@@ -81,9 +81,12 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
 
     Route::resource('transactions', TransactionController::class);
+    Route::get('/transactions/{transaction}/edit-credit', [TransactionController::class, 'editCredit'])->name('transactions.editCredit');
+    Route::put('/transactions/{transaction}/update-credit', [TransactionController::class, 'updateCredit'])->name('transactions.updateCredit');
     Route::post('/transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
     Route::post('/transactions/{transaction}/upload-document', [TransactionController::class, 'uploadDocument'])->name('transactions.upload-document');
     Route::delete('/documents/{document}', [TransactionController::class, 'deleteDocument'])->name('transactions.delete-document');
+
     
 
     Route::post('/installments/{installment}/approve', [\App\Http\Controllers\InstallmentController::class, 'approve'])->name('installments.approve');

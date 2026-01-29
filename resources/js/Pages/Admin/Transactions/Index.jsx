@@ -463,11 +463,11 @@ export default function Index({
                                                             "CREDIT" && (
                                                             <Link
                                                                 href={route(
-                                                                    "admin.transactions.edit",
+                                                                    "admin.transactions.editCredit",
                                                                     transaction.id
                                                                 )}
                                                                 className="p-2 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500 hover:text-white transition-all inline-flex group/btn"
-                                                                title="Edit Detail Kredit"
+                                                                title="Edit Status Kredit"
                                                             >
                                                                 <CreditCard
                                                                     size={16}

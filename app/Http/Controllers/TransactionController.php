@@ -130,12 +130,80 @@ class TransactionController extends Controller
     }
 
 
+
     public function destroy(Transaction $transaction): RedirectResponse
     {
         $this->transactionService->deleteTransaction($transaction);
 
         return redirect()->route('admin.transactions.index')
             ->with('success', 'Transaction deleted successfully.');
+    }
+
+
+    /**
+     * Show the form for editing credit details.
+     */
+    public function editCredit(Transaction $transaction): \Inertia\Response
+    {
+        // Ensure this is a credit transaction
+        if ($transaction->transaction_type !== 'CREDIT') {
+            return redirect()->route('admin.transactions.show', $transaction->id)
+                ->with('error', 'Transaksi ini bukan tipe kredit.');
+        }
+
+        $transaction->load(['creditDetail', 'creditDetail.documents', 'user', 'motor']);
+        
+        return \Inertia\Inertia::render('Admin/Transactions/EditCredit', [
+            'transaction' => $transaction,
+        ]);
+    }
+
+
+    /**
+     * Update the credit details (status, approved amount, notes).
+     */
+    public function updateCredit(Request $request, Transaction $transaction): RedirectResponse
+    {
+        $request->validate([
+            'credit_status' => 'required|in:menunggu_persetujuan,data_tidak_valid,dikirim_ke_surveyor,jadwal_survey,disetujui,ditolak',
+            'approved_amount' => 'nullable|numeric|min:0',
+            'admin_notes' => 'nullable|string|max:1000',
+        ]);
+
+        // Update credit detail
+        if ($transaction->creditDetail) {
+            $transaction->creditDetail->update([
+                'credit_status' => $request->credit_status,
+                'approved_amount' => $request->approved_amount ?? 0,
+            ]);
+        }
+
+        // Update transaction notes
+        $transaction->update([
+            'notes' => $request->admin_notes,
+        ]);
+
+        // Sync transaction status based on credit status
+        $this->syncTransactionStatusFromCredit($transaction, $request->credit_status);
+
+        return redirect()->route('admin.transactions.show', $transaction->id)
+            ->with('success', 'Status kredit berhasil diperbarui.');
+    }
+
+
+    /**
+     * Synchronize transaction status based on credit status.
+     */
+    private function syncTransactionStatusFromCredit(Transaction $transaction, string $creditStatus): void
+    {
+        $statusMap = [
+            'disetujui' => 'unit_preparation', // Credit approved -> prepare unit
+            'ditolak' => 'cancelled',          // Credit rejected -> cancel transaction
+        ];
+
+        if (isset($statusMap[$creditStatus])) {
+            $transaction->update(['status' => $statusMap[$creditStatus]]);
+        }
     }
 
 

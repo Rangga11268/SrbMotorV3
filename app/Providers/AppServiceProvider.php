@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\MotorRepositoryInterface;
 use App\Repositories\MotorRepository;
+use App\Models\CreditDetail;
+use App\Observers\CreditDetailObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register observers
+        CreditDetail::observe(CreditDetailObserver::class);
     }
 }
