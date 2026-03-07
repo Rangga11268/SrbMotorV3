@@ -404,7 +404,7 @@ export default function Register() {
             </div>
 
             {/* Inject Shimmer Animation for the generic auth aesthetic */}
-            <style jsx>{`
+            <style>{`
                 @keyframes shimmer {
                     100% {
                         transform: translateX(100%);
