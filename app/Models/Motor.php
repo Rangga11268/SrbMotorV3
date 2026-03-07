@@ -61,6 +61,29 @@ class Motor extends Model
     }
 
     /**
+     * Get the full image URL
+     */
+    public function getImageAttribute()
+    {
+        if (!$this->image_path) {
+            return null;
+        }
+
+        // If it's already a full URL (http/https), return as is
+        if (str_starts_with($this->image_path, 'http')) {
+            return $this->image_path;
+        }
+
+        // If it starts with 'storage/', it's a public disk file
+        if (str_starts_with($this->image_path, 'storage/')) {
+            return asset($this->image_path);
+        }
+
+        // Otherwise, assume it's in the public directory
+        return asset($this->image_path);
+    }
+
+    /**
      * Delete the image file when the motor is deleted
      */
     protected static function booted()
