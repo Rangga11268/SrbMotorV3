@@ -182,7 +182,15 @@ function AdminLayoutContent({ children, title }) {
                         href="/"
                         className="d-flex align-items-center gap-3 text-decoration-none"
                     >
-                        <div className="sidebar-brand-logo">SR</div>
+                        <img
+                            src="/assets/icon/logo trans.png"
+                            alt="Logo"
+                            style={{
+                                width: 32,
+                                height: 32,
+                                objectFit: "contain",
+                            }}
+                        />
                         <div className="d-flex flex-column">
                             <span className="sidebar-brand-text">
                                 SRB Motors
@@ -197,33 +205,42 @@ function AdminLayoutContent({ children, title }) {
                 <CSidebarNav>
                     <CNavTitle>Menu Utama</CNavTitle>
                     {navItems.map((item) => (
-                        <CNavItem
-                            key={item.name}
-                            href={item.href}
-                            active={item.active}
-                            as={Link}
-                        >
-                            <CIcon
-                                icon={item.icon}
-                                customClassName="nav-icon"
-                            />
-                            {item.name}
-                        </CNavItem>
+                        <li className="nav-item" key={item.name}>
+                            <Link
+                                href={item.href}
+                                className={`nav-link ${item.active ? "active" : ""}`}
+                            >
+                                <CIcon
+                                    icon={item.icon}
+                                    customClassName="nav-icon"
+                                />
+                                {item.name}
+                            </Link>
+                        </li>
                     ))}
 
                     <CNavTitle className="mt-3">Pengaturan</CNavTitle>
-                    <CNavItem
-                        href={route("admin.profile.show")}
-                        active={route().current("admin.profile.*")}
-                        as={Link}
-                    >
-                        <CIcon icon={cilSettings} customClassName="nav-icon" />
-                        Profil Saya
-                    </CNavItem>
-                    <CNavItem href="/" as={Link}>
-                        <CIcon icon={cilGlobeAlt} customClassName="nav-icon" />
-                        Lihat Website
-                    </CNavItem>
+                    <li className="nav-item">
+                        <Link
+                            href={route("admin.profile.show")}
+                            className={`nav-link ${route().current("admin.profile.*") ? "active" : ""}`}
+                        >
+                            <CIcon
+                                icon={cilSettings}
+                                customClassName="nav-icon"
+                            />
+                            Profil Saya
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link href="/" className="nav-link">
+                            <CIcon
+                                icon={cilGlobeAlt}
+                                customClassName="nav-icon"
+                            />
+                            Lihat Website
+                        </Link>
+                    </li>
                 </CSidebarNav>
 
                 <CSidebarFooter className="border-top p-3">

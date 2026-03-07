@@ -74,7 +74,7 @@ class MotorGalleryController extends Controller
         $types = $filterOptions['types'];
         $years = $filterOptions['years'];
 
-        if ($request->wantsJson() || $request->ajax()) {
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'motors' => $motors,
                 'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),

@@ -207,7 +207,7 @@ class TransactionController extends Controller
     }
 
 
-    public function updateStatus(Request $request, Transaction $transaction): RedirectResponse
+    public function updateStatus(Request $request, Transaction $transaction): RedirectResponse|\Illuminate\Http\JsonResponse
     {
 
         $request->validate([
@@ -215,6 +215,10 @@ class TransactionController extends Controller
         ]);
 
         $this->transactionService->updateStatus($transaction, $request->status);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'status' => $request->status]);
+        }
 
         return redirect()->back()
             ->with('success', 'Transaction status updated successfully.');

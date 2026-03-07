@@ -37,7 +37,7 @@ export default function Navbar({ auth }) {
             icon: <Bike className="w-4 h-4" />,
         },
         {
-            href: "/contact",
+            href: "/#contact",
             label: "Hubungi Kami",
             icon: <Phone className="w-4 h-4" />,
         },
@@ -60,18 +60,31 @@ export default function Navbar({ auth }) {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-1">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className="group relative px-4 py-2 text-gray-700 hover:text-blue-600 transition-all duration-200"
-                            >
-                                <div className="flex items-center gap-2 font-semibold text-sm">
-                                    {link.label}
-                                </div>
-                                <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-                            </Link>
-                        ))}
+                        {navLinks.map((link) =>
+                            link.href.startsWith("/#") ? (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    className="group relative px-4 py-2 text-gray-700 hover:text-blue-600 transition-all duration-200"
+                                >
+                                    <div className="flex items-center gap-2 font-semibold text-sm">
+                                        {link.label}
+                                    </div>
+                                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+                                </a>
+                            ) : (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="group relative px-4 py-2 text-gray-700 hover:text-blue-600 transition-all duration-200"
+                                >
+                                    <div className="flex items-center gap-2 font-semibold text-sm">
+                                        {link.label}
+                                    </div>
+                                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+                                </Link>
+                            ),
+                        )}
                     </div>
 
                     {/* Desktop Auth / User Menu */}
@@ -222,18 +235,33 @@ export default function Navbar({ auth }) {
                         className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
                     >
                         <div className="p-4 space-y-2">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="flex items-center gap-4 p-4 rounded-2xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
-                                >
-                                    <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-blue-600 transition-colors">
-                                        {link.icon}
-                                    </div>
-                                    {link.label}
-                                </Link>
-                            ))}
+                            {navLinks.map((link) =>
+                                link.href.startsWith("/#") ? (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-4 p-4 rounded-2xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                    >
+                                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-blue-600 transition-colors">
+                                            {link.icon}
+                                        </div>
+                                        {link.label}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-4 p-4 rounded-2xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                    >
+                                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-blue-600 transition-colors">
+                                            {link.icon}
+                                        </div>
+                                        {link.label}
+                                    </Link>
+                                ),
+                            )}
 
                             <hr className="my-4 border-gray-100" />
 

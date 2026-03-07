@@ -316,10 +316,10 @@ export default function Home({ auth, popularMotors = [] }) {
                                         >
                                             {/* Image Container */}
                                             <div className="relative h-56 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-                                                {motor.image ? (
+                                                {motor.image_path ? (
                                                     <>
                                                         <img
-                                                            src={motor.image}
+                                                            src={`/storage/${motor.image_path}`}
                                                             alt={motor.name}
                                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                         />

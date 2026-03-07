@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useForm, router } from "@inertiajs/react";
+import axios from "axios";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Modal from "@/Components/Modal";
 import {
@@ -37,7 +38,13 @@ import {
 } from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
-export default function Show({ transaction }) {
+export default function Show({ transaction: initialTransaction }) {
+    const [transaction, setTransaction] = useState(initialTransaction);
+
+    useEffect(() => {
+        setTransaction(initialTransaction);
+    }, [initialTransaction]);
+
     const { credit_detail, motor, user } = transaction;
     const documents = credit_detail?.documents || [];
 
@@ -129,23 +136,22 @@ export default function Show({ transaction }) {
         });
     };
 
-    const processStatusUpdate = (newStatus) => {
+    const processStatusUpdate = async (newStatus) => {
         setProcessingAction(true);
-        router.post(
-            route("admin.transactions.updateStatus", transaction.id),
-            { status: newStatus },
-            {
-                onSuccess: () => {
-                    setProcessingAction(false);
-                    setModalConfig((prev) => ({ ...prev, isOpen: false }));
-                    toast.success("Status berhasil diperbarui");
-                },
-                onError: () => {
-                    setProcessingAction(false);
-                    toast.error("Gagal memperbarui status");
-                },
-            },
-        );
+        try {
+            await axios.post(
+                route("admin.transactions.updateStatus", transaction.id),
+                { status: newStatus },
+            );
+
+            setTransaction((prev) => ({ ...prev, status: newStatus }));
+            setModalConfig((prev) => ({ ...prev, isOpen: false }));
+            toast.success("Status berhasil diperbarui secara instan");
+        } catch (error) {
+            toast.error("Gagal memperbarui status");
+        } finally {
+            setProcessingAction(false);
+        }
     };
 
     const confirmDelete = () => {
