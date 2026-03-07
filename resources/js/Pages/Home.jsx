@@ -337,28 +337,51 @@ export default function Home({ auth, popularMotors = [] }) {
                                                     </div>
                                                 )}
 
-                                                {/* Badge Type */}
-                                                <div className="absolute top-3 right-3">
-                                                    <Badge
-                                                        variant="blue"
-                                                        className="shadow-md backdrop-blur-sm bg-white/90"
-                                                    >
-                                                        {motor.type ||
-                                                            "Cash/Kredit"}
-                                                    </Badge>
-                                                </div>
-
-                                                {/* Status Badge */}
-                                                {motor.tersedia && (
-                                                    <div className="absolute top-3 left-3">
+                                                {/* Status & Type Badges */}
+                                                <div className="absolute top-3 left-3 flex flex-col gap-2">
+                                                    {motor.tersedia && (
                                                         <Badge
                                                             variant="green"
-                                                            className="shadow-md backdrop-blur-sm bg-white/90"
+                                                            className="shadow-md backdrop-blur-sm bg-white/90 self-start"
                                                         >
                                                             Ready Stock
                                                         </Badge>
-                                                    </div>
-                                                )}
+                                                    )}
+                                                    <Badge
+                                                        variant="blue"
+                                                        className="shadow-md backdrop-blur-sm bg-white/90 self-start"
+                                                    >
+                                                        {motor.type ||
+                                                            "Standard"}
+                                                    </Badge>
+                                                </div>
+
+                                                {/* Promo Ribbons (Momotor Style) */}
+                                                {motor.promotions &&
+                                                    motor.promotions.length >
+                                                        0 && (
+                                                        <div className="absolute bottom-3 left-0 flex flex-col gap-2 z-10 pointer-events-none w-full pr-4">
+                                                            {motor.promotions
+                                                                .slice(0, 2)
+                                                                .map(
+                                                                    (
+                                                                        promo,
+                                                                        pIndex,
+                                                                    ) => (
+                                                                        <div
+                                                                            key={
+                                                                                pIndex
+                                                                            }
+                                                                            className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-r-full shadow-lg border border-orange-400/50 self-start truncate max-w-full"
+                                                                        >
+                                                                            <Star className="w-3 h-3 inline-block mr-1 -mt-0.5" />
+                                                                            {promo.badge_text ||
+                                                                                promo.title}
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                        </div>
+                                                    )}
                                             </div>
 
                                             {/* Card Body */}

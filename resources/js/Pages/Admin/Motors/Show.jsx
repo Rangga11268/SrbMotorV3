@@ -34,31 +34,6 @@ export default function Show({ motor }) {
         });
     };
 
-    const specs = Array.isArray(motor.specifications)
-        ? motor.specifications.reduce(
-              (acc, spec) => ({ ...acc, [spec.spec_key]: spec.spec_value }),
-              {},
-          )
-        : motor.specifications || {};
-
-    const specItems = [
-        { label: "Tipe Mesin", value: specs.engine_type },
-        {
-            label: "Kapasitas",
-            value: specs.engine_size ? `${specs.engine_size} cc` : null,
-        },
-        { label: "Sistem Bahan Bakar", value: specs.fuel_system },
-        { label: "Transmisi", value: specs.transmission },
-        {
-            label: "Tenaga Maks",
-            value: specs.max_power ? `${specs.max_power} kW` : null,
-        },
-        {
-            label: "Torsi Maks",
-            value: specs.max_torque ? `${specs.max_torque} Nm` : null,
-        },
-    ];
-
     return (
         <AdminLayout title={`Detail Motor: ${motor.name}`}>
             <Modal
@@ -113,7 +88,11 @@ export default function Show({ motor }) {
                             >
                                 {motor.image_path ? (
                                     <img
-                                        src={`/storage/${motor.image_path}`}
+                                        src={
+                                            motor.image_path.startsWith("http")
+                                                ? motor.image_path
+                                                : `/storage/${motor.image_path}`
+                                        }
                                         alt={motor.name}
                                         className="w-100 h-100 object-fit-cover"
                                     />
@@ -191,6 +170,17 @@ export default function Show({ motor }) {
                                             {motor.year}
                                         </CBadge>
                                     </div>
+                                    <div className="d-flex flex-wrap gap-2 mt-2">
+                                        {motor.promotions?.map((promo) => (
+                                            <CBadge
+                                                key={promo.id}
+                                                color={promo.badge_color}
+                                                textColor="white"
+                                            >
+                                                {promo.badge_text}
+                                            </CBadge>
+                                        ))}
+                                    </div>
                                 </div>
                                 <span className="text-body-tertiary small">
                                     ID: #{motor.id.toString().padStart(6, "0")}
@@ -199,56 +189,22 @@ export default function Show({ motor }) {
                         </CCardHeader>
                         <CCardBody>
                             <h6 className="fw-semibold mb-3 text-body-secondary">
-                                Spesifikasi Teknis
+                                Deskripsi (Spesifikasi & Promo)
                             </h6>
-                            <CTable borderless responsive className="mb-0">
-                                <CTableBody>
-                                    {specItems.map(
-                                        (item, i) =>
-                                            item.value && (
-                                                <CTableRow key={i}>
-                                                    <CTableHeaderCell
-                                                        className="text-body-secondary ps-0"
-                                                        style={{ width: "40%" }}
-                                                    >
-                                                        {item.label}
-                                                    </CTableHeaderCell>
-                                                    <CTableDataCell className="fw-medium">
-                                                        {item.value}
-                                                    </CTableDataCell>
-                                                </CTableRow>
-                                            ),
-                                    )}
-                                </CTableBody>
-                            </CTable>
+                            {motor.description ? (
+                                <div
+                                    className="text-body-secondary mb-0 HTML-content-wrapper"
+                                    dangerouslySetInnerHTML={{
+                                        __html: motor.description,
+                                    }}
+                                ></div>
+                            ) : (
+                                <p className="text-body-tertiary fst-italic mb-0">
+                                    Belum ada deskripsi.
+                                </p>
+                            )}
                         </CCardBody>
                     </CCard>
-
-                    {motor.details && (
-                        <CCard className="mb-4">
-                            <CCardHeader className="bg-transparent border-bottom">
-                                <strong>Deskripsi</strong>
-                            </CCardHeader>
-                            <CCardBody>
-                                <p className="text-body-secondary mb-0 white-space-pre-line">
-                                    {motor.details}
-                                </p>
-                            </CCardBody>
-                        </CCard>
-                    )}
-
-                    {specs.additional_specs && (
-                        <CCard>
-                            <CCardHeader className="bg-transparent border-bottom">
-                                <strong>Catatan Tambahan</strong>
-                            </CCardHeader>
-                            <CCardBody>
-                                <p className="text-body-secondary mb-0">
-                                    {specs.additional_specs}
-                                </p>
-                            </CCardBody>
-                        </CCard>
-                    )}
                 </CCol>
             </CRow>
         </AdminLayout>

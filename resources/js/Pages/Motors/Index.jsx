@@ -358,7 +358,7 @@ export default function Index({
                                                             )}
 
                                                             {/* Badges */}
-                                                            <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                                                            <div className="absolute top-3 left-3 flex flex-col items-start gap-2">
                                                                 <Badge
                                                                     variant="blue"
                                                                     size="sm"
@@ -368,9 +368,6 @@ export default function Index({
                                                                         motor.brand
                                                                     }
                                                                 </Badge>
-                                                            </div>
-
-                                                            <div className="absolute top-3 right-3">
                                                                 <Badge
                                                                     variant={
                                                                         motor.tersedia
@@ -385,6 +382,39 @@ export default function Index({
                                                                         : "Stok Habis"}
                                                                 </Badge>
                                                             </div>
+
+                                                            {/* Promo Ribbons (Momotor Style) */}
+                                                            {motor.promotions &&
+                                                                motor.promotions
+                                                                    .length >
+                                                                    0 && (
+                                                                    <div className="absolute bottom-3 left-0 flex flex-col gap-2 z-10 pointer-events-none w-full pr-4">
+                                                                        {motor.promotions
+                                                                            .slice(
+                                                                                0,
+                                                                                2,
+                                                                            )
+                                                                            .map(
+                                                                                (
+                                                                                    promo,
+                                                                                    pIndex,
+                                                                                ) => (
+                                                                                    <div
+                                                                                        key={
+                                                                                            pIndex
+                                                                                        }
+                                                                                        className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-r-full shadow-lg border border-orange-400/50 self-start truncate max-w-full"
+                                                                                    >
+                                                                                        <span className="mr-1">
+                                                                                            🔥
+                                                                                        </span>
+                                                                                        {promo.badge_text ||
+                                                                                            promo.title}
+                                                                                    </div>
+                                                                                ),
+                                                                            )}
+                                                                    </div>
+                                                                )}
                                                         </div>
 
                                                         {/* Card Body */}

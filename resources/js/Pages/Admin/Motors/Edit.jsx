@@ -19,7 +19,7 @@ import CIcon from "@coreui/icons-react";
 import { cilArrowLeft, cilSave, cilTrash, cilBike } from "@coreui/icons";
 import toast from "react-hot-toast";
 
-export default function Edit({ motor }) {
+export default function Edit({ motor, promotions }) {
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
         name: motor.name || "",
@@ -30,20 +30,38 @@ export default function Edit({ motor }) {
         type: motor.type || "",
         tersedia: motor.tersedia,
         image: null,
-        specifications: motor.specifications || {
-            engine_type: "",
-            engine_size: "",
-            fuel_system: "",
-            transmission: "",
-            max_power: "",
-            max_torque: "",
-            additional_specs: "",
-        },
+        description: motor.description || "",
+        promotion_ids: motor.promotions
+            ? motor.promotions.map((p) => p.id)
+            : [],
     });
 
     const [previewUrl, setPreviewUrl] = useState(
-        motor.image_path ? `/storage/${motor.image_path}` : null,
+        motor.image_path
+            ? motor.image_path.startsWith("http")
+                ? motor.image_path
+                : `/storage/${motor.image_path}`
+            : null,
     );
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setData("image", file);
+            setPreviewUrl(URL.createObjectURL(file));
+        }
+    };
+
+    const togglePromotion = (id) => {
+        const currentIds = [...data.promotion_ids];
+        const index = currentIds.indexOf(id);
+        if (index > -1) {
+            currentIds.splice(index, 1);
+        } else {
+            currentIds.push(id);
+        }
+        setData("promotion_ids", currentIds);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -57,25 +75,6 @@ export default function Edit({ motor }) {
             router.delete(route("admin.motors.destroy", motor.id));
         }
     };
-
-    const handleSpecChange = (key, value) => {
-        setData("specifications", { ...data.specifications, [key]: value });
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setData("image", file);
-        if (file) setPreviewUrl(URL.createObjectURL(file));
-    };
-
-    const specFields = [
-        { key: "engine_type", label: "Tipe Mesin" },
-        { key: "engine_size", label: "Kapasitas (cc)" },
-        { key: "fuel_system", label: "Sistem Bahan Bakar" },
-        { key: "transmission", label: "Transmisi" },
-        { key: "max_power", label: "Tenaga Maksimum" },
-        { key: "max_torque", label: "Torsi Maksimum" },
-    ];
 
     return (
         <AdminLayout title="Edit Motor">
@@ -214,55 +213,89 @@ export default function Edit({ motor }) {
                             </CCardBody>
                         </CCard>
 
+                        <CCard className="mb-4 shadow-sm border-0">
+                            <CCardHeader className="bg-white border-bottom">
+                                <strong>Pilih Promosi Aktif</strong>
+                            </CCardHeader>
+                            <CCardBody>
+                                <div className="d-flex flex-wrap gap-2">
+                                    {promotions.map((promo) => (
+                                        <CButton
+                                            key={promo.id}
+                                            type="button"
+                                            color={
+                                                data.promotion_ids.includes(
+                                                    promo.id,
+                                                )
+                                                    ? promo.badge_color
+                                                    : "light"
+                                            }
+                                            variant={
+                                                data.promotion_ids.includes(
+                                                    promo.id,
+                                                )
+                                                    ? "solid"
+                                                    : "outline"
+                                            }
+                                            size="sm"
+                                            onClick={() =>
+                                                togglePromotion(promo.id)
+                                            }
+                                            className="d-flex align-items-center gap-2"
+                                        >
+                                            <span
+                                                className={`badge bg-${data.promotion_ids.includes(promo.id) ? "white text-" + promo.badge_color : promo.badge_color}`}
+                                            >
+                                                {promo.badge_text}
+                                            </span>
+                                            {promo.title}
+                                        </CButton>
+                                    ))}
+                                    {promotions.length === 0 && (
+                                        <div className="text-muted small italic">
+                                            Tidak ada promosi aktif yang
+                                            tersedia.
+                                        </div>
+                                    )}
+                                </div>
+                            </CCardBody>
+                        </CCard>
+
                         <CCard className="mb-4">
                             <CCardHeader className="bg-transparent border-bottom">
-                                <strong>Spesifikasi Teknis</strong>
+                                <strong>
+                                    Deskripsi Motor (Spesifikasi & Promo)
+                                </strong>
                             </CCardHeader>
                             <CCardBody>
                                 <CRow className="g-3">
-                                    {specFields.map((spec) => (
-                                        <CCol md={6} key={spec.key}>
-                                            <CFormLabel>
-                                                {spec.label}
-                                            </CFormLabel>
-                                            <CFormInput
-                                                value={
-                                                    data.specifications[
-                                                        spec.key
-                                                    ] || ""
-                                                }
-                                                onChange={(e) =>
-                                                    handleSpecChange(
-                                                        spec.key,
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                placeholder="-"
-                                            />
-                                        </CCol>
-                                    ))}
                                     <CCol md={12}>
                                         <CFormLabel>
-                                            Catatan Tambahan
+                                            Konten Deskripsi (Mendukung Format
+                                            HTML)
                                         </CFormLabel>
                                         <CFormTextarea
-                                            value={
-                                                data.specifications
-                                                    .additional_specs || ""
-                                            }
+                                            value={data.description}
                                             onChange={(e) =>
-                                                handleSpecChange(
-                                                    "additional_specs",
+                                                setData(
+                                                    "description",
                                                     e.target.value,
                                                 )
                                             }
-                                            rows={3}
+                                            rows={8}
+                                            placeholder="Tuliskan spesifikasi lengkap, keunggulan, dan promo motor ini..."
                                         />
+                                        <div className="form-text mt-2">
+                                            Anda bisa copy-paste dari
+                                            spesifikasi pabrik atau tambahkan
+                                            tabel secara manual. Nanti akan
+                                            dirender sebagai Rich Text di
+                                            halaman depan.
+                                        </div>
                                     </CCol>
                                 </CRow>
                             </CCardBody>
                         </CCard>
-
                         <CButton
                             type="submit"
                             color="primary"

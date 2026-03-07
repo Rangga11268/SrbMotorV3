@@ -21,9 +21,8 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($withSpecs, $perPage) {
             $query = Motor::query();
             
-            if ($withSpecs) {
-                $query = $query->with('specifications');
-            }
+            // Always load promotions to support badges on the frontend
+            $query = $query->with('promotions');
             
             return $query->orderBy('created_at', 'desc')->paginate($perPage);
         });
@@ -39,9 +38,8 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($filters, $withSpecs, $perPage) {
             $query = Motor::query();
             
-            if ($withSpecs) {
-                $query = $query->with('specifications');
-            }
+            // Always load promotions to support badges on the frontend
+            $query = $query->with('promotions');
             
             // Apply filters
             if (isset($filters['search']) && !empty($filters['search'])) {
@@ -51,7 +49,7 @@ class MotorRepository implements MotorRepositoryInterface
                       ->orWhere('model', 'like', '%' . $search . '%')
                       ->orWhere('brand', 'like', '%' . $search . '%')
                       ->orWhere('type', 'like', '%' . $search . '%')
-                      ->orWhere('details', 'like', '%' . $search . '%');
+                      ->orWhere('description', 'like', '%' . $search . '%');
                 });
             }
             
@@ -93,9 +91,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($id, $withSpecs) {
             $query = Motor::query();
             
-            if ($withSpecs) {
-                $query = $query->with('specifications');
-            }
+            $query = $query->with(['promotions', 'financingSchemes.provider']);
             
             return $query->find($id);
         });
@@ -111,9 +107,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($limit, $withSpecs) {
             $query = Motor::query();
             
-            if ($withSpecs) {
-                $query = $query->with('specifications');
-            }
+            $query = $query->with('promotions');
             
             return $query->orderBy('created_at', 'desc')->limit($limit)->get();
         });
@@ -135,7 +129,7 @@ class MotorRepository implements MotorRepositoryInterface
                       ->orWhere('model', 'like', '%' . $search . '%')
                       ->orWhere('brand', 'like', '%' . $search . '%')
                       ->orWhere('type', 'like', '%' . $search . '%')
-                      ->orWhere('details', 'like', '%' . $search . '%');
+                      ->orWhere('description', 'like', '%' . $search . '%');
                 });
             }
             

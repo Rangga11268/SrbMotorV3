@@ -45,7 +45,10 @@ class MotorController extends Controller
 
     public function create(): \Inertia\Response
     {
-        return \Inertia\Inertia::render('Admin/Motors/Create');
+        $promotions = \App\Models\Promotion::where('is_active', true)->get(['id', 'title', 'badge_text']);
+        return \Inertia\Inertia::render('Admin/Motors/Create', [
+            'promotions' => $promotions
+        ]);
     }
 
 
@@ -59,16 +62,10 @@ class MotorController extends Controller
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
             'tersedia' => 'required|boolean',
-            'specifications' => 'nullable|array',
-            'specifications.engine_type' => 'nullable|string|max:255',
-            'specifications.engine_size' => 'nullable|string|max:255',
-            'specifications.fuel_system' => 'nullable|string|max:255',
-            'specifications.transmission' => 'nullable|string|max:255',
-            'specifications.max_power' => 'nullable|string|max:255',
-            'specifications.max_torque' => 'nullable|string|max:255',
-            'specifications.additional_specs' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'details' => 'nullable|string',
+            'description' => 'nullable|string',
+            'promotion_ids' => 'nullable|array',
+            'promotion_ids.*' => 'exists:promotions,id',
         ]);
 
         $imagePath = $request->file('image')->store('motors', 'public');
@@ -82,22 +79,12 @@ class MotorController extends Controller
             'type' => $request->type,
             'tersedia' => $request->tersedia,
             'image_path' => $imagePath,
-            'details' => $request->details,
+            'description' => $request->description,
         ]);
 
-
-        $specifications = $request->input('specifications', []);
-        if (!empty($specifications)) {
-            foreach ($specifications as $key => $value) {
-                if (!empty($value) && trim($value) !== '') {
-                    $motor->specifications()->create([
-                        'spec_key' => $key,
-                        'spec_value' => $value,
-                    ]);
-                }
-            }
+        if ($request->has('promotion_ids')) {
+            $motor->promotions()->sync($request->promotion_ids);
         }
-
 
         $this->motorRepository->clearCache();
 
@@ -107,15 +94,19 @@ class MotorController extends Controller
 
     public function show(Motor $motor): \Inertia\Response
     {
-        $motor->load('specifications');
+        $motor->load('promotions');
         return \Inertia\Inertia::render('Admin/Motors/Show', compact('motor'));
     }
 
 
     public function edit(Motor $motor): \Inertia\Response
     {
-        $motor->load('specifications');
-        return \Inertia\Inertia::render('Admin/Motors/Edit', compact('motor'));
+        $motor->load('promotions');
+        $promotions = \App\Models\Promotion::where('is_active', true)->get(['id', 'title', 'badge_text']);
+        return \Inertia\Inertia::render('Admin/Motors/Edit', [
+            'motor' => $motor,
+            'promotions' => $promotions
+        ]);
     }
 
 
@@ -129,16 +120,10 @@ class MotorController extends Controller
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
             'tersedia' => 'required|boolean',
-            'specifications' => 'nullable|array',
-            'specifications.engine_type' => 'nullable|string|max:255',
-            'specifications.engine_size' => 'nullable|string|max:255',
-            'specifications.fuel_system' => 'nullable|string|max:255',
-            'specifications.transmission' => 'nullable|string|max:255',
-            'specifications.max_power' => 'nullable|string|max:255',
-            'specifications.max_torque' => 'nullable|string|max:255',
-            'specifications.additional_specs' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'details' => 'nullable|string',
+            'description' => 'nullable|string',
+            'promotion_ids' => 'nullable|array',
+            'promotion_ids.*' => 'exists:promotions,id',
         ]);
 
         $data = [
@@ -149,12 +134,10 @@ class MotorController extends Controller
             'year' => $request->year,
             'type' => $request->type,
             'tersedia' => $request->tersedia,
-            'details' => $request->details,
+            'description' => $request->description,
         ];
 
-
         if ($request->hasFile('image')) {
-
             if ($motor->image_path) {
                 Storage::disk('public')->delete($motor->image_path);
             }
@@ -163,24 +146,9 @@ class MotorController extends Controller
 
         $motor->update($data);
 
-
-        $newSpecs = $request->input('specifications', []);
-
-
-        $motor->specifications()->delete();
-
-
-        if (!empty($newSpecs)) {
-            foreach ($newSpecs as $key => $value) {
-                if (!empty($value) && trim($value) !== '') {
-                    $motor->specifications()->create([
-                        'spec_key' => $key,
-                        'spec_value' => $value,
-                    ]);
-                }
-            }
+        if ($request->has('promotion_ids')) {
+            $motor->promotions()->sync($request->promotion_ids);
         }
-
 
         $this->motorRepository->clearCache();
 

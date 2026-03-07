@@ -23,7 +23,7 @@ class Motor extends Model
         'year',
         'type',
         'image_path',
-        'details',
+        'description',
         'tersedia',
     ];
 
@@ -38,26 +38,24 @@ class Motor extends Model
     ];
 
     /**
-     * Get the specifications for the motor.
+     * Get the active promotions for the motor.
      */
-    public function specifications()
+    public function promotions()
     {
-        return $this->hasMany(MotorSpecification::class, 'motor_id');
+        return $this->belongsToMany(Promotion::class, 'motor_promotion')
+            ->where('is_active', true)
+            ->where(function ($query) {
+                $query->whereNull('valid_until')
+                      ->orWhere('valid_until', '>=', now());
+            });
     }
 
     /**
-     * Get the specifications as an associative array.
+     * Get the financing schemes for the motor.
      */
-    public function getSpecificationsArrayAttribute()
+    public function financingSchemes()
     {
-        $specs = $this->specifications;
-        $result = [];
-
-        foreach ($specs as $spec) {
-            $result[$spec->spec_key] = $spec->spec_value;
-        }
-
-        return $result;
+        return $this->hasMany(FinancingScheme::class);
     }
 
     /**
@@ -102,8 +100,8 @@ class Motor extends Model
                 }
             }
 
-            // Delete all associated specifications
-            $motor->specifications()->delete();
+            // Delete associated promotions
+            $motor->promotions()->detach();
         });
     }
 }

@@ -32,7 +32,7 @@ class MotorGalleryController extends Controller
             return redirect()->route('motors.index');
         }
 
-        $motors = Motor::with(['specifications'])
+        $motors = Motor::with(['promotions', 'financingSchemes.provider'])
             ->whereIn('id', $ids)
             ->get();
 
@@ -102,7 +102,7 @@ class MotorGalleryController extends Controller
 
         $relatedMotors = Motor::where('brand', $motor->brand)
             ->where('id', '!=', $motor->id)
-            ->with('specifications')
+            ->with('promotions')
             ->limit(4)
             ->get();
 

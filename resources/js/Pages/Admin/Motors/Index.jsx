@@ -178,7 +178,13 @@ export default function Index({ motors, filters }) {
                                                 >
                                                     {motor.image_path ? (
                                                         <img
-                                                            src={`/storage/${motor.image_path}`}
+                                                            src={
+                                                                motor.image_path.startsWith(
+                                                                    "http",
+                                                                )
+                                                                    ? motor.image_path
+                                                                    : `/storage/${motor.image_path}`
+                                                            }
                                                             alt={motor.name}
                                                             className="w-100 h-100 object-fit-cover"
                                                         />
@@ -193,11 +199,25 @@ export default function Index({ motors, filters }) {
                                                     <div className="fw-semibold">
                                                         {motor.name}
                                                     </div>
-                                                    <div className="text-body-tertiary small">
-                                                        ID:{" "}
-                                                        {motor.id
-                                                            .toString()
-                                                            .padStart(4, "0")}
+                                                    <div className="d-flex flex-wrap gap-1 mt-1">
+                                                        {motor.promotions?.map(
+                                                            (promo) => (
+                                                                <span
+                                                                    key={
+                                                                        promo.id
+                                                                    }
+                                                                    className={`badge text-white bg-${promo.badge_color}`}
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "10px",
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        promo.badge_text
+                                                                    }
+                                                                </span>
+                                                            ),
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

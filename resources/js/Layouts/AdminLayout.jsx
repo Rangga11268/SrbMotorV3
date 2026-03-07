@@ -39,6 +39,10 @@ import {
     cilXCircle,
     cilX,
     cilBell,
+    cilStar,
+    cilBuilding,
+    cilCalculator,
+    cilTag,
 } from "@coreui/icons";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -85,6 +89,24 @@ function AdminLayoutContent({ children, title }) {
             href: route("admin.reports.index"),
             icon: cilChartLine,
             active: route().current("admin.reports.*"),
+        },
+        {
+            name: "Promo & Badge",
+            href: route("admin.promotions.index"),
+            icon: cilTag,
+            active: route().current("admin.promotions.*"),
+        },
+        {
+            name: "Provider Leasing",
+            href: route("admin.leasing-providers.index"),
+            icon: cilBuilding,
+            active: route().current("admin.leasing-providers.*"),
+        },
+        {
+            name: "Skema Cicilan",
+            href: route("admin.financing-schemes.index"),
+            icon: cilCalculator,
+            active: route().current("admin.financing-schemes.*"),
         },
         {
             name: "Pesan Masuk",

@@ -111,6 +111,11 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
 
 
+    Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class);
+    Route::resource('leasing-providers', \App\Http\Controllers\Admin\LeasingProviderController::class);
+    Route::resource('financing-schemes', \App\Http\Controllers\Admin\FinancingSchemeController::class);
+
+
     Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');

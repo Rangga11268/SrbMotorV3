@@ -26,41 +26,6 @@ export default function Compare({ motors }) {
         }).format(value);
     };
 
-    // Helper to format spec keys (camelCase/snake_case to Title Case - consistent with Show.jsx)
-    const formatSpecKey = (key) => {
-        const keyMap = {
-            plate_number: "Nomor Polisi",
-            engine_number: "Nomor Mesin",
-            frame_number: "Nomor Rangka",
-            bpkb_name: "Nama BPKB",
-            stnk_name: "Nama STNK",
-            tax_expiry: "Pajak Berlaku",
-            registration_expiry: "STNK Berlaku",
-            kilometer: "Kilometer",
-            color: "Warna",
-            transmission: "Transmisi",
-            condition: "Kondisi",
-        };
-        return (
-            keyMap[key] ||
-            key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())
-        );
-    };
-
-    // Collect all unique spec keys from all motors
-    const allSpecKeys = Array.from(
-        new Set(
-            motors.flatMap((motor) =>
-                motor.specifications
-                    ? motor.specifications.map((spec) => spec.spec_key)
-                    : []
-            )
-        )
-    );
-
-    // Sort keys alphabetically or by a predefined order if needed
-    allSpecKeys.sort();
-
     return (
         <MainLayout title="Bandingkan Motor">
             <div className="bg-gray-50 min-h-screen py-16">
@@ -117,11 +82,11 @@ export default function Compare({ motors }) {
                                                             onClick={() => {
                                                                 if (
                                                                     confirm(
-                                                                        "Hapus motor ini dari perbandingan?"
+                                                                        "Hapus motor ini dari perbandingan?",
                                                                     )
                                                                 ) {
                                                                     removeFromCompare(
-                                                                        motor.id
+                                                                        motor.id,
                                                                     );
                                                                     // Optional: Refresh page logic via Inertia or rely on Context to update local storage and redirect if needed
                                                                     window.location.reload();
@@ -145,7 +110,7 @@ export default function Compare({ motors }) {
                                                     </h3>
                                                     <div className="text-primary font-extrabold text-2xl mb-4">
                                                         {formatCurrency(
-                                                            motor.price
+                                                            motor.price,
                                                         )}
                                                     </div>
                                                     <div className="flex flex-col gap-2">
@@ -154,7 +119,7 @@ export default function Compare({ motors }) {
                                                                 <Link
                                                                     href={route(
                                                                         "motors.cash-order",
-                                                                        motor.id
+                                                                        motor.id,
                                                                     )}
                                                                     className="w-full py-2 bg-green-600 text-white rounded-lg font-bold text-sm text-center shadow-lg shadow-green-200 hover:bg-green-700 transition-colors"
                                                                 >
@@ -163,7 +128,7 @@ export default function Compare({ motors }) {
                                                                 <Link
                                                                     href={route(
                                                                         "motors.credit-order",
-                                                                        motor.id
+                                                                        motor.id,
                                                                     )}
                                                                     className="w-full py-2 bg-blue-600 text-white rounded-lg font-bold text-sm text-center shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
                                                                 >
@@ -182,7 +147,7 @@ export default function Compare({ motors }) {
                                                         <Link
                                                             href={route(
                                                                 "motors.show",
-                                                                motor.id
+                                                                motor.id,
                                                             )}
                                                             className="w-full py-2 border border-gray-200 text-gray-600 rounded-lg font-bold text-sm text-center hover:bg-gray-50 transition-colors"
                                                         >
@@ -268,37 +233,32 @@ export default function Compare({ motors }) {
                                                 colSpan={motors.length + 1}
                                                 className="p-4 font-bold text-gray-500 uppercase tracking-wider text-xs border-b border-gray-100 sticky left-0 z-10"
                                             >
-                                                Spesifikasi Mesin & Detail
+                                                Deskripsi Tambahan
                                             </td>
                                         </tr>
-                                        {allSpecKeys.map((key) => (
-                                            <tr
-                                                key={key}
-                                                className="hover:bg-blue-50/5 transition-colors"
-                                            >
-                                                <td className="p-4 bg-gray-50/30 border-b border-r border-gray-100 font-bold text-gray-600 sticky left-0 z-10">
-                                                    {formatSpecKey(key)}
+                                        <tr className="hover:bg-blue-50/5 transition-colors">
+                                            <td className="p-4 bg-gray-50/30 border-b border-r border-gray-100 font-bold text-gray-600 sticky left-0 z-10 align-top">
+                                                Deskripsi (Spesifikasi & Promo)
+                                            </td>
+                                            {motors.map((motor) => (
+                                                <td
+                                                    key={motor.id}
+                                                    className="p-4 border-b border-gray-100 text-gray-800 text-sm align-top HTML-content-wrapper"
+                                                >
+                                                    {motor.description ? (
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: motor.description,
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <span className="text-gray-400 italic">
+                                                            Belum ada deskripsi.
+                                                        </span>
+                                                    )}
                                                 </td>
-                                                {motors.map((motor) => {
-                                                    const spec =
-                                                        motor.specifications?.find(
-                                                            (s) =>
-                                                                s.spec_key ===
-                                                                key
-                                                        );
-                                                    return (
-                                                        <td
-                                                            key={motor.id}
-                                                            className="p-4 border-b border-gray-100 font-medium text-gray-800"
-                                                        >
-                                                            {spec
-                                                                ? spec.spec_value
-                                                                : "-"}
-                                                        </td>
-                                                    );
-                                                })}
-                                            </tr>
-                                        ))}
+                                            ))}
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
