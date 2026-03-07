@@ -34,10 +34,14 @@ class AuthController extends Controller
 
 
             if (Auth::user()->isAdmin()) {
-                return redirect()->route('admin.dashboard');
+                return \Inertia\Inertia::location(route('admin.dashboard'));
             }
 
-            return redirect()->intended('/');
+            $intended = redirect()->intended('/')->getTargetUrl();
+            if (str_contains($intended, '/admin')) {
+                return \Inertia\Inertia::location($intended);
+            }
+            return redirect()->to($intended);
         }
 
 

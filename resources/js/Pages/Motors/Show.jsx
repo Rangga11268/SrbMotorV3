@@ -13,6 +13,8 @@ import {
     Smartphone,
     MapPin,
     ArrowRight,
+    Info,
+    PenTool,
 } from "lucide-react";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
