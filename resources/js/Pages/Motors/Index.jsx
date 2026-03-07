@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Head, Link, router } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
+import axios from "axios";
+import Navbar from "@/Components/Public/Navbar";
+import Footer from "@/Components/Public/Footer";
+import Button from "@/Components/UI/Button";
+import Card, { CardBody } from "@/Components/UI/Card";
+import Badge from "@/Components/UI/Badge";
 import {
     Search,
     RotateCcw,
@@ -11,12 +16,25 @@ import {
     CheckCircle2,
     SlidersHorizontal,
     X,
+    ArrowRight,
+    LayoutGrid,
+    ChevronRight,
+    Clock,
+    Loader2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import ComparisonButton from "@/Components/ComparisonButton";
 
-export default function Index({ motors, filters, brands, types, years }) {
+export default function Index({
+    auth,
+    motors: initialMotors,
+    filters,
+    brands,
+    types,
+    years,
+}) {
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [motors, setMotors] = useState(initialMotors);
     const [values, setValues] = useState({
         search: filters.search || "",
         brand: filters.brand || "",
@@ -27,30 +45,54 @@ export default function Index({ motors, filters, brands, types, years }) {
     });
 
     const handleChange = (e) => {
-        const key = e.target.name;
-        const value = e.target.value;
+        const { name, value } = e.target;
         setValues((values) => ({
             ...values,
-            [key]: value,
+            [name]: value,
         }));
     };
 
-    useEffect(() => {
-        const query = Object.keys(values).reduce((acc, key) => {
-            if (values[key]) acc[key] = values[key];
-            return acc;
-        }, {});
+    const fetchMotors = useCallback(async (searchValues) => {
+        setIsLoading(true);
+        try {
+            const query = Object.keys(searchValues).reduce((acc, key) => {
+                if (searchValues[key]) acc[key] = searchValues[key];
+                return acc;
+            }, {});
 
-        const timer = setTimeout(() => {
-            router.get(route("motors.index"), query, {
-                preserveState: true,
-                preserveScroll: true,
-                replace: true,
+            // Use Axios to fetch data
+            const response = await axios.get(route("motors.index"), {
+                params: query,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    Accept: "application/json",
+                },
             });
-        }, 300);
+
+            // Update local state with new motors data
+            setMotors(response.data.motors);
+
+            // Optional: Update URL without reloading to keep Inertia state clean
+            const queryString = new URLSearchParams(query).toString();
+            window.history.pushState(
+                {},
+                "",
+                `${window.location.pathname}${queryString ? "?" + queryString : ""}`,
+            );
+        } catch (error) {
+            console.error("Error fetching motors:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchMotors(values);
+        }, 500);
 
         return () => clearTimeout(timer);
-    }, [values]);
+    }, [values, fetchMotors]);
 
     const resetFilters = () => {
         setValues({
@@ -64,78 +106,480 @@ export default function Index({ motors, filters, brands, types, years }) {
     };
 
     return (
-        <MainLayout title="Koleksi">
-            <div className="min-h-screen bg-surface-dark pt-32 pb-20">
-                {/* HEADLINE */}
-                <div className="container mx-auto px-4 mb-12">
-                    <div className="flex flex-col md:flex-row items-end justify-between gap-6 border-b border-white/10 pb-8">
-                        <div>
-                            <span className="text-accent font-bold tracking-[0.2em] uppercase text-sm mb-2 block animate-pulse">
-                                Inventaris Premium
-                            </span>
-                            <h1 className="text-5xl md:text-8xl font-display font-black text-white tracking-tighter leading-none">
-                                THE{" "}
-                                <span className="text-transparent stroke-text-white">
-                                    FLEET
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <Head title="Katalog Motor" />
+            <Navbar auth={auth} />
+
+            {/* HEADER SECTION */}
+            <section className="bg-white border-b border-gray-200 pt-28 pb-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm font-medium text-blue-600 mb-2">
+                                <Link href="/" className="hover:underline">
+                                    Home
+                                </Link>
+                                <ChevronRight className="w-4 h-4 text-gray-400" />
+                                <span className="text-gray-500">
+                                    Katalog Motor
+                                </span>
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                                Jelajahi{" "}
+                                <span className="text-blue-600">
+                                    Koleksi Kami
                                 </span>
                             </h1>
+                            <p className="text-lg text-gray-600 max-w-2xl">
+                                Temukan berbagai pilihan motor berkualitas
+                                dengan harga terbaik dan kondisi terjamin untuk
+                                menemani perjalanan Anda.
+                            </p>
                         </div>
-                        <p className="text-gray-400 max-w-md text-right md:text-left">
-                            Dihadirkan untuk performa, diinspeksi untuk
-                            kesempurnaan. <br />
-                            Temukan mesin masa depanmu di bawah.
-                        </p>
+
+                        <div className="flex items-center gap-3">
+                            <div className="text-right hidden sm:block">
+                                <p className="text-sm font-medium text-gray-900">
+                                    {motors.total} Unit Tersedia
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    Diperbarui hari ini
+                                </p>
+                            </div>
+                            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                                <LayoutGrid className="w-6 h-6" />
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-                {/* STICKY FILTER BAR */}
-                <div className="sticky top-20 z-30 bg-surface-dark/80 backdrop-blur-xl border-y border-white/10 py-4 mb-12">
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                            {/* Mobile Toggle */}
+            {/* MAIN CONTENT */}
+            <main className="flex-grow py-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid lg:grid-cols-4 gap-8">
+                        {/* SIDEBAR FILTERS (Desktop) */}
+                        <aside className="hidden lg:block space-y-8">
+                            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-24">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                                        <Filter className="w-4 h-4" /> Filter
+                                        Pencarian
+                                    </h3>
+                                    <button
+                                        onClick={resetFilters}
+                                        className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                                    >
+                                        <RotateCcw className="w-3 h-3" /> Reset
+                                    </button>
+                                </div>
+
+                                <div className="space-y-6">
+                                    {/* Search */}
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                            Cari Model
+                                        </label>
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                            <input
+                                                type="text"
+                                                name="search"
+                                                value={values.search}
+                                                onChange={handleChange}
+                                                placeholder="Nama motor..."
+                                                className="w-full bg-gray-50 border-gray-200 rounded-xl pl-10 pr-4 py-2.5 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Brand */}
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                            Merek
+                                        </label>
+                                        <select
+                                            name="brand"
+                                            value={values.brand}
+                                            onChange={handleChange}
+                                            className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-2.5 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                        >
+                                            <option value="">
+                                                Semua Merek
+                                            </option>
+                                            {brands.map((b) => (
+                                                <option key={b} value={b}>
+                                                    {b}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Type */}
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                            Tipe
+                                        </label>
+                                        <select
+                                            name="type"
+                                            value={values.type}
+                                            onChange={handleChange}
+                                            className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-2.5 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                        >
+                                            <option value="">Semua Tipe</option>
+                                            {types.map((t) => (
+                                                <option key={t} value={t}>
+                                                    {t}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Price Range */}
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                            Rentang Harga
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <input
+                                                type="number"
+                                                name="min_price"
+                                                value={values.min_price}
+                                                onChange={handleChange}
+                                                placeholder="Min"
+                                                className="w-full bg-gray-50 border-gray-200 rounded-xl px-3 py-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                            />
+                                            <input
+                                                type="number"
+                                                name="max_price"
+                                                value={values.max_price}
+                                                onChange={handleChange}
+                                                placeholder="Max"
+                                                className="w-full bg-gray-50 border-gray-200 rounded-xl px-3 py-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        {/* MOBILE FILTER TRIGGER */}
+                        <div className="lg:hidden flex gap-4 mb-6">
                             <button
                                 onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                className="md:hidden w-full flex items-center justify-between px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-bold"
+                                className="flex-grow flex items-center justify-between px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 font-bold shadow-sm"
                             >
                                 <span className="flex items-center gap-2">
-                                    <SlidersHorizontal size={18} /> Filter
+                                    <SlidersHorizontal size={18} /> Filter Unit
                                 </span>
-                                <span className="text-xs bg-accent text-black px-2 py-1 rounded-md">
-                                    {
-                                        Object.values(values).filter(Boolean)
-                                            .length
-                                    }{" "}
-                                    Aktif
-                                </span>
+                                {Object.values(values).filter(Boolean).length >
+                                    0 && (
+                                    <Badge variant="blue" size="sm">
+                                        {
+                                            Object.values(values).filter(
+                                                Boolean,
+                                            ).length
+                                        }
+                                    </Badge>
+                                )}
                             </button>
+                        </div>
 
-                            {/* Desktop Filters / Mobile Drawer Content */}
-                            <div
-                                className={`w-full md:flex md:items-center md:gap-4 ${
-                                    isFiltersOpen ? "block" : "hidden"
-                                } space-y-4 md:space-y-0`}
-                            >
-                                <div className="relative flex-grow max-w-md">
-                                    <Search
-                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
-                                        size={18}
-                                    />
+                        {/* GRID PRODUCT */}
+                        <div className="lg:col-span-3 space-y-10">
+                            <AnimatePresence mode="wait">
+                                {isLoading ? (
+                                    <motion.div
+                                        key="loading"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-[2rem] p-12 shadow-sm"
+                                    >
+                                        <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
+                                        <h3 className="text-xl font-bold text-gray-900">
+                                            Memuat Data...
+                                        </h3>
+                                        <p className="text-gray-500">
+                                            Mencari motor terbaik untuk Anda
+                                        </p>
+                                    </motion.div>
+                                ) : motors.data.length > 0 ? (
+                                    <motion.div
+                                        key="content"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                                    >
+                                        {motors.data.map((motor, i) => (
+                                            <motion.div
+                                                key={motor.id}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{
+                                                    duration: 0.3,
+                                                    delay: i * 0.05,
+                                                }}
+                                            >
+                                                <Link
+                                                    href={route(
+                                                        "motors.show",
+                                                        motor.id,
+                                                    )}
+                                                >
+                                                    <Card
+                                                        hoverable
+                                                        className="h-full overflow-hidden group border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+                                                    >
+                                                        {/* Image Container */}
+                                                        <div className="relative h-56 bg-gray-100 overflow-hidden">
+                                                            <img
+                                                                src={
+                                                                    motor.image_path
+                                                                        ? `/storage/${motor.image_path}`
+                                                                        : "/images/placeholder-motor.jpg"
+                                                                }
+                                                                alt={motor.name}
+                                                                className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${
+                                                                    !motor.tersedia
+                                                                        ? "grayscale brightness-75"
+                                                                        : ""
+                                                                }`}
+                                                            />
+
+                                                            {/* Status Overlay */}
+                                                            {!motor.tersedia && (
+                                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                                                    <span className="px-6 py-2 bg-red-600 text-white font-black text-xl uppercase tracking-widest -rotate-12 border-2 border-white shadow-lg">
+                                                                        TERJUAL
+                                                                    </span>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Badges */}
+                                                            <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                                                                <Badge
+                                                                    variant="blue"
+                                                                    size="sm"
+                                                                    className="shadow-sm backdrop-blur-sm bg-white/90"
+                                                                >
+                                                                    {
+                                                                        motor.brand
+                                                                    }
+                                                                </Badge>
+                                                            </div>
+
+                                                            <div className="absolute top-3 right-3">
+                                                                <Badge
+                                                                    variant={
+                                                                        motor.tersedia
+                                                                            ? "green"
+                                                                            : "red"
+                                                                    }
+                                                                    size="sm"
+                                                                    className="shadow-sm backdrop-blur-sm bg-white/90"
+                                                                >
+                                                                    {motor.tersedia
+                                                                        ? "Tersedia"
+                                                                        : "Stok Habis"}
+                                                                </Badge>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Card Body */}
+                                                        <CardBody className="p-6 space-y-4">
+                                                            <div className="space-y-2">
+                                                                <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
+                                                                    <span className="flex items-center gap-1">
+                                                                        <Calendar className="w-3 h-3" />{" "}
+                                                                        {
+                                                                            motor.year
+                                                                        }
+                                                                    </span>
+                                                                    <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                                                                    <span className="flex items-center gap-1 uppercase">
+                                                                        <Clock className="w-3 h-3" />{" "}
+                                                                        {
+                                                                            motor.type
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
+                                                                    {motor.name}
+                                                                </h3>
+                                                            </div>
+
+                                                            <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                                                                <div>
+                                                                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                                                                        Mulai
+                                                                        Harga
+                                                                    </p>
+                                                                    <p className="text-2xl font-black text-blue-600 tracking-tight">
+                                                                        Rp{" "}
+                                                                        {parseFloat(
+                                                                            motor.price,
+                                                                        ).toLocaleString(
+                                                                            "id-ID",
+                                                                        )}
+                                                                    </p>
+                                                                </div>
+                                                                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all transform group-hover:translate-x-1">
+                                                                    <ArrowRight className="w-5 h-5" />
+                                                                </div>
+                                                            </div>
+                                                        </CardBody>
+                                                    </Card>
+                                                </Link>
+                                            </motion.div>
+                                        ))}
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="empty"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-[2rem] p-12 shadow-sm"
+                                    >
+                                        <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-6">
+                                            <Search size={48} />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                            Motor Tidak Ditemukan
+                                        </h3>
+                                        <p className="text-gray-500 max-w-sm mb-8">
+                                            Maaf, kami tidak menemukan motor
+                                            yang sesuai dengan kriteria
+                                            pencarian Anda. Coba ubah filter
+                                            atau kata kunci lainnya.
+                                        </p>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={resetFilters}
+                                        >
+                                            Hapus Semua Filter
+                                        </Button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            {/* PAGINATION */}
+                            {!isLoading &&
+                                motors.links &&
+                                motors.links.length > 3 && (
+                                    <div className="flex justify-center gap-2 pt-10">
+                                        {motors.links.map((link, k) => (
+                                            <button
+                                                key={k}
+                                                disabled={!link.url}
+                                                onClick={() => {
+                                                    if (link.url) {
+                                                        const urlParams =
+                                                            new URLSearchParams(
+                                                                new URL(
+                                                                    link.url,
+                                                                ).search,
+                                                            );
+                                                        const pageParams =
+                                                            Object.fromEntries(
+                                                                urlParams.entries(),
+                                                            );
+                                                        fetchMotors({
+                                                            ...values,
+                                                            ...pageParams,
+                                                        });
+                                                    }
+                                                }}
+                                                className={`min-w-[48px] h-12 flex items-center justify-center rounded-xl font-bold text-sm transition-all border ${
+                                                    link.active
+                                                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200"
+                                                        : link.url
+                                                          ? "bg-white text-gray-600 border-gray-200 hover:border-blue-600 hover:text-blue-600"
+                                                          : "opacity-40 cursor-not-allowed border-transparent text-gray-400"
+                                                }`}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label
+                                                        .replace(
+                                                            "Previous",
+                                                            "&laquo;",
+                                                        )
+                                                        .replace(
+                                                            "Next",
+                                                            "&raquo;",
+                                                        ),
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <Footer />
+
+            {/* MOBILE FILTER OVERLAY (Drawer effect) */}
+            <AnimatePresence>
+                {isFiltersOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[60] lg:hidden"
+                    >
+                        <div
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setIsFiltersOpen(false)}
+                        />
+                        <motion.div
+                            initial={{ x: "100%" }}
+                            animate={{ x: 0 }}
+                            exit={{ x: "100%" }}
+                            transition={{
+                                type: "spring",
+                                damping: 25,
+                                stiffness: 200,
+                            }}
+                            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white p-8 shadow-2xl"
+                        >
+                            <div className="flex items-center justify-between mb-8">
+                                <h3 className="text-xl font-bold text-gray-900">
+                                    Filter Pencarian
+                                </h3>
+                                <button
+                                    onClick={() => setIsFiltersOpen(false)}
+                                    className="p-2 hover:bg-gray-100 rounded-lg"
+                                >
+                                    <X className="w-6 h-6 text-gray-500" />
+                                </button>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700">
+                                        Cari Nama
+                                    </label>
                                     <input
                                         type="text"
                                         name="search"
                                         value={values.search}
                                         onChange={handleChange}
-                                        placeholder="Cari model..."
-                                        className="w-full bg-black/20 border border-white/10 rounded-full pl-12 pr-4 py-2.5 text-white placeholder-gray-600 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
+                                        className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                        placeholder="Cari..."
                                     />
                                 </div>
-
-                                <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700">
+                                        Merek
+                                    </label>
                                     <select
                                         name="brand"
                                         value={values.brand}
                                         onChange={handleChange}
-                                        className="bg-black/20 border border-white/10 text-white text-sm rounded-full px-4 py-2.5 focus:border-accent outline-none cursor-pointer hover:bg-white/5 transition-colors appearance-none min-w-[120px]"
+                                        className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 outline-none"
                                     >
                                         <option value="">Semua Merek</option>
                                         {brands.map((b) => (
@@ -144,12 +588,16 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             </option>
                                         ))}
                                     </select>
-
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-gray-700">
+                                        Tipe
+                                    </label>
                                     <select
                                         name="type"
                                         value={values.type}
                                         onChange={handleChange}
-                                        className="bg-black/20 border border-white/10 text-white text-sm rounded-full px-4 py-2.5 focus:border-accent outline-none cursor-pointer hover:bg-white/5 transition-colors appearance-none min-w-[120px]"
+                                        className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 outline-none"
                                     >
                                         <option value="">Semua Tipe</option>
                                         {types.map((t) => (
@@ -158,156 +606,27 @@ export default function Index({ motors, filters, brands, types, years }) {
                                             </option>
                                         ))}
                                     </select>
-
-                                    <button
+                                </div>
+                                <div className="pt-6 grid grid-cols-2 gap-4">
+                                    <Button
+                                        variant="secondary"
+                                        fullWidth
                                         onClick={resetFilters}
-                                        className="p-2.5 rounded-full border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-                                        title="Reset Filters"
                                     >
-                                        <RotateCcw size={18} />
-                                    </button>
+                                        Reset
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        onClick={() => setIsFiltersOpen(false)}
+                                    >
+                                        Lihat Hasil
+                                    </Button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* GRID GALLERY */}
-                <div className="container mx-auto px-4">
-                    {motors.data.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            <AnimatePresence mode="popLayout">
-                                {motors.data.map((motor, i) => (
-                                    <motion.div
-                                        layout
-                                        key={motor.id}
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{
-                                            duration: 0.3,
-                                            delay: i * 0.05,
-                                        }}
-                                        className="group relative bg-zinc-900 rounded-3xl overflow-hidden border border-white/5 hover:border-accent/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(190,242,100,0.1)]"
-                                    >
-                                        {/* Image Area */}
-                                        <div className="aspect-[4/3] bg-zinc-800 relative overflow-hidden">
-                                            <img
-                                                src={`/storage/${motor.image_path}`}
-                                                alt={motor.name}
-                                                className={`w-full h-full object-cover transition-all duration-700 ${
-                                                    !motor.tersedia
-                                                        ? "grayscale brightness-50"
-                                                        : "group-hover:scale-110 grayscale group-hover:grayscale-0"
-                                                }`}
-                                            />
-
-                                            {/* Overlays */}
-                                            <div className="absolute top-4 left-4">
-                                                <span className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-xs font-bold text-white border border-white/10 uppercase tracking-wider">
-                                                    {motor.brand}
-                                                </span>
-                                            </div>
-
-                                            <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                <ComparisonButton
-                                                    motor={motor}
-                                                    showText={false}
-                                                    className="!bg-black/50 !backdrop-blur-md !border-white/20 hover:!bg-accent hover:!text-black"
-                                                />
-                                            </div>
-
-                                            {!motor.tersedia && (
-                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                    <span className="text-3xl font-display font-black text-red-500 border-4 border-red-500 px-6 py-2 -rotate-12 uppercase tracking-tight">
-                                                        TERJUAL
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Content Area */}
-                                        <div className="p-6">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div>
-                                                    <p className="text-xs text-gray-500 mb-1">
-                                                        {motor.year} •{" "}
-                                                        {motor.type}
-                                                    </p>
-                                                    <h3 className="text-lg font-bold text-white leading-tight group-hover:text-accent transition-colors">
-                                                        {motor.name}
-                                                    </h3>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-end justify-between border-t border-white/5 pt-4">
-                                                <div className="text-xl font-display font-bold text-white">
-                                                    Rp{" "}
-                                                    {parseFloat(
-                                                        motor.price
-                                                    ).toLocaleString("id-ID")}
-                                                </div>
-                                                <Link
-                                                    href={route(
-                                                        "motors.show",
-                                                        motor.id
-                                                    )}
-                                                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white group-hover:bg-accent group-hover:text-black transition-all duration-300"
-                                                >
-                                                    <ArrowUpRight size={20} />
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
-                        </div>
-                    ) : (
-                        <div className="min-h-[40vh] flex flex-col items-center justify-center text-center border-2 border-dashed border-white/10 rounded-[3rem] p-12">
-                            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center text-gray-500 mb-6">
-                                <Search size={32} />
-                            </div>
-                            <h3 className="text-2xl font-bold text-white mb-2">
-                                No Motors Found
-                            </h3>
-                            <p className="text-gray-500 mb-8">
-                                Coba sesuaikan filter atau kata kunci pencarian
-                                anda.
-                            </p>
-                            <button
-                                onClick={resetFilters}
-                                className="px-8 py-3 bg-accent text-black font-bold rounded-full hover:bg-white transition-colors"
-                            >
-                                Hapus Filter
-                            </button>
-                        </div>
-                    )}
-
-                    {/* PAGINATION */}
-                    {motors.links && motors.links.length > 3 && (
-                        <div className="mt-20 flex justify-center flex-wrap gap-2">
-                            {motors.links.map((link, k) => (
-                                <Link
-                                    key={k}
-                                    href={link.url || "#"}
-                                    className={`w-12 h-12 flex items-center justify-center rounded-full font-bold text-sm transition-all border ${
-                                        link.active
-                                            ? "bg-accent text-black border-accent"
-                                            : link.url
-                                            ? "bg-transparent text-gray-500 border-white/10 hover:border-white hover:text-white"
-                                            : "opacity-30 cursor-not-allowed border-transparent text-gray-600"
-                                    }`}
-                                    dangerouslySetInnerHTML={{
-                                        __html: link.label
-                                            .replace("Previous", "&laquo;")
-                                            .replace("Next", "&raquo;"),
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </MainLayout>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
     );
 }

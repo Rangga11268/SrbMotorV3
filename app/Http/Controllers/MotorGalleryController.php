@@ -8,6 +8,7 @@ use App\Models\CreditDetail;
 use App\Models\Document;
 use App\Repositories\MotorRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class MotorGalleryController extends Controller
     {
         $ids = explode(',', $request->query('ids', ''));
         $ids = array_filter($ids, fn($id) => is_numeric($id));
-        
+
         if (empty($ids)) {
             return redirect()->route('motors.index');
         }
@@ -41,7 +42,7 @@ class MotorGalleryController extends Controller
     }
 
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): \Inertia\Response|JsonResponse
     {
 
         $filters = [];
@@ -63,16 +64,26 @@ class MotorGalleryController extends Controller
         if ($request->has('max_price') && !empty($request->max_price)) {
             $filters['max_price'] = $request->max_price;
         }
-        
+
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 12);
-        
+
 
         $filterOptions = $this->motorRepository->getFilterOptions($request->get('search'));
         $brands = $filterOptions['brands'];
         $types = $filterOptions['types'];
         $years = $filterOptions['years'];
-        
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'motors' => $motors,
+                'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),
+                'brands' => $brands,
+                'types' => $types,
+                'years' => $years,
+            ]);
+        }
+
         return \Inertia\Inertia::render('Motors/Index', [
             'motors' => $motors,
             'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),
@@ -87,7 +98,7 @@ class MotorGalleryController extends Controller
     {
 
         $motor = $this->motorRepository->findById($motor->id, true);
-        
+
 
         $relatedMotors = Motor::where('brand', $motor->brand)
             ->where('id', '!=', $motor->id)
@@ -106,13 +117,13 @@ class MotorGalleryController extends Controller
     {
         return view('pages.motors.credit_calculation', compact('motor'));
     }
-    
+
 
     public function showCashOrderForm(Motor $motor): View|\Inertia\Response
     {
         return \Inertia\Inertia::render('Motors/CashOrderForm', compact('motor'));
     }
-    
+
 
     public function processCashOrder(Request $request, Motor $motor): RedirectResponse
     {
@@ -129,7 +140,7 @@ class MotorGalleryController extends Controller
         if ($request->booking_fee && $request->booking_fee >= $motor->price) {
             return back()->withErrors(['booking_fee' => 'Booking fee tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
         }
-        
+
 
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
@@ -145,7 +156,7 @@ class MotorGalleryController extends Controller
             'customer_phone' => $request->customer_phone,
             'customer_occupation' => $request->customer_occupation,
         ]);
-        
+
 
         if ($transaction->booking_fee > 0) {
             \App\Models\Installment::create([
@@ -159,7 +170,7 @@ class MotorGalleryController extends Controller
 
 
         $remainingAmount = $motor->price - ($transaction->booking_fee ?? 0);
-        
+
         if ($remainingAmount > 0) {
             \App\Models\Installment::create([
                 'transaction_id' => $transaction->id,
@@ -170,7 +181,7 @@ class MotorGalleryController extends Controller
             ]);
         }
 
-        
+
 
         try {
 
@@ -189,17 +200,17 @@ class MotorGalleryController extends Controller
             \Illuminate\Support\Facades\Log::error('WA Notification Error: ' . $e->getMessage());
         }
 
-        
+
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
             ->with('success', 'Pesanan tunai Anda telah dibuat. Silakan lanjutkan ke halaman konfirmasi.');
     }
-    
+
 
     public function showCreditOrderForm(Motor $motor): View|\Inertia\Response
     {
         return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor'));
     }
-    
+
 
     public function processCreditOrder(Request $request, Motor $motor): RedirectResponse
     {
@@ -218,7 +229,7 @@ class MotorGalleryController extends Controller
         if ($request->down_payment >= $motor->price) {
             return back()->withErrors(['down_payment' => 'Uang muka tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
         }
-        
+
 
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
@@ -233,11 +244,11 @@ class MotorGalleryController extends Controller
             'customer_phone' => $request->customer_phone,
             'customer_occupation' => $request->customer_occupation,
         ]);
-        
+
 
         $loanAmount = $motor->price - $request->down_payment;
         $monthlyInstallment = $loanAmount / $request->tenor;
-        
+
 
         CreditDetail::create([
             'transaction_id' => $transaction->id,
@@ -246,7 +257,7 @@ class MotorGalleryController extends Controller
             'monthly_installment' => $monthlyInstallment,
             'credit_status' => 'menunggu_persetujuan',
         ]);
-        
+
 
         try {
 
@@ -269,43 +280,43 @@ class MotorGalleryController extends Controller
         return redirect()->route('motors.upload-credit-documents', ['transaction' => $transaction->id])
             ->with('success', 'Pengajuan kredit berhasil dibuat. Silakan lengkapi dokumen untuk melanjutkan proses.');
     }
-    
+
 
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail', 'installments'])->findOrFail($transactionId);
-        
+
 
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this transaction');
         }
-        
+
         return \Inertia\Inertia::render('Motors/OrderConfirmation', compact('transaction'));
     }
-    
+
 
     public function showUploadCreditDocuments($transactionId): View|\Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail'])->findOrFail($transactionId);
-        
+
 
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
-        
+
         return \Inertia\Inertia::render('Motors/UploadCreditDocuments', compact('transaction'));
     }
-    
+
 
     public function uploadCreditDocuments(Request $request, $transactionId)
     {
         $transaction = Transaction::with(['creditDetail'])->findOrFail($transactionId);
-        
+
 
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
-        
+
         $request->validate([
             'documents.KTP' => 'required|array|min:1',
             'documents.KTP.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -335,7 +346,7 @@ class MotorGalleryController extends Controller
             'documents.LAINNYA.*.mimes' => 'File tambahan harus berupa file gambar (jpg, jpeg, png) atau PDF',
             'documents.LAINNYA.*.max' => 'Ukuran file tambahan tidak boleh lebih dari 2MB',
         ]);
-        
+
 
         foreach ($request->file('documents', []) as $docType => $files) {
             if (is_array($files)) {
@@ -343,7 +354,7 @@ class MotorGalleryController extends Controller
                     if ($file) {
 
                         $path = $file->store('credit-documents/' . $transaction->id, 'public');
-                        
+
 
                         Document::create([
                             'credit_detail_id' => $transaction->creditDetail->id,
@@ -355,30 +366,30 @@ class MotorGalleryController extends Controller
                 }
             }
         }
-        
+
 
         $transaction->update(['status' => 'menunggu_persetujuan']);
         if ($transaction->creditDetail) {
             $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
         }
-        
+
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
             ->with('success', 'Dokumen berhasil diunggah. Pengajuan kredit Anda sedang dalam proses review.');
     }
-    
+
 
     public function showDocumentManagement($transactionId): View|\Inertia\Response
     {
         $transaction = Transaction::with(['motor', 'creditDetail', 'creditDetail.documents'])->findOrFail($transactionId);
-        
+
 
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
             abort(403, 'Unauthorized access to this transaction');
         }
-        
+
         return \Inertia\Inertia::render('Motors/DocumentManagement', compact('transaction'));
     }
-    
+
 
     public function updateDocuments(Request $request, $transactionId)
     {
@@ -460,7 +471,7 @@ class MotorGalleryController extends Controller
                 ->with('info', 'Tidak ada dokumen baru yang diunggah.');
         }
     }
-    
+
 
     public function showUserTransactions()
     {
@@ -468,7 +479,7 @@ class MotorGalleryController extends Controller
         if (!Auth::check()) {
             abort(403, 'Anda harus login terlebih dahulu untuk mengakses halaman ini.');
         }
-        
+
         $transactions = Transaction::with(['motor', 'creditDetail'])
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')

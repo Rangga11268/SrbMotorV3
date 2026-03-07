@@ -1,8 +1,11 @@
 import React from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
+import Navbar from "@/Components/Public/Navbar";
+import Footer from "@/Components/Public/Footer";
+import Button from "@/Components/UI/Button";
+import Card, { CardBody } from "@/Components/UI/Card";
+import Input, { Label, ErrorMessage } from "@/Components/UI/Input";
 import {
-    CreditCard,
     User,
     Phone,
     Briefcase,
@@ -14,10 +17,13 @@ import {
     Zap,
     MessageSquare,
     Wallet,
+    CreditCard,
+    ShieldCheck,
+    ChevronLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function CashOrderForm({ motor }) {
+export default function CashOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
         customer_name: "",
         customer_phone: "",
@@ -37,167 +43,219 @@ export default function CashOrderForm({ motor }) {
 
     const submit = (e) => {
         e.preventDefault();
-        if (data.booking_fee >= motor.price) {
-            alert("Booking fee tidak boleh berbeda dari harga motor.");
-            return;
-        }
         post(route("motors.process-cash-order", motor.id));
     };
 
     return (
-        <MainLayout title={`Order Tunai - ${motor.name}`}>
-            <div className="bg-surface-dark min-h-screen text-white pt-20">
-                {/* Fixed Back Button */}
-                <div className="fixed top-24 left-4 z-50 lg:left-8">
-                    <Link
-                        href={route("motors.show", motor.id)}
-                        className="w-12 h-12 bg-black/50 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all duration-300 group"
-                    >
-                        <ArrowLeft
-                            size={20}
-                            className="group-hover:-translate-x-1 transition-transform"
-                        />
-                    </Link>
-                </div>
+        <div className="min-h-screen flex flex-col bg-gray-50/50">
+            <Head title={`Beli Cash - ${motor.name}`} />
+            <Navbar auth={auth} />
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
-                    {/* LEFT: VISUAL SUMMARY */}
-                    <div className="relative hidden lg:flex flex-col justify-center items-center bg-zinc-900 overflow-hidden p-12">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-accent/5 to-transparent z-0"></div>
-
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.8 }}
-                            className="relative z-10 w-full max-w-lg"
+            <main className="flex-grow pt-24 pb-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    {/* Header */}
+                    <div className="mb-8 flex items-center justify-between">
+                        <Link 
+                            href={route("motors.show", motor.id)}
+                            className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
                         >
-                            <h2 className="text-[10vw] font-display font-black text-white/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap select-none">
-                                TUNAI
-                            </h2>
-                            <img
-                                src={`/storage/${motor.image_path}`}
-                                alt={motor.name}
-                                className="w-full object-contain drop-shadow-2xl relative z-20"
-                            />
-                        </motion.div>
-
-                        <div className="relative z-10 mt-12 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full max-w-md">
-                            <h3 className="text-2xl font-bold font-display uppercase tracking-wider mb-1">
-                                {motor.name}
-                            </h3>
-                            <p className="text-accent font-bold text-xl mb-6">
-                                {formatCurrency(motor.price)}
-                            </p>
-
-                            <div className="grid grid-cols-2 gap-4 text-sm text-gray-400">
-                                <div className="flex items-center gap-2">
-                                    <Calendar
-                                        size={14}
-                                        className="text-accent"
-                                    />{" "}
-                                    {motor.year}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Zap size={14} className="text-accent" />{" "}
-                                    {motor.type}
-                                </div>
-                            </div>
-                        </div>
+                            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            Kembali ke Detail
+                        </Link>
                     </div>
 
-                    {/* RIGHT: COMMAND CENTER FORM */}
-                    <div className="relative p-6 lg:p-12 xl:p-20 flex flex-col justify-center">
-                        <div className="max-w-xl mx-auto w-full">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="mb-10"
-                            >
-                                <h1 className="text-4xl md:text-5xl font-display font-black mb-2">
-                                    ORDER{" "}
-                                    <span className="text-accent">AMAN</span>
-                                </h1>
-                                <p className="text-gray-400">
-                                    Lengkapi detail pembelian tunai Anda.
-                                </p>
-                            </motion.div>
-
-                            <form onSubmit={submit} className="space-y-6">
-                                {/* Personal Details */}
-                                <div className="space-y-6">
-                                    <div className="group">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                            Nama Lengkap
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="text"
-                                                value={data.customer_name}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "customer_name",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
-                                                placeholder="Masukkan nama lengkap"
-                                                required
-                                            />
-                                            <User
-                                                size={18}
-                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
-                                            />
-                                        </div>
-                                        {errors.customer_name && (
-                                            <p className="text-red-500 text-xs mt-1">
-                                                {errors.customer_name}
-                                            </p>
-                                        )}
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        
+                        {/* LEFT: FORM */}
+                        <div className="lg:col-span-2 space-y-6">
+                            <Card className="border-none shadow-sm overflow-hidden">
+                                <div className="bg-blue-600 p-8 text-white relative overflow-hidden">
+                                    <div className="relative z-10">
+                                        <h1 className="text-3xl font-black mb-2">Formulir Pembelian Tunai</h1>
+                                        <p className="text-blue-100 font-medium">Lengkapi data diri Anda untuk proses transaksi yang cepat dan aman.</p>
                                     </div>
+                                    <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                                </div>
+                                
+                                <CardBody className="p-8">
+                                    <form onSubmit={submit} className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_name">Nama Lengkap</Label>
+                                                <div className="relative">
+                                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_name"
+                                                        type="text"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="Sesuai KTP"
+                                                        value={data.customer_name}
+                                                        onChange={e => setData("customer_name", e.target.value)}
+                                                    />
+                                                </div>
+                                                {errors.customer_name && <ErrorMessage message={errors.customer_name} />}
+                                            </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="group">
-                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                                Nomor Telepon
-                                            </label>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_phone">Nomor WhatsApp</Label>
+                                                <div className="relative">
+                                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_phone"
+                                                        type="tel"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="0812..."
+                                                        value={data.customer_phone}
+                                                        onChange={e => setData("customer_phone", e.target.value)}
+                                                    />
+                                                </div>
+                                                {errors.customer_phone && <ErrorMessage message={errors.customer_phone} />}
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="customer_occupation">Pekerjaan</Label>
                                             <div className="relative">
+                                                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                 <input
-                                                    type="tel"
-                                                    value={data.customer_phone}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "customer_phone",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
-                                                    placeholder="08..."
-                                                    required
-                                                />
-                                                <Phone
-                                                    size={18}
-                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
+                                                    id="customer_occupation"
+                                                    type="text"
+                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                    placeholder="Contoh: Karyawan Swasta"
+                                                    value={data.customer_occupation}
+                                                    onChange={e => setData("customer_occupation", e.target.value)}
                                                 />
                                             </div>
-                                            {errors.customer_phone && (
-                                                <p className="text-red-500 text-xs mt-1">
-                                                    {errors.customer_phone}
-                                                </p>
-                                            )}
+                                            {errors.customer_occupation && <ErrorMessage message={errors.customer_occupation} />}
                                         </div>
 
-                                        <div className="group">
-                                            <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                                Pekerjaan
-                                            </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    value={
-                                                        data.customer_occupation
-                                                    }
-                                                    onChange={(e) =>
-                                                        setData(
+                                        <div className="space-y-4">
+                                            <Label>Metode Pembayaran</Label>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <label className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Transfer Bank" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        className="sr-only"
+                                                        value="Transfer Bank"
+                                                        onChange={e => setData("payment_method", e.target.value)}
+                                                    />
+                                                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mr-4 text-blue-600 border border-gray-100">
+                                                        <CreditCard className="w-5 h-5" />
+                                                    </div>
+                                                    <div className="flex-grow">
+                                                        <p className="font-bold text-gray-900">Transfer Bank</p>
+                                                        <p className="text-xs text-gray-500">Virtual Account / TF Otomatis</p>
+                                                    </div>
+                                                    {data.payment_method === "Transfer Bank" && <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />}
+                                                </label>
+
+                                                <label className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Tunai di Toko" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        className="sr-only"
+                                                        value="Tunai di Toko"
+                                                        onChange={e => setData("payment_method", e.target.value)}
+                                                    />
+                                                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mr-4 text-blue-600 border border-gray-100">
+                                                        <Wallet className="w-5 h-5" />
+                                                    </div>
+                                                    <div className="flex-grow">
+                                                        <p className="font-bold text-gray-900">Bayar di Tempat</p>
+                                                        <p className="text-xs text-gray-500">Cek unit lalu bayar langsung</p>
+                                                    </div>
+                                                    {data.payment_method === "Tunai di Toko" && <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />}
+                                                </label>
+                                            </div>
+                                            {errors.payment_method && <ErrorMessage message={errors.payment_method} />}
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="notes">Catatan Tambahan (Opsional)</Label>
+                                            <textarea
+                                                id="notes"
+                                                rows="4"
+                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 resize-none"
+                                                placeholder="Berikan info tambahan jika diperlukan..."
+                                                value={data.notes}
+                                                onChange={e => setData("notes", e.target.value)}
+                                            ></textarea>
+                                        </div>
+
+                                        <div className="pt-6 border-t border-gray-100">
+                                            <Button 
+                                                type="submit" 
+                                                fullWidth 
+                                                size="lg" 
+                                                disabled={processing}
+                                                className="h-14 text-lg shadow-lg shadow-blue-200"
+                                            >
+                                                {processing ? "Memproses..." : "Ajukan Order Sekarang"}
+                                            </Button>
+                                            <p className="mt-4 text-center text-xs text-gray-400 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
+                                                <ShieldCheck className="w-4 h-4 text-green-500" /> Transaksi Terenkripsi & Aman
+                                            </p>
+                                        </div>
+                                    </form>
+                                </CardBody>
+                            </Card>
+                        </div>
+
+                        {/* RIGHT: UNIT RECAP */}
+                        <div className="space-y-6">
+                            <Card className="border-none shadow-sm sticky top-28 overflow-hidden">
+                                <CardBody className="p-0">
+                                    <div className="h-48 bg-gray-200 relative">
+                                        <img 
+                                            src={motor.image_path ? `/storage/${motor.image_path}` : "/images/placeholder-motor.jpg"} 
+                                            alt={motor.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                        <div className="absolute bottom-4 left-4">
+                                            <p className="text-white/80 text-xs font-bold uppercase tracking-widest">{motor.brand}</p>
+                                            <h3 className="text-white text-xl font-black">{motor.name}</h3>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="p-6 space-y-4">
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                                            <span className="text-gray-500 font-medium">Harga Unit</span>
+                                            <span className="font-bold text-gray-900">{formatCurrency(motor.price)}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                                            <span className="text-gray-500 font-medium">Tipe</span>
+                                            <span className="font-bold text-gray-900">{motor.type}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                                            <span className="text-gray-500 font-medium">Tahun</span>
+                                            <span className="font-bold text-gray-900">{motor.year}</span>
+                                        </div>
+                                        <div className="pt-4 mt-2">
+                                            <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-start gap-3">
+                                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0 shadow-sm shadow-blue-100">
+                                                    <Info className="w-4 h-4" />
+                                                </div>
+                                                <p className="text-xs leading-relaxed text-blue-800 font-medium">
+                                                    Order ini bersifat <span className="font-bold">booking unit</span>. Admin kami akan menghubungi Anda via WhatsApp setelah formulir dikirim.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CardBody>
+                            </Card>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+
+            <Footer />
+        </div>
+    );
+}
                                                             "customer_occupation",
                                                             e.target.value
                                                         )

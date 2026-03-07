@@ -1,6 +1,10 @@
 import React from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
+import Navbar from "@/Components/Public/Navbar";
+import Footer from "@/Components/Public/Footer";
+import Button from "@/Components/UI/Button";
+import Card, { CardBody } from "@/Components/UI/Card";
+import Badge from "@/Components/UI/Badge";
 import { motion } from "framer-motion";
 import {
     Calendar,
@@ -19,21 +23,23 @@ import {
     MapPin,
     PenTool,
     Activity,
+    ChevronRight,
+    ArrowRight,
+    Phone,
+    Clock,
+    Tag,
 } from "lucide-react";
-import ComparisonButton from "@/Components/ComparisonButton";
 
 export default function Show({ motor, relatedMotors }) {
     const { auth } = usePage().props;
 
     const openWhatsApp = (e) => {
         e.preventDefault();
-        const phoneNumber = "628978638849";
+        const phoneNumber = "6281234567890";
         const message = encodeURIComponent(
             `Halo SRB Motors, saya tertarik dengan unit ${
                 motor.name
-            } (Rp ${new Intl.NumberFormat("id-ID").format(
-                motor.price
-            )}). Bisa minta info lebih lanjut?`
+            } (Rp ${parseFloat(motor.price).toLocaleString("id-ID")}). Bisa minta info lebih lanjut?`
         );
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
     };
@@ -61,280 +67,206 @@ export default function Show({ motor, relatedMotors }) {
 
     const getSpecIcon = (key) => {
         const iconMap = {
-            kilometer: <Gauge size={18} />,
-            transmission: <Cpu size={18} />,
-            color: <PenTool size={18} />,
-            condition: <ShieldCheck size={18} />,
-            plate_number: <MapPin size={18} />,
+            kilometer: <Gauge className="w-5 h-5" />,
+            transmission: <Cpu className="w-5 h-5" />,
+            color: <PenTool className="w-5 h-5" />,
+            condition: <ShieldCheck className="w-5 h-5" />,
+            plate_number: <MapPin className="w-5 h-5" />,
         };
-        return iconMap[key] || <Zap size={18} />;
+        return iconMap[key] || <Zap className="w-5 h-5" />;
     };
 
     return (
-        <MainLayout title={motor.name}>
-            <div className="bg-surface-dark min-h-screen text-white pt-20">
-                {/* BACK & SHARE */}
-                <div className="fixed top-24 left-4 z-40 lg:left-8">
-                    <Link
-                        href={route("motors.index")}
-                        className="w-12 h-12 bg-black/50 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-accent hover:text-black transition-all duration-300"
-                    >
-                        <ArrowLeft size={20} />
-                    </Link>
+        <div className="min-h-screen flex flex-col bg-white">
+            <Head title={`${motor.name} - SRB Motors`} />
+            <Navbar auth={auth} />
+
+            <main className="flex-grow pt-24 pb-20">
+                {/* BREADCRUMBS */}
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                        <Link href="/" className="hover:text-blue-600">Home</Link>
+                        <ChevronRight className="w-4 h-4" />
+                        <Link href={route("motors.index")} className="hover:text-blue-600">Katalog</Link>
+                        <ChevronRight className="w-4 h-4" />
+                        <span className="text-gray-900 line-clamp-1">{motor.name}</span>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2">
-                    {/* LEFT COLUMN - IMMERSIVE IMAGE */}
-                    <div className="relative h-[50vh] lg:h-screen lg:sticky lg:top-0 bg-surface-dark overflow-hidden flex items-center justify-center">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-800/50 to-surface-dark z-0"></div>
-
-                        {/* Huge Background Text */}
-                        <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-display font-black text-white/5 whitespace-nowrap z-0 select-none">
-                            {motor.brand}
-                        </h1>
-
-                        <motion.img
-                            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            transition={{ duration: 0.8, type: "spring" }}
-                            src={`/storage/${motor.image_path}`}
-                            alt={motor.name}
-                            className="relative z-10 w-full max-w-[90%] lg:max-w-2xl object-contain drop-shadow-2xl"
-                        />
-
-                        {/* Status Badge */}
-                        <div className="absolute bottom-8 left-8 z-20">
-                            {motor.tersedia ? (
-                                <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/20 text-accent rounded-full font-bold uppercase tracking-wider text-sm">
-                                    <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>{" "}
-                                    Tersedia
-                                </span>
-                            ) : (
-                                <span className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 rounded-full font-bold uppercase tracking-wider text-sm">
-                                    <XCircle size={16} /> Terjual
-                                </span>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* RIGHT COLUMN - SCROLLABLE CONTENT */}
-                    <div className="relative z-10 p-6 lg:p-20 lg:pt-32 pb-32">
-                        {/* Header Info */}
-                        <div className="mb-12">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="flex items-center gap-4 mb-6"
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+                        
+                        {/* LEFT COLUMN - GALLERY & IMAGE */}
+                        <div className="space-y-6">
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="relative aspect-[4/3] bg-gray-100 rounded-3xl overflow-hidden shadow-sm border border-gray-100"
                             >
-                                <span className="text-gray-400 font-bold tracking-widest uppercase">
-                                    Model Tahun {motor.year}
-                                </span>
-                                <div className="h-px flex-grow bg-white/10"></div>
-                            </motion.div>
-
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="text-5xl md:text-7xl font-display font-black leading-[0.9] text-white tracking-tighter mb-6"
-                            >
-                                {motor.name}
-                            </motion.h1>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-4xl md:text-5xl font-bold text-accent mb-8 font-display"
-                            >
-                                Rp{" "}
-                                {new Intl.NumberFormat("id-ID").format(
-                                    motor.price
-                                )}
-                            </motion.div>
-
-                            <div className="flex gap-4">
-                                <ComparisonButton
-                                    motor={motor}
-                                    className="!bg-white/5 !border-white/10 hover:!bg-white/10 !text-white"
+                                <img
+                                    src={motor.image_path ? `/storage/${motor.image_path}` : "/images/placeholder-motor.jpg"}
+                                    alt={motor.name}
+                                    className="w-full h-full object-cover"
                                 />
-                                <button className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-white">
-                                    <Share2 size={20} />
-                                </button>
+                                
+                                {/* Status Badges */}
+                                <div className="absolute top-6 left-6 flex flex-col gap-3">
+                                    <Badge variant="blue" size="md" className="shadow-lg backdrop-blur-md bg-white/90">
+                                        {motor.brand}
+                                    </Badge>
+                                    <Badge variant={motor.tersedia ? "green" : "red"} size="md" className="shadow-lg backdrop-blur-md bg-white/90">
+                                        {motor.tersedia ? "Unit Tersedia" : "Unit Terjual"}
+                                    </Badge>
+                                </div>
+                            </motion.div>
+
+                            {/* Trust Badges under image */}
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="p-4 bg-blue-50 rounded-2xl flex flex-col items-center text-center gap-2">
+                                    <ShieldCheck className="w-6 h-6 text-blue-600" />
+                                    <span className="text-xs font-bold text-blue-900">Lulus Inspeksi</span>
+                                </div>
+                                <div className="p-4 bg-green-50 rounded-2xl flex flex-col items-center text-center gap-2">
+                                    <CheckCircle2 className="w-6 h-6 text-green-600" />
+                                    <span className="text-xs font-bold text-green-900">Surat Lengkap</span>
+                                </div>
+                                <div className="p-4 bg-yellow-50 rounded-2xl flex flex-col items-center text-center gap-2">
+                                    <Zap className="w-6 h-6 text-yellow-600" />
+                                    <span className="text-xs font-bold text-yellow-900">Siap Pakai</span>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Specs Grid */}
-                        <div className="mb-16">
-                            <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                <Activity className="text-accent" /> Spesifikasi
-                            </h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
-                                    <p className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-2">
-                                        Tipe
-                                    </p>
-                                    <p
-                                        className="text-lg font-bold text-white max-w-full truncate"
-                                        title={motor.type}
-                                    >
-                                        {motor.type}
-                                    </p>
+                        {/* RIGHT COLUMN - DETAILS */}
+                        <div className="space-y-10">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4 text-sm font-semibold text-blue-600 uppercase tracking-widest">
+                                    <span>{motor.brand}</span>
+                                    <span className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
+                                    <span>{motor.type}</span>
                                 </div>
-                                <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
-                                    <p className="text-gray-500 text-xs uppercase font-bold tracking-wider mb-2">
-                                        Model
-                                    </p>
-                                    <p
-                                        className="text-lg font-bold text-white max-w-full truncate"
-                                        title={motor.model}
-                                    >
-                                        {motor.model}
-                                    </p>
+                                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+                                    {motor.name}
+                                </h1>
+                                <div className="flex items-center gap-6">
+                                    <div className="text-3xl font-black text-blue-600">
+                                        Rp {parseFloat(motor.price).toLocaleString("id-ID")}
+                                    </div>
+                                    <Badge variant="gray" size="md">Tahun {motor.year}</Badge>
                                 </div>
+                            </div>
 
-                                {motor.specifications &&
-                                    motor.specifications.map((spec, i) => (
-                                        <div
-                                            key={i}
-                                            className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5 hover:border-accent/30 transition-colors group"
-                                        >
-                                            <div className="flex items-center gap-2 mb-2 text-gray-500 group-hover:text-accent transition-colors">
-                                                {getSpecIcon(spec.spec_key)}
-                                                <span className="text-xs uppercase font-bold tracking-wider">
-                                                    {formatSpecKey(
-                                                        spec.spec_key
-                                                    )}
-                                                </span>
-                                            </div>
-                                            <p className="text-white font-bold">
-                                                {spec.spec_value}
-                                            </p>
+                            {/* CTAs */}
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                {motor.tersedia ? (
+                                    <>
+                                        <div className="flex-grow">
+                                            <Link href={route("motors.cash-order", motor.id)}>
+                                                <Button fullWidth size="lg" className="h-14 text-lg">
+                                                    <ShoppingCart className="w-5 h-5 mr-2" /> Beli Cash
+                                                </Button>
+                                            </Link>
                                         </div>
-                                    ))}
-                            </div>
-                        </div>
-
-                        {/* Description */}
-                        <div className="mb-20">
-                            <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                <FileText className="text-accent" /> Detail
-                            </h3>
-                            <div className="prose prose-invert prose-lg text-gray-400">
-                                <p>
-                                    {motor.details ||
-                                        "Belum ada deskripsi detail untuk unit ini."}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Related Section */}
-                        {relatedMotors.length > 0 && (
-                            <div className="border-t border-white/10 pt-12">
-                                <h3 className="text-2xl font-display font-bold text-white mb-8">
-                                    Unit Terkait
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {relatedMotors.map((related) => (
-                                        <Link
-                                            key={related.id}
-                                            href={route(
-                                                "motors.show",
-                                                related.id
-                                            )}
-                                            className="block group"
-                                        >
-                                            <div className="bg-zinc-900 border border-white/5 rounded-2xl p-4 flex gap-4 hover:border-accent/50 transition-colors">
-                                                <div className="w-24 h-24 bg-zinc-800 rounded-lg overflow-hidden shrink-0">
-                                                    <img
-                                                        src={`/storage/${related.image_path}`}
-                                                        alt={related.name}
-                                                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
-                                                    />
-                                                </div>
-                                                <div className="flex flex-col justify-center">
-                                                    <h4 className="font-bold text-white group-hover:text-accent transition-colors line-clamp-1">
-                                                        {related.name}
-                                                    </h4>
-                                                    <p className="text-gray-500 text-sm mb-2">
-                                                        {related.year} •{" "}
-                                                        {related.brand}
-                                                    </p>
-                                                    <p className="font-bold text-white">
-                                                        Rp{" "}
-                                                        {new Intl.NumberFormat(
-                                                            "id-ID"
-                                                        ).format(related.price)}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* STICKY ACQUISITION BAR */}
-                <div className="fixed bottom-0 left-0 w-full z-50 p-4 pb-6 lg:p-6 bg-surface-dark/80 backdrop-blur-xl border-t border-white/10">
-                    <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div className="hidden md:block">
-                            <p className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">
-                                Harga Total
-                            </p>
-                            <p className="text-3xl font-display font-bold text-white">
-                                Rp{" "}
-                                {new Intl.NumberFormat("id-ID").format(
-                                    motor.price
+                                        <div className="flex-grow">
+                                            <Link href={route("motors.credit-order", motor.id)}>
+                                                <Button fullWidth size="lg" variant="secondary" className="h-14 text-lg border-2">
+                                                    <FileText className="w-5 h-5 mr-2" /> Ajukan Kredit
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <Button fullWidth size="lg" disabled className="h-14 opacity-50 grayscale cursor-not-allowed">
+                                        <XCircle className="w-5 h-5 mr-2" /> Unit Tidak Tersedia
+                                    </Button>
                                 )}
-                            </p>
-                        </div>
+                            </div>
 
-                        <div className="flex w-full md:w-auto gap-3">
-                            <button
+                            <button 
                                 onClick={openWhatsApp}
-                                className="flex-1 md:flex-none px-6 py-4 bg-white/5 border border-white/10 text-white font-bold rounded-xl hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                                className="w-full h-14 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg shadow-green-100"
                             >
-                                <MessageCircle size={20} />{" "}
-                                <span className="hidden sm:inline">
-                                    WhatsApp
-                                </span>
+                                <Phone className="w-5 h-5 fill-current" /> Tanya Admin via WhatsApp
                             </button>
 
-                            {auth.user ? (
-                                <>
-                                    <Link
-                                        href={route(
-                                            "motors.credit-order",
-                                            motor.id
-                                        )}
-                                        className="flex-1 md:flex-none px-8 py-4 bg-zinc-800 text-white border border-white/10 font-bold rounded-xl hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        Credit
-                                    </Link>
-                                    <Link
-                                        href={route(
-                                            "motors.cash-order",
-                                            motor.id
-                                        )}
-                                        className="flex-[2] md:flex-none px-10 py-4 bg-accent text-black font-bold rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(190,242,100,0.3)] hover:shadow-[0_0_30px_rgba(190,242,100,0.5)]"
-                                    >
-                                        <ShoppingCart size={20} /> Beli Tunai
-                                    </Link>
-                                </>
-                            ) : (
-                                <Link
-                                    href={route("login")}
-                                    className="flex-[2] md:flex-none px-12 py-4 bg-accent text-black font-bold rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(190,242,100,0.3)]"
-                                >
-                                    Masuk untuk Membeli
-                                </Link>
+                            {/* SPECIFICATIONS GRID */}
+                            <div className="space-y-6 pt-8 border-t border-gray-100">
+                                <h3 className="text-xl font-bold text-gray-900">Spesifikasi Kendaraan</h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {motor.specifications && Object.entries(motor.specifications_array || {}).map(([key, value]) => (
+                                        <div key={key} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 group hover:bg-white hover:border-blue-100 hover:shadow-md transition-all">
+                                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                                {getSpecIcon(key)}
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{formatSpecKey(key)}</p>
+                                                <p className="font-bold text-gray-900">{value || "-"}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* DESCRIPTION */}
+                            {motor.details && (
+                                <div className="space-y-4 pt-8 border-t border-gray-100">
+                                    <h3 className="text-xl font-bold text-gray-900">Deskripsi Tambahan</h3>
+                                    <div className="prose prose-blue max-w-none text-gray-600 leading-relaxed bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                        {motor.details}
+                                    </div>
+                                </div>
                             )}
+
                         </div>
                     </div>
                 </div>
-            </div>
-        </MainLayout>
+
+                {/* RELATED MOTORS */}
+                {relatedMotors && relatedMotors.length > 0 && (
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-32">
+                        <div className="flex items-center justify-between mb-12">
+                            <div>
+                                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Unit Terkait</h2>
+                                <p className="text-gray-500">Mungkin Anda juga tertarik dengan unit ini</p>
+                            </div>
+                            <Link href={route("motors.index")}>
+                                <Button variant="ghost" className="group">
+                                    Lihat Semua <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </Button>
+                            </Link>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {relatedMotors.map((m) => (
+                                <Link key={m.id} href={route("motors.show", m.id)}>
+                                    <Card hoverable className="overflow-hidden border border-gray-100">
+                                        <div className="relative h-48 bg-gray-100 overflow-hidden">
+                                            <img 
+                                                src={m.image_path ? `/storage/${m.image_path}` : "/images/placeholder-motor.jpg"} 
+                                                alt={m.name}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
+                                            <div className="absolute top-3 right-3">
+                                                <Badge variant="blue" size="sm" className="bg-white/90 backdrop-blur-sm">{m.brand}</Badge>
+                                            </div>
+                                        </div>
+                                        <CardBody className="p-4 space-y-3">
+                                            <h4 className="font-bold text-gray-900 line-clamp-1">{m.name}</h4>
+                                            <div className="flex items-center justify-between">
+                                                <p className="text-blue-600 font-extrabold text-lg">
+                                                    Rp {parseFloat(m.price).toLocaleString("id-ID")}
+                                                </p>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </main>
+
+            <Footer />
+        </div>
     );
 }
