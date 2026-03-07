@@ -136,7 +136,7 @@ export default function Navbar({ auth }) {
                                                     </p>
                                                 </div>
                                                 <Link
-                                                    href={route("dashboard")}
+                                                    href={route("profile.show")}
                                                     className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                                                 >
                                                     <LayoutDashboard className="w-4 h-4" />
@@ -253,7 +253,7 @@ export default function Navbar({ auth }) {
                                         </div>
                                     </div>
                                     <Link
-                                        href={route("dashboard")}
+                                        href={route("profile.show")}
                                         className="block w-full"
                                     >
                                         <Button fullWidth size="lg">

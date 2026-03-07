@@ -152,7 +152,7 @@ export default function Home({ auth, popularMotors = [] }) {
 
                             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
                                 <img
-                                    src="https://images.unsplash.com/photo-1558981403-c5f91cbba527?q=80&w=2070&auto=format&fit=crop"
+                                    src="/assets/img/banner.png"
                                     alt="SRB Motors Hero"
                                     className="w-full h-full object-cover"
                                 />

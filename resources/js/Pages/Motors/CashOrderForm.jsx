@@ -53,10 +53,9 @@ export default function CashOrderForm({ motor, auth }) {
 
             <main className="flex-grow pt-24 pb-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    
                     {/* Header */}
                     <div className="mb-8 flex items-center justify-between">
-                        <Link 
+                        <Link
                             href={route("motors.show", motor.id)}
                             className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
                         >
@@ -66,23 +65,32 @@ export default function CashOrderForm({ motor, auth }) {
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
-                        
                         {/* LEFT: FORM */}
                         <div className="lg:col-span-2 space-y-6">
                             <Card className="border-none shadow-sm overflow-hidden">
                                 <div className="bg-blue-600 p-8 text-white relative overflow-hidden">
                                     <div className="relative z-10">
-                                        <h1 className="text-3xl font-black mb-2">Formulir Pembelian Tunai</h1>
-                                        <p className="text-blue-100 font-medium">Lengkapi data diri Anda untuk proses transaksi yang cepat dan aman.</p>
+                                        <h1 className="text-3xl font-black mb-2">
+                                            Formulir Pembelian Tunai
+                                        </h1>
+                                        <p className="text-blue-100 font-medium">
+                                            Lengkapi data diri Anda untuk proses
+                                            transaksi yang cepat dan aman.
+                                        </p>
                                     </div>
                                     <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                                 </div>
-                                
+
                                 <CardBody className="p-8">
-                                    <form onSubmit={submit} className="space-y-8">
+                                    <form
+                                        onSubmit={submit}
+                                        className="space-y-8"
+                                    >
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_name">Nama Lengkap</Label>
+                                                <Label htmlFor="customer_name">
+                                                    Nama Lengkap
+                                                </Label>
                                                 <div className="relative">
                                                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                     <input
@@ -90,15 +98,30 @@ export default function CashOrderForm({ motor, auth }) {
                                                         type="text"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="Sesuai KTP"
-                                                        value={data.customer_name}
-                                                        onChange={e => setData("customer_name", e.target.value)}
+                                                        value={
+                                                            data.customer_name
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "customer_name",
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                     />
                                                 </div>
-                                                {errors.customer_name && <ErrorMessage message={errors.customer_name} />}
+                                                {errors.customer_name && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.customer_name
+                                                        }
+                                                    />
+                                                )}
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_phone">Nomor WhatsApp</Label>
+                                                <Label htmlFor="customer_phone">
+                                                    Nomor WhatsApp
+                                                </Label>
                                                 <div className="relative">
                                                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                     <input
@@ -106,16 +129,31 @@ export default function CashOrderForm({ motor, auth }) {
                                                         type="tel"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="0812..."
-                                                        value={data.customer_phone}
-                                                        onChange={e => setData("customer_phone", e.target.value)}
+                                                        value={
+                                                            data.customer_phone
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "customer_phone",
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                     />
                                                 </div>
-                                                {errors.customer_phone && <ErrorMessage message={errors.customer_phone} />}
+                                                {errors.customer_phone && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.customer_phone
+                                                        }
+                                                    />
+                                                )}
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="customer_occupation">Pekerjaan</Label>
+                                            <Label htmlFor="customer_occupation">
+                                                Pekerjaan
+                                            </Label>
                                             <div className="relative">
                                                 <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                 <input
@@ -123,79 +161,138 @@ export default function CashOrderForm({ motor, auth }) {
                                                     type="text"
                                                     className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                     placeholder="Contoh: Karyawan Swasta"
-                                                    value={data.customer_occupation}
-                                                    onChange={e => setData("customer_occupation", e.target.value)}
+                                                    value={
+                                                        data.customer_occupation
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "customer_occupation",
+                                                            e.target.value,
+                                                        )
+                                                    }
                                                 />
                                             </div>
-                                            {errors.customer_occupation && <ErrorMessage message={errors.customer_occupation} />}
+                                            {errors.customer_occupation && (
+                                                <ErrorMessage
+                                                    message={
+                                                        errors.customer_occupation
+                                                    }
+                                                />
+                                            )}
                                         </div>
 
                                         <div className="space-y-4">
                                             <Label>Metode Pembayaran</Label>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <label className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Transfer Bank" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}>
+                                                <label
+                                                    className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Transfer Bank" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}
+                                                >
                                                     <input
                                                         type="radio"
                                                         name="payment_method"
                                                         className="sr-only"
                                                         value="Transfer Bank"
-                                                        onChange={e => setData("payment_method", e.target.value)}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "payment_method",
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                     />
                                                     <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mr-4 text-blue-600 border border-gray-100">
                                                         <CreditCard className="w-5 h-5" />
                                                     </div>
                                                     <div className="flex-grow">
-                                                        <p className="font-bold text-gray-900">Transfer Bank</p>
-                                                        <p className="text-xs text-gray-500">Virtual Account / TF Otomatis</p>
+                                                        <p className="font-bold text-gray-900">
+                                                            Transfer Bank
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">
+                                                            Virtual Account / TF
+                                                            Otomatis
+                                                        </p>
                                                     </div>
-                                                    {data.payment_method === "Transfer Bank" && <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />}
+                                                    {data.payment_method ===
+                                                        "Transfer Bank" && (
+                                                        <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />
+                                                    )}
                                                 </label>
 
-                                                <label className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Tunai di Toko" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}>
+                                                <label
+                                                    className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Tunai di Toko" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}
+                                                >
                                                     <input
                                                         type="radio"
                                                         name="payment_method"
                                                         className="sr-only"
                                                         value="Tunai di Toko"
-                                                        onChange={e => setData("payment_method", e.target.value)}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "payment_method",
+                                                                e.target.value,
+                                                            )
+                                                        }
                                                     />
                                                     <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mr-4 text-blue-600 border border-gray-100">
                                                         <Wallet className="w-5 h-5" />
                                                     </div>
                                                     <div className="flex-grow">
-                                                        <p className="font-bold text-gray-900">Bayar di Tempat</p>
-                                                        <p className="text-xs text-gray-500">Cek unit lalu bayar langsung</p>
+                                                        <p className="font-bold text-gray-900">
+                                                            Bayar di Tempat
+                                                        </p>
+                                                        <p className="text-xs text-gray-500">
+                                                            Cek unit lalu bayar
+                                                            langsung
+                                                        </p>
                                                     </div>
-                                                    {data.payment_method === "Tunai di Toko" && <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />}
+                                                    {data.payment_method ===
+                                                        "Tunai di Toko" && (
+                                                        <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />
+                                                    )}
                                                 </label>
                                             </div>
-                                            {errors.payment_method && <ErrorMessage message={errors.payment_method} />}
+                                            {errors.payment_method && (
+                                                <ErrorMessage
+                                                    message={
+                                                        errors.payment_method
+                                                    }
+                                                />
+                                            )}
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="notes">Catatan Tambahan (Opsional)</Label>
+                                            <Label htmlFor="notes">
+                                                Catatan Tambahan (Opsional)
+                                            </Label>
                                             <textarea
                                                 id="notes"
                                                 rows="4"
                                                 className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 resize-none"
                                                 placeholder="Berikan info tambahan jika diperlukan..."
                                                 value={data.notes}
-                                                onChange={e => setData("notes", e.target.value)}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "notes",
+                                                        e.target.value,
+                                                    )
+                                                }
                                             ></textarea>
                                         </div>
 
                                         <div className="pt-6 border-t border-gray-100">
-                                            <Button 
-                                                type="submit" 
-                                                fullWidth 
-                                                size="lg" 
+                                            <Button
+                                                type="submit"
+                                                fullWidth
+                                                size="lg"
                                                 disabled={processing}
                                                 className="h-14 text-lg shadow-lg shadow-blue-200"
                                             >
-                                                {processing ? "Memproses..." : "Ajukan Order Sekarang"}
+                                                {processing
+                                                    ? "Memproses..."
+                                                    : "Ajukan Order Sekarang"}
                                             </Button>
                                             <p className="mt-4 text-center text-xs text-gray-400 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
-                                                <ShieldCheck className="w-4 h-4 text-green-500" /> Transaksi Terenkripsi & Aman
+                                                <ShieldCheck className="w-4 h-4 text-green-500" />{" "}
+                                                Transaksi Terenkripsi & Aman
                                             </p>
                                         </div>
                                     </form>
@@ -208,30 +305,50 @@ export default function CashOrderForm({ motor, auth }) {
                             <Card className="border-none shadow-sm sticky top-28 overflow-hidden">
                                 <CardBody className="p-0">
                                     <div className="h-48 bg-gray-200 relative">
-                                        <img 
-                                            src={motor.image_path ? `/storage/${motor.image_path}` : "/images/placeholder-motor.jpg"} 
+                                        <img
+                                            src={
+                                                motor.image_path
+                                                    ? `/storage/${motor.image_path}`
+                                                    : "/images/placeholder-motor.jpg"
+                                            }
                                             alt={motor.name}
                                             className="w-full h-full object-cover"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                         <div className="absolute bottom-4 left-4">
-                                            <p className="text-white/80 text-xs font-bold uppercase tracking-widest">{motor.brand}</p>
-                                            <h3 className="text-white text-xl font-black">{motor.name}</h3>
+                                            <p className="text-white/80 text-xs font-bold uppercase tracking-widest">
+                                                {motor.brand}
+                                            </p>
+                                            <h3 className="text-white text-xl font-black">
+                                                {motor.name}
+                                            </h3>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="p-6 space-y-4">
                                         <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">Harga Unit</span>
-                                            <span className="font-bold text-gray-900">{formatCurrency(motor.price)}</span>
+                                            <span className="text-gray-500 font-medium">
+                                                Harga Unit
+                                            </span>
+                                            <span className="font-bold text-gray-900">
+                                                {formatCurrency(motor.price)}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">Tipe</span>
-                                            <span className="font-bold text-gray-900">{motor.type}</span>
+                                            <span className="text-gray-500 font-medium">
+                                                Tipe
+                                            </span>
+                                            <span className="font-bold text-gray-900">
+                                                {motor.type}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">Tahun</span>
-                                            <span className="font-bold text-gray-900">{motor.year}</span>
+                                            <span className="text-gray-500 font-medium">
+                                                Tahun
+                                            </span>
+                                            <span className="font-bold text-gray-900">
+                                                {motor.year}
+                                            </span>
                                         </div>
                                         <div className="pt-4 mt-2">
                                             <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-start gap-3">
@@ -239,7 +356,14 @@ export default function CashOrderForm({ motor, auth }) {
                                                     <Info className="w-4 h-4" />
                                                 </div>
                                                 <p className="text-xs leading-relaxed text-blue-800 font-medium">
-                                                    Order ini bersifat <span className="font-bold">booking unit</span>. Admin kami akan menghubungi Anda via WhatsApp setelah formulir dikirim.
+                                                    Order ini bersifat{" "}
+                                                    <span className="font-bold">
+                                                        booking unit
+                                                    </span>
+                                                    . Admin kami akan
+                                                    menghubungi Anda via
+                                                    WhatsApp setelah formulir
+                                                    dikirim.
                                                 </p>
                                             </div>
                                         </div>
@@ -247,157 +371,11 @@ export default function CashOrderForm({ motor, auth }) {
                                 </CardBody>
                             </Card>
                         </div>
-
                     </div>
                 </div>
             </main>
 
             <Footer />
         </div>
-    );
-}
-                                                            "customer_occupation",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
-                                                    placeholder="Pekerjaan saat ini"
-                                                    required
-                                                />
-                                                <Briefcase
-                                                    size={18}
-                                                    className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
-                                                />
-                                            </div>
-                                            {errors.customer_occupation && (
-                                                <p className="text-red-500 text-xs mt-1">
-                                                    {errors.customer_occupation}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Financials */}
-                                <div className="pt-8 border-t border-white/5 space-y-6">
-                                    <div className="group">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                            Booking Fee (Opsional)
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="number"
-                                                value={data.booking_fee}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "booking_fee",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8"
-                                                placeholder="0"
-                                                min="0"
-                                            />
-                                            <DollarSign
-                                                size={18}
-                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
-                                            />
-                                        </div>
-                                        {errors.booking_fee && (
-                                            <p className="text-red-500 text-xs mt-1">
-                                                {errors.booking_fee}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="group">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                            Metode Pembayaran
-                                        </label>
-                                        <div className="relative">
-                                            <select
-                                                value={data.payment_method}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "payment_method",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8 appearance-none"
-                                                required
-                                            >
-                                                <option
-                                                    value=""
-                                                    disabled
-                                                    className="bg-zinc-900"
-                                                >
-                                                    Pilih Metode
-                                                </option>
-                                                <option
-                                                    value="online"
-                                                    className="bg-zinc-900"
-                                                >
-                                                    Pembayaran Online (VA, QRIS,
-                                                    E-Wallet)
-                                                </option>
-                                                <option
-                                                    value="cod_dealer"
-                                                    className="bg-zinc-900"
-                                                >
-                                                    Tunai di Dealer / COD
-                                                </option>
-                                            </select>
-                                            <Wallet
-                                                size={18}
-                                                className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-white transition-colors"
-                                            />
-                                        </div>
-                                        {errors.payment_method && (
-                                            <p className="text-red-500 text-xs mt-1">
-                                                {errors.payment_method}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Notes */}
-                                <div className="group">
-                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 block group-focus-within:text-accent transition-colors">
-                                        Catatan Tambahan
-                                    </label>
-                                    <div className="relative">
-                                        <textarea
-                                            value={data.notes}
-                                            onChange={(e) =>
-                                                setData("notes", e.target.value)
-                                            }
-                                            className="w-full bg-zinc-900/50 border-b border-white/10 px-0 py-4 text-lg font-bold text-white focus:border-accent focus:outline-none transition-colors pl-8 min-h-[100px] resize-none"
-                                            placeholder="Ada permintaan khusus?"
-                                        />
-                                        <MessageSquare
-                                            size={18}
-                                            className="absolute left-0 top-6 text-gray-600 group-focus-within:text-white transition-colors"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="pt-8">
-                                    <button
-                                        type="submit"
-                                        disabled={processing}
-                                        className="w-full py-5 bg-accent text-black font-display font-bold text-xl uppercase tracking-widest hover:bg-white transition-colors rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
-                                    >
-                                        <CheckCircle size={24} />
-                                        {processing
-                                            ? "Memproses..."
-                                            : "Konfirmasi Pembelian"}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </MainLayout>
     );
 }

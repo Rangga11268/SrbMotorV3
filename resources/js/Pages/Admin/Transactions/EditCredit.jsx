@@ -2,21 +2,27 @@ import React from "react";
 import { Link, useForm, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
-    ArrowLeft,
-    Save,
-    CreditCard,
-    FileText,
-    User,
-    Bike,
-    CheckCircle,
-    XCircle,
-    Clock,
-    Eye,
-    ChevronDown,
-    AlertTriangle,
-    Shield,
-    Activity,
-} from "lucide-react";
+    CCard,
+    CCardBody,
+    CCardHeader,
+    CCol,
+    CRow,
+    CButton,
+    CFormInput,
+    CFormLabel,
+    CFormTextarea,
+    CBadge,
+    CAvatar,
+    CCallout,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import {
+    cilArrowLeft,
+    cilSave,
+    cilCheckCircle,
+    cilXCircle,
+    cilFile,
+} from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
 export default function EditCredit({ transaction }) {
@@ -32,62 +38,52 @@ export default function EditCredit({ transaction }) {
     const creditStatusOptions = [
         {
             value: "menunggu_persetujuan",
-            label: "MENUNGGU PERSETUJUAN",
-            color: "text-amber-400",
-            bg: "bg-amber-500/10",
+            label: "Menunggu Persetujuan",
+            color: "warning",
             desc: "Dokumen sedang ditinjau",
         },
         {
             value: "data_tidak_valid",
-            label: "DATA TIDAK VALID",
-            color: "text-red-400",
-            bg: "bg-red-500/10",
+            label: "Data Tidak Valid",
+            color: "danger",
             desc: "Dokumen perlu diperbaiki",
         },
         {
             value: "dikirim_ke_surveyor",
-            label: "DIKIRIM KE SURVEYOR",
-            color: "text-blue-400",
-            bg: "bg-blue-500/10",
+            label: "Dikirim ke Surveyor",
+            color: "info",
             desc: "Menunggu jadwal survey",
         },
         {
             value: "jadwal_survey",
-            label: "JADWAL SURVEY",
-            color: "text-purple-400",
-            bg: "bg-purple-500/10",
+            label: "Jadwal Survey",
+            color: "primary",
             desc: "Survey telah dijadwalkan",
         },
         {
             value: "disetujui",
-            label: "DISETUJUI",
-            color: "text-green-400",
-            bg: "bg-green-500/10",
-            desc: "Kredit disetujui oleh leasing",
+            label: "Disetujui",
+            color: "success",
+            desc: "Kredit disetujui leasing",
         },
         {
             value: "ditolak",
-            label: "DITOLAK",
-            color: "text-red-400",
-            bg: "bg-red-500/10",
-            desc: "Kredit ditolak oleh leasing",
+            label: "Ditolak",
+            color: "danger",
+            desc: "Kredit ditolak leasing",
         },
     ];
 
     const handleSubmit = (e) => {
         e.preventDefault();
         put(route("admin.transactions.updateCredit", transaction.id), {
-            onSuccess: () => toast.success("STATUS KREDIT BERHASIL DIPERBARUI"),
-            onError: () => toast.error("GAGAL MEMPERBARUI STATUS"),
+            onSuccess: () => toast.success("Status kredit berhasil diperbarui"),
+            onError: () => toast.error("Gagal memperbarui status"),
         });
     };
 
     const handleQuickApprove = () => {
-        if (
-            confirm(
-                "Setujui kredit ini? Status akan berubah menjadi DISETUJUI."
-            )
-        ) {
+        if (confirm("Setujui kredit ini?")) {
             router.put(
                 route("admin.transactions.updateCredit", transaction.id),
                 {
@@ -96,15 +92,15 @@ export default function EditCredit({ transaction }) {
                     admin_notes: data.admin_notes,
                 },
                 {
-                    onSuccess: () => toast.success("KREDIT BERHASIL DISETUJUI"),
-                    onError: () => toast.error("GAGAL MENYETUJUI KREDIT"),
-                }
+                    onSuccess: () => toast.success("Kredit berhasil disetujui"),
+                    onError: () => toast.error("Gagal menyetujui kredit"),
+                },
             );
         }
     };
 
     const handleQuickReject = () => {
-        if (confirm("Tolak kredit ini? Status akan berubah menjadi DITOLAK.")) {
+        if (confirm("Tolak kredit ini?")) {
             router.put(
                 route("admin.transactions.updateCredit", transaction.id),
                 {
@@ -113,220 +109,215 @@ export default function EditCredit({ transaction }) {
                     admin_notes: data.admin_notes,
                 },
                 {
-                    onSuccess: () => toast.success("KREDIT BERHASIL DITOLAK"),
-                    onError: () => toast.error("GAGAL MENOLAK KREDIT"),
-                }
+                    onSuccess: () => toast.success("Kredit berhasil ditolak"),
+                    onError: () => toast.error("Gagal menolak kredit"),
+                },
             );
         }
     };
 
-    const formatRupiah = (number) => {
-        return new Intl.NumberFormat("id-ID", {
+    const formatRupiah = (n) =>
+        new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
             minimumFractionDigits: 0,
-        }).format(number || 0);
-    };
+        }).format(n || 0);
 
     const currentStatus = creditStatusOptions.find(
-        (opt) => opt.value === data.credit_status
+        (opt) => opt.value === data.credit_status,
     );
 
     return (
-        <AdminLayout title={`EDIT KREDIT #${transaction.id}`}>
-            <div className="max-w-7xl mx-auto space-y-8">
-                {/* Header Control */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <Link
-                        href={route("admin.transactions.show", transaction.id)}
-                        className="group flex items-center gap-3 text-white/50 hover:text-white transition-colors"
-                    >
-                        <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-blue-500 group-hover:bg-blue-500/10 transition-all">
-                            <ArrowLeft size={18} />
-                        </div>
-                        <span className="font-mono text-sm tracking-wider uppercase">
-                            KEMBALI KE DETAIL
-                        </span>
-                    </Link>
+        <AdminLayout title={`Edit Kredit #${transaction.id}`}>
+            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <Link
+                    href={route("admin.transactions.show", transaction.id)}
+                    className="btn btn-outline-secondary d-flex align-items-center gap-2"
+                >
+                    <CIcon icon={cilArrowLeft} size="sm" />
+                    Kembali
+                </Link>
+                <CBadge color="info" shape="rounded-pill" className="px-3 py-2">
+                    Mode Edit Kredit
+                </CBadge>
+            </div>
 
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest animate-pulse">
-                        <CreditCard size={14} />
-                        MODE EDIT KREDIT
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                    {/* Main Form Section */}
-                    <div className="xl:col-span-2 space-y-6">
-                        {/* Status Selection Panel */}
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="bg-zinc-900/50 backdrop-blur-md p-8 rounded-3xl border border-white/5 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-3xl -translate-y-24 translate-x-24"></div>
-
-                                <h3 className="text-xl font-bold text-white mb-8 font-display uppercase tracking-wider flex items-center gap-3">
-                                    <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
-                                    PROTOKOL STATUS KREDIT
-                                </h3>
-
-                                {/* Status Grid */}
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <CRow>
+                <CCol xl={8}>
+                    <form onSubmit={handleSubmit}>
+                        <CCard className="mb-4">
+                            <CCardHeader className="bg-transparent border-bottom">
+                                <strong>Status Kredit</strong>
+                            </CCardHeader>
+                            <CCardBody>
+                                <div className="row g-3 mb-4">
                                     {creditStatusOptions.map((opt) => (
-                                        <button
+                                        <div
+                                            className="col-md-4 col-6"
                                             key={opt.value}
-                                            type="button"
-                                            onClick={() =>
-                                                setData(
-                                                    "credit_status",
-                                                    opt.value
-                                                )
-                                            }
-                                            className={`p-4 rounded-xl border transition-all text-left group ${
-                                                data.credit_status === opt.value
-                                                    ? `${opt.bg} border-current ${opt.color} shadow-lg scale-[1.02]`
-                                                    : "bg-black/30 border-white/5 hover:border-white/20 text-white/50 hover:text-white"
-                                            }`}
                                         >
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <div
-                                                    className={`w-2 h-2 rounded-full ${
+                                            <div
+                                                role="button"
+                                                onClick={() =>
+                                                    setData(
+                                                        "credit_status",
+                                                        opt.value,
+                                                    )
+                                                }
+                                                className={`border rounded-3 p-3 h-100 text-center transition-all ${
+                                                    data.credit_status ===
+                                                    opt.value
+                                                        ? `border-${opt.color} bg-${opt.color}-subtle`
+                                                        : "border-body-secondary bg-body-tertiary"
+                                                }`}
+                                                style={{ cursor: "pointer" }}
+                                            >
+                                                <CBadge
+                                                    color={
                                                         data.credit_status ===
                                                         opt.value
-                                                            ? "bg-current"
-                                                            : "bg-white/20"
-                                                    }`}
-                                                ></div>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider">
+                                                            ? opt.color
+                                                            : "secondary"
+                                                    }
+                                                    shape="rounded-pill"
+                                                    className="mb-2"
+                                                >
                                                     {opt.label}
-                                                </span>
+                                                </CBadge>
+                                                <p
+                                                    className="text-body-secondary mb-0"
+                                                    style={{ fontSize: 11 }}
+                                                >
+                                                    {opt.desc}
+                                                </p>
                                             </div>
-                                            <p className="text-[10px] text-white/40 font-mono">
-                                                {opt.desc}
-                                            </p>
-                                        </button>
+                                        </div>
                                     ))}
                                 </div>
 
-                                {/* Approved Amount (shown when status is disetujui) */}
                                 {data.credit_status === "disetujui" && (
-                                    <div className="mb-8 p-6 rounded-xl bg-green-500/5 border border-green-500/20">
-                                        <label className="block text-[10px] font-bold text-green-400 uppercase tracking-[0.2em] mb-2 font-mono">
-                                            JUMLAH DISETUJUI LEASING
-                                        </label>
-                                        <div className="relative">
-                                            <span className="absolute left-6 top-1/2 -translate-y-1/2 text-green-500 font-mono font-bold">
-                                                Rp
-                                            </span>
-                                            <input
-                                                type="number"
-                                                value={data.approved_amount}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "approved_amount",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                className="w-full pl-14 pr-6 py-4 rounded-xl bg-black/50 border border-green-500/30 focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 text-white placeholder-white/20 font-mono text-xl font-bold transition-all"
-                                                placeholder="0"
-                                            />
-                                        </div>
-                                        <p className="text-[10px] text-white/40 font-mono mt-2">
-                                            Nominal yang disetujui oleh pihak
+                                    <div className="bg-success-subtle rounded-3 p-3 mb-4">
+                                        <CFormLabel className="fw-semibold text-success">
+                                            Jumlah Disetujui
+                                        </CFormLabel>
+                                        <CFormInput
+                                            type="number"
+                                            value={data.approved_amount}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "approved_amount",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            placeholder="0"
+                                        />
+                                        <small className="text-body-secondary">
+                                            Nominal yang disetujui pihak
                                             leasing/surveyor
-                                        </p>
+                                        </small>
                                     </div>
                                 )}
 
-                                {/* Admin Notes */}
-                                <div>
-                                    <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 font-mono">
-                                        CATATAN ADMIN
-                                    </label>
-                                    <textarea
-                                        value={data.admin_notes}
-                                        onChange={(e) =>
-                                            setData(
-                                                "admin_notes",
-                                                e.target.value
-                                            )
-                                        }
-                                        rows="3"
-                                        className="w-full px-6 py-4 rounded-xl bg-black/50 border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 text-white placeholder-white/20 font-mono transition-all"
-                                        placeholder="Catatan internal untuk proses kredit..."
-                                    />
-                                </div>
-                            </div>
+                                <CFormLabel>Catatan Admin</CFormLabel>
+                                <CFormTextarea
+                                    value={data.admin_notes}
+                                    onChange={(e) =>
+                                        setData("admin_notes", e.target.value)
+                                    }
+                                    rows={3}
+                                    placeholder="Catatan internal proses kredit..."
+                                />
+                            </CCardBody>
+                        </CCard>
 
-                            {/* Action Buttons */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <button
+                        <CRow className="g-3 mb-4">
+                            <CCol md={4}>
+                                <CButton
                                     type="button"
+                                    color="danger"
+                                    variant="outline"
+                                    className="w-100 py-2"
                                     onClick={handleQuickReject}
-                                    className="py-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 font-bold font-display uppercase tracking-wider hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2"
                                 >
-                                    <XCircle size={18} />
-                                    TOLAK KREDIT
-                                </button>
-
-                                <button
+                                    <CIcon
+                                        icon={cilXCircle}
+                                        size="sm"
+                                        className="me-1"
+                                    />
+                                    Tolak
+                                </CButton>
+                            </CCol>
+                            <CCol md={4}>
+                                <CButton
                                     type="submit"
+                                    color="primary"
+                                    className="w-100 py-2"
                                     disabled={processing}
-                                    className="py-4 rounded-xl bg-white/10 border border-white/20 text-white font-bold font-display uppercase tracking-wider hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
                                     {processing ? (
-                                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        <span className="spinner-border spinner-border-sm" />
                                     ) : (
-                                        <Save size={18} />
+                                        <CIcon
+                                            icon={cilSave}
+                                            size="sm"
+                                            className="me-1"
+                                        />
                                     )}
-                                    SIMPAN PERUBAHAN
-                                </button>
-
-                                <button
+                                    Simpan
+                                </CButton>
+                            </CCol>
+                            <CCol md={4}>
+                                <CButton
                                     type="button"
+                                    color="success"
+                                    variant="outline"
+                                    className="w-100 py-2"
                                     onClick={handleQuickApprove}
-                                    className="py-4 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 font-bold font-display uppercase tracking-wider hover:bg-green-500 hover:text-white transition-all flex items-center justify-center gap-2"
                                 >
-                                    <CheckCircle size={18} />
-                                    SETUJUI KREDIT
-                                </button>
-                            </div>
-                        </form>
-
-                        {/* Document Vault */}
-                        <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden">
-                            <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                                <h3 className="text-sm font-bold text-white flex items-center gap-2 font-display uppercase tracking-wider">
-                                    <Shield
-                                        className="text-yellow-400"
-                                        size={18}
+                                    <CIcon
+                                        icon={cilCheckCircle}
+                                        size="sm"
+                                        className="me-1"
                                     />
-                                    DOKUMEN PELANGGAN
-                                </h3>
-                                <span className="text-[10px] font-mono text-white/40">
-                                    {documents.length} DOKUMEN
-                                </span>
-                            </div>
+                                    Setujui
+                                </CButton>
+                            </CCol>
+                        </CRow>
+                    </form>
 
-                            <div className="p-6">
-                                {documents.length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        {documents.map((doc) => (
-                                            <div
-                                                key={doc.id}
-                                                className="p-4 rounded-xl bg-black/40 border border-white/5 hover:border-blue-500/50 transition-all group"
-                                            >
-                                                <div className="flex items-center gap-3 mb-3">
-                                                    <div className="p-2 rounded bg-white/5 text-blue-400 group-hover:text-white transition-colors">
-                                                        <FileText size={20} />
-                                                    </div>
-                                                    <div className="overflow-hidden">
-                                                        <div className="font-bold text-white text-xs font-display uppercase tracking-wide truncate">
+                    {/* Documents */}
+                    <CCard>
+                        <CCardHeader className="bg-transparent border-bottom d-flex justify-content-between">
+                            <strong>Dokumen Pelanggan</strong>
+                            <span className="text-body-secondary small">
+                                {documents.length} dokumen
+                            </span>
+                        </CCardHeader>
+                        <CCardBody>
+                            {documents.length > 0 ? (
+                                <CRow className="g-3">
+                                    {documents.map((doc) => (
+                                        <CCol sm={6} key={doc.id}>
+                                            <div className="border rounded-3 p-3">
+                                                <div className="d-flex align-items-center gap-2 mb-2">
+                                                    <CIcon
+                                                        icon={cilFile}
+                                                        className="text-primary"
+                                                    />
+                                                    <div>
+                                                        <div className="fw-semibold small">
                                                             {doc.document_type}
                                                         </div>
-                                                        <div className="text-[10px] text-white/40 font-mono">
+                                                        <div
+                                                            className="text-body-tertiary"
+                                                            style={{
+                                                                fontSize: 11,
+                                                            }}
+                                                        >
                                                             {new Date(
-                                                                doc.created_at
+                                                                doc.created_at,
                                                             ).toLocaleDateString(
-                                                                "id-ID"
+                                                                "id-ID",
                                                             )}
                                                         </div>
                                                     </div>
@@ -334,151 +325,131 @@ export default function EditCredit({ transaction }) {
                                                 <a
                                                     href={`/storage/${doc.file_path}`}
                                                     target="_blank"
-                                                    className="flex items-center justify-center gap-2 py-2 bg-white/5 hover:bg-blue-500/20 text-[10px] font-bold text-white/60 hover:text-blue-400 rounded transition-all uppercase tracking-wider"
+                                                    className="btn btn-sm btn-outline-primary w-100"
                                                 >
-                                                    <Eye size={12} />
-                                                    LIHAT DOKUMEN
+                                                    Lihat Dokumen
                                                 </a>
                                             </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="py-12 text-center border border-dashed border-white/10 rounded-xl">
-                                        <AlertTriangle
-                                            size={32}
-                                            className="mx-auto text-amber-500/50 mb-3"
-                                        />
-                                        <p className="text-white/30 font-mono text-xs">
-                                            BELUM ADA DOKUMEN TERUPLOAD
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        <div className="sticky top-6 space-y-6">
-                            {/* Customer Info */}
-                            <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-3xl border border-white/5">
-                                <h3 className="text-xs font-bold text-white/50 mb-4 uppercase tracking-widest font-mono flex items-center gap-2">
-                                    <User size={14} className="text-blue-400" />
-                                    DATA PELANGGAN
-                                </h3>
-
-                                <div className="text-center mb-6">
-                                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 p-[1px] mx-auto mb-3">
-                                        <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                                            <span className="text-xl font-black text-white">
-                                                {(user?.name || "U")[0]}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <h4 className="text-lg font-bold text-white">
-                                        {user?.name || "Unknown"}
-                                    </h4>
-                                    <p className="text-xs text-white/40 font-mono">
-                                        {user?.email}
-                                    </p>
+                                        </CCol>
+                                    ))}
+                                </CRow>
+                            ) : (
+                                <div className="text-center py-4 text-body-tertiary">
+                                    Belum ada dokumen terupload.
                                 </div>
+                            )}
+                        </CCardBody>
+                    </CCard>
+                </CCol>
 
-                                <div className="space-y-3 border-t border-white/5 pt-4">
-                                    <div>
-                                        <label className="text-[10px] text-white/30 font-bold uppercase tracking-wider block mb-1">
-                                            TELEPON
-                                        </label>
-                                        <div className="font-mono text-sm text-white">
+                {/* Sidebar */}
+                <CCol xl={4}>
+                    <div className="sticky-top" style={{ top: "5rem" }}>
+                        <CCard className="mb-4">
+                            <CCardHeader className="bg-transparent border-bottom">
+                                <strong>Data Pelanggan</strong>
+                            </CCardHeader>
+                            <CCardBody className="text-center">
+                                <CAvatar
+                                    color="primary"
+                                    textColor="white"
+                                    size="lg"
+                                    className="mb-2"
+                                >
+                                    {(user?.name || "U")[0]}
+                                </CAvatar>
+                                <h6 className="fw-bold mb-0">
+                                    {user?.name || "Unknown"}
+                                </h6>
+                                <p className="text-body-secondary small mb-3">
+                                    {user?.email}
+                                </p>
+                                <div className="border-top pt-3 text-start">
+                                    <div className="mb-2">
+                                        <span className="text-body-tertiary small">
+                                            Telepon:{" "}
+                                        </span>
+                                        <span>
                                             {transaction.customer_phone ||
                                                 user?.phone_number ||
                                                 "-"}
-                                        </div>
+                                        </span>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] text-white/30 font-bold uppercase tracking-wider block mb-1">
-                                            PEKERJAAN
-                                        </label>
-                                        <div className="font-mono text-sm text-white">
+                                        <span className="text-body-tertiary small">
+                                            Pekerjaan:{" "}
+                                        </span>
+                                        <span>
                                             {transaction.customer_occupation ||
                                                 "-"}
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
-                            </div>
+                            </CCardBody>
+                        </CCard>
 
-                            {/* Credit Summary */}
-                            <div className="bg-zinc-900/50 backdrop-blur-md p-6 rounded-3xl border border-white/5">
-                                <h3 className="text-xs font-bold text-white/50 mb-4 uppercase tracking-widest font-mono flex items-center gap-2">
-                                    <Activity
-                                        size={14}
-                                        className="text-green-400"
-                                    />
-                                    RINGKASAN KREDIT
-                                </h3>
-
-                                <div className="space-y-4">
-                                    <div className="p-4 rounded-xl bg-black/40 border border-white/10">
-                                        <label className="text-[10px] text-white/30 font-bold uppercase tracking-wider block mb-1">
-                                            UNIT
-                                        </label>
-                                        <div className="font-display font-bold text-white text-lg uppercase">
-                                            {motor?.name || "-"}
-                                        </div>
-                                        <div className="text-blue-400 font-mono font-bold mt-1">
-                                            {formatRupiah(motor?.price)}
-                                        </div>
+                        <CCard className="mb-4">
+                            <CCardHeader className="bg-transparent border-bottom">
+                                <strong>Ringkasan Kredit</strong>
+                            </CCardHeader>
+                            <CCardBody>
+                                <div className="bg-body-tertiary rounded-3 p-3 mb-3">
+                                    <div className="text-body-tertiary small">
+                                        Unit
                                     </div>
-
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="p-3 rounded-xl bg-black/40 border border-white/10">
-                                            <label className="text-[10px] text-white/30 font-bold uppercase tracking-wider block mb-1">
+                                    <div className="fw-bold">
+                                        {motor?.name || "-"}
+                                    </div>
+                                    <div className="text-primary fw-bold mt-1">
+                                        {formatRupiah(motor?.price)}
+                                    </div>
+                                </div>
+                                <CRow className="g-2 mb-3">
+                                    <CCol xs={6}>
+                                        <div className="bg-body-tertiary rounded-3 p-3">
+                                            <div className="text-body-tertiary small">
                                                 DP
-                                            </label>
-                                            <div className="font-mono font-bold text-white text-sm">
+                                            </div>
+                                            <div className="fw-bold">
                                                 {formatRupiah(
-                                                    credit_detail?.down_payment
+                                                    credit_detail?.down_payment,
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="p-3 rounded-xl bg-black/40 border border-white/10">
-                                            <label className="text-[10px] text-white/30 font-bold uppercase tracking-wider block mb-1">
-                                                TENOR
-                                            </label>
-                                            <div className="font-mono font-bold text-white text-sm">
-                                                {credit_detail?.tenor || 0} BLN
+                                    </CCol>
+                                    <CCol xs={6}>
+                                        <div className="bg-body-tertiary rounded-3 p-3">
+                                            <div className="text-body-tertiary small">
+                                                Tenor
+                                            </div>
+                                            <div className="fw-bold">
+                                                {credit_detail?.tenor || 0} bln
                                             </div>
                                         </div>
+                                    </CCol>
+                                </CRow>
+                                <div className="bg-primary-subtle rounded-3 p-3 mb-3">
+                                    <div className="text-primary small">
+                                        Angsuran / Bulan
                                     </div>
-
-                                    <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                                        <label className="text-[10px] text-blue-400 font-bold uppercase tracking-wider block mb-1">
-                                            ANGSURAN/BULAN
-                                        </label>
-                                        <div className="font-mono font-bold text-white text-xl">
-                                            {formatRupiah(
-                                                credit_detail?.monthly_installment
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {/* Current Status Display */}
-                                    <div
-                                        className={`p-4 rounded-xl border ${currentStatus?.bg} ${currentStatus?.color} border-current`}
-                                    >
-                                        <label className="text-[10px] font-bold uppercase tracking-wider block mb-1 opacity-70">
-                                            STATUS SAAT INI
-                                        </label>
-                                        <div className="font-display font-bold text-lg uppercase">
-                                            {currentStatus?.label ||
-                                                data.credit_status}
-                                        </div>
+                                    <div className="h5 fw-bold mb-0">
+                                        {formatRupiah(
+                                            credit_detail?.monthly_installment,
+                                        )}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                                <CBadge
+                                    color={currentStatus?.color || "secondary"}
+                                    className="w-100 py-2"
+                                >
+                                    Status:{" "}
+                                    {currentStatus?.label || data.credit_status}
+                                </CBadge>
+                            </CCardBody>
+                        </CCard>
                     </div>
-                </div>
-            </div>
+                </CCol>
+            </CRow>
         </AdminLayout>
     );
 }

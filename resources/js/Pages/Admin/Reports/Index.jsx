@@ -2,19 +2,25 @@ import React from "react";
 import { useForm, Head } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
-    Calendar,
-    Search,
-    TrendingUp,
-    DollarSign,
-    Users,
-    Briefcase,
-    ArrowRight,
-    Sparkles,
-    BarChart3,
-    PieChart,
-    Activity,
-    FileText,
-} from "lucide-react";
+    CCard,
+    CCardBody,
+    CCardHeader,
+    CCol,
+    CRow,
+    CButton,
+    CFormInput,
+    CFormLabel,
+    CBadge,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import {
+    cilChartPie,
+    cilDollar,
+    cilPeople,
+    cilSpeedometer,
+    cilCalendar,
+    cilSearch,
+} from "@coreui/icons";
 
 export default function Index() {
     const { data, setData, get, processing } = useForm({
@@ -26,55 +32,39 @@ export default function Index() {
     const reportTypes = [
         {
             id: "sales",
-            label: "ANALISIS PENJUALAN",
-            desc: "METRIK TRANSAKSI & PERFORMA PRODUK",
-            icon: TrendingUp,
-            color: "text-emerald-400",
-            bg: "bg-emerald-500/10",
-            border: "border-emerald-500/20",
-            shadow: "shadow-[0_0_15px_rgba(52,211,153,0.15)]",
-            activeClass: "ring-1 ring-emerald-500 bg-emerald-500/10",
+            label: "Analisis Penjualan",
+            desc: "Metrik transaksi & performa produk",
+            icon: cilSpeedometer,
+            color: "success",
         },
         {
             id: "income",
-            label: "LAPORAN PENDAPATAN",
-            desc: "ARUS KAS & DETAIL REVENUE",
-            icon: DollarSign,
-            color: "text-blue-400",
-            bg: "bg-blue-500/10",
-            border: "border-blue-500/20",
-            shadow: "shadow-[0_0_15px_rgba(96,165,250,0.15)]",
-            activeClass: "ring-1 ring-blue-500 bg-blue-500/10",
+            label: "Laporan Pendapatan",
+            desc: "Arus kas & detail revenue",
+            icon: cilDollar,
+            color: "primary",
         },
         {
             id: "customer",
-            label: "WAWASAN PELANGGAN",
-            desc: "DEMOGRAFI & TOP SPENDER",
-            icon: Users,
-            color: "text-violet-400",
-            bg: "bg-violet-500/10",
-            border: "border-violet-500/20",
-            shadow: "shadow-[0_0_15px_rgba(167,139,250,0.15)]",
-            activeClass: "ring-1 ring-violet-500 bg-violet-500/10",
+            label: "Wawasan Pelanggan",
+            desc: "Demografi & top spender",
+            icon: cilPeople,
+            color: "info",
         },
         {
             id: "status",
-            label: "DISTRIBUSI STATUS",
-            desc: "MONITORING LOGISTIK & PROSES",
-            icon: Activity,
-            color: "text-amber-400",
-            bg: "bg-amber-500/10",
-            border: "border-amber-500/20",
-            shadow: "shadow-[0_0_15px_rgba(251,191,36,0.15)]",
-            activeClass: "ring-1 ring-amber-500 bg-amber-500/10",
+            label: "Distribusi Status",
+            desc: "Monitoring logistik & proses",
+            icon: cilChartPie,
+            color: "warning",
         },
     ];
 
     const presets = [
-        { label: "HARI INI", days: 0 },
-        { label: "7 HARI TERAKHIR", days: 7 },
-        { label: "30 HARI TERAKHIR", days: 30 },
-        { label: "BULAN INI", type: "month" },
+        { label: "Hari Ini", days: 0 },
+        { label: "7 Hari", days: 7 },
+        { label: "30 Hari", days: 30 },
+        { label: "Bulan Ini", type: "month" },
     ];
 
     const applyPreset = (preset) => {
@@ -100,213 +90,124 @@ export default function Index() {
     };
 
     return (
-        <AdminLayout title="PUSAT LAPORAN">
-            <Head title="PUSAT LAPORAN DIGITAl" />
+        <AdminLayout title="Pusat Laporan">
+            <Head title="Pusat Laporan" />
 
-            <div className="space-y-8">
-                {/* Header Control Panel */}
-                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
-                    <div>
-                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
-                            MODUL SISTEM ANALITIK
-                        </h2>
-                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
-                            <span className="w-1 h-8 bg-purple-500 rounded-full"></span>
-                            GENERATOR LAPORAN
-                        </h1>
-                    </div>
-                </div>
-
-                <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden relative">
-                    {/* Decorative Elements */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
-
-                    <div className="p-8 lg:p-12">
-                        <form onSubmit={handleGenerate} className="space-y-12">
-                            {/* Section 1: Report Type */}
-                            <div className="space-y-6">
-                                <div className="flex items-center gap-3 border-b border-white/5 pb-4">
-                                    <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shadow-lg">
-                                        <FileText className="w-5 h-5 text-purple-400" />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-lg font-bold font-display text-white uppercase tracking-wide">
-                                            JENIS LAPORAN
-                                        </h2>
-                                        <p className="text-[10px] font-mono text-white/40 uppercase tracking-wider">
-                                            PILIH PARAMETER DATA YANG AKAN
-                                            DIANALISIS
+            <form onSubmit={handleGenerate}>
+                <CCard className="mb-4">
+                    <CCardHeader className="bg-transparent border-bottom">
+                        <strong>Jenis Laporan</strong>
+                        <p className="text-body-secondary small mb-0 mt-1">
+                            Pilih parameter data yang akan dianalisis
+                        </p>
+                    </CCardHeader>
+                    <CCardBody>
+                        <CRow className="g-3">
+                            {reportTypes.map((type) => (
+                                <CCol key={type.id} xs={6} lg={3}>
+                                    <div
+                                        role="button"
+                                        onClick={() => setData("type", type.id)}
+                                        className={`border rounded-3 p-4 h-100 text-center ${
+                                            data.type === type.id
+                                                ? `border-${type.color} bg-${type.color}-subtle`
+                                                : "bg-body-tertiary"
+                                        }`}
+                                        style={{
+                                            cursor: "pointer",
+                                            transition: "all 0.2s",
+                                        }}
+                                    >
+                                        <div
+                                            className={`rounded-circle d-inline-flex align-items-center justify-content-center mb-3 ${
+                                                data.type === type.id
+                                                    ? `bg-${type.color} text-white`
+                                                    : "bg-body-secondary text-body-tertiary"
+                                            }`}
+                                            style={{ width: 48, height: 48 }}
+                                        >
+                                            <CIcon icon={type.icon} size="lg" />
+                                        </div>
+                                        <h6 className="fw-bold mb-1">
+                                            {type.label}
+                                        </h6>
+                                        <p
+                                            className="text-body-secondary mb-0"
+                                            style={{ fontSize: 11 }}
+                                        >
+                                            {type.desc}
                                         </p>
                                     </div>
-                                </div>
+                                </CCol>
+                            ))}
+                        </CRow>
+                    </CCardBody>
+                </CCard>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    {reportTypes.map((type) => {
-                                        const Icon = type.icon;
-                                        const isSelected =
-                                            data.type === type.id;
-                                        return (
-                                            <div
-                                                key={type.id}
-                                                onClick={() =>
-                                                    setData("type", type.id)
-                                                }
-                                                className={`group cursor-pointer relative p-6 rounded-xl border transition-all duration-300 ${
-                                                    isSelected
-                                                        ? `${type.activeClass} border-transparent shadow-lg scale-[1.02]`
-                                                        : "border-white/5 bg-black/40 hover:bg-white/5 hover:border-white/10"
-                                                }`}
-                                            >
-                                                <div
-                                                    className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300 ${
-                                                        isSelected
-                                                            ? type.bg +
-                                                              " " +
-                                                              type.color
-                                                            : "bg-white/5 text-white/30 group-hover:bg-white/10 group-hover:text-white"
-                                                    }`}
-                                                >
-                                                    <Icon size={24} />
-                                                </div>
-                                                <h3
-                                                    className={`font-bold font-display text-sm mb-1 uppercase tracking-wider transition-colors ${
-                                                        isSelected
-                                                            ? "text-white"
-                                                            : "text-white/60 group-hover:text-white"
-                                                    }`}
-                                                >
-                                                    {type.label}
-                                                </h3>
-                                                <p className="text-[10px] font-mono text-white/30 uppercase tracking-widest leading-relaxed">
-                                                    {type.desc}
-                                                </p>
-
-                                                <div
-                                                    className={`absolute top-4 right-4 w-2 h-2 rounded-full transition-all duration-500 ${
-                                                        isSelected
-                                                            ? type.color.replace(
-                                                                  "text-",
-                                                                  "bg-"
-                                                              ) +
-                                                              " shadow-[0_0_10px_currentColor]"
-                                                            : "bg-transparent"
-                                                    }`}
-                                                ></div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                <CCard className="mb-4">
+                    <CCardHeader className="bg-transparent border-bottom">
+                        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <div>
+                                <strong>Rentang Waktu</strong>
+                                <p className="text-body-secondary small mb-0 mt-1">
+                                    Definisikan periode observasi data
+                                </p>
                             </div>
-
-                            {/* Section 2: Time Period */}
-                            <div className="space-y-6">
-                                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/5 pb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shadow-lg">
-                                            <Calendar className="w-5 h-5 text-blue-400" />
-                                        </div>
-                                        <div>
-                                            <h2 className="text-lg font-bold font-display text-white uppercase tracking-wide">
-                                                RENTANG WAKTU
-                                            </h2>
-                                            <p className="text-[10px] font-mono text-white/40 uppercase tracking-wider">
-                                                DEFINISIKAN PERIODE OBSERVASI
-                                                DATA
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-2">
-                                        {presets.map((preset, idx) => (
-                                            <button
-                                                key={idx}
-                                                type="button"
-                                                onClick={() =>
-                                                    applyPreset(preset)
-                                                }
-                                                className="px-4 py-2 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider bg-white/5 text-white/40 border border-white/5 hover:border-blue-500/50 hover:text-blue-400 hover:bg-blue-500/10 transition-all active:scale-95"
-                                            >
-                                                {preset.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="p-1 bg-black/40 rounded-xl border border-white/5 flex flex-col md:flex-row items-center transition-colors">
-                                    <div className="relative w-full group">
-                                        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                            <Calendar className="h-5 w-5 text-white/30 group-focus-within:text-blue-400 transition-colors" />
-                                        </div>
-                                        <input
-                                            type="date"
-                                            value={data.start_date}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "start_date",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full pl-14 pr-4 py-5 bg-transparent border-none rounded-xl focus:ring-0 font-mono font-bold text-white text-lg cursor-pointer"
-                                        />
-                                        <span className="absolute top-2 left-14 text-[10px] font-bold font-mono text-blue-400/70 uppercase tracking-widest">
-                                            MULAI TANGGAL
-                                        </span>
-                                    </div>
-
-                                    <div className="hidden md:flex items-center justify-center w-12 text-white/20">
-                                        <ArrowRight size={20} strokeWidth={1} />
-                                    </div>
-
-                                    <div className="relative w-full group">
-                                        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                                            <Calendar className="h-5 w-5 text-white/30 group-focus-within:text-blue-400 transition-colors" />
-                                        </div>
-                                        <input
-                                            type="date"
-                                            value={data.end_date}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "end_date",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full pl-14 pr-4 py-5 bg-transparent border-none rounded-xl focus:ring-0 font-mono font-bold text-white text-lg cursor-pointer"
-                                        />
-                                        <span className="absolute top-2 left-14 text-[10px] font-bold font-mono text-blue-400/70 uppercase tracking-widest">
-                                            SAMPAI TANGGAL
-                                        </span>
-                                    </div>
-                                </div>
+                            <div className="d-flex gap-2 flex-wrap">
+                                {presets.map((preset, idx) => (
+                                    <CButton
+                                        key={idx}
+                                        type="button"
+                                        color="light"
+                                        size="sm"
+                                        onClick={() => applyPreset(preset)}
+                                    >
+                                        {preset.label}
+                                    </CButton>
+                                ))}
                             </div>
+                        </div>
+                    </CCardHeader>
+                    <CCardBody>
+                        <CRow className="g-3">
+                            <CCol md={6}>
+                                <CFormLabel>Tanggal Mulai</CFormLabel>
+                                <CFormInput
+                                    type="date"
+                                    value={data.start_date}
+                                    onChange={(e) =>
+                                        setData("start_date", e.target.value)
+                                    }
+                                />
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Tanggal Akhir</CFormLabel>
+                                <CFormInput
+                                    type="date"
+                                    value={data.end_date}
+                                    onChange={(e) =>
+                                        setData("end_date", e.target.value)
+                                    }
+                                />
+                            </CCol>
+                        </CRow>
+                    </CCardBody>
+                </CCard>
 
-                            {/* Execute Button */}
-                            <div className="pt-6">
-                                <button
-                                    type="submit"
-                                    disabled={processing}
-                                    className="relative w-full group overflow-hidden rounded-xl p-[1px]"
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 group-hover:via-purple-500 transition-all duration-500"></div>
-                                    <div className="relative bg-black rounded-[10px] px-8 py-5 flex items-center justify-center gap-3 overflow-hidden group-hover:bg-opacity-90 transition-all">
-                                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                        {processing ? (
-                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                        ) : (
-                                            <Search className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-300" />
-                                        )}
-                                        <span className="font-display font-bold text-lg text-white uppercase tracking-widest">
-                                            {processing
-                                                ? "MEMPROSES DATA..."
-                                                : "EKSEKUSI PEMINDAIAN"}
-                                        </span>
-                                    </div>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+                <CButton
+                    type="submit"
+                    color="primary"
+                    className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                    disabled={processing}
+                >
+                    {processing ? (
+                        <span className="spinner-border spinner-border-sm" />
+                    ) : (
+                        <CIcon icon={cilSearch} />
+                    )}
+                    {processing ? "Memproses Data..." : "Generate Laporan"}
+                </CButton>
+            </form>
         </AdminLayout>
     );
 }

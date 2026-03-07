@@ -1,425 +1,400 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage, Head } from "@inertiajs/react";
+import "@coreui/coreui/dist/css/coreui.min.css";
+import "../../css/admin.css";
 import {
-    LayoutDashboard,
-    Users,
-    MessageSquare,
-    FileText,
-    Settings,
-    LogOut,
-    Menu,
-    X,
-    ChevronDown,
-    Bike,
-    ShoppingCart,
-    CheckCircle,
-    AlertCircle,
-    User,
-    Globe,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ThemeProvider } from "../Contexts/ThemeContext";
-import ThemeToggle from "../Components/ThemeToggle";
+    CSidebar,
+    CSidebarNav,
+    CSidebarHeader,
+    CSidebarFooter,
+    CNavItem,
+    CNavTitle,
+    CHeader,
+    CHeaderToggler,
+    CHeaderNav,
+    CContainer,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
+    CDropdownDivider,
+    CAvatar,
+    CBadge,
+    CFooter,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import {
+    cilSpeedometer,
+    cilBike,
+    cilCart,
+    cilPeople,
+    cilChartLine,
+    cilEnvelopeClosed,
+    cilAccountLogout,
+    cilUser,
+    cilSettings,
+    cilMenu,
+    cilGlobeAlt,
+    cilCheckCircle,
+    cilXCircle,
+    cilX,
+    cilBell,
+} from "@coreui/icons";
+import { AnimatePresence, motion } from "framer-motion";
 
-// Command Center Layout
 function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [sidebarShow, setSidebarShow] = useState(true);
     const [showFlash, setShowFlash] = useState(false);
-    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
 
     useEffect(() => {
         if (flash.success || flash.error) {
             setShowFlash(true);
-            const timer = setTimeout(() => setShowFlash(false), 3000);
+            const timer = setTimeout(() => setShowFlash(false), 4000);
             return () => clearTimeout(timer);
         }
     }, [flash]);
 
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target)
-            ) {
-                setIsProfileDropdownOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-
-    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-    const sidebarLinks = [
+    const navItems = [
         {
-            name: "Command Center",
+            name: "Dashboard",
             href: route("admin.dashboard"),
-            icon: LayoutDashboard,
+            icon: cilSpeedometer,
             active: route().current("admin.dashboard"),
         },
         {
-            name: "Armada",
+            name: "Motor",
             href: route("admin.motors.index"),
-            icon: Bike,
+            icon: cilBike,
             active: route().current("admin.motors.*"),
         },
         {
-            name: "Keuangan",
+            name: "Transaksi",
             href: route("admin.transactions.index"),
-            icon: ShoppingCart,
+            icon: cilCart,
             active: route().current("admin.transactions.*"),
         },
         {
-            name: "Personel",
+            name: "Pengguna",
             href: route("admin.users.index"),
-            icon: Users,
+            icon: cilPeople,
             active: route().current("admin.users.*"),
         },
         {
-            name: "Intelijen",
+            name: "Laporan",
             href: route("admin.reports.index"),
-            icon: FileText,
+            icon: cilChartLine,
             active: route().current("admin.reports.*"),
         },
         {
-            name: "Komunikasi",
+            name: "Pesan Masuk",
             href: route("admin.contact.index"),
-            icon: MessageSquare,
+            icon: cilEnvelopeClosed,
             active: route().current("admin.contact.*"),
         },
     ];
 
     return (
-        <div className="min-h-screen bg-black text-white font-sans selection:bg-accent selection:text-white flex transition-colors duration-200">
-            <Head title={title} />
+        <div className="min-vh-100 d-flex">
+            <Head title={title || "Admin"} />
 
-            {/* Background FX */}
-            <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]"></div>
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px]"></div>
-            </div>
-
-            {/* Flash Message Alert */}
+            {/* Flash Toast */}
             <AnimatePresence>
                 {showFlash && (flash.success || flash.error) && (
                     <motion.div
-                        initial={{ opacity: 0, y: -50, x: "-50%" }}
-                        animate={{ opacity: 1, y: 30, x: "-50%" }}
-                        exit={{ opacity: 0, y: -50, x: "-50%" }}
-                        className={`fixed top-0 left-1/2 z-[100] px-6 py-4 rounded-xl border flex items-center gap-3 min-w-[320px] justify-center backdrop-blur-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] ${
-                            flash.success
-                                ? "bg-green-500/10 border-green-500/20 text-green-400"
-                                : "bg-red-500/10 border-red-500/20 text-red-500"
-                        }`}
+                        initial={{ opacity: 0, x: 60, y: 0 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
+                        exit={{ opacity: 0, x: 60 }}
+                        className="position-fixed top-0 end-0 m-4 d-flex align-items-start gap-3 shadow-lg rounded-3 border"
+                        style={{
+                            zIndex: 9999,
+                            maxWidth: 380,
+                            padding: "14px 18px",
+                            backgroundColor: flash.success
+                                ? "#f0fdf4"
+                                : "#fef2f2",
+                            borderColor: flash.success ? "#bbf7d0" : "#fecaca",
+                        }}
                     >
-                        {flash.success ? (
-                            <CheckCircle size={20} className="text-green-400" />
-                        ) : (
-                            <AlertCircle size={20} className="text-red-500" />
-                        )}
-                        <span className="font-bold font-mono tracking-wide text-sm">
-                            {flash.success || flash.error}
-                        </span>
+                        <div
+                            className="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                            style={{
+                                width: 32,
+                                height: 32,
+                                backgroundColor: flash.success
+                                    ? "#dcfce7"
+                                    : "#fee2e2",
+                            }}
+                        >
+                            <CIcon
+                                icon={
+                                    flash.success ? cilCheckCircle : cilXCircle
+                                }
+                                style={{
+                                    color: flash.success
+                                        ? "#16a34a"
+                                        : "#dc2626",
+                                }}
+                            />
+                        </div>
+                        <div className="flex-grow-1">
+                            <div
+                                className="fw-semibold small"
+                                style={{
+                                    color: flash.success
+                                        ? "#166534"
+                                        : "#991b1b",
+                                }}
+                            >
+                                {flash.success ? "Berhasil!" : "Gagal!"}
+                            </div>
+                            <div
+                                className="small"
+                                style={{
+                                    color: flash.success
+                                        ? "#15803d"
+                                        : "#b91c1c",
+                                }}
+                            >
+                                {flash.success || flash.error}
+                            </div>
+                        </div>
                         <button
                             onClick={() => setShowFlash(false)}
-                            className="ml-auto hover:bg-white/10 rounded-full p-1 transition-colors"
+                            className="btn btn-sm p-0 border-0 lh-1"
+                            style={{ color: "#94a3b8" }}
                         >
-                            <X size={16} />
+                            <CIcon icon={cilX} size="sm" />
                         </button>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* Mobile Sidebar Overlay */}
-            <AnimatePresence>
-                {isSidebarOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setIsSidebarOpen(false)}
-                        className="fixed inset-0 bg-black/80 z-40 lg:hidden backdrop-blur-sm border-r border-white/10"
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Sidebar */}
-            <aside
-                className={`fixed lg:sticky top-0 left-0 h-screen w-72 bg-zinc-900/50 border-r border-white/5 backdrop-blur-xl z-50 transform transition-transform duration-300 ease-out lg:translate-x-0 ${
-                    isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-                }`}
+            {/* ======== SIDEBAR ======== */}
+            <CSidebar
+                className="sidebar-admin"
+                colorScheme="dark"
+                visible={sidebarShow}
+                onVisibleChange={(visible) => setSidebarShow(visible)}
             >
-                <div className="h-full flex flex-col relative overflow-hidden">
-                    {/* Decorative Scan Line */}
-                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent"></div>
-
-                    {/* Logo Area */}
-                    <div className="p-6 border-b border-white/5 flex items-center justify-between relative bg-black/20">
-                        <Link
-                            href="/"
-                            className="flex items-center gap-3 group"
-                        >
-                            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center text-black font-black transform group-hover:rotate-12 transition-transform">
-                                S
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="font-display font-black text-xl text-white leading-none tracking-tight">
-                                    SRB
-                                    <span className="text-accent">ADMIN</span>
-                                </span>
-                                <span className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">
-                                    System v2.0
-                                </span>
-                            </div>
-                        </Link>
-                        <button
-                            onClick={() => setIsSidebarOpen(false)}
-                            className="lg:hidden text-white/50 hover:text-white"
-                        >
-                            <X size={20} />
-                        </button>
-                    </div>
-
-                    {/* Navigation */}
-                    <nav className="flex-1 overflow-y-auto py-8 px-4 space-y-2">
-                        <p className="px-4 text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-4">
-                            Main Modules
-                        </p>
-                        {sidebarLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className={`flex items-center gap-4 px-4 py-3 rounded-lg font-bold text-sm transition-all duration-300 group relative overflow-hidden ${
-                                    link.active
-                                        ? "text-black bg-accent shadow-[0_0_20px_rgba(225,29,72,0.4)] border border-accent"
-                                        : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
-                                }`}
-                            >
-                                <link.icon
-                                    size={18}
-                                    className={`relative z-10 ${
-                                        link.active ? "animate-pulse" : ""
-                                    }`}
-                                />
-                                <span className="relative z-10">
-                                    {link.name}
-                                </span>
-                                {link.active && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
-                                )}
-                            </Link>
-                        ))}
-
-                        <div className="mt-12">
-                            <p className="px-4 text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-4">
-                                System
-                            </p>
-                            <Link
-                                href={route("admin.profile.show")}
-                                className={`flex items-center gap-4 px-4 py-3 rounded-lg font-bold text-sm transition-all duration-300 text-white/60 hover:text-white hover:bg-white/5 border border-transparent ${
-                                    route().current("admin.profile.*")
-                                        ? "bg-white/10 text-white border-white/10"
-                                        : ""
-                                }`}
-                            >
-                                <Settings size={18} />
-                                <span className="relative z-10">
-                                    Konfigurasi
-                                </span>
-                            </Link>
-                            <a
-                                href="/"
-                                className="flex items-center gap-4 px-4 py-3 rounded-lg font-bold text-sm transition-all duration-300 text-white/60 hover:text-red-500 hover:bg-red-500/10 border border-transparent group"
-                            >
-                                <LogOut
-                                    size={18}
-                                    className="rotate-180 group-hover:-translate-x-1 transition-transform"
-                                />
-                                <span>Logout System</span>
-                            </a>
-                        </div>
-                    </nav>
-
-                    {/* Admin Status Footer */}
-                    <div className="p-4 border-t border-white/5 bg-black/20">
-                        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent to-purple-600 p-[1px]">
-                                <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                                    <span className="font-bold text-white">
-                                        {auth.user.name.charAt(0)}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-white truncate">
-                                    {auth.user.name}
-                                </p>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                    <p className="text-[10px] font-mono text-green-500 uppercase tracking-wider">
-                                        ONLINE
-                                    </p>
-                                </div>
-                            </div>
-                            <Link
-                                href={route("logout")}
-                                method="post"
-                                as="button"
-                                className="p-2 text-white/30 hover:text-white transition-colors"
-                            >
-                                <LogOut size={16} />
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col min-w-0 font-sans relative z-10 lg:pl-0">
-                {/* Topbar */}
-                <header className="bg-zinc-900/50 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={toggleSidebar}
-                            className="lg:hidden p-2 text-white/60 hover:text-white rounded-lg transition-colors border border-white/5 bg-white/5"
-                        >
-                            <Menu size={20} />
-                        </button>
-                        <div>
-                            <h1 className="text-2xl font-display font-black text-white uppercase tracking-tighter">
-                                {title}
-                            </h1>
-                            <p className="text-[10px] font-mono text-white/40 hidden sm:block">
-                                SECURE CONNECTION ESTABLISHED
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-6">
-                        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5">
-                            <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                            <span className="text-[10px] font-bold text-white/60">
-                                SYSTEM NORMAL
+                <CSidebarHeader className="border-bottom px-3">
+                    <Link
+                        href="/"
+                        className="d-flex align-items-center gap-3 text-decoration-none"
+                    >
+                        <div className="sidebar-brand-logo">SR</div>
+                        <div className="d-flex flex-column">
+                            <span className="sidebar-brand-text">
+                                SRB Motors
+                            </span>
+                            <span className="sidebar-brand-sub">
+                                Admin Panel
                             </span>
                         </div>
+                    </Link>
+                </CSidebarHeader>
 
-                        <div className="w-px h-8 bg-white/10 hidden md:block"></div>
+                <CSidebarNav>
+                    <CNavTitle>Menu Utama</CNavTitle>
+                    {navItems.map((item) => (
+                        <CNavItem
+                            key={item.name}
+                            href={item.href}
+                            active={item.active}
+                            as={Link}
+                        >
+                            <CIcon
+                                icon={item.icon}
+                                customClassName="nav-icon"
+                            />
+                            {item.name}
+                        </CNavItem>
+                    ))}
 
-                        {/* Admin Profile Dropdown */}
-                        <div className="relative" ref={dropdownRef}>
-                            <button
-                                onClick={() =>
-                                    setIsProfileDropdownOpen(
-                                        !isProfileDropdownOpen
-                                    )
-                                }
-                                className="flex items-center gap-3 hover:bg-white/5 p-2 rounded-xl transition-all border border-transparent hover:border-white/5"
+                    <CNavTitle className="mt-3">Pengaturan</CNavTitle>
+                    <CNavItem
+                        href={route("admin.profile.show")}
+                        active={route().current("admin.profile.*")}
+                        as={Link}
+                    >
+                        <CIcon icon={cilSettings} customClassName="nav-icon" />
+                        Profil Saya
+                    </CNavItem>
+                    <CNavItem href="/" as={Link}>
+                        <CIcon icon={cilGlobeAlt} customClassName="nav-icon" />
+                        Lihat Website
+                    </CNavItem>
+                </CSidebarNav>
+
+                <CSidebarFooter className="border-top p-3">
+                    <div className="d-flex align-items-center gap-3">
+                        <div
+                            className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold flex-shrink-0"
+                            style={{
+                                width: 38,
+                                height: 38,
+                                background:
+                                    "linear-gradient(135deg, #4361ee, #6366f1)",
+                                fontSize: 14,
+                            }}
+                        >
+                            {auth.user.name.charAt(0)}
+                        </div>
+                        <div className="flex-grow-1 overflow-hidden">
+                            <div
+                                className="fw-semibold text-truncate text-white"
+                                style={{ fontSize: 13 }}
                             >
-                                <div className="text-right hidden md:block">
-                                    <span className="block text-sm font-bold text-white">
+                                {auth.user.name}
+                            </div>
+                            <div style={{ fontSize: 11, color: "#64748b" }}>
+                                Administrator
+                            </div>
+                        </div>
+                        <Link
+                            href={route("logout")}
+                            method="post"
+                            as="button"
+                            className="btn btn-sm p-1 border-0"
+                            style={{ color: "#64748b" }}
+                            title="Keluar"
+                        >
+                            <CIcon icon={cilAccountLogout} size="lg" />
+                        </Link>
+                    </div>
+                </CSidebarFooter>
+            </CSidebar>
+
+            {/* ======== MAIN CONTENT ======== */}
+            <div className="wrapper d-flex flex-column flex-grow-1">
+                {/* Header */}
+                <CHeader className="header-admin border-bottom px-4">
+                    <CHeaderToggler
+                        className="header-toggler"
+                        onClick={() => setSidebarShow(!sidebarShow)}
+                    >
+                        <CIcon icon={cilMenu} size="lg" />
+                    </CHeaderToggler>
+
+                    <div className="ms-3 d-flex align-items-center">
+                        <h1 className="header-title mb-0">{title}</h1>
+                    </div>
+
+                    <CHeaderNav className="ms-auto d-flex align-items-center gap-2">
+                        {/* User Menu */}
+                        <CDropdown variant="nav-item" alignment="end">
+                            <CDropdownToggle
+                                caret={false}
+                                className="d-flex align-items-center gap-2 py-0"
+                            >
+                                <div className="d-none d-md-block text-end me-2">
+                                    <div
+                                        className="fw-semibold small"
+                                        style={{ color: "#0f172a" }}
+                                    >
                                         {auth.user.name}
-                                    </span>
-                                    <span className="block text-[10px] font-mono text-accent">
-                                        SUPER ADMIN
-                                    </span>
+                                    </div>
+                                    <div
+                                        style={{
+                                            fontSize: 11,
+                                            color: "#94a3b8",
+                                        }}
+                                    >
+                                        Admin
+                                    </div>
                                 </div>
-                                <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-black font-bold shadow-[0_0_15px_rgba(225,29,72,0.4)]">
+                                <div
+                                    className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold"
+                                    style={{
+                                        width: 36,
+                                        height: 36,
+                                        background:
+                                            "linear-gradient(135deg, #4361ee, #6366f1)",
+                                        fontSize: 14,
+                                    }}
+                                >
                                     {auth.user.name.charAt(0)}
                                 </div>
-                                <ChevronDown
-                                    size={16}
-                                    className={`text-white/50 transition-transform duration-300 ${
-                                        isProfileDropdownOpen
-                                            ? "rotate-180"
-                                            : ""
-                                    }`}
-                                />
-                            </button>
-
-                            <AnimatePresence>
-                                {isProfileDropdownOpen && (
-                                    <motion.div
-                                        initial={{
-                                            opacity: 0,
-                                            y: 10,
-                                            scale: 0.95,
-                                        }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{
-                                            opacity: 0,
-                                            y: 10,
-                                            scale: 0.95,
-                                        }}
-                                        transition={{ duration: 0.2 }}
-                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 backdrop-blur-xl"
+                            </CDropdownToggle>
+                            <CDropdownMenu
+                                className="shadow-lg border"
+                                style={{ borderRadius: 12, minWidth: 200 }}
+                            >
+                                <div className="px-3 py-2">
+                                    <div className="fw-bold small">
+                                        {auth.user.name}
+                                    </div>
+                                    <div
+                                        className="text-body-tertiary"
+                                        style={{ fontSize: 11 }}
                                     >
-                                        <div className="p-3 border-b border-white/5">
-                                            <p className="text-xs font-bold text-white/40 uppercase tracking-widest px-2 mb-1">
-                                                Signed in as
-                                            </p>
-                                            <p className="text-sm font-bold text-white truncate px-2">
-                                                {auth.user.email}
-                                            </p>
-                                        </div>
-                                        <div className="p-2 space-y-1">
-                                            <Link
-                                                href={route(
-                                                    "admin.profile.show"
-                                                )}
-                                                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors group"
-                                            >
-                                                <User
-                                                    size={16}
-                                                    className="text-accent group-hover:scale-110 transition-transform"
-                                                />
-                                                Profile Saya
-                                            </Link>
-                                            <Link
-                                                href="/"
-                                                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors group"
-                                            >
-                                                <Globe
-                                                    size={16}
-                                                    className="text-blue-500 group-hover:scale-110 transition-transform"
-                                                />
-                                                Lihat Website
-                                            </Link>
-                                            <div className="h-px bg-white/5 my-1"></div>
-                                            <Link
-                                                href={route("logout")}
-                                                method="post"
-                                                as="button"
-                                                className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-500/10 rounded-lg transition-colors group"
-                                            >
-                                                <LogOut
-                                                    size={16}
-                                                    className="group-hover:-translate-x-1 transition-transform"
-                                                />
-                                                Sign Out
-                                            </Link>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                    </div>
-                </header>
+                                        {auth.user.email}
+                                    </div>
+                                </div>
+                                <CDropdownDivider />
+                                <CDropdownItem
+                                    as={Link}
+                                    href={route("admin.profile.show")}
+                                >
+                                    <CIcon icon={cilUser} className="me-2" />
+                                    Profil Saya
+                                </CDropdownItem>
+                                <CDropdownItem as={Link} href="/">
+                                    <CIcon
+                                        icon={cilGlobeAlt}
+                                        className="me-2"
+                                    />
+                                    Lihat Website
+                                </CDropdownItem>
+                                <CDropdownDivider />
+                                <CDropdownItem
+                                    as={Link}
+                                    href={route("logout")}
+                                    method="post"
+                                    className="text-danger"
+                                >
+                                    <CIcon
+                                        icon={cilAccountLogout}
+                                        className="me-2"
+                                    />
+                                    Keluar
+                                </CDropdownItem>
+                            </CDropdownMenu>
+                        </CDropdown>
+                    </CHeaderNav>
+                </CHeader>
 
                 {/* Page Content */}
-                <main className="flex-1 p-6 lg:p-10">{children}</main>
+                <div className="body flex-grow-1 admin-body">
+                    <CContainer fluid className="px-4 py-4">
+                        {children}
+                    </CContainer>
+                </div>
+
+                {/* Footer */}
+                <CFooter className="footer-admin px-4">
+                    <div>
+                        <span
+                            className="fw-semibold"
+                            style={{ color: "#475569" }}
+                        >
+                            SRB Motors
+                        </span>
+                        <span className="ms-1" style={{ color: "#94a3b8" }}>
+                            &copy; {new Date().getFullYear()}
+                        </span>
+                    </div>
+                    <div className="ms-auto">
+                        <span style={{ color: "#cbd5e1", fontSize: 12 }}>
+                            Admin Panel v2.0
+                        </span>
+                    </div>
+                </CFooter>
             </div>
         </div>
     );
 }
 
 export default function AdminLayout(props) {
-    return (
-        <ThemeProvider>
-            <AdminLayoutContent {...props} />
-        </ThemeProvider>
-    );
+    return <AdminLayoutContent {...props} />;
 }

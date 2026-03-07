@@ -3,16 +3,28 @@ import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Modal from "@/Components/Modal";
 import {
-    Search,
-    MessageSquare,
-    Trash2,
-    Mail,
-    Clock,
-    ShieldAlert,
-    CheckCircle,
-    ChevronRight,
-    Inbox,
-} from "lucide-react";
+    CCard,
+    CCardBody,
+    CCardHeader,
+    CCol,
+    CRow,
+    CBadge,
+    CButton,
+    CFormInput,
+    CInputGroup,
+    CInputGroupText,
+    CPagination,
+    CPaginationItem,
+    CAvatar,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import {
+    cilSearch,
+    cilTrash,
+    cilEnvelopeClosed,
+    cilReload,
+    cilCommentSquare,
+} from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
 export default function Index({ contactMessages, filters }) {
@@ -26,36 +38,28 @@ export default function Index({ contactMessages, filters }) {
         onConfirm: () => {},
     });
 
-    // Live Search Implementation
     useEffect(() => {
         if (isFirstRender) {
             setIsFirstRender(false);
             return;
         }
-
         const delayDebounceFn = setTimeout(() => {
             router.get(
                 route("admin.contact.index"),
                 { search },
-                { preserveState: true }
+                { preserveState: true },
             );
         }, 500);
-
         return () => clearTimeout(delayDebounceFn);
     }, [search]);
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        // Triggered by effect
-    };
 
     const confirmDelete = (id) => {
         setModalConfig({
             isOpen: true,
             type: "danger",
-            title: "HAPUS PESAN?",
+            title: "Hapus Pesan",
             message:
-                "Apakah anda yakin ingin memusnahkan pesan ini dari database? Tindakan ini bersifat permanen dan tidak dapat dibatalkan.",
+                "Apakah Anda yakin ingin menghapus pesan ini? Tindakan ini tidak dapat dibatalkan.",
             onConfirm: () => handleDelete(id),
         });
     };
@@ -64,17 +68,17 @@ export default function Index({ contactMessages, filters }) {
         router.delete(route("admin.contact.destroy", id), {
             onSuccess: () => {
                 setModalConfig((prev) => ({ ...prev, isOpen: false }));
-                toast.success("PESAN BERHASIL DIHAPUS");
+                toast.success("Pesan berhasil dihapus");
             },
             onError: () => {
                 setModalConfig((prev) => ({ ...prev, isOpen: false }));
-                toast.error("GAGAL MENGHAPUS PESAN");
+                toast.error("Gagal menghapus pesan");
             },
         });
     };
 
     return (
-        <AdminLayout title="PUSAT KOMUNIKASI">
+        <AdminLayout title="Pesan Kontak">
             <Modal
                 isOpen={modalConfig.isOpen}
                 onClose={() =>
@@ -82,201 +86,188 @@ export default function Index({ contactMessages, filters }) {
                 }
                 title={modalConfig.title}
                 message={modalConfig.message}
-                confirmText="MUSNAHKAN"
+                confirmText="Hapus"
                 onConfirm={modalConfig.onConfirm}
                 type={modalConfig.type}
             />
 
-            <div className="space-y-8">
-                {/* Header Control Panel */}
-                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
-                    <div>
-                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
-                            MODUL KOMUNIKASI EKSTERNAL
-                        </h2>
-                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
-                            <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
-                            INBOX PESAN
-                        </h1>
-                    </div>
+            {/* Header */}
+            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                <div>
+                    <h2 className="h4 fw-bold mb-1">Pesan Masuk</h2>
+                    <p className="text-body-secondary mb-0 small">
+                        {contactMessages.total} pesan dari pelanggan
+                    </p>
                 </div>
+            </div>
 
-                <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden relative">
-                    <div className="p-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                                <Inbox size={20} className="text-blue-400" />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-white text-lg font-display uppercase tracking-wide">
-                                    PESAN MASUK
-                                </h3>
-                                <p className="text-[10px] font-mono text-white/40 uppercase tracking-wider">
-                                    {contactMessages.total} PESAN TERENKRIPSI
-                                </p>
-                            </div>
-                        </div>
-
-                        <form
-                            onSubmit={handleSearch}
-                            className="relative w-full md:w-80 group"
-                        >
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-4 w-4 text-white/40 group-focus-within:text-blue-400 transition-colors" />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="CARI KATA KUNCI..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="w-full pl-11 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-white placeholder-white/20 transition-all"
-                            />
-                        </form>
-                    </div>
-
-                    <div className="p-6 grid grid-cols-1 gap-4">
-                        {contactMessages.data.length > 0 ? (
-                            contactMessages.data.map((message) => (
-                                <div
-                                    key={message.id}
-                                    className="group relative bg-black/40 border border-white/5 hover:border-blue-500/30 rounded-2xl p-6 transition-all hover:bg-white/5"
+            {/* Filter */}
+            <CCard className="mb-4">
+                <CCardBody>
+                    <CRow className="g-3 align-items-end">
+                        <CCol md={8}>
+                            <CInputGroup>
+                                <CInputGroupText>
+                                    <CIcon icon={cilSearch} size="sm" />
+                                </CInputGroupText>
+                                <CFormInput
+                                    placeholder="Cari nama, email, atau subjek..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </CInputGroup>
+                        </CCol>
+                        <CCol md={4}>
+                            {search && (
+                                <CButton
+                                    color="light"
+                                    className="w-100 d-flex align-items-center justify-content-center gap-1"
+                                    onClick={() => setSearch("")}
                                 >
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-[40px] -z-10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <CIcon icon={cilReload} size="sm" />
+                                    Reset
+                                </CButton>
+                            )}
+                        </CCol>
+                    </CRow>
+                </CCardBody>
+            </CCard>
 
-                                    <div className="flex flex-col md:flex-row gap-6">
-                                        {/* Avatar / Identity */}
-                                        <div className="flex-shrink-0">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center text-lg font-bold text-white font-display">
-                                                {message.name
-                                                    .charAt(0)
-                                                    .toUpperCase()}
-                                            </div>
-                                        </div>
+            {/* Messages List */}
+            {contactMessages.data.length > 0 ? (
+                <div className="d-flex flex-column gap-3">
+                    {contactMessages.data.map((message) => (
+                        <CCard key={message.id} className="hover-shadow">
+                            <CCardBody>
+                                <div className="d-flex gap-3">
+                                    <CAvatar
+                                        color="primary"
+                                        textColor="white"
+                                        size="md"
+                                        className="flex-shrink-0"
+                                    >
+                                        {message.name.charAt(0).toUpperCase()}
+                                    </CAvatar>
 
-                                        {/* Content */}
-                                        <div className="flex-1 min-w-0 space-y-3">
-                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                                                <h3 className="text-lg font-bold text-white font-display tracking-wide truncate pr-4">
+                                    <div className="flex-grow-1 min-w-0">
+                                        <div className="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                                            <div>
+                                                <h6 className="fw-bold mb-0">
                                                     {message.subject}
-                                                </h3>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/5 border border-white/5 text-[10px] font-mono text-white/40 uppercase tracking-wider">
-                                                        <Clock size={10} />
-                                                        {new Date(
-                                                            message.created_at
-                                                        ).toLocaleDateString(
-                                                            "id-ID",
-                                                            {
-                                                                day: "numeric",
-                                                                month: "short",
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            }
-                                                        )}
+                                                </h6>
+                                                <div className="d-flex align-items-center gap-2 small text-body-secondary mt-1">
+                                                    <span>{message.name}</span>
+                                                    <span className="text-body-tertiary">
+                                                        •
                                                     </span>
+                                                    <a
+                                                        href={`mailto:${message.email}`}
+                                                        className="text-primary text-decoration-none"
+                                                    >
+                                                        {message.email}
+                                                    </a>
                                                 </div>
                                             </div>
-
-                                            <div className="flex items-center gap-4 text-xs font-mono text-white/50">
-                                                <span className="flex items-center gap-1.5">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                                    {message.name}
-                                                </span>
-                                                <span className="text-white/20">
-                                                    |
-                                                </span>
-                                                <a
-                                                    href={`mailto:${message.email}`}
-                                                    className="flex items-center gap-1.5 hover:text-blue-400 transition-colors"
-                                                >
-                                                    <Mail size={12} />
-                                                    {message.email}
-                                                </a>
-                                            </div>
-
-                                            <div className="p-4 bg-white/5 rounded-xl border border-white/5 text-sm text-white/80 leading-relaxed font-sans">
-                                                {message.message}
-                                            </div>
+                                            <span className="text-body-tertiary small">
+                                                {new Date(
+                                                    message.created_at,
+                                                ).toLocaleDateString("id-ID", {
+                                                    day: "numeric",
+                                                    month: "short",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}
+                                            </span>
                                         </div>
 
-                                        {/* Actions */}
-                                        <div className="flex md:flex-col gap-2 justify-end sm:justify-start">
+                                        <div className="bg-body-tertiary rounded-3 p-3 mb-3">
+                                            <p className="mb-0 text-body-secondary small">
+                                                {message.message}
+                                            </p>
+                                        </div>
+
+                                        <div className="d-flex gap-2">
                                             <a
                                                 href={`mailto:${message.email}?subject=Re: ${message.subject}`}
-                                                className="p-3 bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white rounded-xl border border-blue-500/20 hover:border-blue-500 transition-all group/btn"
-                                                title="Balas Pesan"
+                                                className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
                                             >
-                                                <ChevronRight
-                                                    size={18}
-                                                    className="group-hover/btn:translate-x-1 transition-transform"
+                                                <CIcon
+                                                    icon={cilEnvelopeClosed}
+                                                    size="sm"
                                                 />
+                                                Balas
                                             </a>
-                                            <button
+                                            <CButton
+                                                color="danger"
+                                                variant="outline"
+                                                size="sm"
                                                 onClick={() =>
                                                     confirmDelete(message.id)
                                                 }
-                                                className="p-3 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-xl border border-red-500/20 hover:border-red-500 transition-all"
-                                                title="Hapus Pesan"
+                                                className="d-flex align-items-center gap-1"
                                             >
-                                                <Trash2 size={18} />
-                                            </button>
+                                                <CIcon
+                                                    icon={cilTrash}
+                                                    size="sm"
+                                                />
+                                                Hapus
+                                            </CButton>
                                         </div>
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="text-center py-20 bg-white/5 rounded-3xl border border-dashed border-white/10">
-                                <div className="w-20 h-20 bg-black/40 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5 shadow-inner">
-                                    <Inbox
-                                        className="text-white/20"
-                                        size={32}
-                                    />
-                                </div>
-                                <h3 className="text-xl font-bold text-white font-display uppercase tracking-wide mb-2">
-                                    KOTAK MASUK KOSONG
-                                </h3>
-                                <p className="text-white/40 text-sm font-mono max-w-sm mx-auto">
-                                    TIDAK ADA DATA PESAN YANG DITEMUKAN DALAM
-                                    SISTEM SAAT INI.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Pagination */}
-                    {contactMessages.links &&
-                        contactMessages.links.length > 3 && (
-                            <div className="p-6 border-t border-white/5 flex justify-center">
-                                <div className="flex gap-2">
-                                    {contactMessages.links.map((link, index) =>
-                                        link.url ? (
-                                            <Link
-                                                key={index}
-                                                href={link.url}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: link.label,
-                                                }}
-                                                className={`h-10 px-4 flex items-center justify-center rounded-lg text-xs font-mono font-bold transition-all ${
-                                                    link.active
-                                                        ? "bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)] border border-blue-500"
-                                                        : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white border border-white/5"
-                                                }`}
-                                            />
-                                        ) : (
-                                            <span
-                                                key={index}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: link.label,
-                                                }}
-                                                className="h-10 px-4 flex items-center justify-center rounded-lg text-xs font-mono font-bold bg-black/20 text-white/20 border border-white/5 cursor-not-allowed"
-                                            />
-                                        )
-                                    )}
-                                </div>
-                            </div>
-                        )}
+                            </CCardBody>
+                        </CCard>
+                    ))}
                 </div>
-            </div>
+            ) : (
+                <CCard>
+                    <CCardBody className="text-center py-5">
+                        <CIcon
+                            icon={cilCommentSquare}
+                            size="3xl"
+                            className="text-body-tertiary mb-3"
+                        />
+                        <h5 className="fw-semibold text-body-secondary">
+                            Kotak Masuk Kosong
+                        </h5>
+                        <p className="text-body-tertiary small mb-0">
+                            Belum ada pesan masuk dari pelanggan.
+                        </p>
+                    </CCardBody>
+                </CCard>
+            )}
+
+            {/* Pagination */}
+            {contactMessages.links && contactMessages.links.length > 3 && (
+                <div className="d-flex justify-content-center mt-4">
+                    <CPagination>
+                        {contactMessages.links.map((link, index) =>
+                            link.url ? (
+                                <CPaginationItem
+                                    key={index}
+                                    active={link.active}
+                                    href={link.url}
+                                    as={Link}
+                                >
+                                    <span
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
+                                </CPaginationItem>
+                            ) : (
+                                <CPaginationItem key={index} disabled>
+                                    <span
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
+                                </CPaginationItem>
+                            ),
+                        )}
+                    </CPagination>
+                </div>
+            )}
         </AdminLayout>
     );
 }

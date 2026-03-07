@@ -23,10 +23,13 @@ Route::get('/motors/compare', [MotorGalleryController::class, 'compare'])->name(
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
 Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
-Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
-Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
-Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
-Route::post('/motors/{motor}/process-credit-order', [MotorGalleryController::class, 'processCreditOrder'])->name('motors.process-credit-order');
+// Order routes - auth required (security fix: prevent unauthenticated access)
+Route::middleware('auth')->group(function () {
+    Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
+    Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
+    Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
+    Route::post('/motors/{motor}/process-credit-order', [MotorGalleryController::class, 'processCreditOrder'])->name('motors.process-credit-order');
+});
 Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware('auth');
 Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware('auth');
 Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware('auth');
