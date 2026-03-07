@@ -431,11 +431,11 @@ export default function Home({ auth, popularMotors = [] }) {
                                     <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center text-white shadow-lg shadow-green-500/30 group-hover:bg-white group-hover:text-green-500 group-hover:rotate-12 transition-all">
                                         <Phone className="w-7 h-7" />
                                     </div>
-                                    <div className="flex flex-col">
-                                        <p className="text-[10px] font-black text-green-900 uppercase tracking-widest group-hover:text-white/80 transition-colors">
+                                    <div className="flex flex-col text-left">
+                                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest transition-colors">
                                             Whatsapp Bekasi
                                         </p>
-                                        <p className="text-sm font-black text-gray-900 group-hover:text-white transition-colors">
+                                        <p className="text-sm font-black text-slate-900 transition-colors">
                                             0812-1234-5678
                                         </p>
                                     </div>
@@ -444,14 +444,14 @@ export default function Home({ auth, popularMotors = [] }) {
                                     href="mailto:halo@srbmotor.id"
                                     className="p-6 rounded-[2rem] bg-blue-50/50 border border-blue-100 flex items-center gap-5 group hover:bg-primary hover:border-primary transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-primary/20"
                                 >
-                                    <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30 group-hover:bg-white group-hover:text-primary group-hover:rotate-12 transition-all">
+                                    <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-black shadow-lg shadow-primary/30 group-hover:bg-white group-hover:text-primary group-hover:rotate-12 transition-all">
                                         <Mail className="w-7 h-7" />
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] font-black text-primary-dark uppercase tracking-widest group-hover:text-white/80 transition-colors">
+                                    <div className="flex flex-col text-left">
+                                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest transition-colors">
                                             Layanan Email
                                         </p>
-                                        <p className="text-sm font-black text-gray-900 leading-none mt-1 group-hover:text-white transition-colors">
+                                        <p className="text-sm font-black text-slate-900 leading-none mt-1 transition-colors">
                                             halo@srbmotor.id
                                         </p>
                                     </div>
@@ -516,7 +516,6 @@ export default function Home({ auth, popularMotors = [] }) {
                                     <span>Kirim Pesan</span>
                                     <ArrowRight className="group-hover:translate-x-2 transition-transform h-5 w-5" />
                                 </Button>
-                                   
                             </form>
                         </div>
                     </div>

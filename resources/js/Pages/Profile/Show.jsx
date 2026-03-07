@@ -39,8 +39,7 @@ export default function Show({ user }) {
 
             <main className="flex-grow pt-[104px] pb-20">
                 {/* HEADER / COVER AREA */}
-                <div className="bg-slate-950 pt-16 pb-32 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent)] pointer-events-none" />
+                <div className="bg-gray-50 pt-16 pb-32 relative border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="flex flex-col md:flex-row items-center md:items-end gap-8">
                             <motion.div
@@ -48,22 +47,22 @@ export default function Show({ user }) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="relative"
                             >
-                                <div className="w-40 h-40 rounded-[2.5rem] bg-white p-2 shadow-2xl overflow-hidden">
-                                    <div className="w-full h-full rounded-[2rem] bg-gray-100 flex items-center justify-center text-5xl font-black text-slate-900 uppercase">
+                                <div className="w-40 h-40 rounded-[2.5rem] bg-white p-2 shadow-2xl overflow-hidden border border-gray-100">
+                                    <div className="w-full h-full rounded-[2rem] bg-gray-50 flex items-center justify-center text-5xl font-black text-slate-900 uppercase">
                                         {user.name.charAt(0)}
                                     </div>
                                 </div>
-                                <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white font-black text-[10px] px-4 py-1.5 rounded-full shadow-lg border-2 border-slate-950 uppercase tracking-widest">
+                                <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white font-black text-[10px] px-4 py-1.5 rounded-full shadow-lg border-2 border-white uppercase tracking-widest">
                                     {user.role}
                                 </div>
                             </motion.div>
 
                             <div className="text-center md:text-left space-y-2 mb-2">
-                                <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tight">
+                                <h1 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">
                                     {user.name}
                                 </h1>
-                                <p className="text-gray-400 font-bold flex items-center justify-center md:justify-start gap-2 text-lg">
-                                    <Mail className="w-5 h-5 text-gray-500" />{" "}
+                                <p className="text-slate-500 font-bold flex items-center justify-center md:justify-start gap-2 text-lg">
+                                    <Mail className="w-5 h-5 text-blue-600" />{" "}
                                     {user.email}
                                 </p>
                             </div>

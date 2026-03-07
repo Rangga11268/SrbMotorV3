@@ -88,18 +88,17 @@ export default function UserTransactions({ transactions }) {
 
             <main className="flex-grow pt-[104px] pb-20">
                 {/* HERO HEADER */}
-                <div className="bg-slate-950 pt-16 pb-24 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent)] pointer-events-none" />
+                <div className="bg-gray-50 pt-16 pb-24 relative border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-white/60 text-[10px] font-black uppercase tracking-widest mb-6 backdrop-blur-sm border border-white/10">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-6 border border-blue-100">
                             <ShoppingBag className="w-4 h-4" /> Manajemen
                             Pesanan
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
+                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tight">
                             ALIRAN{" "}
-                            <span className="text-white/20">TRANSAKSI</span>
+                            <span className="text-blue-600/20">TRANSAKSI</span>
                         </h1>
-                        <p className="mt-4 text-gray-400 font-bold text-lg max-w-2xl">
+                        <p className="mt-4 text-slate-500 font-bold text-lg max-w-2xl">
                             Lacak status pemesanan motor Anda, kelola dokumen
                             persyaratan, dan lihat rincian transaksi secara
                             transparan.
@@ -284,7 +283,7 @@ export default function UserTransactions({ transactions }) {
                                 menemukan motor impian Anda.
                             </p>
                             <Link href="/motors">
-                                <button className="h-16 px-10 bg-primary text-white font-black uppercase tracking-widest rounded-[2rem] hover:bg-black transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
+                                <button className="h-16 px-10 bg-primary text-black font-black uppercase tracking-widest rounded-[2rem] hover:bg-white transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
                                     Mulai Menjelajah{" "}
                                     <ArrowRight className="w-5 h-5" />
                                 </button>

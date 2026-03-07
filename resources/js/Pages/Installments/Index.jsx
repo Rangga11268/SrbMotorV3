@@ -237,19 +237,17 @@ export default function InstallmentIndex({ transactions }) {
 
             <main className="flex-grow pt-[104px] pb-20">
                 {/* HERO HEADER */}
-                <div className="bg-primary pt-16 pb-24 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)] pointer-events-none" />
+                <div className="bg-gray-50 pt-16 pb-24 relative border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white/80 text-[10px] font-black uppercase tracking-widest mb-6 backdrop-blur-sm border border-white/5">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-6 border border-blue-100">
                             <Landmark className="w-4 h-4" /> Manajemen
                             Pembiayaan
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
+                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tight">
                             RENCANA{" "}
-                            <span className="text-white/40">CICILAN</span>
+                            <span className="text-blue-600/20">CICILAN</span>
                         </h1>
-                           
-                        <p className="mt-4 text-primary-light font-bold text-lg max-w-2xl">
+                        <p className="mt-4 text-slate-500 font-bold text-lg max-w-2xl">
                             Pantau status pembayaran, unduh kwitansi, dan
                             lakukan pelunasan unit motor Anda dengan mudah dan
                             aman.
@@ -497,7 +495,7 @@ export default function InstallmentIndex({ transactions }) {
                             </p>
 
                             <Link href="/motors">
-                                <button className="h-16 px-10 bg-primary text-white font-black uppercase tracking-widest rounded-[2rem] hover:bg-black transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
+                                <button className="h-16 px-10 bg-primary text-black font-black uppercase tracking-widest rounded-[2rem] hover:bg-white transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
                                     Lihat Katalog Motor{" "}
                                     <ArrowRight className="w-5 h-5" />
                                 </button>
