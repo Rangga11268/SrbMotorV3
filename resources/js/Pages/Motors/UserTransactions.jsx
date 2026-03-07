@@ -1,6 +1,7 @@
 import React from "react";
-import { Head, Link } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
+import { Head, Link, usePage } from "@inertiajs/react";
+import Navbar from "@/Components/Public/Navbar";
+import Footer from "@/Components/Public/Footer";
 import {
     ShoppingBag,
     Calendar,
@@ -18,10 +19,16 @@ import {
     CreditCard,
     DollarSign,
     Package,
+    ChevronRight,
+    Zap,
+    MapPin,
+    ShieldCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function UserTransactions({ transactions }) {
+    const { auth } = usePage().props;
+
     // Status Helper
     const getStatusInfo = (status) => {
         switch (status) {
@@ -30,7 +37,7 @@ export default function UserTransactions({ transactions }) {
             case "ready_for_delivery":
                 return {
                     label: "DITERIMA",
-                    color: "text-green-400 border-green-500/30 bg-green-500/10",
+                    color: "text-green-600 border-green-100 bg-green-50",
                     icon: CheckCircle,
                 };
             case "menunggu_persetujuan":
@@ -38,20 +45,20 @@ export default function UserTransactions({ transactions }) {
             case "waiting_payment":
                 return {
                     label: "DIPROSES",
-                    color: "text-yellow-400 border-yellow-500/30 bg-yellow-500/10",
+                    color: "text-blue-600 border-blue-100 bg-blue-50",
                     icon: Activity,
                 };
             case "ditolak":
             case "data_tidak_valid":
                 return {
                     label: "DITOLAK",
-                    color: "text-red-400 border-red-500/30 bg-red-500/10",
+                    color: "text-red-600 border-red-100 bg-red-50",
                     icon: XCircle,
                 };
             default:
                 return {
                     label: status.toUpperCase(),
-                    color: "text-white/50 border-white/20 bg-white/5",
+                    color: "text-gray-500 border-gray-100 bg-gray-50",
                     icon: Info,
                 };
         }
@@ -66,177 +73,193 @@ export default function UserTransactions({ transactions }) {
         }).format(amount);
     };
 
-    return (
-        <MainLayout title="Log Transaksi">
-            <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
-                {/* Background FX */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px] opacity-10 pointer-events-none"></div>
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+    };
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
-                    >
-                        <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-4 backdrop-blur-md">
-                                <Hash size={12} className="text-accent" />
-                                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                    Sistem Log
-                                </span>
-                            </div>
-                            <h1 className="text-4xl md:text-5xl font-display font-black text-white leading-none">
-                                ALIRAN{" "}
-                                <span className="text-accent text-glow">
-                                    TRANSAKSI
-                                </span>
-                            </h1>
+    return (
+        <div className="min-h-screen flex flex-col bg-[#F8F9FA]">
+            <Head title="Riwayat Pesanan - SRB Motors" />
+            <Navbar auth={auth} />
+
+            <main className="flex-grow pt-[104px] pb-20">
+                {/* HERO HEADER */}
+                <div className="bg-slate-950 pt-16 pb-24 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent)] pointer-events-none" />
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-white/60 text-[10px] font-black uppercase tracking-widest mb-6 backdrop-blur-sm border border-white/10">
+                            <ShoppingBag className="w-4 h-4" /> Manajemen
+                            Pesanan
                         </div>
-                        <div className="text-right hidden md:block">
-                            <p className="text-white/30 font-mono text-sm">
+                        <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
+                            ALIRAN{" "}
+                            <span className="text-white/20">TRANSAKSI</span>
+                        </h1>
+                        <p className="mt-4 text-gray-400 font-bold text-lg max-w-2xl">
+                            Lacak status pemesanan motor Anda, kelola dokumen
+                            persyaratan, dan lihat rincian transaksi secara
+                            transparan.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
+                    <div className="flex justify-between items-center mb-10">
+                        <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-3">
+                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                                 TOTAL ENTRI:{" "}
-                                <span className="text-accent">
-                                    {transactions.data.length}
+                                <span className="text-gray-900 ml-1">
+                                    {transactions.total ||
+                                        transactions.data.length}
                                 </span>
-                            </p>
+                            </span>
                         </div>
-                    </motion.div>
+                    </div>
 
                     {transactions.data.length > 0 ? (
-                        <div className="space-y-6">
+                        <div className="space-y-8">
                             {transactions.data.map((transaction, index) => {
                                 const statusInfo = getStatusInfo(
-                                    transaction.status
+                                    transaction.status,
                                 );
                                 const StatusIcon = statusInfo.icon;
 
                                 return (
                                     <motion.div
                                         key={transaction.id}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="group relative bg-zinc-900/50 backdrop-blur-md border border-white/5 hover:border-accent/30 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-black/40"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        className="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-white overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500"
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-accent/0 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
-
                                         <div className="flex flex-col lg:flex-row">
-                                            {/* Image Section */}
-                                            <div className="lg:w-64 h-48 lg:h-auto relative bg-black/50 border-r border-white/5 flex items-center justify-center p-4 overflow-hidden">
-                                                <div className="absolute inset-0 bg-[url('/assets/img/grid.svg')] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                            {/* IMAGE SECTION */}
+                                            <div className="lg:w-80 p-8 bg-gray-50 flex items-center justify-center relative overflow-hidden group-hover:bg-primary/5 transition-colors">
+                                                <div className="absolute top-4 left-4 z-10">
+                                                    <span
+                                                        className={`px-3 py-1.5 rounded-full text-[9px] font-black border flex items-center gap-1.5 uppercase tracking-widest shadow-sm ${statusInfo.color}`}
+                                                    >
+                                                        <StatusIcon
+                                                            size={12}
+                                                            strokeWidth={3}
+                                                        />
+                                                        {statusInfo.label}
+                                                    </span>
+                                                </div>
                                                 <img
                                                     src={`/storage/${transaction.motor.image_path}`}
                                                     alt={transaction.motor.name}
-                                                    className="relative z-10 w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-700"
+                                                    className="w-full h-48 object-contain relative z-10 filter drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-700"
                                                 />
                                             </div>
 
-                                            {/* Content Section */}
-                                            <div className="flex-1 p-6 md:p-8 flex flex-col justify-between relative">
-                                                <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
-                                                    <div>
-                                                        <div className="flex items-center gap-3 mb-2">
-                                                            <span className="text-xs font-mono text-white/30 tracking-widest uppercase">
+                                            {/* CONTENT SECTION */}
+                                            <div className="flex-1 p-8 md:p-10 flex flex-col justify-between">
+                                                <div className="flex flex-col md:flex-row justify-between items-start gap-6 border-b border-gray-100 pb-8 mb-8">
+                                                    <div className="space-y-2">
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
                                                                 TXID: #
                                                                 {String(
-                                                                    transaction.id
+                                                                    transaction.id,
                                                                 ).padStart(
                                                                     6,
-                                                                    "0"
+                                                                    "0",
                                                                 )}
                                                             </span>
-                                                            <span
-                                                                className={`px-2 py-0.5 rounded text-[10px] font-bold border flex items-center gap-1 uppercase tracking-wider ${statusInfo.color}`}
-                                                            >
-                                                                <StatusIcon
-                                                                    size={10}
-                                                                />{" "}
-                                                                {
-                                                                    statusInfo.label
-                                                                }
+                                                            <span className="w-1 h-1 rounded-full bg-gray-200" />
+                                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                                                                {formatDate(
+                                                                    transaction.created_at,
+                                                                )}
                                                             </span>
                                                         </div>
-                                                        <h3 className="text-2xl font-display font-bold text-white group-hover:text-accent transition-colors">
+                                                        <h3 className="text-3xl font-black text-gray-900 group-hover:text-primary transition-colors uppercase tracking-tight">
                                                             {
                                                                 transaction
                                                                     .motor.name
                                                             }
                                                         </h3>
-                                                        <div className="flex items-center gap-4 mt-2 text-xs font-mono text-white/50">
-                                                            <span className="flex items-center gap-1">
-                                                                <Calendar
-                                                                    size={12}
-                                                                />{" "}
+                                                        <div className="flex flex-wrap items-center gap-4 mt-2">
+                                                            <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500">
+                                                                <Calendar className="w-3.5 h-3.5 text-gray-300" />
                                                                 {
                                                                     transaction
                                                                         .motor
                                                                         .year
                                                                 }
                                                             </span>
-                                                            <span>•</span>
-                                                            <span className="flex items-center gap-1 uppercase">
+                                                            <span className="w-1 h-1 rounded-full bg-gray-200" />
+                                                            <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase">
                                                                 {transaction.transaction_type ===
                                                                 "CASH" ? (
-                                                                    <DollarSign
-                                                                        size={
-                                                                            12
-                                                                        }
-                                                                        className="text-green-400"
-                                                                    />
+                                                                    <div className="flex items-center gap-1.5">
+                                                                        <Zap className="w-3.5 h-3.5 text-emerald-500" />
+                                                                        <span className="text-emerald-600">
+                                                                            Tunai
+                                                                            Keras
+                                                                        </span>
+                                                                    </div>
                                                                 ) : (
-                                                                    <CreditCard
-                                                                        size={
-                                                                            12
-                                                                        }
-                                                                        className="text-purple-400"
-                                                                    />
+                                                                    <div className="flex items-center gap-1.5">
+                                                                        <CreditCard className="w-3.5 h-3.5 text-blue-500" />
+                                                                        <span className="text-blue-600">
+                                                                            Pembiayaan
+                                                                            Kredit
+                                                                        </span>
+                                                                    </div>
                                                                 )}
-                                                                {
-                                                                    transaction.transaction_type
-                                                                }
                                                             </span>
                                                         </div>
                                                     </div>
 
-                                                    <div className="text-right">
-                                                        <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold">
-                                                            Nilai Total
+                                                    <div className="md:text-right">
+                                                        <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">
+                                                            Nilai Transaksi
                                                         </p>
-                                                        <p className="text-2xl font-mono font-bold text-white">
+                                                        <p className="text-3xl font-black text-primary">
                                                             {formatCurrency(
-                                                                transaction.total_amount
+                                                                transaction.total_amount,
                                                             )}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex flex-col sm:flex-row items-center gap-4 pt-6 border-t border-white/5 relative z-10">
+                                                <div className="flex flex-col sm:flex-row items-center gap-4">
                                                     {transaction.transaction_type ===
                                                         "CREDIT" && (
                                                         <Link
                                                             href={route(
                                                                 "motors.manage-documents",
-                                                                transaction.id
+                                                                transaction.id,
                                                             )}
-                                                            className="w-full sm:w-auto px-6 py-3 rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-400 hover:text-white hover:bg-blue-500 text-xs font-bold tracking-wider hover:border-blue-500 transition-all flex items-center justify-center gap-2 group/btn"
+                                                            className="w-full sm:w-auto h-14 px-8 rounded-2xl border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white text-[11px] font-black tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn shadow-sm"
                                                         >
                                                             <FileText
-                                                                size={14}
-                                                                className="group-hover/btn:scale-110 transition-transform"
+                                                                size={18}
+                                                                strokeWidth={
+                                                                    2.5
+                                                                }
                                                             />
-                                                            KELOLA DOKUMEN
+                                                            Kelola Dokumen
                                                         </Link>
                                                     )}
                                                     <Link
                                                         href={route(
                                                             "motors.order.confirmation",
-                                                            transaction.id
+                                                            transaction.id,
                                                         )}
-                                                        className="w-full sm:w-auto flex-1 px-6 py-3 rounded-xl bg-white text-black hover:bg-accent font-bold text-xs tracking-wider transition-colors flex items-center justify-center gap-2 group/btn"
+                                                        className="w-full sm:w-auto flex-1 h-14 px-8 rounded-2xl bg-primary text-white hover:bg-black font-black text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn shadow-xl shadow-primary/20"
                                                     >
-                                                        LIHAT DETAIL
+                                                        Lihat Detail Pesanan
                                                         <ArrowRight
-                                                            size={14}
+                                                            size={18}
+                                                            strokeWidth={2.5}
                                                             className="group-hover/btn:translate-x-1 transition-transform"
                                                         />
                                                     </Link>
@@ -248,38 +271,40 @@ export default function UserTransactions({ transactions }) {
                             })}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center py-24 bg-zinc-900/30 border border-white/5 rounded-3xl backdrop-blur-sm">
-                            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5 animate-pulse">
-                                <Package size={32} className="text-white/20" />
+                        <div className="max-w-2xl mx-auto py-24 text-center">
+                            <div className="w-32 h-32 bg-white rounded-[3rem] shadow-xl shadow-gray-200/50 flex items-center justify-center mx-auto mb-8 border border-white">
+                                <Package className="w-16 h-16 text-gray-200" />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2 font-display">
-                                TIDAK ADA ENTRI DITEMUKAN
+                            <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tight mb-4">
+                                Belum Ada Transaksi
                             </h3>
-                            <p className="text-white/30 font-mono text-sm mb-8">
-                                Log transaksi saat ini kosong.
+                            <p className="text-gray-500 font-bold mb-10 text-lg leading-relaxed">
+                                Anda belum memiliki riwayat pemesanan motor di
+                                SRB Motors. Jelajahi katalog kami untuk
+                                menemukan motor impian Anda.
                             </p>
-                            <Link
-                                href={route("motors.index")}
-                                className="bg-accent text-black px-8 py-3 rounded-xl font-bold hover:bg-white transition-colors shadow-[0_0_20px_rgba(190,242,100,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]"
-                            >
-                                MULAI PESANAN
+                            <Link href="/motors">
+                                <button className="h-16 px-10 bg-primary text-white font-black uppercase tracking-widest rounded-[2rem] hover:bg-black transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
+                                    Mulai Menjelajah{" "}
+                                    <ArrowRight className="w-5 h-5" />
+                                </button>
                             </Link>
                         </div>
                     )}
 
-                    {/* Pagination */}
+                    {/* PAGINATION */}
                     {transactions.links && transactions.links.length > 3 && (
-                        <div className="mt-12 flex justify-center gap-2">
+                        <div className="mt-20 flex justify-center gap-3">
                             {transactions.links.map((link, k) => (
                                 <Link
                                     key={k}
                                     href={link.url || "#"}
-                                    className={`w-10 h-10 flex items-center justify-center rounded-lg font-mono text-xs font-bold transition-all ${
+                                    className={`w-12 h-12 flex items-center justify-center rounded-2xl text-[11px] font-black transition-all border ${
                                         link.active
-                                            ? "bg-accent text-black shadow-[0_0_15px_rgba(190,242,100,0.4)]"
+                                            ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
                                             : link.url
-                                            ? "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-                                            : "opacity-30 cursor-not-allowed text-white/20"
+                                              ? "bg-white text-gray-400 border-gray-100 hover:border-primary hover:text-primary shadow-sm"
+                                              : "bg-white text-gray-200 border-gray-50 cursor-not-allowed"
                                     }`}
                                     dangerouslySetInnerHTML={{
                                         __html: link.label,
@@ -289,7 +314,9 @@ export default function UserTransactions({ transactions }) {
                         </div>
                     )}
                 </div>
-            </div>
-        </MainLayout>
+            </main>
+
+            <Footer />
+        </div>
     );
 }

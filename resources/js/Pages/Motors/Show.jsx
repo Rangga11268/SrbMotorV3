@@ -7,29 +7,23 @@ import Card, { CardBody } from "@/Components/UI/Card";
 import Badge from "@/Components/UI/Badge";
 import { motion } from "framer-motion";
 import {
-    Calendar,
-    Info,
-    CheckCircle2,
-    XCircle,
-    ShoppingCart,
-    FileText,
-    MessageCircle,
-    ArrowLeft,
-    Share2,
-    ShieldCheck,
-    Gauge,
-    Cpu,
-    Zap,
-    MapPin,
-    PenTool,
-    Activity,
     ChevronRight,
     ArrowRight,
+    ShoppingCart,
+    FileText,
     Phone,
+    Star,
+    ShieldCheck,
+    CheckCircle2,
+    Zap,
     Clock,
     Tag,
-    Star,
-    CheckCircle,
+    Gauge,
+    Cpu,
+    Activity,
+    Info,
+    ArrowLeft,
+    PenTool,
 } from "lucide-react";
 
 export default function Show({ motor, relatedMotors }) {
@@ -41,7 +35,6 @@ export default function Show({ motor, relatedMotors }) {
         motor.financing_schemes?.[0]?.tenor || null,
     );
 
-    // Group financing schemes by provider
     const schemesByProvider = React.useMemo(() => {
         if (!motor.financing_schemes) return {};
         return motor.financing_schemes.reduce((acc, scheme) => {
@@ -80,83 +73,83 @@ export default function Show({ motor, relatedMotors }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-white">
+        <div className="min-h-screen flex flex-col bg-[#F8F9FA] overflow-x-hidden">
             <Head title={`${motor.name} - SRB Motors`} />
             <Navbar auth={auth} />
 
-            <main className="flex-grow pt-24 pb-20">
-                {/* BREADCRUMBS */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                        <Link href="/" className="hover:text-blue-600">
-                            Home
-                        </Link>
-                        <ChevronRight className="w-4 h-4" />
+            <main className="flex-grow pt-24 md:pt-[104px] pb-20">
+                {/* BREADCRUMBS & BACK BUTTON */}
+                <div className="bg-white border-b border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-xs font-bold text-gray-400">
+                            <Link
+                                href="/"
+                                className="hover:text-primary transition-colors"
+                            >
+                                HOME
+                            </Link>
+                            <ChevronRight className="w-3 h-3" />
+                            <Link
+                                href={route("motors.index")}
+                                className="hover:text-primary transition-colors uppercase"
+                            >
+                                KATALOG
+                            </Link>
+                            <ChevronRight className="w-3 h-3" />
+                            <span className="text-gray-900 uppercase truncate max-w-[150px] md:max-w-none">
+                                {motor.name}
+                            </span>
+                        </div>
                         <Link
                             href={route("motors.index")}
-                            className="hover:text-blue-600"
+                            className="flex items-center gap-2 text-xs font-black text-gray-500 hover:text-primary transition-all"
                         >
-                            Katalog
+                            <ArrowLeft className="w-4 h-4" /> KEMBALI
                         </Link>
-                        <ChevronRight className="w-4 h-4" />
-                        <span className="text-gray-900 line-clamp-1">
-                            {motor.name}
-                        </span>
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-                        {/* LEFT COLUMN - GALLERY & IMAGE */}
-                        <div className="space-y-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                    <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
+                        {/* LEFT COLUMN - CONTENT */}
+                        <div className="flex-grow space-y-8">
+                            {/* MAIN IMAGE CARD */}
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="relative aspect-[4/3] bg-gray-100 rounded-3xl overflow-hidden shadow-sm border border-gray-100"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/50 overflow-hidden border border-white"
                             >
-                                <img
-                                    src={
-                                        motor.image_path
-                                            ? `/storage/${motor.image_path}`
-                                            : "/images/placeholder-motor.jpg"
-                                    }
-                                    alt={motor.name}
-                                    className="w-full h-full object-cover"
-                                />
-
-                                {/* Status Badges */}
-                                <div className="absolute top-6 left-6 flex flex-col gap-3">
-                                    <Badge
-                                        variant="blue"
-                                        size="md"
-                                        className="shadow-lg backdrop-blur-md bg-white/90"
-                                    >
-                                        {motor.brand}
-                                    </Badge>
-                                    <Badge
-                                        variant={
-                                            motor.tersedia ? "green" : "red"
+                                <div className="relative aspect-[16/10] md:aspect-[16/9] bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-8 md:p-12">
+                                    <img
+                                        src={
+                                            motor.image_path
+                                                ? `/storage/${motor.image_path}`
+                                                : "/images/placeholder-motor.jpg"
                                         }
-                                        size="md"
-                                        className="shadow-lg backdrop-blur-md bg-white/90"
-                                    >
-                                        {motor.tersedia
-                                            ? "Unit Tersedia"
-                                            : "Unit Terjual"}
-                                    </Badge>
-                                </div>
+                                        alt={motor.name}
+                                        className="max-w-full max-h-full object-contain drop-shadow-2xl"
+                                    />
 
-                                {/* Promo Ribbons (Momotor Style) */}
-                                {motor.promotions &&
-                                    motor.promotions.length > 0 && (
-                                        <div className="absolute bottom-6 left-0 flex flex-col gap-2 z-10 pointer-events-none w-full pr-10">
+                                    {/* Brand & Type Labels */}
+                                    <div className="absolute top-8 left-8 flex flex-col gap-3">
+                                        <div className="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-2xl">
+                                            {motor.brand}
+                                        </div>
+                                        <div className="bg-white text-primary px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border-2 border-primary/10 shadow-xl shadow-gray-200/50">
+                                            {motor.type}
+                                        </div>
+                                    </div>
+
+                                    {/* Ribbons */}
+                                    {motor.promotions?.length > 0 && (
+                                        <div className="absolute bottom-10 left-0 flex flex-col gap-3 pointer-events-none">
                                             {motor.promotions.map(
-                                                (promo, pIndex) => (
+                                                (promo, idx) => (
                                                     <div
-                                                        key={pIndex}
-                                                        className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-xs sm:text-sm font-black uppercase tracking-wider px-5 py-2.5 rounded-r-full shadow-2xl border border-orange-400/50 self-start truncate"
+                                                        key={idx}
+                                                        className="bg-gradient-to-r from-primary to-blue-900 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-8 py-4 rounded-r-full shadow-2xl border-l-[6px] border-white/50 flex items-center gap-3 transform -translate-x-1"
                                                     >
-                                                        <Star className="w-4 h-4 inline-block mr-2 -mt-0.5 fill-current" />
+                                                        <Star className="w-4 h-4 fill-white animate-pulse" />
                                                         {promo.badge_text ||
                                                             promo.title}
                                                     </div>
@@ -164,353 +157,352 @@ export default function Show({ motor, relatedMotors }) {
                                             )}
                                         </div>
                                     )}
+                                </div>
                             </motion.div>
 
-                            {/* Trust Badges under image */}
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="p-4 bg-blue-50 rounded-2xl flex flex-col items-center text-center gap-2">
-                                    <ShieldCheck className="w-6 h-6 text-blue-600" />
-                                    <span className="text-xs font-bold text-blue-900">
-                                        Lulus Inspeksi
-                                    </span>
-                                </div>
-                                <div className="p-4 bg-green-50 rounded-2xl flex flex-col items-center text-center gap-2">
-                                    <CheckCircle2 className="w-6 h-6 text-green-600" />
-                                    <span className="text-xs font-bold text-green-900">
-                                        Surat Lengkap
-                                    </span>
-                                </div>
-                                <div className="p-4 bg-yellow-50 rounded-2xl flex flex-col items-center text-center gap-2">
-                                    <Zap className="w-6 h-6 text-yellow-600" />
-                                    <span className="text-xs font-bold text-yellow-900">
-                                        Siap Pakai
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* RIGHT COLUMN - DETAILS */}
-                        <div className="space-y-10">
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-4 text-sm font-semibold text-blue-600 uppercase tracking-widest">
-                                    <span>{motor.brand}</span>
-                                    <span className="w-1.5 h-1.5 bg-gray-300 rounded-full" />
-                                    <span>{motor.type}</span>
-                                </div>
-                                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-                                    {motor.name}
-                                </h1>
-                                <div className="flex items-center gap-6">
-                                    <div className="text-3xl font-black text-blue-600">
-                                        Rp{" "}
-                                        {parseFloat(motor.price).toLocaleString(
-                                            "id-ID",
-                                        )}
-                                    </div>
-                                    <Badge variant="gray" size="md">
-                                        Tahun {motor.year}
-                                    </Badge>
-                                </div>
-                            </div>
-
-                            {/* CTAs */}
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                {motor.tersedia ? (
-                                    <>
-                                        <div className="flex-grow">
-                                            <Link
-                                                href={route(
-                                                    "motors.cash-order",
-                                                    motor.id,
-                                                )}
+                            {/* DETAIL SPECIFICATIONS TABS (Conceptually) */}
+                            <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-gray-200/20 border border-white space-y-12">
+                                <div className="space-y-6">
+                                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3">
+                                        <Info className="w-6 h-6 text-primary" />{" "}
+                                        Informasi Kendaraan
+                                    </h2>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                                                Tahun
+                                            </p>
+                                            <p className="text-lg font-black text-gray-900">
+                                                {motor.year}
+                                            </p>
+                                        </div>
+                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                                                Warna
+                                            </p>
+                                            <p className="text-lg font-black text-gray-900">
+                                                {motor.color || "Beragam"}
+                                            </p>
+                                        </div>
+                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                                                Transmisi
+                                            </p>
+                                            <p className="text-lg font-black text-gray-900 uppercase">
+                                                {motor.type?.includes("matic")
+                                                    ? "Otomatis"
+                                                    : "Manual"}
+                                            </p>
+                                        </div>
+                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                                                Status
+                                            </p>
+                                            <p
+                                                className={`text-lg font-black ${motor.tersedia ? "text-green-600" : "text-red-600"}`}
                                             >
-                                                <Button
-                                                    fullWidth
-                                                    size="lg"
-                                                    className="h-14 text-lg"
-                                                >
-                                                    <ShoppingCart className="w-5 h-5 mr-2" />{" "}
-                                                    Beli Cash
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                        <div className="flex-grow">
-                                            <Link
-                                                href={route(
-                                                    "motors.credit-order",
-                                                    motor.id,
-                                                )}
-                                            >
-                                                <Button
-                                                    fullWidth
-                                                    size="lg"
-                                                    variant="secondary"
-                                                    className="h-14 text-lg border-2"
-                                                >
-                                                    <FileText className="w-5 h-5 mr-2" />{" "}
-                                                    Ajukan Kredit
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <Button
-                                        fullWidth
-                                        size="lg"
-                                        disabled
-                                        className="h-14 opacity-50 grayscale cursor-not-allowed"
-                                    >
-                                        <XCircle className="w-5 h-5 mr-2" />{" "}
-                                        Unit Tidak Tersedia
-                                    </Button>
-                                )}
-                            </div>
-
-                            <button
-                                onClick={openWhatsApp}
-                                className="w-full h-14 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg shadow-green-100"
-                            >
-                                <Phone className="w-5 h-5 fill-current" /> Tanya
-                                Admin via WhatsApp
-                            </button>
-
-                            {/* LEASING CALCULATOR */}
-                            {motor.financing_schemes &&
-                                motor.financing_schemes.length > 0 && (
-                                    <div className="space-y-6 pt-8 border-t border-gray-100">
-                                        <div className="flex items-center justify-between">
-                                            <h3 className="text-xl font-bold text-gray-900">
-                                                Simulasi Cicilan
-                                            </h3>
-                                            <Badge variant="blue" size="sm">
-                                                Hubungi via Leasing
-                                            </Badge>
-                                        </div>
-
-                                        <div className="bg-blue-50/50 rounded-2xl border border-blue-100 p-6 space-y-6">
-                                            {/* Provider Selection */}
-                                            <div className="space-y-3">
-                                                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                                                    Pilih Leasing
-                                                </label>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {Object.values(
-                                                        schemesByProvider,
-                                                    ).map((pData) => (
-                                                        <button
-                                                            key={
-                                                                pData.provider
-                                                                    .id
-                                                            }
-                                                            onClick={() =>
-                                                                setSelectedProviderId(
-                                                                    pData
-                                                                        .provider
-                                                                        .id,
-                                                                )
-                                                            }
-                                                            className={`px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
-                                                                selectedProviderId ===
-                                                                pData.provider
-                                                                    .id
-                                                                    ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200"
-                                                                    : "bg-white text-gray-600 border-gray-200 hover:border-blue-300"
-                                                            }`}
-                                                        >
-                                                            {
-                                                                pData.provider
-                                                                    .name
-                                                            }
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Tenor Selection */}
-                                            {activeProvider && (
-                                                <div className="space-y-3">
-                                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-                                                        Pilih Tenor (Bulan)
-                                                    </label>
-                                                    <div className="grid grid-cols-4 gap-2">
-                                                        {activeProvider.schemes
-                                                            .sort(
-                                                                (a, b) =>
-                                                                    a.tenor -
-                                                                    b.tenor,
-                                                            )
-                                                            .map((scheme) => (
-                                                                <button
-                                                                    key={
-                                                                        scheme.id
-                                                                    }
-                                                                    onClick={() =>
-                                                                        setSelectedTenor(
-                                                                            scheme.tenor,
-                                                                        )
-                                                                    }
-                                                                    className={`py-3 rounded-xl text-sm font-bold border transition-all ${
-                                                                        selectedTenor ===
-                                                                        scheme.tenor
-                                                                            ? "bg-blue-600 text-white border-blue-600 shadow-md"
-                                                                            : "bg-white text-gray-600 border-gray-200 hover:border-blue-300"
-                                                                    }`}
-                                                                >
-                                                                    {
-                                                                        scheme.tenor
-                                                                    }
-                                                                    x
-                                                                </button>
-                                                            ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* Result Display */}
-                                            {activeScheme && (
-                                                <div className="pt-4 border-t border-blue-100">
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <div>
-                                                            <p className="text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">
-                                                                Uang Muka (DP)
-                                                            </p>
-                                                            <p className="text-xl font-bold text-gray-900">
-                                                                Rp{" "}
-                                                                {parseFloat(
-                                                                    activeScheme.dp_amount,
-                                                                ).toLocaleString(
-                                                                    "id-ID",
-                                                                )}
-                                                            </p>
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-xs text-gray-500 font-medium mb-1 uppercase tracking-wider">
-                                                                Angsuran / Bln
-                                                            </p>
-                                                            <p className="text-2xl font-black text-blue-600">
-                                                                Rp{" "}
-                                                                {parseFloat(
-                                                                    activeScheme.monthly_installment,
-                                                                ).toLocaleString(
-                                                                    "id-ID",
-                                                                )}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <p className="mt-4 text-[10px] text-gray-400 italic">
-                                                        *Simulasi ini hanya
-                                                        perkiraan. Biaya
-                                                        administrasi & asuransi
-                                                        mungkin belum termasuk.
-                                                        Silakan hubungi admin
-                                                        untuk janji temu atau
-                                                        survey.
-                                                    </p>
-                                                </div>
-                                            )}
+                                                {motor.tersedia
+                                                    ? "Tersedia"
+                                                    : "Terjual"}
+                                            </p>
                                         </div>
                                     </div>
-                                )}
+                                </div>
 
-                            {/* DESCRIPTION (RICH TEXT) */}
-                            {motor.description && (
-                                <div className="space-y-4 pt-8 border-t border-gray-100">
-                                    <h3 className="text-xl font-bold text-gray-900">
-                                        Spesifikasi & Promo
-                                    </h3>
+                                <div className="space-y-6">
+                                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3">
+                                        <PenTool className="w-6 h-6 text-primary" />{" "}
+                                        Deskripsi & Catatan
+                                    </h2>
                                     <div
-                                        className="prose prose-blue max-w-none text-gray-600 leading-relaxed bg-gray-50 p-6 rounded-2xl border border-gray-100"
+                                        className="prose prose-lg prose-primary max-w-none text-gray-600 font-medium leading-relaxed bg-gray-50 p-6 md:p-8 rounded-[2rem] border border-gray-100"
                                         dangerouslySetInnerHTML={{
                                             __html: motor.description,
                                         }}
-                                    ></div>
+                                    />
                                 </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
 
-                {/* RELATED MOTORS */}
-                {relatedMotors && relatedMotors.length > 0 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-32">
-                        <div className="flex items-center justify-between mb-12">
-                            <div>
-                                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
-                                    Unit Terkait
-                                </h2>
-                                <p className="text-gray-500">
-                                    Mungkin Anda juga tertarik dengan unit ini
-                                </p>
-                            </div>
-                            <Link href={route("motors.index")}>
-                                <Button variant="ghost" className="group">
-                                    Lihat Semua{" "}
-                                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </Button>
-                            </Link>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {relatedMotors.map((m) => (
-                                <Link
-                                    key={m.id}
-                                    href={route("motors.show", m.id)}
-                                >
-                                    <Card
-                                        hoverable
-                                        className="overflow-hidden border border-gray-100"
-                                    >
-                                        <div className="relative h-48 bg-gray-100 overflow-hidden">
-                                            <img
-                                                src={
-                                                    m.image_path
-                                                        ? `/storage/${m.image_path}`
-                                                        : "/images/placeholder-motor.jpg"
-                                                }
-                                                alt={m.name}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            />
-                                            {/* Promo Ribbon on Related */}
-                                            {m.promotions &&
-                                                m.promotions.length > 0 && (
-                                                    <div className="absolute bottom-2 left-0 z-10 pointer-events-none">
-                                                        <div className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-r-md shadow-lg">
-                                                            {m.promotions[0]
-                                                                .badge_text ||
-                                                                m.promotions[0]
-                                                                    .title}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            <div className="absolute top-3 right-3">
-                                                <Badge
-                                                    variant="blue"
-                                                    size="sm"
-                                                    className="bg-white/90 backdrop-blur-sm"
-                                                >
-                                                    {m.brand}
-                                                </Badge>
+                                {/* FEATURES & BENEFITS */}
+                                <div className="grid md:grid-cols-3 gap-6">
+                                    {[
+                                        {
+                                            icon: (
+                                                <ShieldCheck className="w-6 h-6 text-primary" />
+                                            ),
+                                            title: "Garansi 1 Thn",
+                                            desc: "Perlindungan mesin harian",
+                                        },
+                                        {
+                                            icon: (
+                                                <CheckCircle2 className="w-6 h-6 text-primary" />
+                                            ),
+                                            title: "Surat Aman",
+                                            desc: "STNK & BPKB ready",
+                                        },
+                                        {
+                                            icon: (
+                                                <Activity className="w-6 h-6 text-primary" />
+                                            ),
+                                            title: "Checkup Gratis",
+                                            desc: "Servis berkala pertama",
+                                        },
+                                    ].map((item, i) => (
+                                        <div
+                                            key={i}
+                                            className="flex items-center gap-4 p-6 rounded-2xl bg-primary/5 border border-primary/10"
+                                        >
+                                            <div className="w-12 h-12 rounded-xl bg-white border border-primary/20 flex items-center justify-center shrink-0 shadow-sm">
+                                                {item.icon}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-black text-gray-900">
+                                                    {item.title}
+                                                </p>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+                                                    {item.desc}
+                                                </p>
                                             </div>
                                         </div>
-                                        <CardBody className="p-4 space-y-3">
-                                            <h4 className="font-bold text-gray-900 line-clamp-1">
-                                                {m.name}
-                                            </h4>
-                                            <div className="flex items-center justify-between">
-                                                <p className="text-blue-600 font-extrabold text-lg">
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* RIGHT COLUMN - STICKY PRICE CARD */}
+                        <div className="lg:w-[400px] shrink-0">
+                            <div className="sticky top-32 space-y-6">
+                                <Card className="rounded-[2.5rem] shadow-2xl shadow-gray-200/50 border-white overflow-hidden bg-white">
+                                    <CardBody className="p-8 space-y-8">
+                                        <div className="space-y-2">
+                                            <p className="text-xs font-black text-gray-500 uppercase tracking-[0.2em]">
+                                                Harga Jual
+                                            </p>
+                                            <h1 className="text-4xl font-black text-gray-900">
+                                                Rp{" "}
+                                                {parseInt(
+                                                    motor.price,
+                                                ).toLocaleString("id-ID")}
+                                            </h1>
+                                            {motor.tersedia && (
+                                                <div className="flex items-center gap-2 text-green-500 font-black text-xs uppercase tracking-widest mt-2">
+                                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                                    UNIT READY STOCK
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-4 pt-8 border-t border-gray-50">
+                                            {motor.tersedia ? (
+                                                <>
+                                                    <Link
+                                                        href={route(
+                                                            "motors.cash-order",
+                                                            motor.id,
+                                                        )}
+                                                        className="block"
+                                                    >
+                                                        <Button
+                                                            fullWidth
+                                                            size="lg"
+                                                            className="h-16 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 group flex items-center justify-center gap-3"
+                                                        >
+                                                            <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                                            <span>
+                                                                Beli Cash
+                                                                Sekarang
+                                                            </span>
+                                                        </Button>
+                                                    </Link>
+                                                    <Link
+                                                        href={route(
+                                                            "motors.credit-order",
+                                                            motor.id,
+                                                        )}
+                                                        className="block"
+                                                    >
+                                                        <Button
+                                                            fullWidth
+                                                            size="lg"
+                                                            variant="secondary"
+                                                            className="h-16 rounded-2xl font-black text-lg border-2 group flex items-center justify-center gap-3"
+                                                        >
+                                                            <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                                            <span>
+                                                                Ajukan Kredit
+                                                            </span>
+                                                        </Button>
+                                                    </Link>
+                                                </>
+                                            ) : (
+                                                <Button
+                                                    fullWidth
+                                                    size="lg"
+                                                    disabled
+                                                    className="h-16 rounded-2xl font-black text-lg grayscale opacity-50 cursor-not-allowed"
+                                                >
+                                                    Unit Sudah Terjual
+                                                </Button>
+                                            )}
+
+                                            <button
+                                                onClick={openWhatsApp}
+                                                className="w-full h-16 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-2xl font-black flex items-center justify-center gap-3 transition-all shadow-xl shadow-green-200/50 group"
+                                            >
+                                                <Phone className="w-5 h-5 fill-white group-hover:rotate-12 transition-transform" />
+                                                <span>Tanya via WhatsApp</span>
+                                            </button>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 space-y-4">
+                                            <div className="flex items-center gap-3 text-primary">
+                                                <ShieldCheck className="w-6 h-6" />
+                                                <p className="text-xs font-black text-gray-900 uppercase tracking-widest">
+                                                    Transaksi 100% Aman
+                                                </p>
+                                            </div>
+                                            <p className="text-[10px] text-gray-400 font-bold leading-relaxed">
+                                                Pembayaran dilakukan setelah
+                                                verifikasi unit dan dokumen. SRB
+                                                Motors menjamin keamanan data
+                                                dan transaksi Anda.
+                                            </p>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+
+                                {/* LEASING QUICK SIMULATION (If available) */}
+                                {motor.financing_schemes?.length > 0 && (
+                                    <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-white space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-black text-gray-900 uppercase tracking-widest text-sm">
+                                                Simulasi Cicilan
+                                            </h3>
+                                            <Badge className="bg-primary/10 text-primary">
+                                                ESTIMASI
+                                            </Badge>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-1">
+                                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                                                        Uang Muka (DP)
+                                                    </p>
+                                                    <p className="font-black text-gray-900">
+                                                        Rp{" "}
+                                                        {parseInt(
+                                                            activeScheme?.dp_amount ||
+                                                                0,
+                                                        ).toLocaleString(
+                                                            "id-ID",
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                                                        Tenor
+                                                    </p>
+                                                    <p className="font-black text-gray-900">
+                                                        {activeScheme?.tenor}{" "}
+                                                        Bulan
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
+                                                <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">
+                                                    Angsuran Per Bulan
+                                                </p>
+                                                <p className="text-2xl font-black text-primary">
                                                     Rp{" "}
-                                                    {parseFloat(
-                                                        m.price,
+                                                    {parseInt(
+                                                        activeScheme?.monthly_installment ||
+                                                            0,
                                                     ).toLocaleString("id-ID")}
                                                 </p>
                                             </div>
-                                        </CardBody>
-                                    </Card>
-                                </Link>
-                            ))}
+                                        </div>
+
+                                        <Link
+                                            href={route(
+                                                "motors.credit-order",
+                                                motor.id,
+                                            )}
+                                            className="flex items-center justify-center gap-2 text-primary font-black uppercase text-xs tracking-widest hover:gap-3 transition-all"
+                                        >
+                                            Sesuaikan simulasi{" "}
+                                            <ChevronRight className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                )}
+
+                    {/* RELATED MOTORS SECTION */}
+                    {relatedMotors?.length > 0 && (
+                        <div className="mt-32 space-y-12">
+                            <div className="flex items-end justify-between">
+                                <div>
+                                    <Badge className="mb-3">
+                                        Mungkin Anda Suka
+                                    </Badge>
+                                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
+                                        UNIT{" "}
+                                        <span className="text-primary">
+                                            TERKAIT
+                                        </span>
+                                    </h2>
+                                </div>
+                                <Link
+                                    href="/motors"
+                                    className="hidden md:flex items-center gap-2 text-gray-400 hover:text-primary font-bold text-sm transition-colors group"
+                                >
+                                    Lihat Semua{" "}
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                                {relatedMotors.map((m, idx) => (
+                                    <Link
+                                        key={m.id}
+                                        href={route("motors.show", m.id)}
+                                    >
+                                        <Card
+                                            hoverable
+                                            className="h-full border-none shadow-lg hover:shadow-2xl shadow-gray-200/50 rounded-[2rem] overflow-hidden group bg-white"
+                                        >
+                                            <div className="relative h-48 bg-gray-50 overflow-hidden">
+                                                <img
+                                                    src={
+                                                        m.image_path
+                                                            ? `/storage/${m.image_path}`
+                                                            : "/images/placeholder-motor.jpg"
+                                                    }
+                                                    className="w-full h-full object-contain p-4 transform group-hover:scale-110 transition-transform duration-700"
+                                                />
+                                                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-gray-500 border border-white/50 shadow-sm uppercase">
+                                                    {m.brand}
+                                                </div>
+                                            </div>
+                                            <CardBody className="p-6 space-y-3">
+                                                <h4 className="text-lg font-black text-gray-900 line-clamp-1 group-hover:text-primary transition-colors uppercase tracking-tight">
+                                                    {m.name}
+                                                </h4>
+                                                <p className="text-xl font-black text-primary leading-none">
+                                                    Rp{" "}
+                                                    {parseInt(
+                                                        m.price,
+                                                    ).toLocaleString("id-ID")}
+                                                </p>
+                                            </CardBody>
+                                        </Card>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
             </main>
 
             <Footer />

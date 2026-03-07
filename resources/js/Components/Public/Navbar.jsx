@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import Button from "../UI/Button";
 import Logo from "./Logo";
@@ -13,6 +13,9 @@ import {
     Phone,
     Search,
     ShoppingBag,
+    MapPin,
+    HelpCircle,
+    Download,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,106 +23,84 @@ export default function Navbar({ auth }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const { url } = usePage();
 
-    // Dynamic scroll effect
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+            setScrolled(window.scrollY > 10);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const navLinks = [
+    const categories = [
         {
+            label: "Motor Baru",
             href: "/motors",
-            label: "Daftar Motor",
-            icon: <Bike className="w-4 h-4" />,
+            active: url.startsWith("/motors"),
         },
-        {
-            href: "/#contact",
-            label: "Hubungi Kami",
-            icon: <Phone className="w-4 h-4" />,
-        },
+        { label: "Tentang Kami", href: "/about", active: url === "/about" },
     ];
 
     return (
-        <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                scrolled
-                    ? "bg-white/90 backdrop-blur-md border-b border-gray-200 py-2 shadow-sm"
-                    : "bg-white border-b border-transparent py-4"
-            }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100">
+            {/* Top Row: Logo, Search, Auth */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                <div className="flex items-center justify-between gap-4 md:gap-8">
                     {/* Logo */}
-                    <Link href="/" className="group">
+                    <Link href="/" className="flex-shrink-0">
                         <Logo />
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-1">
-                        {navLinks.map((link) =>
-                            link.href.startsWith("/#") ? (
-                                <a
-                                    key={link.href}
-                                    href={link.href}
-                                    className="group relative px-4 py-2 text-gray-700 hover:text-blue-600 transition-all duration-200"
-                                >
-                                    <div className="flex items-center gap-2 font-semibold text-sm">
-                                        {link.label}
-                                    </div>
-                                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-                                </a>
-                            ) : (
-                                <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="group relative px-4 py-2 text-gray-700 hover:text-blue-600 transition-all duration-200"
-                                >
-                                    <div className="flex items-center gap-2 font-semibold text-sm">
-                                        {link.label}
-                                    </div>
-                                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-                                </Link>
-                            ),
-                        )}
+                    {/* Desktop Search & Location (Momotor Style) */}
+                    <div className="hidden md:flex flex-1 items-center gap-2 max-w-3xl">
+                        {/* Location Picker */}
+                        <div className="relative flex-shrink-0">
+                            <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                                <MapPin className="w-4 h-4 text-primary" />
+                                <span>Bekasi Only</span>
+                                <ChevronDown className="w-3 h-3 text-gray-400" />
+                            </button>
+                        </div>
+
+                        {/* Search Bar */}
+                        <div className="relative flex-1 group">
+                            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                <Search className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Cari Motor Impianmu disini..."
+                                className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                            />
+                        </div>
                     </div>
 
-                    {/* Desktop Auth / User Menu */}
-                    <div className="hidden md:flex items-center space-x-4">
+                    {/* Right Actions: Auth & CTA */}
+                    <div className="flex items-center gap-2 md:gap-4">
                         {auth.user ? (
                             <div className="relative">
                                 <button
                                     onClick={() =>
                                         setUserMenuOpen(!userMenuOpen)
                                     }
-                                    className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-gray-50 border border-gray-200 hover:border-blue-300 transition-all group"
+                                    className="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100 px-3"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs">
                                         {auth.user.name.charAt(0)}
                                     </div>
-                                    <div className="flex flex-col items-start leading-none">
-                                        <span className="text-sm font-bold text-gray-900 line-clamp-1 max-w-[120px]">
-                                            {auth.user.name}
-                                        </span>
-                                        <span className="text-[10px] text-gray-500 font-medium">
-                                            Customer
-                                        </span>
-                                    </div>
+                                    <span className="hidden sm:block text-sm font-bold text-gray-700">
+                                        Account
+                                    </span>
                                     <ChevronDown
-                                        className={`w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-transform duration-200 ${userMenuOpen ? "rotate-180" : ""}`}
+                                        className={`w-3 h-3 text-gray-400 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
                                     />
                                 </button>
 
                                 <AnimatePresence>
                                     {userMenuOpen && (
                                         <>
-                                            <motion.div
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                exit={{ opacity: 0 }}
+                                            <div
                                                 className="fixed inset-0 z-[-1]"
                                                 onClick={() =>
                                                     setUserMenuOpen(false)
@@ -128,57 +109,62 @@ export default function Navbar({ auth }) {
                                             <motion.div
                                                 initial={{
                                                     opacity: 0,
-                                                    scale: 0.95,
                                                     y: 10,
+                                                    scale: 0.95,
                                                 }}
                                                 animate={{
                                                     opacity: 1,
-                                                    scale: 1,
                                                     y: 0,
+                                                    scale: 1,
                                                 }}
                                                 exit={{
                                                     opacity: 0,
-                                                    scale: 0.95,
                                                     y: 10,
+                                                    scale: 0.95,
                                                 }}
-                                                className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl shadow-blue-900/10 border border-gray-100 py-2.5 overflow-hidden"
+                                                className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden"
                                             >
-                                                <div className="px-4 py-2 border-b border-gray-50 mb-2">
-                                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                                        Akun Saya
+                                                <div className="px-4 py-2 mb-2 border-b border-gray-50">
+                                                    <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                                                        Selamat Datang
+                                                    </p>
+                                                    <p className="text-sm font-bold text-gray-900 truncate">
+                                                        {auth.user.name}
                                                     </p>
                                                 </div>
                                                 <Link
                                                     href={route("profile.show")}
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"
                                                 >
-                                                    <LayoutDashboard className="w-4 h-4" />
-                                                    Dashboard
-                                                </Link>
-                                                <Link
-                                                    href={route("profile.edit")}
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                                                >
-                                                    <User className="w-4 h-4" />
-                                                    Profil
+                                                    <User className="w-4 h-4 text-primary" />{" "}
+                                                    Profil Saya
                                                 </Link>
                                                 <Link
                                                     href={route(
                                                         "motors.user-transactions",
                                                     )}
-                                                    className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"
                                                 >
-                                                    <ShoppingBag className="w-4 h-4" />
-                                                    Pesanan Saya
+                                                    <ShoppingBag className="w-4 h-4 text-primary" />{" "}
+                                                    Riwayat Pesanan
+                                                </Link>
+                                                <Link
+                                                    href={route(
+                                                        "installments.index",
+                                                    )}
+                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"
+                                                >
+                                                    <CreditCardIcon className="w-4 h-4 text-primary" />{" "}
+                                                    Cicilan Saya
                                                 </Link>
                                                 <div className="h-px bg-gray-100 my-2 mx-2" />
                                                 <Link
                                                     href={route("logout")}
                                                     method="post"
                                                     as="button"
-                                                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+                                                    className="flex w-full items-center gap-3 px-4 py-2 hover:bg-red-50 text-sm font-bold text-red-600 transition-colors"
                                                 >
-                                                    <LogOut className="w-4 h-4" />
+                                                    <LogOut className="w-4 h-4" />{" "}
                                                     Keluar
                                                 </Link>
                                             </motion.div>
@@ -187,45 +173,66 @@ export default function Navbar({ auth }) {
                                 </AnimatePresence>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-3">
-                                <Link href={route("login")}>
-                                    <Button
-                                        variant="ghost"
-                                        size="md"
-                                        className="font-bold text-gray-700 hover:bg-gray-50"
-                                    >
-                                        Masuk
-                                    </Button>
+                            <div className="hidden md:flex items-center gap-4">
+                                <Link
+                                    href={route("login")}
+                                    className="text-sm font-bold text-gray-700 hover:text-primary transition-colors px-2"
+                                >
+                                    Masuk/Daftar
                                 </Link>
-                                <Link href={route("register")}>
+                                <Link href="/#contact">
                                     <Button
                                         size="md"
-                                        className="shadow-lg shadow-blue-200"
+                                        className="font-black px-6"
                                     >
-                                        Daftar Sekarang
+                                        Hubungi Kami
                                     </Button>
                                 </Link>
                             </div>
                         )}
-                    </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="flex md:hidden items-center gap-4">
+                        {/* Mobile Toggle */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="text-gray-900 border border-gray-100 bg-gray-50 p-2 rounded-xl"
+                            className="md:hidden p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
                         >
-                            {mobileMenuOpen ? (
-                                <X className="w-6 h-6" />
-                            ) : (
-                                <Menu className="w-6 h-6" />
-                            )}
+                            {mobileMenuOpen ? <X /> : <Menu />}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
+            {/* Bottom Row: Navigation Links */}
+            <div className="hidden md:block bg-gray-50/50 border-t border-gray-100 py-2">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+                    <div className="flex items-center space-x-8">
+                        {categories.map((cat) => (
+                            <Link
+                                key={cat.label}
+                                href={cat.href}
+                                className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors ${cat.active ? "text-primary" : "text-gray-500 hover:text-primary"}`}
+                            >
+                                {cat.label === "Motor Baru" && (
+                                    <Bike className="w-3 h-3" />
+                                )}
+                                {cat.label}
+                            </Link>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                        <a
+                            href="/#contact"
+                            className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-primary uppercase tracking-widest"
+                        >
+                            <HelpCircle className="w-3 h-3" />
+                            Bantuan
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Menu */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
@@ -234,88 +241,42 @@ export default function Navbar({ auth }) {
                         exit={{ opacity: 0, height: 0 }}
                         className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
                     >
-                        <div className="p-4 space-y-2">
-                            {navLinks.map((link) =>
-                                link.href.startsWith("/#") ? (
-                                    <a
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-center gap-4 p-4 rounded-2xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
-                                    >
-                                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-blue-600 transition-colors">
-                                            {link.icon}
-                                        </div>
-                                        {link.label}
-                                    </a>
-                                ) : (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-center gap-4 p-4 rounded-2xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
-                                    >
-                                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-white group-hover:text-blue-600 transition-colors">
-                                            {link.icon}
-                                        </div>
-                                        {link.label}
-                                    </Link>
-                                ),
-                            )}
+                        <div className="p-4 space-y-3">
+                            {/* Mobile Search */}
+                            <div className="relative mb-6">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Cari motor..."
+                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm"
+                                />
+                            </div>
 
-                            <hr className="my-4 border-gray-100" />
+                            {categories.map((cat) => (
+                                <Link
+                                    key={cat.label}
+                                    href={cat.href}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl font-black text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                                >
+                                    <span>{cat.label}</span>
+                                    <ChevronDown className="-rotate-90 w-4 h-4" />
+                                </Link>
+                            ))}
 
-                            {auth.user ? (
-                                <div className="space-y-2 pb-4">
-                                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100 mb-4">
-                                        <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                                            {auth.user.name.charAt(0)}
-                                        </div>
-                                        <div>
-                                            <p className="font-bold text-gray-900">
-                                                {auth.user.name}
-                                            </p>
-                                            <p className="text-xs text-gray-500">
-                                                {auth.user.email}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <Link
-                                        href={route("profile.show")}
-                                        className="block w-full"
-                                    >
-                                        <Button fullWidth size="lg">
-                                            Dashboard
-                                        </Button>
-                                    </Link>
-                                    <Link
-                                        href={route("logout")}
-                                        method="post"
-                                        as="button"
-                                        className="block w-full"
-                                    >
-                                        <Button
-                                            fullWidth
-                                            variant="secondary"
-                                            size="lg"
-                                        >
-                                            Keluar
-                                        </Button>
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-2 gap-4 pb-4">
+                            {!auth.user && (
+                                <div className="grid grid-cols-2 gap-3 pt-4">
                                     <Link href={route("login")}>
                                         <Button
                                             fullWidth
                                             variant="secondary"
-                                            size="lg"
+                                            className="font-bold"
                                         >
                                             Masuk
                                         </Button>
                                     </Link>
                                     <Link href={route("register")}>
-                                        <Button fullWidth size="lg">
+                                        <Button fullWidth className="font-bold">
                                             Daftar
                                         </Button>
                                     </Link>
@@ -326,5 +287,26 @@ export default function Navbar({ auth }) {
                 )}
             </AnimatePresence>
         </nav>
+    );
+}
+
+// Add missing icon
+function CreditCardIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <rect width="20" height="14" x="2" y="5" rx="2" />
+            <line x1="2" x2="22" y1="10" y2="10" />
+        </svg>
     );
 }

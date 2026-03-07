@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import Navbar from "@/Components/Public/Navbar";
 import Footer from "@/Components/Public/Footer";
@@ -7,21 +7,29 @@ import Card, { CardBody } from "@/Components/UI/Card";
 import Badge from "@/Components/UI/Badge";
 import {
     ArrowRight,
-    CheckCircle2,
     Star,
-    Clock,
-    MapPin,
-    Phone,
-    TrendingUp,
     ShieldCheck,
+    Clock,
     Truck,
+    Search,
+    ChevronRight,
+    Bike,
+    Zap,
+    MessageCircle,
+    Info,
     Mail,
-    MessageSquare,
+    Phone,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 import toast from "react-hot-toast";
 
 export default function Home({ auth, popularMotors = [] }) {
+    const [searchQuery, setSearchQuery] = useState("");
     const { data, setData, post, processing, reset } = useForm({
         name: "",
         email: "",
@@ -39,757 +47,478 @@ export default function Home({ auth, popularMotors = [] }) {
         });
     };
 
-    const features = [
+    const banners = [
         {
-            icon: <ShieldCheck className="w-8 h-8" />,
-            title: "Garansi Kualitas",
-            description:
-                "Setiap unit melewati 150+ titik inspeksi ketat oleh teknisi ahli kami.",
+            image: "/assets/img/banner.png",
+            title: "Promo Kredit Motor Honda 2026",
+            subtitle: "DP Mulai 1 Jutaan, Angsuran Ringan & Proses Cepat",
         },
         {
-            icon: <Clock className="w-8 h-8" />,
-            title: "Persetujuan Cepat",
-            description:
-                "Proses verifikasi kredit kilat. Approval dalam hitungan jam, bukan hari.",
-        },
-        {
-            icon: <Truck className="w-8 h-8" />,
-            title: "Pengiriman Aman",
-            description:
-                "Layanan antar jemput unit gratis dan asuransi penuh selama perjalanan.",
+            image: "/assets/img/banner.png", // Reusing for demo, in real scenarios these would be different
+            title: "Gebyar Yamaha Awal Tahun",
+            subtitle:
+                "Dapatkan Cashback hingga 5 Juta Rupiah untuk unit tertentu",
         },
     ];
 
+    const brands = [
+        {
+            name: "Honda",
+            logo: "/assets/img/honda/Honda-Beat-Sporty-Deluxe-SmartKey-Matte-Black.png",
+        }, // Mockup for logo
+        { name: "Yamaha", logo: "/assets/img/honda/pcx 160.png" },
+        { name: "Kawasaki", logo: "/assets/img/honda/adv 160.png" },
+        { name: "Suzuki", logo: "/assets/img/honda/stylo.png" },
+    ];
+
     return (
-        <div className="min-h-screen flex flex-col bg-white">
+        <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
             <Navbar auth={auth} />
 
-            {/* HERO SECTION */}
-            <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 to-white pt-20 pb-16 md:pt-32 md:pb-24">
+            {/* HERO SLIDER SECTION (Momotor Style) */}
+            <section className="relative pt-32 md:pt-[104px] pb-12 bg-[#F8F9FA]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid md:grid-cols-2 gap-12 items-center">
-                        {/* Left Content */}
-                        <div className="space-y-8">
-                            <div className="space-y-4">
-                                <Badge variant="blue" size="md">
-                                    Motor Impian Kamu Menunggu
-                                </Badge>
-                                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                                    Wujudkan Mimpi Berkendara dengan{" "}
-                                    <span className="text-blue-600">
-                                        SRB Motors
-                                    </span>
-                                </h1>
-                                <p className="text-lg text-gray-600 leading-relaxed">
-                                    Platform dealer motor terpercaya dengan
-                                    proses approval kredit cepat, harga
-                                    kompetitif, dan layanan purna jual terbaik.
-                                </p>
-                            </div>
+                    <Swiper
+                        modules={[Autoplay, Pagination, EffectFade]}
+                        effect="fade"
+                        autoplay={{ delay: 5000 }}
+                        pagination={{ clickable: true }}
+                        className="rounded-2xl md:rounded-3xl overflow-hidden h-[250px] md:h-[480px] shadow-xl"
+                    >
+                        {banners.map((banner, index) => (
+                            <SwiperSlide key={index}>
+                                <div className="relative w-full h-full group">
+                                    <img
+                                        src={banner.image}
+                                        alt={banner.title}
+                                        className="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent flex items-center p-8 md:p-20">
+                                        <div className="max-w-xl space-y-4">
+                                            <motion.h2
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                className="text-2xl md:text-5xl font-black text-white leading-tight"
+                                            >
+                                                {banner.title}
+                                            </motion.h2>
+                                            <motion.p
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.1 }}
+                                                className="text-sm md:text-xl text-white/80 font-medium"
+                                            >
+                                                {banner.subtitle}
+                                            </motion.p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
 
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Link href={route("motors.index")}>
-                                    <Button
-                                        size="lg"
-                                        className="w-full sm:w-auto"
-                                    >
-                                        <span className="flex items-center gap-2">
-                                            Jelajahi Katalog
-                                            <ArrowRight className="w-4 h-4" />
-                                        </span>
-                                    </Button>
-                                </Link>
-                                <a href="#features">
-                                    <Button
-                                        size="lg"
-                                        variant="secondary"
-                                        className="w-full sm:w-auto"
-                                    >
-                                        Pelajari Lebih Lanjut
-                                    </Button>
-                                </a>
-                            </div>
-
-                            {/* Trust Indicators */}
-                            <div className="space-y-3 pt-4">
-                                <p className="text-sm font-medium text-gray-600">
-                                    Dipercaya oleh ribuan pelanggan
-                                </p>
-                                <div className="flex items-center gap-3">
-                                    <div className="flex -space-x-2">
-                                        {[1, 2, 3].map((i) => (
-                                            <div
-                                                key={i}
-                                                className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white"
+                    {/* Quick Search & Categories Overlay */}
+                    <div className="relative -mt-10 md:-mt-20 z-10 px-4">
+                        <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-10 border border-gray-100 max-w-5xl mx-auto">
+                            <div className="flex flex-col md:flex-row gap-6">
+                                {/* Search Component */}
+                                <div className="flex-1 space-y-4">
+                                    <h3 className="text-xl md:text-2xl font-black text-gray-900 flex items-center gap-3">
+                                        <Zap className="w-6 h-6 text-primary fill-primary" />
+                                        Cari Motor Impianmu
+                                    </h3>
+                                    <div className="flex gap-2 p-1.5 bg-gray-50 border border-gray-200 rounded-2xl focus-within:ring-4 focus-within:ring-primary/20 transition-all">
+                                        <div className="flex-1 flex items-center px-4 gap-3">
+                                            <Search className="w-5 h-5 text-gray-400" />
+                                            <input
+                                                type="text"
+                                                placeholder="Contoh: Honda PCX 160..."
+                                                className="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base font-medium py-3"
                                             />
+                                        </div>
+                                        <Button
+                                            size="lg"
+                                            className="px-8 rounded-xl font-bold shadow-lg shadow-primary/20"
+                                        >
+                                            Temukan
+                                        </Button>
+                                    </div>
+
+                                    {/* Brand Pills */}
+                                    <div className="flex flex-wrap gap-2 pt-2">
+                                        {[
+                                            "Beat",
+                                            "PCX",
+                                            "NMAX",
+                                            "Vario",
+                                            "Aerox",
+                                        ].map((tag) => (
+                                            <button
+                                                key={tag}
+                                                className="px-4 py-1.5 rounded-full bg-white border border-gray-200 text-xs font-bold text-gray-500 hover:border-primary hover:text-primary transition-all"
+                                            >
+                                                {tag}
+                                            </button>
                                         ))}
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <Star
-                                                key={i}
-                                                className="w-4 h-4 text-yellow-400 fill-yellow-400"
-                                            />
-                                        ))}
-                                        <span className="text-sm text-gray-600 ml-2">
-                                            4.9/5 (2,481 reviews)
+                                </div>
+
+                                {/* Vertical Divider */}
+                                <div className="hidden md:block w-px bg-gray-100" />
+
+                                {/* Categories / Quick Links */}
+                                <div className="md:w-72 grid grid-cols-2 gap-4">
+                                    <Link
+                                        href="/motors"
+                                        className="flex flex-col items-center justify-center p-4 rounded-2xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-all group"
+                                    >
+                                        <div className="w-12 h-12 rounded-xl bg-white border border-primary/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                            <Bike className="w-6 h-6 text-primary" />
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-gray-700">
+                                            Motor Baru
                                         </span>
-                                    </div>
+                                    </Link>
+                                    <a
+                                        href="#contact"
+                                        className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-white hover:border-primary/20 transition-all group"
+                                    >
+                                        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                            <MessageCircle className="w-6 h-6 text-green-500" />
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-gray-700">
+                                            Simulasi WA
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Right - Hero Image */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="relative h-[400px] md:h-[500px] flex items-center justify-center"
-                        >
-                            {/* Decorative Background Elements */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-100/50 rounded-full blur-3xl -z-10" />
-                            <div className="absolute top-10 right-10 w-24 h-24 bg-blue-200/30 rounded-full blur-xl animate-pulse" />
-
-                            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-                                <img
-                                    src="/assets/img/banner.png"
-                                    alt="SRB Motors Hero"
-                                    className="w-full h-full object-cover"
-                                />
-                                {/* Overlay Stats */}
-                                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white/50 flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center text-white">
-                                        <TrendingUp className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-500 font-medium">
-                                            Ready Stock
-                                        </p>
-                                        <p className="text-lg font-bold text-gray-900">
-                                            150+ Unit
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm p-3 rounded-xl shadow-lg border border-white/50">
-                                    <div className="flex items-center gap-2">
-                                        <ShieldCheck className="w-5 h-5 text-green-600" />
-                                        <span className="text-sm font-bold text-gray-900">
-                                            Terverifikasi
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
                     </div>
                 </div>
             </section>
 
-            {/* FEATURES SECTION */}
-            <section
-                id="features"
-                className="py-20 md:py-32 bg-white relative overflow-hidden"
-            >
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-full blur-3xl -z-10 opacity-50" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-gray-50 rounded-full blur-3xl -z-10 opacity-50" />
-
+            {/* MEREK UNGGULAN SECTION */}
+            <section className="py-12 md:py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16 relative">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <Badge variant="blue" size="sm" className="mb-4">
-                                Kenapa Kita?
-                            </Badge>
-                            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
-                                Pengalaman Beli Motor{" "}
-                                <br className="hidden md:block" />
-                                <span className="text-blue-600">
-                                    Terbaik di Indonesia
-                                </span>
+                    <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-4">
+                        <div className="text-center md:text-left">
+                            <h2 className="text-2xl md:text-4xl font-black text-gray-900">
+                                Merek Unggulan
                             </h2>
-                            <div className="w-20 h-1.5 bg-blue-600 mx-auto rounded-full mb-8" />
-                            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                                Kami bukan sekadar dealer, kami adalah mitra
-                                Anda dalam menemukan kendaraan impian dengan
-                                layanan yang transparan dan bersahabat.
+                            <p className="text-gray-500 font-medium">
+                                Temukan motor impian Anda dari brand ternama
                             </p>
-                        </motion.div>
+                        </div>
+                        <Link
+                            href="/motors"
+                            className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-widest hover:gap-3 transition-all"
+                        >
+                            Lihat Semua <ChevronRight className="w-4 h-4" />
+                        </Link>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8 relative">
-                        {features.map((feature, index) => (
-                            <motion.div
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                        {brands.map((brand, index) => (
+                            <Link
                                 key={index}
-                                initial={{ opacity: 0, y: 20 }}
+                                href={`/motors?brand=${brand.name}`}
+                                className="group relative p-6 md:p-10 rounded-2xl md:rounded-[32px] bg-gray-50 border border-gray-100 hover:bg-white hover:border-primary/30 hover:shadow-2xl transition-all duration-500 flex flex-col items-center justify-center overflow-hidden"
+                            >
+                                <div className="relative z-10 w-24 h-24 md:w-32 md:h-32 mb-4 flex items-center justify-center">
+                                    <img
+                                        src={brand.logo}
+                                        alt={brand.name}
+                                        className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
+                                    />
+                                </div>
+                                <span className="relative z-10 text-xl md:text-2xl font-black text-gray-300 group-hover:text-primary transition-colors">
+                                    {brand.name}
+                                </span>
+
+                                {/* Background Decorative Element */}
+                                <div className="absolute bottom-[-20%] right-[-10%] w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* POPULAR MOTORS (Already styled with ribbons from Phase 6) */}
+            <section className="py-20 bg-[#F8F9FA]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-end justify-between mb-12">
+                        <div>
+                            <Badge className="mb-3">🔥 Sedang Tren</Badge>
+                            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
+                                MOTOR{" "}
+                                <span className="text-primary">POPULER</span>
+                            </h2>
+                        </div>
+                        <Link
+                            href="/motors"
+                            className="hidden md:flex items-center gap-2 text-gray-400 hover:text-primary font-bold text-sm transition-colors group"
+                        >
+                            Lihat Selengkapnya{" "}
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {popularMotors.slice(0, 4).map((motor, idx) => (
+                            <motion.div
+                                key={motor.id}
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{
-                                    duration: 0.5,
-                                    delay: index * 0.1,
-                                }}
+                                transition={{ delay: idx * 0.1 }}
                             >
-                                <Card
-                                    hoverable
-                                    className="h-full border border-gray-100 hover:border-blue-100 transition-all duration-300"
-                                >
-                                    <CardBody className="p-8 space-y-6">
-                                        <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                                            {feature.icon}
+                                <Link href={route("motors.show", motor.id)}>
+                                    <Card
+                                        hoverable
+                                        className="h-full border-none shadow-xl hover:shadow-2xl shadow-gray-200/50 rounded-[2rem] overflow-hidden group bg-white"
+                                    >
+                                        <div className="relative h-60 bg-gray-100 overflow-hidden">
+                                            <img
+                                                src={`/storage/${motor.image_path}`}
+                                                className="w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700"
+                                            />
+                                            {/* Ribbon logic from Phase 6 */}
+                                            {motor.promotions?.length > 0 && (
+                                                <div className="absolute top-4 left-0 flex flex-col gap-2 z-10 pointer-events-none">
+                                                    {motor.promotions.map(
+                                                        (promo, pIdx) => (
+                                                            <div
+                                                                key={pIdx}
+                                                                className="bg-gradient-to-r from-primary to-primary-dark text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-r-full shadow-lg border border-white/20"
+                                                            >
+                                                                <Star className="w-3 h-3 inline-block mr-1 -mt-0.5 fill-white" />
+                                                                {promo.badge_text ||
+                                                                    promo.title}
+                                                            </div>
+                                                        ),
+                                                    )}
+                                                </div>
+                                            )}
+                                            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-gray-500 border border-white/50 shadow-sm uppercase">
+                                                {motor.brand}
+                                            </div>
                                         </div>
-                                        <div className="space-y-3">
-                                            <h3 className="text-2xl font-bold text-gray-900 leading-tight">
-                                                {feature.title}
+                                        <CardBody className="p-8 space-y-4">
+                                            <h3 className="text-2xl font-black text-gray-900 line-clamp-1 group-hover:text-primary transition-colors uppercase tracking-tight">
+                                                {motor.name}
                                             </h3>
-                                            <p className="text-gray-600 leading-relaxed">
-                                                {feature.description}
-                                            </p>
-                                        </div>
-                                        <div className="pt-4 flex items-center gap-2 text-sm font-semibold text-blue-600">
-                                            <span>Selengkapnya</span>
-                                            <ArrowRight className="w-4 h-4" />
-                                        </div>
-                                    </CardBody>
-                                </Card>
+                                            <div className="flex items-center gap-4 text-xs font-bold text-gray-400">
+                                                <span className="flex items-center gap-1 uppercase tracking-wider">
+                                                    <Zap className="w-3 h-3 text-yellow-500 fill-yellow-500" />{" "}
+                                                    {motor.type}
+                                                </span>
+                                                <span className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                                                <span className="flex items-center gap-1 uppercase tracking-wider">
+                                                    <Clock className="w-3 h-3" />{" "}
+                                                    {motor.year}
+                                                </span>
+                                            </div>
+                                            <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
+                                                <div>
+                                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">
+                                                        Harga Mulai
+                                                    </p>
+                                                    <p className="text-2xl font-black text-primary leading-none">
+                                                        Rp{" "}
+                                                        {parseInt(
+                                                            motor.price,
+                                                        ).toLocaleString(
+                                                            "id-ID",
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-12">
+                                                    <ArrowRight className="w-6 h-6" />
+                                                </div>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </Link>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* POPULAR MOTORS SECTION */}
-            <section className="py-20 md:py-32 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-                {/* Decorative Background */}
-                <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl -z-10" />
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-100/50 rounded-full blur-3xl -z-10" />
-
+            {/* TRUST INDICATORS SECTION */}
+            <section className="py-24 bg-white relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4"
-                    >
-                        <div>
-                            <Badge variant="blue" size="sm" className="mb-3">
-                                Koleksi Pilihan
-                            </Badge>
-                            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-3 tracking-tight">
-                                Motor{" "}
-                                <span className="text-blue-600">
-                                    Terpopuler
-                                </span>
-                            </h2>
-                            <p className="text-gray-600 text-lg">
-                                Dipilih oleh ribuan pelanggan setia kami
-                            </p>
-                        </div>
-                        <Link href={route("motors.index")}>
-                            <Button variant="ghost" size="lg" className="group">
-                                Lihat Semua Katalog
-                                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                            </Button>
-                        </Link>
-                    </motion.div>
-
-                    {popularMotors && popularMotors.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {popularMotors.slice(0, 4).map((motor, index) => (
-                                <motion.div
-                                    key={motor.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{
-                                        duration: 0.5,
-                                        delay: index * 0.1,
-                                    }}
-                                >
-                                    <Link href={route("motors.show", motor.id)}>
-                                        <Card
-                                            hoverable
-                                            className="overflow-hidden group h-full border border-gray-100 hover:border-blue-200 hover:shadow-2xl transition-all duration-300"
-                                        >
-                                            {/* Image Container */}
-                                            <div className="relative h-56 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-                                                {motor.image_path ? (
-                                                    <>
-                                                        <img
-                                                            src={`/storage/${motor.image_path}`}
-                                                            alt={motor.name}
-                                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                        />
-                                                        {/* Overlay on Hover */}
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                                    </>
-                                                ) : (
-                                                    <div className="flex flex-col items-center justify-center h-full text-gray-400">
-                                                        <div className="text-6xl mb-2">
-                                                            🏍️
-                                                        </div>
-                                                        <span className="text-sm font-medium">
-                                                            Foto Segera Hadir
-                                                        </span>
-                                                    </div>
-                                                )}
-
-                                                {/* Status & Type Badges */}
-                                                <div className="absolute top-3 left-3 flex flex-col gap-2">
-                                                    {motor.tersedia && (
-                                                        <Badge
-                                                            variant="green"
-                                                            className="shadow-md backdrop-blur-sm bg-white/90 self-start"
-                                                        >
-                                                            Ready Stock
-                                                        </Badge>
-                                                    )}
-                                                    <Badge
-                                                        variant="blue"
-                                                        className="shadow-md backdrop-blur-sm bg-white/90 self-start"
-                                                    >
-                                                        {motor.type ||
-                                                            "Standard"}
-                                                    </Badge>
-                                                </div>
-
-                                                {/* Promo Ribbons (Momotor Style) */}
-                                                {motor.promotions &&
-                                                    motor.promotions.length >
-                                                        0 && (
-                                                        <div className="absolute bottom-3 left-0 flex flex-col gap-2 z-10 pointer-events-none w-full pr-4">
-                                                            {motor.promotions
-                                                                .slice(0, 2)
-                                                                .map(
-                                                                    (
-                                                                        promo,
-                                                                        pIndex,
-                                                                    ) => (
-                                                                        <div
-                                                                            key={
-                                                                                pIndex
-                                                                            }
-                                                                            className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-r-full shadow-lg border border-orange-400/50 self-start truncate max-w-full"
-                                                                        >
-                                                                            <Star className="w-3 h-3 inline-block mr-1 -mt-0.5" />
-                                                                            {promo.badge_text ||
-                                                                                promo.title}
-                                                                        </div>
-                                                                    ),
-                                                                )}
-                                                        </div>
-                                                    )}
-                                            </div>
-
-                                            {/* Card Body */}
-                                            <CardBody className="p-5 space-y-4">
-                                                {/* Brand & Year */}
-                                                <div className="flex items-center justify-between text-xs text-gray-500">
-                                                    <span className="font-semibold uppercase tracking-wide">
-                                                        {motor.brand || "Motor"}
-                                                    </span>
-                                                    <span className="flex items-center gap-1">
-                                                        <Clock className="w-3 h-3" />
-                                                        {motor.year ||
-                                                            new Date().getFullYear()}
-                                                    </span>
-                                                </div>
-
-                                                {/* Motor Name */}
-                                                <h3 className="font-bold text-gray-900 text-lg line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
-                                                    {motor.name}
-                                                </h3>
-
-                                                {/* Model (if exists) */}
-                                                {motor.model && (
-                                                    <p className="text-sm text-gray-500 line-clamp-1">
-                                                        {motor.model}
-                                                    </p>
-                                                )}
-
-                                                {/* Price & CTA */}
-                                                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                                    <div>
-                                                        <p className="text-xs text-gray-500 mb-1">
-                                                            Harga Mulai
-                                                        </p>
-                                                        <p className="font-extrabold text-blue-600 text-xl">
-                                                            {motor.price
-                                                                ? `Rp ${parseInt(motor.price).toLocaleString("id-ID")}`
-                                                                : "Hubungi"}
-                                                        </p>
-                                                    </div>
-                                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                                        <ArrowRight className="w-5 h-5" />
-                                                    </div>
-                                                </div>
-                                            </CardBody>
-                                        </Card>
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </div>
-                    ) : (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            className="text-center py-20"
-                        >
-                            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-6">
-                                <svg
-                                    className="w-10 h-10 text-gray-400"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-                                    />
-                                </svg>
+                    <div className="grid md:grid-cols-3 gap-12">
+                        {[
+                            {
+                                icon: (
+                                    <ShieldCheck className="w-12 h-12 text-primary" />
+                                ),
+                                title: "Garansi Resmi",
+                                desc: "Setiap unit bergaransi pabrikan resmi demi ketenangan berkendara Anda.",
+                            },
+                            {
+                                icon: (
+                                    <Clock className="w-12 h-12 text-primary" />
+                                ),
+                                title: "Proses Kilat",
+                                desc: "Persetujuan kredit instan dengan mitra leasing terpercaya (BAF, Astra, dll).",
+                            },
+                            {
+                                icon: (
+                                    <Truck className="w-12 h-12 text-primary" />
+                                ),
+                                title: "Home Delivery",
+                                desc: "Motor diantar langsung ke depan rumah Anda tanpa biaya tambahan.",
+                            },
+                        ].map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="flex flex-col items-center text-center space-y-4 group"
+                            >
+                                <div className="p-6 rounded-[2rem] bg-gray-50 group-hover:bg-primary/5 transition-colors group-hover:scale-110 transition-transform duration-500">
+                                    {item.icon}
+                                </div>
+                                <h4 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                                    {item.title}
+                                </h4>
+                                <p className="text-gray-500 font-medium leading-relaxed max-w-[280px]">
+                                    {item.desc}
+                                </p>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                Belum Ada Motor Tersedia
-                            </h3>
-                            <p className="text-gray-600 mb-6">
-                                Kami sedang memperbarui koleksi motor terbaru
-                                untuk Anda
-                            </p>
-                            <Link href={route("motors.index")}>
-                                <Button variant="secondary">
-                                    Lihat Katalog Lengkap
-                                </Button>
-                            </Link>
-                        </motion.div>
-                    )}
+                        ))}
+                    </div>
                 </div>
             </section>
 
-            {/* CTA SECTION */}
-            <section className="relative py-24 md:py-32 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white overflow-hidden">
-                {/* Decorative Background Patterns */}
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full blur-3xl" />
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400 rounded-full blur-3xl" />
+            {/* CONTACT FOOTER SECTION */}
+            <section className="bg-primary pt-24 pb-32 relative overflow-hidden">
+                {/* Decorative Pattern */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <div className="absolute top-[-50%] left-[-20%] w-[100%] h-[150%] bg-white rounded-[50%] rotate-45" />
                 </div>
 
-                {/* Geometric Pattern Overlay */}
                 <div
-                    className="absolute inset-0 opacity-5"
-                    style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                    }}
-                />
-
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center space-y-10"
-                    >
-                        {/* Badge & Heading */}
-                        <div className="space-y-6">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-                                <span className="flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                                </span>
-                                <span className="text-sm font-semibold text-white">
-                                    Tim Siap Melayani 24/7
-                                </span>
-                            </div>
-
-                            <h2 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
-                                Siap Wujudkan <br className="hidden md:block" />
-                                <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                                    Motor Impianmu?
-                                </span>
-                            </h2>
-
-                            <p className="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-                                Konsultasi gratis dengan tim expert kami.
-                                Dapatkan penawaran spesial dan solusi kredit
-                                terbaik yang sesuai kebutuhanmu.
-                            </p>
-                        </div>
-
-                        {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                            <motion.a
-                                href="https://wa.me/6281234567890"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="group"
-                            >
-                                <button className="flex items-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-white/20 transition-all duration-300 hover:bg-blue-50 border-2 border-transparent hover:border-white/50">
-                                    <div className="w-10 h-10 rounded-lg bg-green-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <Phone className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div className="text-left">
-                                        <p className="text-xs text-gray-500 font-medium">
-                                            Chat Via
-                                        </p>
-                                        <p className="text-blue-600 font-extrabold">
-                                            WhatsApp Kami
-                                        </p>
-                                    </div>
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
-                            </motion.a>
-
-                            <motion.a
-                                href="#contact"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="group"
-                            >
-                                <button className="flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 shadow-lg">
-                                    <svg
-                                        className="w-5 h-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                        />
-                                    </svg>
-                                    <span>Kirim Pesan</span>
-                                </button>
-                            </motion.a>
-                        </div>
-
-                        {/* Trust Stats */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="grid grid-cols-3 gap-6 max-w-3xl mx-auto pt-8 border-t border-white/20"
-                        >
-                            <div className="text-center">
-                                <p className="text-3xl md:text-4xl font-extrabold mb-1">
-                                    2,481+
-                                </p>
-                                <p className="text-blue-200 text-sm">
-                                    Pelanggan Puas
-                                </p>
-                            </div>
-                            <div className="text-center border-l border-r border-white/20">
-                                <p className="text-3xl md:text-4xl font-extrabold mb-1">
-                                    150+
-                                </p>
-                                <p className="text-blue-200 text-sm">
-                                    Unit Ready Stock
-                                </p>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-3xl md:text-4xl font-extrabold mb-1">
-                                    4.9/5
-                                </p>
-                                <p className="text-blue-200 text-sm">
-                                    Rating Kepuasan
-                                </p>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* CONTACT SECTION */}
-            <section
-                id="contact"
-                className="py-24 md:py-32 bg-white relative overflow-hidden"
-            >
-                {/* Decorative background blur */}
-                <div className="absolute top-1/4 -right-20 w-80 h-80 bg-blue-50 rounded-full blur-3xl opacity-60" />
-                <div className="absolute bottom-1/4 -left-20 w-80 h-80 bg-gray-50 rounded-full blur-3xl opacity-60" />
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
-                        {/* Left Content - Info */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                            className="space-y-8"
-                        >
-                            <div className="space-y-4">
-                                <Badge variant="blue" size="sm">
+                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
+                    id="contact"
+                >
+                    <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-3xl flex flex-col lg:flex-row gap-16">
+                        <div className="lg:w-1/2 space-y-8">
+                            <div className="space-y-4 text-center lg:text-left">
+                                <Badge className="bg-primary/10 text-primary border-none">
                                     Hubungi Kami
                                 </Badge>
-                                <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
-                                    Konsultasikan{" "}
-                                    <span className="text-blue-600">
-                                        Kebutuhan Berkendara
-                                    </span>{" "}
-                                    Anda
+                                <h2 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
+                                    Punya{" "}
+                                    <span className="text-primary underline">
+                                        Pertanyaan?
+                                    </span>
                                 </h2>
-                                <p className="text-lg text-gray-600 leading-relaxed">
-                                    Punya pertanyaan tentang unit motor atau
-                                    simulasi kredit? Tim expert SRB Motors siap
-                                    membantu merekomendasikan pilihan terbaik
-                                    untuk Anda.
+                                <p className="text-gray-500 text-lg font-medium leading-relaxed">
+                                    Tim expert kami siap membantu Anda 24/7.
+                                    Konsultasikan pilihan motor dan simulasi
+                                    kredit Anda secara gratis.
                                 </p>
                             </div>
 
-                            {/* Contact Cards */}
                             <div className="grid sm:grid-cols-2 gap-6">
-                                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-3 group hover:bg-white hover:shadow-xl hover:border-blue-100 transition-all duration-300">
-                                    <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
-                                        <Mail className="w-6 h-6" />
+                                <a
+                                    href="https://wa.me/6281212345678"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-6 rounded-[2rem] bg-green-50/50 border border-green-100 flex items-center gap-5 group hover:bg-green-500 hover:border-green-500 transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-green-200"
+                                >
+                                    <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center text-white shadow-lg shadow-green-500/30 group-hover:bg-white group-hover:text-green-500 group-hover:rotate-12 transition-all">
+                                        <Phone className="w-7 h-7" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <p className="text-[10px] font-black text-green-900 uppercase tracking-widest group-hover:text-white/80 transition-colors">
+                                            Whatsapp Bekasi
+                                        </p>
+                                        <p className="text-sm font-black text-gray-900 group-hover:text-white transition-colors">
+                                            0812-1234-5678
+                                        </p>
+                                    </div>
+                                </a>
+                                <a
+                                    href="mailto:halo@srbmotor.id"
+                                    className="p-6 rounded-[2rem] bg-blue-50/50 border border-blue-100 flex items-center gap-5 group hover:bg-primary hover:border-primary transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-primary/20"
+                                >
+                                    <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30 group-hover:bg-white group-hover:text-primary group-hover:rotate-12 transition-all">
+                                        <Mail className="w-7 h-7" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-gray-900">
-                                            Email Kami
+                                        <p className="text-[10px] font-black text-primary-dark uppercase tracking-widest group-hover:text-white/80 transition-colors">
+                                            Layanan Email
                                         </p>
-                                        <p className="text-sm text-gray-500">
-                                            support@srbmotor.id
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-3 group hover:bg-white hover:shadow-xl hover:border-blue-100 transition-all duration-300">
-                                    <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-green-200 group-hover:scale-110 transition-transform">
-                                        <MessageSquare className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-gray-900">
-                                            Live Chat
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                            Senin - Minggu (24/7)
+                                        <p className="text-sm font-black text-gray-900 leading-none mt-1 group-hover:text-white transition-colors">
+                                            halo@srbmotor.id
                                         </p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
+                        </div>
 
-                            <div className="flex items-start gap-4 p-6 bg-blue-50 rounded-2xl border border-blue-100/50">
-                                <div className="w-10 h-10 bg-white rounded-full flex-shrink-0 flex items-center justify-center text-blue-600 shadow-sm font-bold">
-                                    i
-                                </div>
-                                <p className="text-sm text-blue-800 leading-relaxed font-medium">
-                                    Kami biasanya merespons pesan Anda dalam
-                                    waktu kurang dari 30 menit selama jam kerja.
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Right Content - Form */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <Card className="shadow-2xl shadow-gray-200/50 border-0 p-2 md:p-4 bg-white/80 backdrop-blur-xl">
-                                <CardBody className="p-6 md:p-8 space-y-8">
+                        <div className="lg:w-1/2">
+                            <form
+                                onSubmit={submitContact}
+                                className="space-y-6"
+                            >
+                                <div className="grid sm:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <h3 className="text-2xl font-bold text-gray-900">
-                                            Kirim Pesan
-                                        </h3>
-                                        <p className="text-sm text-gray-500">
-                                            Lengkapi formulir di bawah ini
-                                        </p>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
+                                            Nama Lengkap
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={data.name}
+                                            onChange={(e) =>
+                                                setData("name", e.target.value)
+                                            }
+                                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-bold text-gray-900"
+                                            placeholder="John Doe"
+                                        />
                                     </div>
-
-                                    <form
-                                        onSubmit={submitContact}
-                                        className="space-y-6"
-                                    >
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-bold text-gray-700 ml-1">
-                                                    Nama Lengkap
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={data.name}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "name",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    required
-                                                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all placeholder:text-gray-400 font-medium"
-                                                    placeholder="Nama Anda"
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-sm font-bold text-gray-700 ml-1">
-                                                    Alamat Email
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    value={data.email}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "email",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    required
-                                                    className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all placeholder:text-gray-400 font-medium"
-                                                    placeholder="email@anda.com"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <label className="text-sm font-bold text-gray-700 ml-1">
-                                                Pesan Pertanyaan
-                                            </label>
-                                            <textarea
-                                                value={data.message}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "message",
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                required
-                                                rows="4"
-                                                className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all resize-none placeholder:text-gray-400 font-medium"
-                                                placeholder="Tulis detail pertanyaan Anda di sini..."
-                                            />
-                                        </div>
-
-                                        <Button
-                                            fullWidth
-                                            size="lg"
-                                            disabled={processing}
-                                            className="h-14 bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-200 group overflow-hidden relative"
-                                        >
-                                            <span className="relative z-10 flex items-center justify-center gap-2 text-lg">
-                                                {processing ? (
-                                                    "Mengirim..."
-                                                ) : (
-                                                    <>
-                                                        Kirim Sekarang
-                                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                                    </>
-                                                )}
-                                            </span>
-                                        </Button>
-                                    </form>
-                                </CardBody>
-                            </Card>
-                        </motion.div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-bold text-gray-900"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
+                                        Pesan Anda
+                                    </label>
+                                    <textarea
+                                        rows="4"
+                                        value={data.message}
+                                        onChange={(e) =>
+                                            setData("message", e.target.value)
+                                        }
+                                        className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-bold text-gray-900 resize-none"
+                                        placeholder="Saya tertarik dengan motor Honda..."
+                                    />
+                                </div>
+                                <Button
+                                    fullWidth
+                                    size="lg"
+                                    className="h-16 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 group flex items-center justify-center gap-3"
+                                >
+                                    <span>Kirim Pesan</span>
+                                    <ArrowRight className="group-hover:translate-x-2 transition-transform h-5 w-5" />
+                                </Button>
+                                   
+                            </form>
+                        </div>
                     </div>
                 </div>
             </section>

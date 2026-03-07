@@ -24,6 +24,13 @@ export default {
                     800: "#1E40AF",
                     900: "#1E3A8A",
                 },
+                // Primary Brand Color
+                primary: {
+                    DEFAULT: "#2563EB",
+                    light: "#60A5FA",
+                    dark: "#1D4ED8",
+                    darker: "#1E40AF",
+                },
                 // Neutral/Gray - exact from design system
                 gray: {
                     50: "#F9FAFB",
