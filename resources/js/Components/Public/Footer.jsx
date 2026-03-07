@@ -44,10 +44,10 @@ export default function Footer() {
     };
 
     return (
-        <footer className="relative bg-[#050B14] text-gray-300 overflow-hidden pt-20 border-t border-gray-800">
+        <footer className="relative bg-slate-950 text-gray-300 overflow-hidden pt-20 border-t border-slate-900">
             {/* Background Aesthetic Glows */}
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-900/50 to-transparent"></div>
-            <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+            <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
@@ -98,9 +98,9 @@ export default function Footer() {
                     <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12">
                         {/* Box 1 */}
                         <div className="space-y-6">
-                            <h4 className="text-white font-extrabold tracking-widest text-xs uppercase opacity-90 relative inline-block">
+                            <h4 className="text-white font-black tracking-[0.2em] text-[10px] uppercase relative inline-block">
                                 Jelajahi
-                                <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-blue-600 rounded-full"></span>
+                                <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></span>
                             </h4>
                             <ul className="space-y-4">
                                 {footerLinks.produk.map((link, i) => {
@@ -126,9 +126,9 @@ export default function Footer() {
 
                         {/* Box 2 */}
                         <div className="space-y-6">
-                            <h4 className="text-white font-extrabold tracking-widest text-xs uppercase opacity-90 relative inline-block">
+                            <h4 className="text-white font-black tracking-[0.2em] text-[10px] uppercase relative inline-block">
                                 Perusahaan
-                                <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-blue-600 rounded-full"></span>
+                                <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></span>
                             </h4>
                             <ul className="space-y-4">
                                 {footerLinks.perusahaan.map((link, i) => (
@@ -147,9 +147,9 @@ export default function Footer() {
 
                         {/* Box 3 */}
                         <div className="space-y-6 col-span-2 md:col-span-1">
-                            <h4 className="text-white font-extrabold tracking-widest text-xs uppercase opacity-90 relative inline-block">
+                            <h4 className="text-white font-black tracking-[0.2em] text-[10px] uppercase relative inline-block">
                                 Bantuan
-                                <span className="absolute -bottom-2 left-0 w-8 h-0.5 bg-blue-600 rounded-full"></span>
+                                <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></span>
                             </h4>
                             <ul className="space-y-4">
                                 {footerLinks.bantuan.map((link, i) => (
@@ -169,20 +169,20 @@ export default function Footer() {
                 </div>
 
                 {/* Newsletter & Socials Glassmorphism Box */}
-                <div className="mt-20 p-8 rounded-3xl bg-gray-800/20 border border-gray-700/30 backdrop-blur-md flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] rounded-full"></div>
+                <div className="mt-20 p-8 rounded-[2rem] bg-slate-900/50 border border-white/5 backdrop-blur-md flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden group/box">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full group-hover/box:bg-primary/10 transition-colors"></div>
 
                     <div className="space-y-2 relative z-10 text-center lg:text-left">
-                        <h4 className="text-white font-bold text-lg">
+                        <h4 className="text-white font-black text-xl font-display tracking-tight">
                             Dapatkan Penawaran Eksklusif
                         </h4>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-slate-400 font-medium">
                             Jadilah yang pertama tahu promo motor terbaru.
                         </p>
                     </div>
 
                     <div className="flex-grow max-w-md w-full relative z-10">
-                        <div className="flex items-center bg-gray-900/50 border border-gray-700/50 rounded-2xl p-1.5 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500/50 transition-all">
+                        <div className="flex items-center bg-slate-950 border border-white/10 rounded-2xl p-1.5 focus-within:ring-4 focus-within:ring-primary/20 focus-within:border-primary/50 transition-all">
                             <div className="pl-4 text-gray-400">
                                 <Mail className="w-5 h-5" />
                             </div>
@@ -213,7 +213,7 @@ export default function Footer() {
             </div>
 
             {/* Bottom Bar */}
-            <div className="bg-[#03060C] py-6 border-t border-gray-800/50">
+            <div className="bg-black py-8 border-t border-white/5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-sm text-gray-500 font-medium">

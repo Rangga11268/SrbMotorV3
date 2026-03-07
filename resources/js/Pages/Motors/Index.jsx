@@ -403,10 +403,10 @@ export default function Index({
                                                                                         key={
                                                                                             pIndex
                                                                                         }
-                                                                                        className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-r-full shadow-lg border border-orange-400/50 self-start truncate max-w-full"
+                                                                                        className="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-2 rounded-r-xl shadow-xl shadow-blue-500/20 border border-blue-400/30 self-start truncate max-w-full"
                                                                                     >
-                                                                                        <span className="mr-1">
-                                                                                            🔥
+                                                                                        <span className="mr-1.5">
+                                                                                            ✨
                                                                                         </span>
                                                                                         {promo.badge_text ||
                                                                                             promo.title}

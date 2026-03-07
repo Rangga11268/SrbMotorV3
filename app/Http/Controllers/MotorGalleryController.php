@@ -475,7 +475,6 @@ class MotorGalleryController extends Controller
 
     public function showUserTransactions()
     {
-
         if (!Auth::check()) {
             abort(403, 'Anda harus login terlebih dahulu untuk mengakses halaman ini.');
         }
@@ -486,5 +485,26 @@ class MotorGalleryController extends Controller
             ->paginate(9);
 
         return \Inertia\Inertia::render('Motors/UserTransactions', compact('transactions'));
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->get('q');
+        
+        if (empty($query)) {
+            return response()->json([]);
+        }
+
+        $motors = Motor::where(function($q) use ($query) {
+                $q->where('name', 'LIKE', "%{$query}%")
+                  ->orWhere('brand', 'LIKE', "%{$query}%")
+                  ->orWhere('model', 'LIKE', "%{$query}%");
+            })
+            ->where('tersedia', true)
+            ->with(['promotions'])
+            ->limit(8)
+            ->get();
+
+        return response()->json($motors);
     }
 }

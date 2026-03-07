@@ -38,13 +38,13 @@ export default function Edit({ user }) {
         <AdminLayout title="KONFIGURASI PROFIL">
             <div className="max-w-5xl mx-auto space-y-8">
                 {/* Header Control Panel */}
-                <div className="flex flex-col xl:flex-row justify-between items-end gap-6">
+                <div className="flex flex-col xl:flex-row justify-between items-end gap-6 mb-8">
                     <div>
-                        <h2 className="text-white/50 font-mono uppercase tracking-widest text-xs mb-2">
+                        <h2 className="text-slate-400 font-mono uppercase tracking-widest text-[10px] mb-2 font-bold">
                             MODUL KEAMANAN & PERSONALISASI
                         </h2>
-                        <h1 className="text-3xl font-display font-bold text-white uppercase tracking-wide flex items-center gap-3">
-                            <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
+                        <h1 className="text-3xl font-display font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
+                            <span className="w-1.5 h-10 bg-primary rounded-full"></span>
                             PROFIL ADMIN
                         </h1>
                     </div>
@@ -52,22 +52,22 @@ export default function Edit({ user }) {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Profile Information Section */}
-                    <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden relative group">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[60px] -z-10 group-hover:bg-blue-500/20 transition-colors"></div>
+                    <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative group transition-all hover:shadow-xl hover:shadow-primary/5">
+                        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors"></div>
 
-                        <div className="p-6 border-b border-white/5 flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-2xl">
+                        <div className="p-8 border-b border-slate-50 flex items-center gap-5">
+                            <div className="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-3xl shadow-lg shadow-primary/20">
                                 {user.name.charAt(0)}
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-white font-display tracking-wide flex items-center gap-2">
+                                <h2 className="text-xl font-black text-slate-900 font-display tracking-tight flex items-center gap-2">
                                     INFORMASI DASAR
                                     <ShieldCheck
-                                        size={16}
-                                        className="text-blue-500"
+                                        size={20}
+                                        className="text-primary"
                                     />
                                 </h2>
-                                <p className="text-white/40 text-xs font-mono">
+                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">
                                     DATA IDENTITAS SISTEM
                                 </p>
                             </div>
@@ -75,15 +75,15 @@ export default function Edit({ user }) {
 
                         <form
                             onSubmit={submitProfile}
-                            className="p-6 space-y-6"
+                            className="p-8 space-y-8"
                         >
-                            <div>
-                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                                     NAMA LENGKAP
                                 </label>
                                 <div className="relative group/input">
-                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-blue-500 transition-colors">
-                                        <User size={18} />
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary transition-colors">
+                                        <User size={20} />
                                     </div>
                                     <input
                                         type="text"
@@ -91,24 +91,24 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setData("name", e.target.value)
                                         }
-                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-white placeholder-white/20 transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary text-sm font-bold text-slate-900 placeholder-slate-300 transition-all outline-none"
                                     />
                                 </div>
                                 {errors.name && (
-                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
-                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                                    <p className="text-red-500 text-[10px] font-black uppercase tracking-wider mt-2 ml-1 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
                                         {errors.name}
                                     </p>
                                 )}
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                                     ALAMAT EMAIL
                                 </label>
                                 <div className="relative group/input">
-                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-blue-500 transition-colors">
-                                        <span className="text-lg font-mono">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-primary transition-colors">
+                                        <span className="text-xl font-black font-mono">
                                             @
                                         </span>
                                     </div>
@@ -118,24 +118,24 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setData("email", e.target.value)
                                         }
-                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm font-mono text-white placeholder-white/20 transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary text-sm font-bold text-slate-900 placeholder-slate-300 transition-all outline-none"
                                     />
                                 </div>
                                 {errors.email && (
-                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
-                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                                    <p className="text-red-500 text-[10px] font-black uppercase tracking-wider mt-2 ml-1 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
                                         {errors.email}
                                     </p>
                                 )}
                             </div>
 
-                            <div className="pt-4 border-t border-white/5 flex justify-end">
+                            <div className="pt-6 border-t border-slate-50">
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold font-display uppercase tracking-wide transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black font-display uppercase tracking-widest transition-all shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 active:scale-[0.98] disabled:opacity-50"
                                 >
-                                    <Save size={18} />
+                                    <Save size={20} />
                                     {processing
                                         ? "MENYIMPAN..."
                                         : "SIMPAN PERUBAHAN"}
@@ -145,22 +145,22 @@ export default function Edit({ user }) {
                     </div>
 
                     {/* Security Section */}
-                    <div className="bg-zinc-900/50 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden relative group">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-[60px] -z-10 group-hover:bg-red-500/20 transition-colors"></div>
+                    <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative group transition-all hover:shadow-xl hover:shadow-red-500/5">
+                        <div className="absolute top-0 right-0 w-48 h-48 bg-red-500/5 rounded-full blur-[80px] -z-10 group-hover:bg-red-500/10 transition-colors"></div>
 
-                        <div className="p-6 border-b border-white/5 flex items-center gap-4">
-                            <div className="w-14 h-14 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 font-bold text-2xl">
-                                <Lock size={24} />
+                        <div className="p-8 border-b border-slate-50 flex items-center gap-5">
+                            <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center font-black text-3xl">
+                                <Lock size={28} />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-white font-display tracking-wide flex items-center gap-2">
+                                <h2 className="text-xl font-black text-slate-900 font-display tracking-tight flex items-center gap-2">
                                     KEAMANAN AKUN
                                     <Shield
-                                        size={16}
+                                        size={20}
                                         className="text-red-500"
                                     />
                                 </h2>
-                                <p className="text-white/40 text-xs font-mono">
+                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">
                                     ENKRIPSI DATA KATA SANDI
                                 </p>
                             </div>
@@ -168,15 +168,15 @@ export default function Edit({ user }) {
 
                         <form
                             onSubmit={submitPassword}
-                            className="p-6 space-y-6"
+                            className="p-8 space-y-8"
                         >
-                            <div>
-                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                                     PASSWORD SAAT INI
                                 </label>
                                 <div className="relative group/input">
-                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-red-500 transition-colors">
-                                        <Key size={18} />
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-red-500 transition-colors">
+                                        <Key size={20} />
                                     </div>
                                     <input
                                         type="password"
@@ -184,27 +184,27 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setPasswordData(
                                                 "current_password",
-                                                e.target.value
+                                                e.target.value,
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm font-mono text-white placeholder-white/20 transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 text-sm font-bold text-slate-900 placeholder-slate-300 transition-all outline-none"
                                     />
                                 </div>
                                 {passwordErrors.current_password && (
-                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
-                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                                    <p className="text-red-500 text-[10px] font-black uppercase tracking-wider mt-2 ml-1 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
                                         {passwordErrors.current_password}
                                     </p>
                                 )}
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                                     PASSWORD BARU
                                 </label>
                                 <div className="relative group/input">
-                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-red-500 transition-colors">
-                                        <Lock size={18} />
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-red-500 transition-colors">
+                                        <Lock size={20} />
                                     </div>
                                     <input
                                         type="password"
@@ -212,27 +212,27 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setPasswordData(
                                                 "password",
-                                                e.target.value
+                                                e.target.value,
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm font-mono text-white placeholder-white/20 transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 text-sm font-bold text-slate-900 placeholder-slate-300 transition-all outline-none"
                                     />
                                 </div>
                                 {passwordErrors.password && (
-                                    <p className="text-red-500 text-xs font-mono mt-2 flex items-center gap-1">
-                                        <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                                    <p className="text-red-500 text-[10px] font-black uppercase tracking-wider mt-2 ml-1 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
                                         {passwordErrors.password}
                                     </p>
                                 )}
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-bold text-white/60 mb-2 uppercase tracking-wider">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
                                     KONFIRMASI PASSWORD BARU
                                 </label>
                                 <div className="relative group/input">
-                                    <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center text-white/30 group-focus-within/input:text-red-500 transition-colors">
-                                        <Lock size={18} />
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/input:text-red-500 transition-colors">
+                                        <Shield size={20} />
                                     </div>
                                     <input
                                         type="password"
@@ -242,21 +242,21 @@ export default function Edit({ user }) {
                                         onChange={(e) =>
                                             setPasswordData(
                                                 "password_confirmation",
-                                                e.target.value
+                                                e.target.value,
                                             )
                                         }
-                                        className="w-full pl-10 pr-4 py-3 bg-black/40 border border-white/10 rounded-xl focus:ring-1 focus:ring-red-500 focus:border-red-500 text-sm font-mono text-white placeholder-white/20 transition-all"
+                                        className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-red-500/10 focus:border-red-500 text-sm font-bold text-slate-900 placeholder-slate-300 transition-all outline-none"
                                     />
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-white/5 flex justify-end">
+                            <div className="pt-6 border-t border-slate-50">
                                 <button
                                     type="submit"
                                     disabled={passwordProcessing}
-                                    className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-red-500 hover:text-white text-white rounded-xl font-bold font-display uppercase tracking-wide transition-all border border-white/10 hover:border-red-500 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-slate-900 hover:bg-red-600 text-white rounded-2xl font-black font-display uppercase tracking-widest transition-all shadow-lg hover:shadow-red-500/30 active:scale-[0.98] disabled:opacity-50"
                                 >
-                                    <Save size={18} />
+                                    <Key size={20} />
                                     {passwordProcessing
                                         ? "MEMPROSES..."
                                         : "UPDATE SECURITY"}
