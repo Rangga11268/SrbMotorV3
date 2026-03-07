@@ -51,3 +51,29 @@ export default function Input({
         </div>
     );
 }
+
+export function Label({
+    children,
+    className = "",
+    required = false,
+    ...props
+}) {
+    return (
+        <label
+            className={`block text-sm font-medium text-gray-900 ${className}`}
+            {...props}
+        >
+            {children}
+            {required && <span className="text-red-600 ml-1">*</span>}
+        </label>
+    );
+}
+
+export function ErrorMessage({ children, className = "" }) {
+    if (!children) return null;
+    return (
+        <p className={`text-sm text-red-600 font-medium ${className}`}>
+            {children}
+        </p>
+    );
+}

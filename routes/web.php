@@ -23,8 +23,8 @@ Route::get('/motors/compare', [MotorGalleryController::class, 'compare'])->name(
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
 Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
-// Order routes - auth required (security fix: prevent unauthenticated access)
-Route::middleware('auth')->group(function () {
+// Order routes - auth required (security fix: prevent unauthenticated access + applying rate limits)
+Route::middleware(['auth', 'throttle:15,1'])->group(function () {
     Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
     Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
     Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
@@ -41,12 +41,16 @@ Route::get('/contact', function () {
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
 
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'throttle:5,1'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
+
+// Google OAuth routes
+Route::get('/auth/google', [\App\Http\Controllers\GoogleAuthController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google/callback', [\App\Http\Controllers\GoogleAuthController::class, 'callback'])->name('google.callback');
 
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');

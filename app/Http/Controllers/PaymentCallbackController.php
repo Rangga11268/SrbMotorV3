@@ -27,6 +27,18 @@ class PaymentCallbackController extends Controller
             $fraud = $notification->fraud_status;
             $orderId = $notification->order_id;
             
+            // 1. Signature validation
+            $grossAmount = $notification->gross_amount;
+            $statusCode = $notification->status_code;
+            $serverKey = config('midtrans.server_key');
+            
+            $inputSignature = $notification->signature_key ?? '';
+            $calculatedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
+            
+            if ($inputSignature !== $calculatedSignature) {
+                \Log::warning('Midtrans Webhook: Invalid signature key detected.');
+                return response()->json(['message' => 'Invalid signature key'], 403);
+            }
 
             $installmentId = explode('-', $orderId)[1];
             
@@ -34,6 +46,11 @@ class PaymentCallbackController extends Controller
 
             if (!$installment) {
                 return response()->json(['message' => 'Installment not found'], 404);
+            }
+
+            // 2. Idempotency Check (if already paid, ignore to prevent duplicate processing)
+            if ($installment->status === 'paid') {
+                return response()->json(['message' => 'Payment already processed'], 200);
             }
 
             if ($status == 'capture') {

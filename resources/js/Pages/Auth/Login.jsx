@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
 import {
     Eye,
     EyeOff,
     AlertCircle,
-    LogIn,
     Mail,
     Lock,
-    ShieldCheck,
-    Terminal,
+    LogIn,
     ArrowRight,
+    ArrowLeft,
+    ShieldCheck,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function Login() {
     const { data, setData, post, processing, errors } = useForm({
@@ -29,198 +27,296 @@ export default function Login() {
     };
 
     return (
-        <MainLayout title="Terminal Akses">
-            <div className="min-h-screen bg-surface-dark flex pt-32 pb-12 relative overflow-hidden">
-                {/* Background FX */}
-                <div className="absolute top-0 left-0 w-full h-full">
-                    <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px]" />
-                    <div className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-purple-500/5 rounded-full blur-[120px]" />
-                    <div className="absolute inset-0 bg-[url('/assets/img/grid.svg')] opacity-5"></div>
+        <div className="min-h-screen flex font-sans selection:bg-blue-600 selection:text-white bg-white">
+            <Head title="Masuk - SRB Motor" />
+
+            {/* Left Box: Form Area */}
+            <div className="w-full lg:w-1/2 flex flex-col justify-between py-8 px-6 sm:px-12 lg:px-20 relative z-10 bg-white">
+                <div className="flex justify-between items-center">
+                    <Link
+                        href={route("home")}
+                        className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors group"
+                    >
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                        Kembali ke Beranda
+                    </Link>
+                    <div className="font-bold text-xl tracking-tight text-gray-900">
+                        SRB<span className="text-blue-600">Motor.</span>
+                    </div>
                 </div>
 
-                <div className="container mx-auto px-4 relative z-10 flex items-center justify-center">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        className="w-full max-w-5xl bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2"
-                    >
-                        {/* Left Panel: Security Visual */}
-                        <div className="relative hidden md:flex flex-col justify-between p-12 bg-black/50 overflow-hidden group">
-                            <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)]"></div>
+                <div className="flex-grow flex flex-col justify-center max-w-md w-full mx-auto py-12">
+                    <div>
+                        <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+                            Selamat Datang Kembali
+                        </h2>
+                        <p className="mt-2 text-base text-gray-500">
+                            Silakan masuk untuk melanjutkan transaksi dan
+                            menjelajahi premium motor impian Anda.
+                        </p>
+                    </div>
 
-                            <div className="relative z-10">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-8">
-                                    <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                        Koneksi Aman
-                                    </span>
-                                </div>
-                                <h2 className="text-5xl font-display font-black text-white leading-tight mb-4">
-                                    WELCOME <br /> BACK
-                                </h2>
-                                <p className="text-white/40 max-w-xs font-sans">
-                                    Otentikasi untuk mengakses dashboard anda
-                                    dan kelola armada anda.
-                                </p>
-                            </div>
-
-                            <div className="relative z-10 mt-12">
-                                <div className="w-full h-48 bg-black/40 rounded-xl border border-white/10 p-4 font-mono text-xs text-green-500 overflow-hidden opacity-70">
-                                    <p>$ initiating session...</p>
-                                    <p>$ checking protocols...</p>
-                                    <p className="blinking-cursor">
-                                        $ siap untuk input_
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Right Panel: Login Form */}
-                        <div className="p-10 md:p-14 bg-surface-dark relative">
-                            <div className="flex items-center gap-3 mb-8">
-                                <Terminal className="text-white/20" size={32} />
-                                <h3 className="text-2xl font-display font-bold text-white tracking-wide">
-                                    AKSES LOGIN
-                                </h3>
-                            </div>
-
-                            <form onSubmit={submit} className="space-y-6">
-                                <div>
-                                    <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                        Email Identitas
-                                    </label>
-                                    <div className="relative group">
+                    <div className="mt-8">
+                        <form className="space-y-6" onSubmit={submit}>
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-900"
+                                >
+                                    Alamat Email
+                                </label>
+                                <div className="relative mt-2">
+                                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                                         <Mail
-                                            size={18}
-                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-accent transition-colors"
-                                        />
-                                        <input
-                                            type="email"
-                                            value={data.email}
-                                            onChange={(e) =>
-                                                setData("email", e.target.value)
-                                            }
-                                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-accent focus:bg-white/10 outline-none transition-all font-sans"
-                                            placeholder="user@srbmotors.id"
-                                            required
+                                            className="h-5 w-5 text-gray-400"
+                                            aria-hidden="true"
                                         />
                                     </div>
-                                    {errors.email && (
-                                        <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
-                                            <AlertCircle size={12} />{" "}
-                                            {errors.email}
-                                        </div>
-                                    )}
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        required
+                                        value={data.email}
+                                        onChange={(e) =>
+                                            setData("email", e.target.value)
+                                        }
+                                        className="block w-full rounded-2xl border-0 py-3.5 pl-11 pr-4 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 transition-all hover:bg-gray-50 focus:bg-white focus:shadow-md focus:shadow-blue-500/10"
+                                        placeholder="nama@email.com"
+                                    />
                                 </div>
+                                {errors.email && (
+                                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1.5">
+                                        <AlertCircle className="h-4 w-4" />{" "}
+                                        {errors.email}
+                                    </p>
+                                )}
+                            </div>
 
-                                <div>
-                                    <label className="block text-white/40 text-xs font-bold uppercase tracking-widest mb-2">
-                                        Kata Sandi
-                                    </label>
-                                    <div className="relative group">
+                            <div>
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium text-gray-900"
+                                >
+                                    Kata Sandi
+                                </label>
+                                <div className="relative mt-2">
+                                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                                         <Lock
-                                            size={18}
-                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-accent transition-colors"
+                                            className="h-5 w-5 text-gray-400"
+                                            aria-hidden="true"
                                         />
-                                        <input
-                                            type={
-                                                showPassword
-                                                    ? "text"
-                                                    : "password"
-                                            }
-                                            value={data.password}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "password",
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full pl-12 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/20 focus:border-accent focus:bg-white/10 outline-none transition-all font-sans"
-                                            placeholder="••••••••"
-                                            required
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setShowPassword(!showPassword)
-                                            }
-                                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/30 hover:text-white transition-colors"
-                                        >
-                                            {showPassword ? (
-                                                <EyeOff size={18} />
-                                            ) : (
-                                                <Eye size={18} />
-                                            )}
-                                        </button>
                                     </div>
-                                    {errors.password && (
-                                        <div className="mt-2 text-red-500 text-xs flex items-center gap-1">
-                                            <AlertCircle size={12} />{" "}
-                                            {errors.password}
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="flex items-center justify-between pt-2">
-                                    <label className="flex items-center cursor-pointer group">
-                                        <input
-                                            type="checkbox"
-                                            checked={data.remember}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "remember",
-                                                    e.target.checked
-                                                )
-                                            }
-                                            className="w-4 h-4 rounded border-white/20 bg-white/5 text-accent focus:ring-accent focus:ring-offset-0 transition-all cursor-pointer"
-                                        />
-                                        <span className="ml-2 text-sm text-white/60 group-hover:text-white transition-colors">
-                                            Ingat Sesi Ini
-                                        </span>
-                                    </label>
-                                    <Link
-                                        href="#"
-                                        className="text-sm font-bold text-accent hover:text-white transition-colors"
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
+                                        autoComplete="current-password"
+                                        required
+                                        value={data.password}
+                                        onChange={(e) =>
+                                            setData("password", e.target.value)
+                                        }
+                                        className="block w-full rounded-2xl border-0 py-3.5 pl-11 pr-12 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 transition-all hover:bg-gray-50 focus:bg-white focus:shadow-md focus:shadow-blue-500/10"
+                                        placeholder="••••••••"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                        className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600 transition-colors"
                                     >
-                                        Lupa Sandi?
-                                    </Link>
+                                        {showPassword ? (
+                                            <EyeOff
+                                                className="h-5 w-5"
+                                                aria-hidden="true"
+                                            />
+                                        ) : (
+                                            <Eye
+                                                className="h-5 w-5"
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                    </button>
+                                </div>
+                                {errors.password && (
+                                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1.5">
+                                        <AlertCircle className="h-4 w-4" />{" "}
+                                        {errors.password}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <input
+                                        id="remember-me"
+                                        name="remember-me"
+                                        type="checkbox"
+                                        checked={data.remember}
+                                        onChange={(e) =>
+                                            setData(
+                                                "remember",
+                                                e.target.checked,
+                                            )
+                                        }
+                                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                                    />
+                                    <label
+                                        htmlFor="remember-me"
+                                        className="ml-3 block text-sm leading-6 text-gray-600 cursor-pointer select-none"
+                                    >
+                                        Ingat saya
+                                    </label>
                                 </div>
 
+                                <div className="text-sm leading-6">
+                                    <a
+                                        href="#"
+                                        className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+                                    >
+                                        Lupa kata sandi?
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full bg-white text-black font-display font-bold text-xl py-4 rounded-xl hover:bg-accent transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gray-900 px-3 py-4 text-sm font-semibold text-white shadow-lg shadow-gray-900/20 hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                                 >
                                     {processing ? (
-                                        <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                                        <span className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                     ) : (
                                         <>
-                                            MULAI SESI{" "}
-                                            <ArrowRight
-                                                size={20}
-                                                className="group-hover:translate-x-1 transition-transform"
-                                            />
+                                            <span className="relative z-10 flex items-center gap-2">
+                                                <LogIn size={18} />
+                                                Masuk ke Akun
+                                                <ArrowRight
+                                                    size={18}
+                                                    className="group-hover:translate-x-1 transition-transform ml-1"
+                                                />
+                                            </span>
+                                            {/* Shine effect */}
+                                            <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                                         </>
                                     )}
                                 </button>
+                            </div>
+                        </form>
 
-                                <div className="mt-8 text-center border-t border-white/5 pt-6">
-                                    <p className="text-white/40 text-sm">
-                                        Baru di sistem ini?{" "}
-                                        <Link
-                                            href={route("register")}
-                                            className="text-white font-bold hover:text-accent transition-colors ml-1"
-                                        >
-                                            Buat Identitas
-                                        </Link>
-                                    </p>
+                        <div className="mt-8">
+                            <div className="relative">
+                                <div
+                                    className="absolute inset-0 flex items-center"
+                                    aria-hidden="true"
+                                >
+                                    <div className="w-full border-t border-gray-200" />
                                 </div>
-                            </form>
+                                <div className="relative flex justify-center text-sm font-medium leading-6">
+                                    <span className="bg-white px-6 text-gray-400">
+                                        atau masuk pihak ketiga
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="mt-6">
+                                <a
+                                    href={route("auth.google")}
+                                    className="flex w-full items-center justify-center gap-3 rounded-2xl bg-white px-3 py-4 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-inset ring-gray-200 hover:bg-gray-50 hover:ring-gray-300 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                                >
+                                    <svg
+                                        className="h-5 w-5"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                            fill="#4285F4"
+                                        />
+                                        <path
+                                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                            fill="#34A853"
+                                        />
+                                        <path
+                                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                            fill="#FBBC05"
+                                        />
+                                        <path
+                                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                            fill="#EA4335"
+                                        />
+                                    </svg>
+                                    Lanjutkan dengan Google
+                                </a>
+                            </div>
                         </div>
-                    </motion.div>
+                    </div>
+                </div>
+
+                {/* Footer Link */}
+                <div className="text-center text-sm text-gray-500">
+                    Belum punya akun?{" "}
+                    <Link
+                        href={route("register")}
+                        className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+                    >
+                        Daftar sekarang
+                    </Link>
                 </div>
             </div>
-        </MainLayout>
+
+            {/* Right Box: Premium Image Split */}
+            <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 border-l border-gray-100 overflow-hidden">
+                {/* Background Image */}
+                <img
+                    src="/assets/img/banner.png"
+                    alt="Premium Motorcycles"
+                    className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-overlay"
+                />
+
+                {/* Elegant Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-blue-900/60" />
+
+                <div className="relative z-10 flex flex-col justify-end p-20 w-full h-full text-white">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium w-fit mb-6">
+                        <ShieldCheck className="w-4 h-4 text-blue-400" />
+                        Transaksi Resmi & Terpercaya
+                    </div>
+                    <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4 leading-tight">
+                        Cara Premium Membeli
+                        <br />
+                        Motor Impian Anda.
+                    </h1>
+                    <p className="text-lg text-gray-300 max-w-md">
+                        Bergabunglah dengan ribuan pelanggan yang telah
+                        merasakan pengalaman beli motor mudah, transparan, dan
+                        eksklusif bersama SRB Motor.
+                    </p>
+
+                    {/* Minimalist Pattern */}
+                    <svg
+                        className="absolute top-20 right-20 w-64 h-64 text-white/5"
+                        viewBox="0 0 100 100"
+                        fill="currentColor"
+                    >
+                        <path d="M50 0 L100 50 L50 100 L0 50 Z" />
+                    </svg>
+                </div>
+            </div>
+
+            {/* Inject Shimmer Animation for the generic auth aesthetic */}
+            <style jsx>{`
+                @keyframes shimmer {
+                    100% {
+                        transform: translateX(100%);
+                    }
+                }
+            `}</style>
+        </div>
     );
 }
