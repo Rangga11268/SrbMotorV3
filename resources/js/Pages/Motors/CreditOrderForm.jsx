@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
+import PublicLayout from "@/Layouts/PublicLayout";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
 import Input, { Label, ErrorMessage } from "@/Components/UI/Input";
@@ -70,11 +67,8 @@ export default function CreditOrderForm({ motor, auth }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50/50">
-            <Head title={`Pengajuan Kredit - ${motor.name}`} />
-            <Navbar auth={auth} />
-
-            <main className="flex-grow pt-24 pb-20">
+        <PublicLayout auth={auth} title={`Pengajuan Kredit - ${motor.name}`}>
+            <div className="flex-grow pt-[104px] pb-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-8 flex items-center justify-between">
@@ -384,9 +378,7 @@ export default function CreditOrderForm({ motor, auth }) {
                         </div>
                     </div>
                 </div>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </PublicLayout>
     );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
 import {
     Upload,
     FileText,
@@ -23,6 +23,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function DocumentManagement({ transaction }) {
+    const { auth } = usePage().props;
     const { data, setData, post, processing, errors, progress } = useForm({
         documents: {
             KTP: [],
@@ -100,7 +101,7 @@ export default function DocumentManagement({ transaction }) {
     };
 
     const creditStatus = getCreditStatusInfo(
-        transaction.credit_detail?.credit_status
+        transaction.credit_detail?.credit_status,
     );
     const StatusIcon = creditStatus.icon;
 
@@ -114,108 +115,112 @@ export default function DocumentManagement({ transaction }) {
 
     const hasRequiredDocs =
         transaction.credit_detail?.documents?.some(
-            (d) => d.document_type === "KTP"
+            (d) => d.document_type === "KTP",
         ) &&
         transaction.credit_detail?.documents?.some(
-            (d) => d.document_type === "KK"
+            (d) => d.document_type === "KK",
         ) &&
         transaction.credit_detail?.documents?.some(
-            (d) => d.document_type === "SLIP_GAJI"
+            (d) => d.document_type === "SLIP_GAJI",
         );
 
     return (
-        <MainLayout title="Brankas Dokumen">
-            <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
-                {/* Background FX */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-surface-dark to-surface-dark pointer-events-none"></div>
+        <PublicLayout auth={auth} title="Brankas Dokumen">
+            <div className="flex-grow pt-[104px]">
+                <div className="bg-surface-dark min-h-screen pb-20 overflow-hidden relative pt-10">
+                    {/* Background FX */}
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-surface-dark to-surface-dark pointer-events-none"></div>
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-12"
-                    >
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-6 backdrop-blur-md">
-                            <Database size={12} className="text-blue-400" />
-                            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
-                                AKSES DATABASE
-                            </span>
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-display font-black text-white mb-4">
-                            BRANKAS{" "}
-                            <span className="text-accent text-glow">
-                                DOKUMEN
-                            </span>
-                        </h1>
-                        <p className="text-white/40 font-mono text-sm">
-                            Kelola dan perbarui aset verifikasi untuk ID
-                            Transaksi: #{transaction.id}
-                        </p>
-                    </motion.div>
+                    <div className="container mx-auto px-4 relative z-10">
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-center mb-12"
+                        >
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-6 backdrop-blur-md">
+                                <Database size={12} className="text-blue-400" />
+                                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
+                                    AKSES DATABASE
+                                </span>
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-display font-black text-white mb-4">
+                                BRANKAS{" "}
+                                <span className="text-accent text-glow">
+                                    DOKUMEN
+                                </span>
+                            </h1>
+                            <p className="text-white/40 font-mono text-sm">
+                                Kelola dan perbarui aset verifikasi untuk ID
+                                Transaksi: #{transaction.id}
+                            </p>
+                        </motion.div>
 
-                    <div className="max-w-5xl mx-auto space-y-8">
-                        {/* Transaction Status Card */}
-                        <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
-                            <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 bg-black/50 rounded-lg border border-white/10 p-2 flex items-center justify-center">
-                                        <img
-                                            src={`/storage/${transaction.motor.image_path}`}
-                                            alt={transaction.motor.name}
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-bold text-white font-display">
-                                            {transaction.motor.name}
-                                        </h2>
-                                        <div className="flex items-center gap-4 text-xs font-mono text-white/50 mt-1">
-                                            <span>
-                                                TENOR:{" "}
-                                                {
-                                                    transaction.credit_detail
-                                                        .tenor
-                                                }{" "}
-                                                BLN
-                                            </span>
-                                            <span>•</span>
-                                            <span>
-                                                DP:{" "}
-                                                {formatCurrency(
-                                                    transaction.credit_detail
-                                                        .down_payment
-                                                )}
-                                            </span>
+                        <div className="max-w-5xl mx-auto space-y-8">
+                            {/* Transaction Status Card */}
+                            <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+                                <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 bg-black/50 rounded-lg border border-white/10 p-2 flex items-center justify-center">
+                                            <img
+                                                src={`/storage/${transaction.motor.image_path}`}
+                                                alt={transaction.motor.name}
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-white font-display">
+                                                {transaction.motor.name}
+                                            </h2>
+                                            <div className="flex items-center gap-4 text-xs font-mono text-white/50 mt-1">
+                                                <span>
+                                                    TENOR:{" "}
+                                                    {
+                                                        transaction
+                                                            .credit_detail.tenor
+                                                    }{" "}
+                                                    BLN
+                                                </span>
+                                                <span>•</span>
+                                                <span>
+                                                    DP:{" "}
+                                                    {formatCurrency(
+                                                        transaction
+                                                            .credit_detail
+                                                            .down_payment,
+                                                    )}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div
-                                    className={`px-4 py-2 rounded-full border flex items-center gap-2 ${creditStatus.color}`}
-                                >
-                                    <StatusIcon size={16} />
-                                    <span className="text-xs font-bold tracking-wider">
-                                        {creditStatus.label}
-                                    </span>
+                                    <div
+                                        className={`px-4 py-2 rounded-full border flex items-center gap-2 ${creditStatus.color}`}
+                                    >
+                                        <StatusIcon size={16} />
+                                        <span className="text-xs font-bold tracking-wider">
+                                            {creditStatus.label}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Existing Documents Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-                                <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-                                    <ShieldCheck
-                                        size={18}
-                                        className="text-green-400"
-                                    />
-                                    ASET TERSIMPAN
-                                </h3>
+                            {/* Existing Documents Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                                    <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
+                                        <ShieldCheck
+                                            size={18}
+                                            className="text-green-400"
+                                        />
+                                        ASET TERSIMPAN
+                                    </h3>
 
-                                {Object.keys(groupedDocuments).length > 0 ? (
-                                    <div className="space-y-4">
-                                        {Object.entries(groupedDocuments).map(
-                                            ([type, docs]) => (
+                                    {Object.keys(groupedDocuments).length >
+                                    0 ? (
+                                        <div className="space-y-4">
+                                            {Object.entries(
+                                                groupedDocuments,
+                                            ).map(([type, docs]) => (
                                                 <div
                                                     key={type}
                                                     className="space-y-2"
@@ -223,7 +228,7 @@ export default function DocumentManagement({ transaction }) {
                                                     <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest pl-1">
                                                         {type.replace(
                                                             /_/g,
-                                                            " "
+                                                            " ",
                                                         )}
                                                     </h4>
                                                     {docs.map((doc, idx) => (
@@ -259,134 +264,145 @@ export default function DocumentManagement({ transaction }) {
                                                         </div>
                                                     ))}
                                                 </div>
-                                            )
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-10">
-                                        <p className="text-white/30 font-mono text-sm">
-                                            BRANKAS KOSONG
-                                        </p>
-                                    </div>
-                                )}
-
-                                <div
-                                    className={`mt-6 p-4 rounded-xl border flex items-center gap-3 ${
-                                        hasRequiredDocs
-                                            ? "bg-green-500/10 border-green-500/20 text-green-400"
-                                            : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
-                                    }`}
-                                >
-                                    {hasRequiredDocs ? (
-                                        <CheckCircle size={20} />
+                                            ))}
+                                        </div>
                                     ) : (
-                                        <AlertTriangle size={20} />
-                                    )}
-                                    <span className="text-xs font-bold font-mono">
-                                        {hasRequiredDocs
-                                            ? "SEMUA PROTOKOL TERVERIFIKASI"
-                                            : "DATA TIDAK LENGKAP TERDETEKSI"}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Upload New Form */}
-                            <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-                                <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-                                    <Upload size={18} className="text-accent" />
-                                    UNGGAH DATA BARU
-                                </h3>
-
-                                <form onSubmit={submit} className="space-y-4">
-                                    <FileUploadFieldMin
-                                        label="KTP"
-                                        id="document_ktp"
-                                        accept="image/*,application/pdf"
-                                        onChange={(e) =>
-                                            handleFileChange(e, "KTP")
-                                        }
-                                        onRemove={(idx) =>
-                                            handleRemoveFile("KTP", idx)
-                                        }
-                                        error={errors["documents.KTP"]}
-                                        files={data.documents.KTP}
-                                    />
-                                    <FileUploadFieldMin
-                                        label="KK"
-                                        id="document_kk"
-                                        accept="image/*,application/pdf"
-                                        onChange={(e) =>
-                                            handleFileChange(e, "KK")
-                                        }
-                                        onRemove={(idx) =>
-                                            handleRemoveFile("KK", idx)
-                                        }
-                                        error={errors["documents.KK"]}
-                                        files={data.documents.KK}
-                                    />
-                                    <FileUploadFieldMin
-                                        label="SLIP GAJI"
-                                        id="document_slip_gaji"
-                                        accept="image/*,application/pdf"
-                                        onChange={(e) =>
-                                            handleFileChange(e, "SLIP_GAJI")
-                                        }
-                                        onRemove={(idx) =>
-                                            handleRemoveFile("SLIP_GAJI", idx)
-                                        }
-                                        error={errors["documents.SLIP_GAJI"]}
-                                        files={data.documents.SLIP_GAJI}
-                                    />
-                                    <FileUploadFieldMin
-                                        label="DOKUMEN TAMBAHAN"
-                                        id="document_lainnya"
-                                        accept="image/*,application/pdf"
-                                        onChange={(e) =>
-                                            handleFileChange(e, "LAINNYA")
-                                        }
-                                        onRemove={(idx) =>
-                                            handleRemoveFile("LAINNYA", idx)
-                                        }
-                                        error={errors["documents.LAINNYA"]}
-                                        files={data.documents.LAINNYA}
-                                    />
-
-                                    {progress && (
-                                        <div className="w-full bg-black/50 rounded-full h-1 mt-4 overflow-hidden">
-                                            <div
-                                                className="h-full bg-accent"
-                                                style={{
-                                                    width: `${progress.percentage}%`,
-                                                }}
-                                            ></div>
+                                        <div className="text-center py-10">
+                                            <p className="text-white/30 font-mono text-sm">
+                                                BRANKAS KOSONG
+                                            </p>
                                         </div>
                                     )}
 
-                                    <div className="flex gap-4 pt-4 mt-6">
-                                        <Link
-                                            href={route(
-                                                "motors.order.confirmation",
-                                                transaction.id
-                                            )}
-                                            className="px-4 py-3 rounded-xl border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors font-bold text-xs"
-                                        >
-                                            <ArrowLeft size={16} />
-                                        </Link>
-                                        <button
-                                            type="submit"
-                                            disabled={processing}
-                                            className="flex-1 bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-accent transition-colors flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
-                                        >
-                                            <Upload size={16} /> UNGGAH
-                                        </button>
+                                    <div
+                                        className={`mt-6 p-4 rounded-xl border flex items-center gap-3 ${
+                                            hasRequiredDocs
+                                                ? "bg-green-500/10 border-green-500/20 text-green-400"
+                                                : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
+                                        }`}
+                                    >
+                                        {hasRequiredDocs ? (
+                                            <CheckCircle size={20} />
+                                        ) : (
+                                            <AlertTriangle size={20} />
+                                        )}
+                                        <span className="text-xs font-bold font-mono">
+                                            {hasRequiredDocs
+                                                ? "SEMUA PROTOKOL TERVERIFIKASI"
+                                                : "DATA TIDAK LENGKAP TERDETEKSI"}
+                                        </span>
                                     </div>
-                                </form>
+                                </div>
+
+                                {/* Upload New Form */}
+                                <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                                    <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
+                                        <Upload
+                                            size={18}
+                                            className="text-accent"
+                                        />
+                                        UNGGAH DATA BARU
+                                    </h3>
+
+                                    <form
+                                        onSubmit={submit}
+                                        className="space-y-4"
+                                    >
+                                        <FileUploadFieldMin
+                                            label="KTP"
+                                            id="document_ktp"
+                                            accept="image/*,application/pdf"
+                                            onChange={(e) =>
+                                                handleFileChange(e, "KTP")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("KTP", idx)
+                                            }
+                                            error={errors["documents.KTP"]}
+                                            files={data.documents.KTP}
+                                        />
+                                        <FileUploadFieldMin
+                                            label="KK"
+                                            id="document_kk"
+                                            accept="image/*,application/pdf"
+                                            onChange={(e) =>
+                                                handleFileChange(e, "KK")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("KK", idx)
+                                            }
+                                            error={errors["documents.KK"]}
+                                            files={data.documents.KK}
+                                        />
+                                        <FileUploadFieldMin
+                                            label="SLIP GAJI"
+                                            id="document_slip_gaji"
+                                            accept="image/*,application/pdf"
+                                            onChange={(e) =>
+                                                handleFileChange(e, "SLIP_GAJI")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile(
+                                                    "SLIP_GAJI",
+                                                    idx,
+                                                )
+                                            }
+                                            error={
+                                                errors["documents.SLIP_GAJI"]
+                                            }
+                                            files={data.documents.SLIP_GAJI}
+                                        />
+                                        <FileUploadFieldMin
+                                            label="DOKUMEN TAMBAHAN"
+                                            id="document_lainnya"
+                                            accept="image/*,application/pdf"
+                                            onChange={(e) =>
+                                                handleFileChange(e, "LAINNYA")
+                                            }
+                                            onRemove={(idx) =>
+                                                handleRemoveFile("LAINNYA", idx)
+                                            }
+                                            error={errors["documents.LAINNYA"]}
+                                            files={data.documents.LAINNYA}
+                                        />
+
+                                        {progress && (
+                                            <div className="w-full bg-black/50 rounded-full h-1 mt-4 overflow-hidden">
+                                                <div
+                                                    className="h-full bg-accent"
+                                                    style={{
+                                                        width: `${progress.percentage}%`,
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        )}
+
+                                        <div className="flex gap-4 pt-4 mt-6">
+                                            <Link
+                                                href={route(
+                                                    "motors.order.confirmation",
+                                                    transaction.id,
+                                                )}
+                                                className="px-4 py-3 rounded-xl border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors font-bold text-xs"
+                                            >
+                                                <ArrowLeft size={16} />
+                                            </Link>
+                                            <button
+                                                type="submit"
+                                                disabled={processing}
+                                                className="flex-1 bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-accent transition-colors flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
+                                            >
+                                                <Upload size={16} /> UNGGAH
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </MainLayout>
+        </PublicLayout>
     );
 }
 

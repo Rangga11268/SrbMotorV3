@@ -200,6 +200,38 @@ a:hover {
     color: var(--color-primary-dark);
 }
 
+/* RESET: Prevent CoreUI/Bootstrap global leakage in SPA mode */
+.public-theme-root a,
+.public-theme-root button,
+.public-theme-root input,
+html:not(.admin-mode) a,
+html:not(.admin-mode) button,
+html:not(.admin-mode) input {
+    text-decoration: none !important;
+    box-shadow: none;
+    outline: none !important;
+}
+
+.public-theme-root a:hover,
+html:not(.admin-mode) a:hover {
+    text-decoration: none !important;
+}
+
+/* Hardened Specific Resets for "Ghosting" styles */
+.public-theme-root span.underline,
+.public-theme-root .underline {
+    text-decoration: underline !important;
+    text-decoration-color: var(--color-primary) !important;
+}
+
+.public-theme-root h1,
+.public-theme-root h2,
+.public-theme-root h3,
+.public-theme-root p {
+    margin-top: 0;
+    color: inherit;
+}
+
 /* Form Elements */
 input,
 textarea,

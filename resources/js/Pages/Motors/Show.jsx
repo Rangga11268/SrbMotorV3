@@ -1,30 +1,22 @@
 import React from "react";
-import { Head, Link, usePage } from "@inertiajs/react";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
-import Button from "@/Components/UI/Button";
-import Card, { CardBody } from "@/Components/UI/Card";
-import Badge from "@/Components/UI/Badge";
+import { Link, usePage } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
 import { motion } from "framer-motion";
 import {
     ChevronRight,
-    ArrowRight,
-    ShoppingCart,
-    FileText,
-    Phone,
-    Star,
-    ShieldCheck,
-    CheckCircle2,
-    Zap,
-    Clock,
-    Tag,
-    Gauge,
-    Cpu,
-    Activity,
-    Info,
     ArrowLeft,
-    PenTool,
+    Shield,
+    Star,
+    CheckCircle,
+    ShoppingBag,
+    Bike,
+    Smartphone,
+    MapPin,
+    ArrowRight,
 } from "lucide-react";
+import Button from "@/Components/UI/Button";
+import Card, { CardBody } from "@/Components/UI/Card";
+import Badge from "@/Components/UI/Badge";
 
 export default function Show({ motor, relatedMotors }) {
     const { auth } = usePage().props;
@@ -73,11 +65,8 @@ export default function Show({ motor, relatedMotors }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#F8F9FA] overflow-x-hidden">
-            <Head title={`${motor.name} - SRB Motors`} />
-            <Navbar auth={auth} />
-
-            <main className="flex-grow pt-24 md:pt-[104px] pb-20">
+        <PublicLayout auth={auth} title={`${motor.name} - SRB Motors`}>
+            <div className="flex-grow pt-24 md:pt-[104px] pb-20">
                 {/* BREADCRUMBS & BACK BUTTON */}
                 <div className="bg-white border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -503,9 +492,7 @@ export default function Show({ motor, relatedMotors }) {
                         </div>
                     )}
                 </div>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </PublicLayout>
     );
 }

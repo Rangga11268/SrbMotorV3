@@ -1,24 +1,16 @@
 import React from "react";
-import { Head, Link, usePage } from "@inertiajs/react";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
+import { usePage, Link } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
+import { motion } from "framer-motion";
 import {
+    Activity,
+    ShoppingBag,
+    ShieldCheck,
+    CreditCard,
     User,
     Mail,
-    Shield,
-    Calendar,
-    Edit2,
-    LogOut,
-    CheckCircle,
-    AlertTriangle,
-    Fingerprint,
-    Hash,
-    ChevronRight,
-    ShoppingBag,
-    CreditCard,
-    Settings,
+    Phone,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function Show({ user }) {
     const { auth } = usePage().props;
@@ -33,11 +25,8 @@ export default function Show({ user }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#F8F9FA]">
-            <Head title={`Profil Saya - SRB Motors`} />
-            <Navbar auth={auth} />
-
-            <main className="flex-grow pt-[104px] pb-20">
+        <PublicLayout auth={auth} title={`Profil Saya - SRB Motors`}>
+            <div className="flex-grow pt-[104px] pb-20">
                 {/* HEADER / COVER AREA */}
                 <div className="bg-gray-50 pt-16 pb-32 relative border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -83,7 +72,9 @@ export default function Show({ user }) {
                                     <span className="font-black uppercase tracking-widest text-sm">
                                         Informasi Profil
                                     </span>
-                                    <ChevronRight className="w-4 h-4 ml-auto" />
+                                    <span className="w-4 h-4 ml-auto">
+                                        <ChevronRight className="w-4 h-4" />
+                                    </span>
                                 </Link>
                                 <Link
                                     href={route("motors.user-transactions")}
@@ -108,7 +99,7 @@ export default function Show({ user }) {
                             </div>
 
                             <div className="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 p-8 border border-white text-center">
-                                <p className="text-xs font-black text-gray-300 uppercase tracking-widest mb-6 uppercase">
+                                <p className="text-xs font-black text-gray-300 uppercase tracking-widest mb-6">
                                     Otoritas Sesi
                                 </p>
                                 <Link
@@ -241,9 +232,7 @@ export default function Show({ user }) {
                         </div>
                     </div>
                 </div>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </PublicLayout>
     );
 }

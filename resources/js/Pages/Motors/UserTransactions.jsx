@@ -1,7 +1,4 @@
-import React from "react";
-import { Head, Link, usePage } from "@inertiajs/react";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
+import PublicLayout from "@/Layouts/PublicLayout";
 import {
     ShoppingBag,
     Calendar,
@@ -82,11 +79,8 @@ export default function UserTransactions({ transactions }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#F8F9FA]">
-            <Head title="Riwayat Pesanan - SRB Motors" />
-            <Navbar auth={auth} />
-
-            <main className="flex-grow pt-[104px] pb-20">
+        <PublicLayout auth={auth} title="Riwayat Pesanan - SRB Motors">
+            <div className="flex-grow pt-[104px] pb-20 bg-[#F8F9FA]">
                 {/* HERO HEADER */}
                 <div className="bg-gray-50 pt-16 pb-24 relative border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
@@ -313,9 +307,7 @@ export default function UserTransactions({ transactions }) {
                         </div>
                     )}
                 </div>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </PublicLayout>
     );
 }

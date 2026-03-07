@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Head, useForm, router, usePage, Link } from "@inertiajs/react";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
+import { Link, usePage, useForm, router } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-    CreditCard,
-    Calendar,
+    Activity,
+    AlertCircle,
+    AlertTriangle,
+    ArrowRight,
     CheckCircle,
     Clock,
-    AlertTriangle,
-    Upload,
-    ChevronRight,
-    Search,
-    Download,
-    X,
-    Shield,
-    Zap,
-    TrendingUp,
-    Activity,
-    DollarSign,
+    CreditCard,
     Landmark,
-    ArrowRight,
-    FileText,
+    Shield,
+    ShieldCheck,
+    TrendingUp,
+    Upload,
+    Wallet,
+    X,
 } from "lucide-react";
-import Swal from "sweetalert2";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import Swal from "sweetalert2";
 
 export default function InstallmentIndex({ transactions }) {
     const [selectedInstallment, setSelectedInstallment] = useState(null);
@@ -231,11 +226,8 @@ export default function InstallmentIndex({ transactions }) {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#F8F9FA]">
-            <Head title="Cicilan Saya - SRB Motors" />
-            <Navbar auth={auth} />
-
-            <main className="flex-grow pt-[104px] pb-20">
+        <PublicLayout auth={auth} title="Cicilan Saya - SRB Motors">
+            <div className="flex-grow pt-[104px] pb-20">
                 {/* HERO HEADER */}
                 <div className="bg-gray-50 pt-16 pb-24 relative border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
@@ -503,9 +495,7 @@ export default function InstallmentIndex({ transactions }) {
                         </div>
                     )}
                 </div>
-            </main>
-
-            <Footer />
+            </div>
 
             {/* MANUAL UPLOAD MODAL */}
             <AnimatePresence>
@@ -676,6 +666,6 @@ export default function InstallmentIndex({ transactions }) {
                     </div>
                 )}
             </AnimatePresence>
-        </div>
+        </PublicLayout>
     );
 }

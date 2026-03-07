@@ -1,32 +1,34 @@
 import React, { useState } from "react";
 import { Link, useForm } from "@inertiajs/react";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
+import PublicLayout from "@/Layouts/PublicLayout";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    Zap,
+    ChevronRight,
+    Star,
+    ShieldCheck,
+    Truck,
+    Clock,
+    ArrowRight,
+    Search,
+    MapPin,
+    Smartphone,
+    Mail,
+    Phone,
+    Send,
+    Bike,
+    MessageCircle,
+} from "lucide-react";
+import toast from "react-hot-toast";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
 import Badge from "@/Components/UI/Badge";
-import {
-    ArrowRight,
-    Star,
-    ShieldCheck,
-    Clock,
-    Truck,
-    Search,
-    ChevronRight,
-    Bike,
-    Zap,
-    MessageCircle,
-    Info,
-    Mail,
-    Phone,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import toast from "react-hot-toast";
 
 export default function Home({ auth, popularMotors = [] }) {
     const [searchQuery, setSearchQuery] = useState("");
@@ -72,9 +74,7 @@ export default function Home({ auth, popularMotors = [] }) {
     ];
 
     return (
-        <div className="min-h-screen flex flex-col bg-white overflow-x-hidden">
-            <Navbar auth={auth} />
-
+        <PublicLayout auth={auth} title="Beranda">
             {/* HERO SLIDER SECTION (Momotor Style) */}
             <section className="relative pt-32 md:pt-[104px] pb-12 bg-[#F8F9FA]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -521,8 +521,6 @@ export default function Home({ auth, popularMotors = [] }) {
                     </div>
                 </div>
             </section>
-
-            <Footer />
-        </div>
+        </PublicLayout>
     );
 }

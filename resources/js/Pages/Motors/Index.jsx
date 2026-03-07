@@ -1,28 +1,20 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Head, Link, router } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    ChevronRight,
+    Search,
+    Filter,
+    X,
+    TrendingUp,
+    Zap,
+    Heart,
+} from "lucide-react";
 import axios from "axios";
-import Navbar from "@/Components/Public/Navbar";
-import Footer from "@/Components/Public/Footer";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
 import Badge from "@/Components/UI/Badge";
-import {
-    Search,
-    RotateCcw,
-    Filter,
-    Calendar,
-    Info,
-    ArrowUpRight,
-    CheckCircle2,
-    SlidersHorizontal,
-    X,
-    ArrowRight,
-    LayoutGrid,
-    ChevronRight,
-    Clock,
-    Loader2,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 export default function Index({
     auth,
@@ -48,6 +40,7 @@ export default function Index({
         const { name, value } = e.target;
         setValues((values) => ({
             ...values,
+            [name]: value,
             [name]: value,
         }));
     };
@@ -106,10 +99,7 @@ export default function Index({
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
-            <Head title="Katalog Motor" />
-            <Navbar auth={auth} />
-
+        <PublicLayout auth={auth} title="Katalog Motor">
             {/* HEADER SECTION */}
             <section className="bg-white border-b border-gray-200 pt-28 pb-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -657,6 +647,6 @@ export default function Index({
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </PublicLayout>
     );
 }

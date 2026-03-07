@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Head, useForm, usePage, Link } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
+import { useForm, usePage, Link } from "@inertiajs/react";
+import PublicLayout from "@/Layouts/PublicLayout";
 import {
     User,
     Mail,
@@ -18,173 +18,200 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Edit({ user }) {
-    const { flash } = usePage().props;
+    const { auth, flash } = usePage().props;
     const [activeTab, setActiveTab] = useState("profile");
 
     return (
-        <MainLayout title="Pusat Komando">
-            <div className="bg-surface-dark min-h-screen pt-32 pb-20 overflow-hidden relative">
-                {/* Background FX */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 pointer-events-none"></div>
-                <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <PublicLayout auth={auth} title="Pusat Komando">
+            <div className="flex-grow pt-[104px]">
+                <div className="bg-surface-dark min-h-screen pb-20 overflow-hidden relative">
+                    {/* Background FX */}
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px] opacity-20 pointer-events-none"></div>
+                    <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="max-w-4xl mx-auto"
-                    >
-                        {/* Header */}
-                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-6">
-                            <div>
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-4 backdrop-blur-md">
-                                    <Cpu size={12} className="text-accent" />
-                                    <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
-                                        Akses Sistem Diizinkan
-                                    </span>
-                                </div>
-                                <h1 className="text-4xl md:text-5xl font-display font-black text-white leading-none">
-                                    PUSAT{" "}
-                                    <span className="text-accent text-glow">
-                                        KOMANDO
-                                    </span>
-                                </h1>
-                                <p className="text-white/40 mt-2 font-mono text-sm max-w-md">
-                                    Kelola protokol identitas dan kunci keamanan
-                                    akun Anda.
-                                </p>
-                            </div>
-
-                            <div className="relative group">
-                                <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl group-hover:bg-accent/40 transition-all duration-500"></div>
-                                <div className="relative w-24 h-24 rounded-full border border-white/10 bg-black/50 overflow-hidden group-hover:border-accent transition-colors">
-                                    <div className="absolute inset-0 flex items-center justify-center text-white/20 font-display font-bold text-4xl group-hover:text-accent transition-colors">
-                                        {user.name.charAt(0)}
-                                    </div>
-                                    <div className="absolute inset-0 bg-[url('/assets/img/grid.svg')] opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                                </div>
-                                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-accent text-black text-[10px] font-bold rounded-full uppercase tracking-widest whitespace-nowrap">
-                                    Online
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Flash Messages */}
-                        <AnimatePresence>
-                            {(flash.success || flash.error) && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    className="mb-8"
-                                >
-                                    <div
-                                        className={`p-4 rounded-xl border flex items-center gap-3 font-mono text-sm ${
-                                            flash.success
-                                                ? "bg-accent/10 border-accent/20 text-accent"
-                                                : "bg-red-500/10 border-red-500/20 text-red-400"
-                                        }`}
-                                    >
-                                        {flash.success ? (
-                                            <CheckCircle size={18} />
-                                        ) : (
-                                            <AlertCircle size={18} />
-                                        )}
-                                        <span>
-                                            {flash.success || flash.error}
-                                        </span>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
-                        {/* Main Interface */}
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            {/* Sidebar / Tabs */}
-                            <div className="lg:col-span-4 space-y-4">
-                                <TabButton
-                                    active={activeTab === "profile"}
-                                    onClick={() => setActiveTab("profile")}
-                                    icon={ScanFace}
-                                    label="PROTOKOL IDENTITAS"
-                                    desc="Info Personal & Kontak"
-                                />
-                                <TabButton
-                                    active={activeTab === "password"}
-                                    onClick={() => setActiveTab("password")}
-                                    icon={Fingerprint}
-                                    label="KUNCI KEAMANAN"
-                                    desc="Manajemen Password"
-                                />
-
-                                <div className="pt-8 mt-8 border-t border-white/5">
-                                    <Link
-                                        href={route("profile.show")}
-                                        className="flex items-center gap-3 px-6 py-4 rounded-xl border border-white/5 text-white/40 hover:text-white hover:bg-white/5 transition-colors group"
-                                    >
-                                        <ArrowLeft
-                                            size={18}
-                                            className="group-hover:-translate-x-1 transition-transform"
+                    <div className="container mx-auto px-4 relative z-10">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="max-w-4xl mx-auto"
+                        >
+                            {/* Header */}
+                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-6">
+                                <div>
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 mb-4 backdrop-blur-md">
+                                        <Cpu
+                                            size={12}
+                                            className="text-accent"
                                         />
-                                        <span className="font-bold text-xs tracking-widest uppercase">
-                                            Akhiri Sesi
+                                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent">
+                                            Akses Sistem Diizinkan
                                         </span>
-                                    </Link>
+                                    </div>
+                                    <h1 className="text-4xl md:text-5xl font-display font-black text-white leading-none">
+                                        PUSAT{" "}
+                                        <span className="text-accent text-glow">
+                                            KOMANDO
+                                        </span>
+                                    </h1>
+                                    <p className="text-white/40 mt-2 font-mono text-sm max-w-md">
+                                        Kelola protokol identitas dan kunci
+                                        keamanan akun Anda.
+                                    </p>
+                                </div>
+
+                                <div className="relative group">
+                                    <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl group-hover:bg-accent/40 transition-all duration-500"></div>
+                                    <div className="relative w-24 h-24 rounded-full border border-white/10 bg-black/50 overflow-hidden group-hover:border-accent transition-colors">
+                                        <div className="absolute inset-0 flex items-center justify-center text-white/20 font-display font-bold text-4xl group-hover:text-accent transition-colors">
+                                            {user.name.charAt(0)}
+                                        </div>
+                                        <div className="absolute inset-0 bg-[url('/assets/img/grid.svg')] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                    </div>
+                                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-accent text-black text-[10px] font-bold rounded-full uppercase tracking-widest whitespace-nowrap">
+                                        Online
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Content Area */}
-                            <div className="lg:col-span-8">
-                                <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 min-h-[400px] relative overflow-hidden">
-                                    {/* Scan Line Animation */}
-                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-20 animate-[scan_3s_linear_infinite]"></div>
+                            {/* Flash Messages */}
+                            <AnimatePresence>
+                                {(flash.success || flash.error) && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="mb-8"
+                                    >
+                                        <div
+                                            className={`p-4 rounded-xl border flex items-center gap-3 font-mono text-sm ${
+                                                flash.success
+                                                    ? "bg-accent/10 border-accent/20 text-accent"
+                                                    : "bg-red-500/10 border-red-500/20 text-red-400"
+                                            }`}
+                                        >
+                                            {flash.success ? (
+                                                <CheckCircle size={18} />
+                                            ) : (
+                                                <AlertCircle size={18} />
+                                            )}
+                                            <span>
+                                                {flash.success || flash.error}
+                                            </span>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
-                                    <AnimatePresence mode="wait">
-                                        {activeTab === "profile" ? (
-                                            <motion.div
-                                                key="profile"
-                                                initial={{ opacity: 0, x: 20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -20 }}
-                                                transition={{ duration: 0.3 }}
-                                            >
-                                                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                                    <Activity
-                                                        size={18}
-                                                        className="text-accent"
+                            {/* Main Interface */}
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                                {/* Sidebar / Tabs */}
+                                <div className="lg:col-span-4 space-y-4">
+                                    <TabButton
+                                        active={activeTab === "profile"}
+                                        onClick={() => setActiveTab("profile")}
+                                        icon={ScanFace}
+                                        label="PROTOKOL IDENTITAS"
+                                        desc="Info Personal & Kontak"
+                                    />
+                                    <TabButton
+                                        active={activeTab === "password"}
+                                        onClick={() => setActiveTab("password")}
+                                        icon={Fingerprint}
+                                        label="KUNCI KEAMANAN"
+                                        desc="Manajemen Password"
+                                    />
+
+                                    <div className="pt-8 mt-8 border-t border-white/5">
+                                        <Link
+                                            href={route("profile.show")}
+                                            className="flex items-center gap-3 px-6 py-4 rounded-xl border border-white/5 text-white/40 hover:text-white hover:bg-white/5 transition-colors group"
+                                        >
+                                            <ArrowLeft
+                                                size={18}
+                                                className="group-hover:-translate-x-1 transition-transform"
+                                            />
+                                            <span className="font-bold text-xs tracking-widest uppercase">
+                                                Akhiri Sesi
+                                            </span>
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* Content Area */}
+                                <div className="lg:col-span-8">
+                                    <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 min-h-[400px] relative overflow-hidden">
+                                        {/* Scan Line Animation */}
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-20 animate-[scan_3s_linear_infinite]"></div>
+
+                                        <AnimatePresence mode="wait">
+                                            {activeTab === "profile" ? (
+                                                <motion.div
+                                                    key="profile"
+                                                    initial={{
+                                                        opacity: 0,
+                                                        x: 20,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        x: 0,
+                                                    }}
+                                                    exit={{
+                                                        opacity: 0,
+                                                        x: -20,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.3,
+                                                    }}
+                                                >
+                                                    <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                                        <Activity
+                                                            size={18}
+                                                            className="text-accent"
+                                                        />
+                                                        KONFIGURASI IDENTITAS
+                                                    </h2>
+                                                    <UpdateProfileForm
+                                                        user={user}
                                                     />
-                                                    KONFIGURASI IDENTITAS
-                                                </h2>
-                                                <UpdateProfileForm
-                                                    user={user}
-                                                />
-                                            </motion.div>
-                                        ) : (
-                                            <motion.div
-                                                key="password"
-                                                initial={{ opacity: 0, x: 20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -20 }}
-                                                transition={{ duration: 0.3 }}
-                                            >
-                                                <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                                    <Shield
-                                                        size={18}
-                                                        className="text-accent"
-                                                    />
-                                                    PEMBARUAN KEAMANAN
-                                                </h2>
-                                                <UpdatePasswordForm />
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div
+                                                    key="password"
+                                                    initial={{
+                                                        opacity: 0,
+                                                        x: 20,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        x: 0,
+                                                    }}
+                                                    exit={{
+                                                        opacity: 0,
+                                                        x: -20,
+                                                    }}
+                                                    transition={{
+                                                        duration: 0.3,
+                                                    }}
+                                                >
+                                                    <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                                        <Shield
+                                                            size={18}
+                                                            className="text-accent"
+                                                        />
+                                                        PEMBARUAN KEAMANAN
+                                                    </h2>
+                                                    <UpdatePasswordForm />
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </div>
                 </div>
             </div>
-        </MainLayout>
+        </PublicLayout>
     );
 }
 

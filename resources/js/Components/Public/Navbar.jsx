@@ -299,6 +299,17 @@ export default function Navbar({ auth }) {
                                                     <User className="w-4 h-4 text-primary" />{" "}
                                                     Profil Saya
                                                 </Link>
+                                                {auth.user.role === "admin" && (
+                                                    <a
+                                                        href={route(
+                                                            "admin.dashboard",
+                                                        )}
+                                                        className="flex items-center gap-3 px-4 py-2 bg-primary/5 hover:bg-primary/10 text-sm font-bold text-primary transition-colors border-y border-primary/10"
+                                                    >
+                                                        <Shield className="w-4 h-4" />{" "}
+                                                        Dashboard Admin
+                                                    </a>
+                                                )}
                                                 <Link
                                                     href={route(
                                                         "motors.user-transactions",
@@ -318,18 +329,6 @@ export default function Navbar({ auth }) {
                                                     Cicilan Saya
                                                 </Link>
 
-                                                {auth.user.role === "admin" && (
-                                                    <Link
-                                                        href={route(
-                                                            "admin.dashboard",
-                                                        )}
-                                                        className="flex items-center gap-3 px-4 py-2 bg-primary/5 hover:bg-primary/10 text-sm font-bold text-primary transition-colors border-y border-primary/10"
-                                                    >
-                                                        <Shield className="w-4 h-4" />{" "}
-                                                        Dashboard Admin
-                                                    </Link>
-                                                )}
-
                                                 <div className="h-px bg-gray-100 my-2 mx-2" />
                                                 <Link
                                                     href={route("logout")}
@@ -346,23 +345,21 @@ export default function Navbar({ auth }) {
                                 </AnimatePresence>
                             </div>
                         ) : (
-                            <div className="hidden md:flex items-center gap-4">
-                                <Link
-                                    href={route("login")}
-                                    className="text-sm font-bold text-gray-700 hover:text-primary transition-colors px-2"
-                                >
-                                    Masuk/Daftar
-                                </Link>
-                                <Link href="/#contact">
-                                    <Button
-                                        size="md"
-                                        className="font-black px-6"
-                                    >
-                                        Hubungi Kami
-                                    </Button>
-                                </Link>
-                            </div>
+                            <Link
+                                href={route("login")}
+                                className="text-sm font-bold text-gray-700 hover:text-primary transition-colors px-2"
+                            >
+                                Masuk/Daftar
+                            </Link>
                         )}
+
+                        <div className="hidden md:flex items-center gap-4 border-l border-gray-100 ml-2 pl-4">
+                            <Link href="/#contact">
+                                <Button size="md" className="font-black px-6">
+                                    Hubungi Kami
+                                </Button>
+                            </Link>
+                        </div>
 
                         {/* Mobile Toggle */}
                         <button
