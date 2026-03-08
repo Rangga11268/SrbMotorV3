@@ -10,6 +10,16 @@ import {
     User,
     Mail,
     Phone,
+    ChevronRight,
+    LogOut,
+    Fingerprint,
+    Edit2,
+    CheckCircle,
+    AlertTriangle,
+    Calendar,
+    Hash,
+    Shield,
+    Settings,
 } from "lucide-react";
 
 export default function Show({ user }) {
@@ -141,22 +151,20 @@ export default function Show({ user }) {
                                             <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
                                                 Alamat Email
                                             </p>
-                                            <div className="flex items-center gap-3">
-                                                <p className="text-xl font-black text-gray-900">
-                                                    {user.email}
-                                                </p>
-                                                {user.email_verified_at ? (
-                                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-500 rounded-full text-[9px] font-black border border-green-100 uppercase tracking-widest">
-                                                        <CheckCircle className="w-3 h-3" />{" "}
-                                                        Terverifikasi
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-500 rounded-full text-[9px] font-black border border-yellow-100 uppercase tracking-widest">
-                                                        <AlertTriangle className="w-3 h-3" />{" "}
-                                                        Unverified
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <p className="text-xl font-black text-gray-900 break-all">
+                                                {user.email}
+                                            </p>
+                                            {user.email_verified_at ? (
+                                                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-500 rounded-full text-[9px] font-black border border-green-100 uppercase tracking-widest">
+                                                    <CheckCircle className="w-3 h-3" />{" "}
+                                                    Terverifikasi
+                                                </div>
+                                            ) : (
+                                                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-500 rounded-full text-[9px] font-black border border-yellow-100 uppercase tracking-widest">
+                                                    <AlertTriangle className="w-3 h-3" />{" "}
+                                                    Belum Terverifikasi
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="space-y-2">

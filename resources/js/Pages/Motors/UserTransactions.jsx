@@ -1,3 +1,5 @@
+import React from "react";
+import { usePage, Link } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import {
     ShoppingBag,
