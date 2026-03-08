@@ -229,7 +229,9 @@ html:not(.admin-mode) a:hover {
 .public-theme-root h3,
 .public-theme-root p {
     margin-top: 0;
-    color: inherit;
+    /* color intentionally NOT set here — let Tailwind text-* classes control heading color.
+       Setting color:inherit would cause headings inside <a> tags to inherit the global
+       a { color: primary } and appear blue even when text-gray-900 is applied. */
 }
 
 /* Form Elements */

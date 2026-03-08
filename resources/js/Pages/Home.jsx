@@ -477,7 +477,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                             </div>
                                             <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
                                                 <div>
-                                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">
+                                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
                                                         Harga Mulai
                                                     </p>
                                                     <p className="text-2xl font-black text-primary leading-none">

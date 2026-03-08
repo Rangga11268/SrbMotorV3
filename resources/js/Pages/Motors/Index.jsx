@@ -368,8 +368,8 @@ export default function Index({
                                                                 <Badge
                                                                     variant={
                                                                         motor.tersedia
-                                                                            ? "green"
-                                                                            : "red"
+                                                                            ? "blue"
+                                                                            : "default"
                                                                     }
                                                                     size="sm"
                                                                     className="shadow-sm backdrop-blur-sm bg-white/90"
