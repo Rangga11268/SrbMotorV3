@@ -13,7 +13,7 @@ class GoogleAuthController extends Controller
      */
     public function redirect()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
     /**
@@ -22,7 +22,7 @@ class GoogleAuthController extends Controller
     public function callback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
             // Find existing user by email
             $user = User::where('email', $googleUser->getEmail())->first();
@@ -46,14 +46,14 @@ class GoogleAuthController extends Controller
                     'profile_photo_path' => $googleUser->getAvatar(),
                     'password' => bcrypt(\Illuminate\Support\Str::random(16)), // Random password
                     'email_verified_at' => now(), // Auto-verify Google accounts
-                    'role' => 'user', 
+                    'role' => 'user',
                 ]);
 
                 Auth::login($newUser);
             }
 
             return redirect()->intended('/profile'); // Redirecting to profile page instead of dashboard for regular user
-            
+
         } catch (\Exception $e) {
             return redirect('/login')
                 ->with('error', 'Gagal login dengan Google. Silakan coba lagi.');

@@ -10,6 +10,12 @@ import {
     TrendingUp,
     Zap,
     Heart,
+    LayoutGrid,
+    RotateCcw,
+    SlidersHorizontal,
+    Loader2,
+    Calendar,
+    Clock,
 } from "lucide-react";
 import axios from "axios";
 import Button from "@/Components/UI/Button";
@@ -538,8 +544,6 @@ export default function Index({
                     </div>
                 </div>
             </main>
-
-            <Footer />
 
             {/* MOBILE FILTER OVERLAY (Drawer effect) */}
             <AnimatePresence>

@@ -76,76 +76,228 @@ export default function Home({ auth, popularMotors = [] }) {
     return (
         <PublicLayout auth={auth} title="Beranda">
             {/* HERO SLIDER SECTION (Momotor Style) */}
-            <section className="relative pt-32 md:pt-[104px] pb-12 bg-[#F8F9FA]">
+            <section className="relative pt-[120px] md:pt-[140px] pb-12 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Swiper
                         modules={[Autoplay, Pagination, EffectFade]}
                         effect="fade"
-                        autoplay={{ delay: 5000 }}
-                        pagination={{ clickable: true }}
-                        className="rounded-2xl md:rounded-3xl overflow-hidden h-[250px] md:h-[480px] shadow-xl"
+                        autoplay={{ delay: 6000, disableOnInteraction: false }}
+                        pagination={{
+                            clickable: true,
+                            dynamicBullets: true,
+                        }}
+                        className="rounded-3xl overflow-hidden h-[300px] md:h-[520px] shadow-2xl border border-gray-100"
                     >
                         {banners.map((banner, index) => (
                             <SwiperSlide key={index}>
-                                <div className="relative w-full h-full group">
-                                    <img
-                                        src={banner.image}
-                                        alt={banner.title}
-                                        className="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent flex items-center p-8 md:p-20">
-                                        <div className="max-w-xl space-y-4">
-                                            <motion.h2
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                className="text-2xl md:text-5xl font-black text-white leading-tight"
-                                            >
-                                                {banner.title}
-                                            </motion.h2>
-                                            <motion.p
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.1 }}
-                                                className="text-sm md:text-xl text-white/80 font-medium"
-                                            >
-                                                {banner.subtitle}
-                                            </motion.p>
+                                {({ isActive }) => (
+                                    <div className="relative w-full h-full group overflow-hidden">
+                                        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+                                        <img
+                                            src={banner.image}
+                                            alt={banner.title}
+                                            className="relative w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
+                                            onLoad={(e) =>
+                                                e.target.previousSibling.remove()
+                                            }
+                                        />
+                                        {/* High-Contrast Overlay Gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20 flex items-center p-8 md:px-24 md:py-0">
+                                            <AnimatePresence mode="wait">
+                                                {isActive && (
+                                                    <div className="max-w-3xl space-y-6 pb-20 md:pb-28">
+                                                        <div className="space-y-4 md:space-y-6">
+                                                            <motion.div
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    y: -20,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    y: 0,
+                                                                }}
+                                                                transition={{
+                                                                    duration: 0.5,
+                                                                }}
+                                                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600 border border-blue-400 shadow-lg"
+                                                            >
+                                                                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                                                                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white">
+                                                                    Trusted
+                                                                    Dealer 2026
+                                                                </span>
+                                                            </motion.div>
+
+                                                            <motion.h1
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    x: -50,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    x: 0,
+                                                                }}
+                                                                exit={{
+                                                                    opacity: 0,
+                                                                    x: 50,
+                                                                }}
+                                                                transition={{
+                                                                    duration: 0.7,
+                                                                    ease: "easeOut",
+                                                                }}
+                                                                className="text-3xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_8px_20px_rgba(0,0,0,0.8)]"
+                                                            >
+                                                                {banner.title
+                                                                    .split(" ")
+                                                                    .map(
+                                                                        (
+                                                                            word,
+                                                                            i,
+                                                                        ) => (
+                                                                            <span
+                                                                                key={
+                                                                                    i
+                                                                                }
+                                                                                className={
+                                                                                    i <
+                                                                                    2
+                                                                                        ? "text-blue-400"
+                                                                                        : "text-white"
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    word
+                                                                                }{" "}
+                                                                            </span>
+                                                                        ),
+                                                                    )}
+                                                            </motion.h1>
+
+                                                            <motion.p
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    x: -50,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    x: 0,
+                                                                }}
+                                                                exit={{
+                                                                    opacity: 0,
+                                                                    x: 50,
+                                                                }}
+                                                                transition={{
+                                                                    duration: 0.7,
+                                                                    delay: 0.2,
+                                                                    ease: "easeOut",
+                                                                }}
+                                                                className="text-base md:text-xl lg:text-2xl !text-white font-medium max-w-xl leading-relaxed drop-shadow-lg"
+                                                            >
+                                                                {
+                                                                    banner.subtitle
+                                                                }
+                                                            </motion.p>
+                                                        </div>
+
+                                                        <motion.div
+                                                            initial={{
+                                                                opacity: 0,
+                                                                scale: 0.9,
+                                                            }}
+                                                            animate={{
+                                                                opacity: 1,
+                                                                scale: 1,
+                                                            }}
+                                                            exit={{
+                                                                opacity: 0,
+                                                                scale: 0.9,
+                                                            }}
+                                                            transition={{
+                                                                duration: 0.4,
+                                                                delay: 0.4,
+                                                            }}
+                                                            className="flex flex-wrap gap-5 pt-4"
+                                                        >
+                                                            <Link href="/motors">
+                                                                <button className="group relative overflow-hidden px-8 py-4 bg-white text-blue-600 rounded-2xl font-black text-lg transition-all hover:pr-14 hover:bg-blue-50 active:scale-95 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                                                                    <span className="relative z-10">
+                                                                        Lihat
+                                                                        Katalog
+                                                                    </span>
+                                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                                        <ArrowRight className="w-6 h-6 translate-x-4 group-hover:translate-x-0 transition-transform" />
+                                                                    </div>
+                                                                    {/* Shine effect logic handled by tailwind animation if available, otherwise static hover */}
+                                                                    <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12" />
+                                                                </button>
+                                                            </Link>
+                                                            <a
+                                                                href="https://wa.me/6281234567890"
+                                                                target="_blank"
+                                                                className="px-8 py-4 bg-transparent border-2 border-white/30 hover:border-white text-white rounded-2xl font-bold text-lg backdrop-blur-md transition-all hover:bg-white/10 active:scale-95 flex items-center gap-3"
+                                                            >
+                                                                <MessageCircle className="w-6 h-6" />
+                                                                Konsultasi
+                                                                Gratis
+                                                            </a>
+                                                        </motion.div>
+                                                    </div>
+                                                )}
+                                            </AnimatePresence>
                                         </div>
                                     </div>
-                                </div>
+                                )}
                             </SwiperSlide>
                         ))}
                     </Swiper>
 
                     {/* Quick Search & Categories Overlay */}
-                    <div className="relative -mt-10 md:-mt-20 z-10 px-4">
-                        <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-10 border border-gray-100 max-w-5xl mx-auto">
-                            <div className="flex flex-col md:flex-row gap-6">
+                    <div className="relative -mt-12 md:-mt-20 z-20 px-4 md:px-12">
+                        <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-blue-50 max-w-5xl mx-auto transform transition-all hover:scale-[1.01]">
+                            <div className="flex flex-col md:flex-row gap-10">
                                 {/* Search Component */}
-                                <div className="flex-1 space-y-4">
-                                    <h3 className="text-xl md:text-2xl font-black text-gray-900 flex items-center gap-3">
-                                        <Zap className="w-6 h-6 text-primary fill-primary" />
-                                        Cari Motor Impianmu
-                                    </h3>
-                                    <div className="flex gap-2 p-1.5 bg-gray-50 border border-gray-200 rounded-2xl focus-within:ring-4 focus-within:ring-primary/20 transition-all">
-                                        <div className="flex-1 flex items-center px-4 gap-3">
-                                            <Search className="w-5 h-5 text-gray-400" />
-                                            <input
-                                                type="text"
-                                                placeholder="Contoh: Honda PCX 160..."
-                                                className="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base font-medium py-3"
-                                            />
-                                        </div>
-                                        <Button
-                                            size="lg"
-                                            className="px-8 rounded-xl font-bold shadow-lg shadow-primary/20"
-                                        >
-                                            Temukan
-                                        </Button>
+                                <div className="flex-1 space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-4">
+                                            <div className="p-2 bg-blue-100 rounded-xl">
+                                                <Search className="w-6 h-6 text-blue-600" />
+                                            </div>
+                                            Cari Motor Impianmu
+                                        </h3>
                                     </div>
 
-                                    {/* Brand Pills */}
-                                    <div className="flex flex-wrap gap-2 pt-2">
+                                    <div className="relative group">
+                                        <div className="flex gap-3 p-3 bg-gray-50 border-2 border-transparent group-focus-within:border-blue-500 group-focus-within:bg-white rounded-3xl transition-all duration-300 shadow-inner">
+                                            <div className="flex-1 flex items-center px-4 gap-4">
+                                                <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center">
+                                                    <Bike className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500" />
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    value={searchQuery}
+                                                    onChange={(e) =>
+                                                        setSearchQuery(
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                    placeholder="Lagi cari Honda PCX atau NMAX? Ketik di sini..."
+                                                    className="w-full bg-transparent border-none focus:ring-0 text-base md:text-lg font-bold py-4 text-gray-800 placeholder:text-gray-400"
+                                                />
+                                            </div>
+                                            <Button
+                                                size="xl"
+                                                className="px-10 rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all text-sm uppercase tracking-widest"
+                                            >
+                                                Cari
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    {/* Popular Searches */}
+                                    <div className="flex items-center flex-wrap gap-3 pt-2">
+                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest mr-2">
+                                            Populer:
+                                        </span>
                                         {[
                                             "Beat",
                                             "PCX",
@@ -155,7 +307,10 @@ export default function Home({ auth, popularMotors = [] }) {
                                         ].map((tag) => (
                                             <button
                                                 key={tag}
-                                                className="px-4 py-1.5 rounded-full bg-white border border-gray-200 text-xs font-bold text-gray-500 hover:border-primary hover:text-primary transition-all"
+                                                onClick={() =>
+                                                    setSearchQuery(tag)
+                                                }
+                                                className="px-5 py-2.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 border border-gray-100 rounded-full text-sm font-bold text-gray-600 transition-all active:scale-90"
                                             >
                                                 {tag}
                                             </button>
@@ -163,32 +318,34 @@ export default function Home({ auth, popularMotors = [] }) {
                                     </div>
                                 </div>
 
-                                {/* Vertical Divider */}
-                                <div className="hidden md:block w-px bg-gray-100" />
-
-                                {/* Categories / Quick Links */}
-                                <div className="md:w-72 grid grid-cols-2 gap-4">
+                                {/* Quick Shortcuts */}
+                                <div className="md:w-72 flex flex-row md:flex-col gap-4">
                                     <Link
                                         href="/motors"
-                                        className="flex flex-col items-center justify-center p-4 rounded-2xl bg-primary/5 border border-primary/10 hover:bg-primary/10 transition-all group"
+                                        className="flex-1 group"
                                     >
-                                        <div className="w-12 h-12 rounded-xl bg-white border border-primary/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                            <Bike className="w-6 h-6 text-primary" />
+                                        <div className="h-full p-6 bg-blue-50 hover:bg-blue-600 border border-blue-100 rounded-[2rem] flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-blue-200 group-hover:-translate-y-1">
+                                            <div className="p-4 bg-white rounded-2xl shadow-sm text-blue-600 group-hover:scale-110 transition-transform">
+                                                <Bike className="w-7 h-7" />
+                                            </div>
+                                            <span className="font-black text-gray-900 group-hover:text-white transition-colors text-xs uppercase tracking-widest">
+                                                Motor Baru
+                                            </span>
                                         </div>
-                                        <span className="text-[10px] font-black uppercase tracking-wider text-gray-700">
-                                            Motor Baru
-                                        </span>
                                     </Link>
                                     <a
-                                        href="#contact"
-                                        className="flex flex-col items-center justify-center p-4 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-white hover:border-primary/20 transition-all group"
+                                        href="https://wa.me/6281234567890"
+                                        target="_blank"
+                                        className="flex-1 group"
                                     >
-                                        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                            <MessageCircle className="w-6 h-6 text-green-500" />
+                                        <div className="h-full p-6 bg-green-50 hover:bg-green-600 border border-green-100 rounded-[2rem] flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-green-200 group-hover:-translate-y-1">
+                                            <div className="p-4 bg-white rounded-2xl shadow-sm text-green-600 group-hover:scale-110 transition-transform">
+                                                <MessageCircle className="w-7 h-7" />
+                                            </div>
+                                            <span className="font-black text-gray-900 group-hover:text-white transition-colors text-xs uppercase tracking-widest">
+                                                Konsultasi WA
+                                            </span>
                                         </div>
-                                        <span className="text-[10px] font-black uppercase tracking-wider text-gray-700">
-                                            Simulasi WA
-                                        </span>
                                     </a>
                                 </div>
                             </div>

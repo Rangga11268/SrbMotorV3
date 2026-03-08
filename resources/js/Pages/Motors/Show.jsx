@@ -15,6 +15,12 @@ import {
     ArrowRight,
     Info,
     PenTool,
+    ShieldCheck,
+    CheckCircle2,
+    Activity,
+    ShoppingCart,
+    FileText,
+    Phone,
 } from "lucide-react";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";

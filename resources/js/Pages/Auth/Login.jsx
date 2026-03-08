@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import {
     Eye,
     EyeOff,
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 export default function Login() {
+    const { flash } = usePage().props;
     const { data, setData, post, processing, errors } = useForm({
         email: "",
         password: "",
@@ -57,6 +58,18 @@ export default function Login() {
                     </div>
 
                     <div className="mt-8">
+                        {flash?.error && (
+                            <div className="mb-6 flex items-center gap-3 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+                                <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+                                {flash.error}
+                            </div>
+                        )}
+                        {flash?.success && (
+                            <div className="mb-6 flex items-center gap-3 p-4 rounded-2xl bg-green-50 border border-green-200 text-green-700 text-sm font-medium">
+                                <ShieldCheck className="h-5 w-5 shrink-0 text-green-500" />
+                                {flash.success}
+                            </div>
+                        )}
                         <form className="space-y-6" onSubmit={submit}>
                             <div>
                                 <label
