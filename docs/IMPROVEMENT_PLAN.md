@@ -8,6 +8,7 @@
 ## 📋 EXECUTIVE SUMMARY
 
 SRB Motors adalah **platform dealer motor end-to-end** dengan:
+
 - **Customer Portal**: Katalog motor → Order cash/kredit → Upload dokumen → Bayar cicilan
 - **Admin Panel**: Monitoring transaksi, verifikasi dokumen, laporan keuangan, manajemen user
 - **Technology**: Laravel 12 + Inertia.js + React 19 + MySQL + Midtrans + Fonnte
@@ -20,23 +21,27 @@ SRB Motors adalah **platform dealer motor end-to-end** dengan:
 ### A. Temuan Positif ✅
 
 #### 1. **Arsitektur Backend Solid**
+
 - MVC pattern dengan Service Layer (TransactionService, WhatsAppService)
 - Repository Pattern untuk data access + caching
 - Observer Pattern untuk notifikasi otomatis
 - Domain bisnis terstruktur di Models
 
 #### 2. **Business Logic Komprehensif**
+
 - 2 flow transaksi: CASH (sederhana) + CREDIT (kompleks dengan verifikasi)
 - Installment generation otomatis
 - Status workflow jelas dengan enum
 - Payment integration sudah ada (Midtrans)
 
 #### 3. **Frontend Structure Reasonable**
+
 - Inertia.js sebagai bridge (sudah SPA-like)
 - Component-based React (reusable components)
 - Routes sudah grouped customer + admin
 
 #### 4. **Database Schema Matang**
+
 - Relationships clear (1-to-many, cascade delete)
 - Constraints proper
 - Migration files terstruktur
@@ -46,7 +51,9 @@ SRB Motors adalah **platform dealer motor end-to-end** dengan:
 ### B. Temuan Kritis ⚠️
 
 #### 1. **SECURITY ISSUE: Routes Order Publik Tanpa Auth**
+
 **Problem**:
+
 ```php
 // routes/web.php
 Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm']); // ❌ Tidak protected
@@ -67,7 +74,9 @@ public function processCashOrder(Request $request, Motor $motor)
 **Fix**: Wajib `auth` middleware untuk semua proses order.
 
 #### 2. **SECURITY ISSUE: Webhook Midtrans Tidak Divalidasi**
+
 **Problem**:
+
 ```php
 // PaymentCallbackController
 public function handle(Request $request)
@@ -82,6 +91,7 @@ public function handle(Request $request)
 **Fix**: Validasi signature key + implement idempotency check.
 
 #### 3. **UI/UX Problem: Desain Tidak Konsisten**
+
 - Multiple CSS files (`home.css`, `style.css`, `style-optimized.css`, `admin.css`) → overlap + maintenance nightmare.
 - Color scheme terlalu kontras (neon, glow effects) → tidak professional untuk dealer motor.
 - Motion effects berlebih (marquee, framer motion) → fokus pengunjung terganggu.
@@ -90,6 +100,7 @@ public function handle(Request $request)
 **Impact**: User experience tidak professional, maintenance sulit, branding tidak jelas.
 
 #### 4. **Admin Panel Tidak Scalable**
+
 - Dashboard/layout tidak modular.
 - Tidak ada consistent component library.
 - Sulit tambah halaman/fitur baru.
@@ -97,11 +108,13 @@ public function handle(Request $request)
 **Recommendation**: Migrate ke CoreUI (React Admin Template).
 
 #### 5. **Fitur Notifikasi Belum Optimal**
+
 - WhatsApp & Email ada tapi belum comprehensive.
 - Tidak ada push notification real-time.
 - Status laporan belum detail ke customer.
 
 #### 6. **Form Order Pengalaman Kurang Baik**
+
 - Wizard belum ada (1 halaman panjang).
 - Preview ringkasan biaya tidak sticky.
 - Validasi error tidak inline + helpful.
@@ -110,17 +123,17 @@ public function handle(Request $request)
 
 ### C. Fitur Existing yang Perlu Improve
 
-| Fitur | Status | Improvement |
-|-------|--------|-------------|
-| Katalog motor | ✅ Ada | Filter UI perlu dikerjakan, sticky sidebar |
-| Order cash | ✅ Ada | Wizard 2-step + preview biaya |
-| Order kredit | ✅ Ada | Wizard 3-step + estimasi approval cepat |
-| Upload dokumen | ✅ Ada | Checklist, preview file, drag-drop |
-| Bayar cicilan | ✅ Ada | Reminder H-3/H-1, riwayat transparan |
-| Admin transaksi | ✅ Ada | Quick actions, bulk approve |
-| Admin dokumen | ✅ Ada | Preview, checklist, audit trail |
-| Laporan | ✅ Ada | Filter advanced, export konsisten |
-| Notifikasi | ⚠️ Parsial | Email bagus, perlu push + real-time |
+| Fitur           | Status     | Improvement                                |
+| --------------- | ---------- | ------------------------------------------ |
+| Katalog motor   | ✅ Ada     | Filter UI perlu dikerjakan, sticky sidebar |
+| Order cash      | ✅ Ada     | Wizard 2-step + preview biaya              |
+| Order kredit    | ✅ Ada     | Wizard 3-step + estimasi approval cepat    |
+| Upload dokumen  | ✅ Ada     | Checklist, preview file, drag-drop         |
+| Bayar cicilan   | ✅ Ada     | Reminder H-3/H-1, riwayat transparan       |
+| Admin transaksi | ✅ Ada     | Quick actions, bulk approve                |
+| Admin dokumen   | ✅ Ada     | Preview, checklist, audit trail            |
+| Laporan         | ✅ Ada     | Filter advanced, export konsisten          |
+| Notifikasi      | ⚠️ Parsial | Email bagus, perlu push + real-time        |
 
 ---
 
@@ -129,6 +142,7 @@ public function handle(Request $request)
 ### A. Design Philosophy (Simple, Modern, Trust-focused)
 
 #### 1. **Color Palette (3 Warna Inti)**
+
 ```
 Primary (Gray):        #111827 atau #1F2937      (Slate/Charcoal)
 Surface (Light):       #F8FAFC atau #FFFFFF      (Off-white/White)
@@ -141,6 +155,7 @@ Border:                #E5E7EB                   (Light gray border)
 ```
 
 #### 2. **Typography**
+
 ```
 Primary Font:     "Inter" atau "Segoe UI" (sans-serif)
 Fallback:         -apple-system, BlinkMacSystemFont, system-ui
@@ -156,6 +171,7 @@ Line-height:      1.5 for body, 1.2 for headings
 ```
 
 #### 3. **Spacing System (8px Grid)**
+
 ```
 0:    0px
 1:    4px
@@ -172,6 +188,7 @@ Line-height:      1.5 for body, 1.2 for headings
 ```
 
 #### 4. **Component Tokens**
+
 ```
 Border Radius:
   - None:         0px
@@ -199,7 +216,8 @@ Transitions:
 
 ### B. Redesign Per Halaman
 
-#### 1. **Home Page** 
+#### 1. **Home Page**
+
 ```
 Layout:
 ┌─────────────────────────────────────────┐
@@ -237,6 +255,7 @@ Effect: NO neon, NO blur, NO marquee. Foto motor tetap hero.
 ```
 
 #### 2. **Catalog Page (Motors/Index)**
+
 ```
 Layout (2 kolom):
 ┌────────────┬──────────────────────────────────┐
@@ -261,6 +280,7 @@ Effect: Clean filter, clear CTA, minimal distraction
 ```
 
 #### 3. **Motor Detail Page (Motors/Show)**
+
 ```
 Layout (2 kolom):
 ┌──────────────────┬──────────────────────┐
@@ -289,6 +309,7 @@ Color: Hero foto dominant, white back, blue accent untuk CTA
 ```
 
 #### 4. **Order Form (Cash & Credit)**
+
 ```
 WIZARD 2-3 Step dengan progress indicator
 ┌─────────────────────────────────────────┐
@@ -361,6 +382,7 @@ Effect: Inline validation, helper text, NO loading wheel, skeleton OK.
 ```
 
 #### 5. **User Dashboard (Transactions & Installments)**
+
 ```
 ┌─────────────────────────────────────────┐
 │         MY TRANSACTIONS                 │
@@ -416,13 +438,16 @@ Effect: Clear status, easy action, no confusion
 ```
 
 #### 6. **Admin Panel (CoreUI Template)**
+
 Replace custom admin UI dengan **CoreUI React Admin Dashboard**:
+
 - Pre-built components (navbar, sidebar, breadcrumb, card, table)
 - Responsive design out-of-box
 - Professional look
 - Easy to extend
 
 **CoreUI + Customization**:
+
 ```
 Admin Panel Structure (CoreUI):
 ├── Sidebar (navigation auto-collapse mobile)
@@ -442,6 +467,7 @@ Admin Panel Structure (CoreUI):
 ### C. Design System Implementation
 
 #### New File Structure:
+
 ```
 resources/
 ├── css/
@@ -488,120 +514,124 @@ resources/
 ### Critical Issues (Fix Immediately)
 
 - [ ] **Route Auth Protection**
-  ```php
-  Route::middleware('auth')->group(function () {
-      Route::get('/motors/{motor}/cash-order', [...]);
-      Route::post('/motors/{motor}/process-cash-order', [...]);
-      // semua order routes harus diproteksi
-  });
-  ```
+
+    ```php
+    Route::middleware('auth')->group(function () {
+        Route::get('/motors/{motor}/cash-order', [...]);
+        Route::post('/motors/{motor}/process-cash-order', [...]);
+        // semua order routes harus diproteksi
+    });
+    ```
 
 - [ ] **Webhook Signature Validation**
-  ```php
-  use Midtrans\Config;
-  use Midtrans\Notification;
-  
-  public function handle(Request $request)
-  {
-      $notification = new Notification();
-      $order_id = $notification->order_id;
-      $status_code = $notification->status_code;
-      $payment_type = $notification->payment_type;
-      $fraud_status = $notification->fraud_status;
-      
-      // Verify signature
-      $key = Config::$serverKey;
-      $signature = hash('sha512', $order_id.$status_code.$key);
-      
-      if ($signature !== $request->signature_key) {
-          abort(403, 'Invalid signature');
-      }
-      
-      // Idempotency check: cek apakah callback sudah processed sebelumnya
-      $log = CallbackLog::where('notification_id', $order_id)->first();
-      if ($log) {
-          return response()->json(['status' => 'already_processed']);
-      }
-      
-      // Process...
-      CallbackLog::create(['notification_id' => $order_id, ...]);
-  }
-  ```
+
+    ```php
+    use Midtrans\Config;
+    use Midtrans\Notification;
+
+    public function handle(Request $request)
+    {
+        $notification = new Notification();
+        $order_id = $notification->order_id;
+        $status_code = $notification->status_code;
+        $payment_type = $notification->payment_type;
+        $fraud_status = $notification->fraud_status;
+
+        // Verify signature
+        $key = Config::$serverKey;
+        $signature = hash('sha512', $order_id.$status_code.$key);
+
+        if ($signature !== $request->signature_key) {
+            abort(403, 'Invalid signature');
+        }
+
+        // Idempotency check: cek apakah callback sudah processed sebelumnya
+        $log = CallbackLog::where('notification_id', $order_id)->first();
+        if ($log) {
+            return response()->json(['status' => 'already_processed']);
+        }
+
+        // Process...
+        CallbackLog::create(['notification_id' => $order_id, ...]);
+    }
+    ```
 
 - [ ] **Rate Limiting**
-  ```php
-  // app/Http/Middleware/RateLimitMiddleware.php
-  Route::group(['middleware' => ['rate.limit']], function () {
-      Route::post('/login', ...);                    // 5 per minute
-      Route::post('/register', ...);                 // 3 per minute
-      Route::post('/contact', ...);                  // 3 per minute
-      Route::post('/motors/{motor}/process-*', ...); // 10 per minute
-  });
-  ```
+
+    ```php
+    // app/Http/Middleware/RateLimitMiddleware.php
+    Route::group(['middleware' => ['rate.limit']], function () {
+        Route::post('/login', ...);                    // 5 per minute
+        Route::post('/register', ...);                 // 3 per minute
+        Route::post('/contact', ...);                  // 3 per minute
+        Route::post('/motors/{motor}/process-*', ...); // 10 per minute
+    });
+    ```
 
 - [ ] **Security Headers**
-  ```php
-  // app/Http/Middleware/SecurityHeaders.php
-  public function handle($request, Closure $next)
-  {
-      return $next($request)
-          ->header('X-Content-Type-Options', 'nosniff')
-          ->header('X-Frame-Options', 'DENY')
-          ->header('X-XSS-Protection', '1; mode=block')
-          ->header('Strict-Transport-Security', 'max-age=31536000')
-          ->header('Content-Security-Policy', "default-src 'self' https:");
-  }
-  ```
+    ```php
+    // app/Http/Middleware/SecurityHeaders.php
+    public function handle($request, Closure $next)
+    {
+        return $next($request)
+            ->header('X-Content-Type-Options', 'nosniff')
+            ->header('X-Frame-Options', 'DENY')
+            ->header('X-XSS-Protection', '1; mode=block')
+            ->header('Strict-Transport-Security', 'max-age=31536000')
+            ->header('Content-Security-Policy', "default-src 'self' https:");
+    }
+    ```
 
 ### High Priority
 
 - [ ] **Document Upload Security**
-  - [ ] Validasi MIME type + magic bytes
-  - [ ] Scan malware (VirusTotal API atau ClamAV)
-  - [ ] Simpan dengan nama random: `uniqid().'.pdf'`
-  - [ ] Private storage + signed URL untuk akses
-  - [ ] Limit file size per upload (2MB)
+    - [ ] Validasi MIME type + magic bytes
+    - [ ] Scan malware (VirusTotal API atau ClamAV)
+    - [ ] Simpan dengan nama random: `uniqid().'.pdf'`
+    - [ ] Private storage + signed URL untuk akses
+    - [ ] Limit file size per upload (2MB)
 
 - [ ] **Authorization Policies**
-  ```php
-  // Use Laravel Policies instead of manual role check
-  public function update(User $user, Transaction $transaction)
-  {
-      // User hanya bisa lihat transaksi milik mereka
-      return $user->id === $transaction->user_id;
-  }
-  ```
+
+    ```php
+    // Use Laravel Policies instead of manual role check
+    public function update(User $user, Transaction $transaction)
+    {
+        // User hanya bisa lihat transaksi milik mereka
+        return $user->id === $transaction->user_id;
+    }
+    ```
 
 - [ ] **Audit Trail**
-  ```php
-  // Log setiap perubahan kritical
-  Log::channel('audit')->info('Transaction status updated', [
-      'transaction_id' => $transaction->id,
-      'status' => $transaction->status,
-      'changed_by' => auth()->id(),
-      'timestamp' => now(),
-  ]);
-  ```
+    ```php
+    // Log setiap perubahan kritical
+    Log::channel('audit')->info('Transaction status updated', [
+        'transaction_id' => $transaction->id,
+        'status' => $transaction->status,
+        'changed_by' => auth()->id(),
+        'timestamp' => now(),
+    ]);
+    ```
 
 ### Medium Priority
 
 - [ ] **Input Validation Comprehensive**
-  - [ ] Sanitize all inputs via FormRequest
-  - [ ] Enum validation untuk status fields
-  - [ ] Phone format validation strict
+    - [ ] Sanitize all inputs via FormRequest
+    - [ ] Enum validation untuk status fields
+    - [ ] Phone format validation strict
 
 - [ ] **Data Leakage Prevention**
-  - [ ] `$hidden` di Model untuk sensitive fields (password, tokens)
-  - [ ] API responses jangan expose internal data
-  - [ ] Error messages jangan expose DB structure
+    - [ ] `$hidden` di Model untuk sensitive fields (password, tokens)
+    - [ ] API responses jangan expose internal data
+    - [ ] Error messages jangan expose DB structure
 
 - [ ] **Session Security**
-  ```php
-  // .env
-  SESSION_SECURE_COOKIES=true (production only)
-  SESSION_HTTP_ONLY=true
-  SESSION_SAME_SITE=lax
-  ```
+    ```php
+    // .env
+    SESSION_SECURE_COOKIES=true (production only)
+    SESSION_HTTP_ONLY=true
+    SESSION_SAME_SITE=lax
+    ```
 
 ---
 
@@ -610,17 +640,20 @@ resources/
 ### A. Setup Google Cloud Console
 
 #### Step 1: Buat Project di Google Cloud Console
+
 1. Buka [console.cloud.google.com](https://console.cloud.google.com)
 2. Klik "Select a Project" → "New Project"
 3. Nama: "SRB Motors"
 4. Klik "Create"
 
 #### Step 2: Enable Google+ API
+
 1. Sidebar → "APIs & Services"
 2. Search "Google+ API" atau "OAuth 2.0"
 3. Klik "Google+ API" → "Enable"
 
 #### Step 3: Create OAuth 2.0 Credential
+
 1. "APIs & Services" → "Credentials"
 2. Klik "+ Create Credentials" → "OAuth Client ID"
 3. Pilih "Web Application"
@@ -646,13 +679,14 @@ Authorized redirect URIs:
 6. Download JSON → simpan credentials (jangan commit ke git!)
 
 #### Step 4: Ambil Client ID & Secret
+
 ```json
 {
-  "web": {
-    "client_id": "XXXX-XXXX.apps.googleusercontent.com", // ← Copy ini
-    "client_secret": "GOCSPX-XXXXXXXXXXXX",               // ← Copy ini
-    "redirect_uris": ["http://localhost:8000/auth/google/callback"]
-  }
+    "web": {
+        "client_id": "XXXX-XXXX.apps.googleusercontent.com", // ← Copy ini
+        "client_secret": "GOCSPX-XXXXXXXXXXXX", // ← Copy ini
+        "redirect_uris": ["http://localhost:8000/auth/google/callback"]
+    }
 }
 ```
 
@@ -661,11 +695,13 @@ Authorized redirect URIs:
 ### B. Laravel Implementation
 
 #### Step 1: Install Laravel Socialite
+
 ```bash
 composer require laravel/socialite
 ```
 
 #### Step 2: Config .env
+
 ```env
 GOOGLE_CLIENT_ID=XXXX.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=GOCSPX-XXXXXXXXXXXX
@@ -673,6 +709,7 @@ GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 ```
 
 #### Step 3: Add to `config/services.php`
+
 ```php
 'google' => [
     'client_id' => env('GOOGLE_CLIENT_ID'),
@@ -682,6 +719,7 @@ GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback
 ```
 
 #### Step 4: Create Google Auth Controller
+
 ```php
 // app/Http/Controllers/GoogleAuthController.php
 
@@ -752,6 +790,7 @@ class GoogleAuthController extends Controller
 ```
 
 #### Step 5: Update User Model
+
 ```php
 // app/Models/User.php
 
@@ -771,6 +810,7 @@ protected $hidden = [
 ```
 
 #### Step 6: Migration untuk Google Fields
+
 ```php
 // database/migrations/XXXX_add_google_to_users_table.php
 
@@ -781,11 +821,13 @@ Schema::table('users', function (Blueprint $table) {
 ```
 
 Jalankan:
+
 ```bash
 php artisan migrate
 ```
 
 #### Step 7: Add Routes
+
 ```php
 // routes/web.php
 
@@ -800,18 +842,17 @@ Route::post('/logout', [GoogleAuthController::class, 'logout'])
 ```
 
 #### Step 8: Add Button di Login Page (React)
+
 ```jsx
 // resources/js/Pages/Auth/Login.jsx
 
-import { Link } from '@inertiajs/react';
+import { Link } from "@inertiajs/react";
 
 export default function Login() {
     return (
         <div className="space-y-6">
             {/* Email login form */}
-            <form>
-                {/* ... existing form ... */}
-            </form>
+            <form>{/* ... existing form ... */}</form>
 
             <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -824,7 +865,7 @@ export default function Login() {
 
             {/* Google Login Button */}
             <Link
-                href={route('auth.google')}
+                href={route("auth.google")}
                 className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition"
             >
                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -847,12 +888,12 @@ BEFORE DEPLOY TO PRODUCTION:
 ☐ Update Google Console dengan production domain
 ☐ Change .env di production:
     GOOGLE_REDIRECT_URI=https://srbmotor.com/auth/google/callback
-    
+
 ☐ Jangan commit GOOGLE_CLIENT_SECRET ke git
     (Simpan di .env production saja, atau CI/CD secrets)
-    
+
 ☐ Enable "HTTPS only" di production
-    
+
 ☐ Test OAuth flow di production domain
 ```
 
@@ -865,6 +906,7 @@ BEFORE DEPLOY TO PRODUCTION:
 **Goal**: Design system + basic UI redesign
 
 **Tasks**:
+
 - [ ] Establish color palette, typography, spacing tokens
 - [ ] Create Tailwind config dengan design tokens baru
 - [ ] Redesign Navbar & Footer komponens
@@ -883,6 +925,7 @@ BEFORE DEPLOY TO PRODUCTION:
 **Goal**: User-facing pages dengan UX baik, OAuth Google ready
 
 **Tasks**:
+
 - [ ] Redesign Motors/Index (filter sidebar + grid)
 - [ ] Redesign Motors/Show (gallery + detail + action buttons)
 - [ ] Implement Order Wizard (2-3 step forms)
@@ -902,6 +945,7 @@ BEFORE DEPLOY TO PRODUCTION:
 **Goal**: Complete admin panel dengan CoreUI, status update real-time
 
 **Tasks**:
+
 - [ ] Migrate admin UI ke CoreUI React template
 - [ ] Design dashboard KPI cards + charts
 - [ ] Build transactions list dengan filters + quick actions
@@ -921,6 +965,7 @@ BEFORE DEPLOY TO PRODUCTION:
 **Goal**: Production-ready security + end-to-end validation
 
 **Tasks**:
+
 - [ ] Fix route auth protection (all order routes)
 - [ ] Implement Midtrans webhook signature validation + idempotency
 - [ ] Add rate limiting (login, register, contact, order)
@@ -945,6 +990,7 @@ BEFORE DEPLOY TO PRODUCTION:
 **Goal**: Final fixes, UAT, go live
 
 **Tasks**:
+
 - [ ] User Acceptance Testing (UAT) cycle
 - [ ] Bug fixes & refinements
 - [ ] Performance tuning
@@ -963,17 +1009,17 @@ BEFORE DEPLOY TO PRODUCTION:
 
 ### Current → Recommended
 
-| Layer | Current | Recommended | Reason |
-|-------|---------|-------------|--------|
-| **Backend** | Laravel 12 | ✅ Keep | Solid, no change |
-| **Frontend** | React 19 | ✅ Keep | Modern, good UX |
-| **Router** | Inertia.js | ✅ Keep | SSR ready, good DX |
-| **CSS** | Tailwind 4 | ✅ Keep | Utility-first perfect |
-| **Admin UI** | Custom | → **CoreUI** | Professional, scalable |
-| **Auth** | Email/Pass | + **Google OAuth** | Trust, ease of use |
-| **Payment** | Midtrans | ✅ Keep | Reliable, local support |
-| **Notifications** | WhatsApp/Email | ✅ Keep | Working well |
-| **Monitoring** | ? | → **Sentry/LogRocket** | Error tracking, user analytics |
+| Layer             | Current        | Recommended            | Reason                         |
+| ----------------- | -------------- | ---------------------- | ------------------------------ |
+| **Backend**       | Laravel 12     | ✅ Keep                | Solid, no change               |
+| **Frontend**      | React 19       | ✅ Keep                | Modern, good UX                |
+| **Router**        | Inertia.js     | ✅ Keep                | SSR ready, good DX             |
+| **CSS**           | Tailwind 4     | ✅ Keep                | Utility-first perfect          |
+| **Admin UI**      | Custom         | → **CoreUI**           | Professional, scalable         |
+| **Auth**          | Email/Pass     | + **Google OAuth**     | Trust, ease of use             |
+| **Payment**       | Midtrans       | ✅ Keep                | Reliable, local support        |
+| **Notifications** | WhatsApp/Email | ✅ Keep                | Working well                   |
+| **Monitoring**    | ?              | → **Sentry/LogRocket** | Error tracking, user analytics |
 
 ---
 
@@ -986,7 +1032,194 @@ BEFORE DEPLOY TO PRODUCTION:
 - [ ] Security hardened (no auth bypass, no webhook fraud)
 - [ ] Performance fast (<2s page load, <100ms API response)
 - [ ] Google OAuth working (login alternative)
+- [ ] Email verification working (akun terverifikasi sebelum transaksi)
 - [ ] UAT passed (0 critical bugs at go-live)
+
+---
+
+## 📧 RANCANGAN SISTEM VERIFIKASI EMAIL
+
+**Tanggal Perancangan**: March 8, 2026  
+**Status**: Belum diimplementasi  
+**Prioritas**: Medium-High (dibutuhkan sebelum go-live transaksi)
+
+### Latar Belakang
+
+Saat ini user bisa register dan langsung melakukan order/cicilan tanpa memverifikasi email. Ini bermasalah karena:
+
+- Email notifikasi status transaksi bisa gagal kirim ke email salah ketik
+- Tidak ada jaminan akun dimiliki orang yang valid
+- Potensi akun spam/bot untuk flooding sistem
+
+---
+
+### Alur Utama (Flow)
+
+```
+Register
+   │
+   ▼
+Email verifikasi terkirim otomatis (Laravel VerifyEmail notification)
+   │
+   ▼
+User login → bisa akses katalog & profil (read-only)
+   │
+   ├── Email BELUM verified  ──► Banner peringatan di profil
+   │                              Tombol "Kirim Ulang Email Verifikasi"
+   │                              Route checkout/order/cicilan → redirect notice
+   │
+   └── Email SUDAH verified  ──► Akses penuh ke semua fitur
+```
+
+---
+
+### Komponen Backend yang Dibutuhkan
+
+#### 1. Model `User` — Implement `MustVerifyEmail`
+
+```php
+// app/Models/User.php
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+class User extends Authenticatable implements MustVerifyEmail
+{
+    // Laravel akan otomatis kirim email verifikasi setelah register
+}
+```
+
+#### 2. Routes Verifikasi
+
+```php
+// routes/web.php — tambahkan dalam group auth middleware
+Route::get('/email/verify', [EmailVerificationNoticeController::class, 'show'])
+    ->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
+Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('verification.send');
+```
+
+#### 3. Controller Verifikasi
+
+```php
+// app/Http/Controllers/Auth/EmailVerificationController.php
+public function verify(EmailVerificationRequest $request)
+{
+    if ($request->user()->hasVerifiedEmail()) {
+        return redirect()->route('profile.show')->with('flash', [
+            'success' => 'Email Anda sudah terverifikasi sebelumnya.'
+        ]);
+    }
+
+    $request->fulfill(); // mark verified + fire event
+
+    return redirect()->route('profile.show')->with('flash', [
+        'success' => 'Email berhasil diverifikasi! Selamat datang di SRB Motors.'
+    ]);
+}
+```
+
+#### 4. Middleware Proteksi Route Transaksi
+
+```php
+// routes/web.php — semua route yang butuh email verified
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/motors/{motor}/cash-order', ...);
+    Route::post('/motors/{motor}/credit-order', ...);
+    Route::get('/installments', ...);
+    Route::post('/installments/{id}/pay', ...);
+});
+```
+
+#### 5. Proteksi di `GoogleAuthController`
+
+User login via Google otomatis dianggap **verified** (karena Google sudah verifikasi emailnya):
+
+```php
+// Saat create user baru via Google OAuth, set email_verified_at
+$user = User::create([
+    'name'              => $googleUser->getName(),
+    'email'             => $googleUser->getEmail(),
+    'google_id'         => $googleUser->getId(),
+    'email_verified_at' => now(), // ✅ Otomatis verified
+    'password'          => Hash::make(Str::random(24)),
+]);
+```
+
+---
+
+### Komponen Frontend yang Dibutuhkan
+
+#### 1. Banner di `Profile/Show.jsx` (jika belum verified)
+
+```jsx
+{
+    !user.email_verified_at && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 flex items-center gap-4">
+            <AlertTriangle className="w-5 h-5 text-yellow-500 shrink-0" />
+            <div className="flex-1">
+                <p className="text-sm font-black text-yellow-800">
+                    Email belum terverifikasi
+                </p>
+                <p className="text-xs text-yellow-600">
+                    Verifikasi email untuk bisa melakukan transaksi.
+                </p>
+            </div>
+            <button
+                onClick={handleResend}
+                className="px-4 py-2 bg-yellow-500 text-white rounded-xl text-xs font-black hover:bg-yellow-600 transition-colors"
+            >
+                Kirim Ulang
+            </button>
+        </div>
+    );
+}
+```
+
+#### 2. Halaman Notice `VerificationNotice.jsx`
+
+Ditampilkan saat user belum verified mencoba akses route transaksi:
+
+- Pesan "Cek email Anda untuk link verifikasi"
+- Tombol "Kirim Ulang Email"
+- Link ke profil
+
+---
+
+### Konfigurasi Email
+
+Pastikan `.env` sudah set:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your@gmail.com
+MAIL_PASSWORD=app_password_here
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=no-reply@srbmotors.com
+MAIL_FROM_NAME="SRB Motors"
+```
+
+---
+
+### Urutan Implementasi
+
+| #   | Task                                                           | File                                  |
+| --- | -------------------------------------------------------------- | ------------------------------------- |
+| 1   | `User` implement `MustVerifyEmail`                             | `app/Models/User.php`                 |
+| 2   | Tambah routes verifikasi                                       | `routes/web.php`                      |
+| 3   | Buat `EmailVerificationController`                             | `app/Http/Controllers/Auth/`          |
+| 4   | Buat `EmailVerificationNotificationController`                 | `app/Http/Controllers/Auth/`          |
+| 5   | Proteksi route transaksi dengan `verified` middleware          | `routes/web.php`                      |
+| 6   | Google OAuth: set `email_verified_at = now()` saat create user | `GoogleAuthController.php`            |
+| 7   | Banner peringatan di `Profile/Show.jsx`                        | `resources/js/Pages/Profile/Show.jsx` |
+| 8   | Buat halaman `VerificationNotice.jsx`                          | `resources/js/Pages/Auth/`            |
+| 9   | Test flow lengkap (register → verify → order)                  | —                                     |
 
 ---
 

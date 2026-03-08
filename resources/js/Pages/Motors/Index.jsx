@@ -3,6 +3,7 @@ import { Link } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+    ArrowRight,
     ChevronRight,
     Search,
     Filter,

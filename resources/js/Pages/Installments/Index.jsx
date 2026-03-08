@@ -7,9 +7,12 @@ import {
     AlertCircle,
     AlertTriangle,
     ArrowRight,
+    Calendar,
     CheckCircle,
     Clock,
     CreditCard,
+    Download,
+    FileText,
     Landmark,
     Shield,
     ShieldCheck,
@@ -17,6 +20,7 @@ import {
     Upload,
     Wallet,
     X,
+    Zap,
 } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";

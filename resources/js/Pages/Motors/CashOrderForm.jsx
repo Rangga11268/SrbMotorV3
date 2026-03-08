@@ -1,3 +1,5 @@
+import React from "react";
+import { useForm, Link } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
@@ -17,6 +19,7 @@ import {
     CreditCard,
     ShieldCheck,
     ChevronLeft,
+    Info,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
