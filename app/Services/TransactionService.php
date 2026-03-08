@@ -20,9 +20,18 @@ class TransactionService
     public function createTransaction(array $data): Transaction
     {
         $transactionData = array_intersect_key($data, array_flip([
-            'user_id', 'motor_id', 'transaction_type', 'status', 'notes',
-            'booking_fee', 'total_amount', 'payment_method', 'payment_status',
-            'customer_name', 'customer_phone', 'customer_occupation'
+            'user_id',
+            'motor_id',
+            'transaction_type',
+            'status',
+            'notes',
+            'booking_fee',
+            'total_amount',
+            'payment_method',
+            'payment_status',
+            'customer_name',
+            'customer_phone',
+            'customer_occupation'
         ]));
 
         $transaction = Transaction::create($transactionData);
@@ -40,9 +49,18 @@ class TransactionService
     public function updateTransaction(Transaction $transaction, array $data): Transaction
     {
         $transactionData = array_intersect_key($data, array_flip([
-            'user_id', 'motor_id', 'transaction_type', 'status', 'notes',
-            'booking_fee', 'total_amount', 'payment_method', 'payment_status',
-            'customer_name', 'customer_phone', 'customer_occupation'
+            'user_id',
+            'motor_id',
+            'transaction_type',
+            'status',
+            'notes',
+            'booking_fee',
+            'total_amount',
+            'payment_method',
+            'payment_status',
+            'customer_name',
+            'customer_phone',
+            'customer_occupation'
         ]));
 
         $transaction->update($transactionData);
@@ -55,9 +73,9 @@ class TransactionService
         }
 
         // Send notifications if status changed or credit status changed
-        $shouldNotify = isset($data['status']) || 
-                        (isset($data['credit_detail']) && isset($data['credit_detail']['credit_status']));
-        
+        $shouldNotify = isset($data['status']) ||
+            (isset($data['credit_detail']) && isset($data['credit_detail']['credit_status']));
+
         if ($shouldNotify) {
             $this->sendStatusNotification($transaction, $data);
         }
@@ -87,7 +105,7 @@ class TransactionService
     /**
      * Generate Installments for a transaction.
      */
-    protected function generateInstallments(Transaction $transaction, array $creditData): void
+    public function generateInstallments(Transaction $transaction, array $creditData): void
     {
         // Only generate if no installments exist
         if ($transaction->installments()->count() === 0) {
@@ -103,7 +121,7 @@ class TransactionService
             // 2. Create Monthly Installments
             $amount = $creditData['monthly_installment'];
             $tenor = $creditData['tenor'];
-            
+
             for ($i = 1; $i <= $tenor; $i++) {
                 Installment::create([
                     'transaction_id' => $transaction->id,
@@ -161,7 +179,7 @@ class TransactionService
             if ($transaction->customer_phone) {
                 $status = $data['status'] ?? ($data['credit_detail']['credit_status'] ?? 'Updated');
                 $creditStatus = $data['credit_detail']['credit_status'] ?? null;
-                
+
                 $msg = "";
                 if ($creditStatus === 'disetujui') {
                     $msg = "Selamat {$transaction->customer_name}!\n\nPengajuan Kredit Anda untuk unit *{$transaction->motor->name}* telah *DISETUJUI*.\n\nHarap cek dashboard Anda untuk melihat jadwal pembayaran angsuran (Uang Muka).\n\n- SRB Motor";
@@ -171,7 +189,7 @@ class TransactionService
                     $displayStatus = strtoupper(str_replace('_', ' ', $status));
                     $msg = "Halo {$transaction->customer_name},\n\nStatus pesanan #{$transaction->id} diperbarui menjadi: *{$displayStatus}*.\n\n- SRB Motor";
                 }
-                
+
                 WhatsAppService::sendMessage($transaction->customer_phone, $msg);
             }
         } catch (\Exception $e) {

@@ -33,14 +33,14 @@ class TransactionController extends Controller
 
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('customer_name', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($u) use ($search) {
-                      $u->where('name', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('motor', function($m) use ($search) {
-                      $m->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('user', function ($u) use ($search) {
+                        $u->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('motor', function ($m) use ($search) {
+                        $m->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -95,10 +95,10 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction): \Inertia\Response
     {
-        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'installments' => function($q) {
+        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'installments' => function ($q) {
             $q->orderBy('installment_number', 'asc');
         }]);
-        
+
         $transaction->documents_complete = $transaction->transaction_type === 'CREDIT' && $transaction->creditDetail
             ? $transaction->creditDetail->hasRequiredDocuments()
             : true;
@@ -112,7 +112,7 @@ class TransactionController extends Controller
     public function edit(Transaction $transaction): \Inertia\Response
     {
         $transaction->load(['creditDetail', 'user', 'motor']);
-        
+
         return \Inertia\Inertia::render('Admin/Transactions/Edit', [
             'transaction' => $transaction,
             'users' => User::all(),
@@ -152,7 +152,7 @@ class TransactionController extends Controller
         }
 
         $transaction->load(['creditDetail', 'creditDetail.documents', 'user', 'motor']);
-        
+
         return \Inertia\Inertia::render('Admin/Transactions/EditCredit', [
             'transaction' => $transaction,
         ]);
@@ -185,6 +185,12 @@ class TransactionController extends Controller
 
         // Sync transaction status based on credit status
         $this->syncTransactionStatusFromCredit($transaction, $request->credit_status);
+
+        // Generate installments when credit is approved (idempotent — skips if already generated)
+        if ($request->credit_status === 'disetujui' && $transaction->creditDetail) {
+            $fresh = $transaction->fresh(['installments', 'creditDetail']);
+            $this->transactionService->generateInstallments($fresh, $fresh->creditDetail->toArray());
+        }
 
         return redirect()->route('admin.transactions.show', $transaction->id)
             ->with('success', 'Status kredit berhasil diperbarui.');

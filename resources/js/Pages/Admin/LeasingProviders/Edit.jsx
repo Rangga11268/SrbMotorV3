@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
@@ -16,14 +16,27 @@ import CIcon from "@coreui/icons-react";
 import { cilArrowLeft, cilSave } from "@coreui/icons";
 
 export default function Edit({ provider }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         name: provider.name || "",
-        logo_path: provider.logo_path || "",
+        logo: null,
+        _method: "PUT",
     });
+
+    const [preview, setPreview] = useState(
+        provider.logo_path ? `/storage/${provider.logo_path}` : null,
+    );
+
+    const handleLogoChange = (e) => {
+        const file = e.target.files[0];
+        setData("logo", file);
+        if (file) setPreview(URL.createObjectURL(file));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route("admin.leasing-providers.update", provider.id));
+        post(route("admin.leasing-providers.update", provider.id), {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -78,20 +91,38 @@ export default function Edit({ provider }) {
 
                                 <div className="mb-4">
                                     <CFormLabel className="font-weight-bold">
-                                        Logo URL (Opsional)
+                                        Logo (Opsional)
                                     </CFormLabel>
+                                    {preview && (
+                                        <div className="mb-2">
+                                            <img
+                                                src={preview}
+                                                alt="Logo saat ini"
+                                                style={{
+                                                    maxHeight: 80,
+                                                    objectFit: "contain",
+                                                }}
+                                                className="border rounded p-2 bg-light"
+                                            />
+                                            <div className="text-muted small mt-1">
+                                                Logo saat ini
+                                            </div>
+                                        </div>
+                                    )}
                                     <CFormInput
-                                        type="text"
-                                        value={data.logo_path}
-                                        onChange={(e) =>
-                                            setData("logo_path", e.target.value)
-                                        }
-                                        placeholder="https://..."
-                                        invalid={!!errors.logo_path}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleLogoChange}
+                                        invalid={!!errors.logo}
                                     />
-                                    {errors.logo_path && (
+                                    <div className="text-muted small mt-1">
+                                        Biarkan kosong jika tidak ingin mengubah
+                                        logo. Format: JPG, PNG, WebP, SVG. Maks
+                                        2MB.
+                                    </div>
+                                    {errors.logo && (
                                         <div className="text-danger small mt-1">
-                                            {errors.logo_path}
+                                            {errors.logo}
                                         </div>
                                     )}
                                 </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import {
@@ -19,12 +19,20 @@ import { cilArrowLeft, cilSave } from "@coreui/icons";
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
-        logo_path: "",
+        logo: null,
     });
+
+    const [preview, setPreview] = useState(null);
+
+    const handleLogoChange = (e) => {
+        const file = e.target.files[0];
+        setData("logo", file);
+        if (file) setPreview(URL.createObjectURL(file));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("admin.leasing-providers.store"));
+        post(route("admin.leasing-providers.store"), { forceFormData: true });
     };
 
     return (
@@ -81,20 +89,33 @@ export default function Create() {
 
                                 <div className="mb-4">
                                     <CFormLabel className="font-weight-bold">
-                                        Logo URL (Opsional)
+                                        Logo (Opsional)
                                     </CFormLabel>
                                     <CFormInput
-                                        type="text"
-                                        value={data.logo_path}
-                                        onChange={(e) =>
-                                            setData("logo_path", e.target.value)
-                                        }
-                                        placeholder="https://..."
-                                        invalid={!!errors.logo_path}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleLogoChange}
+                                        invalid={!!errors.logo}
                                     />
-                                    {errors.logo_path && (
+                                    <div className="text-muted small mt-1">
+                                        Format: JPG, PNG, WebP, SVG. Maks 2MB.
+                                    </div>
+                                    {errors.logo && (
                                         <div className="text-danger small mt-1">
-                                            {errors.logo_path}
+                                            {errors.logo}
+                                        </div>
+                                    )}
+                                    {preview && (
+                                        <div className="mt-3">
+                                            <img
+                                                src={preview}
+                                                alt="Preview"
+                                                style={{
+                                                    maxHeight: 80,
+                                                    objectFit: "contain",
+                                                }}
+                                                className="border rounded p-2 bg-light"
+                                            />
                                         </div>
                                     )}
                                 </div>
@@ -121,3 +142,88 @@ export default function Create() {
         </AdminLayout>
     );
 }
+
+return (
+    <AdminLayout>
+        <Head title="Tambah Leasing Provider" />
+        <CRow>
+            <CCol md={8}>
+                <CCard className="mb-4 shadow-sm">
+                    <CCardHeader className="bg-white py-3">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <h5 className="mb-0">Tambah Leasing Provider</h5>
+                            <Link href={route("admin.leasing-providers.index")}>
+                                <CButton
+                                    color="secondary"
+                                    variant="outline"
+                                    size="sm"
+                                >
+                                    <CIcon
+                                        icon={cilArrowLeft}
+                                        className="me-2"
+                                    />
+                                    Kembali
+                                </CButton>
+                            </Link>
+                        </div>
+                    </CCardHeader>
+                    <CCardBody className="p-4">
+                        <CForm onSubmit={handleSubmit}>
+                            <div className="mb-4">
+                                <CFormLabel className="font-weight-bold">
+                                    Nama Leasing Provider
+                                </CFormLabel>
+                                <CFormInput
+                                    type="text"
+                                    value={data.name}
+                                    onChange={(e) =>
+                                        setData("name", e.target.value)
+                                    }
+                                    placeholder="Contoh: BAF (Bussan Auto Finance)"
+                                    invalid={!!errors.name}
+                                />
+                                {errors.name && (
+                                    <div className="text-danger small mt-1">
+                                        {errors.name}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <CFormLabel className="font-weight-bold">
+                                    Logo URL (Opsional)
+                                </CFormLabel>
+                                <CFormInput
+                                    type="text"
+                                    value={data.logo_path}
+                                    onChange={(e) =>
+                                        setData("logo_path", e.target.value)
+                                    }
+                                    placeholder="https://..."
+                                    invalid={!!errors.logo_path}
+                                />
+                                {errors.logo_path && (
+                                    <div className="text-danger small mt-1">
+                                        {errors.logo_path}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="d-grid mt-4">
+                                <CButton
+                                    color="primary"
+                                    type="submit"
+                                    disabled={processing}
+                                    size="lg"
+                                >
+                                    <CIcon icon={cilSave} className="me-2" />
+                                    Simpan Provider
+                                </CButton>
+                            </div>
+                        </CForm>
+                    </CCardBody>
+                </CCard>
+            </CCol>
+        </CRow>
+    </AdminLayout>
+);

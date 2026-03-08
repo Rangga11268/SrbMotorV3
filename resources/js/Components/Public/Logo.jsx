@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function Logo({ className = "h-8 w-auto", iconOnly = false }) {
+export default function Logo({
+    className = "h-8 w-auto",
+    iconOnly = false,
+    dark = false,
+}) {
     return (
         <div className={`flex items-center gap-2.5 ${className}`}>
             <div className="relative flex items-center justify-center">
@@ -13,10 +17,14 @@ export default function Logo({ className = "h-8 w-auto", iconOnly = false }) {
 
             {!iconOnly && (
                 <div className="flex flex-col leading-none">
-                    <span className="text-xl font-black tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <span
+                        className={`text-xl font-black tracking-tight transition-colors ${dark ? "text-white group-hover:text-blue-300" : "text-gray-900 group-hover:text-blue-600"}`}
+                    >
                         SRB<span className="text-blue-600">MOTORS</span>
                     </span>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mt-0.5">
+                    <span
+                        className={`text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 ${dark ? "text-gray-400" : "text-gray-400"}`}
+                    >
                         Trusted Dealer
                     </span>
                 </div>

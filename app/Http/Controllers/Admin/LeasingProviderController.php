@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\LeasingProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class LeasingProviderController extends Controller
@@ -24,12 +25,20 @@ class LeasingProviderController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'logo_path' => 'nullable|string', // Placeholder for now
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'logo'  => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:2048',
         ]);
 
-        LeasingProvider::create($validated);
+        $logoPath = null;
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('leasing-providers', 'public');
+        }
+
+        LeasingProvider::create([
+            'name'      => $request->name,
+            'logo_path' => $logoPath,
+        ]);
 
         return redirect()->route('admin.leasing-providers.index')
             ->with('success', 'Leasing Provider berhasil ditambahkan.');
@@ -44,12 +53,24 @@ class LeasingProviderController extends Controller
 
     public function update(Request $request, LeasingProvider $leasingProvider)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'logo_path' => 'nullable|string',
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'logo'  => 'nullable|image|mimes:jpg,jpeg,png,webp,svg|max:2048',
         ]);
 
-        $leasingProvider->update($validated);
+        $logoPath = $leasingProvider->logo_path;
+
+        if ($request->hasFile('logo')) {
+            if ($logoPath && Storage::disk('public')->exists($logoPath)) {
+                Storage::disk('public')->delete($logoPath);
+            }
+            $logoPath = $request->file('logo')->store('leasing-providers', 'public');
+        }
+
+        $leasingProvider->update([
+            'name'      => $request->name,
+            'logo_path' => $logoPath,
+        ]);
 
         return redirect()->route('admin.leasing-providers.index')
             ->with('success', 'Leasing Provider berhasil diperbarui.');
@@ -57,6 +78,9 @@ class LeasingProviderController extends Controller
 
     public function destroy(LeasingProvider $leasingProvider)
     {
+        if ($leasingProvider->logo_path && Storage::disk('public')->exists($leasingProvider->logo_path)) {
+            Storage::disk('public')->delete($leasingProvider->logo_path);
+        }
         $leasingProvider->delete();
         return redirect()->route('admin.leasing-providers.index')
             ->with('success', 'Leasing Provider berhasil dihapus.');

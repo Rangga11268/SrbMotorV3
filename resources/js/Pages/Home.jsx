@@ -145,7 +145,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                                     duration: 0.7,
                                                                     ease: "easeOut",
                                                                 }}
-                                                                className="text-3xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_8px_20px_rgba(0,0,0,0.8)]"
+                                                                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]"
                                                             >
                                                                 {banner.title
                                                                     .split(" ")
@@ -191,7 +191,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                                     delay: 0.2,
                                                                     ease: "easeOut",
                                                                 }}
-                                                                className="text-base md:text-xl lg:text-2xl !text-white font-medium max-w-xl leading-relaxed drop-shadow-lg"
+                                                                className="text-sm md:text-base lg:text-lg !text-white font-medium max-w-xl leading-relaxed drop-shadow-lg"
                                                             >
                                                                 {
                                                                     banner.subtitle
@@ -338,8 +338,8 @@ export default function Home({ auth, popularMotors = [] }) {
                                         target="_blank"
                                         className="flex-1 group"
                                     >
-                                        <div className="h-full p-6 bg-green-50 hover:bg-green-600 border border-green-100 rounded-[2rem] flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-green-200 group-hover:-translate-y-1">
-                                            <div className="p-4 bg-white rounded-2xl shadow-sm text-green-600 group-hover:scale-110 transition-transform">
+                                        <div className="h-full p-6 bg-blue-50 hover:bg-blue-600 border border-blue-100 rounded-[2rem] flex flex-col items-center justify-center text-center gap-3 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-blue-200 group-hover:-translate-y-1">
+                                            <div className="p-4 bg-white rounded-2xl shadow-sm text-blue-600 group-hover:scale-110 transition-transform">
                                                 <MessageCircle className="w-7 h-7" />
                                             </div>
                                             <span className="font-black text-gray-900 group-hover:text-white transition-colors text-xs uppercase tracking-widest">
@@ -466,7 +466,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                             </h3>
                                             <div className="flex items-center gap-4 text-xs font-bold text-gray-400">
                                                 <span className="flex items-center gap-1 uppercase tracking-wider">
-                                                    <Zap className="w-3 h-3 text-yellow-500 fill-yellow-500" />{" "}
+                                                    <Zap className="w-3 h-3 text-blue-500 fill-blue-500" />{" "}
                                                     {motor.type}
                                                 </span>
                                                 <span className="w-1.5 h-1.5 rounded-full bg-gray-200" />
@@ -583,13 +583,13 @@ export default function Home({ auth, popularMotors = [] }) {
                                     href="https://wa.me/6281212345678"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-6 rounded-[2rem] bg-green-50/50 border border-green-100 flex items-center gap-5 group hover:bg-green-500 hover:border-green-500 transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-green-200"
+                                    className="p-6 rounded-[2rem] bg-blue-50/50 border border-blue-100 flex items-center gap-5 group hover:bg-blue-600 hover:border-blue-600 transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-blue-200"
                                 >
-                                    <div className="w-14 h-14 rounded-2xl bg-green-500 flex items-center justify-center text-white shadow-lg shadow-green-500/30 group-hover:bg-white group-hover:text-green-500 group-hover:rotate-12 transition-all">
+                                    <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:bg-white group-hover:text-blue-600 group-hover:rotate-12 transition-all">
                                         <Phone className="w-7 h-7" />
                                     </div>
                                     <div className="flex flex-col text-left">
-                                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest transition-colors">
+                                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest transition-colors">
                                             Whatsapp Bekasi
                                         </p>
                                         <p className="text-sm font-black text-slate-900 transition-colors">

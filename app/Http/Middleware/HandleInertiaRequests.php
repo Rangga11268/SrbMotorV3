@@ -41,14 +41,15 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
+                'message' => fn() => $request->session()->get('message'),
+                'success' => fn() => $request->session()->get('success'),
+                'error' => fn() => $request->session()->get('error'),
             ],
             'admin_phone' => config('services.fonnte.admin_phone'),
             'config' => [
                 'midtrans_client_key' => config('midtrans.client_key'),
             ],
+            'leasingProviders' => fn() => \App\Models\LeasingProvider::select('id', 'name', 'logo_path')->orderBy('name')->get(),
         ];
     }
 }

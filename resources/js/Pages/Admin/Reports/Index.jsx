@@ -121,7 +121,7 @@ export default function Index() {
                                         <div
                                             className={`rounded-circle d-inline-flex align-items-center justify-content-center mb-3 ${
                                                 data.type === type.id
-                                                    ? `bg-${type.color} text-white`
+                                                    ? `bg-${type.color} ${type.color === "warning" ? "text-dark" : "text-white"}`
                                                     : "bg-body-secondary text-body-tertiary"
                                             }`}
                                             style={{ width: 48, height: 48 }}

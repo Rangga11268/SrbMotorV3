@@ -92,11 +92,42 @@ export default function Index({ promotions }) {
                                                 {promo.title}
                                             </CTableDataCell>
                                             <CTableDataCell>
-                                                <CBadge
-                                                    color={promo.badge_color}
-                                                >
-                                                    {promo.badge_text}
-                                                </CBadge>
+                                                {promo.badge_text ? (
+                                                    <span
+                                                        className="badge rounded-pill"
+                                                        style={{
+                                                            backgroundColor:
+                                                                promo.badge_color,
+                                                            color: [
+                                                                "orange",
+                                                                "yellow",
+                                                                "lime",
+                                                                "cyan",
+                                                                "aqua",
+                                                                "gold",
+                                                                "silver",
+                                                                "white",
+                                                                "lightyellow",
+                                                                "lightblue",
+                                                                "yellowgreen",
+                                                            ].includes(
+                                                                (
+                                                                    promo.badge_color ||
+                                                                    ""
+                                                                ).toLowerCase(),
+                                                            )
+                                                                ? "#111827"
+                                                                : "#ffffff",
+                                                            padding: "4px 10px",
+                                                        }}
+                                                    >
+                                                        {promo.badge_text}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-muted small">
+                                                        -
+                                                    </span>
+                                                )}
                                             </CTableDataCell>
                                             <CTableDataCell>
                                                 {promo.badge_color}

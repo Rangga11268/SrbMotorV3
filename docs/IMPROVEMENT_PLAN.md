@@ -1,7 +1,57 @@
 # ANALISIS KOMPREHENSIF & IMPROVEMENT PLAN - SRB MOTORS V2
 
-**Last Updated**: March 6, 2026  
-**Version**: 2.0 - Redesign & Security Hardening
+**Last Updated**: March 8, 2026  
+**Version**: 2.1 - Status Update + Order Flow Analysis
+
+---
+
+## 📊 STATUS IMPLEMENTASI (Last Verified: March 8, 2026)
+
+> Ringkasan cepat apa yang sudah dan belum dikerjakan berdasarkan audit kode aktual.
+
+### ✅ Sudah Diimplementasi
+
+| #   | Item                                               | Keterangan                                                                          |
+| --- | -------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 1   | Auth middleware pada route order                   | `Route::middleware(['auth', 'throttle:15,1'])` sudah aktif                          |
+| 2   | Midtrans webhook signature validation              | `PaymentCallbackController` sudah ada signature check + idempotency                 |
+| 3   | Rate limiting di routes                            | `throttle:15,1` pada order routes, `throttle:5,1` pada guest routes                 |
+| 4   | Google OAuth (Socialite)                           | `GoogleAuthController` dengan `stateless()`, google_id migration sudah ada          |
+| 5   | Google OAuth `email_verified_at` saat create user  | `email_verified_at = now()` di GoogleAuthController                                 |
+| 6   | TransactionService architecture                    | Service layer sudah ada dan dipakai TransactionController                           |
+| 7   | WA notifikasi ke user & admin saat order masuk     | Ada di `processCashOrder` dan `processCreditOrder`                                  |
+| 8   | Email notifikasi saat status kredit berubah        | `CreditStatusUpdated` mail di TransactionService                                    |
+| 9   | Cascade delete dokumen                             | `CreditDetail::booted()` hapus file fisik + record                                  |
+| 10  | Authorization check pada dokumen upload            | `user_id !== Auth::id()` di semua fungsi upload                                     |
+| 11  | `hasRequiredDocuments()` validasi kelengkapan      | Ada di model `CreditDetail`                                                         |
+| 12  | React import audit (useState, useEffect, lucide)   | Diperbaiki March 8, 2026                                                            |
+| 13  | Profile page layout fix (email badge overlap)      | Diperbaiki March 8, 2026                                                            |
+| 14  | Login/Register Google OAuth flash error display    | Ditambahkan flash error banner                                                      |
+| 15  | **Generate installment saat admin approve kredit** | `generateInstallments` dibuat `public`, dipanggil di `updateCredit` — March 8, 2026 |
+| 16  | **Bunga/interest rate kredit (1.5% flat/bulan)**   | Kalkulasi baru + kolom `interest_rate` + migration — March 8, 2026                  |
+| 17  | **Cek stok motor + duplikasi order**               | `tersedia` check + active order check di cash & kredit — March 8, 2026              |
+| 18  | **WA notifikasi admin saat dokumen diupload**      | Ditambahkan di `uploadCreditDocuments` — March 8, 2026                              |
+| 19  | **Minimum DP 20% dari harga motor**                | Custom error dengan nominal Rp di `processCreditOrder` — March 8, 2026              |
+| 20  | **Maksimum tenor 60 bulan**                        | Validasi `max:60` pada field tenor — March 8, 2026                                  |
+
+### ❌ Belum Diimplementasi
+
+| #   | Item                                                        | Prioritas |
+| --- | ----------------------------------------------------------- | --------- |
+| 1   | Status string inconsistency (snake_case vs UPPERCASE)       | 🟠 Tinggi |
+| 2   | Security headers (CSP, HSTS, X-Frame-Options)               | 🟠 Tinggi |
+| 3   | MustVerifyEmail di User model                               | 🟡 Sedang |
+| 4   | Leasing provider selection di form kredit                   | 🟡 Sedang |
+| 5   | Jadwal survey dengan tanggal/waktu/lokasi                   | 🟡 Sedang |
+| 6   | Reminder cicilan jatuh tempo (scheduled job)                | 🟡 Sedang |
+| 7   | Review status per dokumen (per-file approval)               | 🟡 Sedang |
+| 8   | User bisa cancel order sendiri                              | 🟡 Sedang |
+| 9   | Race condition fix di generate installment (DB transaction) | 🟡 Sedang |
+| 10  | Upload path standardization (2 format sekarang)             | 🟢 Rendah |
+| 11  | Audit trail logging                                         | 🟢 Rendah |
+| 12  | Authorization Policies (Laravel Policy)                     | 🟢 Rendah |
+| 13  | Admin panel CoreUI migration                                | 🟢 Rendah |
+| 14  | UI/UX Redesign (Home, Catalog, Detail, Order Wizard)        | 🟢 Rendah |
 
 ---
 
@@ -52,43 +102,15 @@ SRB Motors adalah **platform dealer motor end-to-end** dengan:
 
 #### 1. **SECURITY ISSUE: Routes Order Publik Tanpa Auth**
 
-**Problem**:
+**Status**: ✅ **SUDAH DIFIX** — Route order sudah dalam `middleware(['auth', 'throttle:15,1'])` group.
 
-```php
-// routes/web.php
-Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm']); // ❌ Tidak protected
-Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder']); // ❌
+~~**Problem**~~: ~~Routes order tidak protected~~
 
-// Tapi controller pakai Auth::id()
-public function processCashOrder(Request $request, Motor $motor)
-{
-    $transaction = Transaction::create([
-        'user_id' => Auth::id(),  // ← Bisa NULL jika tidak login!
-        ...
-    ]);
-}
-```
-
-**Impact**: User tidak login bisa akses form, bisa buat error pada create transaction (nullable user_id).
-
-**Fix**: Wajib `auth` middleware untuk semua proses order.
+> Tinggal memastikan semua edge case route sudah masuk group yang benar.
 
 #### 2. **SECURITY ISSUE: Webhook Midtrans Tidak Divalidasi**
 
-**Problem**:
-
-```php
-// PaymentCallbackController
-public function handle(Request $request)
-{
-    $notification = $request->all(); // ← Raw data tanpa signature check
-    // Update installment berdasarkan data Midtrans
-}
-```
-
-**Impact**: Siapa saja bisa POST ke `/api/midtrans/notification` dengan data fake! (e.g., claim payment sudah paid padahal belum).
-
-**Fix**: Validasi signature key + implement idempotency check.
+**Status**: ✅ **SUDAH DIFIX** — `PaymentCallbackController` sudah implementasi signature SHA512 validation + idempotency check.
 
 #### 3. **UI/UX Problem: Desain Tidak Konsisten**
 
@@ -966,9 +988,9 @@ BEFORE DEPLOY TO PRODUCTION:
 
 **Tasks**:
 
-- [ ] Fix route auth protection (all order routes)
-- [ ] Implement Midtrans webhook signature validation + idempotency
-- [ ] Add rate limiting (login, register, contact, order)
+- [ ] Fix route auth protection (all order routes) — ✅ **DONE**
+- [ ] Implement Midtrans webhook signature validation + idempotency — ✅ **DONE**
+- [ ] Add rate limiting (login, register, contact, order) — ✅ **DONE (throttle)**
 - [ ] Add security headers (CSP, HSTS, X-Frame-Options, etc)
 - [ ] Upload document validation + scan
 - [ ] Implement audit trail logging
@@ -1031,8 +1053,9 @@ BEFORE DEPLOY TO PRODUCTION:
 - [ ] Real-time status no-reload (Axios polling OR WebSocket)
 - [ ] Security hardened (no auth bypass, no webhook fraud)
 - [ ] Performance fast (<2s page load, <100ms API response)
-- [ ] Google OAuth working (login alternative)
+- [ ] Google OAuth working (login alternative) — ✅ **DONE**
 - [ ] Email verification working (akun terverifikasi sebelum transaksi)
+- [ ] Order flow bugs fixed (bunga, installment generate, stok motor)
 - [ ] UAT passed (0 critical bugs at go-live)
 
 ---
@@ -1224,5 +1247,340 @@ MAIL_FROM_NAME="SRB Motors"
 ---
 
 **Prepared by**: Copilot  
-**Date**: March 6, 2026  
-**Next Step**: Review & approve roadmap, then start Phase 1
+**Date**: March 8, 2026  
+**Next Step**: Fix order flow critical bugs (installment generation + bunga kredit + stok motor check)
+
+---
+
+## 🛒 ANALISIS & IMPROVEMENT ORDER FLOW
+
+**Tanggal Analisis**: March 8, 2026  
+**Scope**: User pesan → isi form → upload dokumen (kredit) → admin proses → cicilan → selesai
+
+---
+
+### Flow Diagram Aktual
+
+```
+=== CASH ORDER ===
+User → /motors/{id}/cash-order (form)
+     → POST process-cash-order
+     → Transaction CASH created + Installment #0 (booking fee) + #1 (pelunasan)
+     → WA notif ke user & admin
+     → Redirect ke /order-confirmation/{id}
+     → User bayar via Midtrans Snap
+     → Webhook callback → Installment status=paid
+     → Semua lunas → Transaction status=payment_confirmed
+     → Admin update status: unit_preparation → ready_for_delivery → completed
+
+=== CREDIT ORDER ===
+User → /motors/{id}/credit-order (form: nama, DP, tenor)
+     → POST process-credit-order
+     → Transaction CREDIT created + CreditDetail created
+     → WA notif ke user & admin
+     → Redirect ke /upload-credit-documents (wajib KTP, KK, Slip Gaji)
+     → POST upload → Documents saved → status=menunggu_persetujuan
+     → Redirect ke /order-confirmation/{id}
+
+Admin → Dashboard → Review dokumen
+      → Admin update credit_status: menunggu_persetujuan
+                                   → data_tidak_valid (user harus revisi)
+                                   → dikirim_ke_surveyor
+                                   → jadwal_survey
+                                   → disetujui ← ← ← MASALAH: cicilan tidak generate!
+                                   → ditolak → Transaction cancelled
+
+User → /installments → bayar DP + cicilan bulanan via Midtrans
+     → Webhook → status=paid → jika semua lunas → completed
+```
+
+---
+
+### 🔴 Bug Kritis Yang Ditemukan
+
+#### BUG #1 — Installment tidak ter-generate saat kredit disetujui
+
+**File**: `app/Http/Controllers/TransactionController.php` — `updateCredit()`
+
+```php
+// KONDISI SAAT INI:
+public function updateCredit(Request $request, Transaction $transaction)
+{
+    $transaction->creditDetail->update([
+        'credit_status' => $request->credit_status, // disetujui
+    ]);
+    $this->syncTransactionStatusFromCredit($transaction, $request->credit_status);
+    // ❌ generateInstallments() TIDAK dipanggil!
+    // ❌ User tidak pernah bisa bayar cicilan setelah disetujui
+}
+```
+
+**Dampak**: Kredit disetujui admin → halaman cicilan user kosong → tidak bisa bayar sama sekali.
+
+**Fix**:
+
+```php
+// Di updateCredit(), setelah update credit_status:
+if ($request->credit_status === 'disetujui' && $transaction->creditDetail) {
+    $creditData = $transaction->creditDetail->toArray();
+    $this->transactionService->generateInstallmentsIfNeeded($transaction, $creditData);
+}
+```
+
+> `generateInstallments` harus dipindah ke `public` (atau buat method `generateInstallmentsIfNeeded` di TransactionService).
+
+---
+
+#### BUG #2 — Bunga kredit 0% (business logic fatal)
+
+**File**: `app/Http/Controllers/MotorGalleryController.php` — `processCreditOrder()`
+
+```php
+// KONDISI SAAT INI:
+$loanAmount = $motor->price - $request->down_payment;
+$monthlyInstallment = $loanAmount / $request->tenor; // ❌ Tidak ada bunga!
+```
+
+**Dampak**: Motor Rp 20jt, tenor 24 bulan → cicilan cuma Rp 833rb. Dealer rugi.
+
+**Fix** — Gunakan flat rate:
+
+```php
+// Flat rate 1.5% per bulan (adjust sesuai kebijakan)
+$interestRatePerMonth = 0.015; // bisa dari config atau FinancingScheme
+$loanAmount = $motor->price - $request->down_payment;
+$totalInterest = $loanAmount * $interestRatePerMonth * $request->tenor;
+$totalPayment = $loanAmount + $totalInterest;
+$monthlyInstallment = $totalPayment / $request->tenor;
+
+// Simpan interest_rate ke CreditDetail
+CreditDetail::create([
+    ...
+    'interest_rate' => $interestRatePerMonth * 100, // simpan sebagai persen
+    'monthly_installment' => $monthlyInstallment,
+]);
+```
+
+> Perlu tambah kolom `interest_rate` ke tabel `credit_details`.
+
+---
+
+#### BUG #3 — Tidak ada pengecekan stok/status motor saat order
+
+**File**: `app/Http/Controllers/MotorGalleryController.php`
+
+```php
+// KONDISI SAAT INI — tidak ada cek status:
+public function processCashOrder(Request $request, Motor $motor)
+{
+    // ❌ tidak ada: if ($motor->status !== 'tersedia') return error
+    Transaction::create([...]);
+}
+```
+
+**Dampak**: Motor yang sudah terjual atau dinonaktifkan masih bisa di-order.
+
+**Fix**:
+
+```php
+// Tambah di awal processCashOrder dan processCreditOrder:
+if (!$motor->is_active || $motor->status === 'terjual') {
+    return back()->withErrors(['motor' => 'Maaf, unit ini sudah tidak tersedia.'])->withInput();
+}
+
+// Opsional: cegah order duplikasi
+$existingOrder = Transaction::where('user_id', Auth::id())
+    ->where('motor_id', $motor->id)
+    ->whereNotIn('status', ['cancelled', 'ditolak'])
+    ->exists();
+if ($existingOrder) {
+    return back()->withErrors(['motor' => 'Anda sudah memiliki pesanan aktif untuk unit ini.'])->withInput();
+}
+```
+
+---
+
+### 🟠 Masalah Sedang
+
+#### ISSUE #4 — WA admin tidak terkirim saat dokumen diupload
+
+**File**: `app/Http/Controllers/MotorGalleryController.php` — `uploadCreditDocuments()`
+
+Setelah dokumen berhasil disimpan dan status di-update ke `menunggu_persetujuan`, tidak ada notifikasi ke admin. Admin tidak tahu ada dokumen baru yang menunggu review.
+
+**Fix**: Tambahkan WA notifikasi di akhir `uploadCreditDocuments()`:
+
+```php
+try {
+    $adminPhone = config('services.fonnte.admin_phone');
+    if ($adminPhone) {
+        $msg = "*[ADMIN] Dokumen Kredit Baru*\n\nPelanggan: {$transaction->customer_name}\nUnit: {$transaction->motor->name}\nOrder ID: #{$transaction->id}\n\nDokumen telah diunggah. Segera review di dashboard.";
+        \App\Services\WhatsAppService::sendMessage($adminPhone, $msg);
+    }
+} catch (\Exception $e) {
+    \Log::error('WA Notification Error: ' . $e->getMessage());
+}
+```
+
+---
+
+#### ISSUE #5 — Status inconsistency (snake_case vs UPPERCASE)
+
+Dua format status berjalan di sistem yang sama:
+
+- `menunggu_persetujuan`, `data_tidak_valid`, `dikirim_ke_surveyor` (snake_case)
+- `PENDING_REVIEW`, `DATA_INVALID`, `SUBMITTED_TO_SURVEYOR` (UPPERCASE)
+
+**Dampak**: Filter admin by status bisa miss data, statusMap di Transaction model perlu duplicate entry.
+
+**Fix**: Standardisasi ke satu format. Rekomendasi: **snake_case** (sudah mayoritas dipakai).
+Jalankan migration untuk update data lama yang memakai format UPPERCASE.
+
+---
+
+#### ISSUE #6 — Tidak ada minimum DP dan batas tenor
+
+```php
+// KONDISI SAAT INI:
+'down_payment' => 'required|numeric|min:0',     // ❌ DP bisa Rp 1
+'tenor' => 'required|integer|min:1',             // ❌ Tenor bisa 999 bulan
+```
+
+**Fix**:
+
+```php
+'down_payment' => [
+    'required', 'numeric',
+    Rule::when(true, ["min:" . ($motor->price * 0.20)], []), // Min 20% OTR
+],
+'tenor' => 'required|integer|min:6|max:60', // 6 bulan - 5 tahun
+```
+
+---
+
+#### ISSUE #7 — Race condition pada generate installment
+
+```php
+// KONDISI SAAT INI (TransactionService):
+if ($transaction->installments()->count() === 0) { // ❌ Not atomic
+    Installment::create([...]);
+}
+```
+
+Dua request bersamaan bisa lolos cek dan memasukkan duplikat installment.
+
+**Fix**: Gunakan database transaction + pessimistic locking:
+
+```php
+DB::transaction(function() use ($transaction, $creditData) {
+    $locked = $transaction->fresh(['installments']); // fresh query
+    if ($locked->installments()->count() === 0) {
+        // create installments inside transaction
+    }
+});
+```
+
+---
+
+### 🟡 Fitur Yang Kurang
+
+#### MISSING #8 — Leasing provider tidak terhubung ke form kredit
+
+Model `LeasingProvider` dan `FinancingScheme` sudah ada di database tapi tidak dipakai di `CreditOrderForm`. Akibatnya:
+
+- User tidak bisa pilih leasing (FIF, Adira, WOM, dll)
+- Admin tidak tahu mau submit ke leasing mana
+- FinancingScheme (bunga, tenor) tidak dipakai sama sekali
+
+**Fix**: Tambahkan field `leasing_provider_id` dan `financing_scheme_id` di form kredit, dan gunakan bunga dari `FinancingScheme` untuk menghitung cicilan.
+
+---
+
+#### MISSING #9 — Tidak ada field tanggal survey
+
+Status `jadwal_survey` sudah ada tapi tidak ada field untuk menyimpan tanggal/waktu/lokasi survey. Admin tidak bisa record jadwal survey aktual.
+
+**Fix**: Tambah kolom `survey_date`, `survey_time`, `survey_address` ke tabel `credit_details`.
+
+---
+
+#### MISSING #10 — Tidak ada reminder cicilan jatuh tempo
+
+Tidak ada scheduled job untuk kirim WA/email H-3 atau H-1 sebelum due date cicilan.
+
+**Fix**: Buat Artisan Command + Laravel Scheduler:
+
+```php
+// app/Console/Commands/SendInstallmentReminders.php
+$upcoming = Installment::where('status', 'pending')
+    ->whereIn('due_date', [now()->addDays(3)->toDateString(), now()->addDays(1)->toDateString()])
+    ->with('transaction.motor')
+    ->get();
+
+foreach ($upcoming as $installment) {
+    WhatsAppService::sendMessage($installment->transaction->customer_phone, $message);
+}
+
+// app/Console/Kernel.php (atau routes/console.php di Laravel 12)
+Schedule::command('installments:send-reminders')->dailyAt('08:00');
+```
+
+---
+
+#### MISSING #11 — Review status per dokumen
+
+Admin hanya bisa lihat seluruh aplikasi kredit tapi tidak bisa mark per dokumen: `KTP = valid`, `KK = perlu diupload ulang`. Saat status `data_tidak_valid`, user tidak tahu dokumen mana yang bermasalah.
+
+**Fix**: Tambah kolom `status` (`pending|valid|invalid`) dan `admin_notes` ke tabel `documents`. Tambah UI di admin untuk per-dokumen review.
+
+---
+
+#### MISSING #12 — User tidak bisa cancel order sendiri
+
+Hanya admin yang bisa ubah status ke `cancelled`. User tidak punya tombol cancel pesanan selama masih dalam status `new_order` atau `menunggu_persetujuan`.
+
+**Fix**: Tambahkan route + controller action:
+
+```php
+Route::post('/transactions/{transaction}/cancel', [UserTransactionController::class, 'cancel'])
+    ->middleware('auth')
+    ->name('transactions.user-cancel');
+
+// Hanya boleh cancel jika status masih new_order atau menunggu_persetujuan
+// dan belum ada pembayaran yang dilakukan
+```
+
+---
+
+#### MISSING #13 — Path upload dokumen tidak konsisten
+
+- User upload → `credit-documents/{transaction_id}/filename`
+- Admin upload → `documents/filename`
+
+**Fix**: Standardisasi ke satu format, misalnya `documents/transactions/{transaction_id}/{doc_type}/filename`.
+
+---
+
+### Urutan Prioritas Fix Order Flow
+
+| #   | Item                                               | Status     | Prioritas   |
+| --- | -------------------------------------------------- | ---------- | ----------- |
+| 1   | Generate installment saat kredit disetujui         | ❌ Bug     | 🔴 Critical |
+| 2   | Bunga kredit (flat rate atau dari FinancingScheme) | ❌ Bug     | 🔴 Critical |
+| 3   | Cek stok/status motor saat order                   | ❌ Bug     | 🔴 Critical |
+| 4   | WA notifikasi admin saat dokumen diupload          | ❌ Missing | 🟠 Tinggi   |
+| 5   | Minimum DP 20% + batas tenor max 60 bulan          | ❌ Missing | 🟠 Tinggi   |
+| 6   | Status inconsistency (snake_case standardization)  | ❌ Bug     | 🟠 Tinggi   |
+| 7   | Race condition generate installment                | ❌ Bug     | 🟡 Sedang   |
+| 8   | Leasing provider di form kredit                    | ❌ Missing | 🟡 Sedang   |
+| 9   | Reminder cicilan H-3/H-1                           | ❌ Missing | 🟡 Sedang   |
+| 10  | Review status per dokumen                          | ❌ Missing | 🟡 Sedang   |
+| 11  | User cancel order sendiri                          | ❌ Missing | 🟡 Sedang   |
+| 12  | Jadwal survey (tanggal/waktu/lokasi)               | ❌ Missing | 🟡 Sedang   |
+| 13  | Standardisasi path dokumen upload                  | ❌ Bug     | 🟢 Rendah   |
+
+---
+
+**Prepared by**: Copilot  
+**Date**: March 8, 2026  
+**Next Step**: Fix order flow critical bugs (installment generation + bunga kredit + stok motor check)

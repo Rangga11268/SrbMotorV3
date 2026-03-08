@@ -142,6 +142,21 @@ class MotorGalleryController extends Controller
         }
 
 
+        // Cek ketersediaan motor
+        if (!$motor->tersedia) {
+            return back()->withErrors(['motor' => 'Motor ini sedang tidak tersedia untuk dipesan.'])->withInput();
+        }
+
+        // Cek duplikasi order aktif
+        $existingOrder = Transaction::where('user_id', Auth::id())
+            ->where('motor_id', $motor->id)
+            ->where('status', '!=', 'cancelled')
+            ->exists();
+        if ($existingOrder) {
+            return back()->withErrors(['motor' => 'Anda sudah memiliki pesanan aktif untuk motor ini.'])->withInput();
+        }
+
+
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
@@ -219,15 +234,36 @@ class MotorGalleryController extends Controller
             'customer_phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'required|string|max:255',
             'down_payment' => 'required|numeric|min:0',
-            'tenor' => 'required|integer|min:1',
+            'tenor' => 'required|integer|min:1|max:60',
 
             'notes' => 'nullable|string',
             'payment_method' => 'required|string',
         ]);
 
+        // Validasi DP minimum 20% dari harga motor
+        $minDownPayment = $motor->price * 0.20;
+        if ($request->down_payment < $minDownPayment) {
+            return back()->withErrors(['down_payment' => 'Uang muka minimum adalah 20% dari harga motor (Rp ' . number_format($minDownPayment, 0, ',', '.') . ').'])->withInput();
+        }
+
 
         if ($request->down_payment >= $motor->price) {
             return back()->withErrors(['down_payment' => 'Uang muka tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
+        }
+
+
+        // Cek ketersediaan motor
+        if (!$motor->tersedia) {
+            return back()->withErrors(['motor' => 'Motor ini sedang tidak tersedia untuk dipesan.'])->withInput();
+        }
+
+        // Cek duplikasi order aktif
+        $existingOrder = Transaction::where('user_id', Auth::id())
+            ->where('motor_id', $motor->id)
+            ->where('status', '!=', 'cancelled')
+            ->exists();
+        if ($existingOrder) {
+            return back()->withErrors(['motor' => 'Anda sudah memiliki pesanan aktif untuk motor ini.'])->withInput();
         }
 
 
@@ -247,7 +283,9 @@ class MotorGalleryController extends Controller
 
 
         $loanAmount = $motor->price - $request->down_payment;
-        $monthlyInstallment = $loanAmount / $request->tenor;
+        $interestRate = 0.015; // 1.5% bunga flat per bulan
+        $totalInterest = $loanAmount * $interestRate * $request->tenor;
+        $monthlyInstallment = ($loanAmount + $totalInterest) / $request->tenor;
 
 
         CreditDetail::create([
@@ -255,6 +293,7 @@ class MotorGalleryController extends Controller
             'down_payment' => $request->down_payment,
             'tenor' => $request->tenor,
             'monthly_installment' => $monthlyInstallment,
+            'interest_rate' => $interestRate,
             'credit_status' => 'menunggu_persetujuan',
         ]);
 
@@ -371,6 +410,18 @@ class MotorGalleryController extends Controller
         $transaction->update(['status' => 'menunggu_persetujuan']);
         if ($transaction->creditDetail) {
             $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
+        }
+
+        // Notifikasi WA ke admin bahwa dokumen telah diunggah
+        try {
+            $adminPhone = config('services.fonnte.admin_phone');
+            if ($adminPhone) {
+                $transaction->load('motor');
+                $adminMsg = "*[ADMIN] Dokumen Kredit Diunggah*\n\nPelanggan: {$transaction->customer_name}\nUnit: {$transaction->motor->name}\nOrder ID: #{$transaction->id}\n\nSilakan cek & verifikasi dokumen di dashboard admin.";
+                \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Notification Error (upload docs): ' . $e->getMessage());
         }
 
         return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
@@ -490,16 +541,16 @@ class MotorGalleryController extends Controller
     public function search(Request $request): JsonResponse
     {
         $query = $request->get('q');
-        
+
         if (empty($query)) {
             return response()->json([]);
         }
 
-        $motors = Motor::where(function($q) use ($query) {
-                $q->where('name', 'LIKE', "%{$query}%")
-                  ->orWhere('brand', 'LIKE', "%{$query}%")
-                  ->orWhere('model', 'LIKE', "%{$query}%");
-            })
+        $motors = Motor::where(function ($q) use ($query) {
+            $q->where('name', 'LIKE', "%{$query}%")
+                ->orWhere('brand', 'LIKE', "%{$query}%")
+                ->orWhere('model', 'LIKE', "%{$query}%");
+        })
             ->where('tersedia', true)
             ->with(['promotions'])
             ->limit(8)

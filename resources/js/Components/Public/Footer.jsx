@@ -1,164 +1,109 @@
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import Logo from "./Logo";
 import {
     Facebook,
     Instagram,
-    Twitter,
     Youtube,
     Mail,
     Phone,
     MapPin,
-    ArrowRight,
-    Bike,
-    ShieldCheck,
-    CreditCard,
     ChevronRight,
+    ShieldCheck,
 } from "lucide-react";
 
 export default function Footer() {
+    const {
+        props: { leasingProviders = [] },
+    } = usePage();
     const currentYear = new Date().getFullYear();
 
-    const footerLinks = {
+    const links = {
         produk: [
-            { label: "Katalog Motor", href: "/motors", icon: Bike },
-            { label: "Promo Spesial", href: "#", icon: null },
-            { label: "Simulasi Kredit", href: "#", icon: CreditCard },
-            {
-                label: "Lacak Pesanan",
-                href: route("motors.user-transactions"),
-                icon: ShieldCheck,
-            },
-        ],
-        perusahaan: [
-            { label: "Tentang SRB Motors", href: "/about" },
-            { label: "Hubungi Kami", href: "/#contact" },
-            { label: "Syarat & Ketentuan", href: "#" },
-            { label: "Kebijakan Privasi", href: "#" },
+            { label: "Katalog Motor", href: "/motors" },
+            { label: "Simulasi Kredit", href: "#" },
+            { label: "Pesanan Saya", href: route("motors.user-transactions") },
         ],
         bantuan: [
-            { label: "Pusat Bantuan (FAQ)", href: "#" },
+            { label: "Hubungi Kami", href: "/#contact" },
             { label: "Panduan Pemesanan", href: "#" },
-            { label: "Persyaratan Kredit", href: "#" },
-            { label: "Lokasi Dealer", href: "#" },
+            { label: "Syarat & Ketentuan", href: "#" },
+            { label: "Kebijakan Privasi", href: "#" },
         ],
     };
 
     return (
-        <footer className="relative bg-slate-950 text-gray-300 overflow-hidden pt-20 border-t border-slate-900">
-            {/* Background Aesthetic Glows */}
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-            <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
-
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
-                    {/* Brand Section */}
-                    <div className="md:col-span-4 space-y-8">
+        <footer className="bg-gradient-to-b from-[#0d1b2e] to-[#060d18] text-gray-400 border-t border-blue-900/30">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+                    {/* Brand + Contact */}
+                    <div className="md:col-span-4 space-y-6">
                         <Link href="/" className="inline-block">
-                            <Logo className="h-10 text-white brightness-110 drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]" />
+                            <Logo className="h-9" dark={true} />
                         </Link>
-                        <p className="text-gray-400 text-[15px] leading-relaxed max-w-sm">
-                            Menghadirkan pengalaman premium membeli motor impian
-                            Anda. Transparan, aman, dan tanpa proses
-                            berbelit-belit.
+                        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+                            Dealer motor terpercaya dengan proses kredit mudah,
+                            transparan, dan cepat.
                         </p>
-
-                        {/* Contact Info */}
-                        <div className="space-y-5 pt-2">
-                            <div className="flex items-start gap-4 group cursor-pointer">
-                                <div className="w-10 h-10 rounded-xl bg-gray-800/80 border border-gray-700/50 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-500 transition-all duration-300 shadow-lg">
-                                    <MapPin className="w-4 h-4" />
-                                </div>
-                                <div>
-                                    <h5 className="text-gray-200 font-bold text-sm tracking-wide">
-                                        Showroom Pusat
-                                    </h5>
-                                    <p className="text-sm text-gray-400 mt-1 leading-relaxed">
-                                        Jl. Raya Utama No. 123, <br />
-                                        Jakarta Timur, Indonesia
-                                    </p>
-                                </div>
+                        <div className="space-y-3">
+                            <div className="flex items-start gap-3">
+                                <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                                <span className="text-sm text-gray-500">
+                                    Jl. Raya Utama No. 123, Jakarta Timur
+                                </span>
                             </div>
-                            <div className="flex items-start gap-4 group cursor-pointer">
-                                <div className="w-10 h-10 rounded-xl bg-gray-800/80 border border-gray-700/50 flex items-center justify-center text-blue-400 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-500 transition-all duration-300 shadow-lg">
-                                    <Phone className="w-4 h-4" />
-                                </div>
-                                <div>
-                                    <h5 className="text-gray-200 font-bold text-sm tracking-wide">
-                                        Layanan Pelanggan (24/7)
-                                    </h5>
-                                    <p className="text-sm text-gray-400 mt-1 font-medium tracking-wider">
-                                        +62 812 3456 7890
-                                    </p>
-                                </div>
+                            <div className="flex items-center gap-3">
+                                <Phone className="w-4 h-4 text-blue-400 shrink-0" />
+                                <a
+                                    href="https://wa.me/6281234567890"
+                                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                                >
+                                    +62 812 3456 7890
+                                </a>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+                                <a
+                                    href="mailto:halo@srbmotor.id"
+                                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                                >
+                                    halo@srbmotor.id
+                                </a>
                             </div>
                         </div>
                     </div>
 
-                    {/* Quick Links Grid */}
-                    <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-12">
-                        {/* Box 1 */}
-                        <div className="space-y-6">
-                            <h4 className="text-white font-black tracking-[0.2em] text-[10px] uppercase relative inline-block">
-                                Jelajahi
-                                <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></span>
+                    {/* Quick Links */}
+                    <div className="md:col-span-4 grid grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">
+                                Produk
                             </h4>
-                            <ul className="space-y-4">
-                                {footerLinks.produk.map((link, i) => {
-                                    const Icon = link.icon;
-                                    return (
-                                        <li key={i}>
-                                            <Link
-                                                href={link.href}
-                                                className="text-[14px] text-gray-400 font-medium hover:text-white hover:translate-x-1.5 flex items-center gap-2 transition-all duration-300 group"
-                                            >
-                                                {Icon ? (
-                                                    <Icon className="w-4 h-4 text-gray-600 group-hover:text-blue-500 transition-colors" />
-                                                ) : (
-                                                    <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-blue-500 transition-colors" />
-                                                )}
-                                                {link.label}
-                                            </Link>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-
-                        {/* Box 2 */}
-                        <div className="space-y-6">
-                            <h4 className="text-white font-black tracking-[0.2em] text-[10px] uppercase relative inline-block">
-                                Perusahaan
-                                <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></span>
-                            </h4>
-                            <ul className="space-y-4">
-                                {footerLinks.perusahaan.map((link, i) => (
+                            <ul className="space-y-3">
+                                {links.produk.map((link, i) => (
                                     <li key={i}>
-                                        <a
+                                        <Link
                                             href={link.href}
-                                            className="text-[14px] text-gray-400 font-medium hover:text-white hover:translate-x-1.5 flex items-center gap-2 transition-all duration-300 group"
+                                            className="text-sm text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors group"
                                         >
-                                            <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-blue-500 transition-colors" />
+                                            <ChevronRight className="w-3 h-3 text-blue-800 group-hover:text-blue-400 transition-colors" />
                                             {link.label}
-                                        </a>
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
                         </div>
-
-                        {/* Box 3 */}
-                        <div className="space-y-6 col-span-2 md:col-span-1">
-                            <h4 className="text-white font-black tracking-[0.2em] text-[10px] uppercase relative inline-block">
+                        <div className="space-y-4">
+                            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">
                                 Bantuan
-                                <span className="absolute -bottom-2 left-0 w-8 h-1 bg-primary rounded-full shadow-[0_0_10px_rgba(37,99,235,0.5)]"></span>
                             </h4>
-                            <ul className="space-y-4">
-                                {footerLinks.bantuan.map((link, i) => (
+                            <ul className="space-y-3">
+                                {links.bantuan.map((link, i) => (
                                     <li key={i}>
                                         <a
                                             href={link.href}
-                                            className="text-[14px] text-gray-400 font-medium hover:text-white hover:translate-x-1.5 flex items-center gap-2 transition-all duration-300 group"
+                                            className="text-sm text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors group"
                                         >
-                                            <ChevronRight className="w-3.5 h-3.5 text-gray-600 group-hover:text-blue-500 transition-colors" />
+                                            <ChevronRight className="w-3 h-3 text-blue-800 group-hover:text-blue-400 transition-colors" />
                                             {link.label}
                                         </a>
                                     </li>
@@ -166,73 +111,94 @@ export default function Footer() {
                             </ul>
                         </div>
                     </div>
-                </div>
 
-                {/* Newsletter & Socials Glassmorphism Box */}
-                <div className="mt-20 p-8 rounded-[2rem] bg-slate-900/50 border border-white/5 backdrop-blur-md flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden group/box">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full group-hover/box:bg-primary/10 transition-colors"></div>
-
-                    <div className="space-y-2 relative z-10 text-center lg:text-left">
-                        <h4 className="text-white font-black text-xl font-display tracking-tight">
-                            Dapatkan Penawaran Eksklusif
+                    {/* Leasing Partners */}
+                    <div className="md:col-span-4 space-y-4">
+                        <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">
+                            Mitra Leasing
                         </h4>
-                        <p className="text-sm text-slate-400 font-medium">
-                            Jadilah yang pertama tahu promo motor terbaru.
-                        </p>
-                    </div>
-
-                    <div className="flex-grow max-w-md w-full relative z-10">
-                        <div className="flex items-center bg-slate-950 border border-white/10 rounded-2xl p-1.5 focus-within:ring-4 focus-within:ring-primary/20 focus-within:border-primary/50 transition-all">
-                            <div className="pl-4 text-gray-400">
-                                <Mail className="w-5 h-5" />
+                        {leasingProviders.length > 0 ? (
+                            <div className="grid grid-cols-3 gap-2">
+                                {leasingProviders.map((provider) => (
+                                    <div
+                                        key={provider.id}
+                                        title={provider.name}
+                                        className="bg-white rounded-lg p-2 flex items-center justify-center h-12 overflow-hidden"
+                                    >
+                                        {provider.logo_path ? (
+                                            <img
+                                                src={`/storage/${provider.logo_path}`}
+                                                alt={provider.name}
+                                                className="max-h-8 max-w-full object-contain"
+                                                onError={(e) => {
+                                                    e.target.style.display =
+                                                        "none";
+                                                    e.target.nextSibling.style.display =
+                                                        "block";
+                                                }}
+                                            />
+                                        ) : null}
+                                        <span
+                                            className="text-[9px] font-bold text-gray-700 text-center leading-tight px-1"
+                                            style={{
+                                                display: provider.logo_path
+                                                    ? "none"
+                                                    : "block",
+                                            }}
+                                        >
+                                            {provider.name}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
-                            <input
-                                type="email"
-                                placeholder="Masukkan alamat email..."
-                                className="w-full bg-transparent border-none text-white focus:ring-0 text-sm px-4 placeholder:text-gray-500"
-                            />
-                            <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-blue-600/25 flex-shrink-0">
-                                Berlangganan
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Socials */}
-                    <div className="flex items-center gap-3 relative z-10">
-                        {[Instagram, Facebook, Youtube].map((Icon, i) => (
-                            <a
-                                key={i}
-                                href="#"
-                                className="w-12 h-12 rounded-xl bg-gray-800/50 border border-gray-700/50 text-gray-400 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300 hover:-translate-y-1 shadow-md"
-                            >
-                                <Icon className="w-5 h-5" />
-                            </a>
-                        ))}
+                        ) : (
+                            <div className="grid grid-cols-3 gap-2">
+                                {[
+                                    "BAF",
+                                    "Astra Credit",
+                                    "FIF",
+                                    "ADIRA",
+                                    "WOM Finance",
+                                    "BCA Finance",
+                                ].map((name, i) => (
+                                    <div
+                                        key={i}
+                                        className="bg-white/5 border border-white/10 rounded-lg p-2 flex items-center justify-center h-12"
+                                    >
+                                        <span className="text-[9px] font-bold text-gray-500 text-center leading-tight">
+                                            {name}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        <p className="text-[11px] text-gray-600 mt-2">
+                            Tersedia berbagai pilihan leasing terpercaya.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Bottom Bar */}
-            <div className="bg-black py-8 border-t border-white/5">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p className="text-sm text-gray-500 font-medium">
-                            &copy; {currentYear} SRB Motors. Hak Cipta
-                            Dilindungi.
-                        </p>
-                        <div className="flex items-center gap-3 sm:gap-6 opacity-60">
-                            {[
-                                "Kredit Mudah",
-                                "OJK Verified",
-                                "Aman Dipercaya",
-                            ].map((text, i) => (
-                                <span
+            {/* Bottom bar */}
+            <div className="border-t border-blue-900/20 py-5">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <p className="text-xs text-gray-600">
+                        &copy; {currentYear} SRB Motors. Hak Cipta Dilindungi.
+                    </p>
+                    <div className="flex items-center gap-4">
+                        <span className="text-xs text-gray-600 flex items-center gap-1">
+                            <ShieldCheck className="w-3 h-3 text-blue-500" />{" "}
+                            OJK Verified
+                        </span>
+                        <div className="flex items-center gap-2">
+                            {[Instagram, Facebook, Youtube].map((Icon, i) => (
+                                <a
                                     key={i}
-                                    className="text-[11px] font-black uppercase tracking-[0.1em] text-gray-400 flex items-center gap-1.5"
+                                    href="#"
+                                    className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-gray-500 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
                                 >
-                                    <ShieldCheck className="w-3 h-3 text-gray-500" />
-                                    {text}
-                                </span>
+                                    <Icon className="w-3.5 h-3.5" />
+                                </a>
                             ))}
                         </div>
                     </div>

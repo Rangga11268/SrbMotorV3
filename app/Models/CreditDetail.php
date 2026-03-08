@@ -21,6 +21,7 @@ class CreditDetail extends Model
         'down_payment',
         'tenor',
         'monthly_installment',
+        'interest_rate',
         'credit_status',
         'approved_amount',
     ];
@@ -51,7 +52,7 @@ class CreditDetail extends Model
     {
         return $this->hasMany(Document::class);
     }
-    
+
     /**
      * Check if all required documents are uploaded
      */
@@ -59,16 +60,16 @@ class CreditDetail extends Model
     {
         $requiredTypes = ['KTP', 'KK', 'SLIP_GAJI'];
         $uploadedTypes = $this->documents->pluck('document_type')->toArray();
-        
+
         foreach ($requiredTypes as $type) {
             if (!in_array($type, $uploadedTypes)) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Cascade delete to documents when credit detail is deleted
      */
@@ -98,7 +99,7 @@ class CreditDetail extends Model
             'APPROVED' => 'Disetujui',
             'REJECTED' => 'Ditolak'
         ];
-        
+
         return $statusMap[$this->credit_status] ?? $this->credit_status;
     }
 }

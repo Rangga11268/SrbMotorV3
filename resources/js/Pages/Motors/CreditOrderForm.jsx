@@ -53,10 +53,9 @@ export default function CreditOrderForm({ motor, auth }) {
 
         if (tenor > 0) {
             const loanAmount = Math.max(0, motor.price - dp);
-            // Simple calculation with 2% interest per month for simulation
-            const interest = 0.02 * tenor;
-            const totalLoan = loanAmount * (1 + interest);
-            const monthly = totalLoan / tenor;
+            const interestRate = 0.015; // 1.5% flat/bulan
+            const totalInterest = loanAmount * interestRate * tenor;
+            const monthly = (loanAmount + totalInterest) / tenor;
             setCalculatedInstallment(Math.round(monthly));
         } else {
             setCalculatedInstallment(0);
@@ -90,11 +89,12 @@ export default function CreditOrderForm({ motor, auth }) {
                                 <div className="bg-blue-600 p-8 text-white relative overflow-hidden">
                                     <div className="relative z-10">
                                         <h1 className="text-3xl font-black mb-2">
-                                            Simulasi & Pengajuan Kredit
+                                            Pengajuan Kredit
                                         </h1>
                                         <p className="text-blue-100 font-medium">
-                                            Lengkapi data untuk mendapatkan
-                                            simulasi cicilan motor impian Anda.
+                                            Lengkapi data di bawah untuk
+                                            mengajukan pembelian motor secara
+                                            kredit.
                                         </p>
                                     </div>
                                     <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
@@ -169,6 +169,37 @@ export default function CreditOrderForm({ motor, auth }) {
                                             </div>
                                         </div>
 
+                                        <div className="space-y-2">
+                                            <Label htmlFor="customer_occupation">
+                                                Pekerjaan
+                                            </Label>
+                                            <div className="relative">
+                                                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                <input
+                                                    id="customer_occupation"
+                                                    type="text"
+                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                    placeholder="Contoh: Karyawan Swasta, Wiraswasta"
+                                                    value={
+                                                        data.customer_occupation
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "customer_occupation",
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                            {errors.customer_occupation && (
+                                                <ErrorMessage
+                                                    message={
+                                                        errors.customer_occupation
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
                                                 <Label htmlFor="down_payment">
@@ -199,6 +230,20 @@ export default function CreditOrderForm({ motor, auth }) {
                                                         }
                                                     />
                                                 )}
+                                                <p className="text-xs text-gray-400 mt-1">
+                                                    Min. DP:{" "}
+                                                    {new Intl.NumberFormat(
+                                                        "id-ID",
+                                                        {
+                                                            style: "currency",
+                                                            currency: "IDR",
+                                                            minimumFractionDigits: 0,
+                                                        },
+                                                    ).format(
+                                                        motor.price * 0.2,
+                                                    )}{" "}
+                                                    (20% harga)
+                                                </p>
                                             </div>
 
                                             <div className="space-y-2">
@@ -281,7 +326,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 id="notes"
                                                 rows="4"
                                                 className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 resize-none"
-                                                placeholder="Contoh: Pekerjaan, domisili, atau permintaan simulasi lainnya..."
+                                                placeholder="Contoh: keterangan tambahan atau pertanyaan untuk admin..."
                                                 value={data.notes}
                                                 onChange={(e) =>
                                                     setData(
@@ -302,10 +347,10 @@ export default function CreditOrderForm({ motor, auth }) {
                                             >
                                                 {processing
                                                     ? "Memproses..."
-                                                    : "Ajukan Simulasi Kredit"}
+                                                    : "Ajukan Kredit"}
                                             </Button>
                                             <p className="mt-4 text-center text-xs text-gray-400 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
-                                                <ShieldCheck className="w-4 h-4 text-green-500" />{" "}
+                                                <ShieldCheck className="w-4 h-4 text-blue-500" />{" "}
                                                 Pengajuan Cepat & Syarat Mudah
                                             </p>
                                         </div>
@@ -358,15 +403,16 @@ export default function CreditOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="pt-4 mt-2">
-                                            <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-100 flex items-start gap-3">
-                                                <div className="w-8 h-8 bg-yellow-600 rounded-lg flex items-center justify-center text-white shrink-0 shadow-sm shadow-yellow-100">
+                                            <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-start gap-3">
+                                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0">
                                                     <Info className="w-4 h-4" />
                                                 </div>
-                                                <p className="text-xs leading-relaxed text-yellow-800 font-medium">
-                                                    Simulasi ini bersifat
-                                                    estimasi. Leasing resmi yang
+                                                <p className="text-xs leading-relaxed text-blue-800 font-medium">
+                                                    Estimasi cicilan bersifat
+                                                    indikatif (bunga 1.5%/bulan
+                                                    flat). Leasing resmi yang
                                                     bekerja sama dengan{" "}
-                                                    <span className="font-bold text-yellow-900">
+                                                    <span className="font-bold text-blue-900">
                                                         SRB Motors
                                                     </span>{" "}
                                                     akan memberikan hitungan
