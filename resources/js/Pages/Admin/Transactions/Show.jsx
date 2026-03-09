@@ -155,9 +155,30 @@ export default function Show({ transaction: initialTransaction }) {
 
             setTransaction((prev) => ({ ...prev, status: newStatus }));
             setModalConfig((prev) => ({ ...prev, isOpen: false }));
-            toast.success("Status berhasil diperbarui secara instan");
+
+            Swal.fire({
+                title: "Berhasil!",
+                text: "Status transaksi telah diperbarui.",
+                icon: "success",
+                timer: 2000,
+                showConfirmButton: false,
+                background: "#ffffff",
+                customClass: {
+                    title: "text-success fw-bold",
+                    popup: "rounded-4 shadow-lg border-0",
+                },
+            });
         } catch (error) {
-            toast.error("Gagal memperbarui status");
+            Swal.fire({
+                title: "Gagal!",
+                text: "Terjadi kesalahan saat memperbarui status.",
+                icon: "error",
+                background: "#ffffff",
+                customClass: {
+                    title: "text-danger fw-bold",
+                    popup: "rounded-4 shadow-lg border-0",
+                },
+            });
         } finally {
             setProcessingAction(false);
         }

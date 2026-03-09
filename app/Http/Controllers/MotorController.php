@@ -36,9 +36,16 @@ class MotorController extends Controller
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 10);
 
+        if (request()->ajax()) {
+            return response()->json([
+                'motors' => $motors,
+                'filters' => request()->all(['search', 'brand', 'status']),
+            ]);
+        }
+
         return \Inertia\Inertia::render('Admin/Motors/Index', [
             'motors' => $motors,
-            'filters' => request()->all(['search', 'tersedia']),
+            'filters' => request()->all(['search', 'brand', 'status']),
         ]);
     }
 

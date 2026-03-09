@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import axios from "axios";
 import Modal from "@/Components/Modal";
 import {
     CCard,
@@ -33,9 +34,29 @@ import {
 } from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
-export default function Index({ users, filters }) {
+export default function Index({ users: initialUsers, filters }) {
+    const [localUsers, setLocalUsers] = useState(initialUsers);
     const [search, setSearch] = useState(filters.search || "");
     const [isFirstRender, setIsFirstRender] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const fetchUsers = async (currentFilters) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(route("admin.users.index"), {
+                params: currentFilters,
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            if (response.data.users) {
+                setLocalUsers(response.data.users);
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const [modalConfig, setModalConfig] = useState({
         isOpen: false,
         type: "danger",
@@ -51,13 +72,18 @@ export default function Index({ users, filters }) {
             setIsFirstRender(false);
             return;
         }
+
+        const params = {};
+        if (search) params.search = search;
+
         const delayDebounceFn = setTimeout(() => {
-            router.get(
-                route("admin.users.index"),
-                { search },
-                { preserveState: true, replace: true },
-            );
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchUsers(params);
         }, 500);
+
         return () => clearTimeout(delayDebounceFn);
     }, [search]);
 
@@ -165,7 +191,7 @@ export default function Index({ users, filters }) {
                 <div className="d-flex align-items-center gap-2 bg-body-tertiary rounded-3 px-3 py-2">
                     <CIcon icon={cilPeople} className="text-primary" />
                     <span className="text-body-secondary small">Total:</span>
-                    <span className="fw-bold">{users.total}</span>
+                    <span className="fw-bold">{localUsers.total}</span>
                 </div>
             </div>
 
@@ -217,8 +243,8 @@ export default function Index({ users, filters }) {
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {users.data.length > 0 ? (
-                                users.data.map((user) => (
+                            {localUsers.data.length > 0 ? (
+                                localUsers.data.map((user) => (
                                     <CTableRow
                                         key={user.id}
                                         className="align-middle"
@@ -347,10 +373,10 @@ export default function Index({ users, filters }) {
                     </CTable>
                 </CCardBody>
 
-                {users.links.length > 3 && (
+                {localUsers.links.length > 3 && (
                     <div className="card-footer d-flex justify-content-center py-3">
                         <CPagination>
-                            {users.links.map((link, index) => {
+                            {localUsers.links.map((link, index) => {
                                 if (!link.url && !link.label) return null;
                                 return (
                                     <CPaginationItem

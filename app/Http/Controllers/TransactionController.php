@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
@@ -25,7 +26,7 @@ class TransactionController extends Controller
     }
 
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request): \Inertia\Response|JsonResponse
     {
         $query = Transaction::with(['user', 'motor', 'creditDetail.documents'])
             ->orderBy('created_at', 'desc');
@@ -65,6 +66,15 @@ class TransactionController extends Controller
 
         $transactionTypes = Transaction::distinct('transaction_type')->pluck('transaction_type');
         $statuses = Transaction::distinct('status')->pluck('status');
+
+        if ($request->ajax()) {
+            return response()->json([
+                'transactions' => $transactions,
+                'transactionTypes' => $transactionTypes,
+                'statuses' => $statuses,
+                'filters' => $request->all(['search', 'type', 'status']),
+            ]);
+        }
 
         return \Inertia\Inertia::render('Admin/Transactions/Index', [
             'transactions' => $transactions,

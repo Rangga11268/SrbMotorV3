@@ -19,6 +19,16 @@ class UserController extends Controller
         
         $users = $query->paginate(10);
         
+        if (request()->ajax()) {
+            return response()->json([
+                'users' => $users,
+                'filters' => [
+                    'search' => request('search'),
+                    'current_user_id' => auth()->id(),
+                ],
+            ]);
+        }
+        
         return \Inertia\Inertia::render('Admin/Users/Index', [
             'users' => $users,
             'filters' => [

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import axios from "axios";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import {
@@ -35,24 +36,50 @@ import {
     cilBike,
 } from "@coreui/icons";
 
-export default function Index({ motors, filters }) {
+export default function Index({ motors: initialMotors, filters }) {
+    const [localMotors, setLocalMotors] = useState(initialMotors);
     const [search, setSearch] = useState(filters.search || "");
     const [brand, setBrand] = useState(filters.brand || "");
     const [status, setStatus] = useState(filters.status || "");
     const [isFirstRender, setIsFirstRender] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const fetchMotors = async (currentFilters) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(route("admin.motors.index"), {
+                params: currentFilters,
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            if (response.data.motors) {
+                setLocalMotors(response.data.motors);
+            }
+        } catch (error) {
+            console.error("Error fetching motors:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (isFirstRender) {
             setIsFirstRender(false);
             return;
         }
+
+        const params = {};
+        if (search) params.search = search;
+        if (brand) params.brand = brand;
+        if (status) params.status = status;
+
         const delayDebounceFn = setTimeout(() => {
-            router.get(
-                route("admin.motors.index"),
-                { search, brand, status },
-                { preserveState: true, replace: true },
-            );
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchMotors(params);
         }, 500);
+
         return () => clearTimeout(delayDebounceFn);
     }, [search, brand, status]);
 
@@ -178,8 +205,8 @@ export default function Index({ motors, filters }) {
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {motors.data.length > 0 ? (
-                                motors.data.map((motor) => (
+                            {localMotors.data.length > 0 ? (
+                                localMotors.data.map((motor) => (
                                     <CTableRow
                                         key={motor.id}
                                         className="align-middle"
@@ -380,10 +407,10 @@ export default function Index({ motors, filters }) {
                 </CCardBody>
 
                 {/* Pagination */}
-                {motors.links.length > 3 && (
+                {localMotors.links.length > 3 && (
                     <div className="card-footer d-flex justify-content-center py-3">
                         <CPagination>
-                            {motors.links.map((link, index) => {
+                            {localMotors.links.map((link, index) => {
                                 if (!link.url && !link.label) return null;
                                 return (
                                     <CPaginationItem

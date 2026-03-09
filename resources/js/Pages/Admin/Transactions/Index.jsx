@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import axios from "axios";
 import {
     CCard,
     CCardBody,
@@ -20,6 +21,7 @@ import {
     CFormLabel,
     CFormTextarea,
     CInputGroupText,
+    CAvatar,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -34,28 +36,65 @@ import {
 } from "@coreui/icons";
 
 export default function Index({
-    transactions,
+    transactions: initialTransactions,
     filters,
     transactionTypes,
     statuses,
 }) {
+    const [localTransactions, setLocalTransactions] =
+        useState(initialTransactions);
     const [search, setSearch] = useState(filters.search || "");
     const [type, setType] = useState(filters.type || "");
     const [status, setStatus] = useState(filters.status || "");
     const [isFirstRender, setIsFirstRender] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const fetchTransactions = async (currentFilters) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                route("admin.transactions.index"),
+                {
+                    params: currentFilters,
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                },
+            );
+
+            // If the response is from Inertia, it might return the whole page object
+            // but we want just the props if it's an XHR request that's handled as such.
+            // However, typically Inertia handles this. If we use plain axios, we need
+            // the controller to return JSON.
+
+            if (response.data.transactions) {
+                setLocalTransactions(response.data.transactions);
+            }
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (isFirstRender) {
             setIsFirstRender(false);
             return;
         }
+
+        const params = {};
+        if (search) params.search = search;
+        if (type) params.type = type;
+        if (status) params.status = status;
+
         const delayDebounceFn = setTimeout(() => {
-            router.get(
-                route("admin.transactions.index"),
-                { search, type, status },
-                { preserveState: true, replace: true },
-            );
+            // Update URL without full reload
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchTransactions(params);
         }, 500);
+
         return () => clearTimeout(delayDebounceFn);
     }, [search, type, status]);
 
@@ -237,8 +276,8 @@ export default function Index({
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {transactions.data.length > 0 ? (
-                                transactions.data.map((trx) => {
+                            {localTransactions.data.length > 0 ? (
+                                localTransactions.data.map((trx) => {
                                     const customerName =
                                         trx.customer_name ||
                                         trx.user?.name ||
@@ -446,10 +485,10 @@ export default function Index({
                 </CCardBody>
 
                 {/* Pagination */}
-                {transactions.links.length > 3 && (
+                {localTransactions.links.length > 3 && (
                     <div className="card-footer d-flex justify-content-center py-3">
                         <CPagination>
-                            {transactions.links.map((link, index) => {
+                            {localTransactions.links.map((link, index) => {
                                 if (!link.url && !link.label) return null;
                                 return (
                                     <CPaginationItem

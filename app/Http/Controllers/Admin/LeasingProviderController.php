@@ -10,11 +10,26 @@ use Inertia\Inertia;
 
 class LeasingProviderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $providers = LeasingProvider::latest()->paginate(10);
+        $query = LeasingProvider::query();
+
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $providers = $query->latest()->paginate(10);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'providers' => $providers,
+                'filters' => $request->only(['search'])
+            ]);
+        }
+
         return Inertia::render('Admin/LeasingProviders/Index', [
-            'providers' => $providers
+            'providers' => $providers,
+            'filters' => $request->only(['search'])
         ]);
     }
 

@@ -9,11 +9,27 @@ use Inertia\Inertia;
 
 class PromotionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $promotions = Promotion::latest()->paginate(10);
+        $query = Promotion::query();
+
+        if ($request->search) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('badge_text', 'like', '%' . $request->search . '%');
+        }
+
+        $promotions = $query->latest()->paginate(10);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'promotions' => $promotions,
+                'filters' => $request->only(['search'])
+            ]);
+        }
+
         return Inertia::render('Admin/Promotions/Index', [
-            'promotions' => $promotions
+            'promotions' => $promotions,
+            'filters' => $request->only(['search'])
         ]);
     }
 

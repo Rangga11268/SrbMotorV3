@@ -84,8 +84,32 @@ export default function EditCombined({ transaction, motors, users }) {
             route("admin.transactions.update", transaction.id),
             payload,
             {
-                onSuccess: () => toast.success("Data berhasil diperbarui"),
-                onError: () => toast.error("Gagal memperbarui data"),
+                onSuccess: () => {
+                    Swal.fire({
+                        title: "Berhasil!",
+                        text: "Data transaksi telah diperbarui.",
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false,
+                        background: "#ffffff",
+                        customClass: {
+                            title: "text-success fw-bold",
+                            popup: "rounded-4 shadow-lg border-0",
+                        },
+                    });
+                },
+                onError: () => {
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: "Mohon periksa kembali form Anda.",
+                        icon: "error",
+                        background: "#ffffff",
+                        customClass: {
+                            title: "text-danger fw-bold",
+                            popup: "rounded-4 shadow-lg border-0",
+                        },
+                    });
+                },
             },
         );
     };

@@ -17,10 +17,71 @@ import {
     CAvatar,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPlus, cilPencil, cilTrash, cilIndustry } from "@coreui/icons";
+import {
+    cilPlus,
+    cilPencil,
+    cilTrash,
+    cilIndustry,
+    cilSearch,
+    cilReload,
+} from "@coreui/icons";
 import Swal from "sweetalert2";
+import {
+    CFormInput,
+    CInputGroup,
+    CInputGroupText,
+    CPagination,
+    CPaginationItem,
+} from "@coreui/react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function Index({ providers }) {
+export default function Index({ providers: initialProviders, filters }) {
+    const [localProviders, setLocalProviders] = useState(initialProviders);
+    const [search, setSearch] = useState(filters?.search || "");
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const fetchProviders = async (currentFilters) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                route("admin.leasing-providers.index"),
+                {
+                    params: currentFilters,
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                },
+            );
+            if (response.data.providers) {
+                setLocalProviders(response.data.providers);
+            }
+        } catch (error) {
+            console.error("Error fetching providers:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const params = {};
+        if (search) params.search = search;
+
+        const delayDebounceFn = setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchProviders(params);
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search]);
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Apakah Anda yakin?",
@@ -66,6 +127,34 @@ export default function Index({ providers }) {
                             </Link>
                         </CCardHeader>
                         <CCardBody>
+                            <CRow className="mb-3 g-3">
+                                <CCol md={12}>
+                                    <CInputGroup>
+                                        <CInputGroupText>
+                                            <CIcon icon={cilSearch} size="sm" />
+                                        </CInputGroupText>
+                                        <CFormInput
+                                            placeholder="Cari nama leasing..."
+                                            value={search}
+                                            onChange={(e) =>
+                                                setSearch(e.target.value)
+                                            }
+                                        />
+                                        {search && (
+                                            <CButton
+                                                color="light"
+                                                onClick={() => setSearch("")}
+                                                className="d-flex align-items-center"
+                                            >
+                                                <CIcon
+                                                    icon={cilReload}
+                                                    size="sm"
+                                                />
+                                            </CButton>
+                                        )}
+                                    </CInputGroup>
+                                </CCol>
+                            </CRow>
                             <CTable
                                 align="middle"
                                 bordered
@@ -93,59 +182,65 @@ export default function Index({ providers }) {
                                     </CTableRow>
                                 </CTableHead>
                                 <CTableBody>
-                                    {providers.data.map((provider, index) => (
-                                        <CTableRow key={provider.id}>
-                                            <CTableDataCell className="text-center">
-                                                {index + 1}
-                                            </CTableDataCell>
-                                            <CTableDataCell className="font-weight-bold">
-                                                {provider.name}
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                                {provider.logo_path ? (
-                                                    <img
-                                                        src={provider.logo_path}
-                                                        alt={provider.name}
-                                                        height="30"
-                                                    />
-                                                ) : (
-                                                    <div className="bg-light p-2 rounded text-muted small d-inline-block">
-                                                        No Logo
-                                                    </div>
-                                                )}
-                                            </CTableDataCell>
-                                            <CTableDataCell className="text-center">
-                                                <Link
-                                                    href={route(
-                                                        "admin.leasing-providers.edit",
-                                                        provider.id,
+                                    {localProviders.data.map(
+                                        (provider, index) => (
+                                            <CTableRow key={provider.id}>
+                                                <CTableDataCell className="text-center">
+                                                    {index + 1}
+                                                </CTableDataCell>
+                                                <CTableDataCell className="font-weight-bold">
+                                                    {provider.name}
+                                                </CTableDataCell>
+                                                <CTableDataCell>
+                                                    {provider.logo_path ? (
+                                                        <img
+                                                            src={
+                                                                provider.logo_path
+                                                            }
+                                                            alt={provider.name}
+                                                            height="30"
+                                                        />
+                                                    ) : (
+                                                        <div className="bg-light p-2 rounded text-muted small d-inline-block">
+                                                            No Logo
+                                                        </div>
                                                     )}
-                                                >
+                                                </CTableDataCell>
+                                                <CTableDataCell className="text-center">
+                                                    <Link
+                                                        href={route(
+                                                            "admin.leasing-providers.edit",
+                                                            provider.id,
+                                                        )}
+                                                    >
+                                                        <CButton
+                                                            color="info"
+                                                            size="sm"
+                                                            className="me-2 text-white"
+                                                        >
+                                                            <CIcon
+                                                                icon={cilPencil}
+                                                            />
+                                                        </CButton>
+                                                    </Link>
                                                     <CButton
-                                                        color="info"
+                                                        color="danger"
                                                         size="sm"
-                                                        className="me-2 text-white"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                provider.id,
+                                                            )
+                                                        }
                                                     >
                                                         <CIcon
-                                                            icon={cilPencil}
+                                                            icon={cilTrash}
                                                         />
                                                     </CButton>
-                                                </Link>
-                                                <CButton
-                                                    color="danger"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        handleDelete(
-                                                            provider.id,
-                                                        )
-                                                    }
-                                                >
-                                                    <CIcon icon={cilTrash} />
-                                                </CButton>
-                                            </CTableDataCell>
-                                        </CTableRow>
-                                    ))}
-                                    {providers.data.length === 0 && (
+                                                </CTableDataCell>
+                                            </CTableRow>
+                                        ),
+                                    )}
+                                    {localProviders.data.length === 0 && (
                                         <CTableRow>
                                             <CTableDataCell
                                                 colSpan="4"
@@ -162,6 +257,32 @@ export default function Index({ providers }) {
                                     )}
                                 </CTableBody>
                             </CTable>
+
+                            {localProviders.links.length > 3 && (
+                                <div className="d-flex justify-content-center mt-4">
+                                    <CPagination>
+                                        {localProviders.links.map(
+                                            (link, index) => (
+                                                <CPaginationItem
+                                                    key={index}
+                                                    active={link.active}
+                                                    disabled={!link.url}
+                                                    href={link.url || "#"}
+                                                    as={
+                                                        link.url ? Link : "span"
+                                                    }
+                                                >
+                                                    <span
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: link.label,
+                                                        }}
+                                                    />
+                                                </CPaginationItem>
+                                            ),
+                                        )}
+                                    </CPagination>
+                                </div>
+                            )}
                         </CCardBody>
                     </CCard>
                 </CCol>

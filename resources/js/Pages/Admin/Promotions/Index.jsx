@@ -17,10 +17,67 @@ import {
     CBadge,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPlus, cilPencil, cilTrash } from "@coreui/icons";
+import {
+    cilPlus,
+    cilPencil,
+    cilTrash,
+    cilSearch,
+    cilReload,
+} from "@coreui/icons";
 import Swal from "sweetalert2";
+import {
+    CFormInput,
+    CInputGroup,
+    CInputGroupText,
+    CPagination,
+    CPaginationItem,
+} from "@coreui/react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function Index({ promotions }) {
+export default function Index({ promotions: initialPromotions, filters }) {
+    const [localPromotions, setLocalPromotions] = useState(initialPromotions);
+    const [search, setSearch] = useState(filters?.search || "");
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const fetchPromotions = async (currentFilters) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(route("admin.promotions.index"), {
+                params: currentFilters,
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            if (response.data.promotions) {
+                setLocalPromotions(response.data.promotions);
+            }
+        } catch (error) {
+            console.error("Error fetching promotions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const params = {};
+        if (search) params.search = search;
+
+        const delayDebounceFn = setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchPromotions(params);
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search]);
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Apakah Anda yakin?",
