@@ -113,7 +113,7 @@ class TransactionController extends Controller
     {
         $transaction->load(['creditDetail', 'user', 'motor']);
 
-        return \Inertia\Inertia::render('Admin/Transactions/Edit', [
+        return \Inertia\Inertia::render('Admin/Transactions/EditCombined', [
             'transaction' => $transaction,
             'users' => User::all(),
             'motors' => Motor::all(),
@@ -124,6 +124,11 @@ class TransactionController extends Controller
     public function update(UpdateTransactionRequest $request, Transaction $transaction): RedirectResponse
     {
         $this->transactionService->updateTransaction($transaction, $request->validated());
+
+        // For convenience, if this is a credit transaction and credit data is passed, update it too
+        if ($transaction->transaction_type === 'CREDIT' && $request->has('credit_detail')) {
+            $this->transactionService->handleCreditDetail($transaction, $request->credit_detail);
+        }
 
         return redirect()->route('admin.transactions.show', $transaction->id)
             ->with('success', 'Transaction updated successfully.');
@@ -153,8 +158,10 @@ class TransactionController extends Controller
 
         $transaction->load(['creditDetail', 'creditDetail.documents', 'user', 'motor']);
 
-        return \Inertia\Inertia::render('Admin/Transactions/EditCredit', [
+        return \Inertia\Inertia::render('Admin/Transactions/EditCombined', [
             'transaction' => $transaction,
+            'users' => User::all(),
+            'motors' => Motor::all(),
         ]);
     }
 
@@ -204,7 +211,11 @@ class TransactionController extends Controller
     {
         $statusMap = [
             'disetujui' => 'unit_preparation', // Credit approved -> prepare unit
-            'ditolak' => 'cancelled',          // Credit rejected -> cancel transaction
+            'ditolak' => 'cancelled',           // Credit rejected -> cancel transaction
+            'menunggu_persetujuan' => 'menunggu_persetujuan',
+            'data_tidak_valid' => 'data_tidak_valid',
+            'dikirim_ke_surveyor' => 'dikirim_ke_surveyor',
+            'jadwal_survey' => 'jadwal_survey',
         ];
 
         if (isset($statusMap[$creditStatus])) {

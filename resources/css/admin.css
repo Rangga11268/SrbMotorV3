@@ -393,3 +393,19 @@
         font-size: 1.25rem !important;
     }
 }
+
+/* ---- Custom Helper Classes ---- */
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.text-primary-subtle {
+    color: #cfe2ff;
+}
+
+.bg-primary-subtle {
+    background-color: #cfe2ff;
+}

@@ -82,24 +82,19 @@ class Transaction extends Model
         $statusMap = [
             'new_order' => 'Pesanan Baru',
             'waiting_payment' => 'Menunggu Pembayaran',
-            'payment_confirmed' => 'Pembayaran Dikonfirmasi',
+            'payment_confirmed' => 'Pembayaran Berhasil',
             'unit_preparation' => 'Persiapan Unit',
             'ready_for_delivery' => 'Siap Dikirim',
             'completed' => 'Selesai',
-            'menunggu_persetujuan' => 'Menunggu Persetujuan',
-            'data_tidak_valid' => 'Data Tidak Valid',
-            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'cancelled' => 'Dibatalkan',
+            'menunggu_persetujuan' => 'Verifikasi Berkas',
+            'data_tidak_valid' => 'Perbaiki Dokumen',
+            'dikirim_ke_surveyor' => 'Proses Surveyor',
             'jadwal_survey' => 'Jadwal Survey',
-            'disetujui' => 'Disetujui',
-            'ditolak' => 'Ditolak',
-            'PENDING_REVIEW' => 'Menunggu Persetujuan',
-            'DATA_INVALID' => 'Data Tidak Valid',
-            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
-            'SURVEY_SCHEDULED' => 'Jadwal Survey',
-            'APPROVED' => 'Disetujui',
-            'REJECTED' => 'Ditolak'
+            'disetujui' => 'Kredit Disetujui',
+            'ditolak' => 'Kredit Ditolak',
         ];
-        
+
         return $statusMap[$this->status] ?? $this->status;
     }
 
@@ -111,8 +106,17 @@ class Transaction extends Model
         if (!$this->creditDetail) {
             return '';
         }
-        
-        return $statusMap[$this->creditDetail->credit_status] ?? $this->creditDetail->credit_status;
+
+        $creditMap = [
+            'menunggu_persetujuan' => 'Menunggu Persetujuan',
+            'data_tidak_valid' => 'Data Tidak Valid',
+            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
+            'jadwal_survey' => 'Jadwal Survey',
+            'disetujui' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+        ];
+
+        return $creditMap[$this->creditDetail->credit_status] ?? $this->creditDetail->credit_status;
     }
 
     /**

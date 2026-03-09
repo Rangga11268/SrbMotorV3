@@ -294,17 +294,17 @@ export default function Show({ transaction: initialTransaction }) {
             : [
                   {
                       value: "menunggu_persetujuan",
-                      label: "Menunggu Persetujuan",
+                      label: "Verifikasi Berkas",
                   },
                   {
                       value: "dikirim_ke_surveyor",
-                      label: "Dikirim ke Surveyor",
+                      label: "Proses Surveyor",
                   },
                   { value: "jadwal_survey", label: "Jadwal Survey" },
-                  { value: "disetujui", label: "Disetujui" },
-                  { value: "ditolak", label: "Ditolak" },
+                  { value: "disetujui", label: "Setujui Kredit (Unit Prep)" },
+                  { value: "ditolak", label: "Tolak Kredit (Batal)" },
                   { value: "completed", label: "Selesai" },
-                  { value: "data_tidak_valid", label: "Data Tidak Valid" },
+                  { value: "data_tidak_valid", label: "Perbaiki Dokumen" },
               ];
 
     return (
@@ -337,20 +337,8 @@ export default function Show({ transaction: initialTransaction }) {
                         className="btn btn-sm btn-outline-warning d-flex align-items-center gap-2"
                     >
                         <CIcon icon={cilPencil} size="sm" />
-                        Edit Umum
+                        Edit Transaksi
                     </Link>
-                    {transaction.transaction_type === "CREDIT" && (
-                        <Link
-                            href={route(
-                                "admin.transactions.editCredit",
-                                transaction.id,
-                            )}
-                            className="btn btn-sm btn-outline-info d-flex align-items-center gap-2"
-                        >
-                            <CIcon icon={cilCreditCard} size="sm" />
-                            Edit Kredit
-                        </Link>
-                    )}
                     <CBadge
                         color={getStatusColor(transaction.status)}
                         shape="rounded-pill"

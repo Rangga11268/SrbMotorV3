@@ -21,6 +21,7 @@ import {
     CPagination,
     CPaginationItem,
     CAvatar,
+    CFormLabel,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -69,30 +70,23 @@ export default function Index({
     const getStatusBadge = (status) => {
         const map = {
             completed: { color: "success", label: "Selesai" },
-            approved: { color: "success", label: "Disetujui" },
-            disetujui: { color: "success", label: "Disetujui" },
-            ready_for_delivery: { color: "success", label: "Siap Kirim" },
             payment_confirmed: {
-                color: "info",
-                label: "Pembayaran Dikonfirmasi",
+                color: "success",
+                label: "Pembayaran Berhasil",
             },
-            lunas: { color: "success", label: "Lunas" },
-            pending: { color: "warning", label: "Pending" },
+            unit_preparation: { color: "info", label: "Persiapan Unit" },
+            ready_for_delivery: { color: "primary", label: "Siap Dikirim" },
+            new_order: { color: "warning", label: "Pesanan Baru" },
+            waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
             menunggu_persetujuan: {
                 color: "warning",
-                label: "Menunggu Persetujuan",
+                label: "Verifikasi Berkas",
             },
-            new_order: { color: "info", label: "Order Baru" },
-            waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
-            unit_preparation: { color: "info", label: "Persiapan Unit" },
-            dikirim_ke_surveyor: {
-                color: "info",
-                label: "Dikirim ke Surveyor",
-            },
-            jadwal_survey: { color: "info", label: "Jadwal Survey" },
-            rejected: { color: "danger", label: "Ditolak" },
-            ditolak: { color: "danger", label: "Ditolak" },
-            data_tidak_valid: { color: "danger", label: "Data Tidak Valid" },
+            data_tidak_valid: { color: "danger", label: "Perbaiki Dokumen" },
+            dikirim_ke_surveyor: { color: "info", label: "Proses Surveyor" },
+            jadwal_survey: { color: "primary", label: "Jadwal Survey" },
+            disetujui: { color: "success", label: "Kredit Disetujui" },
+            ditolak: { color: "danger", label: "Kredit Ditolak" },
             cancelled: { color: "danger", label: "Dibatalkan" },
         };
         const badge = map[status] || {
@@ -103,7 +97,11 @@ export default function Index({
                     .replace(/\b\w/g, (l) => l.toUpperCase()) || "N/A",
         };
         return (
-            <CBadge color={badge.color} shape="rounded-pill">
+            <CBadge
+                color={badge.color}
+                shape="rounded-pill"
+                className="px-3 py-1"
+            >
                 {badge.label}
             </CBadge>
         );
@@ -119,6 +117,13 @@ export default function Index({
             .toUpperCase();
     };
 
+    const formatRupiah = (n) =>
+        new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(n || 0);
+
     return (
         <AdminLayout title="Manajemen Transaksi">
             {/* Header */}
@@ -126,12 +131,13 @@ export default function Index({
                 <div>
                     <h2 className="h4 fw-bold mb-1">Daftar Transaksi</h2>
                     <p className="text-body-secondary mb-0 small">
-                        Kelola seluruh data transaksi pelanggan
+                        Kelola seluruh data transaksi pelanggan dalam satu
+                        dashboard
                     </p>
                 </div>
                 <Link
                     href={route("admin.transactions.create")}
-                    className="btn btn-primary d-flex align-items-center gap-2"
+                    className="btn btn-primary d-flex align-items-center gap-2 px-4 shadow-sm"
                 >
                     <CIcon icon={cilPlus} size="sm" />
                     Tambah Transaksi
@@ -139,22 +145,29 @@ export default function Index({
             </div>
 
             {/* Filter Card */}
-            <CCard className="mb-4">
+            <CCard className="mb-4 border-0 shadow-sm">
                 <CCardBody>
                     <CRow className="g-3 align-items-end">
                         <CCol md={4}>
+                            <CFormLabel className="small text-body-secondary">
+                                Cari Transaksi
+                            </CFormLabel>
                             <CInputGroup>
-                                <CInputGroupText>
+                                <CInputGroupText className="bg-transparent border-end-0">
                                     <CIcon icon={cilSearch} size="sm" />
                                 </CInputGroupText>
                                 <CFormInput
-                                    placeholder="Cari ID / nama pelanggan..."
+                                    className="border-start-0"
+                                    placeholder="ID / nama pelanggan..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </CInputGroup>
                         </CCol>
                         <CCol md={3}>
+                            <CFormLabel className="small text-body-secondary">
+                                Tipe
+                            </CFormLabel>
                             <CFormSelect
                                 value={type}
                                 onChange={(e) => setType(e.target.value)}
@@ -162,12 +175,17 @@ export default function Index({
                                 <option value="">Semua Tipe</option>
                                 {transactionTypes.map((t) => (
                                     <option key={t} value={t}>
-                                        {t}
+                                        {t === "CASH"
+                                            ? "💵 Cash / Tunai"
+                                            : "💳 Kredit"}
                                     </option>
                                 ))}
                             </CFormSelect>
                         </CCol>
                         <CCol md={3}>
+                            <CFormLabel className="small text-body-secondary">
+                                Status
+                            </CFormLabel>
                             <CFormSelect
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
@@ -201,17 +219,20 @@ export default function Index({
             </CCard>
 
             {/* Data Table */}
-            <CCard>
+            <CCard className="border-0 shadow-sm overflow-hidden">
                 <CCardBody className="p-0">
                     <CTable hover responsive className="mb-0">
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
-                                <CTableHeaderCell>ID</CTableHeaderCell>
+                                <CTableHeaderCell className="ps-4">
+                                    No. Transaksi
+                                </CTableHeaderCell>
                                 <CTableHeaderCell>Pelanggan</CTableHeaderCell>
-                                <CTableHeaderCell>Unit</CTableHeaderCell>
-                                <CTableHeaderCell>Nominal</CTableHeaderCell>
-                                <CTableHeaderCell>Status</CTableHeaderCell>
-                                <CTableHeaderCell>Tanggal</CTableHeaderCell>
+                                <CTableHeaderCell>Unit Motor</CTableHeaderCell>
+                                <CTableHeaderCell>Total Bayar</CTableHeaderCell>
+                                <CTableHeaderCell>
+                                    Status Saat Ini
+                                </CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
                                 </CTableHeaderCell>
@@ -229,24 +250,27 @@ export default function Index({
                                     return (
                                         <CTableRow
                                             key={trx.id}
-                                            className="align-middle cursor-pointer"
-                                            onClick={() =>
-                                                router.visit(
-                                                    route(
-                                                        "admin.transactions.show",
-                                                        trx.id,
-                                                    ),
-                                                )
-                                            }
-                                            style={{ cursor: "pointer" }}
+                                            className="align-middle"
                                         >
-                                            <CTableDataCell>
-                                                <span className="fw-bold text-primary">
-                                                    #
-                                                    {trx.id
-                                                        .toString()
-                                                        .padStart(6, "0")}
-                                                </span>
+                                            <CTableDataCell className="ps-4">
+                                                <div className="d-flex flex-column">
+                                                    <span className="fw-bold text-primary">
+                                                        #
+                                                        {trx.id
+                                                            .toString()
+                                                            .padStart(6, "0")}
+                                                    </span>
+                                                    <span
+                                                        className="text-body-tertiary"
+                                                        style={{ fontSize: 10 }}
+                                                    >
+                                                        {new Date(
+                                                            trx.created_at,
+                                                        ).toLocaleDateString(
+                                                            "id-ID",
+                                                        )}
+                                                    </span>
+                                                </div>
                                             </CTableDataCell>
                                             <CTableDataCell>
                                                 <div className="d-flex align-items-center gap-2">
@@ -258,6 +282,7 @@ export default function Index({
                                                         }
                                                         textColor="white"
                                                         size="sm"
+                                                        className="fw-bold"
                                                     >
                                                         {getInitials(
                                                             customerName,
@@ -279,8 +304,8 @@ export default function Index({
                                                     <div
                                                         className="bg-body-tertiary rounded-2 overflow-hidden flex-shrink-0 d-flex align-items-center justify-content-center"
                                                         style={{
-                                                            width: 40,
-                                                            height: 40,
+                                                            width: 45,
+                                                            height: 45,
                                                         }}
                                                     >
                                                         {trx.motor
@@ -302,43 +327,42 @@ export default function Index({
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <div className="fw-medium small">
+                                                        <div className="fw-medium small pb-1">
                                                             {trx.motor?.name ||
                                                                 "Unit Dihapus"}
                                                         </div>
-                                                        <div
-                                                            className="text-body-tertiary"
+                                                        <CBadge
+                                                            color="primary-subtle"
+                                                            textColor="primary"
                                                             style={{
-                                                                fontSize: 11,
+                                                                fontSize: 9,
                                                             }}
                                                         >
                                                             {trx.motor?.brand ||
                                                                 "N/A"}
-                                                        </div>
+                                                        </CBadge>
                                                     </div>
                                                 </div>
                                             </CTableDataCell>
                                             <CTableDataCell>
-                                                <div className="fw-bold">
-                                                    Rp{" "}
-                                                    {new Intl.NumberFormat(
-                                                        "id-ID",
-                                                    ).format(trx.total_amount)}
+                                                <div className="fw-bold text-dark">
+                                                    {formatRupiah(
+                                                        trx.total_amount,
+                                                    )}
                                                 </div>
-                                                <CBadge
-                                                    color={
-                                                        isCash
-                                                            ? "success"
-                                                            : "info"
-                                                    }
-                                                    shape="rounded-pill"
-                                                    size="sm"
-                                                    className="mt-1"
-                                                >
-                                                    {isCash
-                                                        ? "Tunai"
-                                                        : "Kredit"}
-                                                </CBadge>
+                                                <div className="mt-1 d-flex align-items-center gap-1">
+                                                    <span
+                                                        className={`badge-dot bg-${isCash ? "success" : "info"}`}
+                                                    ></span>
+                                                    <span
+                                                        className="text-body-secondary"
+                                                        style={{ fontSize: 11 }}
+                                                    >
+                                                        {isCash
+                                                            ? "Tunai"
+                                                            : "Kredit"}
+                                                    </span>
+                                                </div>
                                             </CTableDataCell>
                                             <CTableDataCell>
                                                 <div className="d-flex flex-column gap-1">
@@ -346,48 +370,39 @@ export default function Index({
                                                     {trx.transaction_type ===
                                                         "CREDIT" &&
                                                         !trx.documents_complete && (
-                                                            <CBadge
-                                                                color="warning"
-                                                                shape="rounded-pill"
-                                                                className="d-flex align-items-center gap-1"
+                                                            <div
+                                                                className="text-danger d-flex align-items-center gap-1"
                                                                 style={{
-                                                                    width: "fit-content",
+                                                                    fontSize: 10,
                                                                 }}
                                                             >
                                                                 <CIcon
                                                                     icon={
                                                                         cilWarning
                                                                     }
-                                                                    size="xs"
+                                                                    size="custom-unit"
+                                                                    style={{
+                                                                        width: 10,
+                                                                    }}
                                                                 />
                                                                 Dokumen Belum
                                                                 Lengkap
-                                                            </CBadge>
+                                                            </div>
                                                         )}
                                                 </div>
                                             </CTableDataCell>
-                                            <CTableDataCell className="small text-body-secondary">
-                                                {new Date(
-                                                    trx.created_at,
-                                                ).toLocaleDateString("id-ID", {
-                                                    day: "numeric",
-                                                    month: "short",
-                                                    year: "numeric",
-                                                })}
-                                            </CTableDataCell>
-                                            <CTableDataCell
-                                                className="text-center"
-                                                onClick={(e) =>
-                                                    e.stopPropagation()
-                                                }
-                                            >
-                                                <div className="d-flex gap-1 justify-content-center">
+                                            <CTableDataCell className="text-center">
+                                                <div className="d-flex gap-2 justify-content-center">
                                                     <Link
                                                         href={route(
                                                             "admin.transactions.show",
                                                             trx.id,
                                                         )}
-                                                        className="btn btn-sm btn-outline-primary"
+                                                        className="btn btn-sm btn-light border d-flex align-items-center justify-content-center"
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                        }}
                                                         title="Detail"
                                                     >
                                                         <CIcon
@@ -395,35 +410,22 @@ export default function Index({
                                                             size="sm"
                                                         />
                                                     </Link>
-                                                    {trx.transaction_type ===
-                                                        "CREDIT" && (
-                                                        <Link
-                                                            href={route(
-                                                                "admin.transactions.editCredit",
-                                                                trx.id,
-                                                            )}
-                                                            className="btn btn-sm btn-outline-info"
-                                                            title="Edit Kredit"
-                                                        >
-                                                            <CIcon
-                                                                icon={
-                                                                    cilCreditCard
-                                                                }
-                                                                size="sm"
-                                                            />
-                                                        </Link>
-                                                    )}
                                                     <Link
                                                         href={route(
                                                             "admin.transactions.edit",
                                                             trx.id,
                                                         )}
-                                                        className="btn btn-sm btn-outline-warning"
+                                                        className="btn btn-sm btn-warning d-flex align-items-center justify-content-center shadow-sm"
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                        }}
                                                         title="Edit"
                                                     >
                                                         <CIcon
                                                             icon={cilPencil}
                                                             size="sm"
+                                                            className="text-white"
                                                         />
                                                     </Link>
                                                 </div>
@@ -434,10 +436,10 @@ export default function Index({
                             ) : (
                                 <CTableRow>
                                     <CTableDataCell
-                                        colSpan={7}
+                                        colSpan={6}
                                         className="text-center py-5 text-body-tertiary"
                                     >
-                                        Tidak ada data transaksi.
+                                        Tidak ada data transaksi yang ditemukan.
                                     </CTableDataCell>
                                 </CTableRow>
                             )}
