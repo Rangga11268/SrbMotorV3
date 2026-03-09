@@ -70,20 +70,29 @@ export default function Edit({ transaction, motors, users }) {
     return (
         <AdminLayout title={`Edit Transaksi #${transaction.id}`}>
             <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                <Link
-                    href={route("admin.transactions.show", transaction.id)}
-                    className="btn btn-outline-secondary d-flex align-items-center gap-2"
-                >
-                    <CIcon icon={cilArrowLeft} size="sm" />
-                    Kembali
-                </Link>
-                <CBadge
-                    color="warning"
-                    shape="rounded-pill"
-                    className="px-3 py-2"
-                >
-                    Mode Edit
-                </CBadge>
+                <div>
+                    <h5 className="mb-1 fw-bold">Edit Data Transaksi</h5>
+                    <p className="text-body-secondary small mb-0">
+                        Ubah informasi umum: pelanggan, motor, jenis transaksi,
+                        dan catatan
+                    </p>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                    <Link
+                        href={route("admin.transactions.show", transaction.id)}
+                        className="btn btn-outline-secondary d-flex align-items-center gap-2"
+                    >
+                        <CIcon icon={cilArrowLeft} size="sm" />
+                        Kembali
+                    </Link>
+                    <CBadge
+                        color="warning"
+                        shape="rounded-pill"
+                        className="px-3 py-2"
+                    >
+                        Edit Umum
+                    </CBadge>
+                </div>
             </div>
 
             <form onSubmit={handleSubmit}>

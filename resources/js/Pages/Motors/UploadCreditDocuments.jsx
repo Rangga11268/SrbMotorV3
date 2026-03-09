@@ -43,6 +43,10 @@ export default function UploadCreditDocuments({ transaction }) {
         });
     };
 
+    // Check if documents already exist
+    const existingDocs = transaction.credit_detail?.documents || [];
+    const hasUploadedDocuments = existingDocs.length > 0;
+
     const submit = (e) => {
         e.preventDefault();
         post(route("motors.upload-credit-documents.post", transaction.id));
@@ -175,6 +179,39 @@ export default function UploadCreditDocuments({ transaction }) {
                                                 <li>• Slip Gaji 3 bulan</li>
                                             </ul>
                                         </div>
+
+                                        {/* Show existing documents if any */}
+                                        {hasUploadedDocuments && (
+                                            <div className="bg-green-50 rounded-lg p-4 border border-green-200 mt-4">
+                                                <p className="text-xs font-semibold text-green-900 mb-3 flex items-center gap-2">
+                                                    <CheckCircle size={16} />{" "}
+                                                    Dokumen yang Sudah Dikirim
+                                                </p>
+                                                <ul className="text-xs text-green-800 space-y-2">
+                                                    {existingDocs.map((doc) => (
+                                                        <li
+                                                            key={doc.id}
+                                                            className="flex items-center gap-2"
+                                                        >
+                                                            <CheckCircle
+                                                                size={14}
+                                                                className="text-green-600"
+                                                            />
+                                                            {doc.document_type}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                <p className="text-xs text-green-700 mt-3 italic">
+                                                    💡 Anda dapat mengganti
+                                                    dokumen dengan versi yang
+                                                    lebih baik di halaman{" "}
+                                                    <strong>
+                                                        Kelola Dokumen
+                                                    </strong>
+                                                    .
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

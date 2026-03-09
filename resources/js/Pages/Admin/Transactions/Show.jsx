@@ -35,6 +35,7 @@ import {
     cilXCircle,
     cilUser,
     cilBike,
+    cilCreditCard,
 } from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
@@ -289,7 +290,26 @@ export default function Show({ transaction: initialTransaction }) {
                     <CIcon icon={cilArrowLeft} size="sm" />
                     Kembali
                 </Link>
-                <div className="d-flex align-items-center gap-2">
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                    <Link
+                        href={route("admin.transactions.edit", transaction.id)}
+                        className="btn btn-sm btn-outline-warning d-flex align-items-center gap-2"
+                    >
+                        <CIcon icon={cilPencil} size="sm" />
+                        Edit Umum
+                    </Link>
+                    {transaction.transaction_type === "CREDIT" && (
+                        <Link
+                            href={route(
+                                "admin.transactions.editCredit",
+                                transaction.id,
+                            )}
+                            className="btn btn-sm btn-outline-info d-flex align-items-center gap-2"
+                        >
+                            <CIcon icon={cilCreditCard} size="sm" />
+                            Edit Kredit
+                        </Link>
+                    )}
                     <CBadge
                         color={getStatusColor(transaction.status)}
                         shape="rounded-pill"
