@@ -23,6 +23,7 @@ import {
     CreditCard,
     ShieldCheck,
     Coins,
+    MapPin,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -31,6 +32,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         customer_name: "",
         customer_phone: "",
         customer_occupation: "",
+        customer_address: "",
         down_payment: "",
         tenor: "12",
         payment_method: "Transfer Bank",
@@ -97,6 +99,9 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         }
         if (!data.customer_occupation.trim()) {
             validationErrors.push("Pekerjaan harus diisi");
+        }
+        if (!data.customer_address.trim()) {
+            validationErrors.push("Alamat lengkap harus diisi");
         }
         if (!data.down_payment || parseFloat(data.down_payment) < minDP) {
             validationErrors.push(
@@ -279,6 +284,37 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                 <ErrorMessage
                                                     message={
                                                         errors.customer_occupation
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="customer_address">
+                                                Alamat Lengkap
+                                            </Label>
+                                            <div className="relative">
+                                                <MapPin className="absolute left-3 top-4 w-5 h-5 text-gray-400" />
+                                                <textarea
+                                                    id="customer_address"
+                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]"
+                                                    placeholder="Alamat pengiriman unit..."
+                                                    required
+                                                    value={
+                                                        data.customer_address
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "customer_address",
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                ></textarea>
+                                            </div>
+                                            {errors.customer_address && (
+                                                <ErrorMessage
+                                                    message={
+                                                        errors.customer_address
                                                     }
                                                 />
                                             )}

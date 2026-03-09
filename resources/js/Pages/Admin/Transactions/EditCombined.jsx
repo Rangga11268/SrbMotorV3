@@ -41,6 +41,7 @@ export default function EditCombined({ transaction, motors, users }) {
         user_id: transaction.user_id || "",
         motor_id: transaction.motor_id || "",
         transaction_type: transaction.transaction_type || "CASH",
+        customer_address: transaction.customer_address || "",
         notes: transaction.notes || "",
         // Credit specific fields (synced to credit_detail)
         credit_status: credit_detail?.credit_status || "menunggu_persetujuan",
@@ -223,6 +224,20 @@ export default function EditCombined({ transaction, motors, users }) {
                                                 </option>
                                             ))}
                                         </CFormSelect>
+                                    </CCol>
+                                    <CCol md={12}>
+                                        <CFormLabel>Alamat Lengkap</CFormLabel>
+                                        <CFormTextarea
+                                            value={data.customer_address}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "customer_address",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            rows={3}
+                                            placeholder="Alamat pengiriman unit..."
+                                        />
                                     </CCol>
                                     <CCol md={12}>
                                         <CFormLabel>

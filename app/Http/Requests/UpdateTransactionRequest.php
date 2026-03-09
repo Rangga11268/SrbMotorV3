@@ -34,6 +34,7 @@ class UpdateTransactionRequest extends FormRequest
             'customer_name' => 'nullable|string|max:255',
             'customer_phone' => 'nullable|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'nullable|string|max:255',
+            'customer_address' => 'nullable|string|max:1000',
         ];
 
         if ($this->transaction_type === 'CREDIT') {

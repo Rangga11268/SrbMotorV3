@@ -30,6 +30,7 @@ class Transaction extends Model
         'customer_name',
         'customer_phone',
         'customer_occupation',
+        'customer_address',
     ];
 
     /**

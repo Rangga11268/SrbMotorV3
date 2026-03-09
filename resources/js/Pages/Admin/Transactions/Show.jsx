@@ -277,35 +277,20 @@ export default function Show({ transaction: initialTransaction }) {
         });
     };
 
-    const transactionStatusOptions =
-        transaction.transaction_type === "CASH"
-            ? [
-                  { value: "new_order", label: "Pesanan Baru" },
-                  { value: "waiting_payment", label: "Menunggu Pembayaran" },
-                  {
-                      value: "payment_confirmed",
-                      label: "Pembayaran Dikonfirmasi",
-                  },
-                  { value: "unit_preparation", label: "Persiapan Unit" },
-                  { value: "ready_for_delivery", label: "Siap Dikirim" },
-                  { value: "completed", label: "Selesai" },
-                  { value: "cancelled", label: "Dibatalkan" },
-              ]
-            : [
-                  {
-                      value: "menunggu_persetujuan",
-                      label: "Verifikasi Berkas",
-                  },
-                  {
-                      value: "dikirim_ke_surveyor",
-                      label: "Proses Surveyor",
-                  },
-                  { value: "jadwal_survey", label: "Jadwal Survey" },
-                  { value: "disetujui", label: "Setujui Kredit (Unit Prep)" },
-                  { value: "ditolak", label: "Tolak Kredit (Batal)" },
-                  { value: "completed", label: "Selesai" },
-                  { value: "data_tidak_valid", label: "Perbaiki Dokumen" },
-              ];
+    const unifiedStatusOptions = [
+        { value: "new_order", label: "Pesanan Baru (Draft)" },
+        { value: "menunggu_persetujuan", label: "Verifikasi Berkas" },
+        { value: "dikirim_ke_surveyor", label: "Kirim ke Surveyor" },
+        { value: "jadwal_survey", label: "Jadwal Survey" },
+        { value: "disetujui", label: "Kredit Disetujui / DP" },
+        { value: "payment_confirmed", label: "Pembayaran Dikonfirmasi" },
+        { value: "unit_preparation", label: "Persiapan Unit" },
+        { value: "ready_for_delivery", label: "Siap Dikirim" },
+        { value: "completed", label: "Selesai" },
+        { value: "cancelled", label: "Batalkan Pesanan" },
+        { value: "data_tidak_valid", label: "Dokumen Tidak Valid" },
+        { value: "ditolak", label: "Kredit Ditolak" },
+    ];
 
     return (
         <AdminLayout title={`Detail Transaksi #${transaction.id}`}>
@@ -799,6 +784,17 @@ export default function Show({ transaction: initialTransaction }) {
                                                 "-"}
                                         </div>
                                     </div>
+                                    <div className="bg-body-tertiary rounded-3 p-3 mt-3">
+                                        <div className="text-body-tertiary small mb-1">
+                                            Catatan Pembeli
+                                        </div>
+                                        <div className="fw-medium italic text-body-secondary">
+                                            "
+                                            {transaction.notes ||
+                                                "Tidak ada catatan"}
+                                            "
+                                        </div>
+                                    </div>
                                 </div>
                             </CCardBody>
                         </CCard>
@@ -815,8 +811,9 @@ export default function Show({ transaction: initialTransaction }) {
                                 <CFormSelect
                                     value={transaction.status}
                                     onChange={handleStatusUpdate}
+                                    className="mb-3"
                                 >
-                                    {transactionStatusOptions.map((opt) => (
+                                    {unifiedStatusOptions.map((opt) => (
                                         <option
                                             key={opt.value}
                                             value={opt.value}
@@ -825,6 +822,18 @@ export default function Show({ transaction: initialTransaction }) {
                                         </option>
                                     ))}
                                 </CFormSelect>
+
+                                <div className="small text-body-tertiary">
+                                    <CIcon
+                                        icon={cilCheckCircle}
+                                        size="sm"
+                                        className="me-1 text-success"
+                                    />
+                                    Status saat ini:{" "}
+                                    <strong>
+                                        {formatStatus(transaction.status)}
+                                    </strong>
+                                </div>
 
                                 {transaction.transaction_type === "CREDIT" && (
                                     <div className="mt-3 bg-primary-subtle rounded-3 p-3">
