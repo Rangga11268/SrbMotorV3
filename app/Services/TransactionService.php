@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Transaction;
 use App\Models\CreditDetail;
 use App\Models\Installment;
-use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;

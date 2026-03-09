@@ -1,246 +1,298 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
-import { motion, useScroll, useTransform } from "framer-motion";
-import {
-    Star,
-    Target,
-    Heart,
-    Zap,
-    Users,
-    Trophy,
-    ArrowUpRight,
-    Search,
-    ShieldCheck,
-} from "lucide-react";
+import { Target, Heart, Users, Trophy, CheckCircle, Star } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function About() {
     const { auth } = usePage().props;
-    const targetRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ["start start", "end start"],
-    });
 
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+    const stats = [
+        { label: "Unit Terjual", value: "500+" },
+        { label: "Kepuasan Pelanggan", value: "99%" },
+        { label: "Tahun Berdiri", value: "5" },
+    ];
+
+    const missions = [
+        {
+            icon: <CheckCircle className="text-blue-600" size={24} />,
+            title: "Seleksi Terkurasi",
+            description:
+                "Hanya motor terbaik yang lolos dari inspeksi ketat kami.",
+        },
+        {
+            icon: <Trophy className="text-blue-600" size={24} />,
+            title: "Pengujian Ketat",
+            description:
+                "150-poin inspeksi teknisi oleh mekanik bersertifikat.",
+        },
+        {
+            icon: <Heart className="text-blue-600" size={24} />,
+            title: "Transparansi",
+            description:
+                "Laporan riwayat lengkap dan harga jelas tanpa biaya tersembunyi.",
+        },
+        {
+            icon: <Users className="text-blue-600" size={24} />,
+            title: "Komunitas",
+            description:
+                "Membangun ekosistem penggemar motor, bukan hanya pelanggan.",
+        },
+    ];
 
     return (
         <PublicLayout auth={auth} title="Tentang Kami">
             <div className="flex-grow pt-[104px]">
-                {/* HERO SECTION - VERTICAL MASSIVE TYPE */}
-                <section
-                    ref={targetRef}
-                    className="relative min-h-screen flex items-center justify-center overflow-hidden bg-surface-dark pt-20"
-                >
-                    {/* Background Noise & Gradient */}
-                    <div className="absolute inset-0 z-0">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
-                    </div>
-
-                    <motion.div
-                        style={{ opacity }}
-                        className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center"
-                    >
-                        <h1 className="flex flex-col text-[13vw] leading-[0.85] font-display font-black text-white tracking-tighter mix-blend-difference">
-                            <span className="self-start ml-4 md:ml-20">
-                                JATI
-                            </span>
-                            <span className="self-center text-accent/20 stroke-text-white backdrop-blur-sm">
-                                DIRI
-                            </span>
-                            <span className="self-end mr-4 md:mr-20">KAMI</span>
-                        </h1>
-                    </motion.div>
-
-                    {/* Floating Image Parallax */}
-                    <motion.div
-                        style={{ y }}
-                        className="absolute inset-0 z-0 flex items-center justify-center opacity-40 mix-blend-overlay pointer-events-none"
-                    >
-                        <img
-                            src="/assets/img/about us.jpeg"
-                            alt="Garage"
-                            className="w-full h-full object-cover grayscale opacity-50"
-                        />
-                    </motion.div>
-                </section>
-
-                {/* MANIFESTO / STORY */}
-                <section className="py-32 bg-surface-dark relative z-10">
-                    <div className="container mx-auto px-4 md:px-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                            <div>
-                                <span className="text-accent font-bold tracking-[0.2em] uppercase text-sm mb-6 block">
-                                    Est. 2020
-                                </span>
-                                <h2 className="text-5xl md:text-7xl font-display font-black text-white leading-[0.9] tracking-tighter mb-10">
-                                    REVOLUSI <br />
-                                    KULTUR
-                                </h2>
-                            </div>
-                            <div className="space-y-8">
-                                <p className="text-xl md:text-2xl text-gray-300 font-medium leading-relaxed">
-                                    Kami bukan dealer biasa. Kami adalah
-                                    kolektif penggemar, insinyur, dan
-                                    perfeksionis yang terobsesi dengan seni
-                                    gerak.
+                <div className="bg-white min-h-screen">
+                    {/* Hero Section */}
+                    <section className="bg-gradient-to-r from-blue-50 to-indigo-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-gray-200">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                            >
+                                <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6">
+                                    Tentang SRB Motors
+                                </h1>
+                                <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                                    Kami adalah revolusi dalam industri dealer
+                                    motor. Menyediakan motor berkualitas tinggi
+                                    dengan transparansi penuh dan jaminan
+                                    kepuasan pelanggan.
                                 </p>
-                                <p className="text-gray-500 text-lg leading-relaxed">
-                                    Didirikan atas keyakinan bahwa membeli motor
-                                    bekas seharusnya tidak terasa seperti
-                                    perjudian. Seharusnya terasa seperti
-                                    upgrade. Kami kurasi, kami inspeksi, dan
-                                    kami jamin kualitas yang menyaingi pabrikan.
-                                </p>
-                                <div className="pt-8">
-                                    <span className="font-handwriting text-4xl text-white opacity-80 rotate-[-5deg] block">
-                                        SRB Team
-                                    </span>
-                                </div>
-                            </div>
+                            </motion.div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* KINETIC STATS */}
-                <section className="py-20 bg-accent text-black border-y-4 border-black">
-                    <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-1 md:grid-cols-3 divide-y-2 md:divide-y-0 md:divide-x-2 divide-black/10">
-                            {[
-                                { label: "UNIT TERJUAL", value: "500+" },
-                                { label: "KEPUASAN", value: "99%" },
-                                { label: "TAHUN BERDIRI", value: "05" },
-                            ].map((stat, i) => (
-                                <div
-                                    key={i}
-                                    className="py-8 md:py-0 md:px-12 text-center group cursor-default"
+                    {/* Story Section */}
+                    <section className="py-20 px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-5xl mx-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                {/* Image */}
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    viewport={{ once: true }}
+                                    className="rounded-lg overflow-hidden shadow-lg"
                                 >
-                                    <h3 className="text-5xl md:text-7xl font-display font-black tracking-tighter mb-2 group-hover:scale-110 transition-transform duration-300">
-                                        {stat.value}
-                                    </h3>
-                                    <p className="text-sm font-bold tracking-[0.3em] uppercase">
-                                        {stat.label}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                                    <img
+                                        src="/assets/img/about us.jpeg"
+                                        alt="SRB Motors"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </motion.div>
 
-                {/* VISION & MISSION - BENTO GRID REIMAGINED */}
-                <section className="py-32 bg-surface-dark relative">
-                    <div className="container mx-auto px-4 md:px-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            {/* Vision Card */}
-                            <div className="lg:col-span-8 bg-zinc-900 rounded-[2rem] p-12 border border-white/5 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:opacity-100 transition-opacity duration-500">
-                                    <Target size={200} className="text-white" />
-                                </div>
-                                <h3 className="text-2xl text-accent font-bold mb-4 uppercase tracking-widest">
-                                    Visi
-                                </h3>
-                                <p className="text-4xl md:text-5xl font-display font-bold text-white leading-tight max-w-2xl relative z-10">
-                                    Mendefinisikan ulang pasar motor bekas
-                                    melalui transparansi radikal dan kualitas.
+                                {/* Content */}
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    viewport={{ once: true }}
+                                    className="space-y-6"
+                                >
+                                    <div>
+                                        <span className="inline-block px-4 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full mb-4">
+                                            Didirikan 2020
+                                        </span>
+                                        <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                                            Revolusi Kultur Motor
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-600 leading-relaxed">
+                                        Kami bukan sekadar dealer motor biasa.
+                                        Kami adalah kolektif penggemar,
+                                        insinyur, dan perfeksionis yang
+                                        terobsesi dengan kualitas dan kepuasan
+                                        pelanggan.
+                                    </p>
+                                    <p className="text-lg text-gray-600 leading-relaxed">
+                                        Didirikan atas keyakinan bahwa membeli
+                                        motor bekas seharusnya tidak terasa
+                                        seperti perjudian. Kami kurasi setiap
+                                        kendaraan dengan standar tertinggi dan
+                                        inspeksi menyeluruh.
+                                    </p>
+                                    <div className="pt-4">
+                                        <Link
+                                            href={route("motors.index")}
+                                            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                        >
+                                            Lihat Unit Kami
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Stats Section */}
+                    <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8 border-y border-gray-200">
+                        <div className="max-w-5xl mx-auto">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                                {stats.map((stat, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{
+                                            opacity: 1,
+                                            y: 0,
+                                        }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        viewport={{ once: true }}
+                                        className="text-center"
+                                    >
+                                        <div className="text-5xl font-bold text-blue-600 mb-2">
+                                            {stat.value}
+                                        </div>
+                                        <p className="text-gray-600 font-medium">
+                                            {stat.label}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Vision & Mission Section */}
+                    <section className="py-20 px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-5xl mx-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                                {/* Vision */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 }}
+                                    viewport={{ once: true }}
+                                    className="bg-blue-50 rounded-lg p-8 border border-blue-200"
+                                >
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="p-3 bg-blue-100 rounded-lg">
+                                            <Target
+                                                className="text-blue-600"
+                                                size={24}
+                                            />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-gray-900">
+                                            Visi Kami
+                                        </h3>
+                                    </div>
+                                    <p className="text-gray-700 text-lg">
+                                        Mendefinisikan ulang pasar motor bekas
+                                        melalui transparansi radikal, kualitas
+                                        premium, dan layanan pelanggan yang luar
+                                        biasa.
+                                    </p>
+                                </motion.div>
+
+                                {/* Mission */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    viewport={{ once: true }}
+                                    className="bg-indigo-50 rounded-lg p-8 border border-indigo-200"
+                                >
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="p-3 bg-indigo-100 rounded-lg">
+                                            <Heart
+                                                className="text-indigo-600"
+                                                size={24}
+                                            />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-gray-900">
+                                            Misi Kami
+                                        </h3>
+                                    </div>
+                                    <p className="text-gray-700 text-lg">
+                                        Memberikan akses kepada motor
+                                        berkualitas tinggi dengan harga yang
+                                        adil, inspeksi menyeluruh, dan dukungan
+                                        purna jual yang responsif.
+                                    </p>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Core Values Section */}
+                    <section className="bg-gray-50 py-20 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+                        <div className="max-w-5xl mx-auto">
+                            <div className="text-center mb-12">
+                                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                                    Nilai Inti Kami
+                                </h2>
+                                <p className="text-gray-600 text-lg">
+                                    Empat pilar yang memandu setiap keputusan
+                                    kami
                                 </p>
                             </div>
 
-                            {/* Decoration / Image */}
-                            <div className="lg:col-span-4 bg-zinc-900 rounded-[2rem] border border-white/5 overflow-hidden relative group">
-                                <img
-                                    src="/assets/img/about us.jpeg"
-                                    alt="About Us"
-                                    className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
-                            </div>
-
-                            {/* Mission */}
-                            <div className="lg:col-span-12 bg-zinc-900 rounded-[2rem] p-12 border border-white/5">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                                    <div className="md:col-span-1">
-                                        <h3 className="text-2xl text-accent font-bold mb-4 uppercase tracking-widest">
-                                            Misi
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {missions.map((mission, idx) => (
+                                    <motion.div
+                                        key={idx}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{
+                                            opacity: 1,
+                                            y: 0,
+                                        }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        viewport={{ once: true }}
+                                        className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                                    >
+                                        <div className="bg-blue-50 rounded-lg p-3 mb-4 w-fit">
+                                            {mission.icon}
+                                        </div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-3">
+                                            {mission.title}
                                         </h3>
-                                        <h4 className="text-4xl font-display font-bold text-white">
-                                            Tiga Pilar SRB.
-                                        </h4>
-                                    </div>
-                                    <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                        {[
-                                            {
-                                                title: "Seleksi Terkurasi",
-                                                desc: "Hanya 1% motor terbaik yang masuk ke showroom kami.",
-                                            },
-                                            {
-                                                title: "Pengujian Ketat",
-                                                desc: "150-poin inspeksi teknis oleh mekanik bersertifikat.",
-                                            },
-                                            {
-                                                title: "Kejujuran Radikal",
-                                                desc: "Laporan riwayat lengkap dan harga transparan. Tanpa rahasia.",
-                                            },
-                                            {
-                                                title: "Komunitas Utama",
-                                                desc: "Membangun budaya pengendara, bukan sekadar daftar pelanggan.",
-                                            },
-                                        ].map((item, i) => (
-                                            <div
-                                                key={i}
-                                                className="space-y-2 group"
-                                            >
-                                                <div className="w-2 h-2 bg-accent rounded-full mb-4 group-hover:w-8 transition-all duration-300"></div>
-                                                <h5 className="text-xl font-bold text-white">
-                                                    {item.title}
-                                                </h5>
-                                                <p className="text-gray-400 text-sm">
-                                                    {item.desc}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                                        <p className="text-gray-600 text-sm">
+                                            {mission.description}
+                                        </p>
+                                    </motion.div>
+                                ))}
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* TEAM / CTA */}
-                <section className="py-32 bg-black text-white text-center border-t border-white/10">
-                    <div className="container mx-auto px-4">
-                        <h2 className="text-4xl md:text-6xl font-display font-black tracking-tighter mb-8">
-                            GABUNG{" "}
-                            <span className="text-accent">GERAKAN KAMI.</span>
-                        </h2>
-                        <p className="text-gray-400 max-w-xl mx-auto mb-12 text-lg">
-                            Ikuti sosial media kami untuk info terbaru, tips
-                            berkendara, dan event komunitas.
-                        </p>
-                        <div className="flex justify-center gap-6">
-                            <Link
-                                href="/motors"
-                                className="px-10 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-accent transition-colors rounded-full"
+                    {/* CTA Section */}
+                    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-gray-200">
+                        <div className="max-w-3xl mx-auto text-center">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                viewport={{ once: true }}
                             >
-                                Lihat Unit
-                            </Link>
-                            <a
-                                href="https://instagram.com"
-                                target="_blank"
-                                className="px-10 py-4 border border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white/10 transition-colors rounded-full rounded-r-none border-r-0"
-                            >
-                                Instagram
-                            </a>
-                            <a
-                                href="https://tiktok.com"
-                                target="_blank"
-                                className="px-10 py-4 border border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white/10 transition-colors rounded-full rounded-l-none"
-                            >
-                                TikTok
-                            </a>
+                                <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                                    Siap Bergabung dengan Keluarga SRB?
+                                </h2>
+                                <p className="text-lg text-gray-600 mb-8">
+                                    Jelajahi koleksi motor berkualitas kami dan
+                                    temukan kendaraan impian Anda hari ini.
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                    <Link
+                                        href={route("motors.index")}
+                                        className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        Lihat Unit Kami
+                                    </Link>
+                                    <a
+                                        href="https://instagram.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-block px-8 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+                                    >
+                                        Follow Instagram
+                                    </a>
+                                </div>
+                            </motion.div>
                         </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             </div>
         </PublicLayout>
     );

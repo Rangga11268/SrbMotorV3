@@ -63,6 +63,14 @@ class CreditDetail extends Model
     }
 
     /**
+     * Get the survey schedules associated with this credit detail.
+     */
+    public function surveySchedules(): HasMany
+    {
+        return $this->hasMany(SurveySchedule::class);
+    }
+
+    /**
      * Check if all required documents are uploaded
      */
     public function hasRequiredDocuments(): bool

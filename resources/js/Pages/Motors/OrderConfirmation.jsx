@@ -14,14 +14,10 @@ import {
     Home,
     ArrowRight,
     Wallet,
-    Lock,
-    Copy,
     Download,
-    Share2,
-    ShieldCheck,
-    Clock,
+    AlertCircle,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -62,12 +58,12 @@ export default function OrderConfirmation({ transaction }) {
                         console.error("Manual status check failed", e);
                     }
                     Swal.fire({
-                        title: "PAYMENT SUCCESSFUL",
-                        text: "Pembayaran Booking Fee berhasil diterima.",
+                        title: "Pembayaran Berhasil",
+                        text: "Pembayaran Anda telah diterima.",
                         icon: "success",
-                        background: "#09090b",
-                        color: "#ffffff",
-                        confirmButtonColor: "#84cc16",
+                        background: "#ffffff",
+                        color: "#000000",
+                        confirmButtonColor: "#2563eb",
                     });
                     router.reload();
                 },
@@ -78,23 +74,23 @@ export default function OrderConfirmation({ transaction }) {
                         );
                     } catch (e) {}
                     Swal.fire({
-                        title: "PAYMENT PENDING",
-                        text: "Menunggu pembayaran Anda.",
+                        title: "Pembayaran Tertunda",
+                        text: "Menunggu konfirmasi pembayaran Anda.",
                         icon: "info",
-                        background: "#09090b",
-                        color: "#ffffff",
-                        confirmButtonColor: "#3b82f6",
+                        background: "#ffffff",
+                        color: "#000000",
+                        confirmButtonColor: "#2563eb",
                     });
                     router.reload();
                 },
                 onError: function (result) {
                     Swal.fire({
-                        title: "PAYMENT FAILED",
-                        text: "Pembayaran gagal diproses.",
+                        title: "Pembayaran Gagal",
+                        text: "Pembayaran tidak berhasil diproses.",
                         icon: "error",
-                        background: "#09090b",
-                        color: "#ffffff",
-                        confirmButtonColor: "#ef4444",
+                        background: "#ffffff",
+                        color: "#000000",
+                        confirmButtonColor: "#dc2626",
                     });
                 },
                 onClose: function () {
@@ -104,12 +100,12 @@ export default function OrderConfirmation({ transaction }) {
         } catch (error) {
             console.error(error);
             Swal.fire({
-                title: "SYSTEM ERROR",
+                title: "Error Sistem",
                 text: "Gagal memproses pembayaran online.",
                 icon: "error",
-                background: "#09090b",
-                color: "#ffffff",
-                confirmButtonColor: "#ef4444",
+                background: "#ffffff",
+                color: "#000000",
+                confirmButtonColor: "#dc2626",
             });
         } finally {
             setIsLoadingPay(false);
@@ -126,417 +122,344 @@ export default function OrderConfirmation({ transaction }) {
 
     const isCredit = transaction.transaction_type === "CREDIT";
 
-    // Animation Variants
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2,
-            },
-        },
-    };
-
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                stiffness: 100,
-            },
-        },
-    };
-
-    const ticketVariants = {
-        hidden: { scale: 0.9, opacity: 0, rotateX: 10 },
-        visible: {
-            scale: 1,
-            opacity: 1,
-            rotateX: 0,
-            transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 20,
-            },
-        },
-    };
-
     return (
         <PublicLayout auth={auth} title="Konfirmasi Pesanan">
             <div className="flex-grow pt-[104px] pb-24">
-                <div className="min-h-screen bg-surface-dark text-white relative overflow-hidden pt-10">
-                    {/* Background FX */}
-                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-green-500/10 rounded-full blur-[120px]" />
-                        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px]" />
-                    </div>
-
-                    <div className="container mx-auto px-4 relative z-10">
-                        <motion.div
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="visible"
-                            className="max-w-4xl mx-auto"
-                        >
-                            {/* Status Header */}
-                            <motion.div
-                                variants={itemVariants}
-                                className="text-center mb-12"
-                            >
-                                <div className="relative inline-block mb-6">
-                                    <motion.div
-                                        initial={{ scale: 0, rotate: -180 }}
-                                        animate={{ scale: 1, rotate: 0 }}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 200,
-                                            delay: 0.3,
-                                        }}
-                                        className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(34,197,94,0.4)] relative z-10"
-                                    >
+                <div className="min-h-screen bg-white">
+                    {/* Header Section */}
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-5xl mx-auto">
+                            <div className="text-center">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="inline-block mb-6"
+                                >
+                                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
                                         <CheckCircle
                                             size={48}
-                                            className="text-black"
-                                            strokeWidth={3}
+                                            className="text-green-600"
                                         />
-                                    </motion.div>
-                                    <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full animate-pulse" />
-                                </div>
-
-                                <h1 className="text-5xl md:text-6xl font-display font-black text-white tracking-tighter mb-4">
-                                    PESANAN{" "}
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">
-                                        DIKONFIRMASI
-                                    </span>
-                                </h1>
-                                <p className="text-lg text-white/60 font-sans max-w-xl mx-auto">
-                                    Terima kasih! Pesanan Anda telah berhasil
-                                    dibuat. Simpan bukti transaksi ini untuk
-                                    keperluan administrasi.
-                                </p>
-                            </motion.div>
-
-                            {/* Digital Ticket */}
-                            <motion.div
-                                variants={ticketVariants}
-                                className="relative group perspective-1000"
-                            >
-                                <div className="absolute -inset-1 bg-gradient-to-b from-white/20 to-transparent rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-
-                                <div className="relative bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-[2rem] overflow-hidden shadow-2xl">
-                                    {/* Ticket Header: ID & Date */}
-                                    <div className="bg-white/5 border-b border-white/5 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 bg-white/10 rounded-lg">
-                                                <ShieldCheck
-                                                    className="text-green-400"
-                                                    size={24}
-                                                />
-                                            </div>
-                                            <div>
-                                                <div className="text-xs text-white/40 font-bold tracking-widest uppercase">
-                                                    ID Transaksi
-                                                </div>
-                                                <div className="font-mono text-xl text-white font-bold tracking-wider">
-                                                    {transaction.id}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-right hidden md:block">
-                                                <div className="text-xs text-white/40 font-bold tracking-widest uppercase">
-                                                    Tanggal
-                                                </div>
-                                                <div className="text-white font-bold">
-                                                    {new Date(
-                                                        transaction.created_at,
-                                                    ).toLocaleDateString(
-                                                        "id-ID",
-                                                        {
-                                                            day: "numeric",
-                                                            month: "long",
-                                                            year: "numeric",
-                                                        },
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={() => window.print()}
-                                                className="p-3 hover:bg-white/10 rounded-full transition-colors text-white/60 hover:text-white"
-                                                title="Print/Save Receipt"
-                                            >
-                                                <Download size={20} />
-                                            </button>
-                                        </div>
                                     </div>
+                                </motion.div>
+                                <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                                    Pesanan Dikonfirmasi
+                                </h1>
+                                <p className="text-gray-600 text-lg">
+                                    Terima kasih telah melakukan pemesanan.
+                                    Simpan bukti transaksi ini untuk keperluan
+                                    administrasi.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-                                    <div className="grid grid-cols-1 lg:grid-cols-12">
-                                        {/* Left: Motor Visual */}
-                                        <div className="lg:col-span-5 relative bg-gradient-to-b from-white/5 to-transparent p-8 flex flex-col items-center justify-center border-b lg:border-b-0 lg:border-r border-white/5">
-                                            <div className="absolute top-4 left-4">
-                                                <span className="px-3 py-1 rounded-full border border-white/10 text-xs font-bold text-white/60 uppercase tracking-wider bg-black/20 backdrop-blur-md">
-                                                    Unit Terpilih
+                    {/* Main Content */}
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* Left: Motor Summary */}
+                            <div className="lg:col-span-1">
+                                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-24 shadow-sm">
+                                    <div className="aspect-video bg-gray-100 overflow-hidden flex items-center justify-center p-4">
+                                        <img
+                                            src={`/storage/${transaction.motor.image_path}`}
+                                            alt={transaction.motor.name}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
+                                    <div className="p-5">
+                                        <h3 className="font-bold text-lg text-gray-900 mb-4">
+                                            {transaction.motor.name}
+                                        </h3>
+                                        <div className="space-y-3 mb-5 pb-5 border-b border-gray-200">
+                                            <div className="flex justify-between">
+                                                <span className="text-sm text-gray-600">
+                                                    Tipe
+                                                </span>
+                                                <span className="font-semibold text-gray-900">
+                                                    {transaction.motor.type}
                                                 </span>
                                             </div>
-
-                                            <motion.img
-                                                initial={{ y: 20, opacity: 0 }}
-                                                animate={{ y: 0, opacity: 1 }}
-                                                transition={{ delay: 0.5 }}
-                                                src={`/storage/${transaction.motor.image_path}`}
-                                                alt={transaction.motor.name}
-                                                className="w-full max-w-[280px] object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] mb-6 hover:scale-105 transition-transform duration-500"
-                                            />
-
-                                            <div className="text-center w-full">
-                                                <h3 className="text-2xl font-display font-bold text-white mb-1">
-                                                    {transaction.motor.name}
-                                                </h3>
-                                                <div className="text-white/40 text-sm mb-4">
-                                                    {transaction.motor.type} •{" "}
+                                            <div className="flex justify-between">
+                                                <span className="text-sm text-gray-600">
+                                                    Tahun
+                                                </span>
+                                                <span className="font-semibold text-gray-900">
                                                     {transaction.motor.year}
-                                                </div>
-
-                                                <div className="inline-block px-6 py-2 bg-white/5 rounded-xl border border-white/10">
-                                                    <div className="text-xs text-white/40 uppercase tracking-widest mb-1">
-                                                        Total Harga
-                                                    </div>
-                                                    <div className="text-xl font-bold text-accent">
-                                                        {formatCurrency(
-                                                            transaction.motor
-                                                                .price,
-                                                        )}
-                                                    </div>
-                                                </div>
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-sm text-gray-600">
+                                                    Harga
+                                                </span>
+                                                <span className="font-semibold text-gray-900">
+                                                    {formatCurrency(
+                                                        transaction.motor.price,
+                                                    )}
+                                                </span>
                                             </div>
                                         </div>
+                                        <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
+                                            <p className="text-xs font-semibold text-blue-900">
+                                                ID Transaksi
+                                            </p>
+                                            <p className="font-mono text-sm font-bold text-blue-600 mt-1">
+                                                {transaction.id}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                        {/* Right: Details & Actions */}
-                                        <div className="lg:col-span-7 p-8">
-                                            <div className="space-y-8">
-                                                {/* Customer Info */}
-                                                <div>
-                                                    <h4 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                                        <User size={14} />{" "}
-                                                        Detail Pelanggan
-                                                    </h4>
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        <InfoBox
-                                                            label="Nama Lengkap"
-                                                            value={
-                                                                transaction.customer_name
-                                                            }
-                                                        />
-                                                        <InfoBox
-                                                            label="No. Telepon"
-                                                            value={
-                                                                transaction.customer_phone
-                                                            }
-                                                        />
-                                                        <InfoBox
-                                                            label="Pekerjaan"
-                                                            value={
-                                                                transaction.customer_occupation
-                                                            }
-                                                        />
-                                                        <InfoBox
-                                                            label="Metode Pembayaran"
-                                                            value={
-                                                                isCredit
-                                                                    ? "Kredit (Leasing)"
-                                                                    : "Cash (Tunai)"
-                                                            }
-                                                            highlight={true}
-                                                        />
-                                                    </div>
-                                                </div>
+                            {/* Right: Order Details */}
+                            <div className="lg:col-span-2 space-y-6">
+                                {/* Customer Information */}
+                                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                    <div className="flex items-center gap-3 mb-6">
+                                        <div className="p-2 bg-blue-100 rounded-lg">
+                                            <User
+                                                size={20}
+                                                className="text-blue-600"
+                                            />
+                                        </div>
+                                        <h2 className="text-lg font-bold text-gray-900">
+                                            Informasi Pelanggan
+                                        </h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                Nama Lengkap
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {transaction.customer_name}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                Nomor Telepon
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {transaction.customer_phone}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                Pekerjaan
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {
+                                                    transaction.customer_occupation
+                                                }
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                Jenis Transaksi
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {isCredit ? "Kredit" : "Cash"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                {/* Credit Spec (If Credit) */}
-                                                {isCredit &&
-                                                    transaction.credit_detail && (
-                                                        <div className="pt-6 border-t border-white/5 animate-pulse-once">
-                                                            <h4 className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                                                <CreditCard
-                                                                    size={14}
-                                                                />{" "}
-                                                                Simulasi Kredit
-                                                            </h4>
-                                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                                <InfoBox
-                                                                    label="Uang Muka"
-                                                                    value={formatCurrency(
-                                                                        transaction
-                                                                            .credit_detail
-                                                                            .down_payment,
-                                                                    )}
-                                                                />
-                                                                <InfoBox
-                                                                    label="Tenor"
-                                                                    value={`${transaction.credit_detail.tenor} Bulan`}
-                                                                />
-                                                                <InfoBox
-                                                                    label="Angsuran/Bulan"
-                                                                    value={formatCurrency(
-                                                                        transaction
-                                                                            .credit_detail
-                                                                            .monthly_installment,
-                                                                    )}
-                                                                />
-                                                            </div>
-                                                        </div>
+                                {/* Credit Details (if applicable) */}
+                                {isCredit && transaction.credit_detail && (
+                                    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="p-2 bg-blue-100 rounded-lg">
+                                                <CreditCard
+                                                    size={20}
+                                                    className="text-blue-600"
+                                                />
+                                            </div>
+                                            <h2 className="text-lg font-bold text-gray-900">
+                                                Simulasi Kredit
+                                            </h2>
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    Uang Muka
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {formatCurrency(
+                                                        transaction
+                                                            .credit_detail
+                                                            .down_payment,
                                                     )}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    Tenor
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {
+                                                        transaction
+                                                            .credit_detail
+                                                            .tenor_in_months
+                                                    }{" "}
+                                                    Bulan
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    Cicilan/Bulan
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {formatCurrency(
+                                                        transaction
+                                                            .credit_detail
+                                                            .monthly_installment,
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
-                                                {/* Action Zone: Booking Fee / Status */}
-                                                <div className="bg-black/40 rounded-xl p-6 border border-white/10">
-                                                    {!isCredit &&
-                                                        transaction.installments?.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                0,
-                                                        ) && (
-                                                            <CashPaymentModule
-                                                                installment={transaction.installments.find(
-                                                                    (i) =>
-                                                                        i.installment_number ===
-                                                                        0,
-                                                                )}
-                                                                type="BOOKING FEE"
-                                                                isLoading={
-                                                                    isLoadingPay
-                                                                }
-                                                                onPay={
-                                                                    handleOnlinePayment
-                                                                }
-                                                                formatCurrency={
-                                                                    formatCurrency
-                                                                }
-                                                            />
-                                                        )}
+                                {/* Payment Status */}
+                                {!isCredit && (
+                                    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                        <div className="flex items-center gap-3 mb-6">
+                                            <div className="p-2 bg-blue-100 rounded-lg">
+                                                <Wallet
+                                                    size={20}
+                                                    className="text-blue-600"
+                                                />
+                                            </div>
+                                            <h2 className="text-lg font-bold text-gray-900">
+                                                Pembayaran
+                                            </h2>
+                                        </div>
 
-                                                    {/* If Cash & Booking Fee Paid, Show Pelunasan */}
-                                                    {!isCredit &&
-                                                        transaction.installments?.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                0,
-                                                        )?.status === "paid" &&
-                                                        transaction.installments?.find(
+                                        {/* Booking Fee */}
+                                        {transaction.installments?.find(
+                                            (i) => i.installment_number === 0,
+                                        ) && (
+                                            <CashPaymentModule
+                                                installment={transaction.installments.find(
+                                                    (i) =>
+                                                        i.installment_number ===
+                                                        0,
+                                                )}
+                                                type="Booking Fee"
+                                                isLoading={isLoadingPay}
+                                                onPay={handleOnlinePayment}
+                                                formatCurrency={formatCurrency}
+                                            />
+                                        )}
+
+                                        {/* Pelunasan (if booking fee paid) */}
+                                        {transaction.installments?.find(
+                                            (i) => i.installment_number === 0,
+                                        )?.status === "paid" &&
+                                            transaction.installments?.find(
+                                                (i) =>
+                                                    i.installment_number === 1,
+                                            ) && (
+                                                <div className="mt-5 pt-5 border-t border-gray-200">
+                                                    <CashPaymentModule
+                                                        installment={transaction.installments.find(
                                                             (i) =>
                                                                 i.installment_number ===
                                                                 1,
-                                                        ) && (
-                                                            <div className="mt-6 pt-6 border-t border-white/10">
-                                                                <CashPaymentModule
-                                                                    installment={transaction.installments.find(
-                                                                        (i) =>
-                                                                            i.installment_number ===
-                                                                            1,
-                                                                    )}
-                                                                    type="PELUNASAN UNIT"
-                                                                    isLoading={
-                                                                        isLoadingPay
-                                                                    }
-                                                                    onPay={
-                                                                        handleOnlinePayment
-                                                                    }
-                                                                    formatCurrency={
-                                                                        formatCurrency
-                                                                    }
-                                                                />
-                                                            </div>
                                                         )}
+                                                        type="Pelunasan Unit"
+                                                        isLoading={isLoadingPay}
+                                                        onPay={
+                                                            handleOnlinePayment
+                                                        }
+                                                        formatCurrency={
+                                                            formatCurrency
+                                                        }
+                                                    />
+                                                </div>
+                                            )}
+                                    </div>
+                                )}
 
-                                                    {/* Credit Document CTA */}
-                                                    {isCredit && (
-                                                        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                                                            <div>
-                                                                <div className="text-white font-bold mb-1">
-                                                                    Lengkapi
-                                                                    Dokumen
-                                                                </div>
-                                                                <div className="text-sm text-white/50">
-                                                                    Upload KTP,
-                                                                    KK, dan Slip
-                                                                    Gaji untuk
-                                                                    proses
-                                                                    survey.
-                                                                </div>
-                                                            </div>
-                                                            <Link
-                                                                href={route(
-                                                                    "motors.manage-documents",
-                                                                    transaction.id,
-                                                                )}
-                                                                className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2 whitespace-nowrap"
-                                                            >
-                                                                <Upload
-                                                                    size={18}
-                                                                />{" "}
-                                                                Upload Dokumen
-                                                            </Link>
-                                                        </div>
+                                {/* Document Upload CTA (Credit) */}
+                                {isCredit && (
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                                        <div className="flex items-start gap-4">
+                                            <div className="p-3 bg-blue-100 rounded-lg shrink-0">
+                                                <AlertCircle
+                                                    size={20}
+                                                    className="text-blue-600"
+                                                />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="font-bold text-blue-900 mb-2">
+                                                    Lengkapi Dokumen Anda
+                                                </h3>
+                                                <p className="text-sm text-blue-800 mb-4">
+                                                    Upload KTP, Kartu Keluarga,
+                                                    dan Slip Gaji untuk
+                                                    melanjutkan proses
+                                                    verifikasi kredit Anda.
+                                                </p>
+                                                <Link
+                                                    href={route(
+                                                        "motors.upload-credit-documents",
+                                                        transaction.id,
                                                     )}
-                                                </div>
-
-                                                {/* Navigation Buttons */}
-                                                <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                                                    <Link
-                                                        href={route("home")}
-                                                        className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold transition-all flex items-center gap-2"
-                                                    >
-                                                        <Home size={18} />{" "}
-                                                        Beranda
-                                                    </Link>
-                                                    <Link
-                                                        href={route(
-                                                            "motors.index",
-                                                        )}
-                                                        className="px-8 py-3 bg-white text-black hover:bg-gray-200 rounded-xl font-bold transition-all shadow-lg flex items-center gap-2"
-                                                    >
-                                                        <ArrowRight size={18} />{" "}
-                                                        Cari Motor Lain
-                                                    </Link>
-                                                </div>
+                                                    className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                                >
+                                                    <Upload size={18} /> Upload
+                                                    Dokumen
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
+                                )}
 
-                                    {/* Decor: Barcode Line */}
-                                    <div className="h-2 w-full bg-[repeating-linear-gradient(90deg,transparent,transparent_4px,#ffffff_4px,#ffffff_8px)] opacity-10"></div>
+                                {/* Action Buttons */}
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <Link
+                                        href={route("home")}
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 text-gray-700 font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                    >
+                                        <Home size={18} /> Beranda
+                                    </Link>
+                                    <Link
+                                        href={route("motors.index")}
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        <ArrowRight size={18} /> Cari Motor Lain
+                                    </Link>
+                                    <button
+                                        onClick={() => window.print()}
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 text-gray-700 font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                    >
+                                        <Download size={18} /> Print
+                                    </button>
                                 </div>
-                            </motion.div>
-                        </motion.div>
+
+                                {/* Tanggal Info */}
+                                <div className="text-center text-sm text-gray-600">
+                                    <p>
+                                        Dibuat pada:{" "}
+                                        <span className="font-semibold text-gray-900">
+                                            {new Date(
+                                                transaction.created_at,
+                                            ).toLocaleDateString("id-ID", {
+                                                day: "numeric",
+                                                month: "long",
+                                                year: "numeric",
+                                            })}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </PublicLayout>
-    );
-}
-
-// Subcomponents
-function InfoBox({ label, value, highlight = false }) {
-    return (
-        <div
-            className={`p-3 rounded-lg border ${
-                highlight
-                    ? "bg-white/5 border-white/20"
-                    : "bg-transparent border-transparent"
-            }`}
-        >
-            <div className="text-xs text-white/40 uppercase tracking-wide mb-1">
-                {label}
-            </div>
-            <div
-                className={`font-medium ${
-                    highlight ? "text-accent" : "text-white"
-                }`}
-            >
-                {value}
-            </div>
-        </div>
     );
 }
 
@@ -550,55 +473,39 @@ function CashPaymentModule({
     const isPaid = installment.status === "paid";
 
     return (
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4">
             <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-2">
                     {isPaid ? (
                         <CheckCircle className="text-green-500" size={18} />
                     ) : (
-                        <Wallet className="text-yellow-500" size={18} />
+                        <AlertCircle className="text-yellow-500" size={18} />
                     )}
-                    <h5 className="font-bold text-white">{type}</h5>
+                    <h5 className="font-bold text-gray-900">{type}</h5>
                 </div>
-                <div className="text-2xl font-mono font-bold text-white tracking-tight">
+                <div className="text-2xl font-bold text-blue-600">
                     {formatCurrency(installment.amount)}
                 </div>
-                <p className="text-xs text-white/40 mt-1">
+                <p
+                    className={`text-xs mt-1 ${
+                        isPaid ? "text-green-600" : "text-yellow-600"
+                    }`}
+                >
                     {isPaid
-                        ? "Pembayaran telah diverifikasi."
-                        : "Segera selesaikan pembayaran untuk diproses."}
+                        ? "✓ Pembayaran telah diverifikasi"
+                        : "⚠ Segera selesaikan pembayaran"}
                 </p>
             </div>
 
-            <div>
-                {isPaid ? (
-                    <span className="px-4 py-2 bg-green-500/20 border border-green-500/30 text-green-400 font-bold rounded-lg flex items-center gap-2">
-                        LUNAS{" "}
-                        <CheckCircle
-                            size={16}
-                            fill="currentColor"
-                            className="text-green-900"
-                        />
-                    </span>
-                ) : (
-                    <button
-                        onClick={() => onPay(installment)}
-                        disabled={isLoading}
-                        className="px-6 py-3 bg-accent hover:bg-lime-400 text-black font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(132,204,22,0.3)] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isLoading ? (
-                            <span className="flex items-center gap-2">
-                                <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
-                                Memproses...
-                            </span>
-                        ) : (
-                            <>
-                                Bayar Sekarang <ArrowRight size={18} />
-                            </>
-                        )}
-                    </button>
-                )}
-            </div>
+            {!isPaid && (
+                <button
+                    onClick={() => onPay(installment)}
+                    disabled={isLoading}
+                    className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                >
+                    {isLoading ? "Memproses..." : "Bayar Sekarang"}
+                </button>
+            )}
         </div>
     );
 }

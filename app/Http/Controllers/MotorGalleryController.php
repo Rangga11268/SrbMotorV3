@@ -696,4 +696,104 @@ class MotorGalleryController extends Controller
             return back()->with('error', 'Terjadi kesalahan saat menolak dokumen.');
         }
     }
+
+    /**
+     * Schedule a survey for credit application
+     */
+    public function scheduleSurvey(Request $request, $creditDetailId)
+    {
+        // Validate input
+        $request->validate([
+            'scheduled_date' => 'required|date|after_or_equal:today',
+            'scheduled_time' => 'required|date_format:H:i',
+            'location' => 'required|string|min:5|max:255',
+            'surveyor_name' => 'required|string|min:3|max:100',
+            'surveyor_phone' => 'required|string|min:10|max:20',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        // Only admin can schedule surveys
+        if (!Auth::user()->isAdmin) {
+            return back()->with('error', 'Unauthorized');
+        }
+
+        try {
+            $creditDetail = CreditDetail::findOrFail($creditDetailId);
+
+            // Create survey schedule
+            $schedule = $creditDetail->surveySchedules()->create([
+                'scheduled_date' => $request->scheduled_date,
+                'scheduled_time' => $request->scheduled_time,
+                'location' => $request->location,
+                'surveyor_name' => $request->surveyor_name,
+                'surveyor_phone' => $request->surveyor_phone,
+                'notes' => $request->notes,
+                'status' => 'pending',
+            ]);
+
+            // Update credit status
+            $creditDetail->credit_status = 'jadwal_survey';
+            $creditDetail->save();
+
+            Log::info('Survey scheduled', [
+                'survey_schedule_id' => $schedule->id,
+                'credit_detail_id' => $creditDetailId,
+                'scheduled_date' => $request->scheduled_date,
+            ]);
+
+            // Send WhatsApp notification to customer
+            $user = $creditDetail->transaction->user;
+            $whatsappService = app(\App\Services\WhatsAppService::class);
+            $whatsappService->sendMessage(
+                $user->phone,
+                "Halo {$user->name},\n\n✓ Jadwal survey kredit Anda telah dijadwalkan:\n\n📅 Tanggal: {$request->scheduled_date}\n⏰ Waktu: {$request->scheduled_time}\n📍 Lokasi: {$request->location}\n👤 Surveyor: {$request->surveyor_name}\n📞 Telepon: {$request->surveyor_phone}\n\nMohon memastikan Anda ada di lokasi pada waktu yang telah ditentukan.\n\n- SRB Motor"
+            );
+
+            return back()->with('success', 'Jadwal survey telah dibuat dan notifikasi telah dikirim ke customer.');
+        } catch (\Exception $e) {
+            Log::error('Error scheduling survey', [
+                'error' => $e->getMessage(),
+                'credit_detail_id' => $creditDetailId,
+            ]);
+
+            return back()->with('error', 'Terjadi kesalahan saat menjadwalkan survey.');
+        }
+    }
+
+    /**
+     * Confirm survey completion
+     */
+    public function confirmSurveyCompletion($surveyScheduleId)
+    {
+        // Only admin can confirm survey completion
+        if (!Auth::user()->isAdmin) {
+            return back()->with('error', 'Unauthorized');
+        }
+
+        try {
+            $schedule = \App\Models\SurveySchedule::findOrFail($surveyScheduleId);
+            $schedule->complete();
+
+            Log::info('Survey completed', [
+                'survey_schedule_id' => $surveyScheduleId,
+            ]);
+
+            // Send notification to customer
+            $user = $schedule->creditDetail->transaction->user;
+            $whatsappService = app(\App\Services\WhatsAppService::class);
+            $whatsappService->sendMessage(
+                $user->phone,
+                "Halo {$user->name},\n\n✓ Survey kredit Anda telah selesai dilakukan.\n\nTim kami akan segera memproses hasil survey dan memberikan keputusan persetujuan kredit Anda.\n\nTerima kasih atas waktu dan kerjasama Anda.\n\n- SRB Motor"
+            );
+
+            return back()->with('success', 'Survey telah ditandai sebagai selesai.');
+        } catch (\Exception $e) {
+            Log::error('Error confirming survey completion', [
+                'error' => $e->getMessage(),
+                'survey_schedule_id' => $surveyScheduleId,
+            ]);
+
+            return back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi survey.');
+        }
+    }
 }

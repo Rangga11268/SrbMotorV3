@@ -143,7 +143,7 @@ class TransactionController extends Controller
     /**
      * Show the form for editing credit details.
      */
-    public function editCredit(Transaction $transaction): \Inertia\Response
+    public function editCredit(Transaction $transaction): \Inertia\Response|RedirectResponse
     {
         // Ensure this is a credit transaction
         if ($transaction->transaction_type !== 'CREDIT') {

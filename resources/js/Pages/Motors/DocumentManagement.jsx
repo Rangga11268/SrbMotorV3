@@ -8,17 +8,8 @@ import {
     AlertCircle,
     ArrowLeft,
     Eye,
-    Clock,
-    XCircle,
-    AlertTriangle,
-    Image as ImageIcon,
     Trash2,
-    ShieldCheck,
-    Database,
-    ScanLine,
-    X,
-    Lock,
-    Activity,
+    FileCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -32,42 +23,6 @@ export default function DocumentManagement({ transaction }) {
             LAINNYA: [],
         },
     });
-
-    // Status Helper
-    const getCreditStatusInfo = (status) => {
-        switch (status) {
-            case "disetujui":
-            case "ready_for_delivery":
-                return {
-                    label: "DISETUJUI",
-                    color: "bg-green-500/10 text-green-400 border-green-500/20",
-                    icon: CheckCircle,
-                };
-            case "menunggu_persetujuan":
-            case "dikirim_ke_surveyor":
-            case "PENDING_REVIEW":
-            case "SUBMITTED_TO_SURVEYOR":
-            case "SURVEY_SCHEDULED":
-                return {
-                    label: "DIPROSES",
-                    color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-                    icon: Activity,
-                };
-            case "ditolak":
-            case "REJECTED":
-                return {
-                    label: "DITOLAK",
-                    color: "bg-red-500/10 text-red-400 border-red-500/20",
-                    icon: XCircle,
-                };
-            default:
-                return {
-                    label: status,
-                    color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-                    icon: FileText,
-                };
-        }
-    };
 
     const handleFileChange = (e, type) => {
         const newFiles = Array.from(e.target.files);
@@ -100,303 +55,232 @@ export default function DocumentManagement({ transaction }) {
         }).format(amount);
     };
 
-    const creditStatus = getCreditStatusInfo(
-        transaction.credit_detail?.credit_status,
-    );
-    const StatusIcon = creditStatus.icon;
+    const documentTypes = [
+        {
+            key: "KTP",
+            label: "Kartu Identitas (KTP)",
+            description: "Foto bagian depan dan belakang",
+            required: true,
+        },
+        {
+            key: "KK",
+            label: "Kartu Keluarga (KK)",
+            description: "Dokumen lengkap dan jelas",
+            required: true,
+        },
+        {
+            key: "SLIP_GAJI",
+            label: "Bukti Penghasilan",
+            description: "Slip gaji 3 bulan terakhir",
+            required: true,
+        },
+        {
+            key: "LAINNYA",
+            label: "Dokumen Pendukung",
+            description: "Dokumen tambahan (opsional)",
+            required: false,
+        },
+    ];
 
-    const groupedDocuments =
-        transaction.credit_detail?.documents?.reduce((acc, doc) => {
-            const type = doc.document_type;
-            if (!acc[type]) acc[type] = [];
-            acc[type].push(doc);
-            return acc;
-        }, {}) || {};
+    // Check if all required documents are complete
+    const isComplete =
+        data.documents.KTP.length > 0 &&
+        data.documents.KK.length > 0 &&
+        data.documents.SLIP_GAJI.length > 0;
 
-    const hasRequiredDocs =
-        transaction.credit_detail?.documents?.some(
-            (d) => d.document_type === "KTP",
-        ) &&
-        transaction.credit_detail?.documents?.some(
-            (d) => d.document_type === "KK",
-        ) &&
-        transaction.credit_detail?.documents?.some(
-            (d) => d.document_type === "SLIP_GAJI",
-        );
+    const existingDocs = transaction.credit_detail?.documents || [];
 
     return (
-        <PublicLayout auth={auth} title="Brankas Dokumen">
-            <div className="flex-grow pt-[104px]">
-                <div className="bg-surface-dark min-h-screen pb-20 overflow-hidden relative pt-10">
-                    {/* Background FX */}
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-surface-dark to-surface-dark pointer-events-none"></div>
-
-                    <div className="container mx-auto px-4 relative z-10">
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-center mb-12"
-                        >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 mb-6 backdrop-blur-md">
-                                <Database size={12} className="text-blue-400" />
-                                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-blue-400">
-                                    AKSES DATABASE
-                                </span>
-                            </div>
-                            <h1 className="text-4xl md:text-5xl font-display font-black text-white mb-4">
-                                BRANKAS{" "}
-                                <span className="text-accent text-glow">
-                                    DOKUMEN
-                                </span>
-                            </h1>
-                            <p className="text-white/40 font-mono text-sm">
-                                Kelola dan perbarui aset verifikasi untuk ID
-                                Transaksi: #{transaction.id}
-                            </p>
-                        </motion.div>
-
-                        <div className="max-w-5xl mx-auto space-y-8">
-                            {/* Transaction Status Card */}
-                            <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
-                                <div className="p-6 border-b border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 bg-black/50 rounded-lg border border-white/10 p-2 flex items-center justify-center">
-                                            <img
-                                                src={`/storage/${transaction.motor.image_path}`}
-                                                alt={transaction.motor.name}
-                                                className="w-full h-full object-contain"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h2 className="text-xl font-bold text-white font-display">
-                                                {transaction.motor.name}
-                                            </h2>
-                                            <div className="flex items-center gap-4 text-xs font-mono text-white/50 mt-1">
-                                                <span>
-                                                    TENOR:{" "}
-                                                    {
-                                                        transaction
-                                                            .credit_detail.tenor
-                                                    }{" "}
-                                                    BLN
-                                                </span>
-                                                <span>•</span>
-                                                <span>
-                                                    DP:{" "}
-                                                    {formatCurrency(
-                                                        transaction
-                                                            .credit_detail
-                                                            .down_payment,
-                                                    )}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        className={`px-4 py-2 rounded-full border flex items-center gap-2 ${creditStatus.color}`}
-                                    >
-                                        <StatusIcon size={16} />
-                                        <span className="text-xs font-bold tracking-wider">
-                                            {creditStatus.label}
-                                        </span>
-                                    </div>
+        <PublicLayout auth={auth} title="Kelola Dokumen">
+            <div className="flex-grow pt-[104px] pb-20">
+                <div className="bg-white min-h-screen">
+                    {/* Header Section */}
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-5xl mx-auto">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-blue-100 rounded-lg">
+                                    <FileCheck
+                                        size={24}
+                                        className="text-blue-600"
+                                    />
                                 </div>
+                                <h1 className="text-4xl font-bold text-gray-900">
+                                    Kelola Dokumen
+                                </h1>
                             </div>
+                            <p className="text-gray-600">
+                                Lihat dokumen yang sudah diupload atau tambahkan
+                                dokumen baru
+                            </p>
+                        </div>
+                    </div>
 
-                            {/* Existing Documents Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-                                    <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-                                        <ShieldCheck
-                                            size={18}
-                                            className="text-green-400"
+                    {/* Main Content */}
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* Left: Motor Summary */}
+                            <div className="lg:col-span-1">
+                                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-24 shadow-sm">
+                                    <div className="aspect-video bg-gray-100 overflow-hidden flex items-center justify-center p-4">
+                                        <img
+                                            src={`/storage/${transaction.motor.image_path}`}
+                                            alt={transaction.motor.name}
+                                            className="w-full h-full object-contain"
                                         />
-                                        ASET TERSIMPAN
-                                    </h3>
+                                    </div>
+                                    <div className="p-5">
+                                        <h3 className="font-bold text-lg text-gray-900 mb-4">
+                                            {transaction.motor.name}
+                                        </h3>
 
-                                    {Object.keys(groupedDocuments).length >
-                                    0 ? (
-                                        <div className="space-y-4">
-                                            {Object.entries(
-                                                groupedDocuments,
-                                            ).map(([type, docs]) => (
-                                                <div
-                                                    key={type}
-                                                    className="space-y-2"
-                                                >
-                                                    <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-widest pl-1">
-                                                        {type.replace(
-                                                            /_/g,
-                                                            " ",
-                                                        )}
-                                                    </h4>
-                                                    {docs.map((doc, idx) => (
+                                        {/* Existing Documents List */}
+                                        <div className="mb-5 pb-5 border-b border-gray-200">
+                                            <p className="text-xs font-semibold text-gray-600 mb-3">
+                                                DOKUMEN YANG ADA
+                                            </p>
+                                            {existingDocs.length > 0 ? (
+                                                <div className="space-y-2">
+                                                    {existingDocs.map((doc) => (
                                                         <div
-                                                            key={idx}
-                                                            className="flex items-center justify-between bg-black/30 p-3 rounded-xl border border-white/5 group hover:border-blue-500/30 transition-colors"
+                                                            key={doc.id}
+                                                            className="flex items-center gap-2"
                                                         >
-                                                            <div className="flex items-center gap-3 overflow-hidden">
-                                                                <div className="w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center text-blue-400">
-                                                                    <FileText
-                                                                        size={
-                                                                            16
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                                <span className="text-sm text-white/70 font-mono truncate max-w-[150px]">
-                                                                    {
-                                                                        doc.original_name
-                                                                    }
-                                                                </span>
-                                                            </div>
+                                                            <CheckCircle
+                                                                size={16}
+                                                                className="text-green-600 shrink-0"
+                                                            />
                                                             <a
                                                                 href={`/storage/${doc.file_path}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors"
+                                                                className="text-xs text-blue-600 hover:underline truncate"
                                                             >
-                                                                <Eye
-                                                                    size={12}
-                                                                />{" "}
-                                                                LIHAT
+                                                                {
+                                                                    doc.document_type
+                                                                }
                                                             </a>
                                                         </div>
                                                     ))}
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                <p className="text-xs text-gray-500">
+                                                    Belum ada dokumen
+                                                </p>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <div className="text-center py-10">
-                                            <p className="text-white/30 font-mono text-sm">
-                                                BRANKAS KOSONG
-                                            </p>
-                                        </div>
-                                    )}
 
-                                    <div
-                                        className={`mt-6 p-4 rounded-xl border flex items-center gap-3 ${
-                                            hasRequiredDocs
-                                                ? "bg-green-500/10 border-green-500/20 text-green-400"
-                                                : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
-                                        }`}
-                                    >
-                                        {hasRequiredDocs ? (
-                                            <CheckCircle size={20} />
+                                        {/* Status Badge */}
+                                        {isComplete ? (
+                                            <div className="inline-flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg w-full justify-center">
+                                                <CheckCircle
+                                                    size={16}
+                                                    className="text-green-600"
+                                                />
+                                                <span className="text-xs font-semibold text-green-700">
+                                                    Lengkap
+                                                </span>
+                                            </div>
                                         ) : (
-                                            <AlertTriangle size={20} />
+                                            <div className="inline-flex items-center gap-2 px-3 py-2 bg-yellow-50 border border-yellow-200 rounded-lg w-full justify-center">
+                                                <AlertCircle
+                                                    size={16}
+                                                    className="text-yellow-700"
+                                                />
+                                                <span className="text-xs font-semibold text-yellow-700">
+                                                    Belum Lengkap
+                                                </span>
+                                            </div>
                                         )}
-                                        <span className="text-xs font-bold font-mono">
-                                            {hasRequiredDocs
-                                                ? "SEMUA PROTOKOL TERVERIFIKASI"
-                                                : "DATA TIDAK LENGKAP TERDETEKSI"}
-                                        </span>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Upload New Form */}
-                                <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-                                    <h3 className="text-white font-bold flex items-center gap-2 mb-6 border-b border-white/5 pb-4">
-                                        <Upload
-                                            size={18}
-                                            className="text-accent"
-                                        />
-                                        UNGGAH DATA BARU
-                                    </h3>
+                            {/* Right: Upload Form */}
+                            <div className="lg:col-span-2">
+                                {/* Info Banner */}
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                                    <p className="text-sm text-blue-800">
+                                        <strong>💡 Tip:</strong> Anda dapat
+                                        mengganti dokumen dengan versi yang
+                                        lebih baik kapan saja.
+                                    </p>
+                                </div>
 
-                                    <form
-                                        onSubmit={submit}
-                                        className="space-y-4"
-                                    >
-                                        <FileUploadFieldMin
-                                            label="KTP"
-                                            id="document_ktp"
+                                <form onSubmit={submit} className="space-y-6">
+                                    {/* Document Fields */}
+                                    {documentTypes.map((docType) => (
+                                        <FileUploadField
+                                            key={docType.key}
+                                            label={docType.label}
+                                            description={docType.description}
+                                            id={`document_${docType.key.toLowerCase()}`}
                                             accept="image/*,application/pdf"
                                             onChange={(e) =>
-                                                handleFileChange(e, "KTP")
-                                            }
-                                            onRemove={(idx) =>
-                                                handleRemoveFile("KTP", idx)
-                                            }
-                                            error={errors["documents.KTP"]}
-                                            files={data.documents.KTP}
-                                        />
-                                        <FileUploadFieldMin
-                                            label="KK"
-                                            id="document_kk"
-                                            accept="image/*,application/pdf"
-                                            onChange={(e) =>
-                                                handleFileChange(e, "KK")
-                                            }
-                                            onRemove={(idx) =>
-                                                handleRemoveFile("KK", idx)
-                                            }
-                                            error={errors["documents.KK"]}
-                                            files={data.documents.KK}
-                                        />
-                                        <FileUploadFieldMin
-                                            label="SLIP GAJI"
-                                            id="document_slip_gaji"
-                                            accept="image/*,application/pdf"
-                                            onChange={(e) =>
-                                                handleFileChange(e, "SLIP_GAJI")
+                                                handleFileChange(e, docType.key)
                                             }
                                             onRemove={(idx) =>
                                                 handleRemoveFile(
-                                                    "SLIP_GAJI",
+                                                    docType.key,
                                                     idx,
                                                 )
                                             }
                                             error={
-                                                errors["documents.SLIP_GAJI"]
+                                                errors[
+                                                    `documents.${docType.key}`
+                                                ]
                                             }
-                                            files={data.documents.SLIP_GAJI}
+                                            files={data.documents[docType.key]}
+                                            required={docType.required}
                                         />
-                                        <FileUploadFieldMin
-                                            label="DOKUMEN TAMBAHAN"
-                                            id="document_lainnya"
-                                            accept="image/*,application/pdf"
-                                            onChange={(e) =>
-                                                handleFileChange(e, "LAINNYA")
-                                            }
-                                            onRemove={(idx) =>
-                                                handleRemoveFile("LAINNYA", idx)
-                                            }
-                                            error={errors["documents.LAINNYA"]}
-                                            files={data.documents.LAINNYA}
-                                        />
+                                    ))}
 
-                                        {progress && (
-                                            <div className="w-full bg-black/50 rounded-full h-1 mt-4 overflow-hidden">
-                                                <div
-                                                    className="h-full bg-accent"
-                                                    style={{
+                                    {/* Upload Progress */}
+                                    {progress && (
+                                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="text-sm font-medium text-gray-700">
+                                                    Mengupload...
+                                                </span>
+                                                <span className="text-sm font-medium text-gray-700">
+                                                    {progress.percentage}%
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
+                                                <motion.div
+                                                    className="h-full bg-blue-600"
+                                                    initial={{ width: 0 }}
+                                                    animate={{
                                                         width: `${progress.percentage}%`,
                                                     }}
-                                                ></div>
+                                                    transition={{
+                                                        duration: 0.3,
+                                                    }}
+                                                />
                                             </div>
-                                        )}
-
-                                        <div className="flex gap-4 pt-4 mt-6">
-                                            <Link
-                                                href={route(
-                                                    "motors.order.confirmation",
-                                                    transaction.id,
-                                                )}
-                                                className="px-4 py-3 rounded-xl border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors font-bold text-xs"
-                                            >
-                                                <ArrowLeft size={16} />
-                                            </Link>
-                                            <button
-                                                type="submit"
-                                                disabled={processing}
-                                                className="flex-1 bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-accent transition-colors flex items-center justify-center gap-2 disabled:opacity-50 text-sm"
-                                            >
-                                                <Upload size={16} /> UNGGAH
-                                            </button>
                                         </div>
-                                    </form>
-                                </div>
+                                    )}
+
+                                    {/* Action Buttons */}
+                                    <div className="flex flex-col-reverse sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                                        <Link
+                                            href={route(
+                                                "motors.order.confirmation",
+                                                transaction.id,
+                                            )}
+                                            className="flex items-center justify-center gap-2 px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                        >
+                                            <ArrowLeft size={18} /> Kembali
+                                        </Link>
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                        >
+                                            <Upload size={18} /> Perbarui
+                                            Dokumen
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -406,73 +290,143 @@ export default function DocumentManagement({ transaction }) {
     );
 }
 
-function FileUploadFieldMin({
+function FileUploadField({
     label,
+    description,
     id,
     accept,
     onChange,
     onRemove,
     error,
     files,
+    required,
 }) {
+    const isImage = (file) => file.type.startsWith("image/");
+
     return (
-        <div className="bg-black/20 p-3 rounded-xl border border-white/5 hover:border-white/20 transition-colors">
-            <div className="flex justify-between items-center mb-2">
-                <label
-                    htmlFor={id}
-                    className="text-[10px] font-bold text-white/50 uppercase tracking-wider"
-                >
-                    {label}
-                </label>
-                <div className="relative">
-                    <input
-                        type="file"
-                        id={id}
-                        className="absolute inset-0 w-8 h-8 opacity-0 cursor-pointer z-10"
-                        accept={accept}
-                        multiple
-                        onChange={onChange}
-                    />
-                    <button
-                        type="button"
-                        className="text-accent hover:text-white transition-colors"
+        <div className="bg-white border border-gray-200 rounded-lg p-5">
+            <div className="flex items-start justify-between mb-4">
+                <div>
+                    <label
+                        htmlFor={id}
+                        className="block text-sm font-semibold text-gray-900 mb-1"
                     >
-                        <Upload size={14} />
-                    </button>
+                        {label}
+                        {required && (
+                            <span className="text-red-500 ml-1">*</span>
+                        )}
+                    </label>
+                    <p className="text-sm text-gray-600">{description}</p>
                 </div>
             </div>
 
-            <AnimatePresence>
-                {files && files.length > 0 && (
-                    <div className="space-y-1">
-                        {Array.from(files).map((file, idx) => (
-                            <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="flex items-center justify-between text-xs text-white bg-white/5 p-1.5 rounded"
-                            >
-                                <span className="truncate max-w-[150px]">
-                                    {file.name}
-                                </span>
-                                <button
-                                    type="button"
-                                    onClick={() => onRemove(idx)}
-                                    className="text-red-400 hover:text-red-300"
-                                >
-                                    <X size={12} />
-                                </button>
-                            </motion.div>
-                        ))}
+            <div className="space-y-4">
+                {/* Upload Zone */}
+                <div className="relative group">
+                    <input
+                        type="file"
+                        id={id}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                        accept={accept}
+                        multiple
+                        onChange={onChange}
+                        required={files.length === 0 && required}
+                    />
+                    <div
+                        className={`w-full p-6 rounded-lg border-2 border-dashed transition-all flex flex-col items-center justify-center text-center ${
+                            error
+                                ? "border-red-300 bg-red-50"
+                                : "border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50"
+                        }`}
+                    >
+                        <Upload
+                            size={32}
+                            className={error ? "text-red-400" : "text-gray-400"}
+                        />
+                        <p className="mt-2 text-sm font-medium text-gray-900">
+                            Klik untuk unggah atau drag & drop
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">
+                            JPG, PNG, atau PDF. Maksimal 2MB per file.
+                        </p>
                     </div>
+                </div>
+
+                {/* File List */}
+                <AnimatePresence>
+                    {files && files.length > 0 && (
+                        <div className="space-y-2">
+                            {Array.from(files).map((file, idx) => (
+                                <motion.div
+                                    key={`${file.name}-${idx}`}
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg group hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                                >
+                                    {/* Preview */}
+                                    <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center shrink-0 border border-gray-200 overflow-hidden">
+                                        {isImage(file) ? (
+                                            <img
+                                                src={URL.createObjectURL(file)}
+                                                alt="preview"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <FileText
+                                                size={16}
+                                                className="text-gray-400"
+                                            />
+                                        )}
+                                    </div>
+
+                                    {/* Info */}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-gray-900 truncate">
+                                            {file.name}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            {(file.size / 1024).toFixed(2)} KB
+                                        </p>
+                                    </div>
+
+                                    {/* Status */}
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle
+                                            size={18}
+                                            className="text-green-500"
+                                        />
+                                    </div>
+
+                                    {/* Remove Button */}
+                                    <button
+                                        type="button"
+                                        onClick={() => onRemove(idx)}
+                                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-0 group-hover:opacity-100"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
+                </AnimatePresence>
+
+                {/* Error Message */}
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg"
+                    >
+                        <AlertCircle
+                            size={16}
+                            className="text-red-600 shrink-0 mt-0.5"
+                        />
+                        <span className="text-sm text-red-700">{error}</span>
+                    </motion.div>
                 )}
-            </AnimatePresence>
-            {error && (
-                <span className="text-[10px] text-red-500 block mt-1">
-                    {error}
-                </span>
-            )}
+            </div>
         </div>
     );
 }

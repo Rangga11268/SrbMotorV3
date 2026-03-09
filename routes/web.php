@@ -39,6 +39,8 @@ Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::c
 Route::post('/motors/{transaction}/cancel', [MotorGalleryController::class, 'cancelOrder'])->name('motors.cancel')->middleware(['auth', 'verified']);
 Route::post('/documents/{document}/approve', [MotorGalleryController::class, 'approveDocument'])->name('documents.approve')->middleware(['auth', 'verified']);
 Route::post('/documents/{document}/reject', [MotorGalleryController::class, 'rejectDocument'])->name('documents.reject')->middleware(['auth', 'verified']);
+Route::post('/credit-details/{creditDetail}/schedule-survey', [MotorGalleryController::class, 'scheduleSurvey'])->name('credit-details.schedule-survey')->middleware(['auth', 'verified']);
+Route::post('/survey-schedules/{surveySchedule}/confirm-completion', [MotorGalleryController::class, 'confirmSurveyCompletion'])->name('survey-schedules.confirm-completion')->middleware(['auth', 'verified']);
 Route::get('/contact', function () {
     return redirect('/#contact');
 })->name('contact');
