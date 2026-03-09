@@ -92,12 +92,6 @@ class CreditDetail extends Model
             'jadwal_survey' => 'Jadwal Survey',
             'disetujui' => 'Disetujui',
             'ditolak' => 'Ditolak',
-            'PENDING_REVIEW' => 'Menunggu Persetujuan',
-            'DATA_INVALID' => 'Data Tidak Valid',
-            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
-            'SURVEY_SCHEDULED' => 'Jadwal Survey',
-            'APPROVED' => 'Disetujui',
-            'REJECTED' => 'Ditolak'
         ];
 
         return $statusMap[$this->credit_status] ?? $this->credit_status;

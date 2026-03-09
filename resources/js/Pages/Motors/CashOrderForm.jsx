@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Link } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import Button from "@/Components/UI/Button";
@@ -20,6 +20,7 @@ import {
     ShieldCheck,
     ChevronLeft,
     Info,
+    AlertTriangle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -30,8 +31,10 @@ export default function CashOrderForm({ motor, auth }) {
         customer_occupation: "",
         notes: "",
         booking_fee: 0,
-        payment_method: "",
+        payment_method: "Transfer Bank",
     });
+
+    const [hasValidationErrors, setHasValidationErrors] = useState(false);
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat("id-ID", {
@@ -41,8 +44,56 @@ export default function CashOrderForm({ motor, auth }) {
         }).format(amount);
     };
 
+    // Format number untuk display: 4700000 -> 4.700.000
+    const formatNumberDisplay = (numStr) => {
+        if (!numStr && numStr !== 0) return "";
+        const strValue = String(numStr);
+        const cleanNum = strValue.replace(/[^\d]/g, "");
+        return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    // Parse formatted number untuk backend: 4.700.000 -> 4700000
+    const parseFormattedNumber = (str) => {
+        return String(str).replace(/[^\d]/g, "");
+    };
+
+    const handleBookingFeeChange = (value) => {
+        const cleaned = parseFormattedNumber(value);
+        setData("booking_fee", cleaned);
+    };
+
     const submit = (e) => {
         e.preventDefault();
+
+        // Validation check
+        const validationErrors = [];
+        const bookingFee = parseFloat(data.booking_fee) || 0;
+
+        if (!data.customer_name.trim()) {
+            validationErrors.push("Nama lengkap harus diisi");
+        }
+        if (!data.customer_phone.trim()) {
+            validationErrors.push("Nomor WhatsApp harus diisi");
+        }
+        if (!data.customer_occupation.trim()) {
+            validationErrors.push("Pekerjaan harus diisi");
+        }
+        if (bookingFee < 0 || bookingFee >= motor.price) {
+            validationErrors.push(
+                `Biaya bookingnya harus antara 0 dan kurang dari Rp ${formatCurrency(motor.price)}`,
+            );
+        }
+        if (!data.payment_method) {
+            validationErrors.push("Metode pembayaran harus dipilih");
+        }
+
+        if (validationErrors.length > 0) {
+            setHasValidationErrors(validationErrors);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+        }
+
+        setHasValidationErrors(false);
         post(route("motors.process-cash-order", motor.id));
     };
 
@@ -78,6 +129,37 @@ export default function CashOrderForm({ motor, auth }) {
                                     <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                                 </div>
 
+                                {hasValidationErrors &&
+                                    Array.isArray(hasValidationErrors) && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="p-4 bg-red-50 border-l-4 border-red-500 m-4"
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                                <div>
+                                                    <p className="font-bold text-red-900 mb-2">
+                                                        Data tidak lengkap:
+                                                    </p>
+                                                    <ul className="space-y-1">
+                                                        {hasValidationErrors.map(
+                                                            (err, idx) => (
+                                                                <li
+                                                                    key={idx}
+                                                                    className="text-sm text-red-700 flex items-center gap-2"
+                                                                >
+                                                                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                                                    {err}
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+
                                 <CardBody className="p-8">
                                     <form
                                         onSubmit={submit}
@@ -95,6 +177,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                         type="text"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="Sesuai KTP"
+                                                        required
                                                         value={
                                                             data.customer_name
                                                         }
@@ -126,6 +209,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                         type="tel"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="0812..."
+                                                        required
                                                         value={
                                                             data.customer_phone
                                                         }
@@ -158,6 +242,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                     type="text"
                                                     className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                     placeholder="Contoh: Karyawan Swasta"
+                                                    required
                                                     value={
                                                         data.customer_occupation
                                                     }
@@ -176,6 +261,142 @@ export default function CashOrderForm({ motor, auth }) {
                                                     }
                                                 />
                                             )}
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="booking_fee">
+                                                Booking Fee (Opsional)
+                                            </Label>
+                                            <div className="space-y-3">
+                                                <div className="relative">
+                                                    <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="booking_fee"
+                                                        type="text"
+                                                        className={`w-full bg-white border-2 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-gray-900 ${
+                                                            parseFloat(
+                                                                data.booking_fee,
+                                                            ) > 0 &&
+                                                            parseFloat(
+                                                                data.booking_fee,
+                                                            ) < motor.price
+                                                                ? "border-green-500"
+                                                                : "border-gray-200 focus:border-blue-500"
+                                                        }`}
+                                                        placeholder="Masukkan booking fee (cicilan pertama atau jaminan)"
+                                                        value={formatNumberDisplay(
+                                                            data.booking_fee,
+                                                        )}
+                                                        onChange={(e) =>
+                                                            handleBookingFeeChange(
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+
+                                                {/* Booking Fee Info */}
+                                                <div>
+                                                    <p className="text-xs text-gray-500 font-medium mb-2">
+                                                        Maximum:{" "}
+                                                        {new Intl.NumberFormat(
+                                                            "id-ID",
+                                                            {
+                                                                style: "currency",
+                                                                currency: "IDR",
+                                                                minimumFractionDigits: 0,
+                                                            },
+                                                        ).format(
+                                                            motor.price - 1,
+                                                        )}{" "}
+                                                        (kurang dari harga unit)
+                                                    </p>
+
+                                                    {data.booking_fee &&
+                                                        parseFloat(
+                                                            data.booking_fee,
+                                                        ) > 0 && (
+                                                            <motion.div
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    y: -5,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    y: 0,
+                                                                }}
+                                                                className={`p-3 rounded-lg border ${
+                                                                    parseFloat(
+                                                                        data.booking_fee,
+                                                                    ) <
+                                                                    motor.price
+                                                                        ? "bg-green-50 border-green-200"
+                                                                        : "bg-red-50 border-red-200"
+                                                                }`}
+                                                            >
+                                                                <div className="space-y-2">
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span
+                                                                            className={`text-xs font-bold uppercase tracking-wider ${
+                                                                                parseFloat(
+                                                                                    data.booking_fee,
+                                                                                ) <
+                                                                                motor.price
+                                                                                    ? "text-green-700"
+                                                                                    : "text-red-700"
+                                                                            }`}
+                                                                        >
+                                                                            Sisa
+                                                                            Pembayaran
+                                                                        </span>
+                                                                        <span className="text-sm font-black text-gray-900">
+                                                                            {new Intl.NumberFormat(
+                                                                                "id-ID",
+                                                                                {
+                                                                                    style: "currency",
+                                                                                    currency:
+                                                                                        "IDR",
+                                                                                    minimumFractionDigits: 0,
+                                                                                },
+                                                                            ).format(
+                                                                                Math.max(
+                                                                                    0,
+                                                                                    motor.price -
+                                                                                        parseFloat(
+                                                                                            data.booking_fee,
+                                                                                        ),
+                                                                                ),
+                                                                            )}
+                                                                        </span>
+                                                                    </div>
+                                                                    {parseFloat(
+                                                                        data.booking_fee,
+                                                                    ) >=
+                                                                        motor.price && (
+                                                                        <p className="text-xs text-red-700 font-medium">
+                                                                            ❌
+                                                                            Booking
+                                                                            fee
+                                                                            tidak
+                                                                            boleh
+                                                                            ≥
+                                                                            harga
+                                                                            unit
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            </motion.div>
+                                                        )}
+                                                </div>
+
+                                                {errors.booking_fee && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.booking_fee
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="space-y-4">

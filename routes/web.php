@@ -24,18 +24,18 @@ Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.in
 Route::get('/api/search/motors', [MotorGalleryController::class, 'search'])->name('api.motors.search');
 Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
-// Order routes - auth required (security fix: prevent unauthenticated access + applying rate limits)
-Route::middleware(['auth', 'throttle:15,1'])->group(function () {
+// Order routes - auth + email verification required (security fix: prevent unauthenticated access + applying rate limits)
+Route::middleware(['auth', 'verified', 'throttle:15,1'])->group(function () {
     Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
     Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
     Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
     Route::post('/motors/{motor}/process-credit-order', [MotorGalleryController::class, 'processCreditOrder'])->name('motors.process-credit-order');
 });
-Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware('auth');
-Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware('auth');
-Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware('auth');
-Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware('auth');
-Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware('auth');
+Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware(['auth', 'verified']);
+Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware(['auth', 'verified']);
+Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware(['auth', 'verified']);
+Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware(['auth', 'verified']);
+Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware(['auth', 'verified']);
 Route::get('/contact', function () {
     return redirect('/#contact');
 })->name('contact');
@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/installments', [\App\Http\Controllers\InstallmentController::class, 'index'])->name('installments.index');
     Route::post('/installments/{installment}/pay', [\App\Http\Controllers\InstallmentController::class, 'store'])->name('installments.pay');
     Route::post('/installments/{installment}/pay-online', [\App\Http\Controllers\InstallmentController::class, 'createPayment'])->name('installments.create-payment');
@@ -95,7 +95,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/transactions/{transaction}/upload-document', [TransactionController::class, 'uploadDocument'])->name('transactions.upload-document');
     Route::delete('/documents/{document}', [TransactionController::class, 'deleteDocument'])->name('transactions.delete-document');
 
-    
+
 
     Route::post('/installments/{installment}/approve', [\App\Http\Controllers\InstallmentController::class, 'approve'])->name('installments.approve');
     Route::post('/installments/{installment}/reject', [\App\Http\Controllers\InstallmentController::class, 'reject'])->name('installments.reject');

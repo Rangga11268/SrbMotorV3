@@ -1,57 +1,68 @@
 # ANALISIS KOMPREHENSIF & IMPROVEMENT PLAN - SRB MOTORS V2
 
-**Last Updated**: March 8, 2026  
-**Version**: 2.1 - Status Update + Order Flow Analysis
+**Last Updated**: March 9, 2026 (Evening)  
+**Version**: 2.3 - Security & Status Standardization Complete
 
 ---
 
-## 📊 STATUS IMPLEMENTASI (Last Verified: March 8, 2026)
+## 📊 STATUS IMPLEMENTASI (Last Verified: March 9, 2026 - Evening)
 
 > Ringkasan cepat apa yang sudah dan belum dikerjakan berdasarkan audit kode aktual.
 
 ### ✅ Sudah Diimplementasi
 
-| #   | Item                                               | Keterangan                                                                          |
-| --- | -------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| 1   | Auth middleware pada route order                   | `Route::middleware(['auth', 'throttle:15,1'])` sudah aktif                          |
-| 2   | Midtrans webhook signature validation              | `PaymentCallbackController` sudah ada signature check + idempotency                 |
-| 3   | Rate limiting di routes                            | `throttle:15,1` pada order routes, `throttle:5,1` pada guest routes                 |
-| 4   | Google OAuth (Socialite)                           | `GoogleAuthController` dengan `stateless()`, google_id migration sudah ada          |
-| 5   | Google OAuth `email_verified_at` saat create user  | `email_verified_at = now()` di GoogleAuthController                                 |
-| 6   | TransactionService architecture                    | Service layer sudah ada dan dipakai TransactionController                           |
-| 7   | WA notifikasi ke user & admin saat order masuk     | Ada di `processCashOrder` dan `processCreditOrder`                                  |
-| 8   | Email notifikasi saat status kredit berubah        | `CreditStatusUpdated` mail di TransactionService                                    |
-| 9   | Cascade delete dokumen                             | `CreditDetail::booted()` hapus file fisik + record                                  |
-| 10  | Authorization check pada dokumen upload            | `user_id !== Auth::id()` di semua fungsi upload                                     |
-| 11  | `hasRequiredDocuments()` validasi kelengkapan      | Ada di model `CreditDetail`                                                         |
-| 12  | React import audit (useState, useEffect, lucide)   | Diperbaiki March 8, 2026                                                            |
-| 13  | Profile page layout fix (email badge overlap)      | Diperbaiki March 8, 2026                                                            |
-| 14  | Login/Register Google OAuth flash error display    | Ditambahkan flash error banner                                                      |
-| 15  | **Generate installment saat admin approve kredit** | `generateInstallments` dibuat `public`, dipanggil di `updateCredit` — March 8, 2026 |
-| 16  | **Bunga/interest rate kredit (1.5% flat/bulan)**   | Kalkulasi baru + kolom `interest_rate` + migration — March 8, 2026                  |
-| 17  | **Cek stok motor + duplikasi order**               | `tersedia` check + active order check di cash & kredit — March 8, 2026              |
-| 18  | **WA notifikasi admin saat dokumen diupload**      | Ditambahkan di `uploadCreditDocuments` — March 8, 2026                              |
-| 19  | **Minimum DP 20% dari harga motor**                | Custom error dengan nominal Rp di `processCreditOrder` — March 8, 2026              |
-| 20  | **Maksimum tenor 60 bulan**                        | Validasi `max:60` pada field tenor — March 8, 2026                                  |
+| #   | Item                                                | Keterangan                                                                             |
+| --- | --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| 1   | Auth middleware pada route order                    | `Route::middleware(['auth', 'throttle:15,1'])` sudah aktif                             |
+| 2   | Midtrans webhook signature validation               | `PaymentCallbackController` sudah ada signature check + idempotency                    |
+| 3   | Rate limiting di routes                             | `throttle:15,1` pada order routes, `throttle:5,1` pada guest routes                    |
+| 4   | Google OAuth (Socialite)                            | `GoogleAuthController` dengan `stateless()`, google_id migration sudah ada             |
+| 5   | Google OAuth `email_verified_at` saat create user   | `email_verified_at = now()` di GoogleAuthController                                    |
+| 6   | TransactionService architecture                     | Service layer sudah ada dan dipakai TransactionController                              |
+| 7   | WA notifikasi ke user & admin saat order masuk      | Ada di `processCashOrder` dan `processCreditOrder`                                     |
+| 8   | Email notifikasi saat status kredit berubah         | `CreditStatusUpdated` mail di TransactionService                                       |
+| 9   | Cascade delete dokumen                              | `CreditDetail::booted()` hapus file fisik + record                                     |
+| 10  | Authorization check pada dokumen upload             | `user_id !== Auth::id()` di semua fungsi upload                                        |
+| 11  | `hasRequiredDocuments()` validasi kelengkapan       | Ada di model `CreditDetail`                                                            |
+| 12  | React import audit (useState, useEffect, lucide)    | Diperbaiki March 8, 2026                                                               |
+| 13  | Profile page layout fix (email badge overlap)       | Diperbaiki March 8, 2026                                                               |
+| 14  | Login/Register Google OAuth flash error display     | Ditambahkan flash error banner                                                         |
+| 15  | **Generate installment saat admin approve kredit**  | `generateInstallments` dibuat `public`, dipanggil di `updateCredit` — March 8, 2026    |
+| 16  | **Bunga/interest rate kredit (1.5% flat/bulan)**    | Kalkulasi baru + kolom `interest_rate` + migration — March 8, 2026                     |
+| 17  | **Cek stok motor + duplikasi order**                | `tersedia` check + active order check di cash & kredit — March 8, 2026                 |
+| 18  | **WA notifikasi admin saat dokumen diupload**       | Ditambahkan di `uploadCreditDocuments` — March 8, 2026                                 |
+| 19  | **Minimum DP 20% dari harga motor**                 | Custom error dengan nominal Rp di `processCreditOrder` — March 8, 2026                 |
+| 20  | **Maksimum tenor 60 bulan**                         | Validasi `max:60` pada field tenor — March 8, 2026                                     |
+| 21  | **Form tenor dropdown fix (48→60 bulan)**           | Ditambahkan option 60 bulan ke CreditOrderForm — March 9, 2026                         |
+| 22  | **Add payment_method field ke CreditOrderForm**     | Select dropdown dengan options: Transfer Bank, E-Wallet, Virtual Account — March 9     |
+| 23  | **Add booking_fee field ke CashOrderForm**          | Input number dengan max-price validation hint — March 9, 2026                          |
+| 24  | **CashOrderForm payment_method UI sudah ada**       | Radio button UI untuk Transfer Bank & Tunai di Toko — Already existed                  |
+| 25  | **Status string standardization (snake_case only)** | Removed UPPERCASE variants dari CreditDetail model + InstallmentController — March 9   |
+| 26  | **Security headers (CSP, HSTS, X-Frame-Options)**   | SecurityHeadersMiddleware sudah aktif di bootstrap/app.php — March 9                   |
+| 27  | **MustVerifyEmail di User model**                   | Uncommented interface, added to User class, tested via `verified` middleware — March 9 |
+| 28  | **Form client-side validation dengan error banner** | Validasi realtime + error list, auto-scroll ke atas — March 9, 2026                    |
+| 29  | **DP input improvement (Suggestion Button)**        | Button "Gunakan Min DP" + dynamic loan amount feedback — March 9, 2026                 |
+| 30  | **Booking fee input improvement**                   | Dynamic sisa pembayaran + validation feedback - March 9, 2026                          |
+| 31  | **Format number dengan separator titik**            | 4700000 → 4.700.000 display, backend terima clean number — March 9, 2026               |
+| 32  | **Default tenor = 12 bulan (tidak empty)**          | Tenor dropdown default di value "12" — March 9, 2026                                   |
+| 33  | **Required attributes di semua form fields**        | Added required validation di DP, tenor, payment_method — March 9, 2026                 |
+| 34  | **Color feedback untuk input validation**           | Border hijau saat valid, abu-abu saat invalid — March 9, 2026                          |
 
 ### ❌ Belum Diimplementasi
 
 | #   | Item                                                        | Prioritas |
 | --- | ----------------------------------------------------------- | --------- |
-| 1   | Status string inconsistency (snake_case vs UPPERCASE)       | 🟠 Tinggi |
-| 2   | Security headers (CSP, HSTS, X-Frame-Options)               | 🟠 Tinggi |
-| 3   | MustVerifyEmail di User model                               | 🟡 Sedang |
-| 4   | Leasing provider selection di form kredit                   | 🟡 Sedang |
-| 5   | Jadwal survey dengan tanggal/waktu/lokasi                   | 🟡 Sedang |
-| 6   | Reminder cicilan jatuh tempo (scheduled job)                | 🟡 Sedang |
-| 7   | Review status per dokumen (per-file approval)               | 🟡 Sedang |
-| 8   | User bisa cancel order sendiri                              | 🟡 Sedang |
-| 9   | Race condition fix di generate installment (DB transaction) | 🟡 Sedang |
-| 10  | Upload path standardization (2 format sekarang)             | 🟢 Rendah |
-| 11  | Audit trail logging                                         | 🟢 Rendah |
-| 12  | Authorization Policies (Laravel Policy)                     | 🟢 Rendah |
-| 13  | Admin panel CoreUI migration                                | 🟢 Rendah |
-| 14  | UI/UX Redesign (Home, Catalog, Detail, Order Wizard)        | 🟢 Rendah |
+| 1   | Leasing provider selection di form kredit                   | 🟡 Sedang |
+| 2   | Jadwal survey dengan tanggal/waktu/lokasi                   | 🟡 Sedang |
+| 3   | Reminder cicilan jatuh tempo (scheduled job)                | 🟡 Sedang |
+| 4   | Review status per dokumen (per-file approval)               | 🟡 Sedang |
+| 5   | User bisa cancel order sendiri                              | 🟡 Sedang |
+| 6   | Race condition fix di generate installment (DB transaction) | 🟡 Sedang |
+| 7   | Upload path standardization (2 format sekarang)             | 🟢 Rendah |
+| 8   | Audit trail logging                                         | 🟢 Rendah |
+| 9   | Authorization Policies (Laravel Policy)                     | 🟢 Rendah |
+| 10  | Admin panel CoreUI migration                                | 🟢 Rendah |
+| 11  | UI/UX Redesign (Home, Catalog, Detail, Order Wizard)        | 🟢 Rendah |
 
 ---
 
@@ -1563,21 +1574,22 @@ Route::post('/transactions/{transaction}/cancel', [UserTransactionController::cl
 
 ### Urutan Prioritas Fix Order Flow
 
-| #   | Item                                               | Status     | Prioritas   |
-| --- | -------------------------------------------------- | ---------- | ----------- |
-| 1   | Generate installment saat kredit disetujui         | ❌ Bug     | 🔴 Critical |
-| 2   | Bunga kredit (flat rate atau dari FinancingScheme) | ❌ Bug     | 🔴 Critical |
-| 3   | Cek stok/status motor saat order                   | ❌ Bug     | 🔴 Critical |
-| 4   | WA notifikasi admin saat dokumen diupload          | ❌ Missing | 🟠 Tinggi   |
-| 5   | Minimum DP 20% + batas tenor max 60 bulan          | ❌ Missing | 🟠 Tinggi   |
-| 6   | Status inconsistency (snake_case standardization)  | ❌ Bug     | 🟠 Tinggi   |
-| 7   | Race condition generate installment                | ❌ Bug     | 🟡 Sedang   |
-| 8   | Leasing provider di form kredit                    | ❌ Missing | 🟡 Sedang   |
-| 9   | Reminder cicilan H-3/H-1                           | ❌ Missing | 🟡 Sedang   |
-| 10  | Review status per dokumen                          | ❌ Missing | 🟡 Sedang   |
-| 11  | User cancel order sendiri                          | ❌ Missing | 🟡 Sedang   |
-| 12  | Jadwal survey (tanggal/waktu/lokasi)               | ❌ Missing | 🟡 Sedang   |
-| 13  | Standardisasi path dokumen upload                  | ❌ Bug     | 🟢 Rendah   |
+| #   | Item                                       | Status | Prioritas   |
+| --- | ------------------------------------------ | ------ | ----------- |
+| 1   | Generate installment saat kredit disetujui | ❌ Bug | 🔴 Critical |
+
+| 2 | Bunga kredit (flat rate atau dari FinancingScheme) | ❌ Bug | 🔴 Critical |
+| 3 | Cek stok/status motor saat order | ❌ Bug | 🔴 Critical |
+| 4 | WA notifikasi admin saat dokumen diupload | ❌ Missing | 🟠 Tinggi |
+| 5 | Minimum DP 20% + batas tenor max 60 bulan | ❌ Missing | 🟠 Tinggi |
+| 6 | Status inconsistency (snake_case standardization) | ❌ Bug | 🟠 Tinggi |
+| 7 | Race condition generate installment | ❌ Bug | 🟡 Sedang |
+| 8 | Leasing provider di form kredit | ❌ Missing | 🟡 Sedang |
+| 9 | Reminder cicilan H-3/H-1 | ❌ Missing | 🟡 Sedang |
+| 10 | Review status per dokumen | ❌ Missing | 🟡 Sedang |
+| 11 | User cancel order sendiri | ❌ Missing | 🟡 Sedang |
+| 12 | Jadwal survey (tanggal/waktu/lokasi) | ❌ Missing | 🟡 Sedang |
+| 13 | Standardisasi path dokumen upload | ❌ Bug | 🟢 Rendah |
 
 ---
 

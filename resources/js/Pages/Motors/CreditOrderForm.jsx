@@ -32,12 +32,13 @@ export default function CreditOrderForm({ motor, auth }) {
         customer_phone: "",
         customer_occupation: "",
         down_payment: "",
-        tenor: "",
+        tenor: "12",
         payment_method: "Transfer Bank",
         notes: "",
     });
 
     const [calculatedInstallment, setCalculatedInstallment] = useState(0);
+    const [hasValidationErrors, setHasValidationErrors] = useState(false);
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat("id-ID", {
@@ -45,6 +46,24 @@ export default function CreditOrderForm({ motor, auth }) {
             currency: "IDR",
             minimumFractionDigits: 0,
         }).format(amount);
+    };
+
+    // Format number untuk display: 4700000 -> 4.700.000
+    const formatNumberDisplay = (numStr) => {
+        if (!numStr && numStr !== 0) return "";
+        const strValue = String(numStr);
+        const cleanNum = strValue.replace(/[^\d]/g, "");
+        return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    // Parse formatted number untuk backend: 4.700.000 -> 4700000
+    const parseFormattedNumber = (str) => {
+        return String(str).replace(/[^\d]/g, "");
+    };
+
+    const handleDownPaymentChange = (value) => {
+        const cleaned = parseFormattedNumber(value);
+        setData("down_payment", cleaned);
     };
 
     useEffect(() => {
@@ -64,6 +83,36 @@ export default function CreditOrderForm({ motor, auth }) {
 
     const submit = (e) => {
         e.preventDefault();
+
+        // Validation check
+        const minDP = motor.price * 0.2;
+        const validationErrors = [];
+
+        if (!data.customer_name.trim()) {
+            validationErrors.push("Nama lengkap harus diisi");
+        }
+        if (!data.customer_phone.trim()) {
+            validationErrors.push("Nomor WhatsApp harus diisi");
+        }
+        if (!data.customer_occupation.trim()) {
+            validationErrors.push("Pekerjaan harus diisi");
+        }
+        if (!data.down_payment || parseFloat(data.down_payment) < minDP) {
+            validationErrors.push(
+                `DP minimum ${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(minDP)}`,
+            );
+        }
+        if (!data.tenor) {
+            validationErrors.push("Tenor harus dipilih");
+        }
+
+        if (validationErrors.length > 0) {
+            setHasValidationErrors(validationErrors);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            return;
+        }
+
+        setHasValidationErrors(false);
         post(route("motors.process-credit-order", motor.id));
     };
 
@@ -100,6 +149,37 @@ export default function CreditOrderForm({ motor, auth }) {
                                     <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                                 </div>
 
+                                {hasValidationErrors &&
+                                    Array.isArray(hasValidationErrors) && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="p-4 bg-red-50 border-l-4 border-red-500 m-4"
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                                <div>
+                                                    <p className="font-bold text-red-900 mb-2">
+                                                        Data tidak lengkap:
+                                                    </p>
+                                                    <ul className="space-y-1">
+                                                        {hasValidationErrors.map(
+                                                            (err, idx) => (
+                                                                <li
+                                                                    key={idx}
+                                                                    className="text-sm text-red-700 flex items-center gap-2"
+                                                                >
+                                                                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                                                    {err}
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+
                                 <CardBody className="p-8">
                                     <form
                                         onSubmit={submit}
@@ -117,6 +197,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                         type="text"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="Sesuai KTP"
+                                                        required
                                                         value={
                                                             data.customer_name
                                                         }
@@ -148,6 +229,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                         type="tel"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="0812..."
+                                                        required
                                                         value={
                                                             data.customer_phone
                                                         }
@@ -180,6 +262,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     type="text"
                                                     className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                     placeholder="Contoh: Karyawan Swasta, Wiraswasta"
+                                                    required
                                                     value={
                                                         data.customer_occupation
                                                     }
@@ -203,47 +286,188 @@ export default function CreditOrderForm({ motor, auth }) {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
                                                 <Label htmlFor="down_payment">
-                                                    Uang Muka (DP)
+                                                    Uang Muka (DP) - Minimum 20%
                                                 </Label>
-                                                <div className="relative">
-                                                    <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                    <input
-                                                        id="down_payment"
-                                                        type="number"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Contoh: 5000000"
-                                                        value={
-                                                            data.down_payment
-                                                        }
-                                                        onChange={(e) =>
-                                                            setData(
-                                                                "down_payment",
-                                                                e.target.value,
-                                                            )
-                                                        }
-                                                    />
+                                                <div className="space-y-3">
+                                                    <div className="relative">
+                                                        <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                        <input
+                                                            id="down_payment"
+                                                            type="text"
+                                                            className={`w-full bg-white border-2 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-gray-900 ${
+                                                                parseFloat(
+                                                                    data.down_payment,
+                                                                ) >=
+                                                                    motor.price *
+                                                                        0.2 &&
+                                                                data.down_payment
+                                                                    ? "border-green-500"
+                                                                    : "border-gray-200 focus:border-blue-500"
+                                                            }`}
+                                                            placeholder="Masukkan jumlah uang muka"
+                                                            required
+                                                            value={formatNumberDisplay(
+                                                                data.down_payment,
+                                                            )}
+                                                            onChange={(e) =>
+                                                                handleDownPaymentChange(
+                                                                    e.target
+                                                                        .value,
+                                                                )
+                                                            }
+                                                        />
+                                                    </div>
+
+                                                    {/* DP Minimum Info */}
+                                                    <div className="grid grid-cols-2 gap-3">
+                                                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                                            <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">
+                                                                Min. DP (20%)
+                                                            </p>
+                                                            <p className="text-sm font-black text-blue-900">
+                                                                {new Intl.NumberFormat(
+                                                                    "id-ID",
+                                                                    {
+                                                                        style: "currency",
+                                                                        currency:
+                                                                            "IDR",
+                                                                        minimumFractionDigits: 0,
+                                                                    },
+                                                                ).format(
+                                                                    motor.price *
+                                                                        0.2,
+                                                                )}
+                                                            </p>
+                                                        </div>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                setData(
+                                                                    "down_payment",
+                                                                    Math.round(
+                                                                        motor.price *
+                                                                            0.2,
+                                                                    ),
+                                                                )
+                                                            }
+                                                            className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm flex items-center justify-center gap-2 h-auto"
+                                                        >
+                                                            <Zap className="w-4 h-4" />
+                                                            Gunakan Min
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Dynamic Loan Info */}
+                                                    {data.down_payment &&
+                                                        parseFloat(
+                                                            data.down_payment,
+                                                        ) > 0 && (
+                                                            <motion.div
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                    y: -5,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                    y: 0,
+                                                                }}
+                                                                className={`p-3 rounded-lg border ${
+                                                                    parseFloat(
+                                                                        data.down_payment,
+                                                                    ) >=
+                                                                    motor.price *
+                                                                        0.2
+                                                                        ? "bg-green-50 border-green-200"
+                                                                        : "bg-yellow-50 border-yellow-200"
+                                                                }`}
+                                                            >
+                                                                <div className="space-y-2">
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span
+                                                                            className={`text-xs font-bold uppercase tracking-wider ${
+                                                                                parseFloat(
+                                                                                    data.down_payment,
+                                                                                ) >=
+                                                                                motor.price *
+                                                                                    0.2
+                                                                                    ? "text-green-700"
+                                                                                    : "text-yellow-700"
+                                                                            }`}
+                                                                        >
+                                                                            Sisa
+                                                                            Angsuran
+                                                                        </span>
+                                                                        <span className="text-sm font-black text-gray-900">
+                                                                            {new Intl.NumberFormat(
+                                                                                "id-ID",
+                                                                                {
+                                                                                    style: "currency",
+                                                                                    currency:
+                                                                                        "IDR",
+                                                                                    minimumFractionDigits: 0,
+                                                                                },
+                                                                            ).format(
+                                                                                Math.max(
+                                                                                    0,
+                                                                                    motor.price -
+                                                                                        parseFloat(
+                                                                                            data.down_payment,
+                                                                                        ),
+                                                                                ),
+                                                                            )}
+                                                                        </span>
+                                                                    </div>
+                                                                    {parseFloat(
+                                                                        data.down_payment,
+                                                                    ) <
+                                                                        motor.price *
+                                                                            0.2 && (
+                                                                        <p className="text-xs text-yellow-700 font-medium">
+                                                                            ⚠️
+                                                                            Masih
+                                                                            perlu{" "}
+                                                                            {new Intl.NumberFormat(
+                                                                                "id-ID",
+                                                                                {
+                                                                                    style: "currency",
+                                                                                    currency:
+                                                                                        "IDR",
+                                                                                    minimumFractionDigits: 0,
+                                                                                },
+                                                                            ).format(
+                                                                                motor.price *
+                                                                                    0.2 -
+                                                                                    parseFloat(
+                                                                                        data.down_payment,
+                                                                                    ),
+                                                                            )}{" "}
+                                                                            lagi
+                                                                        </p>
+                                                                    )}
+                                                                    {parseFloat(
+                                                                        data.down_payment,
+                                                                    ) >=
+                                                                        motor.price *
+                                                                            0.2 && (
+                                                                        <p className="text-xs text-green-700 font-medium flex items-center gap-1.5">
+                                                                            ✓ DP
+                                                                            sudah
+                                                                            mencukupi
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            </motion.div>
+                                                        )}
+
+                                                    {errors.down_payment && (
+                                                        <ErrorMessage
+                                                            message={
+                                                                errors.down_payment
+                                                            }
+                                                        />
+                                                    )}
                                                 </div>
-                                                {errors.down_payment && (
-                                                    <ErrorMessage
-                                                        message={
-                                                            errors.down_payment
-                                                        }
-                                                    />
-                                                )}
-                                                <p className="text-xs text-gray-400 mt-1">
-                                                    Min. DP:{" "}
-                                                    {new Intl.NumberFormat(
-                                                        "id-ID",
-                                                        {
-                                                            style: "currency",
-                                                            currency: "IDR",
-                                                            minimumFractionDigits: 0,
-                                                        },
-                                                    ).format(
-                                                        motor.price * 0.2,
-                                                    )}{" "}
-                                                    (20% harga)
-                                                </p>
                                             </div>
 
                                             <div className="space-y-2">
@@ -255,6 +479,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <select
                                                         id="tenor"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
+                                                        required
                                                         value={data.tenor}
                                                         onChange={(e) =>
                                                             setData(
@@ -263,9 +488,6 @@ export default function CreditOrderForm({ motor, auth }) {
                                                             )
                                                         }
                                                     >
-                                                        <option value="">
-                                                            Pilih Tenor
-                                                        </option>
                                                         <option value="12">
                                                             12 Bulan (1 Tahun)
                                                         </option>
@@ -277,6 +499,9 @@ export default function CreditOrderForm({ motor, auth }) {
                                                         </option>
                                                         <option value="48">
                                                             48 Bulan (4 Tahun)
+                                                        </option>
+                                                        <option value="60">
+                                                            60 Bulan (5 Tahun)
                                                         </option>
                                                     </select>
                                                 </div>
@@ -317,6 +542,46 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 </div>
                                             </motion.div>
                                         )}
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="payment_method">
+                                                Metode Pembayaran
+                                            </Label>
+                                            <div className="relative">
+                                                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                <select
+                                                    id="payment_method"
+                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
+                                                    required
+                                                    value={data.payment_method}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "payment_method",
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                >
+                                                    <option value="Transfer Bank">
+                                                        Transfer Bank (BCA,
+                                                        Mandiri, BNI)
+                                                    </option>
+                                                    <option value="E-Wallet">
+                                                        E-Wallet (OVO, GoPay,
+                                                        Dana)
+                                                    </option>
+                                                    <option value="Virtual Account">
+                                                        Virtual Account
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            {errors.payment_method && (
+                                                <ErrorMessage
+                                                    message={
+                                                        errors.payment_method
+                                                    }
+                                                />
+                                            )}
+                                        </div>
 
                                         <div className="space-y-2">
                                             <Label htmlFor="notes">

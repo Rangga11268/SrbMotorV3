@@ -45,14 +45,14 @@ class InstallmentController extends Controller
 
         try {
             $status = MidtransTransaction::status($installment->midtrans_booking_code);
-            
+
             $transactionStatus = $status->transaction_status;
             $type = $status->payment_type;
             $fraud = $status->fraud_status;
 
             if ($transactionStatus == 'capture') {
-                if ($type == 'credit_card'){
-                    if($fraud == 'challenge'){
+                if ($type == 'credit_card') {
+                    if ($fraud == 'challenge') {
                         $installment->update(['status' => 'waiting_approval']);
                     } else {
                         $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => 'midtrans_' . $type]);
@@ -60,26 +60,22 @@ class InstallmentController extends Controller
                 }
             } else if ($transactionStatus == 'settlement') {
 
-                 $methodStr = 'midtrans_' . $type;
-                
+                $methodStr = 'midtrans_' . $type;
 
-                 if ($type == 'bank_transfer' && isset($status->va_numbers)) {
 
-                     $vaNumbers = $status->va_numbers;
-                     if (is_array($vaNumbers) && count($vaNumbers) > 0) {
-                          $bank = $vaNumbers[0]->bank ?? 'other';
-                          $methodStr = 'midtrans_' . $bank . '_va';
-                     }
-                 }
+                if ($type == 'bank_transfer' && isset($status->va_numbers)) {
 
-                 else if ($type == 'gopay' || $type == 'shopeepay') {
-                     $methodStr = 'midtrans_' . $type;
-                 }
-
-                 else if ($type == 'cstore') {
-                     $store = $status->store ?? 'store';
-                     $methodStr = 'midtrans_' . $store;
-                 }
+                    $vaNumbers = $status->va_numbers;
+                    if (is_array($vaNumbers) && count($vaNumbers) > 0) {
+                        $bank = $vaNumbers[0]->bank ?? 'other';
+                        $methodStr = 'midtrans_' . $bank . '_va';
+                    }
+                } else if ($type == 'gopay' || $type == 'shopeepay') {
+                    $methodStr = 'midtrans_' . $type;
+                } else if ($type == 'cstore') {
+                    $store = $status->store ?? 'store';
+                    $methodStr = 'midtrans_' . $store;
+                }
 
                 $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => $methodStr]);
 
@@ -87,11 +83,11 @@ class InstallmentController extends Controller
                 if ($transaction) {
                     $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
                     if ($unpaid == 0) {
-                         if ($transaction->transaction_type == 'CASH') {
+                        if ($transaction->transaction_type == 'CASH') {
                             $transaction->update(['status' => 'payment_confirmed']);
-                         } else {
+                        } else {
                             $transaction->update(['status' => 'completed']);
-                         }
+                        }
                     }
                 }
             } else if ($transactionStatus == 'pending') {
@@ -108,7 +104,6 @@ class InstallmentController extends Controller
                 'status' => $transactionStatus,
                 'message' => 'Status pembayaran diperbarui: ' . $transactionStatus
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -148,7 +143,7 @@ class InstallmentController extends Controller
 
         try {
             $snapToken = Snap::getSnapToken($params);
-            
+
             $installment->update([
                 'snap_token' => $snapToken,
                 'midtrans_booking_code' => $orderId
@@ -167,7 +162,7 @@ class InstallmentController extends Controller
             ->with(['installments' => function ($query) {
                 $query->orderBy('installment_number', 'asc');
             }, 'motor'])
-            ->whereIn('status', ['disetujui', 'completed', 'APPROVED'])
+            ->whereIn('status', ['disetujui', 'completed'])
             ->latest()
             ->get();
 
@@ -191,7 +186,7 @@ class InstallmentController extends Controller
 
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('payment_proofs', 'public');
-            
+
             $installment->update([
                 'payment_proof' => $path,
                 'payment_method' => $request->payment_method,
@@ -205,7 +200,7 @@ class InstallmentController extends Controller
                 if ($adminPhone) {
                     $user = Auth::user();
                     $motor = $installment->transaction->motor->name;
-                    
+
                     if ($installment->installment_number == 0) {
                         $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
                     } else {
@@ -215,7 +210,9 @@ class InstallmentController extends Controller
                     $msg = "*[ADMIN] Bukti Pembayaran Baru*\n\nUser: {$user->name}\nUnit: {$motor}\nJenis: {$typeLabel}\n\nSegera verifikasi di dashboard.";
                     \App\Services\WhatsAppService::sendMessage($adminPhone, $msg);
                 }
-            } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage());
+            }
 
             return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu verifikasi admin.');
         }
@@ -237,21 +234,23 @@ class InstallmentController extends Controller
 
         try {
             $user = $installment->transaction->user;
-            if ($user && $user->phone) { 
+            if ($user && $user->phone) {
                 $phone = $installment->transaction->customer_phone ?? $user->phone;
-                
-                if ($phone) {
-                     if ($installment->installment_number == 0) {
-                        $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
-                     } else {
-                        $typeLabel = "cicilan ke-{$installment->installment_number}";
-                     }
 
-                     $msg = "Halo {$user->name},\n\nPembayaran *{$typeLabel}* Anda telah *DIVERIFIKASI/DITERIMA*.\n\nTerima kasih atas pembayarannya.\n\n- SRB Motor";
-                     \App\Services\WhatsAppService::sendMessage($phone, $msg);
+                if ($phone) {
+                    if ($installment->installment_number == 0) {
+                        $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
+                    } else {
+                        $typeLabel = "cicilan ke-{$installment->installment_number}";
+                    }
+
+                    $msg = "Halo {$user->name},\n\nPembayaran *{$typeLabel}* Anda telah *DIVERIFIKASI/DITERIMA*.\n\nTerima kasih atas pembayarannya.\n\n- SRB Motor";
+                    \App\Services\WhatsAppService::sendMessage($phone, $msg);
                 }
             }
-        } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', 'Pembayaran cicilan berhasil diverifikasi.');
     }
@@ -264,7 +263,7 @@ class InstallmentController extends Controller
         }
 
         $installment->update([
-            'status' => 'pending', 
+            'status' => 'pending',
         ]);
 
 
@@ -273,16 +272,18 @@ class InstallmentController extends Controller
             $phone = $installment->transaction->customer_phone ?? $user->phone;
 
             if ($phone) {
-                  if ($installment->installment_number == 0) {
-                     $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
-                  } else {
-                     $typeLabel = "cicilan ke-{$installment->installment_number}";
-                  }
-                  
-                  $msg = "Halo {$user->name},\n\nMohon maaf, bukti pembayaran *{$typeLabel}* Anda *DITOLAK* (tidak valid/buram).\n\nSilakan unggah ulang bukti yang valid.\n\n- SRB Motor";
-                  \App\Services\WhatsAppService::sendMessage($phone, $msg);
+                if ($installment->installment_number == 0) {
+                    $typeLabel = $installment->transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)';
+                } else {
+                    $typeLabel = "cicilan ke-{$installment->installment_number}";
+                }
+
+                $msg = "Halo {$user->name},\n\nMohon maaf, bukti pembayaran *{$typeLabel}* Anda *DITOLAK* (tidak valid/buram).\n\nSilakan unggah ulang bukti yang valid.\n\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($phone, $msg);
             }
-        } catch (\Exception $e) { \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage()); }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Error: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', 'Pembayaran cicilan ditolak. User dapat mengupload ulang bukti.');
     }
