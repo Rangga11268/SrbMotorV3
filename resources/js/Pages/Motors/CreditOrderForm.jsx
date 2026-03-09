@@ -248,11 +248,9 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                     />
                                                 </div>
                                                 {errors.customer_phone && (
-                                                    <ErrorMessage
-                                                        message={
-                                                            errors.customer_phone
-                                                        }
-                                                    />
+                                                    <ErrorMessage>
+                                                        {errors.customer_phone}
+                                                    </ErrorMessage>
                                                 )}
                                             </div>
                                         </div>
@@ -312,11 +310,9 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                 ></textarea>
                                             </div>
                                             {errors.customer_address && (
-                                                <ErrorMessage
-                                                    message={
-                                                        errors.customer_address
-                                                    }
-                                                />
+                                                <ErrorMessage>
+                                                    {errors.customer_address}
+                                                </ErrorMessage>
                                             )}
                                         </div>
 

@@ -195,11 +195,9 @@ export default function CashOrderForm({ motor, auth }) {
                                                     />
                                                 </div>
                                                 {errors.customer_name && (
-                                                    <ErrorMessage
-                                                        message={
-                                                            errors.customer_name
-                                                        }
-                                                    />
+                                                    <ErrorMessage>
+                                                        {errors.customer_name}
+                                                    </ErrorMessage>
                                                 )}
                                             </div>
 
@@ -227,11 +225,9 @@ export default function CashOrderForm({ motor, auth }) {
                                                     />
                                                 </div>
                                                 {errors.customer_phone && (
-                                                    <ErrorMessage
-                                                        message={
-                                                            errors.customer_phone
-                                                        }
-                                                    />
+                                                    <ErrorMessage>
+                                                        {errors.customer_phone}
+                                                    </ErrorMessage>
                                                 )}
                                             </div>
                                         </div>
@@ -284,11 +280,9 @@ export default function CashOrderForm({ motor, auth }) {
                                                 ></textarea>
                                             </div>
                                             {errors.customer_address && (
-                                                <ErrorMessage
-                                                    message={
-                                                        errors.customer_address
-                                                    }
-                                                />
+                                                <ErrorMessage>
+                                                    {errors.customer_address}
+                                                </ErrorMessage>
                                             )}
                                         </div>
 
@@ -419,11 +413,9 @@ export default function CashOrderForm({ motor, auth }) {
                                                 </div>
 
                                                 {errors.booking_fee && (
-                                                    <ErrorMessage
-                                                        message={
-                                                            errors.booking_fee
-                                                        }
-                                                    />
+                                                    <ErrorMessage>
+                                                        {errors.booking_fee}
+                                                    </ErrorMessage>
                                                 )}
                                             </div>
                                         </div>

@@ -17,11 +17,9 @@ import {
     CFormInput,
     CFormSelect,
     CInputGroup,
-    CInputGroupText,
-    CPagination,
-    CPaginationItem,
-    CAvatar,
     CFormLabel,
+    CFormTextarea,
+    CInputGroupText,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {

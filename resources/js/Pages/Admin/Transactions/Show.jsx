@@ -128,12 +128,19 @@ export default function Show({ transaction: initialTransaction }) {
 
     const handleStatusUpdate = (e) => {
         const newStatus = e.target.value;
+        const selectedOption = unifiedStatusOptions.find(
+            (opt) => opt.value === newStatus,
+        );
+        const statusLabel = selectedOption
+            ? selectedOption.label
+            : formatStatus(newStatus);
+
         setModalConfig({
             isOpen: true,
-            title: "Ubah Status",
-            message: `Ubah status transaksi menjadi "${formatStatus(newStatus)}"?`,
+            title: "Konfirmasi Perubahan Status",
+            message: `Anda akan mengubah status transaksi ini menjadi "${statusLabel}". Lanjutkan?`,
             type: "info",
-            confirmText: "Ubah",
+            confirmText: "Ya, Ubah Status",
             onConfirm: () => processStatusUpdate(newStatus),
         });
     };
@@ -774,16 +781,16 @@ export default function Show({ transaction: initialTransaction }) {
                                                 "-"}
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className="mb-3">
                                         <div className="text-body-tertiary small">
-                                            Alamat
+                                            Alamat Pengiriman (Unit)
                                         </div>
-                                        <div className="fw-medium">
+                                        <div className="fw-medium text-wrap">
                                             {transaction.customer_address ||
-                                                user?.address ||
                                                 "-"}
                                         </div>
                                     </div>
+
                                     <div className="bg-body-tertiary rounded-3 p-3 mt-3">
                                         <div className="text-body-tertiary small mb-1">
                                             Catatan Pembeli

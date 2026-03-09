@@ -31,7 +31,8 @@ class TransactionService
             'payment_status',
             'customer_name',
             'customer_phone',
-            'customer_occupation'
+            'customer_occupation',
+            'customer_address',
         ]));
 
         $transaction = Transaction::create($transactionData);
@@ -60,7 +61,8 @@ class TransactionService
             'payment_status',
             'customer_name',
             'customer_phone',
-            'customer_occupation'
+            'customer_occupation',
+            'customer_address',
         ]));
 
         $transaction->update($transactionData);
