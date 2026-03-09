@@ -24,6 +24,7 @@ class CreditDetail extends Model
         'interest_rate',
         'credit_status',
         'approved_amount',
+        'leasing_provider_id',
     ];
 
     /**
@@ -51,6 +52,14 @@ class CreditDetail extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    /**
+     * Get the leasing provider for this credit application.
+     */
+    public function leasingProvider(): BelongsTo
+    {
+        return $this->belongsTo(LeasingProvider::class);
     }
 
     /**

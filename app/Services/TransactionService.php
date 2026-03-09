@@ -9,6 +9,7 @@ use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Mail\CreditStatusUpdated;
 use App\Services\WhatsAppService;
 
@@ -107,31 +108,37 @@ class TransactionService
      */
     public function generateInstallments(Transaction $transaction, array $creditData): void
     {
-        // Only generate if no installments exist
-        if ($transaction->installments()->count() === 0) {
-            // 1. Create Down Payment Installment (Installment 0)
-            Installment::create([
-                'transaction_id' => $transaction->id,
-                'installment_number' => 0, // 0 indicates Down Payment
-                'amount' => $creditData['down_payment'],
-                'due_date' => now(), // Due immediately
-                'status' => 'pending',
-            ]);
+        // Wrap in DB transaction with pessimistic locking to prevent concurrent duplicate generation
+        \Illuminate\Support\Facades\DB::transaction(function () use ($transaction, $creditData) {
+            // Lock the transaction row to prevent race conditions
+            $lockedTransaction = Transaction::lockForUpdate()->find($transaction->id);
 
-            // 2. Create Monthly Installments
-            $amount = $creditData['monthly_installment'];
-            $tenor = $creditData['tenor'];
-
-            for ($i = 1; $i <= $tenor; $i++) {
+            // Only generate if no installments exist
+            if ($lockedTransaction->installments()->count() === 0) {
+                // 1. Create Down Payment Installment (Installment 0)
                 Installment::create([
-                    'transaction_id' => $transaction->id,
-                    'installment_number' => $i,
-                    'amount' => $amount,
-                    'due_date' => now()->addMonths($i),
+                    'transaction_id' => $lockedTransaction->id,
+                    'installment_number' => 0, // 0 indicates Down Payment
+                    'amount' => $creditData['down_payment'],
+                    'due_date' => now(), // Due immediately
                     'status' => 'pending',
                 ]);
+
+                // 2. Create Monthly Installments
+                $amount = $creditData['monthly_installment'];
+                $tenor = $creditData['tenor'];
+
+                for ($i = 1; $i <= $tenor; $i++) {
+                    Installment::create([
+                        'transaction_id' => $lockedTransaction->id,
+                        'installment_number' => $i,
+                        'amount' => $amount,
+                        'due_date' => now()->addMonths($i),
+                        'status' => 'pending',
+                    ]);
+                }
             }
-        }
+        });
     }
 
     /**

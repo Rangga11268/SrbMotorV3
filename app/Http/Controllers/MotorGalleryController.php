@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class MotorGalleryController extends Controller
 {
@@ -223,7 +224,8 @@ class MotorGalleryController extends Controller
 
     public function showCreditOrderForm(Motor $motor): View|\Inertia\Response
     {
-        return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor'));
+        $leasingProviders = \App\Models\LeasingProvider::all(['id', 'name']);
+        return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor', 'leasingProviders'));
     }
 
 
@@ -235,7 +237,7 @@ class MotorGalleryController extends Controller
             'customer_occupation' => 'required|string|max:255',
             'down_payment' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1|max:60',
-
+            'leasing_provider_id' => 'nullable|exists:leasing_providers,id',
             'notes' => 'nullable|string',
             'payment_method' => 'required|string',
         ]);
@@ -295,6 +297,7 @@ class MotorGalleryController extends Controller
             'monthly_installment' => $monthlyInstallment,
             'interest_rate' => $interestRate,
             'credit_status' => 'menunggu_persetujuan',
+            'leasing_provider_id' => $request->leasing_provider_id,
         ]);
 
 
@@ -557,5 +560,140 @@ class MotorGalleryController extends Controller
             ->get();
 
         return response()->json($motors);
+    }
+
+    public function cancelOrder(Request $request, Transaction $transaction): \Illuminate\Http\RedirectResponse
+    {
+        // Authorize - user hanya bisa cancel order mereka sendiri
+        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Validate - hanya bisa cancel order yang belum completed/paid
+        if (!in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'dikirim_ke_surveyor', 'jadwal_survey'])) {
+            return back()->withErrors(['transaction' => 'Order ini tidak dapat dibatalkan. Status: ' . $transaction->status]);
+        }
+
+        $request->validate([
+            'cancellation_reason' => 'string|max:500|nullable',
+        ]);
+
+        // Update transaction status
+        $transaction->update([
+            'status' => 'cancelled',
+            'cancelled_at' => now(),
+            'cancellation_reason' => $request->cancellation_reason ?? 'User requested cancellation',
+        ]);
+
+        // Send WA notification
+        try {
+            $motor = $transaction->motor;
+            $userMsg = "Pesanan motor *{$motor->name}* (Order ID: #{$transaction->id}) telah dibatalkan.\n\nTanggal pembatalan: " . now()->format('d-m-Y H:i') . "\n\nTerima kasih telah menggunakan layanan kami. — SRB Motor";
+            \App\Services\WhatsAppService::sendMessage($transaction->customer_phone, $userMsg);
+
+            $adminPhone = config('services.fonnte.admin_phone');
+            if ($adminPhone) {
+                $adminMsg = "*[ADMIN] Order Dibatalkan*\n\nPelanggan: {$transaction->customer_name}\nUnit: {$motor->name}\nAlasan: {$transaction->cancellation_reason}\n\nSilakan cek dashboard.";
+                \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Notification Error on cancellation: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Pesanan telah dibatalkan.');
+    }
+
+    /**
+     * Approve a document (admin only)
+     */
+    public function approveDocument(Document $document): RedirectResponse
+    {
+        // Only admin can approve documents
+        if (!Auth::user()->isAdmin) {
+            return back()->with('error', 'Unauthorized');
+        }
+
+        try {
+            $document->approve();
+
+            Log::info('Document approved', [
+                'document_id' => $document->id,
+                'admin_id' => Auth::id(),
+            ]);
+
+            // Check if all documents are now approved
+            $creditDetail = $document->creditDetail;
+            if ($creditDetail->documents()->where('approval_status', '!=', 'approved')->count() === 0) {
+                // All documents approved - send notification
+                $creditDetail->credit_status = 'semua_dokumen_disetujui';
+                $creditDetail->save();
+
+                // Send WhatsApp notification to customer
+                $user = $creditDetail->transaction->user;
+                $whatsappService = app(\App\Services\WhatsAppService::class);
+                $whatsappService->sendMessage(
+                    $user->phone,
+                    "Halo {$user->name},\n\nSemua dokumen Anda telah disetujui. Tim kami akan segera melanjutkan proses verifikasi kredit Anda.\n\nTerima kasih atas perhatian Anda.\n\n- SRB Motor"
+                );
+            }
+
+            return back()->with('success', 'Dokumen telah disetujui.');
+        } catch (\Exception $e) {
+            Log::error('Error approving document', [
+                'error' => $e->getMessage(),
+                'document_id' => $document->id,
+            ]);
+
+            return back()->with('error', 'Terjadi kesalahan saat menyetujui dokumen.');
+        }
+    }
+
+    /**
+     * Reject a document (admin only)
+     */
+    public function rejectDocument(Request $request, Document $document): RedirectResponse
+    {
+        // Validate input
+        $request->validate([
+            'rejection_reason' => 'required|string|min:10|max:500',
+        ]);
+
+        // Only admin can reject documents
+        if (!Auth::user()->isAdmin) {
+            return back()->with('error', 'Unauthorized');
+        }
+
+        try {
+            $reason = $request->input('rejection_reason');
+            $document->reject($reason);
+
+            // Update credit status to indicate rejection
+            $creditDetail = $document->creditDetail;
+            $creditDetail->credit_status = 'dokumen_ditolak';
+            $creditDetail->save();
+
+            Log::info('Document rejected', [
+                'document_id' => $document->id,
+                'admin_id' => Auth::id(),
+                'reason' => $reason,
+            ]);
+
+            // Send WhatsApp notification to customer
+            $user = $creditDetail->transaction->user;
+            $whatsappService = app(\App\Services\WhatsAppService::class);
+            $whatsappService->sendMessage(
+                $user->phone,
+                "Halo {$user->name},\n\nSalah satu dokumen Anda telah disesuaikan dengan komentar berikut:\n\n{$reason}\n\nSilakan upload ulang dokumen yang telah disesuaikan.\n\n- SRB Motor"
+            );
+
+            return back()->with('success', 'Dokumen telah ditolak dan notifikasi telah dikirim ke customer.');
+        } catch (\Exception $e) {
+            Log::error('Error rejecting document', [
+                'error' => $e->getMessage(),
+                'document_id' => $document->id,
+            ]);
+
+            return back()->with('error', 'Terjadi kesalahan saat menolak dokumen.');
+        }
     }
 }

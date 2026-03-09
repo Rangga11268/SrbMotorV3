@@ -36,6 +36,9 @@ Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryControl
 Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware(['auth', 'verified']);
 Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware(['auth', 'verified']);
 Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware(['auth', 'verified']);
+Route::post('/motors/{transaction}/cancel', [MotorGalleryController::class, 'cancelOrder'])->name('motors.cancel')->middleware(['auth', 'verified']);
+Route::post('/documents/{document}/approve', [MotorGalleryController::class, 'approveDocument'])->name('documents.approve')->middleware(['auth', 'verified']);
+Route::post('/documents/{document}/reject', [MotorGalleryController::class, 'rejectDocument'])->name('documents.reject')->middleware(['auth', 'verified']);
 Route::get('/contact', function () {
     return redirect('/#contact');
 })->name('contact');
