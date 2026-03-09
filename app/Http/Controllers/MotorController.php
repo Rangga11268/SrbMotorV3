@@ -24,7 +24,7 @@ class MotorController extends Controller
     }
 
 
-    public function index(): \Inertia\Response
+    public function index(): \Inertia\Response|JsonResponse
     {
         $filters = [];
         if (request('search')) {
@@ -36,7 +36,7 @@ class MotorController extends Controller
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 10);
 
-        if (request()->ajax()) {
+        if (!request()->hasHeader('X-Inertia-Version') && request()->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'motors' => $motors,
                 'filters' => request()->all(['search', 'brand', 'status']),

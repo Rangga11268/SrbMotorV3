@@ -11,15 +11,15 @@ class UserController extends Controller
     public function index()
     {
         $query = User::query();
-        
+
         if (request('search')) {
             $query->where('name', 'like', '%' . request('search') . '%')
-                  ->orWhere('email', 'like', '%' . request('search') . '%');
+                ->orWhere('email', 'like', '%' . request('search') . '%');
         }
-        
+
         $users = $query->paginate(10);
-        
-        if (request()->ajax()) {
+
+        if (!request()->hasHeader('X-Inertia-Version') && request()->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'users' => $users,
                 'filters' => [
@@ -28,7 +28,7 @@ class UserController extends Controller
                 ],
             ]);
         }
-        
+
         return \Inertia\Inertia::render('Admin/Users/Index', [
             'users' => $users,
             'filters' => [

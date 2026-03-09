@@ -67,7 +67,7 @@ class TransactionController extends Controller
         $transactionTypes = Transaction::distinct('transaction_type')->pluck('transaction_type');
         $statuses = Transaction::distinct('status')->pluck('status');
 
-        if ($request->ajax()) {
+        if (!$request->hasHeader('X-Inertia-Version') && $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'transactions' => $transactions,
                 'transactionTypes' => $transactionTypes,

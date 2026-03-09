@@ -58,20 +58,28 @@
 | 43  | **Redesign OrderConfirmation page (modern)**        | Removed dark neon theme, clean order summary UI, modern card-based payment display — March 9, 2026       |
 | 44  | **Redesign About page (modern)**                    | Removed cyber/massive type, modern clean layout, readable content, professional design — March 9, 2026   |
 | 45  | **Redesign Profile/Edit page (modern)**             | Removed dark command theme, modern settings form, clean tabs, organized security section — March 9, 2026 |
+| 46  | **Fix TransactionController return type**           | Added `JsonResponse` union type, fixed ajax() check with X-Inertia-Version header — March 9, 2026        |
+| 47  | **Fix MotorController return type**                 | Added `JsonResponse` union type, fixed ajax() check with X-Inertia-Version header — March 9, 2026        |
+| 48  | **Fix UserController ajax() check**                 | Changed dari `request()->ajax()` ke X-Inertia-Version header check — March 9, 2026                       |
+| 49  | **Fix LeasingProviderController ajax() check**      | Changed dari `request()->ajax()` ke X-Inertia-Version header check + logo URL transform — March 9, 2026  |
+| 50  | **Fix PromotionController ajax() check**            | Changed dari `request()->ajax()` ke X-Inertia-Version header check — March 9, 2026                       |
+| 51  | **Fix axios imports di admin pages**                | Added `import axios` ke Transactions/Index, Motors/Index, Users/Index — March 9, 2026                    |
+| 52  | **Fix LeasingProviders logo display**               | Added maxHeight, maxWidth, objectFit constraints untuk proper logo sizing — March 9, 2026                |
+| 53  | **Shared data logo URL transform**                  | Added `asset()` URL prefix di HandleInertiaRequests middleware untuk logo_path — March 9, 2026           |
+| 54  | **Fix duplicate return statement di Create.jsx**    | Removed duplicate JSX return block di LeasingProviders/Create.jsx yang menyebabkan build error — March 9 |
 
 ### ❌ Belum Diimplementasi
 
-| #   | Item                                              | Prioritas |
-| --- | ------------------------------------------------- | --------- |
-| 1   | Jadwal survey dengan tanggal/waktu/lokasi         | � Kritis  |
-| 2   | Reminder cicilan jatuh tempo (scheduled job)      | 🔴 Kritis |
-| 3   | Redesign About.jsx (tentang kami page)            | 🟡 Sedang |
-| 4   | Redesign Profile/Edit.jsx (akun settings)         | 🟡 Sedang |
-| 5   | Redesign OrderConfirmation.jsx (order summary UI) | 🟡 Sedang |
-| 6   | Upload path standardization (2 format sekarang)   | 🟢 Rendah |
-| 7   | Audit trail logging                               | 🟢 Rendah |
-| 8   | Authorization Policies (Laravel Policy)           | 🟢 Rendah |
-| 9   | Admin panel CoreUI migration                      | 🟢 Rendah |
+| #   | Item                                            | Prioritas |
+| --- | ----------------------------------------------- | --------- |
+| 1   | Jadwal survey dengan tanggal/waktu/lokasi       | � Kritis  |
+| 2   | Reminder cicilan jatuh tempo (scheduled job)    | 🔴 Kritis |
+| 3   | Loading indicators di admin filtering (axios)   | 🟡 Sedang |
+| 4   | Lazy loading untuk table data di admin pages    | 🟡 Sedang |
+| 5   | Upload path standardization (2 format sekarang) | 🟢 Rendah |
+| 6   | Audit trail logging                             | 🟢 Rendah |
+| 7   | Authorization Policies (Laravel Policy)         | 🟢 Rendah |
+| 8   | Admin panel CoreUI migration                    | 🟢 Rendah |
 
 ---
 

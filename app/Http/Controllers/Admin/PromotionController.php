@@ -15,12 +15,12 @@ class PromotionController extends Controller
 
         if ($request->search) {
             $query->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('badge_text', 'like', '%' . $request->search . '%');
+                ->orWhere('badge_text', 'like', '%' . $request->search . '%');
         }
 
         $promotions = $query->latest()->paginate(10);
 
-        if ($request->ajax()) {
+        if (!$request->hasHeader('X-Inertia-Version') && $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'promotions' => $promotions,
                 'filters' => $request->only(['search'])

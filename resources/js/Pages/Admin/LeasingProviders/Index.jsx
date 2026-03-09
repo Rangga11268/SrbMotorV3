@@ -198,7 +198,14 @@ export default function Index({ providers: initialProviders, filters }) {
                                                                 provider.logo_path
                                                             }
                                                             alt={provider.name}
-                                                            height="30"
+                                                            style={{
+                                                                maxHeight:
+                                                                    "30px",
+                                                                maxWidth:
+                                                                    "100px",
+                                                                objectFit:
+                                                                    "contain",
+                                                            }}
                                                         />
                                                     ) : (
                                                         <div className="bg-light p-2 rounded text-muted small d-inline-block">

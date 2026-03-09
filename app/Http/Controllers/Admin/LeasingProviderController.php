@@ -20,7 +20,15 @@ class LeasingProviderController extends Controller
 
         $providers = $query->latest()->paginate(10);
 
-        if ($request->ajax()) {
+        // Transform logo_path to full storage URL
+        $providers->getCollection()->transform(function ($provider) {
+            if ($provider->logo_path) {
+                $provider->logo_path = asset('storage/' . $provider->logo_path);
+            }
+            return $provider;
+        });
+
+        if (!$request->hasHeader('X-Inertia-Version') && $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'providers' => $providers,
                 'filters' => $request->only(['search'])
