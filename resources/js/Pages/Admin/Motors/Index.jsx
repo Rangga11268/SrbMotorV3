@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import {
     CCard,
     CCardBody,
@@ -32,7 +34,6 @@ import {
     cilReload,
     cilBike,
 } from "@coreui/icons";
-import toast from "react-hot-toast";
 
 export default function Index({ motors, filters }) {
     const [search, setSearch] = useState(filters.search || "");
@@ -64,11 +65,27 @@ export default function Index({ motors, filters }) {
     };
 
     const confirmDelete = (motor) => {
-        if (confirm(`Apakah Anda yakin ingin menghapus ${motor.name}?`)) {
-            router.delete(route("admin.motors.destroy", motor.id), {
-                onSuccess: () => toast.success("Data unit berhasil dihapus"),
-            });
-        }
+        Swal.fire({
+            title: `Hapus ${motor.name}?`,
+            text: "Motor akan dihapus dari katalog permanen. Tindakan ini tidak bisa dibatalkan.",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Hapus",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("admin.motors.destroy", motor.id), {
+                    onSuccess: () => {
+                        toast.success("Motor berhasil dihapus");
+                    },
+                    onError: () => {
+                        toast.error("Gagal menghapus motor");
+                    },
+                });
+            }
+        });
     };
 
     return (

@@ -3,6 +3,7 @@ import { Link, useForm, router } from "@inertiajs/react";
 import axios from "axios";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Modal from "@/Components/Modal";
+import Swal from "sweetalert2";
 import {
     CCard,
     CCardBody,
@@ -183,29 +184,53 @@ export default function Show({ transaction: initialTransaction }) {
     };
 
     const approvePayment = (installmentId) => {
-        if (confirm("Verifikasi pembayaran ini?")) {
-            router.post(
-                route("admin.installments.approve", installmentId),
-                {},
-                {
-                    onSuccess: () => toast.success("Pembayaran terverifikasi"),
-                    onError: () => toast.error("Gagal memproses"),
-                },
-            );
-        }
+        Swal.fire({
+            title: "Verifikasi Pembayaran?",
+            text: "Tandai pembayaran ini sebagai terverifikasi?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#10b981",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Verifikasi",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(
+                    route("admin.installments.approve", installmentId),
+                    {},
+                    {
+                        onSuccess: () => {
+                            toast.success("Pembayaran terverifikasi");
+                        },
+                        onError: () => toast.error("Gagal memproses"),
+                    },
+                );
+            }
+        });
     };
 
     const rejectPayment = (installmentId) => {
-        if (confirm("Tolak pembayaran ini?")) {
-            router.post(
-                route("admin.installments.reject", installmentId),
-                {},
-                {
-                    onSuccess: () => toast.success("Pembayaran ditolak"),
-                    onError: () => toast.error("Gagal memproses"),
-                },
-            );
-        }
+        Swal.fire({
+            title: "Tolak Pembayaran?",
+            text: "Pembayaran tidak akan diterima. Tindakan ini tidak bisa dibatalkan.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Tolak",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(
+                    route("admin.installments.reject", installmentId),
+                    {},
+                    {
+                        onSuccess: () => toast.success("Pembayaran ditolak"),
+                        onError: () => toast.error("Gagal memproses"),
+                    },
+                );
+            }
+        });
     };
 
     const {
@@ -228,12 +253,28 @@ export default function Show({ transaction: initialTransaction }) {
     };
 
     const confirmDeleteDocument = (docId) => {
-        if (confirm("Hapus dokumen ini?")) {
-            router.delete(route("admin.transactions.delete_document", docId), {
-                onSuccess: () => toast.success("Dokumen dihapus"),
-                onError: () => toast.error("Gagal menghapus dokumen"),
-            });
-        }
+        Swal.fire({
+            title: "Hapus Dokumen?",
+            text: "Dokumen akan dihapus dari sistem. Tindakan ini tidak bisa dibatalkan.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Hapus",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(
+                    route("admin.transactions.delete_document", docId),
+                    {
+                        onSuccess: () => {
+                            toast.success("Dokumen berhasil dihapus");
+                        },
+                        onError: () => toast.error("Gagal menghapus dokumen"),
+                    },
+                );
+            }
+        });
     };
 
     const transactionStatusOptions =

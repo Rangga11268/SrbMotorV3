@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useForm, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
 import {
     CCard,
     CCardBody,
@@ -23,7 +25,6 @@ import {
     cilXCircle,
     cilFile,
 } from "@coreui/icons";
-import { toast } from "react-hot-toast";
 
 export default function EditCredit({ transaction }) {
     const { credit_detail, motor, user } = transaction;
@@ -83,37 +84,62 @@ export default function EditCredit({ transaction }) {
     };
 
     const handleQuickApprove = () => {
-        if (confirm("Setujui kredit ini?")) {
-            router.put(
-                route("admin.transactions.updateCredit", transaction.id),
-                {
-                    credit_status: "disetujui",
-                    approved_amount: data.approved_amount || motor?.price || 0,
-                    admin_notes: data.admin_notes,
-                },
-                {
-                    onSuccess: () => toast.success("Kredit berhasil disetujui"),
-                    onError: () => toast.error("Gagal menyetujui kredit"),
-                },
-            );
-        }
+        Swal.fire({
+            title: "Setujui Kredit?",
+            text: "Kredit akan ditandai sebagai DISETUJUI. Installment akan dibuat dan customer akan menerima notifikasi.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#10b981",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Setujui",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.put(
+                    route("admin.transactions.updateCredit", transaction.id),
+                    {
+                        credit_status: "disetujui",
+                        approved_amount:
+                            data.approved_amount || motor?.price || 0,
+                        admin_notes: data.admin_notes,
+                    },
+                    {
+                        onSuccess: () =>
+                            toast.success("Kredit berhasil disetujui"),
+                        onError: () => toast.error("Gagal menyetujui kredit"),
+                    },
+                );
+            }
+        });
     };
 
     const handleQuickReject = () => {
-        if (confirm("Tolak kredit ini?")) {
-            router.put(
-                route("admin.transactions.updateCredit", transaction.id),
-                {
-                    credit_status: "ditolak",
-                    approved_amount: 0,
-                    admin_notes: data.admin_notes,
-                },
-                {
-                    onSuccess: () => toast.success("Kredit berhasil ditolak"),
-                    onError: () => toast.error("Gagal menolak kredit"),
-                },
-            );
-        }
+        Swal.fire({
+            title: "Tolak Kredit?",
+            text: "Kredit akan ditandai sebagai DITOLAK. Customer akan menerima notifikasi penolakan.",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Tolak",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.put(
+                    route("admin.transactions.updateCredit", transaction.id),
+                    {
+                        credit_status: "ditolak",
+                        approved_amount: 0,
+                        admin_notes: data.admin_notes,
+                    },
+                    {
+                        onSuccess: () =>
+                            toast.success("Kredit berhasil ditolak"),
+                        onError: () => toast.error("Gagal menolak kredit"),
+                    },
+                );
+            }
+        });
     };
 
     const formatRupiah = (n) =>

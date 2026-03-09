@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Link, useForm, router } from "@inertiajs/react";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import {
     CCard,
     CCardBody,
@@ -17,7 +19,6 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilArrowLeft, cilSave, cilTrash, cilBike } from "@coreui/icons";
-import toast from "react-hot-toast";
 
 export default function Edit({ motor, promotions }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -71,9 +72,27 @@ export default function Edit({ motor, promotions }) {
     };
 
     const handleDelete = () => {
-        if (confirm("Apakah Anda yakin ingin menghapus motor ini?")) {
-            router.delete(route("admin.motors.destroy", motor.id));
-        }
+        Swal.fire({
+            title: "Hapus Motor?",
+            text: "Motor akan dihapus dari katalog. Tindakan ini tidak bisa dibatalkan.",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Hapus",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("admin.motors.destroy", motor.id), {
+                    onSuccess: () => {
+                        toast.success("Motor berhasil dihapus");
+                    },
+                    onError: () => {
+                        toast.error("Gagal menghapus motor");
+                    },
+                });
+            }
+        });
     };
 
     return (

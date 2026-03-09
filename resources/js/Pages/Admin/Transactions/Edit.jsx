@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, useForm, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
 import {
     CCard,
     CCardBody,
@@ -51,13 +53,30 @@ export default function Edit({ transaction, motors, users }) {
     };
 
     const handleDelete = () => {
-        if (
-            confirm(
-                "Menghapus transaksi ini akan menghilangkan semua data terkait. Lanjutkan?",
-            )
-        ) {
-            destroy(route("admin.transactions.destroy", transaction.id));
-        }
+        Swal.fire({
+            title: "Hapus Transaksi?",
+            text: "Menghapus transaksi akan menghilangkan SEMUA data terkait: pembayaran, dokumen, dan cicilan. Tindakan ini tidak bisa dibatalkan!",
+            icon: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Hapus Semua",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(
+                    route("admin.transactions.destroy", transaction.id),
+                    {
+                        onSuccess: () => {
+                            toast.success("Transaksi berhasil dihapus");
+                        },
+                        onError: () => {
+                            toast.error("Gagal menghapus transaksi");
+                        },
+                    },
+                );
+            }
+        });
     };
 
     const formatRupiah = (n) =>

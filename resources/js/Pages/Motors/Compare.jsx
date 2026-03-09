@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import Swal from "sweetalert2";
 import {
     ArrowLeft,
     CheckCircle,
@@ -86,17 +87,33 @@ export default function Compare({ motors }) {
                                                         <div className="absolute top-4 right-4 z-20">
                                                             <button
                                                                 onClick={() => {
-                                                                    if (
-                                                                        confirm(
-                                                                            "Hapus motor ini dari perbandingan?",
-                                                                        )
-                                                                    ) {
-                                                                        removeFromCompare(
-                                                                            motor.id,
-                                                                        );
-                                                                        // Optional: Refresh page logic via Inertia or rely on Context to update local storage and redirect if needed
-                                                                        window.location.reload();
-                                                                    }
+                                                                    Swal.fire({
+                                                                        title: "Hapus dari Perbandingan?",
+                                                                        text: "Motor akan dikeluarkan dari tabel perbandingan.",
+                                                                        icon: "question",
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor:
+                                                                            "#ef4444",
+                                                                        cancelButtonColor:
+                                                                            "#6b7280",
+                                                                        confirmButtonText:
+                                                                            "Ya, Hapus",
+                                                                        cancelButtonText:
+                                                                            "Batal",
+                                                                    }).then(
+                                                                        (
+                                                                            result,
+                                                                        ) => {
+                                                                            if (
+                                                                                result.isConfirmed
+                                                                            ) {
+                                                                                removeFromCompare(
+                                                                                    motor.id,
+                                                                                );
+                                                                                window.location.reload();
+                                                                            }
+                                                                        },
+                                                                    );
                                                                 }}
                                                                 className="bg-white/80 backdrop-blur p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors shadow-sm border border-gray-200"
                                                                 title="Hapus"

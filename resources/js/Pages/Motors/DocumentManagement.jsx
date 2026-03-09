@@ -206,6 +206,91 @@ export default function DocumentManagement({ transaction }) {
                                     </p>
                                 </div>
 
+                                {/* Existing Documents Preview */}
+                                {existingDocs.length > 0 && (
+                                    <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-lg font-bold text-green-900 flex items-center gap-2">
+                                                <CheckCircle
+                                                    size={24}
+                                                    className="text-green-600"
+                                                />
+                                                Dokumen yang Diterima
+                                            </h3>
+                                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-xs font-bold rounded-full">
+                                                ✓ {existingDocs.length} Dokumen
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {existingDocs.map((doc) => {
+                                                const isPdf = doc.file_path
+                                                    .toLowerCase()
+                                                    .endsWith(".pdf");
+                                                const isImage =
+                                                    /\.(jpg|jpeg|png|webp|gif)$/i.test(
+                                                        doc.file_path,
+                                                    );
+                                                return (
+                                                    <motion.a
+                                                        key={doc.id}
+                                                        href={`/storage/${doc.file_path}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        whileHover={{
+                                                            scale: 1.02,
+                                                        }}
+                                                        className="relative group rounded-lg overflow-hidden border border-green-300 bg-white hover:shadow-lg transition-shadow cursor-pointer"
+                                                    >
+                                                        <div className="aspect-video bg-gray-100 flex items-center justify-center relative overflow-hidden">
+                                                            {isImage ? (
+                                                                <img
+                                                                    src={`/storage/${doc.file_path}`}
+                                                                    alt={
+                                                                        doc.document_type
+                                                                    }
+                                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                                                />
+                                                            ) : isPdf ? (
+                                                                <div className="flex flex-col items-center justify-center text-red-600 w-full h-full">
+                                                                    <FileText
+                                                                        size={
+                                                                            48
+                                                                        }
+                                                                    />
+                                                                    <span className="text-xs font-bold mt-2">
+                                                                        PDF
+                                                                    </span>
+                                                                </div>
+                                                            ) : (
+                                                                <FileText
+                                                                    size={48}
+                                                                    className="text-gray-400"
+                                                                />
+                                                            )}
+                                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                                                                <Eye
+                                                                    size={32}
+                                                                    className="text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="p-3 bg-white">
+                                                            <p className="text-xs font-semibold text-gray-900 truncate">
+                                                                {
+                                                                    doc.document_type
+                                                                }
+                                                            </p>
+                                                            <p className="text-xs text-green-600 font-bold mt-1">
+                                                                ✓ Terima
+                                                            </p>
+                                                        </div>
+                                                    </motion.a>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+
                                 <form onSubmit={submit} className="space-y-6">
                                     {/* Document Fields */}
                                     {documentTypes.map((docType) => (
