@@ -111,6 +111,18 @@ export default function Edit({ transaction, motors, users }) {
                     >
                         Edit Umum
                     </CBadge>
+                    {transaction.transaction_type === "CREDIT" && (
+                        <Link
+                            href={route(
+                                "admin.transactions.editCredit",
+                                transaction.id,
+                            )}
+                            className="btn btn-primary btn-sm d-flex align-items-center gap-2"
+                        >
+                            <CIcon icon={cilSave} size="sm" />
+                            Proses Kredit
+                        </Link>
+                    )}
                 </div>
             </div>
 

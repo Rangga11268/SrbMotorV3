@@ -112,21 +112,46 @@ class Transaction extends Model
             return '';
         }
         
-        $statusMap = [
-            'menunggu_persetujuan' => 'Menunggu Persetujuan',
-            'data_tidak_valid' => 'Data Tidak Valid',
-            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
-            'jadwal_survey' => 'Jadwal Survey',
-            'disetujui' => 'Disetujui',
-            'ditolak' => 'Ditolak',
-            'PENDING_REVIEW' => 'Menunggu Persetujuan',
-            'DATA_INVALID' => 'Data Tidak Valid',
-            'SUBMITTED_TO_SURVEYOR' => 'Dikirim ke Surveyor',
-            'SURVEY_SCHEDULED' => 'Jadwal Survey',
-            'APPROVED' => 'Disetujui',
-            'REJECTED' => 'Ditolak'
-        ];
-        
         return $statusMap[$this->creditDetail->credit_status] ?? $this->creditDetail->credit_status;
+    }
+
+    /**
+     * Get a unified status for display to the user.
+     * Combines transaction status and credit status into a single human-readable string.
+     */
+    public function getUnifiedStatusAttribute(): string
+    {
+        // 1. If cancelled or completed, show that immediately
+        if ($this->status === 'cancelled') return 'Dibatalkan';
+        if ($this->status === 'completed') return 'Selesai';
+
+        // 2. For credit transactions, the credit_status is usually more relevant in the early stages
+        if ($this->transaction_type === 'CREDIT' && $this->creditDetail) {
+            $creditStatus = $this->creditDetail->credit_status;
+
+            // If it's still in the "order" stage but credit is already processed
+            if ($this->status === 'new_order' || $this->status === 'menunggu_persetujuan' || $this->status === 'waiting_payment') {
+                $creditMap = [
+                    'menunggu_persetujuan' => 'Verifikasi Berkas',
+                    'data_tidak_valid' => 'Perbaiki Dokumen',
+                    'dikirim_ke_surveyor' => 'Proses Surveyor',
+                    'jadwal_survey' => 'Jadwal Survey',
+                    'disetujui' => 'Kredit Disetujui',
+                    'ditolak' => 'Kredit Ditolak',
+                ];
+                return $creditMap[$creditStatus] ?? 'Proses Verifikasi';
+            }
+        }
+
+        // 3. Fallback to standard transaction statuses
+        $statusMap = [
+            'new_order' => 'Pesanan Baru',
+            'waiting_payment' => 'Menunggu Pembayaran',
+            'payment_confirmed' => 'Pembayaran Berhasil',
+            'unit_preparation' => 'Persiapan Unit',
+            'ready_for_delivery' => 'Siap Dikirim',
+        ];
+
+        return $statusMap[$this->status] ?? $this->status;
     }
 }

@@ -72,7 +72,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/installments', [\App\Http\Controllers\InstallmentController::class, 'index'])->name('installments.index');
+    Route::post('/installments/pay-multiple', [\App\Http\Controllers\InstallmentController::class, 'payMultiple'])->name('installments.pay-multiple');
     Route::post('/installments/{installment}/pay', [\App\Http\Controllers\InstallmentController::class, 'store'])->name('installments.pay');
     Route::post('/installments/{installment}/pay-online', [\App\Http\Controllers\InstallmentController::class, 'createPayment'])->name('installments.create-payment');
     Route::post('/installments/{installment}/check-status', [\App\Http\Controllers\InstallmentController::class, 'checkPaymentStatus'])->name('installments.check-status');

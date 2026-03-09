@@ -112,6 +112,81 @@ class InstallmentController extends Controller
         }
     }
 
+    public function payMultiple(Request $request)
+    {
+        $request->validate([
+            'installment_ids' => 'required|array|min:1',
+            'installment_ids.*' => 'exists:installments,id',
+        ]);
+
+        $installments = Installment::whereIn('id', $request->installment_ids)
+            ->whereHas('transaction', function ($q) {
+                $q->where('user_id', Auth::id());
+            })
+            ->where('status', '!=', 'paid')
+            ->get();
+
+        if ($installments->isEmpty()) {
+            return response()->json(['error' => 'Tidak ada cicilan yang valid untuk dibayar'], 400);
+        }
+
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        $totalAmount = $installments->sum(function ($inst) {
+            return $inst->amount + $inst->penalty_amount;
+        });
+
+        // Use the first installment's transaction ID for grouping
+        $transaction = $installments->first()->transaction;
+        $orderId = 'MULTI-' . time() . '-' . $transaction->id;
+
+        $itemDetails = [];
+        foreach ($installments as $inst) {
+            $itemDetails[] = [
+                'id' => 'INST-' . $inst->id,
+                'price' => (int) ($inst->amount + $inst->penalty_amount),
+                'quantity' => 1,
+                'name' => 'Cicilan Ke-' . $inst->installment_number . ' ' . $transaction->motor->name,
+            ];
+        }
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,
+                'gross_amount' => (int) $totalAmount,
+            ],
+            'customer_details' => [
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ],
+            'item_details' => $itemDetails,
+            'callbacks' => [
+                'finish' => route('installments.index'),
+                'error' => route('installments.index'),
+                'pending' => route('installments.index'),
+            ]
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+
+            // Update all selected installments with the same booking code and token
+            foreach ($installments as $inst) {
+                $inst->update([
+                    'snap_token' => $snapToken,
+                    'midtrans_booking_code' => $orderId
+                ]);
+            }
+
+            return response()->json(['snap_token' => $snapToken]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function createPayment(Installment $installment)
     {
         if ($installment->transaction->user_id !== Auth::id()) {

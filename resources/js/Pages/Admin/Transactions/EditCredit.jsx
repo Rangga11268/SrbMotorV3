@@ -166,6 +166,13 @@ export default function EditCredit({ transaction }) {
                 <CBadge color="info" shape="rounded-pill" className="px-3 py-2">
                     Mode Edit Kredit
                 </CBadge>
+                <Link
+                    href={route("admin.transactions.edit", transaction.id)}
+                    className="btn btn-outline-warning btn-sm d-flex align-items-center gap-2"
+                >
+                    <CIcon icon={cilSave} size="sm" />
+                    Edit Info Umum
+                </Link>
             </div>
 
             <CRow>

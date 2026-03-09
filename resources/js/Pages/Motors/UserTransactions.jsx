@@ -29,38 +29,50 @@ export default function UserTransactions({ transactions }) {
     const { auth } = usePage().props;
 
     // Status Helper
-    const getStatusInfo = (status) => {
-        switch (status) {
-            case "completed":
-            case "disetujui":
-            case "ready_for_delivery":
-                return {
-                    label: "DITERIMA",
-                    color: "text-green-600 border-green-100 bg-green-50",
-                    icon: CheckCircle,
-                };
-            case "menunggu_persetujuan":
-            case "new_order":
-            case "waiting_payment":
-                return {
-                    label: "DIPROSES",
-                    color: "text-blue-600 border-blue-100 bg-blue-50",
-                    icon: Activity,
-                };
-            case "ditolak":
-            case "data_tidak_valid":
-                return {
-                    label: "DITOLAK",
-                    color: "text-red-600 border-red-100 bg-red-50",
-                    icon: XCircle,
-                };
-            default:
-                return {
-                    label: status.toUpperCase(),
-                    color: "text-gray-500 border-gray-100 bg-gray-50",
-                    icon: Info,
-                };
+    const getStatusInfo = (transaction) => {
+        const status = transaction.unified_status || transaction.status;
+
+        const successStatuses = [
+            "Selesai",
+            "Kredit Disetujui",
+            "Pembayaran Berhasil",
+            "Persiapan Unit",
+            "Siap Dikirim",
+            "completed",
+            "disetujui",
+            "ready_for_delivery",
+            "payment_confirmed",
+        ];
+        const warningStatuses = [
+            "Perbaiki Dokumen",
+            "Data Tidak Valid",
+            "Kredit Ditolak",
+            "Ditolak",
+            "ditolak",
+            "data_tidak_valid",
+        ];
+
+        if (successStatuses.includes(status)) {
+            return {
+                label: status.toUpperCase(),
+                color: "text-green-600 border-green-100 bg-green-50",
+                icon: CheckCircle,
+            };
         }
+
+        if (warningStatuses.includes(status)) {
+            return {
+                label: status.toUpperCase(),
+                color: "text-red-600 border-red-100 bg-red-50",
+                icon: XCircle,
+            };
+        }
+
+        return {
+            label: status.toUpperCase(),
+            color: "text-blue-600 border-blue-100 bg-blue-50",
+            icon: Activity,
+        };
     };
 
     const formatCurrency = (amount) => {
@@ -119,9 +131,7 @@ export default function UserTransactions({ transactions }) {
                     {transactions.data.length > 0 ? (
                         <div className="space-y-8">
                             {transactions.data.map((transaction, index) => {
-                                const statusInfo = getStatusInfo(
-                                    transaction.status,
-                                );
+                                const statusInfo = getStatusInfo(transaction);
                                 const StatusIcon = statusInfo.icon;
 
                                 return (

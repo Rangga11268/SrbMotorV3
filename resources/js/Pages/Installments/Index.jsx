@@ -28,6 +28,7 @@ import Swal from "sweetalert2";
 export default function InstallmentIndex({ transactions }) {
     const [selectedInstallment, setSelectedInstallment] = useState(null);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+    const [selectedIds, setSelectedIds] = useState([]);
 
     const [isLoadingPay, setIsLoadingPay] = useState(false);
     const [isLoadingCheck, setIsLoadingCheck] = useState(false);
@@ -311,6 +312,9 @@ export default function InstallmentIndex({ transactions }) {
                                         <table className="w-full text-left">
                                             <thead>
                                                 <tr className="bg-gray-50/30 border-b border-gray-100">
+                                                    <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                        Pilih
+                                                    </th>
                                                     <th className="px-10 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Termin
                                                     </th>
@@ -336,6 +340,27 @@ export default function InstallmentIndex({ transactions }) {
                                                                 key={inst.id}
                                                                 className="hover:bg-gray-50/50 transition-colors group"
                                                             >
+                                                                <td className="px-6 py-6">
+                                                                    {inst.status ===
+                                                                        "pending" ||
+                                                                    inst.status ===
+                                                                        "overdue" ? (
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary shadow-sm cursor-pointer"
+                                                                            checked={selectedIds.includes(
+                                                                                inst.id,
+                                                                            )}
+                                                                            onChange={() =>
+                                                                                toggleSelection(
+                                                                                    inst.id,
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                    ) : (
+                                                                        <div className="w-5 h-5 rounded bg-gray-100 border border-gray-200" />
+                                                                    )}
+                                                                </td>
                                                                 <td className="px-10 py-6">
                                                                     <span
                                                                         className={`text-[11px] font-black uppercase tracking-widest ${inst.installment_number === 0 ? "text-blue-500" : "text-gray-900"}`}
@@ -462,6 +487,35 @@ export default function InstallmentIndex({ transactions }) {
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    {selectedIds.length > 0 && (
+                                        <div className="px-10 py-8 bg-blue-50/50 border-t border-blue-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
+                                                    <Wallet className="w-6 h-6" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">
+                                                        Terpilih Untuk Dibayar
+                                                    </p>
+                                                    <p className="text-xl font-black text-gray-900">
+                                                        {selectedIds.length}{" "}
+                                                        Tagihan Cicilan
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={handlePayMultiple}
+                                                disabled={isLoadingPay}
+                                                className="w-full md:w-auto h-14 px-10 bg-blue-600 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-black transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3"
+                                            >
+                                                <Zap className="w-5 h-5" />
+                                                {isLoadingPay
+                                                    ? "MEMPROSES..."
+                                                    : "BAYAR SEMUA TERPILIH"}
+                                            </button>
+                                        </div>
+                                    )}
 
                                     {/* FOOTER INFO */}
                                     <div className="p-6 bg-gray-50/30 border-t border-gray-100 flex items-center gap-3">
