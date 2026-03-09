@@ -88,6 +88,9 @@ class InstallmentController extends Controller
                         } else {
                             $transaction->update(['status' => 'completed']);
                         }
+                    } elseif ($installment->installment_number === 0) {
+                        // If DP/Booking Fee paid, advance to unit preparation
+                        $transaction->update(['status' => 'unit_preparation']);
                     }
                 }
             } else if ($transactionStatus == 'pending') {
@@ -138,6 +141,11 @@ class InstallmentController extends Controller
                     'quantity' => 1,
                     'name' => 'Cicilan Ke-' . $installment->installment_number . ' ' . $installment->transaction->motor->name . ($installment->penalty_amount > 0 ? ' (+Denda)' : ''),
                 ]
+            ],
+            'callbacks' => [
+                'finish' => route('installments.index'),
+                'error' => route('installments.index'),
+                'pending' => route('installments.index'),
             ]
         ];
 

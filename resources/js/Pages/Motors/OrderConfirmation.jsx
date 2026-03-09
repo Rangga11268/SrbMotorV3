@@ -65,7 +65,11 @@ export default function OrderConfirmation({ transaction }) {
                         color: "#000000",
                         confirmButtonColor: "#2563eb",
                     });
-                    router.reload();
+                    if (installment.installment_number === 0) {
+                        router.visit(route("installments.index"));
+                    } else {
+                        router.reload();
+                    }
                 },
                 onPending: async function (result) {
                     try {
@@ -81,7 +85,11 @@ export default function OrderConfirmation({ transaction }) {
                         color: "#000000",
                         confirmButtonColor: "#2563eb",
                     });
-                    router.reload();
+                    if (installment.installment_number === 0) {
+                        router.visit(route("installments.index"));
+                    } else {
+                        router.reload();
+                    }
                 },
                 onError: function (result) {
                     Swal.fire({
