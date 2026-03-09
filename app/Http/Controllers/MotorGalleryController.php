@@ -326,12 +326,16 @@ class MotorGalleryController extends Controller
 
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
-        $transaction = Transaction::with(['motor', 'creditDetail', 'installments'])->findOrFail($transactionId);
-
+        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'installments'])->findOrFail($transactionId);
 
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this transaction');
         }
+
+        // Calculate if documents are complete
+        $transaction->documents_complete = $transaction->transaction_type === 'CREDIT' && $transaction->creditDetail
+            ? $transaction->creditDetail->hasRequiredDocuments()
+            : true;
 
         return \Inertia\Inertia::render('Motors/OrderConfirmation', compact('transaction'));
     }

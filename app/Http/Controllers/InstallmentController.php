@@ -162,7 +162,7 @@ class InstallmentController extends Controller
             ->with(['installments' => function ($query) {
                 $query->orderBy('installment_number', 'asc');
             }, 'motor'])
-            ->whereIn('status', ['disetujui', 'completed'])
+            ->whereIn('status', ['disetujui', 'unit_preparation', 'ready_for_delivery', 'completed'])
             ->latest()
             ->get();
 

@@ -299,8 +299,7 @@ export default function OrderConfirmation({ transaction }) {
                                                 <p className="font-semibold text-gray-900">
                                                     {
                                                         transaction
-                                                            .credit_detail
-                                                            .tenor_in_months
+                                                            .credit_detail.tenor
                                                     }{" "}
                                                     Bulan
                                                 </p>
@@ -321,96 +320,139 @@ export default function OrderConfirmation({ transaction }) {
                                     </div>
                                 )}
 
-                                {/* Payment Status */}
-                                {!isCredit && (
-                                    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <div className="p-2 bg-blue-100 rounded-lg">
-                                                <Wallet
-                                                    size={20}
-                                                    className="text-blue-600"
-                                                />
+                                {/* Payment Information */}
+                                {transaction.installments &&
+                                    transaction.installments.length > 0 && (
+                                        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                            <div className="flex items-center gap-3 mb-6">
+                                                <div className="p-2 bg-blue-100 rounded-lg">
+                                                    <Wallet
+                                                        size={20}
+                                                        className="text-blue-600"
+                                                    />
+                                                </div>
+                                                <h2 className="text-lg font-bold text-gray-900">
+                                                    Pembayaran
+                                                </h2>
                                             </div>
-                                            <h2 className="text-lg font-bold text-gray-900">
-                                                Pembayaran
-                                            </h2>
-                                        </div>
 
-                                        {/* Booking Fee */}
-                                        {transaction.installments?.find(
-                                            (i) => i.installment_number === 0,
-                                        ) && (
-                                            <CashPaymentModule
-                                                installment={transaction.installments.find(
+                                            {/* Booking Fee / Down Payment */}
+                                            {transaction.installments?.find(
+                                                (i) =>
+                                                    i.installment_number === 0,
+                                            ) && (
+                                                <CashPaymentModule
+                                                    installment={transaction.installments.find(
+                                                        (i) =>
+                                                            i.installment_number ===
+                                                            0,
+                                                    )}
+                                                    type={
+                                                        isCredit
+                                                            ? "Uang Muka (DP)"
+                                                            : "Booking Fee"
+                                                    }
+                                                    isLoading={isLoadingPay}
+                                                    onPay={handleOnlinePayment}
+                                                    formatCurrency={
+                                                        formatCurrency
+                                                    }
+                                                />
+                                            )}
+
+                                            {/* Pelunasan (if booking fee paid) */}
+                                            {!isCredit &&
+                                                transaction.installments?.find(
                                                     (i) =>
                                                         i.installment_number ===
                                                         0,
+                                                )?.status === "paid" &&
+                                                transaction.installments?.find(
+                                                    (i) =>
+                                                        i.installment_number ===
+                                                        1,
+                                                ) && (
+                                                    <div className="mt-5 pt-5 border-t border-gray-200">
+                                                        <CashPaymentModule
+                                                            installment={transaction.installments.find(
+                                                                (i) =>
+                                                                    i.installment_number ===
+                                                                    1,
+                                                            )}
+                                                            type="Pelunasan Unit"
+                                                            isLoading={
+                                                                isLoadingPay
+                                                            }
+                                                            onPay={
+                                                                handleOnlinePayment
+                                                            }
+                                                            formatCurrency={
+                                                                formatCurrency
+                                                            }
+                                                        />
+                                                    </div>
                                                 )}
-                                                type="Booking Fee"
-                                                isLoading={isLoadingPay}
-                                                onPay={handleOnlinePayment}
-                                                formatCurrency={formatCurrency}
-                                            />
-                                        )}
-
-                                        {/* Pelunasan (if booking fee paid) */}
-                                        {transaction.installments?.find(
-                                            (i) => i.installment_number === 0,
-                                        )?.status === "paid" &&
-                                            transaction.installments?.find(
-                                                (i) =>
-                                                    i.installment_number === 1,
-                                            ) && (
-                                                <div className="mt-5 pt-5 border-t border-gray-200">
-                                                    <CashPaymentModule
-                                                        installment={transaction.installments.find(
-                                                            (i) =>
-                                                                i.installment_number ===
-                                                                1,
-                                                        )}
-                                                        type="Pelunasan Unit"
-                                                        isLoading={isLoadingPay}
-                                                        onPay={
-                                                            handleOnlinePayment
-                                                        }
-                                                        formatCurrency={
-                                                            formatCurrency
-                                                        }
-                                                    />
-                                                </div>
-                                            )}
-                                    </div>
-                                )}
+                                        </div>
+                                    )}
 
                                 {/* Document Upload CTA (Credit) */}
                                 {isCredit && (
-                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                                    <div
+                                        className={`${transaction.documents_complete ? "bg-green-50 border-green-200" : "bg-blue-50 border-blue-200"} border rounded-lg p-6`}
+                                    >
                                         <div className="flex items-start gap-4">
-                                            <div className="p-3 bg-blue-100 rounded-lg shrink-0">
-                                                <AlertCircle
-                                                    size={20}
-                                                    className="text-blue-600"
-                                                />
+                                            <div
+                                                className={`p-3 ${transaction.documents_complete ? "bg-green-100" : "bg-blue-100"} rounded-lg shrink-0`}
+                                            >
+                                                {transaction.documents_complete ? (
+                                                    <CheckCircle
+                                                        size={20}
+                                                        className="text-green-600"
+                                                    />
+                                                ) : (
+                                                    <AlertCircle
+                                                        size={20}
+                                                        className="text-blue-600"
+                                                    />
+                                                )}
                                             </div>
                                             <div className="flex-1">
-                                                <h3 className="font-bold text-blue-900 mb-2">
-                                                    Lengkapi Dokumen Anda
+                                                <h3
+                                                    className={`font-bold ${transaction.documents_complete ? "text-green-900" : "text-blue-900"} mb-2`}
+                                                >
+                                                    {transaction.documents_complete
+                                                        ? "Dokumen Berhasil Diunggah"
+                                                        : "Lengkapi Dokumen Anda"}
                                                 </h3>
-                                                <p className="text-sm text-blue-800 mb-4">
-                                                    Upload KTP, Kartu Keluarga,
-                                                    dan Slip Gaji untuk
-                                                    melanjutkan proses
-                                                    verifikasi kredit Anda.
+                                                <p
+                                                    className={`text-sm ${transaction.documents_complete ? "text-green-800" : "text-blue-800"} mb-4`}
+                                                >
+                                                    {transaction.documents_complete
+                                                        ? "Dokumen Anda telah lengkap dan sedang dalam proses verifikasi oleh tim kami."
+                                                        : "Upload KTP, Kartu Keluarga, dan Slip Gaji untuk melanjutkan proses verifikasi kredit Anda."}
                                                 </p>
                                                 <Link
                                                     href={route(
-                                                        "motors.upload-credit-documents",
+                                                        transaction.documents_complete
+                                                            ? "motors.manage-documents"
+                                                            : "motors.upload-credit-documents",
                                                         transaction.id,
                                                     )}
-                                                    className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
+                                                    className={`inline-flex items-center gap-2 px-6 py-2 ${transaction.documents_complete ? "bg-green-600 hover:bg-green-500" : "bg-blue-600 hover:bg-blue-500"} text-white font-semibold rounded-lg transition-colors`}
                                                 >
-                                                    <Upload size={18} /> Upload
-                                                    Dokumen
+                                                    {transaction.documents_complete ? (
+                                                        <>
+                                                            <FileText
+                                                                size={18}
+                                                            />{" "}
+                                                            Manage Dokumen
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Upload size={18} />{" "}
+                                                            Upload Dokumen
+                                                        </>
+                                                    )}
                                                 </Link>
                                             </div>
                                         </div>
