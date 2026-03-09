@@ -129,7 +129,7 @@ export default function Compare({ motors }) {
                                                                             "motors.cash-order",
                                                                             motor.id,
                                                                         )}
-                                                                        className="w-full py-2 bg-green-600 text-white rounded-lg font-bold text-sm text-center shadow-lg shadow-green-200 hover:bg-green-700 transition-colors"
+                                                                        className="w-full py-2 bg-green-600 text-white rounded-lg font-bold text-sm text-center shadow-lg shadow-green-200 hover:bg-green-500 hover:text-white transition-colors"
                                                                     >
                                                                         Beli
                                                                         Tunai
@@ -139,7 +139,7 @@ export default function Compare({ motors }) {
                                                                             "motors.credit-order",
                                                                             motor.id,
                                                                         )}
-                                                                        className="w-full py-2 bg-blue-600 text-white rounded-lg font-bold text-sm text-center shadow-lg shadow-blue-200 hover:bg-blue-700 transition-colors"
+                                                                        className="w-full py-2 bg-blue-600 text-white rounded-lg font-bold text-sm text-center shadow-lg shadow-blue-200 hover:bg-blue-500 hover:text-white transition-colors"
                                                                     >
                                                                         Ajukan
                                                                         Kredit

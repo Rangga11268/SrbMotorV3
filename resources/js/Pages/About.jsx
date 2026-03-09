@@ -117,7 +117,7 @@ export default function About() {
                                     <div className="pt-4">
                                         <Link
                                             href={route("motors.index")}
-                                            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                            className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
                                         >
                                             Lihat Unit Kami
                                         </Link>
@@ -276,7 +276,7 @@ export default function About() {
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                     <Link
                                         href={route("motors.index")}
-                                        className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                        className="inline-block px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white hover:shadow-lg transition-all"
                                     >
                                         Lihat Unit Kami
                                     </Link>

@@ -286,7 +286,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                             </div>
                                             <Button
                                                 size="xl"
-                                                className="px-10 rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all text-sm uppercase tracking-widest"
+                                                className="px-10 rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest"
                                             >
                                                 Cari
                                             </Button>

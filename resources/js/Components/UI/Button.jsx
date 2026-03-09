@@ -12,11 +12,11 @@ export default function Button({
 
     const variants = {
         primary:
-            "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300 disabled:text-gray-500",
+            "bg-blue-600 text-white hover:bg-blue-500 hover:text-white active:bg-blue-700 disabled:bg-gray-300 disabled:text-gray-500",
         secondary:
             "bg-gray-100 text-gray-900 border border-gray-300 hover:bg-gray-200 active:bg-gray-300 disabled:bg-gray-200 disabled:text-gray-400",
         ghost: "text-blue-600 hover:bg-blue-50 active:bg-blue-100 disabled:text-gray-400",
-        danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-gray-300 disabled:text-gray-500",
+        danger: "bg-red-600 text-white hover:bg-red-500 hover:text-white active:bg-red-700 disabled:bg-gray-300 disabled:text-gray-500",
     };
 
     const sizes = {

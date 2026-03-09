@@ -34,7 +34,7 @@ export default function ComparisonFloatingBar() {
                     <div className="flex items-center gap-2">
                         <Link
                             href={route("motors.compare")}
-                            className="bg-primary text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-primary-dark transition-colors flex items-center gap-1 group"
+                            className="bg-primary text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-primary-dark hover:text-white transition-all flex items-center gap-1 group"
                         >
                             Bandingkan{" "}
                             <ArrowRight

@@ -34,7 +34,7 @@ export default function Modal({
             iconColor: "text-red-600 dark:text-red-400",
             iconBg: "bg-red-100 dark:bg-red-900/30",
             confirmBtn:
-                "bg-red-600 hover:bg-red-700 text-white dark:bg-red-600 dark:hover:bg-red-700",
+                "bg-red-600 hover:bg-red-500 hover:text-white text-white dark:bg-red-600 dark:hover:bg-red-500",
             focusRing: "focus:ring-red-500",
         },
         success: {
@@ -42,7 +42,7 @@ export default function Modal({
             iconColor: "text-green-600 dark:text-green-400",
             iconBg: "bg-green-100 dark:bg-green-900/30",
             confirmBtn:
-                "bg-green-600 hover:bg-green-700 text-white dark:bg-green-600 dark:hover:bg-green-700",
+                "bg-green-600 hover:bg-green-500 hover:text-white text-white dark:bg-green-600 dark:hover:bg-green-500",
             focusRing: "focus:ring-green-500",
         },
         warning: {
@@ -50,7 +50,7 @@ export default function Modal({
             iconColor: "text-orange-600 dark:text-orange-400",
             iconBg: "bg-orange-100 dark:bg-orange-900/30",
             confirmBtn:
-                "bg-orange-600 hover:bg-orange-700 text-white dark:bg-orange-600 dark:hover:bg-orange-700",
+                "bg-orange-600 hover:bg-orange-500 hover:text-white text-white dark:bg-orange-600 dark:hover:bg-orange-500",
             focusRing: "focus:ring-orange-500",
         },
         info: {
@@ -58,7 +58,7 @@ export default function Modal({
             iconColor: "text-blue-600 dark:text-blue-400",
             iconBg: "bg-blue-100 dark:bg-blue-900/30",
             confirmBtn:
-                "bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-600 dark:hover:bg-blue-700",
+                "bg-blue-600 hover:bg-blue-500 hover:text-white text-white dark:bg-blue-600 dark:hover:bg-blue-500",
             focusRing: "focus:ring-blue-500",
         },
     };

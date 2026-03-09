@@ -407,7 +407,7 @@ export default function OrderConfirmation({ transaction }) {
                                                         "motors.upload-credit-documents",
                                                         transaction.id,
                                                     )}
-                                                    className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                                    className="inline-flex items-center gap-2 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
                                                 >
                                                     <Upload size={18} /> Upload
                                                     Dokumen
@@ -427,7 +427,7 @@ export default function OrderConfirmation({ transaction }) {
                                     </Link>
                                     <Link
                                         href={route("motors.index")}
-                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
                                     >
                                         <ArrowRight size={18} /> Cari Motor Lain
                                     </Link>
@@ -501,7 +501,7 @@ function CashPaymentModule({
                 <button
                     onClick={() => onPay(installment)}
                     disabled={isLoading}
-                    className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                    className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                 >
                     {isLoading ? "Memproses..." : "Bayar Sekarang"}
                 </button>

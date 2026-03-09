@@ -284,7 +284,7 @@ function UpdateProfileForm({ user }) {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 >
                     <Save size={18} />
                     Simpan Perubahan
@@ -393,7 +393,7 @@ function UpdatePasswordForm() {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 >
                     <Save size={18} />
                     {processing ? "Menyimpan..." : "Ubah Password"}

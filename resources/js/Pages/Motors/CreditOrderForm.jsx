@@ -352,7 +352,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                     ),
                                                                 )
                                                             }
-                                                            className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold text-sm flex items-center justify-center gap-2 h-auto"
+                                                            className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 hover:text-white transition-colors font-bold text-sm flex items-center justify-center gap-2 h-auto"
                                                         >
                                                             <Zap className="w-4 h-4" />
                                                             Gunakan Min

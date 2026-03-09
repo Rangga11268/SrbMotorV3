@@ -629,7 +629,9 @@
     border-radius: 0.5rem;
     box-shadow: var(--box-shadow);
     border: var(--border);
-    transition: transform 0.3s ease, background-color 0.3s ease,
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
         box-shadow 0.3s ease;
 }
 
@@ -648,7 +650,9 @@
     margin-bottom: 1.5rem;
     background: var(--primary);
     color: #fff;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .our-advantages .box-container .box:hover i {
@@ -844,7 +848,8 @@
 .search-filter-container .form-select:focus,
 .search-filter-container .form-control:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 0.25rem rgba(74, 144, 226, 0.25),
+    box-shadow:
+        0 0 0 0.25rem rgba(74, 144, 226, 0.25),
         inset 0 1px 2px rgba(0, 0, 0, 0.05);
     outline: 0;
 }
@@ -1120,7 +1125,10 @@
     border-radius: 0.5rem;
     box-shadow: var(--box-shadow);
     border: var(--border);
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
 }
 
 .tips-tricks .box-container .box:hover {
@@ -1137,7 +1145,9 @@
     margin-bottom: 1.5rem;
     background: var(--primary);
     color: #fff;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 .tips-tricks .box-container .box:hover i {
@@ -2206,9 +2216,9 @@ body {
 }
 
 .btn-primary-transaction:hover {
-    background: linear-gradient(135deg, #032a60 0%, #3a7bc8 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
     transform: translateY(-2px);
-    box-shadow: 0 0.5rem 1rem rgba(4, 54, 128, 0.3);
+    box-shadow: 0 0.5rem 1rem rgba(37, 99, 235, 0.4);
     color: white;
 }
 
@@ -2320,7 +2330,9 @@ body {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     transform: translateY(0);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transition:
+        transform 0.4s ease,
+        box-shadow 0.4s ease;
 }
 
 .document-card:hover {
@@ -2605,9 +2617,9 @@ body {
 }
 
 .btn-primary-document:hover {
-    background: linear-gradient(135deg, #032a60 0%, #3a7bc8 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
     transform: translateY(-2px);
-    box-shadow: 0 0.5rem 1rem rgba(4, 54, 128, 0.3);
+    box-shadow: 0 0.5rem 1rem rgba(37, 99, 235, 0.4);
     color: white;
 }
 
