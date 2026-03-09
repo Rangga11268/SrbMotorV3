@@ -94,40 +94,22 @@ export default function UserTransactions({ transactions }) {
 
     return (
         <PublicLayout auth={auth} title="Riwayat Pesanan - SRB Motors">
-            <div className="flex-grow pt-[104px] pb-20 bg-[#F8F9FA]">
-                {/* HERO HEADER */}
-                <div className="bg-gray-50 pt-16 pb-24 relative border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-6 border border-blue-100">
-                            <ShoppingBag className="w-4 h-4" /> Manajemen
-                            Pesanan
-                        </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tight">
-                            ALIRAN{" "}
-                            <span className="text-blue-600/20">TRANSAKSI</span>
+            <div className="flex-grow pt-[104px] pb-20">
+                {/* HERO HEADER - SIMPLE */}
+                <div className="bg-white border-b border-gray-100 pt-8 pb-8">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                            Riwayat Transaksi
                         </h1>
-                        <p className="mt-4 text-slate-500 font-bold text-lg max-w-2xl">
+                        <p className="text-gray-600 text-sm md:text-base max-w-2xl">
                             Lacak status pemesanan motor Anda, kelola dokumen
                             persyaratan, dan lihat rincian transaksi secara
-                            transparan.
+                            transparan
                         </p>
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
-                    <div className="flex justify-between items-center mb-10">
-                        <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-3">
-                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                TOTAL ENTRI:{" "}
-                                <span className="text-gray-900 ml-1">
-                                    {transactions.total ||
-                                        transactions.data.length}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-20">
                     {transactions.data.length > 0 ? (
                         <div className="space-y-8">
                             {transactions.data.map((transaction, index) => {

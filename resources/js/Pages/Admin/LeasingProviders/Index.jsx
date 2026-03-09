@@ -15,6 +15,7 @@ import {
     CTableRow,
     CButton,
     CAvatar,
+    CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -112,7 +113,24 @@ export default function Index({ providers: initialProviders, filters }) {
             <Head title="Manajemen Leasing" />
             <CRow>
                 <CCol xs={12}>
-                    <CCard className="mb-4 shadow-sm">
+                    <CCard className="mb-4 shadow-sm position-relative">
+                        {loading && (
+                            <div
+                                className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                                style={{
+                                    zIndex: 10,
+                                    backgroundColor: "rgba(255, 255, 255, 0.8)",
+                                    backdropFilter: "blur(2px)",
+                                }}
+                            >
+                                <div className="text-center">
+                                    <CSpinner color="primary" />
+                                    <p className="mt-2 text-body-secondary small">
+                                        Memuat data...
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                         <CCardHeader className="d-flex justify-content-between align-items-center bg-white py-3">
                             <strong className="h5 mb-0">
                                 Daftar Leasing Provider
@@ -126,7 +144,7 @@ export default function Index({ providers: initialProviders, filters }) {
                                 </CButton>
                             </Link>
                         </CCardHeader>
-                        <CCardBody>
+                        <CCardBody style={{ opacity: loading ? 0.5 : 1 }}>
                             <CRow className="mb-3 g-3">
                                 <CCol md={12}>
                                     <CInputGroup>
@@ -182,85 +200,162 @@ export default function Index({ providers: initialProviders, filters }) {
                                     </CTableRow>
                                 </CTableHead>
                                 <CTableBody>
-                                    {localProviders.data.map(
-                                        (provider, index) => (
-                                            <CTableRow key={provider.id}>
-                                                <CTableDataCell className="text-center">
-                                                    {index + 1}
-                                                </CTableDataCell>
-                                                <CTableDataCell className="font-weight-bold">
-                                                    {provider.name}
-                                                </CTableDataCell>
-                                                <CTableDataCell>
-                                                    {provider.logo_path ? (
-                                                        <img
-                                                            src={
-                                                                provider.logo_path
-                                                            }
-                                                            alt={provider.name}
+                                    {loading ? (
+                                        // Skeleton loaders
+                                        Array(5)
+                                            .fill(null)
+                                            .map((_, index) => (
+                                                <CTableRow
+                                                    key={`skeleton-${index}`}
+                                                    className="align-middle"
+                                                >
+                                                    <CTableDataCell>
+                                                        <div
                                                             style={{
-                                                                maxHeight:
-                                                                    "30px",
-                                                                maxWidth:
-                                                                    "100px",
-                                                                objectFit:
-                                                                    "contain",
+                                                                height: "20px",
+                                                                backgroundColor:
+                                                                    "#e9ecef",
+                                                                borderRadius:
+                                                                    "4px",
+                                                                animation:
+                                                                    "pulse 1.5s ease-in-out infinite",
                                                             }}
                                                         />
-                                                    ) : (
-                                                        <div className="bg-light p-2 rounded text-muted small d-inline-block">
-                                                            No Logo
-                                                        </div>
-                                                    )}
-                                                </CTableDataCell>
-                                                <CTableDataCell className="text-center">
-                                                    <Link
-                                                        href={route(
-                                                            "admin.leasing-providers.edit",
-                                                            provider.id,
-                                                        )}
+                                                    </CTableDataCell>
+                                                    <CTableDataCell>
+                                                        <div
+                                                            style={{
+                                                                height: "20px",
+                                                                backgroundColor:
+                                                                    "#e9ecef",
+                                                                borderRadius:
+                                                                    "4px",
+                                                                animation:
+                                                                    "pulse 1.5s ease-in-out infinite",
+                                                            }}
+                                                        />
+                                                    </CTableDataCell>
+                                                    <CTableDataCell>
+                                                        <div
+                                                            style={{
+                                                                height: "20px",
+                                                                backgroundColor:
+                                                                    "#e9ecef",
+                                                                borderRadius:
+                                                                    "4px",
+                                                                animation:
+                                                                    "pulse 1.5s ease-in-out infinite",
+                                                            }}
+                                                        />
+                                                    </CTableDataCell>
+                                                    <CTableDataCell>
+                                                        <div
+                                                            style={{
+                                                                height: "20px",
+                                                                backgroundColor:
+                                                                    "#e9ecef",
+                                                                borderRadius:
+                                                                    "4px",
+                                                                animation:
+                                                                    "pulse 1.5s ease-in-out infinite",
+                                                            }}
+                                                        />
+                                                    </CTableDataCell>
+                                                </CTableRow>
+                                            ))
+                                    ) : (
+                                        <>
+                                            {localProviders.data.map(
+                                                (provider, index) => (
+                                                    <CTableRow
+                                                        key={provider.id}
                                                     >
-                                                        <CButton
-                                                            color="info"
-                                                            size="sm"
-                                                            className="me-2 text-white"
-                                                        >
-                                                            <CIcon
-                                                                icon={cilPencil}
-                                                            />
-                                                        </CButton>
-                                                    </Link>
-                                                    <CButton
-                                                        color="danger"
-                                                        size="sm"
-                                                        onClick={() =>
-                                                            handleDelete(
-                                                                provider.id,
-                                                            )
-                                                        }
+                                                        <CTableDataCell className="text-center">
+                                                            {index + 1}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell className="font-weight-bold">
+                                                            {provider.name}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell>
+                                                            {provider.logo_path ? (
+                                                                <img
+                                                                    src={
+                                                                        provider.logo_path
+                                                                    }
+                                                                    alt={
+                                                                        provider.name
+                                                                    }
+                                                                    style={{
+                                                                        maxHeight:
+                                                                            "30px",
+                                                                        maxWidth:
+                                                                            "100px",
+                                                                        objectFit:
+                                                                            "contain",
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <div className="bg-light p-2 rounded text-muted small d-inline-block">
+                                                                    No Logo
+                                                                </div>
+                                                            )}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell className="text-center">
+                                                            <Link
+                                                                href={route(
+                                                                    "admin.leasing-providers.edit",
+                                                                    provider.id,
+                                                                )}
+                                                            >
+                                                                <CButton
+                                                                    color="info"
+                                                                    size="sm"
+                                                                    className="me-2 text-white"
+                                                                >
+                                                                    <CIcon
+                                                                        icon={
+                                                                            cilPencil
+                                                                        }
+                                                                    />
+                                                                </CButton>
+                                                            </Link>
+                                                            <CButton
+                                                                color="danger"
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        provider.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                <CIcon
+                                                                    icon={
+                                                                        cilTrash
+                                                                    }
+                                                                />
+                                                            </CButton>
+                                                        </CTableDataCell>
+                                                    </CTableRow>
+                                                ),
+                                            )}
+                                            {localProviders.data.length ===
+                                                0 && (
+                                                <CTableRow>
+                                                    <CTableDataCell
+                                                        colSpan="4"
+                                                        className="text-center py-4 text-muted"
                                                     >
                                                         <CIcon
-                                                            icon={cilTrash}
+                                                            icon={cilIndustry}
+                                                            size="xl"
+                                                            className="d-block mx-auto mb-2 opacity-25"
                                                         />
-                                                    </CButton>
-                                                </CTableDataCell>
-                                            </CTableRow>
-                                        ),
-                                    )}
-                                    {localProviders.data.length === 0 && (
-                                        <CTableRow>
-                                            <CTableDataCell
-                                                colSpan="4"
-                                                className="text-center py-4 text-muted"
-                                            >
-                                                <CIcon
-                                                    icon={cilIndustry}
-                                                    size="xl"
-                                                    className="d-block mx-auto mb-2 opacity-25"
-                                                />
-                                                Belum ada data leasing provider.
-                                            </CTableDataCell>
-                                        </CTableRow>
+                                                        Belum ada data leasing
+                                                        provider.
+                                                    </CTableDataCell>
+                                                </CTableRow>
+                                            )}
+                                        </>
                                     )}
                                 </CTableBody>
                             </CTable>

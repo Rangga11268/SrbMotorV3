@@ -155,14 +155,14 @@ export default function Navbar() {
                                                 },
                                                 {
                                                     href: route(
-                                                        "motors.user-transactions"
+                                                        "motors.user-transactions",
                                                     ),
                                                     label: "Pesanan",
                                                     icon: List,
                                                 },
                                                 {
                                                     href: route(
-                                                        "installments.index"
+                                                        "installments.index",
                                                     ),
                                                     label: "Cicilan",
                                                     icon: CreditCard,
@@ -181,7 +181,7 @@ export default function Navbar() {
                                             {auth.user.role === "admin" && (
                                                 <Link
                                                     href={route(
-                                                        "admin.dashboard"
+                                                        "admin.dashboard",
                                                     )}
                                                     className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent/10 text-accent transition-colors text-xs font-medium mt-1"
                                                 >

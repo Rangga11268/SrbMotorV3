@@ -127,7 +127,7 @@ export default function Footer() {
                                     >
                                         {provider.logo_path ? (
                                             <img
-                                                src={`/storage/${provider.logo_path}`}
+                                                src={provider.logo_path}
                                                 alt={provider.name}
                                                 className="max-h-8 max-w-full object-contain"
                                                 onError={(e) => {

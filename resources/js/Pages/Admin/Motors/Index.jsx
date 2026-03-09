@@ -24,6 +24,7 @@ import {
     CInputGroupText,
     CPagination,
     CPaginationItem,
+    CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -190,8 +191,28 @@ export default function Index({ motors: initialMotors, filters }) {
             </CCard>
 
             {/* Data Table */}
-            <CCard>
-                <CCardBody className="p-0">
+            <CCard className="position-relative">
+                {loading && (
+                    <div
+                        className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                        style={{
+                            zIndex: 10,
+                            backgroundColor: "rgba(255, 255, 255, 0.8)",
+                            backdropFilter: "blur(2px)",
+                        }}
+                    >
+                        <div className="text-center">
+                            <CSpinner color="primary" />
+                            <p className="mt-2 text-body-secondary small">
+                                Memuat data...
+                            </p>
+                        </div>
+                    </div>
+                )}
+                <CCardBody
+                    className="p-0"
+                    style={{ opacity: loading ? 0.5 : 1 }}
+                >
                     <CTable hover responsive className="mb-0">
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
@@ -205,7 +226,78 @@ export default function Index({ motors: initialMotors, filters }) {
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {localMotors.data.length > 0 ? (
+                            {loading ? (
+                                // Skeleton loaders
+                                Array(5)
+                                    .fill(null)
+                                    .map((_, index) => (
+                                        <CTableRow
+                                            key={`skeleton-${index}`}
+                                            className="align-middle"
+                                        >
+                                            <CTableDataCell>
+                                                <div
+                                                    style={{
+                                                        height: "20px",
+                                                        backgroundColor:
+                                                            "#e9ecef",
+                                                        borderRadius: "4px",
+                                                        animation:
+                                                            "pulse 1.5s ease-in-out infinite",
+                                                    }}
+                                                />
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                                <div
+                                                    style={{
+                                                        height: "20px",
+                                                        backgroundColor:
+                                                            "#e9ecef",
+                                                        borderRadius: "4px",
+                                                        animation:
+                                                            "pulse 1.5s ease-in-out infinite",
+                                                    }}
+                                                />
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                                <div
+                                                    style={{
+                                                        height: "20px",
+                                                        backgroundColor:
+                                                            "#e9ecef",
+                                                        borderRadius: "4px",
+                                                        animation:
+                                                            "pulse 1.5s ease-in-out infinite",
+                                                    }}
+                                                />
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                                <div
+                                                    style={{
+                                                        height: "20px",
+                                                        backgroundColor:
+                                                            "#e9ecef",
+                                                        borderRadius: "4px",
+                                                        animation:
+                                                            "pulse 1.5s ease-in-out infinite",
+                                                    }}
+                                                />
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                                <div
+                                                    style={{
+                                                        height: "20px",
+                                                        backgroundColor:
+                                                            "#e9ecef",
+                                                        borderRadius: "4px",
+                                                        animation:
+                                                            "pulse 1.5s ease-in-out infinite",
+                                                    }}
+                                                />
+                                            </CTableDataCell>
+                                        </CTableRow>
+                                    ))
+                            ) : localMotors.data.length > 0 ? (
                                 localMotors.data.map((motor) => (
                                     <CTableRow
                                         key={motor.id}

@@ -1,7 +1,7 @@
 # ANALISIS KOMPREHENSIF & IMPROVEMENT PLAN - SRB MOTORS V2
 
-**Last Updated**: March 9, 2026 (Night - Final Session - Extended)  
-**Version**: 2.6 - Complete Feature Implementation & UI Redesign Phase 2 (All Public Pages)
+**Last Updated**: March 9, 2026 (Final Session - Code Audit & Verification Complete)  
+**Version**: 2.7 - Bug Fixes + Verification of Pre-Implemented Features
 
 ---
 
@@ -1619,11 +1619,28 @@ Route::post('/transactions/{transaction}/cancel', [UserTransactionController::cl
 | 9 | Reminder cicilan H-3/H-1 | ❌ Missing | 🟡 Sedang |
 | 10 | Review status per dokumen | ❌ Missing | 🟡 Sedang |
 | 11 | User cancel order sendiri | ❌ Missing | 🟡 Sedang |
-| 12 | Jadwal survey (tanggal/waktu/lokasi) | ❌ Missing | 🟡 Sedang |
-| 13 | Standardisasi path dokumen upload | ❌ Bug | 🟢 Rendah |
 
 ---
 
 **Prepared by**: Copilot  
-**Date**: March 8, 2026  
-**Next Step**: Fix order flow critical bugs (installment generation + bunga kredit + stok motor check)
+**Date**: March 8-9, 2026  
+**Last Verified**: March 9, 2026
+
+---
+
+## 🔍 VERIFICATION AUDIT (March 9, 2026 - Final Check)
+
+### ✅ Previously Marked as "Belum Diimplementasi" But VERIFIED ✓
+
+Items yang ternyata SUDAH fully implemented dan working:
+
+| Item                                             | Bukti Implementasi                                                                                                                                              |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Jadwal survey dengan tanggal/waktu/lokasi**    | `SurveySchedule` model exists, `scheduleSurvey()` + `confirmSurveyCompletion()` in MotorGalleryController, routes defined, WhatsApp notifications working       |
+| **Reminder cicilan jatuh tempo (scheduled job)** | `SendInstallmentReminders` command exists, scheduled in `bootstrap/app.php` dailyAt('09:00'), sends WhatsApp 3 days before due, has `reminder_sent_at` tracking |
+
+**Action**: Both items moved to "Sudah Diimplementasi" (items #41 & #42).
+
+---
+
+**Next Step**: fokus ke medium priority items sesuai kebutuhan bisnis

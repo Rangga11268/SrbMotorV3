@@ -29,6 +29,7 @@ export default function InstallmentIndex({ transactions }) {
     const [selectedInstallment, setSelectedInstallment] = useState(null);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
+    const [selectedTotal, setSelectedTotal] = useState(0);
 
     const [isLoadingPay, setIsLoadingPay] = useState(false);
     const [isLoadingCheck, setIsLoadingCheck] = useState(false);
@@ -175,6 +176,109 @@ export default function InstallmentIndex({ transactions }) {
         });
     };
 
+    const toggleSelection = (installmentId, amount, penalty = 0) => {
+        setSelectedIds((prevIds) => {
+            const isCurrentlySelected = prevIds.includes(installmentId);
+            const newSelectedIds = isCurrentlySelected
+                ? prevIds.filter((id) => id !== installmentId)
+                : [...prevIds, installmentId];
+
+            // Calculate total
+            const newTotal = transactions.reduce((total, transaction) => {
+                return (
+                    total +
+                    (transaction.installments?.reduce((sum, inst) => {
+                        if (newSelectedIds.includes(inst.id)) {
+                            return (
+                                sum +
+                                Number(inst.amount) +
+                                Number(inst.penalty_amount || 0)
+                            );
+                        }
+                        return sum;
+                    }, 0) || 0)
+                );
+            }, 0);
+
+            setSelectedTotal(newTotal);
+            return newSelectedIds;
+        });
+    };
+
+    const handlePayMultiple = async () => {
+        if (selectedIds.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "PILIH CICILAN",
+                text: "Pilih minimal satu cicilan untuk dibayar.",
+                background: "#fff",
+                color: "#1a1a1a",
+                confirmButtonColor: "#1a1a1a",
+            });
+            return;
+        }
+
+        setIsLoadingPay(true);
+        try {
+            const response = await axios.post(
+                route("installments.pay-multiple"),
+                { installment_ids: selectedIds },
+            );
+            const token = response.data.snap_token;
+
+            window.snap.pay(token, {
+                onSuccess: function (result) {
+                    Swal.fire({
+                        title: "PEMBAYARAN BERHASIL",
+                        text: "Transaksi semua cicilan diproses.",
+                        icon: "success",
+                        background: "#fff",
+                        color: "#1a1a1a",
+                        confirmButtonColor: "#1a1a1a",
+                    });
+                    setSelectedIds([]);
+                    router.reload();
+                },
+                onPending: function (result) {
+                    Swal.fire({
+                        title: "PEMBAYARAN TERTUNDA",
+                        text: "Menunggu penyelesaian.",
+                        icon: "info",
+                        background: "#fff",
+                        color: "#1a1a1a",
+                        confirmButtonColor: "#1a1a1a",
+                    });
+                    router.reload();
+                },
+                onError: function (result) {
+                    Swal.fire({
+                        title: "PEMBAYARAN GAGAL",
+                        text: "Transaksi ditolak.",
+                        icon: "error",
+                        background: "#fff",
+                        color: "#1a1a1a",
+                        confirmButtonColor: "#1a1a1a",
+                    });
+                },
+                onClose: function () {},
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                title: "KESALAHAN SISTEM",
+                text:
+                    error.response?.data?.message ||
+                    "Gagal memproses pembayaran.",
+                icon: "error",
+                background: "#fff",
+                color: "#1a1a1a",
+                confirmButtonColor: "#1a1a1a",
+            });
+        } finally {
+            setIsLoadingPay(false);
+        }
+    };
+
     const getStatusBadge = (status) => {
         const badges = {
             pending: "bg-gray-100 text-gray-500 border-gray-100",
@@ -230,158 +334,207 @@ export default function InstallmentIndex({ transactions }) {
         return new Date(dateString).toLocaleDateString("id-ID", options);
     };
 
+    const getDaysUntilDue = (dueDate) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const due = new Date(dueDate);
+        due.setHours(0, 0, 0, 0);
+        const diffTime = due - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+    };
+
+    const getReminderBadge = (daysUntilDue) => {
+        if (daysUntilDue < 0) {
+            return {
+                text: `${Math.abs(daysUntilDue)} hari terlambat`,
+                color: "text-red-600 bg-red-50 border-red-200",
+            };
+        } else if (daysUntilDue === 0) {
+            return {
+                text: "Jatuh tempo hari ini",
+                color: "text-red-600 bg-red-50 border-red-200",
+            };
+        } else if (daysUntilDue <= 7) {
+            return {
+                text: `${daysUntilDue} hari lagi`,
+                color: "text-amber-600 bg-amber-50 border-amber-200",
+            };
+        } else if (daysUntilDue <= 30) {
+            return {
+                text: `${daysUntilDue} hari lagi`,
+                color: "text-blue-600 bg-blue-50 border-blue-200",
+            };
+        } else {
+            return {
+                text: `${daysUntilDue} hari lagi`,
+                color: "text-green-600 bg-green-50 border-green-200",
+            };
+        }
+    };
+
     return (
         <PublicLayout auth={auth} title="Cicilan Saya - SRB Motors">
             <div className="flex-grow pt-[104px] pb-20">
-                {/* HERO HEADER */}
-                <div className="bg-gray-50 pt-16 pb-24 relative border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-6 border border-blue-100">
-                            <Landmark className="w-4 h-4" /> Manajemen
-                            Pembiayaan
-                        </div>
-                        <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tight">
-                            RENCANA{" "}
-                            <span className="text-blue-600/20">CICILAN</span>
+                {/* HERO HEADER - SIMPLE */}
+                <div className="bg-white border-b border-gray-100 pt-8 pb-8">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                            Manajemen Cicilan
                         </h1>
-                        <p className="mt-4 text-slate-500 font-bold text-lg max-w-2xl">
-                            Pantau status pembayaran, unduh kwitansi, dan
-                            lakukan pelunasan unit motor Anda dengan mudah dan
-                            aman.
+                        <p className="text-gray-600 text-sm md:text-base max-w-2xl">
+                            Bayar cicilan Anda dengan mudah. Pilih metode
+                            pembayaran: bayar langsung online atau transfer
+                            kemudian upload bukti
                         </p>
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-20">
                     {transactions.length > 0 ? (
-                        <div className="space-y-12">
+                        <div className="space-y-8">
                             {transactions.map((transaction) => (
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     key={transaction.id}
-                                    className="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-white overflow-hidden"
+                                    className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
                                 >
-                                    {/* TRANSACTION STRIP */}
-                                    <div className="p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 bg-gray-50/50 border-b border-gray-100">
-                                        <div className="flex items-center gap-6">
-                                            <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center border border-gray-100 shadow-sm shrink-0">
-                                                <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
-                                                    <FileText className="w-6 h-6" />
-                                                </div>
-                                            </div>
+                                    {/* TRANSACTION HEADER - SIMPLIFIED */}
+                                    <div className="px-6 md:px-8 py-6 md:py-8 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                                             <div>
-                                                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tight">
+                                                <h3 className="text-2xl font-bold text-gray-900 mb-1">
                                                     {transaction.motor?.name ||
                                                         "Unit Motor"}
                                                 </h3>
-                                                <div className="flex flex-wrap items-center gap-3 mt-1">
-                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                        NO INVOICE:{" "}
-                                                        <span className="text-gray-900">
-                                                            {transaction.invoice_number ||
-                                                                `INV-${transaction.id}`}
-                                                        </span>
+                                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 text-sm text-gray-600">
+                                                    <span>
+                                                        <span className="font-semibold text-gray-900">
+                                                            No. Invoice:
+                                                        </span>{" "}
+                                                        {transaction.invoice_number ||
+                                                            `INV-${transaction.id}`}
                                                     </span>
-                                                    <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                        TRANSAKSI:{" "}
-                                                        <span className="text-gray-900">
-                                                            {formatDate(
-                                                                transaction.created_at,
-                                                            )}
-                                                        </span>
+                                                    <span>
+                                                        <span className="font-semibold text-gray-900">
+                                                            Tanggal:
+                                                        </span>{" "}
+                                                        {formatDate(
+                                                            transaction.created_at,
+                                                        )}
                                                     </span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="text-right shrink-0">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
-                                                Sisa Kewajiban
-                                            </p>
-                                            <p className="text-3xl font-black text-primary">
-                                                {formatCurrency(
-                                                    transaction.total_amount,
-                                                )}
-                                            </p>
+                                            <div className="text-right w-full md:w-auto">
+                                                <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                                                    Sisa Kewajiban
+                                                </p>
+                                                <p className="text-3xl font-black text-blue-600">
+                                                    {formatCurrency(
+                                                        transaction.total_amount,
+                                                    )}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* INSTALLMENT TABLE */}
+                                    {/* INSTALLMENT TABLE - IMPROVED RESPONSIVE */}
                                     <div className="overflow-x-auto">
-                                        <table className="w-full text-left">
+                                        <table className="w-full text-sm">
                                             <thead>
-                                                <tr className="bg-gray-50/30 border-b border-gray-100">
-                                                    <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                <tr className="bg-gray-50 border-b border-gray-200">
+                                                    <th className="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                                                         Pilih
                                                     </th>
-                                                    <th className="px-10 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                                                         Termin
                                                     </th>
-                                                    <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
                                                         Jatuh Tempo
                                                     </th>
-                                                    <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                        Nominal Pembayaran
+                                                    <th className="px-4 py-4 text-right text-xs font-semibold text-gray-600 uppercase">
+                                                        Nominal
                                                     </th>
-                                                    <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-4 text-center text-xs font-semibold text-gray-600 uppercase">
                                                         Status
                                                     </th>
-                                                    <th className="px-10 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">
-                                                        Tindakan
+                                                    <th className="px-4 py-4 text-center text-xs font-semibold text-gray-600 uppercase">
+                                                        Pembayaran
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody className="divide-y divide-gray-50">
+                                            <tbody className="divide-y divide-gray-100">
                                                 {transaction.installments &&
                                                     transaction.installments.map(
                                                         (inst) => (
                                                             <tr
                                                                 key={inst.id}
-                                                                className="hover:bg-gray-50/50 transition-colors group"
+                                                                className={`hover:bg-blue-50/30 transition-colors ${selectedIds.includes(inst.id) ? "bg-blue-50" : ""}`}
                                                             >
-                                                                <td className="px-6 py-6">
+                                                                <td className="px-4 py-4">
                                                                     {inst.status ===
                                                                         "pending" ||
                                                                     inst.status ===
                                                                         "overdue" ? (
                                                                         <input
                                                                             type="checkbox"
-                                                                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary shadow-sm cursor-pointer"
+                                                                            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
                                                                             checked={selectedIds.includes(
                                                                                 inst.id,
                                                                             )}
                                                                             onChange={() =>
                                                                                 toggleSelection(
                                                                                     inst.id,
+                                                                                    inst.amount,
+                                                                                    inst.penalty_amount ||
+                                                                                        0,
                                                                                 )
                                                                             }
                                                                         />
                                                                     ) : (
-                                                                        <div className="w-5 h-5 rounded bg-gray-100 border border-gray-200" />
+                                                                        <div className="w-4 h-4 rounded bg-gray-100 border border-gray-200" />
                                                                     )}
                                                                 </td>
-                                                                <td className="px-10 py-6">
+                                                                <td className="px-4 py-4">
                                                                     <span
-                                                                        className={`text-[11px] font-black uppercase tracking-widest ${inst.installment_number === 0 ? "text-blue-500" : "text-gray-900"}`}
+                                                                        className={`font-semibold ${inst.installment_number === 0 ? "text-blue-600" : "text-gray-900"}`}
                                                                     >
                                                                         {inst.installment_number ===
                                                                         0
-                                                                            ? "Down Payment (DP)"
-                                                                            : `# Cicilan ${inst.installment_number}`}
+                                                                            ? "DP"
+                                                                            : `Cicilan #${inst.installment_number}`}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-6 py-6">
-                                                                    <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
-                                                                        <Calendar className="w-4 h-4 text-gray-300" />
-                                                                        {formatDate(
-                                                                            inst.due_date,
-                                                                        )}
+                                                                <td className="px-4 py-4">
+                                                                    <div className="flex flex-col gap-2">
+                                                                        <p className="text-gray-700 font-medium">
+                                                                            {formatDate(
+                                                                                inst.due_date,
+                                                                            )}
+                                                                        </p>
+                                                                        {inst.status ===
+                                                                            "pending" ||
+                                                                        inst.status ===
+                                                                            "overdue" ? (
+                                                                            <span
+                                                                                className={`inline-flex text-[10px] font-semibold px-2.5 py-1 rounded-full border w-fit ${getReminderBadge(getDaysUntilDue(inst.due_date)).color}`}
+                                                                            >
+                                                                                {
+                                                                                    getReminderBadge(
+                                                                                        getDaysUntilDue(
+                                                                                            inst.due_date,
+                                                                                        ),
+                                                                                    )
+                                                                                        .text
+                                                                                }
+                                                                            </span>
+                                                                        ) : null}
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-6 py-6">
-                                                                    <div className="space-y-1">
-                                                                        <p className="text-lg font-black text-gray-900">
+                                                                <td className="px-4 py-4 text-right">
+                                                                    <div className="flex flex-col items-end gap-0.5">
+                                                                        <p className="font-bold text-gray-900">
                                                                             {formatCurrency(
                                                                                 Number(
                                                                                     inst.amount,
@@ -396,26 +549,27 @@ export default function InstallmentIndex({ transactions }) {
                                                                             inst.penalty_amount,
                                                                         ) >
                                                                             0 && (
-                                                                            <p className="text-[10px] font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-full w-fit flex items-center gap-1 uppercase tracking-widest">
-                                                                                <AlertTriangle className="w-3 h-3" />{" "}
-                                                                                Termasuk
-                                                                                Denda
+                                                                            <p className="text-[10px] font-medium text-red-600">
+                                                                                +Denda{" "}
+                                                                                {formatCurrency(
+                                                                                    inst.penalty_amount,
+                                                                                )}
                                                                             </p>
                                                                         )}
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-6 py-6">
+                                                                <td className="px-4 py-4 text-center">
                                                                     {getStatusBadge(
                                                                         inst.status,
                                                                     )}
                                                                 </td>
-                                                                <td className="px-10 py-6">
-                                                                    <div className="flex items-center justify-center gap-3">
+                                                                <td className="px-4 py-4">
+                                                                    <div className="flex items-center justify-center">
                                                                         {inst.status ===
                                                                             "pending" ||
                                                                         inst.status ===
                                                                             "overdue" ? (
-                                                                            <>
+                                                                            <div className="flex gap-1">
                                                                                 <button
                                                                                     onClick={() =>
                                                                                         handleOnlinePayment(
@@ -425,12 +579,12 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     disabled={
                                                                                         isLoadingPay
                                                                                     }
-                                                                                    className="h-10 px-5 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-black transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
+                                                                                    title="Bayar langsung via online gateway"
+                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
                                                                                 >
-                                                                                    <Zap className="w-4 h-4" />{" "}
-                                                                                    {isLoadingPay
-                                                                                        ? "Memproses..."
-                                                                                        : "Bayar Snap"}
+                                                                                    <Zap className="w-3.5 h-3.5" />
+                                                                                    Bayar
+                                                                                    Online
                                                                                 </button>
                                                                                 <button
                                                                                     onClick={() =>
@@ -438,10 +592,11 @@ export default function InstallmentIndex({ transactions }) {
                                                                                             inst,
                                                                                         )
                                                                                     }
-                                                                                    className="w-10 h-10 bg-white border border-gray-100 text-gray-400 hover:text-primary hover:border-primary transition-all rounded-xl flex items-center justify-center shadow-sm"
-                                                                                    title="Upload Bukti Manual"
+                                                                                    title="Upload struk transfer manual dari bank"
+                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg transition-colors whitespace-nowrap"
                                                                                 >
-                                                                                    <Upload className="w-4 h-4" />
+                                                                                    <Upload className="w-3.5 h-3.5" />
+                                                                                    Transfer
                                                                                 </button>
                                                                                 <button
                                                                                     onClick={() =>
@@ -452,14 +607,16 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     disabled={
                                                                                         isLoadingCheck
                                                                                     }
-                                                                                    className="w-10 h-10 bg-white border border-gray-100 text-gray-400 hover:text-primary hover:border-primary transition-all rounded-xl flex items-center justify-center shadow-sm"
-                                                                                    title="Cek Status Webhook"
+                                                                                    title="Cek apakah pembayaran sudah terverifikasi"
+                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
                                                                                 >
                                                                                     <Activity
-                                                                                        className={`w-4 h-4 ${isLoadingCheck ? "animate-spin" : ""}`}
+                                                                                        className={`w-3.5 h-3.5 ${isLoadingCheck ? "animate-spin" : ""}`}
                                                                                     />
+                                                                                    Cek
+                                                                                    Status
                                                                                 </button>
-                                                                            </>
+                                                                            </div>
                                                                         ) : inst.status ===
                                                                           "paid" ? (
                                                                             <a
@@ -468,15 +625,16 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     inst.id,
                                                                                 )}
                                                                                 target="_blank"
-                                                                                className="flex items-center gap-2 text-[10px] font-black text-primary hover:text-black uppercase tracking-widest transition-colors"
+                                                                                className="flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors inline-flex whitespace-nowrap"
                                                                             >
-                                                                                <Download className="w-4 h-4" />{" "}
+                                                                                <Download className="w-3.5 h-3.5" />
+                                                                                Lihat
                                                                                 Kwitansi
                                                                             </a>
                                                                         ) : (
-                                                                            <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
-                                                                                Menunggu
-                                                                                Konfirmasi
+                                                                            <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-lg whitespace-nowrap">
+                                                                                <Clock className="w-3.5 h-3.5" />
+                                                                                Verifikasi
                                                                             </span>
                                                                         )}
                                                                     </div>
@@ -489,32 +647,44 @@ export default function InstallmentIndex({ transactions }) {
                                     </div>
 
                                     {selectedIds.length > 0 && (
-                                        <div className="px-10 py-8 bg-blue-50/50 border-t border-blue-100 flex flex-col md:flex-row items-center justify-between gap-6">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
-                                                    <Wallet className="w-6 h-6" />
-                                                </div>
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="px-6 md:px-8 py-6 md:py-8 bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-200"
+                                        >
+                                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                                                 <div>
-                                                    <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest">
-                                                        Terpilih Untuk Dibayar
+                                                    <p className="text-xs font-semibold text-blue-600 uppercase mb-2">
+                                                        Cicilan Terpilih untuk
+                                                        Dibayar
                                                     </p>
-                                                    <p className="text-xl font-black text-gray-900">
-                                                        {selectedIds.length}{" "}
-                                                        Tagihan Cicilan
-                                                    </p>
+                                                    <div className="flex flex-col gap-2">
+                                                        <p className="text-2xl md:text-3xl font-black text-gray-900">
+                                                            {selectedIds.length}{" "}
+                                                            Cicilan
+                                                        </p>
+                                                        <p className="text-xs font-medium text-gray-600">
+                                                            Total Nominal:{" "}
+                                                            <span className="font-bold text-blue-600">
+                                                                {formatCurrency(
+                                                                    selectedTotal,
+                                                                )}
+                                                            </span>
+                                                        </p>
+                                                    </div>
                                                 </div>
+                                                <button
+                                                    onClick={handlePayMultiple}
+                                                    disabled={isLoadingPay}
+                                                    className="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                                >
+                                                    <Zap className="w-5 h-5" />
+                                                    {isLoadingPay
+                                                        ? "Memproses..."
+                                                        : "Bayar Semua"}
+                                                </button>
                                             </div>
-                                            <button
-                                                onClick={handlePayMultiple}
-                                                disabled={isLoadingPay}
-                                                className="w-full md:w-auto h-14 px-10 bg-blue-600 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-black transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3"
-                                            >
-                                                <Zap className="w-5 h-5" />
-                                                {isLoadingPay
-                                                    ? "MEMPROSES..."
-                                                    : "BAYAR SEMUA TERPILIH"}
-                                            </button>
-                                        </div>
+                                        </motion.div>
                                     )}
 
                                     {/* FOOTER INFO */}

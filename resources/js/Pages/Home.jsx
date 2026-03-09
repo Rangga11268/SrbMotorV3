@@ -145,7 +145,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                                     duration: 0.7,
                                                                     ease: "easeOut",
                                                                 }}
-                                                                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]"
+                                                                className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]"
                                                             >
                                                                 {banner.title
                                                                     .split(" ")
@@ -191,7 +191,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                                     delay: 0.2,
                                                                     ease: "easeOut",
                                                                 }}
-                                                                className="text-sm md:text-base lg:text-lg !text-white font-medium max-w-xl leading-relaxed drop-shadow-lg"
+                                                                className="text-xs sm:text-sm md:text-base lg:text-lg !text-white font-medium max-w-xl leading-relaxed drop-shadow-lg"
                                                             >
                                                                 {
                                                                     banner.subtitle
@@ -216,10 +216,10 @@ export default function Home({ auth, popularMotors = [] }) {
                                                                 duration: 0.4,
                                                                 delay: 0.4,
                                                             }}
-                                                            className="flex flex-wrap gap-5 pt-4"
+                                                            className="flex flex-wrap gap-3 sm:gap-5 pt-4"
                                                         >
                                                             <Link href="/motors">
-                                                                <button className="group relative overflow-hidden px-8 py-4 bg-white text-blue-600 rounded-2xl font-black text-lg transition-all hover:pr-14 hover:bg-blue-50 active:scale-95 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+                                                                <button className="group relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 rounded-2xl font-black text-sm sm:text-lg transition-all hover:pr-12 sm:hover:pr-14 hover:bg-blue-50 active:scale-95 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
                                                                     <span className="relative z-10">
                                                                         Lihat
                                                                         Katalog
@@ -234,7 +234,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                             <a
                                                                 href="https://wa.me/6281234567890"
                                                                 target="_blank"
-                                                                className="px-8 py-4 bg-transparent border-2 border-white/30 hover:border-white text-white rounded-2xl font-bold text-lg backdrop-blur-md transition-all hover:bg-white/10 active:scale-95 flex items-center gap-3"
+                                                                className="px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-white/30 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 active:scale-95 flex items-center gap-2 sm:gap-3"
                                                             >
                                                                 <MessageCircle className="w-6 h-6" />
                                                                 Konsultasi
@@ -252,13 +252,13 @@ export default function Home({ auth, popularMotors = [] }) {
                     </Swiper>
 
                     {/* Quick Search & Categories Overlay */}
-                    <div className="relative -mt-12 md:-mt-20 z-20 px-4 md:px-12">
-                        <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-blue-50 max-w-5xl mx-auto transform transition-all hover:scale-[1.01]">
-                            <div className="flex flex-col md:flex-row gap-10">
+                    <div className="relative -mt-12 md:-mt-20 z-20 px-4 sm:px-8 md:px-12">
+                        <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 border border-blue-50 max-w-5xl mx-auto transform transition-all hover:scale-[1.01]">
+                            <div className="flex flex-col md:flex-row gap-6 md:gap-10">
                                 {/* Search Component */}
                                 <div className="flex-1 space-y-6">
                                     <div className="flex items-center justify-between">
-                                        <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-4">
+                                        <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3 sm:gap-4">
                                             <div className="p-2 bg-blue-100 rounded-xl">
                                                 <Search className="w-6 h-6 text-blue-600" />
                                             </div>
@@ -267,10 +267,10 @@ export default function Home({ auth, popularMotors = [] }) {
                                     </div>
 
                                     <div className="relative group">
-                                        <div className="flex gap-3 p-3 bg-gray-50 border-2 border-transparent group-focus-within:border-blue-500 group-focus-within:bg-white rounded-3xl transition-all duration-300 shadow-inner">
-                                            <div className="flex-1 flex items-center px-4 gap-4">
-                                                <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center">
-                                                    <Bike className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500" />
+                                        <div className="flex gap-2 sm:gap-3 p-3 bg-gray-50 border-2 border-transparent group-focus-within:border-blue-500 group-focus-within:bg-white rounded-3xl transition-all duration-300 shadow-inner">
+                                            <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 sm:gap-4">
+                                                <div className="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                                                    <Bike className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 group-focus-within:text-blue-500" />
                                                 </div>
                                                 <input
                                                     type="text"
@@ -281,12 +281,12 @@ export default function Home({ auth, popularMotors = [] }) {
                                                         )
                                                     }
                                                     placeholder="Lagi cari Honda PCX atau NMAX? Ketik di sini..."
-                                                    className="w-full bg-transparent border-none focus:ring-0 text-base md:text-lg font-bold py-4 text-gray-800 placeholder:text-gray-400"
+                                                    className="w-full bg-transparent border-none focus:ring-0 text-sm sm:text-base md:text-lg font-bold py-2 sm:py-4 text-gray-800 placeholder:text-gray-400"
                                                 />
                                             </div>
                                             <Button
-                                                size="xl"
-                                                className="px-10 rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest"
+                                                size="lg"
+                                                className="px-6 sm:px-8 md:px-10 py-2 sm:py-3 md:py-auto rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap"
                                             >
                                                 Cari
                                             </Button>
@@ -294,8 +294,8 @@ export default function Home({ auth, popularMotors = [] }) {
                                     </div>
 
                                     {/* Popular Searches */}
-                                    <div className="flex items-center flex-wrap gap-3 pt-2">
-                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest mr-2">
+                                    <div className="flex items-center flex-wrap gap-2 sm:gap-3 pt-2">
+                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">
                                             Populer:
                                         </span>
                                         {[
@@ -310,7 +310,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                 onClick={() =>
                                                     setSearchQuery(tag)
                                                 }
-                                                className="px-5 py-2.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 border border-gray-100 rounded-full text-sm font-bold text-gray-600 transition-all active:scale-90"
+                                                className="px-4 sm:px-5 py-2 sm:py-2.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 border border-gray-100 rounded-full text-xs sm:text-sm font-bold text-gray-600 transition-all active:scale-90 flex-shrink-0"
                                             >
                                                 {tag}
                                             </button>
@@ -319,7 +319,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                 </div>
 
                                 {/* Quick Shortcuts */}
-                                <div className="md:w-72 flex flex-row md:flex-col gap-4">
+                                <div className="md:w-80 flex flex-row md:flex-col gap-3 md:gap-4 mt-6 md:mt-0">
                                     <Link
                                         href="/motors"
                                         className="flex-1 group"
