@@ -74,7 +74,7 @@ export default function Home({ auth, popularMotors = [] }) {
     ];
 
     return (
-        <PublicLayout auth={auth} title="Beranda">
+        <PublicLayout title="Beranda">
             {/* HERO SLIDER SECTION (Momotor Style) */}
             <section className="relative pt-[120px] md:pt-[140px] pb-12 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

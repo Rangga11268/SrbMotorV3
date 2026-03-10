@@ -25,6 +25,8 @@ class SurveySchedule extends Model
         'surveyor_phone',
         'status',
         'notes',
+        'customer_confirmed_at',
+        'customer_notes',
     ];
 
     /**
@@ -43,14 +45,6 @@ class SurveySchedule extends Model
     public function creditDetail(): BelongsTo
     {
         return $this->belongsTo(CreditDetail::class);
-    }
-
-    /**
-     * Get the reschedule requests for this survey schedule.
-     */
-    public function rescheduleRequests(): HasMany
-    {
-        return $this->hasMany(SurveyRescheduleRequest::class);
     }
 
     /**

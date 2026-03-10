@@ -895,42 +895,33 @@ class MotorGalleryController extends Controller
         ]);
 
         try {
-            // Create reschedule request
-            $rescheduleRequest = \App\Models\SurveyRescheduleRequest::create([
-                'survey_schedule_id' => $surveySchedule->id,
-                'customer_id' => Auth::id(),
-                'requested_date' => $validated['requested_date'],
-                'requested_time' => $validated['requested_time'],
-                'reason' => $validated['reason'],
-                'reason_notes' => $validated['reason_notes'] ?? null,
-                'status' => 'pending',
-            ]);
-
-            // Update survey status
+            // Update survey schedule directly with new date/time
             $surveySchedule->update([
-                'status' => 'reschedule_requested',
-                'reschedule_requested_at' => now(),
+                'scheduled_date' => $validated['requested_date'],
+                'scheduled_time' => $validated['requested_time'],
+                'customer_notes' => $validated['reason'] . ($validated['reason_notes'] ? ' - ' . $validated['reason_notes'] : ''),
+                'status' => 'pending', // Reset to pending for admin re-confirmation
             ]);
 
             // Notify surveyor and admin
             $datetime_str = $validated['requested_date'] . ' ' . $validated['requested_time'];
-            $surveyor_msg = "Pelanggan *{$transaction->user->name}* meminta penjadwalan ulang survei.\n\n" .
+            $surveyor_msg = "Pelanggan *{$transaction->user->name}* telah mengajukan jadwal survei baru.\n\n" .
                 "Motor: {$transaction->motor->name}\n" .
-                "Tanggal permintaan: " . now()->format('d-m-Y H:i') . "\n" .
-                "Tanggal usulan: {$datetime_str}\n" .
+                "Tanggal jadwal baru: {$datetime_str}\n" .
                 "Alasan: {$validated['reason']}\n\n" .
+                "Mohon konfirmasi penjadwalan baru.\n" .
                 "Kontak: {$transaction->user->phone}";
 
             \App\Services\WhatsAppService::sendMessage($surveySchedule->surveyor_phone, $surveyor_msg);
 
-            return back()->with('success', 'Permintaan penjadwalan ulang telah dikirim. Admin akan menghubungi Anda segera.');
+            return back()->with('success', 'Jadwal survei telah diperbarui. Admin akan mengkonfirmasi jadwal baru Anda.');
         } catch (\Exception $e) {
-            Log::error('Survey reschedule request error', [
+            Log::error('Survey reschedule error', [
                 'error' => $e->getMessage(),
                 'survey_schedule_id' => $surveySchedule->id,
             ]);
 
-            return back()->withErrors(['survey' => 'Terjadi kesalahan saat membuat permintaan penjadwalan ulang.']);
+            return back()->withErrors(['survey' => 'Terjadi kesalahan saat memperbarui jadwal survei.']);
         }
     }
 

@@ -375,7 +375,7 @@ export default function InstallmentIndex({ transactions }) {
     };
 
     return (
-        <PublicLayout auth={auth} title="Cicilan Saya - SRB Motors">
+        <PublicLayout title="Cicilan Saya - SRB Motors">
             {/* BACK BUTTON */}
             <div className="bg-white border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

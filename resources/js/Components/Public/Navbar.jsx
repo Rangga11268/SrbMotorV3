@@ -76,6 +76,7 @@ export default function Navbar({ auth }) {
             href: "/motors",
             active: url.startsWith("/motors"),
         },
+        { label: "Berita", href: "/berita", active: url.startsWith("/berita") },
         { label: "Tentang Kami", href: "/about", active: url === "/about" },
     ];
 
@@ -238,7 +239,7 @@ export default function Navbar({ auth }) {
 
                     {/* Right Actions: Auth & CTA */}
                     <div className="flex items-center gap-2 md:gap-4">
-                        {auth.user ? (
+                        {auth?.user ? (
                             <div className="relative">
                                 <button
                                     onClick={() =>

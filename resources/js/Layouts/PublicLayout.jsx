@@ -2,9 +2,11 @@ import React from "react";
 import Navbar from "@/Components/Public/Navbar";
 import Footer from "@/Components/Public/Footer";
 import { Toaster } from "react-hot-toast";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 
-export default function PublicLayout({ children, title, auth }) {
+export default function PublicLayout({ children, title }) {
+    const { auth } = usePage().props;
+
     return (
         <div className="public-theme-root">
             <Head title={title} />

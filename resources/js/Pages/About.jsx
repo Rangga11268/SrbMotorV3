@@ -49,7 +49,7 @@ export default function About() {
     ];
 
     return (
-        <PublicLayout auth={auth} title="Tentang Kami">
+        <PublicLayout title="Tentang Kami">
             <div className="flex-grow pt-[104px]">
                 {/* BACK BUTTON */}
                 <div className="bg-white border-b border-gray-100">

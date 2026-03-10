@@ -105,7 +105,7 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction): \Inertia\Response
     {
-        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'installments' => function ($q) {
+        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments' => function ($q) {
             $q->orderBy('installment_number', 'asc');
         }]);
 
@@ -113,21 +113,17 @@ class TransactionController extends Controller
             ? $transaction->creditDetail->hasRequiredDocuments()
             : true;
 
-        return \Inertia\Inertia::render('Admin/Transactions/Show', [
-            'transaction' => $transaction
-        ]);
-    }
-
-
-    public function edit(Transaction $transaction): \Inertia\Response
-    {
-        $transaction->load(['creditDetail', 'user', 'motor']);
-
-        return \Inertia\Inertia::render('Admin/Transactions/EditCombined', [
+        return \Inertia\Inertia::render('Admin/Transactions/ShowConsolidated', [
             'transaction' => $transaction,
             'users' => User::all(),
             'motors' => Motor::all(),
         ]);
+    }
+
+
+    public function edit(Transaction $transaction): RedirectResponse
+    {
+        return redirect()->route('admin.transactions.show', $transaction->id);
     }
 
 
@@ -154,84 +150,6 @@ class TransactionController extends Controller
             ->with('success', 'Transaction deleted successfully.');
     }
 
-
-    /**
-     * Show the form for editing credit details.
-     */
-    public function editCredit(Transaction $transaction): \Inertia\Response|RedirectResponse
-    {
-        // Ensure this is a credit transaction
-        if ($transaction->transaction_type !== 'CREDIT') {
-            return redirect()->route('admin.transactions.show', $transaction->id)
-                ->with('error', 'Transaksi ini bukan tipe kredit.');
-        }
-
-        $transaction->load(['creditDetail', 'creditDetail.documents', 'user', 'motor']);
-
-        return \Inertia\Inertia::render('Admin/Transactions/EditCombined', [
-            'transaction' => $transaction,
-            'users' => User::all(),
-            'motors' => Motor::all(),
-        ]);
-    }
-
-
-    /**
-     * Update the credit details (status, approved amount, notes).
-     */
-    public function updateCredit(Request $request, Transaction $transaction): RedirectResponse
-    {
-        $request->validate([
-            'credit_status' => 'required|in:menunggu_persetujuan,data_tidak_valid,dikirim_ke_surveyor,jadwal_survey,disetujui,ditolak',
-            'approved_amount' => 'nullable|numeric|min:0',
-            'admin_notes' => 'nullable|string|max:1000',
-        ]);
-
-        // Update credit detail
-        if ($transaction->creditDetail) {
-            $transaction->creditDetail->update([
-                'credit_status' => $request->credit_status,
-                'approved_amount' => $request->approved_amount ?? 0,
-            ]);
-        }
-
-        // Update transaction notes
-        $transaction->update([
-            'notes' => $request->admin_notes,
-        ]);
-
-        // Sync transaction status based on credit status
-        $this->syncTransactionStatusFromCredit($transaction, $request->credit_status);
-
-        // Generate installments when credit is approved (idempotent — skips if already generated)
-        if ($request->credit_status === 'disetujui' && $transaction->creditDetail) {
-            $fresh = $transaction->fresh(['installments', 'creditDetail']);
-            $this->transactionService->generateInstallments($fresh, $fresh->creditDetail->toArray());
-        }
-
-        return redirect()->route('admin.transactions.show', $transaction->id)
-            ->with('success', 'Status kredit berhasil diperbarui.');
-    }
-
-
-    /**
-     * Synchronize transaction status based on credit status.
-     */
-    private function syncTransactionStatusFromCredit(Transaction $transaction, string $creditStatus): void
-    {
-        $statusMap = [
-            'disetujui' => 'unit_preparation', // Credit approved -> prepare unit
-            'ditolak' => 'cancelled',           // Credit rejected -> cancel transaction
-            'menunggu_persetujuan' => 'menunggu_persetujuan',
-            'data_tidak_valid' => 'data_tidak_valid',
-            'dikirim_ke_surveyor' => 'dikirim_ke_surveyor',
-            'jadwal_survey' => 'jadwal_survey',
-        ];
-
-        if (isset($statusMap[$creditStatus])) {
-            $transaction->update(['status' => $statusMap[$creditStatus]]);
-        }
-    }
 
 
     public function updateStatus(Request $request, Transaction $transaction): RedirectResponse|\Illuminate\Http\JsonResponse

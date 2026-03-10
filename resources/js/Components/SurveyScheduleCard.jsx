@@ -1,22 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import {
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CBadge,
-    CButton,
-    CCollapse,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-    cilCalendar,
-    cilClock,
-    cilLocationPin,
-    cilUser,
-    cilPhone,
-    cilChevronDown,
-    cilChevronUp,
-} from "@coreui/icons";
+    Calendar,
+    Clock,
+    MapPin,
+    User,
+    Phone,
+    AlertCircle,
+} from "lucide-react";
 
 export default function SurveyScheduleCard({
     surveySchedule,
@@ -24,23 +14,34 @@ export default function SurveyScheduleCard({
     onConfirm,
     onCancel,
 }) {
-    const [expandHistory, setExpandHistory] = useState(false);
-
     if (!surveySchedule) {
         return null;
     }
 
-    const getStatusBadge = (status) => {
-        const statusConfig = {
-            pending: { color: "warning", label: "⏳ Pending" },
-            confirmed: { color: "info", label: "✅ Confirmed" },
-            completed: { color: "success", label: "✓ Completed" },
-            cancelled: { color: "danger", label: "✗ Cancelled" },
+    // Status color configurations
+    const getStatusConfig = (status) => {
+        const config = {
+            pending: {
+                badge: "bg-yellow-100 text-yellow-800",
+                label: "⏳ Pending",
+            },
+            confirmed: {
+                badge: "bg-blue-100 text-blue-800",
+                label: "✅ Confirmed",
+            },
+            completed: {
+                badge: "bg-green-100 text-green-800",
+                label: "✓ Completed",
+            },
+            cancelled: {
+                badge: "bg-red-100 text-red-800",
+                label: "✗ Cancelled",
+            },
         };
-        return statusConfig[status] || { color: "secondary", label: status };
+        return config[status] || config.pending;
     };
 
-    const statusConfig = getStatusBadge(surveySchedule.status);
+    const statusConfig = getStatusConfig(surveySchedule.status);
     const surveyDate = new Date(surveySchedule.scheduled_date);
     const formattedDate = surveyDate.toLocaleDateString("id-ID", {
         weekday: "long",
@@ -50,158 +51,141 @@ export default function SurveyScheduleCard({
     });
 
     return (
-        <CCard className="mb-4 shadow-sm">
-            <CCardHeader className="bg-light border-bottom d-flex justify-content-between align-items-center py-3">
-                <div className="d-flex align-items-center gap-3">
-                    <strong className="h6 mb-0">📅 Jadwal Survey</strong>
-                    <CBadge
-                        color={statusConfig.color}
-                        shape="rounded-pill"
-                        className="px-3"
+        <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-sm mb-4">
+            {/* Header */}
+            <div className="border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                        📅 Jadwal Survey
+                    </h3>
+                    <span
+                        className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${statusConfig.badge}`}
                     >
                         {statusConfig.label}
-                    </CBadge>
+                    </span>
                 </div>
                 {surveySchedule.status === "pending" && (
-                    <div className="d-flex gap-2">
+                    <div className="flex gap-2">
                         {onReschedule && (
-                            <CButton
-                                size="sm"
-                                color="warning"
-                                variant="outline"
+                            <button
                                 onClick={onReschedule}
-                                className="d-flex align-items-center gap-2"
+                                className="px-3 py-1.5 text-sm font-medium text-yellow-700 border border-yellow-300 rounded-lg hover:bg-yellow-50 dark:text-yellow-400 dark:border-yellow-600 dark:hover:bg-yellow-950 transition-colors"
                             >
                                 🔄 Ubah Jadwal
-                            </CButton>
+                            </button>
                         )}
                         {onCancel && (
-                            <CButton
-                                size="sm"
-                                color="danger"
-                                variant="outline"
+                            <button
                                 onClick={onCancel}
-                                className="d-flex align-items-center gap-2"
+                                className="px-3 py-1.5 text-sm font-medium text-red-700 border border-red-300 rounded-lg hover:bg-red-50 dark:text-red-400 dark:border-red-600 dark:hover:bg-red-950 transition-colors"
                             >
                                 ✕ Batalkan
-                            </CButton>
+                            </button>
                         )}
                     </div>
                 )}
-            </CCardHeader>
+            </div>
 
-            <CCardBody className="p-4">
-                <div className="row g-4">
-                    {/* Tanggal & Waktu */}
-                    <div className="col-md-6">
-                        <div className="d-flex gap-3">
-                            <div className="text-primary">
-                                <CIcon icon={cilCalendar} size="xl" />
-                            </div>
-                            <div>
-                                <small className="text-muted d-block">Tanggal</small>
-                                <strong className="h6">{formattedDate}</strong>
-                            </div>
-                        </div>
+            {/* Content */}
+            <div className="p-6 space-y-4">
+                {/* Tanggal */}
+                <div className="flex gap-4">
+                    <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Tanggal
+                        </p>
+                        <p className="font-semibold text-gray-900 dark:text-white">
+                            {formattedDate}
+                        </p>
                     </div>
-
-                    <div className="col-md-6">
-                        <div className="d-flex gap-3">
-                            <div className="text-primary">
-                                <CIcon icon={cilClock} size="xl" />
-                            </div>
-                            <div>
-                                <small className="text-muted d-block">Waktu</small>
-                                <strong className="h6">
-                                    {surveySchedule.scheduled_time}
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Lokasi */}
-                    <div className="col-12">
-                        <div className="d-flex gap-3">
-                            <div className="text-primary">
-                                <CIcon icon={cilLocationPin} size="xl" />
-                            </div>
-                            <div className="w-100">
-                                <small className="text-muted d-block">Lokasi</small>
-                                <strong className="h6">
-                                    {surveySchedule.location}
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Surveyor Info */}
-                    <div className="col-md-6">
-                        <div className="d-flex gap-3">
-                            <div className="text-primary">
-                                <CIcon icon={cilUser} size="xl" />
-                            </div>
-                            <div>
-                                <small className="text-muted d-block">Surveyor</small>
-                                <strong className="h6">
-                                    {surveySchedule.surveyor_name}
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="d-flex gap-3">
-                            <div className="text-primary">
-                                <CIcon icon={cilPhone} size="xl" />
-                            </div>
-                            <div>
-                                <small className="text-muted d-block">
-                                    No. WhatsApp
-                                </small>
-                                <strong className="h6">
-                                    <a
-                                        href={`https://wa.me/${surveySchedule.surveyor_phone}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-decoration-none"
-                                    >
-                                        {surveySchedule.surveyor_phone}
-                                    </a>
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Catatan */}
-                    {surveySchedule.notes && (
-                        <div className="col-12">
-                            <div className="p-3 bg-light rounded-3 border">
-                                <strong className="d-block mb-2">
-                                    📝 Catatan Survey:
-                                </strong>
-                                <div
-                                    className="text-body-secondary small prose prose-sm max-w-none"
-                                    dangerouslySetInnerHTML={{
-                                        __html: surveySchedule.notes,
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Info Box */}
-                    {surveySchedule.status === "pending" && (
-                        <div className="col-12">
-                            <div className="alert alert-info mb-0" role="alert">
-                                <strong>💡 Tips:</strong> Customer akan menerima
-                                notifikasi WhatsApp berisi detail jadwal survey ini.
-                                Pastikan semua informasi sudah benar sebelum
-                                disimpan.
-                            </div>
-                        </div>
-                    )}
                 </div>
-            </CCardBody>
-        </CCard>
+
+                {/* Waktu */}
+                <div className="flex gap-4">
+                    <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Waktu
+                        </p>
+                        <p className="font-semibold text-gray-900 dark:text-white">
+                            {surveySchedule.scheduled_time}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Lokasi */}
+                <div className="flex gap-4">
+                    <MapPin className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <div className="flex-1">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Lokasi
+                        </p>
+                        <p className="font-semibold text-gray-900 dark:text-white">
+                            {surveySchedule.location}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Surveyor */}
+                <div className="flex gap-4">
+                    <User className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Surveyor
+                        </p>
+                        <p className="font-semibold text-gray-900 dark:text-white">
+                            {surveySchedule.surveyor_name}
+                        </p>
+                    </div>
+                </div>
+
+                {/* No. WhatsApp */}
+                <div className="flex gap-4">
+                    <Phone className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                    <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            No. WhatsApp
+                        </p>
+                        <a
+                            href={`https://wa.me/${surveySchedule.surveyor_phone}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                        >
+                            {surveySchedule.surveyor_phone}
+                        </a>
+                    </div>
+                </div>
+
+                {/* Catatan */}
+                {surveySchedule.notes && (
+                    <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-700">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                            📝 Catatan Survey
+                        </p>
+                        <div
+                            className="text-sm text-gray-700 dark:text-gray-300 prose prose-sm dark:prose-invert max-w-none"
+                            dangerouslySetInnerHTML={{
+                                __html: surveySchedule.notes,
+                            }}
+                        />
+                    </div>
+                )}
+
+                {/* Info Box */}
+                {surveySchedule.status === "pending" && (
+                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg flex gap-3">
+                        <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-blue-900 dark:text-blue-100">
+                            <strong>💡 Tips:</strong> Customer akan menerima
+                            notifikasi WhatsApp berisi detail jadwal survey ini.
+                            Pastikan semua informasi sudah benar sebelum
+                            disimpan.
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 }
