@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Link, useForm, router } from "@inertiajs/react";
+import RichTextEditor from "@/Components/RichTextEditor";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import {
@@ -13,7 +14,6 @@ import {
     CFormInput,
     CFormSelect,
     CFormLabel,
-    CFormTextarea,
     CCallout,
     CBadge,
 } from "@coreui/react";
@@ -290,27 +290,18 @@ export default function Edit({ motor, promotions }) {
                                 <CRow className="g-3">
                                     <CCol md={12}>
                                         <CFormLabel>
-                                            Konten Deskripsi (Mendukung Format
-                                            HTML)
+                                            Deskripsi Motor (Spesifikasi &
+                                            Fitur)
                                         </CFormLabel>
-                                        <CFormTextarea
+                                        <RichTextEditor
                                             value={data.description}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "description",
-                                                    e.target.value,
-                                                )
+                                            onChange={(html) =>
+                                                setData("description", html)
                                             }
-                                            rows={8}
-                                            placeholder="Tuliskan spesifikasi lengkap, keunggulan, dan promo motor ini..."
+                                            placeholder="Edit spesifikasi lengkap, keunggulan, dan promo motor dengan formatting..."
+                                            error={errors.description}
+                                            minHeight="400px"
                                         />
-                                        <div className="form-text mt-2">
-                                            Anda bisa copy-paste dari
-                                            spesifikasi pabrik atau tambahkan
-                                            tabel secara manual. Nanti akan
-                                            dirender sebagai Rich Text di
-                                            halaman depan.
-                                        </div>
                                     </CCol>
                                 </CRow>
                             </CCardBody>

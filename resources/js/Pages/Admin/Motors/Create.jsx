@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import RichTextEditor from "@/Components/RichTextEditor";
 import {
     CCard,
     CCardBody,
@@ -264,27 +265,17 @@ export default function Create({ promotions }) {
                                 <CRow className="g-3">
                                     <CCol md={12}>
                                         <CFormLabel>
-                                            Konten Deskripsi (Mendukung Format
-                                            HTML)
+                                            Deskripsi Motor (Spesifikasi &
+                                            Fitur)
                                         </CFormLabel>
-                                        <CFormTextarea
+                                        <RichTextEditor
                                             value={data.description}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "description",
-                                                    e.target.value,
-                                                )
+                                            onChange={(html) =>
+                                                setData("description", html)
                                             }
-                                            rows={8}
-                                            placeholder="Tuliskan spesifikasi lengkap, keunggulan, dan promo motor ini..."
+                                            placeholder="Tuliskan spesifikasi lengkap, keunggulan, dan promo motor ini dengan formatting..."
+                                            minHeight="400px"
                                         />
-                                        <div className="form-text mt-2">
-                                            Anda bisa copy-paste dari
-                                            spesifikasi pabrik atau tambahkan
-                                            tabel secara manual. Nanti akan
-                                            dirender sebagai Rich Text di
-                                            halaman depan.
-                                        </div>
                                     </CCol>
                                 </CRow>
                             </CCardBody>

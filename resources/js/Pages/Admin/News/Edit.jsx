@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm, Head, Link } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import RichTextEditor from "@/Components/RichTextEditor";
 import {
     CCard,
     CCardBody,
@@ -112,26 +113,17 @@ export default function NewsEdit({ post, categories }) {
 
                                         <div className="mb-3">
                                             <CFormLabel htmlFor="content">
-                                                Konten
+                                                Konten Berita
                                             </CFormLabel>
-                                            <CFormTextarea
-                                                id="content"
-                                                rows={8}
-                                                placeholder="Tulis konten berita di sini..."
+                                            <RichTextEditor
                                                 value={data.content}
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "content",
-                                                        e.target.value,
-                                                    )
+                                                onChange={(html) =>
+                                                    setData("content", html)
                                                 }
-                                                isInvalid={!!errors.content}
-                                                feedbackInvalid={errors.content}
+                                                placeholder="Edit konten berita dengan formatting di sini..."
+                                                error={errors.content}
+                                                minHeight="400px"
                                             />
-                                            <small className="text-muted d-block mt-2">
-                                                Gunakan HTML basic jika
-                                                diperlukan formatting
-                                            </small>
                                         </div>
                                     </div>
 
