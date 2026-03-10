@@ -542,7 +542,7 @@ function CashPaymentModule({
                     }`}
                 >
                     {isPaid
-                        ? "✓ Pembayaran telah diverifikasi"
+                        ? "Pembayaran telah diverifikasi"
                         : "⚠ Segera selesaikan pembayaran"}
                 </p>
             </div>

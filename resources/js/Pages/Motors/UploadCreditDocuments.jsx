@@ -171,7 +171,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                         </div>
                                         <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
                                             <p className="text-xs font-semibold text-blue-900 mb-2">
-                                                ✓ Dokumen yang Diperlukan:
+                                                Dokumen yang Diperlukan:
                                             </p>
                                             <ul className="text-xs text-blue-800 space-y-1">
                                                 <li>• Kartu Identitas (KTP)</li>

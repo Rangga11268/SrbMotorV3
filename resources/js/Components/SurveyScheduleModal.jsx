@@ -162,7 +162,7 @@ export default function SurveyScheduleModal({
                 <strong className="h5 mb-0">
                     {isReschedule
                         ? "🔄 Ubah Jadwal Survey"
-                        : "📅 Jadwalkan Survey Kredit"}
+                        : "Jadwalkan Survey Kredit"}
                 </strong>
             </CModalHeader>
             <CModalBody className="p-4">

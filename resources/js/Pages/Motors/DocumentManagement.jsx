@@ -218,7 +218,7 @@ export default function DocumentManagement({ transaction }) {
                                                 Dokumen yang Diterima
                                             </h3>
                                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white text-xs font-bold rounded-full">
-                                                ✓ {existingDocs.length} Dokumen
+                                                {existingDocs.length} Dokumen
                                             </span>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -281,7 +281,7 @@ export default function DocumentManagement({ transaction }) {
                                                                 }
                                                             </p>
                                                             <p className="text-xs text-green-600 font-bold mt-1">
-                                                                ✓ Terima
+                                                                Terima
                                                             </p>
                                                         </div>
                                                     </motion.a>

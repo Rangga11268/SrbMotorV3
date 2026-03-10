@@ -70,7 +70,7 @@ class Phase6Seeder extends Seeder
         foreach ($motors as $mData) {
             $promos = $mData['promos'];
             unset($mData['promos']);
-            
+
             $motor = \App\Models\Motor::updateOrCreate(
                 ['name' => $mData['name']],
                 $mData

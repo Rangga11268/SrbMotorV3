@@ -484,7 +484,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                         motor.price *
                                                                             0.2 && (
                                                                         <p className="text-xs text-green-700 font-medium flex items-center gap-1.5">
-                                                                            ✓ DP
+                                                                            DP
                                                                             sudah
                                                                             mencukupi
                                                                         </p>

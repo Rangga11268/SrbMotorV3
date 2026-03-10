@@ -27,11 +27,11 @@ export default function SurveyScheduleCard({
             },
             confirmed: {
                 badge: "bg-blue-100 text-blue-800",
-                label: "✅ Confirmed",
+                label: "Confirmed",
             },
             completed: {
                 badge: "bg-green-100 text-green-800",
-                label: "✓ Completed",
+                label: "Completed",
             },
             cancelled: {
                 badge: "bg-red-100 text-red-800",
@@ -56,7 +56,7 @@ export default function SurveyScheduleCard({
             <div className="border-b border-gray-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <h3 className="font-semibold text-gray-900 dark:text-white">
-                        📅 Jadwal Survey
+                        Jadwal Survey
                     </h3>
                     <span
                         className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${statusConfig.badge}`}

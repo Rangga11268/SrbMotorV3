@@ -646,8 +646,7 @@ export default function ShowConsolidated({
                                                     <div className="d-flex align-items-center justify-content-between">
                                                         <div>
                                                             <h6 className="alert-heading mb-1">
-                                                                📍 Jadwalkan
-                                                                Survey
+                                                                Jadwalkan Survey
                                                             </h6>
                                                             <p className="mb-0 small">
                                                                 Status berubah
@@ -767,8 +766,7 @@ export default function ShowConsolidated({
                                                     <div className="d-flex align-items-center justify-content-between">
                                                         <div>
                                                             <h6 className="alert-heading mb-1">
-                                                                📍 Jadwalkan
-                                                                Survey
+                                                                Jadwalkan Survey
                                                             </h6>
                                                             <p className="mb-0 small">
                                                                 Status: Jadwal

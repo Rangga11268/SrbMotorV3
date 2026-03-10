@@ -405,7 +405,7 @@ export default function Home({ auth, popularMotors = [] }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-end justify-between mb-12">
                         <div>
-                            <Badge className="mb-3">🔥 Sedang Tren</Badge>
+                            <Badge className="mb-3">Sedang Tren</Badge>
                             <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
                                 MOTOR{" "}
                                 <span className="text-primary">POPULER</span>
@@ -420,85 +420,104 @@ export default function Home({ auth, popularMotors = [] }) {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {popularMotors.slice(0, 4).map((motor, idx) => (
-                            <motion.div
-                                key={motor.id}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: idx * 0.1 }}
+                    {popularMotors.length === 0 ? (
+                        <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-200">
+                            <h3 className="text-xl font-bold text-gray-500 mb-2">
+                                Tidak Ada Motor Populer
+                            </h3>
+                            <p className="text-gray-400 mb-6">
+                                Motor populer akan ditampilkan setelah ada data
+                                yang tersedia.
+                            </p>
+                            <Link
+                                href="/motors"
+                                className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-bold hover:bg-primary/90 transition-colors"
                             >
-                                <Link href={route("motors.show", motor.id)}>
-                                    <Card
-                                        hoverable
-                                        className="h-full border-none shadow-xl hover:shadow-2xl shadow-gray-200/50 rounded-[2rem] overflow-hidden group bg-white"
-                                    >
-                                        <div className="relative h-60 bg-gray-100 overflow-hidden">
-                                            <img
-                                                src={`/storage/${motor.image_path}`}
-                                                className="w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700"
-                                            />
-                                            {/* Ribbon logic from Phase 6 */}
-                                            {motor.promotions?.length > 0 && (
-                                                <div className="absolute top-4 left-0 flex flex-col gap-2 z-10 pointer-events-none">
-                                                    {motor.promotions.map(
-                                                        (promo, pIdx) => (
-                                                            <div
-                                                                key={pIdx}
-                                                                className="bg-gradient-to-r from-primary to-primary-dark text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-r-full shadow-lg border border-white/20"
-                                                            >
-                                                                <Star className="w-3 h-3 inline-block mr-1 -mt-0.5 fill-white" />
-                                                                {promo.badge_text ||
-                                                                    promo.title}
-                                                            </div>
-                                                        ),
-                                                    )}
-                                                </div>
-                                            )}
-                                            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-gray-500 border border-white/50 shadow-sm uppercase">
-                                                {motor.brand}
-                                            </div>
-                                        </div>
-                                        <CardBody className="p-8 space-y-4">
-                                            <h3 className="text-2xl font-black text-gray-900 line-clamp-1 group-hover:text-primary transition-colors uppercase tracking-tight">
-                                                {motor.name}
-                                            </h3>
-                                            <div className="flex items-center gap-4 text-xs font-bold text-gray-400">
-                                                <span className="flex items-center gap-1 uppercase tracking-wider">
-                                                    <Zap className="w-3 h-3 text-blue-500 fill-blue-500" />{" "}
-                                                    {motor.type}
-                                                </span>
-                                                <span className="w-1.5 h-1.5 rounded-full bg-gray-200" />
-                                                <span className="flex items-center gap-1 uppercase tracking-wider">
-                                                    <Clock className="w-3 h-3" />{" "}
-                                                    {motor.year}
-                                                </span>
-                                            </div>
-                                            <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
-                                                <div>
-                                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-                                                        Harga Mulai
-                                                    </p>
-                                                    <p className="text-2xl font-black text-primary leading-none">
-                                                        Rp{" "}
-                                                        {parseInt(
-                                                            motor.price,
-                                                        ).toLocaleString(
-                                                            "id-ID",
+                                Lihat Semua Motor
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {popularMotors.slice(0, 4).map((motor, idx) => (
+                                <motion.div
+                                    key={motor.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: idx * 0.1 }}
+                                >
+                                    <Link href={route("motors.show", motor.id)}>
+                                        <Card
+                                            hoverable
+                                            className="h-full border-none shadow-xl hover:shadow-2xl shadow-gray-200/50 rounded-[2rem] overflow-hidden group bg-white"
+                                        >
+                                            <div className="relative h-60 bg-gray-100 overflow-hidden">
+                                                <img
+                                                    src={`/storage/${motor.image_path}`}
+                                                    className="w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700"
+                                                />
+                                                {/* Ribbon logic from Phase 6 */}
+                                                {motor.promotions?.length >
+                                                    0 && (
+                                                    <div className="absolute top-4 left-0 flex flex-col gap-2 z-10 pointer-events-none">
+                                                        {motor.promotions.map(
+                                                            (promo, pIdx) => (
+                                                                <div
+                                                                    key={pIdx}
+                                                                    className="bg-gradient-to-r from-primary to-primary-dark text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-r-full shadow-lg border border-white/20"
+                                                                >
+                                                                    <Star className="w-3 h-3 inline-block mr-1 -mt-0.5 fill-white" />
+                                                                    {promo.badge_text ||
+                                                                        promo.title}
+                                                                </div>
+                                                            ),
                                                         )}
-                                                    </p>
-                                                </div>
-                                                <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-12">
-                                                    <ArrowRight className="w-6 h-6" />
+                                                    </div>
+                                                )}
+                                                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-gray-500 border border-white/50 shadow-sm uppercase">
+                                                    {motor.brand}
                                                 </div>
                                             </div>
-                                        </CardBody>
-                                    </Card>
-                                </Link>
-                            </motion.div>
-                        ))}
-                    </div>
+                                            <CardBody className="p-8 space-y-4">
+                                                <h3 className="text-2xl font-black text-gray-900 line-clamp-1 group-hover:text-primary transition-colors uppercase tracking-tight">
+                                                    {motor.name}
+                                                </h3>
+                                                <div className="flex items-center gap-4 text-xs font-bold text-gray-400">
+                                                    <span className="flex items-center gap-1 uppercase tracking-wider">
+                                                        <Zap className="w-3 h-3 text-blue-500 fill-blue-500" />{" "}
+                                                        {motor.type}
+                                                    </span>
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                                                    <span className="flex items-center gap-1 uppercase tracking-wider">
+                                                        <Clock className="w-3 h-3" />{" "}
+                                                        {motor.year}
+                                                    </span>
+                                                </div>
+                                                <div className="pt-6 border-t border-gray-50 flex items-center justify-between">
+                                                    <div>
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                            Harga Mulai
+                                                        </p>
+                                                        <p className="text-2xl font-black text-primary leading-none">
+                                                            Rp{" "}
+                                                            {parseInt(
+                                                                motor.price,
+                                                            ).toLocaleString(
+                                                                "id-ID",
+                                                            )}
+                                                        </p>
+                                                    </div>
+                                                    <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-12">
+                                                        <ArrowRight className="w-6 h-6" />
+                                                    </div>
+                                                </div>
+                                            </CardBody>
+                                        </Card>
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
