@@ -21,6 +21,7 @@ import {
     Wallet,
     X,
     Zap,
+    ArrowLeft,
 } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -375,6 +376,19 @@ export default function InstallmentIndex({ transactions }) {
 
     return (
         <PublicLayout auth={auth} title="Cicilan Saya - SRB Motors">
+            {/* BACK BUTTON */}
+            <div className="bg-white border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <Link
+                        href={route("profile.show")}
+                        className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
+                    >
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                        Kembali ke Profil
+                    </Link>
+                </div>
+            </div>
+
             <div className="flex-grow pt-[104px] pb-20">
                 {/* HERO HEADER - SIMPLE */}
                 <div className="bg-white border-b border-gray-100 pt-8 pb-8">

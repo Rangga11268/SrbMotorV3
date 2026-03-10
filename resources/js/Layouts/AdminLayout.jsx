@@ -43,12 +43,23 @@ import {
     cilBuilding,
     cilCalculator,
     cilTag,
+    cilNewspaper,
+    cilImage,
 } from "@coreui/icons";
 import { AnimatePresence, motion } from "framer-motion";
 
 function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
-    const [sidebarShow, setSidebarShow] = useState(true);
+    const [sidebarShow, setSidebarShow] = useState(() => {
+        // Load sidebar state from localStorage, default to true (open)
+        const saved = localStorage.getItem("adminSidebarShow");
+        return saved !== null ? JSON.parse(saved) : true;
+    });
+
+    // Save sidebar state to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("adminSidebarShow", JSON.stringify(sidebarShow));
+    }, [sidebarShow]);
     const [showFlash, setShowFlash] = useState(false);
 
     useEffect(() => {
@@ -113,6 +124,27 @@ function AdminLayoutContent({ children, title }) {
             href: route("admin.contact.index"),
             icon: cilEnvelopeClosed,
             active: route().current("admin.contact.*"),
+        },
+    ];
+
+    const contentMenuItems = [
+        {
+            name: "Berita",
+            href: route("admin.news.index"),
+            icon: cilNewspaper,
+            active: route().current("admin.news.*"),
+        },
+        {
+            name: "Kategori Berita",
+            href: route("admin.categories.index"),
+            icon: cilTag,
+            active: route().current("admin.categories.*"),
+        },
+        {
+            name: "Banner",
+            href: route("admin.banners.index"),
+            icon: cilImage,
+            active: route().current("admin.banners.*"),
         },
     ];
 
@@ -251,14 +283,42 @@ function AdminLayoutContent({ children, title }) {
                             </li>
                         ))}
 
+                        <CNavTitle className="mt-3">Manajemen Konten</CNavTitle>
+                        {contentMenuItems.map((item) => (
+                            <li className="nav-item" key={item.name}>
+                                <Link
+                                    href={item.href}
+                                    className={`nav-link ${item.active ? "active" : ""}`}
+                                >
+                                    <CIcon
+                                        icon={item.icon}
+                                        customClassName="nav-icon"
+                                    />
+                                    {item.name}
+                                </Link>
+                            </li>
+                        ))}
+
                         <CNavTitle className="mt-3">Pengaturan</CNavTitle>
+                        <li className="nav-item">
+                            <Link
+                                href={route("admin.settings.index")}
+                                className={`nav-link ${route().current("admin.settings.*") ? "active" : ""}`}
+                            >
+                                <CIcon
+                                    icon={cilSettings}
+                                    customClassName="nav-icon"
+                                />
+                                Pengaturan Website
+                            </Link>
+                        </li>
                         <li className="nav-item">
                             <Link
                                 href={route("admin.profile.show")}
                                 className={`nav-link ${route().current("admin.profile.*") ? "active" : ""}`}
                             >
                                 <CIcon
-                                    icon={cilSettings}
+                                    icon={cilUser}
                                     customClassName="nav-icon"
                                 />
                                 Profil Saya

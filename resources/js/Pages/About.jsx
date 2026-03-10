@@ -1,7 +1,15 @@
 import React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
-import { Target, Heart, Users, Trophy, CheckCircle, Star } from "lucide-react";
+import {
+    Target,
+    Heart,
+    Users,
+    Trophy,
+    CheckCircle,
+    Star,
+    ArrowLeft,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function About() {
@@ -43,6 +51,18 @@ export default function About() {
     return (
         <PublicLayout auth={auth} title="Tentang Kami">
             <div className="flex-grow pt-[104px]">
+                {/* BACK BUTTON */}
+                <div className="bg-white border-b border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                        <Link
+                            href="/"
+                            className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
+                        >
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            Kembali ke Beranda
+                        </Link>
+                    </div>
+                </div>
                 <div className="bg-white min-h-screen">
                     {/* Hero Section */}
                     <section className="bg-gradient-to-r from-blue-50 to-indigo-50 py-20 px-4 sm:px-6 lg:px-8 border-b border-gray-200">

@@ -20,6 +20,7 @@ import {
     Hash,
     Shield,
     Settings,
+    ArrowLeft,
 } from "lucide-react";
 
 export default function Show({ user }) {
@@ -36,6 +37,19 @@ export default function Show({ user }) {
 
     return (
         <PublicLayout auth={auth} title={`Profil Saya - SRB Motors`}>
+            {/* BACK BUTTON */}
+            <div className="bg-white border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <Link
+                        href="/"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
+                    >
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                        Kembali ke Beranda
+                    </Link>
+                </div>
+            </div>
+
             <div className="flex-grow pt-[104px] pb-20">
                 {/* HEADER / COVER AREA */}
                 <div className="bg-gray-50 pt-16 pb-32 relative border-b border-gray-100">

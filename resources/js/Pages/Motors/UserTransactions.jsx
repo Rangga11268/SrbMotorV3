@@ -22,6 +22,7 @@ import {
     Zap,
     MapPin,
     ShieldCheck,
+    ArrowLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -95,6 +96,19 @@ export default function UserTransactions({ transactions }) {
     return (
         <PublicLayout auth={auth} title="Riwayat Pesanan - SRB Motors">
             <div className="flex-grow pt-[104px] pb-20">
+                {/* BACK BUTTON */}
+                <div className="bg-white border-b border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                        <Link
+                            href={route("profile.show")}
+                            className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
+                        >
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            Kembali ke Profil
+                        </Link>
+                    </div>
+                </div>
+
                 {/* HERO HEADER - SIMPLE */}
                 <div className="bg-white border-b border-gray-100 pt-8 pb-8">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

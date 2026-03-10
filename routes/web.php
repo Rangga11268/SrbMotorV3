@@ -122,6 +122,19 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::resource('leasing-providers', \App\Http\Controllers\Admin\LeasingProviderController::class);
     Route::resource('financing-schemes', \App\Http\Controllers\Admin\FinancingSchemeController::class);
 
+    // Settings Management
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings/{category}/edit', [\App\Http\Controllers\Admin\SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings/{category}', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
+    Route::delete('/settings/{setting}', [\App\Http\Controllers\Admin\SettingController::class, 'destroy'])->name('settings.destroy');
+
+    // Banner Management
+    Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
+
+    // News & Categories Management
+    Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
 
     Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');
