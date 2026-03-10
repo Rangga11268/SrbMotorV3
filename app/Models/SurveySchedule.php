@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SurveySchedule extends Model
 {
@@ -42,6 +43,14 @@ class SurveySchedule extends Model
     public function creditDetail(): BelongsTo
     {
         return $this->belongsTo(CreditDetail::class);
+    }
+
+    /**
+     * Get the reschedule requests for this survey schedule.
+     */
+    public function rescheduleRequests(): HasMany
+    {
+        return $this->hasMany(SurveyRescheduleRequest::class);
     }
 
     /**

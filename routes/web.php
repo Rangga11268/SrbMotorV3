@@ -41,6 +41,18 @@ Route::post('/documents/{document}/approve', [MotorGalleryController::class, 'ap
 Route::post('/documents/{document}/reject', [MotorGalleryController::class, 'rejectDocument'])->name('documents.reject')->middleware(['auth', 'verified']);
 Route::post('/credit-details/{creditDetail}/schedule-survey', [MotorGalleryController::class, 'scheduleSurvey'])->name('credit-details.schedule-survey')->middleware(['auth', 'verified']);
 Route::post('/survey-schedules/{surveySchedule}/confirm-completion', [MotorGalleryController::class, 'confirmSurveyCompletion'])->name('survey-schedules.confirm-completion')->middleware(['auth', 'verified']);
+
+// Customer transaction & survey routes
+Route::get('/motors/transactions/{transaction}', [MotorGalleryController::class, 'showTransaction'])->name('motors.transaction.show')->middleware(['auth', 'verified']);
+Route::post('/survey-schedules/{surveySchedule}/confirm-attendance', [MotorGalleryController::class, 'confirmSurveyAttendance'])->name('survey.confirm-attendance')->middleware(['auth', 'verified']);
+Route::post('/survey-schedules/{surveySchedule}/request-reschedule', [MotorGalleryController::class, 'requestSurveyReschedule'])->name('survey.request-reschedule')->middleware(['auth', 'verified']);
+Route::get('/api/survey-history/{creditDetail}', [MotorGalleryController::class, 'getSurveyHistory'])->name('api.survey-history')->middleware(['auth', 'verified']);
+
+// Customer-facing news routes
+Route::get('/berita', [App\Http\Controllers\NewsController::class, 'index'])->name('berita.index');
+Route::get('/berita/{post:slug}', [App\Http\Controllers\NewsController::class, 'show'])->name('berita.show');
+Route::get('/api/berita/search', [App\Http\Controllers\NewsController::class, 'search'])->name('api.berita.search');
+
 Route::get('/contact', function () {
     return redirect('/#contact');
 })->name('contact');

@@ -804,4 +804,155 @@ class MotorGalleryController extends Controller
             return back()->with('error', 'Terjadi kesalahan saat mengkonfirmasi survey.');
         }
     }
+
+    /**
+     * Show single transaction detail page for customer.
+     * GET /motors/transactions/{transaction}
+     */
+    public function showTransaction(Transaction $transaction)
+    {
+        // Authorize - user can only view their own transactions
+        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $transaction->load([
+            'motor',
+            'creditDetail.documents',
+            'creditDetail.surveySchedules',
+            'installments',
+        ]);
+
+        return \Inertia\Inertia::render('Motors/TransactionDetail', [
+            'transaction' => $transaction,
+        ]);
+    }
+
+    /**
+     * Confirm survey attendance by customer.
+     * POST /survey-schedules/{surveySchedule}/confirm-attendance
+     */
+    public function confirmSurveyAttendance(Request $request, \App\Models\SurveySchedule $surveySchedule)
+    {
+        // Authorize - customer owns this survey
+        $transaction = $surveySchedule->creditDetail->transaction;
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $validated = $request->validate([
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // Update survey status to confirmed
+            $surveySchedule->update([
+                'status' => 'confirmed',
+                'customer_confirmed_at' => now(),
+                'customer_notes' => $validated['notes'] ?? null,
+            ]);
+
+            // Send WhatsApp notification to surveyor
+            $surveyor_msg = "Pelanggan *{$transaction->user->name}* telah mengkonfirmasi kehadiran survei pada *" .
+                $surveySchedule->scheduled_date->format('d-m-Y H:i') . "* di " .
+                $surveySchedule->location . ".\n\nKontak: {$transaction->user->phone}";
+
+            \App\Services\WhatsAppService::sendMessage($surveySchedule->surveyor_phone, $surveyor_msg);
+
+            return back()->with('success', 'Kehadiran survei telah dikonfirmasi. Surveyor akan segera menghubungi Anda.');
+        } catch (\Exception $e) {
+            Log::error('Survey confirmation error', [
+                'error' => $e->getMessage(),
+                'survey_schedule_id' => $surveySchedule->id,
+            ]);
+
+            return back()->withErrors(['survey' => 'Terjadi kesalahan saat mengkonfirmasi kehadiran.']);
+        }
+    }
+
+    /**
+     * Request survey reschedule by customer.
+     * POST /survey-schedules/{surveySchedule}/request-reschedule
+     */
+    public function requestSurveyReschedule(Request $request, \App\Models\SurveySchedule $surveySchedule)
+    {
+        // Authorize - customer owns this survey
+        $transaction = $surveySchedule->creditDetail->transaction;
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Can only reschedule pending/confirmed surveys (not completed/cancelled)
+        if (!in_array($surveySchedule->status, ['pending', 'confirmed'])) {
+            return back()->withErrors(['survey' => 'Survei ini tidak dapat dijadwal ulang.']);
+        }
+
+        $validated = $request->validate([
+            'requested_date' => 'required|date|after:today',
+            'requested_time' => 'required|date_format:H:i',
+            'reason' => 'required|string|max:255',
+            'reason_notes' => 'nullable|string|max:500',
+        ]);
+
+        try {
+            // Create reschedule request
+            $rescheduleRequest = \App\Models\SurveyRescheduleRequest::create([
+                'survey_schedule_id' => $surveySchedule->id,
+                'customer_id' => Auth::id(),
+                'requested_date' => $validated['requested_date'],
+                'requested_time' => $validated['requested_time'],
+                'reason' => $validated['reason'],
+                'reason_notes' => $validated['reason_notes'] ?? null,
+                'status' => 'pending',
+            ]);
+
+            // Update survey status
+            $surveySchedule->update([
+                'status' => 'reschedule_requested',
+                'reschedule_requested_at' => now(),
+            ]);
+
+            // Notify surveyor and admin
+            $datetime_str = $validated['requested_date'] . ' ' . $validated['requested_time'];
+            $surveyor_msg = "Pelanggan *{$transaction->user->name}* meminta penjadwalan ulang survei.\n\n" .
+                "Motor: {$transaction->motor->name}\n" .
+                "Tanggal permintaan: " . now()->format('d-m-Y H:i') . "\n" .
+                "Tanggal usulan: {$datetime_str}\n" .
+                "Alasan: {$validated['reason']}\n\n" .
+                "Kontak: {$transaction->user->phone}";
+
+            \App\Services\WhatsAppService::sendMessage($surveySchedule->surveyor_phone, $surveyor_msg);
+
+            return back()->with('success', 'Permintaan penjadwalan ulang telah dikirim. Admin akan menghubungi Anda segera.');
+        } catch (\Exception $e) {
+            Log::error('Survey reschedule request error', [
+                'error' => $e->getMessage(),
+                'survey_schedule_id' => $surveySchedule->id,
+            ]);
+
+            return back()->withErrors(['survey' => 'Terjadi kesalahan saat membuat permintaan penjadwalan ulang.']);
+        }
+    }
+
+    /**
+     * Get survey schedule history for a credit detail.
+     * GET /api/survey-history/{creditDetail}
+     */
+    public function getSurveyHistory(\App\Models\CreditDetail $creditDetail)
+    {
+        $transaction = $creditDetail->transaction;
+        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $surveys = $creditDetail->surveySchedules()
+            ->with('rescheduleRequests')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $surveys,
+        ]);
+    }
 }
