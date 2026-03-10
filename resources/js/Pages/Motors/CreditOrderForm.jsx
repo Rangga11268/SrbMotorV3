@@ -30,8 +30,11 @@ import { motion } from "framer-motion";
 export default function CreditOrderForm({ motor, auth, leasingProviders }) {
     const { data, setData, post, processing, errors } = useForm({
         customer_name: "",
+        customer_nik: "",
         customer_phone: "",
         customer_occupation: "",
+        customer_monthly_income: "",
+        customer_employment_duration: "",
         customer_address: "",
         down_payment: "",
         tenor: "12",
@@ -94,11 +97,26 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         if (!data.customer_name.trim()) {
             validationErrors.push("Nama lengkap harus diisi");
         }
+        if (!data.customer_nik.trim()) {
+            validationErrors.push("NIK harus diisi");
+        }
+        if (
+            data.customer_nik &&
+            data.customer_nik.replace(/\D/g, "").length !== 16
+        ) {
+            validationErrors.push("NIK harus 16 digit");
+        }
         if (!data.customer_phone.trim()) {
             validationErrors.push("Nomor WhatsApp harus diisi");
         }
         if (!data.customer_occupation.trim()) {
             validationErrors.push("Pekerjaan harus diisi");
+        }
+        if (!data.customer_monthly_income) {
+            validationErrors.push("Penghasilan bulanan harus diisi");
+        }
+        if (!data.customer_employment_duration.trim()) {
+            validationErrors.push("Lama bekerja harus diisi");
         }
         if (!data.customer_address.trim()) {
             validationErrors.push("Alamat lengkap harus diisi");
@@ -255,36 +273,141 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <Label htmlFor="customer_occupation">
-                                                Pekerjaan
-                                            </Label>
-                                            <div className="relative">
-                                                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                <input
-                                                    id="customer_occupation"
-                                                    type="text"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                    placeholder="Contoh: Karyawan Swasta, Wiraswasta"
-                                                    required
-                                                    value={
-                                                        data.customer_occupation
-                                                    }
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "customer_occupation",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_nik">
+                                                    NIK (16 Digit)
+                                                </Label>
+                                                <div className="relative">
+                                                    <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_nik"
+                                                        type="text"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="Contoh: 1234567890123456"
+                                                        maxLength="16"
+                                                        required
+                                                        value={
+                                                            data.customer_nik
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "customer_nik",
+                                                                e.target.value.replace(
+                                                                    /\D/g,
+                                                                    "",
+                                                                ),
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.customer_nik && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.customer_nik
+                                                        }
+                                                    />
+                                                )}
                                             </div>
-                                            {errors.customer_occupation && (
-                                                <ErrorMessage
-                                                    message={
-                                                        errors.customer_occupation
-                                                    }
-                                                />
-                                            )}
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_occupation">
+                                                    Pekerjaan
+                                                </Label>
+                                                <div className="relative">
+                                                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_occupation"
+                                                        type="text"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="Contoh: Karyawan Swasta, Wiraswasta"
+                                                        required
+                                                        value={
+                                                            data.customer_occupation
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "customer_occupation",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.customer_occupation && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.customer_occupation
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_monthly_income">
+                                                    Penghasilan Bulanan
+                                                </Label>
+                                                <div className="relative">
+                                                    <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_monthly_income"
+                                                        type="number"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="Contoh: 5000000"
+                                                        required
+                                                        min="0"
+                                                        value={
+                                                            data.customer_monthly_income
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "customer_monthly_income",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.customer_monthly_income && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.customer_monthly_income
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_employment_duration">
+                                                    Lama Bekerja
+                                                </Label>
+                                                <div className="relative">
+                                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_employment_duration"
+                                                        type="text"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="Contoh: 3 tahun 6 bulan"
+                                                        required
+                                                        value={
+                                                            data.customer_employment_duration
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "customer_employment_duration",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.customer_employment_duration && (
+                                                    <ErrorMessage
+                                                        message={
+                                                            errors.customer_employment_duration
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="space-y-2">

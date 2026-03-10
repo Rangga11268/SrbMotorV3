@@ -24,7 +24,7 @@ class MotorFactory extends Factory
             'year' => $this->faker->numberBetween(2020, 2025),
             'type' => $this->faker->randomElement(['Matic', 'Bebek', 'Sport', 'Trail']),
             'image_path' => 'storage/motor_images/default.jpg',
-            'details' => $this->faker->sentence,
+            'description' => $this->faker->sentence,
             'tersedia' => $this->faker->boolean,
         ];
     }

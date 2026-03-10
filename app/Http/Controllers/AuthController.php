@@ -46,7 +46,7 @@ class AuthController extends Controller
 
 
         $user = User::where('email', $request->email)->first();
-        
+
         if (!$user) {
             return back()->withErrors([
                 'email' => 'Email tidak ditemukan. Silakan periksa kembali email Anda atau buat akun baru.',
@@ -107,6 +107,9 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended('/');
+        // Send email verification notification
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('verification.notice')->with('status', 'Silakan verifikasi email Anda untuk melanjutkan.');
     }
 }

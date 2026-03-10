@@ -21,22 +21,15 @@ import {
     CAvatar,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import {
-    cilSearch,
-    cilPlus,
-    cilPencil,
-    cilZoom,
-    cilReload,
-    cilBike,
-} from "@coreui/icons";
+import { cilSearch, cilZoom, cilReload, cilCreditCard } from "@coreui/icons";
 
 export default function Index({
-    transactions: initialTransactions,
-    filters,
-    statuses,
+    credits,
+    statuses: statusList,
+    filters: currentFilters,
 }) {
-    const [search, setSearch] = useState(filters.search || "");
-    const [status, setStatus] = useState(filters.status || "");
+    const [search, setSearch] = useState(currentFilters?.search || "");
+    const [status, setStatus] = useState(currentFilters?.status || "");
 
     const formatCurrency = (amount) =>
         new Intl.NumberFormat("id-ID", {
@@ -47,16 +40,25 @@ export default function Index({
 
     const getStatusBadge = (status) => {
         const map = {
-            new_order: { color: "warning", label: "Pesanan Baru" },
-            waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
-            payment_confirmed: {
-                color: "success",
-                label: "Pembayaran Dikonfirmasi",
+            pengajuan_masuk: { color: "info", label: "Pengajuan Masuk" },
+            verifikasi_dokumen: {
+                color: "warning",
+                label: "Verifikasi Dokumen",
             },
-            unit_preparation: { color: "info", label: "Persiapan Unit" },
-            ready_for_delivery: { color: "primary", label: "Siap Dikirim" },
-            completed: { color: "success", label: "Selesai" },
-            cancelled: { color: "danger", label: "Dibatalkan" },
+            dikirim_ke_leasing: { color: "info", label: "Dikirim ke Leasing" },
+            survey_dijadwalkan: {
+                color: "warning",
+                label: "Survey Dijadwalkan",
+            },
+            survey_berjalan: { color: "warning", label: "Survey Berjalan" },
+            menunggu_keputusan_leasing: {
+                color: "info",
+                label: "Menunggu Keputusan",
+            },
+            disetujui: { color: "success", label: "Disetujui" },
+            ditolak: { color: "danger", label: "Ditolak" },
+            dp_dibayar: { color: "success", label: "DP Dibayar" },
+            selesai: { color: "success", label: "Selesai" },
         };
         const badge = map[status] || { color: "secondary", label: status };
         return (
@@ -82,7 +84,7 @@ export default function Index({
 
     const handleSearch = (value) => {
         setSearch(value);
-        router.get(route("admin.transactions.index"), {
+        router.get(route("admin.credits.index"), {
             search: value || undefined,
             status: status || undefined,
         });
@@ -90,7 +92,7 @@ export default function Index({
 
     const handleStatusFilter = (value) => {
         setStatus(value);
-        router.get(route("admin.transactions.index"), {
+        router.get(route("admin.credits.index"), {
             search: search || undefined,
             status: value || undefined,
         });
@@ -99,26 +101,19 @@ export default function Index({
     const handleReset = () => {
         setSearch("");
         setStatus("");
-        router.get(route("admin.transactions.index"));
+        router.get(route("admin.credits.index"));
     };
 
     return (
-        <AdminLayout title="Manajemen Transaksi Tunai">
+        <AdminLayout title="Kelola Pengajuan Kredit">
             {/* Header */}
             <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                 <div>
-                    <h2 className="h4 fw-bold mb-1">Daftar Transaksi Tunai</h2>
+                    <h2 className="h4 fw-bold mb-1">Daftar Pengajuan Kredit</h2>
                     <p className="text-body-secondary mb-0 small">
-                        Kelola transaksi pembayaran tunai pelanggan
+                        Proses dan monitor aplikasi kredit dari pelanggan
                     </p>
                 </div>
-                <Link
-                    href={route("admin.transactions.create")}
-                    className="btn btn-primary d-flex align-items-center gap-2 px-4 shadow-sm"
-                >
-                    <CIcon icon={cilPlus} size="sm" />
-                    Tambah Transaksi
-                </Link>
             </div>
 
             {/* Filter Card */}
@@ -127,7 +122,7 @@ export default function Index({
                     <CRow className="g-3 align-items-end">
                         <CCol md={6}>
                             <label className="small text-body-secondary">
-                                Cari Transaksi
+                                Cari Kredit
                             </label>
                             <CInputGroup>
                                 <CInputGroupText className="bg-transparent border-end-0">
@@ -135,7 +130,7 @@ export default function Index({
                                 </CInputGroupText>
                                 <CFormInput
                                     className="border-start-0"
-                                    placeholder="ID / nama pelanggan..."
+                                    placeholder="No. transaksi / nama pelanggan..."
                                     value={search}
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
@@ -154,15 +149,28 @@ export default function Index({
                                 }
                             >
                                 <option value="">Semua Status</option>
-                                {statuses?.map((s) => (
-                                    <option key={s} value={s}>
-                                        {s
-                                            .replace(/_/g, " ")
-                                            .replace(/\b\w/g, (l) =>
-                                                l.toUpperCase(),
-                                            )}
-                                    </option>
-                                ))}
+                                <option value="pengajuan_masuk">
+                                    Pengajuan Masuk
+                                </option>
+                                <option value="verifikasi_dokumen">
+                                    Verifikasi Dokumen
+                                </option>
+                                <option value="dikirim_ke_leasing">
+                                    Dikirim ke Leasing
+                                </option>
+                                <option value="survey_dijadwalkan">
+                                    Survey Dijadwalkan
+                                </option>
+                                <option value="survey_berjalan">
+                                    Survey Berjalan
+                                </option>
+                                <option value="menunggu_keputusan_leasing">
+                                    Menunggu Keputusan
+                                </option>
+                                <option value="disetujui">Disetujui</option>
+                                <option value="ditolak">Ditolak</option>
+                                <option value="dp_dibayar">DP Dibayar</option>
+                                <option value="selesai">Selesai</option>
                             </CFormSelect>
                         </CCol>
                         <CCol md={2}>
@@ -187,11 +195,11 @@ export default function Index({
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
                                 <CTableHeaderCell className="ps-4">
-                                    No. Transaksi
+                                    No. Kredit
                                 </CTableHeaderCell>
                                 <CTableHeaderCell>Pelanggan</CTableHeaderCell>
                                 <CTableHeaderCell>Motor</CTableHeaderCell>
-                                <CTableHeaderCell>Total Bayar</CTableHeaderCell>
+                                <CTableHeaderCell>Jumlah</CTableHeaderCell>
                                 <CTableHeaderCell>Status</CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
@@ -199,27 +207,20 @@ export default function Index({
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {initialTransactions.data &&
-                            initialTransactions.data.length > 0 ? (
-                                initialTransactions.data.map((trx) => (
-                                    <CTableRow
-                                        key={trx.id}
-                                        className="align-middle"
-                                    >
+                            {credits.data && credits.data.length > 0 ? (
+                                credits.data.map((credit) => (
+                                    <CTableRow key={credit.id}>
                                         <CTableDataCell className="ps-4">
                                             <div className="d-flex flex-column">
                                                 <span className="fw-bold text-primary">
-                                                    #
-                                                    {trx.id
-                                                        .toString()
-                                                        .padStart(6, "0")}
+                                                    #{credit.transaction_id}
                                                 </span>
                                                 <span
                                                     className="text-body-tertiary"
                                                     style={{ fontSize: 11 }}
                                                 >
                                                     {new Date(
-                                                        trx.created_at,
+                                                        credit.created_at,
                                                     ).toLocaleDateString(
                                                         "id-ID",
                                                     )}
@@ -229,24 +230,25 @@ export default function Index({
                                         <CTableDataCell>
                                             <div className="d-flex align-items-center gap-2">
                                                 <CAvatar
-                                                    color="success"
+                                                    color="primary"
                                                     textColor="white"
                                                     size="sm"
                                                     className="fw-bold"
                                                 >
                                                     {getInitials(
-                                                        trx.customer_name ||
-                                                            trx.user?.name,
+                                                        credit.transaction?.user
+                                                            ?.name,
                                                     )}
                                                 </CAvatar>
                                                 <div>
                                                     <div className="fw-semibold">
-                                                        {trx.customer_name ||
-                                                            trx.user?.name ||
+                                                        {credit.transaction
+                                                            ?.user?.name ||
                                                             "N/A"}
                                                     </div>
                                                     <div className="text-body-tertiary small">
-                                                        {trx.customer_phone ||
+                                                        {credit.transaction
+                                                            ?.user?.email ||
                                                             "-"}
                                                     </div>
                                                 </div>
@@ -254,102 +256,60 @@ export default function Index({
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <div className="d-flex align-items-center gap-2">
-                                                <div
-                                                    className="bg-body-tertiary rounded-2 overflow-hidden flex-shrink-0 d-flex align-items-center justify-content-center"
-                                                    style={{
-                                                        width: 45,
-                                                        height: 45,
-                                                    }}
-                                                >
-                                                    {trx.motor?.image_path ? (
-                                                        <img
-                                                            src={`/storage/${trx.motor.image_path}`}
-                                                            alt={trx.motor.name}
-                                                            className="w-100 h-100 object-fit-cover"
-                                                        />
-                                                    ) : (
-                                                        <CIcon
-                                                            icon={cilBike}
-                                                            className="text-body-tertiary"
-                                                            size="sm"
-                                                        />
-                                                    )}
-                                                </div>
+                                                <CIcon
+                                                    icon={cilCreditCard}
+                                                    size="lg"
+                                                    className="text-muted"
+                                                />
                                                 <div>
-                                                    <div className="fw-medium small pb-1">
-                                                        {trx.motor?.name ||
-                                                            "Unit Dihapus"}
-                                                    </div>
-                                                    <CBadge
-                                                        color="primary-subtle"
-                                                        textColor="primary"
-                                                        style={{ fontSize: 9 }}
-                                                    >
-                                                        {trx.motor?.brand ||
+                                                    <div className="fw-semibold">
+                                                        {credit.transaction
+                                                            ?.motor?.name ||
                                                             "N/A"}
-                                                    </CBadge>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            <div className="fw-bold text-dark">
+                                            <div className="fw-bold text-success">
                                                 {formatCurrency(
-                                                    trx.total_amount,
+                                                    credit.approved_amount ||
+                                                        credit.down_payment ||
+                                                        0,
                                                 )}
                                             </div>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {getStatusBadge(trx.status)}
+                                            {getStatusBadge(
+                                                credit.credit_status,
+                                            )}
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
-                                            <div className="d-flex gap-2 justify-content-center">
-                                                <Link
-                                                    href={route(
-                                                        "admin.transactions.show",
-                                                        trx.id,
-                                                    )}
-                                                    className="btn btn-sm btn-light border d-flex align-items-center justify-content-center"
-                                                    style={{
-                                                        width: 32,
-                                                        height: 32,
-                                                    }}
-                                                    title="Detail"
-                                                >
-                                                    <CIcon
-                                                        icon={cilZoom}
-                                                        size="sm"
-                                                    />
-                                                </Link>
-                                                <Link
-                                                    href={route(
-                                                        "admin.transactions.edit",
-                                                        trx.id,
-                                                    )}
-                                                    className="btn btn-sm btn-warning d-flex align-items-center justify-content-center shadow-sm"
-                                                    style={{
-                                                        width: 32,
-                                                        height: 32,
-                                                    }}
-                                                    title="Edit"
-                                                >
-                                                    <CIcon
-                                                        icon={cilPencil}
-                                                        size="sm"
-                                                        className="text-white"
-                                                    />
-                                                </Link>
-                                            </div>
+                                            <Link
+                                                href={route(
+                                                    "admin.credits.show",
+                                                    credit.id,
+                                                )}
+                                                className="btn btn-sm btn-info"
+                                            >
+                                                <CIcon
+                                                    icon={cilZoom}
+                                                    size="sm"
+                                                />{" "}
+                                                Proses
+                                            </Link>
                                         </CTableDataCell>
                                     </CTableRow>
                                 ))
                             ) : (
                                 <CTableRow>
                                     <CTableDataCell
-                                        colSpan={6}
-                                        className="text-center py-5 text-body-tertiary"
+                                        colSpan="6"
+                                        className="text-center py-4"
                                     >
-                                        Tidak ada transaksi tunai yang
-                                        ditemukan.
+                                        <p className="text-body-secondary mb-0">
+                                            Tidak ada pengajuan kredit
+                                        </p>
                                     </CTableDataCell>
                                 </CTableRow>
                             )}

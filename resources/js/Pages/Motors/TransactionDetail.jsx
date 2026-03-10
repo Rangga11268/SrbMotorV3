@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import SurveyScheduleCard from "@/Components/SurveyScheduleCard";
+import CreditStatusDisplay from "@/Components/CreditStatusDisplay";
 import {
     ChevronLeft,
     Calendar,
@@ -26,9 +27,20 @@ export default function TransactionDetail({ transaction }) {
 
     const getStatusColor = (status) => {
         const statusMap = {
-            menunggu_persetujuan: "warning",
+            // New 10-status credit flow
+            pengajuan_masuk: "info",
+            verifikasi_dokumen: "warning",
+            dikirim_ke_leasing: "info",
+            survey_dijadwalkan: "warning",
+            survey_berjalan: "warning",
+            menunggu_keputusan_leasing: "info",
             disetujui: "success",
             ditolak: "danger",
+            dp_dibayar: "success",
+            selesai: "success",
+            // Old statuses for backward compatibility
+            menunggu_persetujuan: "warning",
+            data_tidak_valid: "danger",
             dikirim_ke_surveyor: "info",
             jadwal_survey: "info",
             survey_selesai: "success",
@@ -39,6 +51,12 @@ export default function TransactionDetail({ transaction }) {
             approved: "success",
             rejected: "danger",
             completed: "success",
+            // Transaction statuses
+            waiting_credit_approval: "warning",
+            survey_scheduled: "warning",
+            survey_in_progress: "warning",
+            unit_preparation: "info",
+            ready_for_delivery: "success",
         };
 
         return statusMap[status] || "secondary";
@@ -46,9 +64,20 @@ export default function TransactionDetail({ transaction }) {
 
     const getStatusLabel = (status) => {
         const labels = {
-            menunggu_persetujuan: "Menunggu Persetujuan",
+            // New 10-status credit flow
+            pengajuan_masuk: "Pengajuan Masuk",
+            verifikasi_dokumen: "Verifikasi Dokumen",
+            dikirim_ke_leasing: "Dikirim ke Leasing",
+            survey_dijadwalkan: "Survey Dijadwalkan",
+            survey_berjalan: "Survey Sedang Berlangsung",
+            menunggu_keputusan_leasing: "Menunggu Keputusan",
             disetujui: "Disetujui",
             ditolak: "Ditolak",
+            dp_dibayar: "DP Dibayar",
+            selesai: "Selesai",
+            // Old statuses for backward compatibility
+            menunggu_persetujuan: "Menunggu Persetujuan",
+            data_tidak_valid: "Data Tidak Valid",
             dikirim_ke_surveyor: "Dikirim ke Surveyor",
             jadwal_survey: "Jadwal Survey",
             survey_selesai: "Survey Selesai",
@@ -59,6 +88,12 @@ export default function TransactionDetail({ transaction }) {
             approved: "Disetujui",
             rejected: "Ditolak",
             completed: "Selesai",
+            // Transaction statuses
+            waiting_credit_approval: "Menunggu Persetujuan Kredit",
+            survey_scheduled: "Survey Dijadwalkan",
+            survey_in_progress: "Survey Sedang Berlangsung",
+            unit_preparation: "Persiapan Unit",
+            ready_for_delivery: "Siap Dikirim",
         };
 
         return labels[status] || status;
@@ -267,18 +302,10 @@ export default function TransactionDetail({ transaction }) {
                                     </div>
                                 </div>
 
-                                {/* Credit Status */}
-                                <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                                        Status Kredit
-                                    </p>
-                                    <p className="font-semibold text-slate-900 dark:text-white capitalize">
-                                        {getStatusLabel(
-                                            transaction.creditDetail
-                                                .credit_status,
-                                        )}
-                                    </p>
-                                </div>
+                                {/* Credit Status - Using new CreditStatusDisplay component */}
+                                <CreditStatusDisplay
+                                    credit={transaction.creditDetail}
+                                />
                             </div>
                         )}
 

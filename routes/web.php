@@ -15,6 +15,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminProfileController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
@@ -69,6 +70,23 @@ Route::middleware(['guest', 'throttle:5,1'])->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+// Email Verification Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect('/')->with('status', 'Email anda telah berhasil diverifikasi!');
+    })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('status', 'Verifikasi email telah dikirim!');
+    })->middleware(['throttle:6,1'])->name('verification.send');
+});
+
 // Google OAuth routes
 Route::get('/auth/google', [\App\Http\Controllers\GoogleAuthController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [\App\Http\Controllers\GoogleAuthController::class, 'callback'])->name('google.callback');
@@ -99,6 +117,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
+    // Credit Management Routes (Refactored Credit Flow)
+    Route::get('/credits', [App\Http\Controllers\Admin\CreditController::class, 'index'])->name('credits.index');
+    Route::get('/credits/{credit}', [App\Http\Controllers\Admin\CreditController::class, 'show'])->name('credits.show');
+    Route::post('/credits/{credit}/verify-documents', [App\Http\Controllers\Admin\CreditController::class, 'verifyDocuments'])->name('credits.verify-documents');
+    Route::post('/credits/{credit}/reject-document', [App\Http\Controllers\Admin\CreditController::class, 'rejectDocument'])->name('credits.reject-document');
+    Route::post('/credits/{credit}/send-to-leasing', [App\Http\Controllers\Admin\CreditController::class, 'sendToLeasing'])->name('credits.send-to-leasing');
+    Route::post('/credits/{credit}/schedule-survey', [App\Http\Controllers\Admin\CreditController::class, 'scheduleSurvey'])->name('credits.schedule-survey');
+    Route::post('/credits/{credit}/start-survey', [App\Http\Controllers\Admin\CreditController::class, 'startSurvey'])->name('credits.start-survey');
+    Route::post('/credits/{credit}/complete-survey', [App\Http\Controllers\Admin\CreditController::class, 'completeSurvey'])->name('credits.complete-survey');
+    Route::post('/credits/{credit}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveCredit'])->name('credits.approve');
+    Route::post('/credits/{credit}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectCredit'])->name('credits.reject');
+    Route::post('/credits/{credit}/record-dp-payment', [App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
+    Route::post('/credits/{credit}/complete', [App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
+    Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
 
     Route::resource('motors', MotorController::class);
 
@@ -108,11 +140,9 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
 
-
-    Route::resource('transactions', TransactionController::class);
-    Route::post('/transactions/{transaction}/status', [TransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
-    Route::post('/transactions/{transaction}/upload-document', [TransactionController::class, 'uploadDocument'])->name('transactions.upload-document');
-    Route::delete('/documents/{document}', [TransactionController::class, 'deleteDocument'])->name('transactions.delete-document');
+    // Cash Transaction Management Routes (CASH ONLY - tunai)
+    Route::resource('transactions', AdminTransactionController::class);
+    Route::post('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
 
 
 
@@ -148,6 +178,21 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // News & Categories Management
     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+
+    // Credit Management
+    Route::get('/credits', [\App\Http\Controllers\Admin\CreditController::class, 'index'])->name('credits.index');
+    Route::get('/credits/{credit}', [\App\Http\Controllers\Admin\CreditController::class, 'show'])->name('credits.show');
+    Route::post('/credits/{credit}/verify-documents', [\App\Http\Controllers\Admin\CreditController::class, 'verifyDocuments'])->name('credits.verify-documents');
+    Route::post('/credits/{credit}/reject-document', [\App\Http\Controllers\Admin\CreditController::class, 'rejectDocument'])->name('credits.reject-document');
+    Route::post('/credits/{credit}/send-to-leasing', [\App\Http\Controllers\Admin\CreditController::class, 'sendToLeasing'])->name('credits.send-to-leasing');
+    Route::post('/credits/{credit}/schedule-survey', [\App\Http\Controllers\Admin\CreditController::class, 'scheduleSurvey'])->name('credits.schedule-survey');
+    Route::post('/credits/{credit}/start-survey', [\App\Http\Controllers\Admin\CreditController::class, 'startSurvey'])->name('credits.start-survey');
+    Route::post('/credits/{credit}/complete-survey', [\App\Http\Controllers\Admin\CreditController::class, 'completeSurvey'])->name('credits.complete-survey');
+    Route::post('/credits/{credit}/approve', [\App\Http\Controllers\Admin\CreditController::class, 'approveCredit'])->name('credits.approve');
+    Route::post('/credits/{credit}/reject', [\App\Http\Controllers\Admin\CreditController::class, 'rejectCredit'])->name('credits.reject');
+    Route::post('/credits/{credit}/record-dp-payment', [\App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
+    Route::post('/credits/{credit}/complete', [\App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
+    Route::get('/credits/export', [\App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
 
     Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');

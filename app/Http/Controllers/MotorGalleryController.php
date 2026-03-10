@@ -237,6 +237,9 @@ class MotorGalleryController extends Controller
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'customer_occupation' => 'required|string|max:255',
+            'customer_nik' => 'required|digits:16',
+            'customer_monthly_income' => 'required|numeric|min:0',
+            'customer_employment_duration' => 'required|string|max:255',
             'customer_address' => 'required|string|max:1000',
             'down_payment' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1|max:60',
@@ -284,7 +287,11 @@ class MotorGalleryController extends Controller
             'customer_name' => $request->customer_name,
             'customer_phone' => $request->customer_phone,
             'customer_occupation' => $request->customer_occupation,
+            'customer_nik' => $request->customer_nik,
+            'customer_monthly_income' => $request->customer_monthly_income,
+            'customer_employment_duration' => $request->customer_employment_duration,
             'customer_address' => $request->customer_address,
+            'credit_amount' => $motor->price - $request->down_payment,
         ]);
 
 
@@ -300,7 +307,7 @@ class MotorGalleryController extends Controller
             'tenor' => $request->tenor,
             'monthly_installment' => $monthlyInstallment,
             'interest_rate' => $interestRate,
-            'credit_status' => 'menunggu_persetujuan',
+            'credit_status' => 'pengajuan_masuk',
             'leasing_provider_id' => $request->leasing_provider_id,
         ]);
 

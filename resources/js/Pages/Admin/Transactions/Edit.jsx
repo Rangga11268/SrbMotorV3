@@ -17,16 +17,18 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilArrowLeft, cilSave } from "@coreui/icons";
 
-export default function Create({ motors, users }) {
-    const [selectedMotor, setSelectedMotor] = useState(null);
+export default function Edit({ transaction, motors, users }) {
+    const [selectedMotor, setSelectedMotor] = useState(
+        motors.find((m) => m.id === transaction.motor_id),
+    );
 
-    const { data, setData, post, processing, errors } = useForm({
-        user_id: "",
-        motor_id: "",
-        customer_address: "",
-        booking_fee: 0,
-        notes: "",
-        status: "new_order",
+    const { data, setData, put, processing, errors } = useForm({
+        user_id: transaction.user_id || "",
+        motor_id: transaction.motor_id || "",
+        customer_address: transaction.customer_address || "",
+        booking_fee: transaction.booking_fee || 0,
+        notes: transaction.notes || "",
+        status: transaction.status || "new_order",
     });
 
     const handleMotorChange = (motorId) => {
@@ -44,23 +46,20 @@ export default function Create({ motors, users }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("admin.transactions.store"), {
+        put(route("admin.transactions.update", transaction.id), {
             onSuccess: () => {
                 Swal.fire({
                     title: "Berhasil!",
-                    text: "Transaksi baru telah dibuat.",
+                    text: "Transaksi telah diperbarui.",
                     icon: "success",
                     timer: 2000,
                     showConfirmButton: false,
                 });
             },
             onError: () => {
-                const errorMessage = Object.values(errors).join(", ");
                 Swal.fire({
                     title: "Gagal!",
-                    text:
-                        errorMessage ||
-                        "Terjadi kesalahan saat membuat transaksi.",
+                    text: Object.values(errors).join(", "),
                     icon: "error",
                 });
             },
@@ -71,10 +70,10 @@ export default function Create({ motors, users }) {
         (selectedMotor?.price || 0) + (parseFloat(data.booking_fee) || 0);
 
     return (
-        <AdminLayout title="Buat Transaksi Tunai Baru">
+        <AdminLayout title={`Edit Transaksi Tunai #${transaction.id}`}>
             <div className="mb-4">
                 <Link
-                    href={route("admin.transactions.index")}
+                    href={route("admin.transactions.show", transaction.id)}
                     className="btn btn-outline-secondary d-flex align-items-center gap-2"
                 >
                     <CIcon icon={cilArrowLeft} size="sm" />
@@ -84,7 +83,7 @@ export default function Create({ motors, users }) {
 
             <CCard>
                 <CCardHeader className="bg-transparent border-bottom">
-                    <strong>Buat Transaksi Tunai Baru</strong>
+                    <strong>Edit Transaksi #{transaction.id}</strong>
                 </CCardHeader>
                 <CCardBody>
                     <form onSubmit={handleSubmit}>
@@ -92,8 +91,7 @@ export default function Create({ motors, users }) {
                             {/* Pelanggan */}
                             <CCol md={6}>
                                 <CFormLabel htmlFor="user_id">
-                                    Pelanggan{" "}
-                                    <span className="text-danger">*</span>
+                                    Pelanggan *
                                 </CFormLabel>
                                 <CFormSelect
                                     id="user_id"
@@ -122,7 +120,7 @@ export default function Create({ motors, users }) {
                             {/* Motor */}
                             <CCol md={6}>
                                 <CFormLabel htmlFor="motor_id">
-                                    Motor <span className="text-danger">*</span>
+                                    Motor *
                                 </CFormLabel>
                                 <CFormSelect
                                     id="motor_id"
@@ -137,8 +135,7 @@ export default function Create({ motors, users }) {
                                     <option value="">Pilih Motor</option>
                                     {motors.map((motor) => (
                                         <option key={motor.id} value={motor.id}>
-                                            {motor.name} -{" "}
-                                            {formatCurrency(motor.price)}
+                                            {motor.name}
                                         </option>
                                     ))}
                                 </CFormSelect>
@@ -166,8 +163,7 @@ export default function Create({ motors, users }) {
                             {/* Booking Fee */}
                             <CCol md={6}>
                                 <CFormLabel htmlFor="booking_fee">
-                                    Booking Fee{" "}
-                                    <span className="text-danger">*</span>
+                                    Booking Fee *
                                 </CFormLabel>
                                 <CFormInput
                                     id="booking_fee"
@@ -176,7 +172,6 @@ export default function Create({ motors, users }) {
                                     onChange={(e) =>
                                         setData("booking_fee", e.target.value)
                                     }
-                                    placeholder="0"
                                     className={
                                         errors.booking_fee ? "is-invalid" : ""
                                     }
@@ -214,7 +209,6 @@ export default function Create({ motors, users }) {
                                         )
                                     }
                                     rows={3}
-                                    placeholder="Masukkan alamat pengiriman..."
                                 />
                                 {errors.customer_address && (
                                     <div className="invalid-feedback d-block">
@@ -226,8 +220,7 @@ export default function Create({ motors, users }) {
                             {/* Status */}
                             <CCol md={6}>
                                 <CFormLabel htmlFor="status">
-                                    Status{" "}
-                                    <span className="text-danger">*</span>
+                                    Status *
                                 </CFormLabel>
                                 <CFormSelect
                                     id="status"
@@ -255,6 +248,9 @@ export default function Create({ motors, users }) {
                                         Siap Dikirim
                                     </option>
                                     <option value="completed">Selesai</option>
+                                    <option value="cancelled">
+                                        Dibatalkan
+                                    </option>
                                 </CFormSelect>
                                 {errors.status && (
                                     <div className="invalid-feedback d-block">
@@ -265,9 +261,7 @@ export default function Create({ motors, users }) {
 
                             {/* Catatan */}
                             <CCol md={12}>
-                                <CFormLabel htmlFor="notes">
-                                    Catatan Internal
-                                </CFormLabel>
+                                <CFormLabel htmlFor="notes">Catatan</CFormLabel>
                                 <CFormTextarea
                                     id="notes"
                                     value={data.notes}
@@ -275,7 +269,6 @@ export default function Create({ motors, users }) {
                                         setData("notes", e.target.value)
                                     }
                                     rows={2}
-                                    placeholder="Tambahkan catatan atau informasi penting..."
                                 />
                                 {errors.notes && (
                                     <div className="invalid-feedback d-block">
@@ -290,20 +283,19 @@ export default function Create({ motors, users }) {
                                     <CButton
                                         color="primary"
                                         type="submit"
-                                        disabled={
-                                            processing ||
-                                            !data.user_id ||
-                                            !data.motor_id
-                                        }
+                                        disabled={processing}
                                         className="d-flex align-items-center gap-2"
                                     >
                                         <CIcon icon={cilSave} size="sm" />
                                         {processing
-                                            ? "Membuat..."
-                                            : "Buat Transaksi"}
+                                            ? "Menyimpan..."
+                                            : "Simpan Perubahan"}
                                     </CButton>
                                     <Link
-                                        href={route("admin.transactions.index")}
+                                        href={route(
+                                            "admin.transactions.show",
+                                            transaction.id,
+                                        )}
                                         className="btn btn-outline-secondary"
                                     >
                                         Batal

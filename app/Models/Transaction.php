@@ -31,6 +31,10 @@ class Transaction extends Model
         'customer_phone',
         'customer_occupation',
         'customer_address',
+        'customer_nik',
+        'customer_monthly_income',
+        'customer_employment_duration',
+        'credit_amount',
     ];
 
     /**

@@ -45,6 +45,7 @@ import {
     cilTag,
     cilNewspaper,
     cilImage,
+    cilCreditCard,
 } from "@coreui/icons";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -84,7 +85,13 @@ function AdminLayoutContent({ children, title }) {
             active: route().current("admin.motors.*"),
         },
         {
-            name: "Transaksi",
+            name: "Pengajuan Kredit",
+            href: route("admin.credits.index"),
+            icon: cilCreditCard,
+            active: route().current("admin.credits.*"),
+        },
+        {
+            name: "Transaksi Tunai",
             href: route("admin.transactions.index"),
             icon: cilCart,
             active: route().current("admin.transactions.*"),

@@ -25,6 +25,20 @@ class CreditDetail extends Model
         'credit_status',
         'approved_amount',
         'leasing_provider_id',
+        // New columns for refactored flow
+        'survey_scheduled_date',
+        'survey_scheduled_time',
+        'surveyor_name',
+        'surveyor_phone',
+        'survey_notes',
+        'survey_completed_at',
+        'leasing_application_ref',
+        'leasing_decision_date',
+        'rejection_reason',
+        'internal_notes',
+        'dp_paid_date',
+        'dp_payment_method',
+        'dp_confirmed_by',
     ];
 
     /**
@@ -60,6 +74,14 @@ class CreditDetail extends Model
     public function leasingProvider(): BelongsTo
     {
         return $this->belongsTo(LeasingProvider::class);
+    }
+
+    /**
+     * Get the admin user who confirmed DP payment.
+     */
+    public function dPConfirmedByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dp_confirmed_by');
     }
 
     /**
