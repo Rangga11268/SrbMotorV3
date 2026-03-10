@@ -46,7 +46,7 @@ class Motor extends Model
             ->where('is_active', true)
             ->where(function ($query) {
                 $query->whereNull('valid_until')
-                      ->orWhere('valid_until', '>=', now());
+                    ->orWhere('valid_until', '>=', now());
             });
     }
 
