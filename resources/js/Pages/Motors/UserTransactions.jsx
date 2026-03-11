@@ -217,7 +217,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         <option value="menunggu_persetujuan">Verifikasi Berkas</option>
                                         <option value="waiting_credit_approval">Sedang Diproses</option>
                                         <option value="disetujui">Disetujui</option>
-                                        <option value="selesai">Selesai</option>
+                                        <option value="completed">Selesai</option>
                                         <option value="cancelled">Dibatalkan</option>
                                     </select>
                                     <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-gray-400">

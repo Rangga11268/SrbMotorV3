@@ -565,6 +565,7 @@ class MotorGalleryController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('id', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
                     ->orWhereHas('motor', function ($mq) use ($search) {
                         $mq->where('name', 'like', "%{$search}%");
                     });
