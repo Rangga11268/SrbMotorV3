@@ -7,6 +7,7 @@ This directory contains **consolidated database migrations** for SRB Motor appli
 ## Migration Structure
 
 ### 📦 Framework Migrations (5 files)
+
 These are Laravel's built-in tables for caching, job queues, sessions, and authentication:
 
 ```
@@ -18,6 +19,7 @@ These are Laravel's built-in tables for caching, job queues, sessions, and authe
 ```
 
 ### 🎯 Business Core Tables (11 files)
+
 These are the original application tables that are stable and don't change often:
 
 ```
@@ -35,6 +37,7 @@ These are the original application tables that are stable and don't change often
 ```
 
 ### ✅ Consolidated Final Tables (6 files)
+
 These are **clean, consolidated versions** that replaced 19 fragmented migrations:
 
 ```
@@ -53,12 +56,15 @@ Each consolidated migration includes **ALL fields** that were previously scatter
 ## What Changed
 
 ### Before (41 migrations)
+
 ❌ Users table scattered across 3 files:
+
 - Create users (2025-11-05)
 - Add Google auth (2026-03-07)
 - Add customer profile (2026-03-11)
 
 ❌ Credit Details table scattered across 7 files:
+
 - Create credit_details (2025-11-05)
 - Add interest_rate (2026-03-08)
 - Add leasing_provider (2026-03-09)
@@ -66,6 +72,7 @@ Each consolidated migration includes **ALL fields** that were previously scatter
 - Refactor credit flow (2026-03-11)
 
 ❌ Transactions table scattered across 6 files:
+
 - Create transactions (2025-11-05)
 - Add customer info (2025-11-07)
 - Add cancellation (2026-03-09)
@@ -73,12 +80,14 @@ Each consolidated migration includes **ALL fields** that were previously scatter
 - Add customer address (2026-03-09) × 2
 
 ❌ Installments table scattered across 4 files:
+
 - Create installments (2025-12-11)
 - Add snap_token (2025-12-11)
 - Add penalty_amount (2025-12-18)
 - Add reminder_sent (2026-03-09)
 
 ### After (22 migrations)
+
 ✅ **Clean consolidated structure** - Each table has ONE final migration with ALL fields
 
 ---
@@ -86,6 +95,7 @@ Each consolidated migration includes **ALL fields** that were previously scatter
 ## How to Use
 
 ### Fresh Installation
+
 ```bash
 # Run all migrations - will create clean database with consolidated structure
 php artisan migrate
@@ -96,6 +106,7 @@ php artisan migrate:fresh --seed
 ```
 
 ### For Developers
+
 When you need to **modify a table**, edit one of the consolidated migration files:
 
 1. `consolidate_users_table.php` - All user-related fields
@@ -119,11 +130,13 @@ Schema::table('users', function (Blueprint $table) {
 ## Consolidated Table Schemas
 
 ### users
+
 - **Original fields:** id, name, email, password, role, timestamps
 - **Google OAuth:** google_id, profile_photo_path, phone
 - **Customer Profile:** alamat, nik, no_ktp, no_hp_backup, jenis_kelamin, tanggal_lahir, pekerjaan, pendapatan_bulanan, nama_ibu_kandung
 
 ### credit_details
+
 - **Base:** id, transaction_id, leasing_provider_id, status, reference_number
 - **Financials:** tenor, interest_rate, monthly_installment, total_interest
 - **Documents:** verification_notes, verified_at
@@ -134,6 +147,7 @@ Schema::table('users', function (Blueprint $table) {
 - **Customer Confirmation:** customer_confirms_survey, customer_survey_confirmed_at
 
 ### transactions
+
 - **Base:** id, user_id, reference_number, transaction_type, status, motor_id
 - **Prices:** motor_price, total_price, discount_amount, final_price
 - **Customer Contact:** phone, address, city
@@ -142,17 +156,20 @@ Schema::table('users', function (Blueprint $table) {
 - **Notes:** notes, internal_notes
 
 ### installments
+
 - **Base:** id, credit_detail_id, installment_number, due_date, amount, status
 - **Payment:** paid_date, payment_method, payment_proof, snap_token
 - **Late Payment:** is_overdue, days_overdue, penalty_amount, total_with_penalty
 - **Reminder:** reminder_sent, reminder_sent_at
 
 ### survey_schedules
+
 - **Base:** id, credit_detail_id, scheduled_date, status, location
 - **Notes:** notes, survey_result, findings
 - **Customer Confirmation:** customer_confirms, customer_confirmed_at, customer_confirmation_notes
 
 ### documents
+
 - **Base:** id, credit_detail_id, document_type, description
 - **File Info:** file_path, file_name, file_size
 - **Approval:** status, approval_status, approval_notes, approved_at, rejected_at
