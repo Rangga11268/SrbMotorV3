@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Motor;
-use App\Models\MotorSpecification;
 use App\Repositories\MotorRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;

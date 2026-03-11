@@ -41,7 +41,7 @@ class TransactionStatusChanged extends Notification
         $transactionId = $this->transaction->id;
         $previousStatus = $this->transaction->getOriginal('status') ?? $this->transaction->status;
         $newStatus = $this->transaction->status;
-        
+
         // Check if it's a credit status change
         $isCreditStatusChange = false;
         if ($this->transaction->transaction_type === 'CREDIT' && $this->transaction->creditDetail) {
@@ -53,22 +53,22 @@ class TransactionStatusChanged extends Notification
                 $newStatus = $newCreditStatus;
             }
         }
-        
+
         $statusMessage = $this->getStatusMessage($newStatus, $isCreditStatusChange);
-        
+
         return (new MailMessage)
-                    ->subject('Update Status Pesanan - SRB Motors')
-                    ->greeting('Halo ' . $notifiable->name . '!')
-                    ->line('Status pesanan Anda telah diperbarui.')
-                    ->line('Rincian pesanan:')
-                    ->line('ID Transaksi: ' . $transactionId)
-                    ->line('Motor: ' . $motorName)
-                    ->line('Tipe Pesanan: ' . ($this->transaction->transaction_type === 'CASH' ? 'Tunai' : 'Kredit'))
-                    ->line('Status Sebelumnya: ' . $previousStatus)
-                    ->line('Status Terbaru: ' . $newStatus)
-                    ->line('Keterangan: ' . $statusMessage)
-                    ->action('Lihat Pesanan', url('/motors/order-confirmation/' . $transactionId))
-                    ->line('Tim kami akan segera menghubungi Anda jika diperlukan.');
+            ->subject('Update Status Pesanan - SRB Motors')
+            ->greeting('Halo ' . $notifiable->name . '!')
+            ->line('Status pesanan Anda telah diperbarui.')
+            ->line('Rincian pesanan:')
+            ->line('ID Transaksi: ' . $transactionId)
+            ->line('Motor: ' . $motorName)
+            ->line('Tipe Pesanan: ' . ($this->transaction->transaction_type === 'CASH' ? 'Tunai' : 'Kredit'))
+            ->line('Status Sebelumnya: ' . $previousStatus)
+            ->line('Status Terbaru: ' . $newStatus)
+            ->line('Keterangan: ' . $statusMessage)
+            ->action('Lihat Pesanan', url('/motors/order-confirmation/' . $transactionId))
+            ->line('Tim kami akan segera menghubungi Anda jika diperlukan.');
     }
 
     /**
@@ -97,12 +97,18 @@ class TransactionStatusChanged extends Notification
             switch ($status) {
                 case 'COMPLETED':
                     return 'Pesanan Anda telah selesai. Terima kasih telah membeli di SRB Motors.';
+                case 'selesai':
+                    return '🚚 Motor Anda telah dikirim! Silakan cek kondisi unit dan konfirmasi penerimaan. Cicilan Anda akan mulai berjalan sesuai jadwal yang telah disepakati.';
                 case 'READY_FOR_DELIVERY':
                     return 'Motor Anda siap untuk dikirim. Tim kami akan menghubungi Anda untuk konfirmasi jadwal.';
+                case 'ready_for_delivery':
+                    return 'Motor Anda siap untuk dikirim dalam 24 jam. Tim kami akan menghubungi Anda untuk konfirmasi jadwal pengiriman.';
                 case 'PAYMENT_CONFIRMED':
                     return 'Pembayaran Anda telah dikonfirmasi. Motor Anda sedang disiapkan.';
                 case 'UNIT_PREPARATION':
                     return 'Motor Anda sedang dalam proses persiapan.';
+                case 'unit_preparation':
+                    return 'Motor Anda sedang dalam proses persiapan lengkap (servis, perpanjangan BPKB, asuransi, dll). Perkiraan selesai dalam 3-5 hari kerja.';
                 case 'WAITING_PAYMENT':
                     return 'Mohon segera lakukan pembayaran sesuai instruksi yang telah diberikan.';
                 case 'NEW_ORDER':
@@ -128,7 +134,7 @@ class TransactionStatusChanged extends Notification
                 $isCreditStatusChange = true;
             }
         }
-        
+
         return [
             'transaction_id' => $this->transaction->id,
             'motor_name' => $this->transaction->motor->name,

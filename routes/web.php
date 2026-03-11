@@ -48,6 +48,8 @@ Route::post('/survey-schedules/{surveySchedule}/confirm-completion', [MotorGalle
 
 // Customer transaction & survey routes
 Route::get('/motors/transactions/{transaction}', [MotorGalleryController::class, 'showTransaction'])->name('motors.transaction.show')->middleware(['auth', 'verified']);
+Route::get('/motors/transactions/{transaction}/installments', [MotorGalleryController::class, 'showInstallments'])->name('motors.installments')->middleware(['auth', 'verified']);
+Route::get('/credit-status/{transaction}', [MotorGalleryController::class, 'showCreditStatus'])->name('credit-status.show')->middleware(['auth', 'verified']);
 Route::post('/survey-schedules/{surveySchedule}/confirm-attendance', [MotorGalleryController::class, 'confirmSurveyAttendance'])->name('survey.confirm-attendance')->middleware(['auth', 'verified']);
 Route::post('/survey-schedules/{surveySchedule}/request-reschedule', [MotorGalleryController::class, 'requestSurveyReschedule'])->name('survey.request-reschedule')->middleware(['auth', 'verified']);
 Route::get('/api/survey-history/{creditDetail}', [MotorGalleryController::class, 'getSurveyHistory'])->name('api.survey-history')->middleware(['auth', 'verified']);
@@ -129,7 +131,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/credits/{credit}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveCredit'])->name('credits.approve');
     Route::post('/credits/{credit}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectCredit'])->name('credits.reject');
     Route::post('/credits/{credit}/record-dp-payment', [App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
-    Route::post('/credits/{credit}/complete', [App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
     Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
 
     Route::resource('motors', MotorController::class);

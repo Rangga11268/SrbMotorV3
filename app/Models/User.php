@@ -25,6 +25,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'google_id',
         'profile_photo_path',
         'email_verified_at',
+        'phone',
+        'alamat',
+        'nik',
+        'no_ktp',
+        'no_hp_backup',
+        'jenis_kelamin',
+        'tanggal_lahir',
+        'pekerjaan',
+        'pendapatan_bulanan',
+        'nama_ibu_kandung',
     ];
 
     /**

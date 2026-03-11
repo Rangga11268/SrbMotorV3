@@ -186,10 +186,19 @@ class TransactionController extends Controller
             'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,completed,cancelled',
         ]);
 
-        $transaction->update([
-            'status' => $validated['status'],
-        ]);
+        $oldStatus = $transaction->status;
+        $newStatus = $validated['status'];
 
-        return back()->with('success', 'Status transaksi berhasil diperbarui');
+        // Only update and notify if status actually changed
+        if ($oldStatus !== $newStatus) {
+            $transaction->update([
+                'status' => $newStatus,
+            ]);
+
+            // Send notification to user
+            $transaction->user->notify(new \App\Notifications\TransactionStatusChanged($transaction));
+        }
+
+        return back()->with('success', 'Status transaksi berhasil diperbarui' . ($oldStatus === $newStatus ? ' (tidak ada perubahan)' : ' dan notifikasi dikirim ke customer'));
     }
 }

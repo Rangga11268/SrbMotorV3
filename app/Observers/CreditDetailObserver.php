@@ -82,9 +82,6 @@ class CreditDetailObserver
 
             // Send notification
             if ($notificationData) {
-                // TODO: Implement notification class based on status
-                // Notification::send($customer, new CreditStatusUpdated($creditDetail, $notificationData));
-
                 Log::info("Credit status notification queued for customer {$customer->id}: {$status}");
             }
         } catch (\Exception $e) {

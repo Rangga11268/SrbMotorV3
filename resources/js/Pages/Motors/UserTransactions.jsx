@@ -252,7 +252,7 @@ export default function UserTransactions({ transactions }) {
                                                     )}
                                                     <Link
                                                         href={route(
-                                                            "motors.order.confirmation",
+                                                            "motors.transaction.show",
                                                             transaction.id,
                                                         )}
                                                         className="w-full sm:w-auto flex-1 h-14 px-8 rounded-2xl bg-primary text-white hover:bg-black font-black text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn shadow-xl shadow-primary/20"

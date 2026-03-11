@@ -619,6 +619,73 @@ export default function Show({
         );
     }
 
+    function CompleteCreditModal() {
+        const { data, setData, post, processing } = useForm({
+            internal_notes: "",
+        });
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            setIsLoading(true);
+            post(route("admin.credits.complete", credit.id), {
+                onFinish: () => {
+                    setIsLoading(false);
+                    setActiveModal(null);
+                },
+            });
+        };
+
+        return (
+            <CModal
+                visible={activeModal === "completeCredit"}
+                onClose={() => setActiveModal(null)}
+            >
+                <CModalHeader onClose={() => setActiveModal(null)}>
+                    <CModalTitle>Selesaikan Proses Kredit</CModalTitle>
+                </CModalHeader>
+                <CForm onSubmit={handleSubmit}>
+                    <CModalBody>
+                        <div className="mb-3">
+                            <CFormLabel>Catatan Internal (Opsional)</CFormLabel>
+                            <CFormTextarea
+                                value={data.internal_notes}
+                                onChange={(e) =>
+                                    setData("internal_notes", e.target.value)
+                                }
+                                placeholder="Catat informasi penting tentang proses kredit ini..."
+                                rows={4}
+                            />
+                        </div>
+                        <CAlert color="info">
+                            <strong>Perhatian:</strong> Menyelesaikan proses
+                            kredit berarti customer dapat mulai mengambil motor
+                            dan cicilan akan dimulai sesuai jadwal.
+                        </CAlert>
+                    </CModalBody>
+                    <CModalFooter>
+                        <CButton
+                            type="button"
+                            color="secondary"
+                            onClick={() => setActiveModal(null)}
+                        >
+                            Batal
+                        </CButton>
+                        <CButton
+                            type="submit"
+                            color="success"
+                            disabled={processing || isLoading}
+                        >
+                            {processing || isLoading ? (
+                                <CSpinner size="sm" />
+                            ) : null}{" "}
+                            Selesaikan
+                        </CButton>
+                    </CModalFooter>
+                </CForm>
+            </CModal>
+        );
+    }
+
     return (
         <AdminLayout title={`Detail Pengajuan Kredit #${credit.id}`}>
             {/* Header */}
@@ -1002,6 +1069,10 @@ export default function Show({
                                                     "completeSurvey",
                                                 );
                                         } else if (key === "selesai") {
+                                            handleClick = () =>
+                                                setActiveModal(
+                                                    "completeCredit",
+                                                );
                                             buttonColor = "success";
                                         }
 
@@ -1037,6 +1108,7 @@ export default function Show({
             <CompleteSurveyModal />
             <ApproveCreditModal />
             <RecordDPModal />
+            <CompleteCreditModal />
         </AdminLayout>
     );
 }

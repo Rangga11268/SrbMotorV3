@@ -823,15 +823,69 @@ class MotorGalleryController extends Controller
             abort(403, 'Unauthorized access');
         }
 
+        // Load all relationships
         $transaction->load([
             'motor',
             'creditDetail.documents',
             'creditDetail.surveySchedules',
+            'creditDetail.leasingProvider',
             'installments',
         ]);
 
+        // Prepare explicit response data
+        $transactionData = $transaction->toArray();
+
+        // Ensure creditDetail is in the response
+        if ($transaction->creditDetail) {
+            $transactionData['creditDetail'] = $transaction->creditDetail->toArray();
+            $transactionData['creditDetail']['documents'] = $transaction->creditDetail->documents->toArray();
+            $transactionData['creditDetail']['surveySchedules'] = $transaction->creditDetail->surveySchedules->toArray();
+            $transactionData['creditDetail']['leasingProvider'] = $transaction->creditDetail->leasingProvider?->toArray();
+        }
+
         return \Inertia\Inertia::render('Motors/TransactionDetail', [
+            'transaction' => $transactionData,
+        ]);
+    }
+
+    /**
+     * Show installments/cicilan page for a transaction
+     */
+    public function showInstallments(Transaction $transaction)
+    {
+        // Authorize - user can only view their own transactions
+        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Load relationships
+        $transaction->load(['motor', 'installments']);
+
+        return \Inertia\Inertia::render('Motors/Installments', [
             'transaction' => $transaction,
+        ]);
+    }
+
+    /**
+     * Show credit application status page for customer
+     */
+    public function showCreditStatus(Transaction $transaction)
+    {
+        // Authorize - user can only view their own transactions
+        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Only for credit transactions
+        if ($transaction->transaction_type !== 'CREDIT' || !$transaction->creditDetail) {
+            abort(404, 'Credit application not found');
+        }
+
+        $transaction->load(['motor', 'creditDetail']);
+
+        return \Inertia\Inertia::render('CreditStatus', [
+            'transaction' => $transaction,
+            'credit' => $transaction->creditDetail,
         ]);
     }
 
