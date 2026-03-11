@@ -17,46 +17,38 @@ return new class extends Migration
         // Add indexes to motors table (exists from 2025-10-30)
         if (Schema::hasTable('motors')) {
             Schema::table('motors', function (Blueprint $table) {
-                if (!Schema::hasIndexes('motors', ['brand', 'type'])) {
-                    $table->index(['brand', 'type']);
-                    $table->index('year');
-                    $table->index('price');
-                    $table->index('tersedia');
-                    $table->index(['brand', 'tersedia']);
-                }
+                $table->index(['brand', 'type']);
+                $table->index('year');
+                $table->index('price');
+                $table->index('tersedia');
+                $table->index(['brand', 'tersedia']);
             });
         }
 
         // Add indexes to transactions table (exists from 2025-11-05)
         if (Schema::hasTable('transactions')) {
             Schema::table('transactions', function (Blueprint $table) {
-                if (!Schema::hasIndexes('transactions', ['user_id', 'status'])) {
-                    $table->index(['user_id', 'status']);
-                    $table->index(['motor_id', 'transaction_type']);
-                    $table->index('transaction_type');
-                    $table->index('status');
-                    $table->index('created_at');
-                }
+                $table->index(['user_id', 'status']);
+                $table->index(['motor_id', 'transaction_type']);
+                $table->index('transaction_type');
+                $table->index('status');
+                $table->index('created_at');
             });
         }
 
         // Add indexes to users table (exists from 2025-11-04 - consolidated migration)
         if (Schema::hasTable('users')) {
             Schema::table('users', function (Blueprint $table) {
-                if (!Schema::hasIndexes('users', ['role'])) {
-                    $table->index('role');
-                    $table->index('email');
-                    $table->index('created_at');
-                }
+                $table->index('role');
+                $table->index('email');
+                $table->index('created_at');
             });
         }
 
         // Add indexes to contact_messages table (exists from 2025-10-30)
         if (Schema::hasTable('contact_messages')) {
             Schema::table('contact_messages', function (Blueprint $table) {
-                if (!Schema::hasIndexes('contact_messages', ['created_at'])) {
-                    $table->index('created_at');
-                }
+                $table->index('created_at');
             });
         }
 
