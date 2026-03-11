@@ -8,62 +8,72 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     * NOTE: This migration adds indexes ONLY to tables that exist at 2025-11-07.
+     * Tables created after this date (credit_details, documents, etc.) already have indexes
+     * defined in their consolidated migration files.
      */
     public function up(): void
     {
-        // Add indexes to motors table
-        Schema::table('motors', function (Blueprint $table) {
-            $table->index(['brand', 'type']);
-            $table->index('year');
-            $table->index('price');
-            $table->index('tersedia');
-            $table->index(['brand', 'tersedia']);
-        });
-        
-        // Add indexes to motor_specifications table (already has index on motor_id, spec_key)
-        Schema::table('motor_specifications', function (Blueprint $table) {
-            $table->index('spec_key');
-        });
-        
-        // Add indexes to transactions table
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->index(['user_id', 'status']);
-            $table->index(['motor_id', 'transaction_type']);
-            $table->index('transaction_type');
-            $table->index('status');
-            $table->index('created_at');
-        });
-        
-        // Add indexes to users table
-        Schema::table('users', function (Blueprint $table) {
-            $table->index('role');
-            $table->index('email');
-            $table->index('created_at');
-        });
-        
-        // Add indexes to contact_messages table
-        Schema::table('contact_messages', function (Blueprint $table) {
-            $table->index('created_at');
-        });
-        
-        // Add indexes to credit_details table
-        Schema::table('credit_details', function (Blueprint $table) {
-            $table->index('credit_status');
-        });
-        
-        // Add indexes to documents table
-        Schema::table('documents', function (Blueprint $table) {
-            $table->index('document_type');
-            $table->index('credit_detail_id');
-        });
+        // Add indexes to motors table (exists from 2025-10-30)
+        if (Schema::hasTable('motors')) {
+            Schema::table('motors', function (Blueprint $table) {
+                if (!Schema::hasIndexes('motors', ['brand', 'type'])) {
+                    $table->index(['brand', 'type']);
+                    $table->index('year');
+                    $table->index('price');
+                    $table->index('tersedia');
+                    $table->index(['brand', 'tersedia']);
+                }
+            });
+        }
+
+        // Add indexes to transactions table (exists from 2025-11-05)
+        if (Schema::hasTable('transactions')) {
+            Schema::table('transactions', function (Blueprint $table) {
+                if (!Schema::hasIndexes('transactions', ['user_id', 'status'])) {
+                    $table->index(['user_id', 'status']);
+                    $table->index(['motor_id', 'transaction_type']);
+                    $table->index('transaction_type');
+                    $table->index('status');
+                    $table->index('created_at');
+                }
+            });
+        }
+
+        // Add indexes to users table (exists from 2025-11-04 - consolidated migration)
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
+                if (!Schema::hasIndexes('users', ['role'])) {
+                    $table->index('role');
+                    $table->index('email');
+                    $table->index('created_at');
+                }
+            });
+        }
+
+        // Add indexes to contact_messages table (exists from 2025-10-30)
+        if (Schema::hasTable('contact_messages')) {
+            Schema::table('contact_messages', function (Blueprint $table) {
+                if (!Schema::hasIndexes('contact_messages', ['created_at'])) {
+                    $table->index('created_at');
+                }
+            });
+        }
+
+        // NOTE: credit_details, documents, and survey_schedules indexes are already defined
+        // in their respective consolidated migration files (2026_03_11_*).
+        // motor_specifications table no longer exists, so we skip it.
     }
 
     /**
      * Reverse the migrations.
+     * NOTE: Index drops are intentionally skipped because:
+     * 1. Dropping indexes doesn't affect data integrity
+     * 2. Prevents issues if indexes don't exist (partial rollback scenarios)
+     * 3. Keeps rollback operations fast
      */
     public function down(): void
     {
-        // Skip index drops as motorspecs table structure may vary
-        // Safer to leave indexes in place
+        // Index drops are skipped - safer for partial rollbacks
     }
 };
