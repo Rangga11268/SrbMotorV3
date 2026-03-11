@@ -172,7 +172,7 @@ class CreditService
     }
 
     /**
-     * Forced cancel
+     * Forced cancel (Admin)
      */
     public function cancelCredit(CreditDetail $credit): bool
     {
@@ -182,6 +182,52 @@ class CreditService
         });
 
         return true;
+    }
+
+    /**
+     * Cancel by customer with validation
+     */
+    public function cancelByCustomer(\App\Models\Transaction $transaction, ?string $reason = null): array
+    {
+        // 1. Define allowed statuses for user cancellation
+        $allowedCashStatuses = ['new_order', 'waiting_payment'];
+        $allowedCreditStatuses = ['menunggu_persetujuan', 'waiting_credit_approval'];
+
+        $isCash = $transaction->transaction_type === 'CASH';
+        $currentStatus = $transaction->status;
+
+        // 2. Validate
+        $isAllowed = $isCash 
+            ? in_array($currentStatus, $allowedCashStatuses)
+            : in_array($currentStatus, $allowedCreditStatuses);
+
+        if (!$isAllowed) {
+            return [
+                'success' => false,
+                'message' => 'Pesanan tidak dapat dibatalkan pada tahap ini. Silakan hubungi admin.'
+            ];
+        }
+
+        // 3. Perform cancellation
+        DB::transaction(function () use ($transaction, $reason) {
+            $transaction->update([
+                'status' => 'cancelled',
+                'is_cancelled' => true,
+                'cancelled_at' => now(),
+                'cancellation_reason' => $reason ?? 'Dibatalkan oleh pelanggan',
+            ]);
+
+            if ($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail) {
+                $transaction->creditDetail->update([
+                    'status' => 'dibatalkan',
+                ]);
+            }
+        });
+
+        return [
+            'success' => true,
+            'message' => 'Pesanan berhasil dibatalkan.'
+        ];
     }
 
     /**

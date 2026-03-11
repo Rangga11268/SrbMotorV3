@@ -549,18 +549,45 @@ class MotorGalleryController extends Controller
     }
 
 
-    public function showUserTransactions()
+    public function showUserTransactions(Request $request)
     {
         if (!Auth::check()) {
             abort(403, 'Anda harus login terlebih dahulu untuk mengakses halaman ini.');
         }
 
-        $transactions = Transaction::with(['motor', 'creditDetail'])
-            ->where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(9);
+        $search = $request->query('search');
+        $status = $request->query('status');
 
-        return \Inertia\Inertia::render('Motors/UserTransactions', compact('transactions'));
+        $query = Transaction::with(['motor', 'creditDetail'])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                    ->orWhereHas('motor', function ($mq) use ($search) {
+                        $mq->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $transactions = $query->paginate(9)->withQueryString();
+
+        if ($request->wantsJson()) {
+            return response()->json($transactions);
+        }
+
+        return \Inertia\Inertia::render('Motors/UserTransactions', [
+            'transactions' => $transactions,
+            'filters' => [
+                'search' => $search,
+                'status' => $status,
+            ],
+        ]);
     }
 
     public function search(Request $request): JsonResponse
@@ -591,21 +618,16 @@ class MotorGalleryController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        // Validate - hanya bisa cancel order yang belum completed/paid
-        if (!in_array($transaction->status, ['menunggu_persetujuan', 'new_order', 'dikirim_ke_surveyor', 'jadwal_survey'])) {
-            return back()->withErrors(['transaction' => 'Order ini tidak dapat dibatalkan. Status: ' . $transaction->status]);
-        }
-
         $request->validate([
             'cancellation_reason' => 'string|max:500|nullable',
         ]);
 
-        // Update transaction status
-        $transaction->update([
-            'status' => 'cancelled',
-            'cancelled_at' => now(),
-            'cancellation_reason' => $request->cancellation_reason ?? 'User requested cancellation',
-        ]);
+        $creditService = app(\App\Services\CreditService::class);
+        $result = $creditService->cancelByCustomer($transaction, $request->cancellation_reason);
+
+        if (!$result['success']) {
+            return back()->with('error', $result['message']);
+        }
 
         // Send WA notification
         try {
@@ -615,7 +637,8 @@ class MotorGalleryController extends Controller
 
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
-                $adminMsg = "*[ADMIN] Order Dibatalkan*\n\nPelanggan: {$transaction->user->name}\nUnit: {$motor->name}\nAlasan: {$transaction->cancellation_reason}\n\nSilakan cek dashboard.";
+                $statusLabel = $transaction->transaction_type === 'CASH' ? 'Tunai' : 'Kredit';
+                $adminMsg = "*[ADMIN] Order {$statusLabel} Dibatalkan oleh Pelanggan*\n\nPelanggan: {$transaction->name}\nUnit: {$motor->name}\nAlasan: " . ($transaction->cancellation_reason ?? '-') . "\n\nSilakan cek dashboard.";
                 \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
             }
         } catch (\Exception $e) {

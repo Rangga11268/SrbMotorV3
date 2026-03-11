@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { usePage, Link } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import axios from "axios";
 import {
     ShoppingBag,
     Calendar,
@@ -23,11 +24,65 @@ import {
     MapPin,
     ShieldCheck,
     ArrowLeft,
+    Search,
+    Filter,
+    X,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function UserTransactions({ transactions }) {
+export default function UserTransactions({ transactions: initialTransactions, filters }) {
     const { auth } = usePage().props;
+
+    const [localTransactions, setLocalTransactions] = useState(initialTransactions);
+    const [search, setSearch] = useState(filters?.search || "");
+    const [status, setStatus] = useState(filters?.status || "");
+    const [loading, setLoading] = useState(false);
+    const [isFirstRender, setIsFirstRender] = useState(true);
+
+    const fetchTransactions = async (params) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(route("motors.user-transactions"), {
+                params,
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            setLocalTransactions(response.data);
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const params = {};
+        if (search) params.search = search;
+        if (status) params.status = status;
+
+        const delayDebounceFn = setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchTransactions(params);
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search, status]);
+
+    const handlePageChange = (url) => {
+        if (!url) return;
+        const urlObj = new URL(url);
+        const params = Object.fromEntries(urlObj.searchParams);
+        fetchTransactions(params);
+        window.history.replaceState({}, "", url);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
 
     // Status Helper
     const getStatusInfo = (transaction) => {
@@ -110,23 +165,75 @@ export default function UserTransactions({ transactions }) {
                 </div>
 
                 {/* HERO HEADER - SIMPLE */}
-                <div className="bg-white border-b border-gray-100 pt-8 pb-8">
+                <div className="bg-white border-b border-gray-100 pt-8 pb-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                            Riwayat Transaksi
-                        </h1>
-                        <p className="text-gray-600 text-sm md:text-base max-w-2xl">
-                            Lacak status pemesanan motor Anda, kelola dokumen
-                            persyaratan, dan lihat rincian transaksi secara
-                            transparan
-                        </p>
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                            <div>
+                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 uppercase tracking-tight">
+                                    Riwayat Transaksi
+                                </h1>
+                                <p className="text-gray-500 font-medium text-sm md:text-base max-w-xl leading-relaxed">
+                                    Lacak status pemesanan motor Anda, kelola dokumen
+                                    persyaratan, dan lihat rincian transaksi secara
+                                    transparan
+                                </p>
+                            </div>
+
+                            {/* SEARCH & FILTER UI */}
+                            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                                <div className="relative w-full sm:w-80 group">
+                                    <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                                        <Search className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Cari ID atau Nama Motor..."
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        className="w-full h-14 pl-12 pr-12 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-bold placeholder:text-gray-400"
+                                    />
+                                    {search && (
+                                        <button 
+                                            onClick={() => setSearch("")}
+                                            className="absolute inset-y-0 right-5 flex items-center text-gray-400 hover:text-gray-600"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div className="relative w-full sm:w-56">
+                                    <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                                        <Filter className="w-4 h-4 text-gray-400" />
+                                    </div>
+                                    <select
+                                        value={status}
+                                        onChange={(e) => setStatus(e.target.value)}
+                                        className="w-full h-14 pl-12 pr-10 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-bold text-gray-700 appearance-none"
+                                    >
+                                        <option value="">Semua Status</option>
+                                        <option value="new_order">Pesanan Baru</option>
+                                        <option value="waiting_payment">Menunggu Pembayaran</option>
+                                        <option value="menunggu_persetujuan">Verifikasi Berkas</option>
+                                        <option value="waiting_credit_approval">Sedang Diproses</option>
+                                        <option value="disetujui">Disetujui</option>
+                                        <option value="selesai">Selesai</option>
+                                        <option value="cancelled">Dibatalkan</option>
+                                    </select>
+                                    <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-gray-400">
+                                        <ChevronRight className="w-4 h-4 rotate-90" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-20">
-                    {transactions.data.length > 0 ? (
+                    <div className={`${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'} transition-opacity duration-300`}>
+                    {localTransactions.data.length > 0 ? (
                         <div className="space-y-8">
-                            {transactions.data.map((transaction, index) => {
+                            {localTransactions.data.map((transaction, index) => {
                                 const statusInfo = getStatusInfo(transaction);
                                 const StatusIcon = statusInfo.icon;
 
@@ -301,14 +408,16 @@ export default function UserTransactions({ transactions }) {
                             </Link>
                         </div>
                     )}
+                    </div>
 
                     {/* PAGINATION */}
-                    {transactions.links && transactions.links.length > 3 && (
+                    {localTransactions.links && localTransactions.links.length > 3 && (
                         <div className="mt-20 flex justify-center gap-3">
-                            {transactions.links.map((link, k) => (
-                                <Link
+                            {localTransactions.links.map((link, k) => (
+                                <button
                                     key={k}
-                                    href={link.url || "#"}
+                                    onClick={() => handlePageChange(link.url)}
+                                    disabled={!link.url || link.active}
                                     className={`w-12 h-12 flex items-center justify-center rounded-2xl text-[11px] font-black transition-all border ${
                                         link.active
                                             ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"

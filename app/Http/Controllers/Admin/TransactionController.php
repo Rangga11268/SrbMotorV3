@@ -36,7 +36,11 @@ class TransactionController extends Controller
             $query->where('status', $status);
         }
 
-        $transactions = $query->paginate(15);
+        $transactions = $query->paginate(15)->withQueryString();
+
+        if ($request->wantsJson()) {
+            return response()->json($transactions);
+        }
 
         // Get count by status for filters
         $statusCounts = Transaction::whereDoesntHave('creditDetail')

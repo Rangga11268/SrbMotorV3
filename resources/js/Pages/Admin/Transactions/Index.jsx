@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import axios from "axios";
 import {
     CCard,
     CCardBody,
@@ -19,6 +20,9 @@ import {
     CInputGroup,
     CInputGroupText,
     CAvatar,
+    CPagination,
+    CPaginationItem,
+    CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -35,8 +39,47 @@ export default function Index({
     filters,
     statuses,
 }) {
+    const [localTransactions, setLocalTransactions] = useState(initialTransactions);
     const [search, setSearch] = useState(filters.search || "");
     const [status, setStatus] = useState(filters.status || "");
+    const [loading, setLoading] = useState(false);
+    const [isFirstRender, setIsFirstRender] = useState(true);
+
+    const fetchTransactions = async (params) => {
+        setLoading(true);
+        try {
+            const response = await axios.get(route("admin.transactions.index"), {
+                params,
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
+            setLocalTransactions(response.data);
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isFirstRender) {
+            setIsFirstRender(false);
+            return;
+        }
+
+        const params = {};
+        if (search) params.search = search;
+        if (status) params.status = status;
+
+        const delayDebounceFn = setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.search = new URLSearchParams(params).toString();
+            window.history.replaceState({}, "", url);
+
+            fetchTransactions(params);
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search, status]);
 
     const formatCurrency = (amount) =>
         new Intl.NumberFormat("id-ID", {
@@ -82,24 +125,25 @@ export default function Index({
 
     const handleSearch = (value) => {
         setSearch(value);
-        router.get(route("admin.transactions.index"), {
-            search: value || undefined,
-            status: status || undefined,
-        });
     };
 
     const handleStatusFilter = (value) => {
         setStatus(value);
-        router.get(route("admin.transactions.index"), {
-            search: search || undefined,
-            status: value || undefined,
-        });
     };
 
     const handleReset = () => {
         setSearch("");
         setStatus("");
-        router.get(route("admin.transactions.index"));
+    };
+
+    const handlePageChange = (url) => {
+        if (!url) return;
+        const urlObj = new URL(url);
+        const params = Object.fromEntries(urlObj.searchParams);
+        fetchTransactions(params);
+        
+        // Update URL
+        window.history.replaceState({}, "", url);
     };
 
     return (
@@ -181,8 +225,25 @@ export default function Index({
             </CCard>
 
             {/* Data Table */}
-            <CCard className="border-0 shadow-sm overflow-hidden">
-                <CCardBody className="p-0">
+            <CCard className="border-0 shadow-sm overflow-hidden position-relative">
+                {loading && (
+                    <div
+                        className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                        style={{
+                            zIndex: 10,
+                            backgroundColor: "rgba(255, 255, 255, 0.7)",
+                            backdropFilter: "blur(2px)",
+                        }}
+                    >
+                        <div className="text-center">
+                            <CSpinner color="primary" />
+                            <p className="mt-2 text-body-secondary small">
+                                Memuat data...
+                            </p>
+                        </div>
+                    </div>
+                )}
+                <CCardBody className="p-0" style={{ opacity: loading ? 0.6 : 1 }}>
                     <CTable hover responsive className="mb-0">
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
@@ -199,9 +260,9 @@ export default function Index({
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {initialTransactions.data &&
-                            initialTransactions.data.length > 0 ? (
-                                initialTransactions.data.map((trx) => (
+                            {localTransactions.data &&
+                            localTransactions.data.length > 0 ? (
+                                localTransactions.data.map((trx) => (
                                     <CTableRow
                                         key={trx.id}
                                         className="align-middle"
@@ -356,6 +417,32 @@ export default function Index({
                         </CTableBody>
                     </CTable>
                 </CCardBody>
+
+                {/* Pagination */}
+                {localTransactions.links && localTransactions.links.length > 3 && (
+                    <div className="card-footer d-flex justify-content-center py-3 bg-white border-top-0">
+                        <CPagination className="mb-0">
+                            {localTransactions.links.map((link, index) => {
+                                if (!link.url && !link.label) return null;
+                                return (
+                                    <CPaginationItem
+                                        key={index}
+                                        active={link.active}
+                                        disabled={!link.url}
+                                        onClick={() => handlePageChange(link.url)}
+                                        style={{ cursor: link.url ? "pointer" : "default" }}
+                                    >
+                                        <span
+                                            dangerouslySetInnerHTML={{
+                                                __html: link.label,
+                                            }}
+                                        />
+                                    </CPaginationItem>
+                                );
+                            })}
+                        </CPagination>
+                    </div>
+                )}
             </CCard>
         </AdminLayout>
     );

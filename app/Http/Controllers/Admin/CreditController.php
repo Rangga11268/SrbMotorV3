@@ -33,18 +33,38 @@ class CreditController extends Controller
         }
 
         if ($search) {
-            $query->whereHas('transaction', function ($q) use ($search) {
-                $q->where('id', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                // Search by reference number
+                $q->where('reference_number', 'like', "%{$search}%")
+                    ->orWhereHas('transaction', function ($tq) use ($search) {
+                        // Search by transaction ID, name, or phone
+                        $tq->where('id', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%")
+                            ->orWhereHas('user', function ($uq) use ($search) {
+                                // Search by user name or phone
+                                $uq->where('name', 'like', "%{$search}%")
+                                    ->orWhere('phone', 'like', "%{$search}%");
+                            });
                     });
             });
         }
 
-        $credits = $query->paginate(15);
+        $credits = $query->paginate(15)->withQueryString();
+
+        if ($request->wantsJson()) {
+            return response()->json($credits);
+        }
+
+        // Get unique statuses from the table for filters
+        $statuses = CreditDetail::select('status')
+            ->distinct()
+            ->pluck('status')
+            ->toArray();
 
         return Inertia::render('Admin/Credits/Index', [
             'credits' => $credits,
+            'statuses' => $statuses,
             'filters' => [
                 'search' => $search,
                 'status' => $status,

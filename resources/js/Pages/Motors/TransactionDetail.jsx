@@ -3,6 +3,7 @@ import { Link, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import SurveyScheduleCard from "@/Components/SurveyScheduleCard";
 import CreditStatusDisplay from "@/Components/CreditStatusDisplay";
+import Swal from "sweetalert2";
 import {
     ChevronLeft,
     Calendar,
@@ -16,6 +17,7 @@ import {
     Phone,
     ChevronDown,
     ChevronUp,
+    XCircle,
 } from "lucide-react";
 
 export default function TransactionDetail({ transaction }) {
@@ -107,6 +109,78 @@ export default function TransactionDetail({ transaction }) {
         transaction.transaction_type === "CREDIT" && !!transaction.creditDetail;
 
     // Check if survey is scheduled (from surveySchedules or from credit_details fields)
+    const handleCancel = () => {
+        const allowedCashStatuses = ["new_order", "waiting_payment"];
+        const allowedCreditStatuses = [
+            "menunggu_persetujuan",
+            "waiting_credit_approval",
+        ];
+        const isAllowed =
+            transaction.transaction_type === "CASH"
+                ? allowedCashStatuses.includes(transaction.status)
+                : allowedCreditStatuses.includes(transaction.status);
+
+        if (!isAllowed) {
+            Swal.fire({
+                icon: "error",
+                title: "Opps...",
+                text: "Pesanan tidak dapat dibatalkan pada tahap ini. Silakan hubungi admin.",
+                confirmButtonColor: "#3b82f6",
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: "Batalkan Pesanan?",
+            text: "Apakah Anda yakin ingin membatalkan pesanan ini? Aksi ini tidak dapat dibatalkan.",
+            icon: "warning",
+            input: "textarea",
+            inputPlaceholder: "Berikan alasan pembatalan (opsional)...",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Batalkan!",
+            cancelButtonText: "Batal",
+            showLoaderOnConfirm: true,
+            preConfirm: (reason) => {
+                return router.post(
+                    route("motors.cancel", transaction.id),
+                    { cancellation_reason: reason },
+                    {
+                        onSuccess: () => {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Berhasil",
+                                text: "Pesanan Anda telah dibatalkan.",
+                                confirmButtonColor: "#3b82f6",
+                            });
+                        },
+                        onError: () => {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Gagal",
+                                text: "Terjadi kesalahan saat membatalkan pesanan.",
+                                confirmButtonColor: "#3b82f6",
+                            });
+                        },
+                    },
+                );
+            },
+            allowOutsideClick: () => !Swal.isLoading(),
+        });
+    };
+
+    const allowedCashStatuses = ["new_order", "waiting_payment"];
+    const allowedCreditStatuses = [
+        "menunggu_persetujuan",
+        "waiting_credit_approval",
+    ];
+    const canCancel =
+        !transaction.is_cancelled &&
+        (transaction.transaction_type === "CASH"
+            ? allowedCashStatuses.includes(transaction.status)
+            : allowedCreditStatuses.includes(transaction.status));
+
     const survey =
         transaction.creditDetail?.surveySchedules?.[0] ||
         (transaction.creditDetail?.survey_scheduled_date
@@ -170,6 +244,15 @@ export default function TransactionDetail({ transaction }) {
                                 <p className="text-blue-100">
                                     {transaction.motor.name}
                                 </p>
+                                {canCancel && (
+                                    <button
+                                        onClick={handleCancel}
+                                        className="mt-4 flex items-center gap-2 px-4 py-2 bg-red-500 bg-opacity-20 hover:bg-opacity-30 text-white rounded-lg transition-all text-sm font-medium border border-white border-opacity-30"
+                                    >
+                                        <XCircle className="w-4 h-4" />
+                                        Batalkan Pesanan
+                                    </button>
+                                )}
                             </div>
 
                             <div className="p-6 grid grid-cols-2 gap-4">
