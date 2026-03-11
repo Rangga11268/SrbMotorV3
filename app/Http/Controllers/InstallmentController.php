@@ -317,7 +317,7 @@ class InstallmentController extends Controller
         try {
             $user = $installment->transaction->user;
             if ($user && $user->phone) {
-                $phone = $installment->transaction->customer_phone ?? $user->phone;
+                $phone = $installment->transaction->phone ?? $user->phone;
 
                 if ($phone) {
                     if ($installment->installment_number == 0) {
@@ -351,7 +351,7 @@ class InstallmentController extends Controller
 
         try {
             $user = $installment->transaction->user;
-            $phone = $installment->transaction->customer_phone ?? $user->phone;
+            $phone = $installment->transaction->phone ?? $user->phone;
 
             if ($phone) {
                 if ($installment->installment_number == 0) {

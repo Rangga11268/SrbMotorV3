@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CreditDetail extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -18,27 +19,29 @@ class CreditDetail extends Model
      */
     protected $fillable = [
         'transaction_id',
-        'down_payment',
-        'tenor',
-        'monthly_installment',
-        'interest_rate',
-        'credit_status',
-        'approved_amount',
         'leasing_provider_id',
-        // New columns for refactored flow
+        'status',
+        'reference_number',
+        'tenor',
+        'interest_rate',
+        'monthly_installment',
+        'total_interest',
+        'verification_notes',
+        'verified_at',
         'survey_scheduled_date',
-        'survey_scheduled_time',
-        'surveyor_name',
-        'surveyor_phone',
-        'survey_notes',
         'survey_completed_at',
-        'leasing_application_ref',
-        'leasing_decision_date',
-        'rejection_reason',
-        'internal_notes',
-        'dp_paid_date',
+        'survey_notes',
+        'dp_amount',
+        'dp_paid_at',
         'dp_payment_method',
-        'dp_confirmed_by',
+        'unit_prepared_at',
+        'ready_for_delivery_at',
+        'delivered_at',
+        'completed_at',
+        'completion_notes',
+        'is_completed',
+        'customer_confirms_survey',
+        'customer_survey_confirmed_at',
     ];
 
     /**
@@ -47,9 +50,21 @@ class CreditDetail extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'down_payment' => 'decimal:2',
+        'interest_rate' => 'decimal:2',
         'monthly_installment' => 'decimal:2',
-        'approved_amount' => 'decimal:2',
+        'total_interest' => 'decimal:2',
+        'verified_at' => 'datetime',
+        'survey_scheduled_date' => 'date',
+        'survey_completed_at' => 'datetime',
+        'dp_amount' => 'decimal:2',
+        'dp_paid_at' => 'datetime',
+        'unit_prepared_at' => 'datetime',
+        'ready_for_delivery_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'is_completed' => 'boolean',
+        'customer_confirms_survey' => 'boolean',
+        'customer_survey_confirmed_at' => 'datetime',
     ];
 
     /**
@@ -119,12 +134,14 @@ class CreditDetail extends Model
             $creditDetail->documents()->delete();
         });
     }
+
     /**
      * Accessor to get the human-readable credit status text
      */
     public function getCreditStatusTextAttribute()
     {
         $statusMap = [
+            'pengajuan_masuk' => 'Pengajuan Masuk',
             'menunggu_persetujuan' => 'Menunggu Persetujuan',
             'data_tidak_valid' => 'Data Tidak Valid',
             'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
@@ -133,6 +150,6 @@ class CreditDetail extends Model
             'ditolak' => 'Ditolak',
         ];
 
-        return $statusMap[$this->credit_status] ?? $this->credit_status;
+        return $statusMap[$this->status] ?? $this->status;
     }
 }

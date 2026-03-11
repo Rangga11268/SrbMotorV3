@@ -129,10 +129,10 @@ class MotorGalleryController extends Controller
     public function processCashOrder(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
-            'customer_occupation' => 'required|string|max:255',
-            'customer_address' => 'required|string|max:1000',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
+            'occupation' => 'required|string|max:255',
+            'address' => 'required|string|max:1000',
             'notes' => 'nullable|string',
             'booking_fee' => 'nullable|numeric|min:0',
             'payment_method' => 'required|string',
@@ -162,17 +162,18 @@ class MotorGalleryController extends Controller
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
+            'reference_number' => 'TRX-' . strtoupper(uniqid()),
             'transaction_type' => 'CASH',
             'status' => 'new_order',
             'notes' => $request->notes ?? '',
-            'booking_fee' => $request->booking_fee ?? 0,
-            'total_amount' => $motor->price,
+            'motor_price' => $motor->price,
+            'total_price' => $motor->price + ($request->booking_fee ?? 0),
+            'discount_amount' => 0,
+            'final_price' => $motor->price + ($request->booking_fee ?? 0),
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
-            'customer_name' => $request->customer_name,
-            'customer_phone' => $request->customer_phone,
-            'customer_occupation' => $request->customer_occupation,
-            'customer_address' => $request->customer_address,
+            'phone' => $request->phone,
+            'address' => $request->address,
         ]);
 
 
@@ -203,15 +204,15 @@ class MotorGalleryController extends Controller
 
         try {
 
-            if ($request->customer_phone) {
-                $userMsg = "Halo {$request->customer_name},\n\nTerima kasih! Pesanan motor *{$motor->name}* Anda telah kami terima.\nOrder ID: #{$transaction->id}\n\nSilakan lanjutkan pembayaran Booking Fee agar kami dapat segera memproses pesanan Anda.\n\n- SRB Motor";
-                \App\Services\WhatsAppService::sendMessage($request->customer_phone, $userMsg);
+            if ($request->phone) {
+                $userMsg = "Halo {$request->name},\n\nTerima kasih! Pesanan motor *{$motor->name}* Anda telah kami terima.\nOrder ID: #{$transaction->id}\n\nSilakan lanjutkan pembayaran Booking Fee agar kami dapat segera memproses pesanan Anda.\n\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($request->phone, $userMsg);
             }
 
 
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
-                $adminMsg = "*[ADMIN] Order Tunai Baru*\n\nPelanggan: {$request->customer_name}\nUnit: {$motor->name}\nTelp: {$request->customer_phone}\n\nSegera cek dashboard admin.";
+                $adminMsg = "*[ADMIN] Order Tunai Baru*\n\nPelanggan: {$request->name}\nUnit: {$motor->name}\nTelp: {$request->phone}\n\nSegera cek dashboard admin.";
                 \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
             }
         } catch (\Exception $e) {
@@ -234,14 +235,14 @@ class MotorGalleryController extends Controller
     public function processCreditOrder(Request $request, Motor $motor): RedirectResponse
     {
         $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
-            'customer_occupation' => 'required|string|max:255',
-            'customer_nik' => 'required|digits:16',
-            'customer_monthly_income' => 'required|numeric|min:0',
-            'customer_employment_duration' => 'required|string|max:255',
-            'customer_address' => 'required|string|max:1000',
-            'down_payment' => 'required|numeric|min:0',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
+            'occupation' => 'required|string|max:255',
+            'nik' => 'required|digits:16',
+            'monthly_income' => 'required|numeric|min:0',
+            'employment_duration' => 'required|string|max:255',
+            'address' => 'required|string|max:1000',
+            'dp_amount' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1|max:60',
             'leasing_provider_id' => 'nullable|exists:leasing_providers,id',
             'notes' => 'nullable|string',
@@ -250,13 +251,13 @@ class MotorGalleryController extends Controller
 
         // Validasi DP minimum 20% dari harga motor
         $minDownPayment = $motor->price * 0.20;
-        if ($request->down_payment < $minDownPayment) {
-            return back()->withErrors(['down_payment' => 'Uang muka minimum adalah 20% dari harga motor (Rp ' . number_format($minDownPayment, 0, ',', '.') . ').'])->withInput();
+        if ($request->dp_amount < $minDownPayment) {
+            return back()->withErrors(['dp_amount' => 'Uang muka minimum adalah 20% dari harga motor (Rp ' . number_format($minDownPayment, 0, ',', '.') . ').'])->withInput();
         }
 
 
-        if ($request->down_payment >= $motor->price) {
-            return back()->withErrors(['down_payment' => 'Uang muka tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
+        if ($request->dp_amount >= $motor->price) {
+            return back()->withErrors(['dp_amount' => 'Uang muka tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
         }
 
 
@@ -278,24 +279,22 @@ class MotorGalleryController extends Controller
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
             'motor_id' => $motor->id,
+            'reference_number' => 'TRX-' . strtoupper(uniqid()),
             'transaction_type' => 'CREDIT',
             'status' => 'menunggu_persetujuan',
             'notes' => $request->notes ?? '',
-            'total_amount' => $motor->price,
+            'motor_price' => $motor->price,
+            'total_price' => $motor->price,
+            'discount_amount' => 0,
+            'final_price' => $motor->price,
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
-            'customer_name' => $request->customer_name,
-            'customer_phone' => $request->customer_phone,
-            'customer_occupation' => $request->customer_occupation,
-            'customer_nik' => $request->customer_nik,
-            'customer_monthly_income' => $request->customer_monthly_income,
-            'customer_employment_duration' => $request->customer_employment_duration,
-            'customer_address' => $request->customer_address,
-            'credit_amount' => $motor->price - $request->down_payment,
+            'phone' => $request->phone,
+            'address' => $request->address,
         ]);
 
 
-        $loanAmount = $motor->price - $request->down_payment;
+        $loanAmount = $motor->price - $request->dp_amount;
         $interestRate = 0.015; // 1.5% bunga flat per bulan
         $totalInterest = $loanAmount * $interestRate * $request->tenor;
         $monthlyInstallment = ($loanAmount + $totalInterest) / $request->tenor;
@@ -303,26 +302,27 @@ class MotorGalleryController extends Controller
 
         CreditDetail::create([
             'transaction_id' => $transaction->id,
-            'down_payment' => $request->down_payment,
+            'dp_amount' => $request->dp_amount,
             'tenor' => $request->tenor,
             'monthly_installment' => $monthlyInstallment,
             'interest_rate' => $interestRate,
-            'credit_status' => 'pengajuan_masuk',
+            'status' => 'pengajuan_masuk',
             'leasing_provider_id' => $request->leasing_provider_id,
+            'reference_number' => 'REF-' . strtoupper(uniqid()),
         ]);
 
 
         try {
 
-            if ($request->customer_phone) {
-                $userMsg = "Halo {$request->customer_name},\n\nPengajuan Kredit untuk motor *{$motor->name}* telah diterima.\nOrder ID: #{$transaction->id}\nTenor: {$request->tenor} Bulan\nCicilan: Rp " . number_format($monthlyInstallment, 0, ',', '.') . "\n\nMohon SEGERA UNGGAH DOKUMEN (KTP, KK, Slip Gaji) agar pengajuan dapat kami proses.\n\n- SRB Motor";
-                \App\Services\WhatsAppService::sendMessage($request->customer_phone, $userMsg);
+            if ($request->phone) {
+                $userMsg = "Halo {$request->name},\n\nPengajuan Kredit untuk motor *{$motor->name}* telah diterima.\nOrder ID: #{$transaction->id}\nTenor: {$request->tenor} Bulan\nCicilan: Rp " . number_format($monthlyInstallment, 0, ',', '.') . "\n\nMohon SEGERA UNGGAH DOKUMEN (KTP, KK, Slip Gaji) agar pengajuan dapat kami proses.\n\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($request->phone, $userMsg);
             }
 
 
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
-                $adminMsg = "*[ADMIN] Pengajuan Kredit Baru*\n\nPelanggan: {$request->customer_name}\nUnit: {$motor->name}\nTenor: {$request->tenor} Bulan\n\nSegera cek dokumen di dashboard.";
+                $adminMsg = "*[ADMIN] Pengajuan Kredit Baru*\n\nPelanggan: {$request->name}\nUnit: {$motor->name}\nTenor: {$request->tenor} Bulan\n\nSegera cek dokumen di dashboard.";
                 \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
             }
         } catch (\Exception $e) {
@@ -427,7 +427,7 @@ class MotorGalleryController extends Controller
 
         $transaction->update(['status' => 'menunggu_persetujuan']);
         if ($transaction->creditDetail) {
-            $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
+            $transaction->creditDetail->update(['status' => 'menunggu_persetujuan']);
         }
 
         // Notifikasi WA ke admin bahwa dokumen telah diunggah
@@ -530,7 +530,7 @@ class MotorGalleryController extends Controller
 
             $transaction->update(['status' => 'menunggu_persetujuan']);
             if ($transaction->creditDetail) {
-                $transaction->creditDetail->update(['credit_status' => 'menunggu_persetujuan']);
+                $transaction->creditDetail->update(['status' => 'menunggu_persetujuan']);
             }
 
             return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
@@ -604,11 +604,11 @@ class MotorGalleryController extends Controller
         try {
             $motor = $transaction->motor;
             $userMsg = "Pesanan motor *{$motor->name}* (Order ID: #{$transaction->id}) telah dibatalkan.\n\nTanggal pembatalan: " . now()->format('d-m-Y H:i') . "\n\nTerima kasih telah menggunakan layanan kami. — SRB Motor";
-            \App\Services\WhatsAppService::sendMessage($transaction->customer_phone, $userMsg);
+            \App\Services\WhatsAppService::sendMessage($transaction->phone, $userMsg);
 
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
-                $adminMsg = "*[ADMIN] Order Dibatalkan*\n\nPelanggan: {$transaction->customer_name}\nUnit: {$motor->name}\nAlasan: {$transaction->cancellation_reason}\n\nSilakan cek dashboard.";
+                $adminMsg = "*[ADMIN] Order Dibatalkan*\n\nPelanggan: {$transaction->user->name}\nUnit: {$motor->name}\nAlasan: {$transaction->cancellation_reason}\n\nSilakan cek dashboard.";
                 \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
             }
         } catch (\Exception $e) {
@@ -640,7 +640,7 @@ class MotorGalleryController extends Controller
             $creditDetail = $document->creditDetail;
             if ($creditDetail->documents()->where('approval_status', '!=', 'approved')->count() === 0) {
                 // All documents approved - send notification
-                $creditDetail->credit_status = 'semua_dokumen_disetujui';
+                $creditDetail->status = 'semua_dokumen_disetujui';
                 $creditDetail->save();
 
                 // Send WhatsApp notification to customer
@@ -684,7 +684,7 @@ class MotorGalleryController extends Controller
 
             // Update credit status to indicate rejection
             $creditDetail = $document->creditDetail;
-            $creditDetail->credit_status = 'dokumen_ditolak';
+            $creditDetail->status = 'dokumen_ditolak';
             $creditDetail->save();
 
             Log::info('Document rejected', [
@@ -747,7 +747,7 @@ class MotorGalleryController extends Controller
             ]);
 
             // Update credit status
-            $creditDetail->credit_status = 'jadwal_survey';
+            $creditDetail->status = 'jadwal_survey';
             $creditDetail->save();
 
             Log::info('Survey scheduled', [

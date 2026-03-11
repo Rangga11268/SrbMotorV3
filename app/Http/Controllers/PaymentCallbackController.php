@@ -129,7 +129,7 @@ class PaymentCallbackController extends Controller
             . "- SRB Motor System";
             
 
-        $phone = $installment->transaction->customer_phone ?? $user->phone;
+        $phone = $installment->transaction->phone ?? $user->phone;
 
         if (!empty($phone)) {
             try {

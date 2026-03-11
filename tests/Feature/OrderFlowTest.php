@@ -21,31 +21,38 @@ class OrderFlowTest extends TestCase
         // Create a motor
         $motor = Motor::factory()->create([
             'price' => 25000000, // 25 million
+            'tersedia' => true,
         ]);
         
         // Test cash order creation
         $response = $this->actingAs($user)
             ->post(route('motors.process-cash-order', $motor->id), [
+                'name' => 'Test User',
+                'phone' => '08123456789',
+                'occupation' => 'Employee',
+                'address' => 'Test Address',
                 'notes' => 'Test cash order',
                 'booking_fee' => 2000000, // 2 million
                 'payment_method' => 'transfer',
             ]);
             
         // Check that the transaction was created
+        $transaction = Transaction::where('user_id', $user->id)->first();
+        // dump($transaction->toArray());
+
         $this->assertDatabaseHas('transactions', [
             'user_id' => $user->id,
             'motor_id' => $motor->id,
             'transaction_type' => 'CASH',
-            'status' => 'NEW_ORDER',
+            'status' => 'new_order',
             'notes' => 'Test cash order',
-            'booking_fee' => 2000000,
-            'total_amount' => 25000000,
+            'total_price' => 27000000,
+            'final_price' => 27000000,
             'payment_method' => 'transfer',
             'payment_status' => 'pending',
         ]);
         
         // Verify redirect to confirmation page
-        $transaction = Transaction::where('user_id', $user->id)->first();
         $response->assertRedirect(route('motors.order.confirmation', ['transaction' => $transaction->id]));
     }
     
@@ -56,41 +63,51 @@ class OrderFlowTest extends TestCase
         
         // Create a motor
         $motor = Motor::factory()->create([
-            'price' => 30000000, // 30 million
+            'price' => 50000000, // 50 million
+            'tersedia' => true,
         ]);
         
         // Test credit order creation
         $response = $this->actingAs($user)
             ->post(route('motors.process-credit-order', $motor->id), [
-                'down_payment' => 5000000, // 5 million
+                'name' => 'Test User',
+                'phone' => '08123456789',
+                'occupation' => 'Employee',
+                'nik' => '1234567890123456',
+                'monthly_income' => 5000000,
+                'employment_duration' => '2 years',
+                'address' => 'Test Address',
+                'dp_amount' => 15000000, // 30% of 50m
                 'tenor' => 36, // 36 months
-                'monthly_installment' => 700000, // 700k per month (approx)
                 'notes' => 'Test credit order',
                 'payment_method' => 'leasing',
             ]);
             
         // Check that the transaction was created
+        $transaction = Transaction::where('user_id', $user->id)->first();
+        // dump($transaction->toArray());
+
         $this->assertDatabaseHas('transactions', [
             'user_id' => $user->id,
             'motor_id' => $motor->id,
             'transaction_type' => 'CREDIT',
-            'status' => 'PENDING_REVIEW',
+            'status' => 'menunggu_persetujuan',
             'notes' => 'Test credit order',
-            'total_amount' => 30000000,
+            'final_price' => 50000000,
             'payment_method' => 'leasing',
             'payment_status' => 'pending',
         ]);
         
         // Check that the credit details were created
         $this->assertDatabaseHas('credit_details', [
-            'down_payment' => 5000000,
+            'transaction_id' => $transaction->id,
+            'dp_amount' => 15000000,
             'tenor' => 36,
-            'monthly_installment' => 700000,
-            'credit_status' => 'PENDING_REVIEW',
+            'status' => 'pengajuan_masuk',
         ]);
         
-        // Verify redirect to confirmation page
+        // Verify redirect to document upload page
         $transaction = Transaction::where('user_id', $user->id)->first();
-        $response->assertRedirect(route('motors.order.confirmation', ['transaction' => $transaction->id]));
+        $response->assertRedirect(route('motors.upload-credit-documents', ['transaction' => $transaction->id]));
     }
 }

@@ -40,7 +40,7 @@ class TransactionObserver
         }
         
         // Check if credit status was updated (for credit transactions)
-        if ($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail && $transaction->creditDetail->isDirty('credit_status')) {
+        if ($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail && $transaction->creditDetail->isDirty('status')) {
             // Send notification to customer about credit status change
             $transaction->user->notify(new TransactionStatusChanged($transaction));
             

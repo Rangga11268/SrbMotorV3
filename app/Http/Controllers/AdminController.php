@@ -36,7 +36,7 @@ class AdminController extends Controller
 
         $monthlyStats = Transaction::select(
             DB::raw('count(id) as count'),
-            DB::raw('SUM(total_amount) as revenue'),
+            DB::raw('SUM(final_price) as revenue'),
             DB::raw("DATE_FORMAT(created_at, '%Y-%m') as date")
         )
         ->where('created_at', '>=', Carbon::now()->subMonths(6))

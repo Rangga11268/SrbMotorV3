@@ -20,21 +20,25 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'motor_id',
+        'reference_number',
         'transaction_type',
         'status',
-        'notes',
-        'booking_fee',
-        'total_amount',
+        'motor_price',
+        'phone',
+        'address',
+        'city',
+        'total_price',
+        'discount_amount',
+        'final_price',
         'payment_method',
         'payment_status',
-        'customer_name',
-        'customer_phone',
-        'customer_occupation',
-        'customer_address',
-        'customer_nik',
-        'customer_monthly_income',
-        'customer_employment_duration',
-        'credit_amount',
+        'payment_date',
+        'payment_proof',
+        'is_cancelled',
+        'cancelled_at',
+        'cancellation_reason',
+        'notes',
+        'internal_notes',
     ];
 
     /**
@@ -43,8 +47,13 @@ class Transaction extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'booking_fee' => 'decimal:2',
-        'total_amount' => 'decimal:2',
+        'motor_price' => 'decimal:2',
+        'total_price' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'final_price' => 'decimal:2',
+        'payment_date' => 'datetime',
+        'is_cancelled' => 'boolean',
+        'cancelled_at' => 'datetime',
     ];
 
     /**

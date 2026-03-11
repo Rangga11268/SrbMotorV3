@@ -14,76 +14,60 @@ class CreditService
      */
     public function markApplicationReceived(CreditDetail $credit): bool
     {
-        return $credit->update(['credit_status' => 'pengajuan_masuk']);
+        return $credit->update(['status' => 'pengajuan_masuk']);
     }
 
     /**
      * Stage 2: Verify documents
-     * @param string $internalNotes Notes from admin about verification
+     * @param string $notes Notes from admin about verification
      */
-    public function verifyDocuments(CreditDetail $credit, string $internalNotes = ''): bool
+    public function verifyDocuments(CreditDetail $credit, string $notes = ''): bool
     {
         return $credit->update([
-            'credit_status' => 'verifikasi_dokumen',
-            'internal_notes' => $internalNotes,
+            'status' => 'verifikasi_dokumen',
+            'verification_notes' => $notes,
+            'verified_at' => now(),
         ]);
     }
 
     /**
      * Stage 2 - Reject: Mark documents as invalid
-     * @param string $rejectionReason Reason for rejection
+     * @param string $reason Reason for rejection
      */
-    public function rejectDocument(CreditDetail $credit, string $rejectionReason): bool
+    public function rejectDocument(CreditDetail $credit, string $reason): bool
     {
         return $credit->update([
-            'credit_status' => 'ditolak',
-            'rejection_reason' => $rejectionReason,
+            'status' => 'ditolak',
+            'verification_notes' => $reason,
         ]);
     }
 
     /**
      * Stage 3: Send to leasing company
      * @param int $leasingProviderId The leasing provider ID
-     * @param string $applicationRef Reference number from leasing company
+     * @param string $appRef Reference number from leasing company
      */
-    public function sendToLeasing(CreditDetail $credit, int $leasingProviderId, string $applicationRef = ''): bool
+    public function sendToLeasing(CreditDetail $credit, int $leasingProviderId, string $appRef = ''): bool
     {
         return $credit->update([
-            'credit_status' => 'dikirim_ke_leasing',
+            'status' => 'dikirim_ke_leasing',
             'leasing_provider_id' => $leasingProviderId,
-            'leasing_application_ref' => $applicationRef,
+            'reference_number' => $appRef ?: $credit->reference_number,
         ]);
     }
 
     /**
      * Stage 4: Schedule survey
-     * @param \DateTime $scheduledDate Date of survey
-     * @param string $scheduledTime Time of survey
-     * @param string $surveyorName Name of surveyor
-     * @param string $surveyorPhone Surveyor's phone number
+     * @param string $scheduledDate Date of survey
      */
     public function scheduleSurvey(
         CreditDetail $credit,
-        string $scheduledDate,
-        string $scheduledTime,
-        string $surveyorName,
-        string $surveyorPhone
+        string $scheduledDate
     ): bool {
         return $credit->update([
-            'credit_status' => 'survey_dijadwalkan',
+            'status' => 'survey_dijadwalkan',
             'survey_scheduled_date' => $scheduledDate,
-            'survey_scheduled_time' => $scheduledTime,
-            'surveyor_name' => $surveyorName,
-            'surveyor_phone' => $surveyorPhone,
         ]);
-    }
-
-    /**
-     * Stage 5: Mark survey as in progress
-     */
-    public function startSurvey(CreditDetail $credit): bool
-    {
-        return $credit->update(['credit_status' => 'survey_berjalan']);
     }
 
     /**
@@ -95,70 +79,60 @@ class CreditService
         return $credit->update([
             'survey_notes' => $surveyNotes,
             'survey_completed_at' => now(),
-            'credit_status' => 'menunggu_keputusan_leasing',
+            'status' => 'menunggu_keputusan_leasing',
         ]);
     }
 
     /**
      * Stage 6 - Approve: Mark credit as approved by leasing
-     * @param float $approvedAmount The approved amount
-     * @param float $interestRate The approved interest rate
      */
     public function approveCredit(
-        CreditDetail $credit,
-        float $approvedAmount,
-        float $interestRate
+        CreditDetail $credit
     ): bool {
         return $credit->update([
-            'credit_status' => 'disetujui',
-            'approved_amount' => $approvedAmount,
-            'interest_rate' => $interestRate,
-            'leasing_decision_date' => now(),
+            'status' => 'disetujui',
+            'verified_at' => now(),
         ]);
     }
 
     /**
      * Stage 6 - Reject: Mark credit as rejected by leasing
-     * @param string $rejectionReason Reason for rejection from leasing
+     * @param string $reason Reason for rejection from leasing
      */
-    public function rejectCredit(CreditDetail $credit, string $rejectionReason): bool
+    public function rejectCredit(CreditDetail $credit, string $reason): bool
     {
         return $credit->update([
-            'credit_status' => 'ditolak',
-            'rejection_reason' => $rejectionReason,
-            'leasing_decision_date' => now(),
+            'status' => 'ditolak',
+            'verification_notes' => $reason,
         ]);
     }
 
     /**
      * Stage 7: Mark DP as paid
      * @param string $paymentMethod Payment method used
-     * @param User|int $confirmedByUser Admin user who confirmed the payment
      */
     public function recordDPPayment(
         CreditDetail $credit,
-        string $paymentMethod,
-        User|int $confirmedByUser
+        string $paymentMethod
     ): bool {
-        $confirmedById = $confirmedByUser instanceof User ? $confirmedByUser->id : $confirmedByUser;
-
         return $credit->update([
-            'credit_status' => 'dp_dibayar',
-            'dp_paid_date' => now(),
+            'status' => 'dp_dibayar',
+            'dp_paid_at' => now(),
             'dp_payment_method' => $paymentMethod,
-            'dp_confirmed_by' => $confirmedById,
         ]);
     }
 
     /**
      * Stage 8: Mark credit as completed
-     * @param string $internalNotes Final notes
+     * @param string $notes Final notes
      */
-    public function completeCredit(CreditDetail $credit, string $internalNotes = ''): bool
+    public function completeCredit(CreditDetail $credit, string $notes = ''): bool
     {
         return $credit->update([
-            'credit_status' => 'selesai',
-            'internal_notes' => $internalNotes,
+            'status' => 'selesai',
+            'completion_notes' => $notes,
+            'completed_at' => now(),
+            'is_completed' => true,
         ]);
     }
 
@@ -167,7 +141,7 @@ class CreditService
      */
     public function getAvailableTransitions(CreditDetail $credit): array
     {
-        $currentStatus = $credit->credit_status;
+        $currentStatus = $credit->status;
 
         $transitions = [
             'pengajuan_masuk' => [
@@ -182,9 +156,6 @@ class CreditService
                 'survey_dijadwalkan' => 'Schedule Survey',
             ],
             'survey_dijadwalkan' => [
-                'survey_berjalan' => 'Start Survey',
-            ],
-            'survey_berjalan' => [
                 'menunggu_keputusan_leasing' => 'Complete Survey',
             ],
             'menunggu_keputusan_leasing' => [
@@ -228,11 +199,6 @@ class CreditService
                 'badge' => 'warning',
                 'icon' => 'calendar',
             ],
-            'survey_berjalan' => [
-                'label' => 'Survey In Progress',
-                'badge' => 'warning',
-                'icon' => 'loading',
-            ],
             'menunggu_keputusan_leasing' => [
                 'label' => 'Waiting for Decision',
                 'badge' => 'info',
@@ -265,74 +231,5 @@ class CreditService
             'badge' => 'secondary',
             'icon' => 'question',
         ];
-    }
-
-    /**
-     * Get timeline of status changes for a credit
-     */
-    public function getTimeline(CreditDetail $credit): array
-    {
-        $timeline = [];
-
-        // Add created event
-        $timeline[] = [
-            'date' => $credit->created_at,
-            'status' => 'pengajuan_masuk',
-            'label' => 'Application Created',
-            'notes' => null,
-        ];
-
-        // Add verification event
-        if ($credit->credit_status !== 'pengajuan_masuk') {
-            $timeline[] = [
-                'date' => $credit->updated_at,
-                'status' => 'verifikasi_dokumen',
-                'label' => 'Documents Verified',
-                'notes' => $credit->internal_notes,
-            ];
-        }
-
-        // Add survey scheduled event
-        if ($credit->survey_scheduled_date) {
-            $timeline[] = [
-                'date' => $credit->survey_scheduled_date,
-                'status' => 'survey_dijadwalkan',
-                'label' => 'Survey Scheduled',
-                'notes' => $credit->surveyor_name ? "Surveyor: {$credit->surveyor_name}" : null,
-            ];
-        }
-
-        // Add survey completed event
-        if ($credit->survey_completed_at) {
-            $timeline[] = [
-                'date' => $credit->survey_completed_at,
-                'status' => 'menunggu_keputusan_leasing',
-                'label' => 'Survey Completed',
-                'notes' => $credit->survey_notes,
-            ];
-        }
-
-        // Add leasing decision event
-        if ($credit->leasing_decision_date) {
-            $status = $credit->credit_status === 'ditolak' && $credit->rejection_reason ? 'ditolak' : 'disetujui';
-            $timeline[] = [
-                'date' => $credit->leasing_decision_date,
-                'status' => $status,
-                'label' => $status === 'ditolak' ? 'Credit Rejected' : 'Credit Approved',
-                'notes' => $credit->rejection_reason ?? "Approved Amount: {$credit->approved_amount}",
-            ];
-        }
-
-        // Add DP paid event
-        if ($credit->dp_paid_date) {
-            $timeline[] = [
-                'date' => $credit->dp_paid_date,
-                'status' => 'dp_dibayar',
-                'label' => 'DP Payment Received',
-                'notes' => $credit->dp_payment_method,
-            ];
-        }
-
-        return $timeline;
     }
 }

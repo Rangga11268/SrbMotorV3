@@ -62,18 +62,18 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
 
         $data = [
             'total_transactions' => $transactions->count(),
-            'total_revenue' => $transactions->sum('total_amount'),
+            'total_revenue' => $transactions->sum('final_price'),
             'cash_transactions' => $transactions->where('transaction_type', 'CASH')->count(),
             'credit_transactions' => $transactions->where('transaction_type', 'CREDIT')->count(),
-            'cash_revenue' => $transactions->where('transaction_type', 'CASH')->sum('total_amount'),
-            'credit_revenue' => $transactions->where('transaction_type', 'CREDIT')->sum('total_amount'),
+            'cash_revenue' => $transactions->where('transaction_type', 'CASH')->sum('final_price'),
+            'credit_revenue' => $transactions->where('transaction_type', 'CREDIT')->sum('final_price'),
         ];
 
         // Group by motor brand
         $data['by_brand'] = $transactions->groupBy('motor.brand')->map(function ($group) {
             return [
                 'count' => $group->count(),
-                'revenue' => $group->sum('total_amount')
+                'revenue' => $group->sum('final_price')
             ];
         });
 
@@ -81,7 +81,7 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
         $data['by_type'] = $transactions->groupBy('motor.type')->map(function ($group) {
             return [
                 'count' => $group->count(),
-                'revenue' => $group->sum('total_amount')
+                'revenue' => $group->sum('final_price')
             ];
         });
 
@@ -97,9 +97,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
             ->get();
 
         $data = [
-            'total_income' => $transactions->sum('total_amount'),
-            'cash_income' => $transactions->where('transaction_type', 'CASH')->sum('total_amount'),
-            'credit_income' => $transactions->where('transaction_type', 'CREDIT')->sum('total_amount'),
+            'total_income' => $transactions->sum('final_price'),
+            'cash_income' => $transactions->where('transaction_type', 'CASH')->sum('final_price'),
+            'credit_income' => $transactions->where('transaction_type', 'CREDIT')->sum('final_price'),
         ];
 
         // Group by month
@@ -109,9 +109,9 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
             })
             ->map(function ($group) {
                 return [
-                    'total' => $group->sum('total_amount'),
-                    'cash' => $group->where('transaction_type', 'CASH')->sum('total_amount'),
-                    'credit' => $group->where('transaction_type', 'CREDIT')->sum('total_amount'),
+                    'total' => $group->sum('final_price'),
+                    'cash' => $group->where('transaction_type', 'CASH')->sum('final_price'),
+                    'credit' => $group->where('transaction_type', 'CREDIT')->sum('final_price'),
                 ];
             });
 
@@ -141,7 +141,7 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
                     'name' => $user->name,
                     'email' => $user->email,
                     'transaction_count' => $group->count(),
-                    'total_spent' => $group->sum('total_amount'),
+                    'total_spent' => $group->sum('final_price'),
                 ];
             })
             ->sortByDesc('transaction_count')
@@ -172,7 +172,7 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
                 return [
                     'count' => $group->count(),
                     'percentage' => $totalTransactionsCount > 0 ? round(($group->count() / $totalTransactionsCount) * 100, 2) : 0,
-                    'revenue' => $group->sum('total_amount'),
+                    'revenue' => $group->sum('final_price'),
                 ];
             });
 
@@ -182,7 +182,7 @@ class ReportExport implements FromCollection, WithHeadings, WithMapping, WithSty
             ->map(function ($group) {
                 return [
                     'count' => $group->count(),
-                    'revenue' => $group->sum('total_amount'),
+                    'revenue' => $group->sum('final_price'),
                 ];
             });
 

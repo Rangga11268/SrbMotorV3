@@ -38,10 +38,10 @@ class DocumentUploadTest extends TestCase
         
         CreditDetail::create([
             'transaction_id' => $transaction->id,
-            'down_payment' => 1000000,
+            'dp_amount' => 1000000,
             'tenor' => 12,
             'monthly_installment' => 1000000,
-            'credit_status' => 'menunggu_persetujuan',
+            'status' => 'menunggu_persetujuan',
         ]);
 
         $response = $this->actingAs($user)->get(route('motors.upload-credit-documents', $transaction));
@@ -73,10 +73,10 @@ class DocumentUploadTest extends TestCase
         
         CreditDetail::create([
             'transaction_id' => $transaction->id,
-            'down_payment' => 1000000,
+            'dp_amount' => 1000000,
             'tenor' => 12,
             'monthly_installment' => 1000000,
-            'credit_status' => 'menunggu_persetujuan',
+            'status' => 'menunggu_persetujuan',
         ]);
 
         $response = $this->actingAs($user)->post(route('motors.upload-credit-documents', $transaction), [
@@ -110,10 +110,10 @@ class DocumentUploadTest extends TestCase
         
         CreditDetail::create([
             'transaction_id' => $transaction->id,
-            'down_payment' => 1000000,
+            'dp_amount' => 1000000,
             'tenor' => 12,
             'monthly_installment' => 1000000,
-            'credit_status' => 'menunggu_persetujuan',
+            'status' => 'menunggu_persetujuan',
         ]);
 
         $response = $this->actingAs($user)->post(route('motors.upload-credit-documents', $transaction), [
@@ -151,10 +151,10 @@ class DocumentUploadTest extends TestCase
         
         $creditDetail = CreditDetail::create([
             'transaction_id' => $transaction->id,
-            'down_payment' => 1000000,
+            'dp_amount' => 1000000,
             'tenor' => 12,
             'monthly_installment' => 1000000,
-            'credit_status' => 'menunggu_persetujuan',
+            'status' => 'menunggu_persetujuan',
         ]);
 
         $response = $this->actingAs($user)->post(route('motors.upload-credit-documents', $transaction), [

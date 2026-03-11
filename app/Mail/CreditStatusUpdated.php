@@ -24,7 +24,7 @@ class CreditStatusUpdated extends Mailable
     public function __construct(Transaction $transaction)
     {
         $this->transaction = $transaction;
-        $this->status = $transaction->creditDetail->credit_status ?? 'Unknown';
+        $this->status = $transaction->creditDetail->status ?? 'Unknown';
         $this->note = $transaction->notes; // Or any specific rejection reason if you have a field for it
     }
 
@@ -44,7 +44,7 @@ class CreditStatusUpdated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.credit_status_updated',
+            view: 'emails.status_updated',
         );
     }
 

@@ -16,7 +16,7 @@ return new class extends Migration
             Schema::create('installments', function (Blueprint $table) {
                 // Relationships
                 $table->id();
-                $table->foreignId('credit_detail_id')->constrained('credit_details')->onDelete('cascade');
+                $table->foreignId('transaction_id')->constrained('transactions')->onDelete('cascade');
 
                 // Installment Details
                 $table->integer('installment_number')->comment('1st, 2nd, 3rd... installment');
@@ -47,7 +47,7 @@ return new class extends Migration
                 $table->softDeletes();
 
                 // Indexes
-                $table->index('credit_detail_id');
+                $table->index('transaction_id');
                 $table->index('status');
                 $table->index('due_date');
             });

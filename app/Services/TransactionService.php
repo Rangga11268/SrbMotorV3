@@ -22,17 +22,22 @@ class TransactionService
         $transactionData = array_intersect_key($data, array_flip([
             'user_id',
             'motor_id',
+            'reference_number',
             'transaction_type',
             'status',
-            'notes',
-            'booking_fee',
-            'total_amount',
+            'motor_price',
+            'phone',
+            'address',
+            'city',
+            'total_price',
+            'discount_amount',
+            'final_price',
             'payment_method',
             'payment_status',
-            'customer_name',
-            'customer_phone',
-            'customer_occupation',
-            'customer_address',
+            'payment_date',
+            'payment_proof',
+            'notes',
+            'internal_notes',
         ]));
 
         $transaction = Transaction::create($transactionData);
@@ -52,17 +57,22 @@ class TransactionService
         $transactionData = array_intersect_key($data, array_flip([
             'user_id',
             'motor_id',
+            'reference_number',
             'transaction_type',
             'status',
-            'notes',
-            'booking_fee',
-            'total_amount',
+            'motor_price',
+            'phone',
+            'address',
+            'city',
+            'total_price',
+            'discount_amount',
+            'final_price',
             'payment_method',
             'payment_status',
-            'customer_name',
-            'customer_phone',
-            'customer_occupation',
-            'customer_address',
+            'payment_date',
+            'payment_proof',
+            'notes',
+            'internal_notes',
         ]));
 
         $transaction->update($transactionData);
@@ -99,7 +109,7 @@ class TransactionService
         }
 
         // Generate Installments if Approved
-        if (isset($creditData['credit_status']) && $creditData['credit_status'] === 'disetujui') {
+        if (isset($creditData['status']) && $creditData['status'] === 'disetujui') {
             $this->generateInstallments($transaction, $creditData);
         }
     }
@@ -120,7 +130,7 @@ class TransactionService
                 Installment::create([
                     'transaction_id' => $lockedTransaction->id,
                     'installment_number' => 0, // 0 indicates Down Payment
-                    'amount' => $creditData['down_payment'],
+                    'amount' => $creditData['dp_amount'] ?? $creditData['down_payment'],
                     'due_date' => now(), // Due immediately
                     'status' => 'pending',
                 ]);
@@ -184,21 +194,22 @@ class TransactionService
 
         // WhatsApp Notification
         try {
-            if ($transaction->customer_phone) {
-                $status = $data['status'] ?? ($data['credit_detail']['credit_status'] ?? 'Updated');
-                $creditStatus = $data['credit_detail']['credit_status'] ?? null;
+            if ($transaction->phone) {
+                $status = $data['status'] ?? ($data['credit_detail']['status'] ?? 'Updated');
+                $creditStatus = $data['credit_detail']['status'] ?? null;
+                $customerName = $transaction->user->name ?? 'Pelanggan';
 
                 $msg = "";
                 if ($creditStatus === 'disetujui') {
-                    $msg = "Selamat {$transaction->customer_name}!\n\nPengajuan Kredit Anda untuk unit *{$transaction->motor->name}* telah *DISETUJUI*.\n\nHarap cek dashboard Anda untuk melihat jadwal pembayaran angsuran (Uang Muka).\n\n- SRB Motor";
+                    $msg = "Selamat {$customerName}!\n\nPengajuan Kredit Anda untuk unit *{$transaction->motor->name}* telah *DISETUJUI*.\n\nHarap cek dashboard Anda untuk melihat jadwal pembayaran angsuran (Uang Muka).\n\n- SRB Motor";
                 } else if ($creditStatus === 'ditolak') {
-                    $msg = "Halo {$transaction->customer_name},\n\nMohon maaf, pengajuan kredit Anda untuk unit *{$transaction->motor->name}* belum dapat kami setujui saat ini.\n\nHubungi admin untuk info lebih lanjut.\n\n- SRB Motor";
+                    $msg = "Halo {$customerName},\n\nMohon maaf, pengajuan kredit Anda untuk unit *{$transaction->motor->name}* belum dapat kami setujui saat ini.\n\nHubungi admin untuk info lebih lanjut.\n\n- SRB Motor";
                 } else {
                     $displayStatus = strtoupper(str_replace('_', ' ', $status));
-                    $msg = "Halo {$transaction->customer_name},\n\nStatus pesanan #{$transaction->id} diperbarui menjadi: *{$displayStatus}*.\n\n- SRB Motor";
+                    $msg = "Halo {$customerName},\n\nStatus pesanan #{$transaction->id} diperbarui menjadi: *{$displayStatus}*.\n\n- SRB Motor";
                 }
 
-                WhatsAppService::sendMessage($transaction->customer_phone, $msg);
+                WhatsAppService::sendMessage($transaction->phone, $msg);
             }
         } catch (\Exception $e) {
             Log::error('WA Notification Error: ' . $e->getMessage());

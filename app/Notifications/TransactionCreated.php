@@ -49,7 +49,7 @@ class TransactionCreated extends Notification
                     ->line('Motor: ' . $motorName)
                     ->line('Tipe Pesanan: ' . ($this->transaction->transaction_type === 'CASH' ? 'Tunai' : 'Kredit'))
                     ->line('Status Saat Ini: ' . $this->transaction->status)
-                    ->line('Total Jumlah: Rp ' . number_format($this->transaction->total_amount, 0, ',', '.'))
+                    ->line('Total Jumlah: Rp ' . number_format($this->transaction->final_price, 0, ',', '.'))
                     ->action('Lihat Pesanan', url('/motors/order-confirmation/' . $transactionId))
                     ->line('Tim kami akan segera menghubungi Anda untuk konfirmasi lebih lanjut.');
     }
@@ -66,7 +66,7 @@ class TransactionCreated extends Notification
             'motor_name' => $this->transaction->motor->name,
             'transaction_type' => $this->transaction->transaction_type,
             'status' => $this->transaction->status,
-            'total_amount' => $this->transaction->total_amount,
+            'final_price' => $this->transaction->final_price,
             'message' => 'Pesanan baru telah dibuat dengan ID: ' . $this->transaction->id,
             'created_at' => now(),
         ];

@@ -99,22 +99,24 @@ class TransactionController extends Controller
             'user_id' => 'required|exists:users,id',
             'motor_id' => 'required|exists:motors,id',
             'booking_fee' => 'required|numeric|min:0',
-            'customer_address' => 'nullable|string|max:500',
+            'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
             'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,completed,cancelled',
         ]);
 
         // Get motor and calculate total
         $motor = Motor::findOrFail($validated['motor_id']);
-        $total_amount = $motor->price + $validated['booking_fee'];
+        $final_price = $motor->price + $validated['booking_fee'];
 
         // Create transaction
         $transaction = Transaction::create([
             'user_id' => $validated['user_id'],
             'motor_id' => $validated['motor_id'],
-            'total_amount' => $total_amount,
-            'booking_fee' => $validated['booking_fee'],
-            'customer_address' => $validated['customer_address'],
+            'reference_number' => 'TRX-' . strtoupper(uniqid()),
+            'final_price' => $final_price,
+            'motor_price' => $motor->price,
+            'address' => $validated['address'],
+            'total_price' => $final_price,
             'notes' => $validated['notes'],
             'status' => $validated['status'],
             'transaction_type' => 'cash',
@@ -142,21 +144,22 @@ class TransactionController extends Controller
             'user_id' => 'required|exists:users,id',
             'motor_id' => 'required|exists:motors,id',
             'booking_fee' => 'required|numeric|min:0',
-            'customer_address' => 'nullable|string|max:500',
+            'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
             'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,completed,cancelled',
         ]);
 
         // Get motor and calculate total
         $motor = Motor::findOrFail($validated['motor_id']);
-        $total_amount = $motor->price + $validated['booking_fee'];
+        $final_price = $motor->price + $validated['booking_fee'];
 
         $transaction->update([
             'user_id' => $validated['user_id'],
             'motor_id' => $validated['motor_id'],
-            'total_amount' => $total_amount,
-            'booking_fee' => $validated['booking_fee'],
-            'customer_address' => $validated['customer_address'],
+            'final_price' => $final_price,
+            'motor_price' => $motor->price,
+            'address' => $validated['address'],
+            'total_price' => $final_price,
             'notes' => $validated['notes'],
             'status' => $validated['status'],
             'transaction_type' => 'cash',

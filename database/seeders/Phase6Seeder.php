@@ -36,7 +36,7 @@ class Phase6Seeder extends Seeder
                 'price' => 35500000,
                 'year' => 2024,
                 'type' => 'Matic',
-                'description' => '<h3>Fitur Unggulan NMAX Turbo</h3><ul><li>Mesin Blue Core 155cc</li><li>Y-Connect Navigation</li><li>Electric Power Socket</li></ul><p>Nikmati berkendara dengan kenyamanan maksimal dan teknologi turbo terbaru dari Yamaha.</p>',
+                'details' => '<h3>Fitur Unggulan NMAX Turbo</h3><ul><li>Mesin Blue Core 155cc</li><li>Y-Connect Navigation</li><li>Electric Power Socket</li></ul><p>Nikmati berkendara dengan kenyamanan maksimal dan teknologi turbo terbaru dari Yamaha.</p>',
                 'image_path' => 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800',
                 'tersedia' => true,
                 'promos' => [$promo1->id, $promo2->id]
@@ -48,7 +48,7 @@ class Phase6Seeder extends Seeder
                 'price' => 31200000,
                 'year' => 2024,
                 'type' => 'Sport Matic',
-                'description' => '<h3>Aerox 155 Cyber City</h3><p>Desain sporty yang agresif dengan performa mesin yang tangguh. Cocok untuk Anda yang berjiwa muda.</p>',
+                'details' => '<h3>Aerox 155 Cyber City</h3><p>Desain sporty yang agresif dengan performa mesin yang tangguh. Cocok untuk Anda yang berjiwa muda.</p>',
                 'image_path' => 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=800',
                 'tersedia' => true,
                 'promos' => [$promo1->id]
@@ -60,7 +60,7 @@ class Phase6Seeder extends Seeder
                 'price' => 23500000,
                 'year' => 2024,
                 'type' => 'Classy',
-                'description' => '<h3>Gaya Hidup Classy dengan Fazzio</h3><p>Motor hybrid pertama di kelasnya. Hemat bahan bakar dan tampil elegan di jalanan Bekasi.</p>',
+                'details' => '<h3>Gaya Hidup Classy dengan Fazzio</h3><p>Motor hybrid pertama di kelasnya. Hemat bahan bakar dan tampil elegan di jalanan Bekasi.</p>',
                 'image_path' => 'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=800',
                 'tersedia' => true,
                 'promos' => [$promo2->id]

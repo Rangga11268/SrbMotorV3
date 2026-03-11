@@ -11,12 +11,12 @@ class CreditDetailObserver
 {
     /**
      * Handle the CreditDetail "updated" event.
-     * Syncs Transaction status based on credit_status.
+     * Syncs Transaction status based on status.
      */
     public function updated(CreditDetail $creditDetail): void
     {
-        // Check if credit_status was updated
-        if ($creditDetail->isDirty('credit_status')) {
+        // Check if status was updated
+        if ($creditDetail->isDirty('status')) {
             $this->syncTransactionStatus($creditDetail);
             $this->notifyCustomer($creditDetail);
             $this->logStatusChange($creditDetail);
@@ -24,7 +24,7 @@ class CreditDetailObserver
     }
 
     /**
-     * Synchronize the parent Transaction status based on credit_status.
+     * Synchronize the parent Transaction status based on status.
      */
     private function syncTransactionStatus(CreditDetail $creditDetail): void
     {
@@ -34,9 +34,9 @@ class CreditDetailObserver
             return;
         }
 
-        $creditStatus = $creditDetail->credit_status;
+        $creditStatus = $creditDetail->status;
 
-        // Define the mapping from credit_status to transaction status
+        // Define the mapping from status to transaction status
         $statusMap = [
             'pengajuan_masuk' => 'waiting_credit_approval',
             'verifikasi_dokumen' => 'waiting_credit_approval',
@@ -58,7 +58,7 @@ class CreditDetailObserver
             if ($transaction->status !== $newStatus) {
                 $transaction->update(['status' => $newStatus]);
 
-                Log::info("Transaction #{$transaction->id} status synced to '{$newStatus}' from credit_status '{$creditStatus}'");
+                Log::info("Transaction #{$transaction->id} status synced to '{$newStatus}' from status '{$creditStatus}'");
             }
         }
     }
@@ -75,7 +75,7 @@ class CreditDetailObserver
             }
 
             $customer = $transaction->customer;
-            $status = $creditDetail->credit_status;
+            $status = $creditDetail->status;
 
             // Map credit status to notification type
             $notificationData = $this->getNotificationData($creditDetail, $status);

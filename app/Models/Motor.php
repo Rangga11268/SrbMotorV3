@@ -23,7 +23,7 @@ class Motor extends Model
         'year',
         'type',
         'image_path',
-        'description',
+        'details',
         'tersedia',
     ];
 

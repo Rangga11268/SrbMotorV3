@@ -29,7 +29,7 @@ class CreditController extends Controller
         $query = CreditDetail::with(['transaction', 'transaction.user', 'transaction.motor']);
 
         if ($status) {
-            $query->where('credit_status', $status);
+            $query->where('status', $status);
         }
 
         if ($search) {
@@ -83,10 +83,10 @@ class CreditController extends Controller
     public function verifyDocuments(Request $request, CreditDetail $credit)
     {
         $validated = $request->validate([
-            'internal_notes' => 'nullable|string|max:1000',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
-        $this->creditService->verifyDocuments($credit, $validated['internal_notes'] ?? '');
+        $this->creditService->verifyDocuments($credit, $validated['notes'] ?? '');
 
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Documents verified successfully');
@@ -141,10 +141,7 @@ class CreditController extends Controller
 
         $this->creditService->scheduleSurvey(
             $credit,
-            $validated['survey_scheduled_date'],
-            $validated['survey_scheduled_time'],
-            $validated['surveyor_name'],
-            $validated['surveyor_phone']
+            $validated['survey_scheduled_date']
         );
 
         return redirect()->route('admin.credits.show', $credit)
@@ -188,9 +185,7 @@ class CreditController extends Controller
         ]);
 
         $this->creditService->approveCredit(
-            $credit,
-            $validated['approved_amount'],
-            $validated['interest_rate']
+            $credit
         );
 
         return redirect()->route('admin.credits.show', $credit)
@@ -237,10 +232,10 @@ class CreditController extends Controller
     public function completeCredit(Request $request, CreditDetail $credit)
     {
         $validated = $request->validate([
-            'internal_notes' => 'nullable|string|max:1000',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
-        $this->creditService->completeCredit($credit, $validated['internal_notes'] ?? '');
+        $this->creditService->completeCredit($credit, $validated['notes'] ?? '');
 
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Credit process completed');
@@ -255,7 +250,7 @@ class CreditController extends Controller
         $query = CreditDetail::with(['transaction', 'transaction.user']);
 
         if ($status) {
-            $query->where('credit_status', $status);
+            $query->where('status', $status);
         }
 
         $credits = $query->get();

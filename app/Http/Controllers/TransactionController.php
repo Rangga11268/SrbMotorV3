@@ -181,10 +181,10 @@ class TransactionController extends Controller
         if (!$transaction->creditDetail) {
             $creditDetail = CreditDetail::create([
                 'transaction_id' => $transaction->id,
-                'down_payment' => 0,
+                'dp_amount' => 0,
                 'tenor' => 12,
                 'monthly_installment' => 0,
-                'credit_status' => 'menunggu_persetujuan',
+                'status' => 'menunggu_persetujuan',
             ]);
         } else {
             $creditDetail = $transaction->creditDetail;
