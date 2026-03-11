@@ -62,11 +62,20 @@ class CreditService
      */
     public function scheduleSurvey(
         CreditDetail $credit,
-        string $scheduledDate
+        array $surveyData
     ): bool {
+        // Create survey schedule
+        $credit->surveySchedules()->create([
+            'scheduled_date' => $surveyData['survey_scheduled_date'],
+            'scheduled_time' => $surveyData['survey_scheduled_time'],
+            'surveyor_name' => $surveyData['surveyor_name'],
+            'surveyor_phone' => $surveyData['surveyor_phone'],
+            'status' => 'pending',
+        ]);
+
         return $credit->update([
             'status' => 'survey_dijadwalkan',
-            'survey_scheduled_date' => $scheduledDate,
+            'survey_scheduled_date' => $surveyData['survey_scheduled_date'],
         ]);
     }
 
@@ -89,6 +98,17 @@ class CreditService
     public function approveCredit(
         CreditDetail $credit
     ): bool {
+        // Create DP Installment
+        if ($credit->transaction->installments()->where('installment_number', 0)->count() === 0) {
+            \App\Models\Installment::create([
+                'transaction_id' => $credit->transaction_id,
+                'installment_number' => 0, // DP
+                'amount' => $credit->dp_amount,
+                'due_date' => now(), 
+                'status' => 'pending'
+            ]);
+        }
+
         return $credit->update([
             'status' => 'disetujui',
             'verified_at' => now(),
@@ -128,6 +148,21 @@ class CreditService
      */
     public function completeCredit(CreditDetail $credit, string $notes = ''): bool
     {
+        // Generate monthly installments
+        if ($credit->transaction->installments()->where('installment_number', '>', 0)->count() === 0) {
+            $amount = $credit->monthly_installment;
+            $tenor = $credit->tenor;
+            for ($i = 1; $i <= $tenor; $i++) {
+                \App\Models\Installment::create([
+                    'transaction_id' => $credit->transaction_id,
+                    'installment_number' => $i,
+                    'amount' => $amount,
+                    'due_date' => now()->addMonths($i),
+                    'status' => 'pending'
+                ]);
+            }
+        }
+
         return $credit->update([
             'status' => 'selesai',
             'completion_notes' => $notes,
@@ -137,11 +172,93 @@ class CreditService
     }
 
     /**
+     * Forced cancel
+     */
+    public function cancelCredit(CreditDetail $credit): bool
+    {
+        DB::transaction(function () use ($credit) {
+            $credit->update(['status' => 'dibatalkan']);
+            $credit->transaction->update(['status' => 'cancelled']);
+        });
+
+        return true;
+    }
+
+    /**
+     * Get a timeline representation for a credit application
+     */
+    public function getTimeline(CreditDetail $credit): array
+    {
+        $timeline = [];
+
+        // Application received
+        $timeline[] = [
+            'status' => 'pengajuan_masuk',
+            'date' => $credit->created_at,
+            'is_completed' => true,
+        ];
+
+        // Documents verification
+        if (in_array($credit->status, ['ditolak']) || $credit->verified_at || $credit->updated_at > $credit->created_at) {
+            $timeline[] = [
+                'status' => 'verifikasi_dokumen',
+                'date' => $credit->verified_at ?? ($credit->status === 'ditolak' ? $credit->updated_at : null),
+                'is_completed' => $credit->verified_at !== null || $credit->status === 'ditolak',
+                'notes' => $credit->verification_notes,
+            ];
+        }
+
+        // Survey scheduled & completed
+        if ($credit->survey_scheduled_date || $credit->survey_completed_at) {
+             $timeline[] = [
+                'status' => 'survey_dijadwalkan',
+                'date' => $credit->survey_scheduled_date,
+                'is_completed' => $credit->survey_completed_at !== null,
+                'notes' => $credit->survey_notes,
+            ];
+        }
+
+        // DP Paid
+        if ($credit->dp_paid_at) {
+            $timeline[] = [
+                'status' => 'dp_dibayar',
+                'date' => $credit->dp_paid_at,
+                'is_completed' => true,
+                'notes' => 'Metode: ' . $credit->dp_payment_method,
+            ];
+        }
+
+        // Completed
+        if ($credit->completed_at || $credit->is_completed) {
+            $timeline[] = [
+                'status' => 'selesai',
+                'date' => $credit->completed_at,
+                'is_completed' => true,
+                'notes' => $credit->completion_notes,
+            ];
+        }
+
+        return $timeline;
+    }
+
+    /**
      * Get all available status transitions for a credit
      */
     public function getAvailableTransitions(CreditDetail $credit): array
     {
         $currentStatus = $credit->status;
+
+        // Map legacy statuses for backward compatibility
+        $legacyMap = [
+            'menunggu_persetujuan' => 'pengajuan_masuk',
+            'dikirim_ke_surveyor' => 'dikirim_ke_leasing',
+            'jadwal_survey' => 'survey_dijadwalkan',
+            'data_tidak_valid' => 'verifikasi_dokumen' // Allow them to reject again or send to leasing
+        ];
+
+        if (array_key_exists($currentStatus, $legacyMap)) {
+            $currentStatus = $legacyMap[$currentStatus];
+        }
 
         $transitions = [
             'pengajuan_masuk' => [
@@ -227,9 +344,30 @@ class CreditService
         ];
 
         return $statusInfo[$status] ?? [
-            'label' => ucfirst(str_replace('_', ' ', $status)),
+            'label' => $status,
             'badge' => 'secondary',
             'icon' => 'question',
         ];
+    }
+
+    /**
+     * Get specific status color for frontend
+     */
+    public function getStatusColor(string $status): string
+    {
+        $statusColors = [
+            'pengajuan_masuk' => 'info',
+            'verifikasi_dokumen' => 'warning',
+            'dikirim_ke_leasing' => 'info',
+            'survey_dijadwalkan' => 'warning',
+            'menunggu_keputusan_leasing' => 'info',
+            'disetujui' => 'success',
+            'ditolak' => 'danger',
+            'dp_dibayar' => 'success',
+            'selesai' => 'success',
+            'dibatalkan' => 'secondary'
+        ];
+
+        return $statusColors[$status] ?? 'secondary';
     }
 }

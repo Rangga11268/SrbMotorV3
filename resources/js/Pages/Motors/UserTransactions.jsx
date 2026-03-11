@@ -216,6 +216,15 @@ export default function UserTransactions({ transactions }) {
                                                                     </div>
                                                                 )}
                                                             </span>
+                                                            {(transaction.nik || transaction.occupation) && (
+                                                                <>
+                                                                    <span className="w-1 h-1 rounded-full bg-gray-200" />
+                                                                    <span className="flex items-center gap-1.5 text-[10px] font-black text-gray-400 uppercase tracking-tighter">
+                                                                        {transaction.occupation || "Pekerjaan -"} 
+                                                                        {transaction.nik && ` • NIK: ${transaction.nik.substring(0, 6)}...`}
+                                                                    </span>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </div>
 
@@ -225,7 +234,7 @@ export default function UserTransactions({ transactions }) {
                                                         </p>
                                                         <p className="text-3xl font-black text-primary">
                                                             {formatCurrency(
-                                                                transaction.total_amount,
+                                                                transaction.final_price || transaction.total_price || 0,
                                                             )}
                                                         </p>
                                                     </div>

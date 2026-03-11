@@ -14,6 +14,8 @@ import {
     MapPin,
     User,
     Phone,
+    ChevronDown,
+    ChevronUp,
 } from "lucide-react";
 
 export default function TransactionDetail({ transaction }) {
@@ -260,6 +262,22 @@ export default function TransactionDetail({ transaction }) {
                                 <div className="grid grid-cols-2 gap-4 mb-4">
                                     <div>
                                         <p className="text-slate-600 dark:text-slate-400 text-sm">
+                                            Lembaga Pembiayaan
+                                        </p>
+                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                                            {transaction.creditDetail.leasing_provider?.name || "Belum ditentukan"}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-slate-600 dark:text-slate-400 text-sm">
+                                            No. Referensi
+                                        </p>
+                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                                            {transaction.creditDetail.reference_number || "-"}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-slate-600 dark:text-slate-400 text-sm">
                                             DP
                                         </p>
                                         <p className="text-lg font-semibold text-slate-900 dark:text-white">
@@ -336,6 +354,54 @@ export default function TransactionDetail({ transaction }) {
                             </div>
                         )}
 
+                        {/* Customer Information */}
+                        <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
+                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                                Informasi Pelanggan
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-3">
+                                        <User className="w-5 h-5 text-blue-600 mt-0.5" />
+                                        <div>
+                                            <p className="text-slate-600 dark:text-slate-400 text-xs">Nama Lengkap (Sesuai KTP)</p>
+                                            <p className="font-semibold text-slate-900 dark:text-white">{transaction.name || transaction.user?.name}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+                                        <div>
+                                            <p className="text-slate-600 dark:text-slate-400 text-xs">NIK (Nomor Induk Kependudukan)</p>
+                                            <p className="font-semibold text-slate-900 dark:text-white">{transaction.nik || "-"}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <Phone className="w-5 h-5 text-blue-600 mt-0.5" />
+                                        <div>
+                                            <p className="text-slate-600 dark:text-slate-400 text-xs">Nomor WhatsApp</p>
+                                            <p className="font-semibold text-slate-900 dark:text-white">{transaction.phone || "-"}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-3">
+                                        <Clock className="w-5 h-5 text-blue-600 mt-0.5" />
+                                        <div>
+                                            <p className="text-slate-600 dark:text-slate-400 text-xs">Pekerjaan</p>
+                                            <p className="font-semibold text-slate-900 dark:text-white">{transaction.occupation || "-"}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <MapPin className="w-5 h-5 text-blue-600 mt-0.5" />
+                                        <div>
+                                            <p className="text-slate-600 dark:text-slate-400 text-xs">Alamat Lengkap</p>
+                                            <p className="font-semibold text-slate-900 dark:text-white leading-relaxed">{transaction.address || "-"}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Survey Schedule */}
                         {isCreditOrder && survey && (
                             <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
@@ -352,11 +418,11 @@ export default function TransactionDetail({ transaction }) {
                                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                                         Jadwal Survei
                                     </h2>
-                                    <span
-                                        className={`transform transition-transform ${expandedSection === "survey" ? "rotate-180" : ""}`}
-                                    >
-                                        ▼
-                                    </span>
+                                    {expandedSection === "survey" ? (
+                                        <ChevronUp className="w-5 h-5 text-gray-500 transition-transform" />
+                                    ) : (
+                                        <ChevronDown className="w-5 h-5 text-gray-500 transition-transform" />
+                                    )}
                                 </button>
 
                                 {expandedSection === "survey" && (
@@ -445,11 +511,11 @@ export default function TransactionDetail({ transaction }) {
                                             Jadwal Cicilan (
                                             {transaction.installments.length})
                                         </h2>
-                                        <span
-                                            className={`transform transition-transform ${expandedSection === "installments" ? "rotate-180" : ""}`}
-                                        >
-                                            ▼
-                                        </span>
+                                        {expandedSection === "installments" ? (
+                                            <ChevronUp className="w-5 h-5 text-gray-500 transition-transform" />
+                                        ) : (
+                                            <ChevronDown className="w-5 h-5 text-gray-500 transition-transform" />
+                                        )}
                                     </button>
                                     {expandedSection === "installments" && (
                                         <div className="space-y-2">
@@ -545,11 +611,11 @@ export default function TransactionDetail({ transaction }) {
                                             }
                                             )
                                         </h2>
-                                        <span
-                                            className={`transform transition-transform ${expandedSection === "documents" ? "rotate-180" : ""}`}
-                                        >
-                                            ▼
-                                        </span>
+                                        {expandedSection === "documents" ? (
+                                            <ChevronUp className="w-5 h-5 text-gray-500 transition-transform" />
+                                        ) : (
+                                            <ChevronDown className="w-5 h-5 text-gray-500 transition-transform" />
+                                        )}
                                     </button>
                                     {expandedSection === "documents" && (
                                         <div className="space-y-2">

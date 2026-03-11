@@ -114,7 +114,7 @@ export default function Show({
                 const grouped = data.items.reduce((acc, item) => {
                     const dateKey = item.created_at?.substring(0, 10) || "N/A";
                     if (!acc[dateKey]) acc[dateKey] = 0;
-                    acc[dateKey] += parseFloat(item.total_amount || 0);
+                    acc[dateKey] += parseFloat(item.total_price || 0);
                     return acc;
                 }, {});
                 return Object.keys(grouped).map((date) => ({
@@ -328,7 +328,7 @@ export default function Show({
                                                 </CTableDataCell>
                                                 <CTableDataCell className="text-end fw-bold">
                                                     {formatRupiah(
-                                                        item.total_amount,
+                                                        item.total_price,
                                                     )}
                                                 </CTableDataCell>
                                             </CTableRow>
@@ -345,7 +345,7 @@ export default function Show({
                                             <td className="p-3 text-end text-success h5 mb-0">
                                                 {formatRupiah(
                                                     calculateTotal(
-                                                        "total_amount",
+                                                        "total_price",
                                                     ),
                                                 )}
                                             </td>

@@ -63,6 +63,7 @@ class CreditController extends Controller
             'transaction.motor',
             'leasingProvider',
             'dPConfirmedByUser',
+            'surveySchedules',
         ]);
 
         $availableTransitions = $this->creditService->getAvailableTransitions($credit);
@@ -141,7 +142,7 @@ class CreditController extends Controller
 
         $this->creditService->scheduleSurvey(
             $credit,
-            $validated['survey_scheduled_date']
+            $validated
         );
 
         return redirect()->route('admin.credits.show', $credit)
@@ -239,6 +240,35 @@ class CreditController extends Controller
 
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Credit process completed');
+    }
+
+    /**
+     * Stage 9: Cancel Credit
+     */
+    public function cancel(CreditDetail $credit)
+    {
+        $this->creditService->cancelCredit($credit);
+
+        return redirect()->route('admin.credits.show', $credit)
+            ->with('success', 'Kredit berhasil dibatalkan');
+    }
+
+    /**
+     * Destroy Credit Application
+     */
+    public function destroy(CreditDetail $credit)
+    {
+        $transaction = $credit->transaction;
+        
+        DB::transaction(function () use ($credit, $transaction) {
+            $credit->delete();
+            if ($transaction) {
+                $transaction->delete();
+            }
+        });
+
+        return redirect()->route('admin.credits.index')
+            ->with('success', 'Pengajuan kredit berhasil dihapus');
     }
 
     /**

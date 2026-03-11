@@ -236,19 +236,25 @@ export default function Index({
                                                     className="fw-bold"
                                                 >
                                                     {getInitials(
-                                                        credit.transaction?.user
-                                                            ?.name,
+                                                        credit.transaction
+                                                            ?.name ||
+                                                            credit.transaction
+                                                                ?.user?.name,
                                                     )}
                                                 </CAvatar>
                                                 <div>
                                                     <div className="fw-semibold">
                                                         {credit.transaction
-                                                            ?.user?.name ||
+                                                            ?.name ||
+                                                            credit.transaction
+                                                                ?.user?.name ||
                                                             "N/A"}
                                                     </div>
                                                     <div className="text-body-tertiary small">
                                                         {credit.transaction
-                                                            ?.user?.email ||
+                                                            ?.phone ||
+                                                            credit.transaction
+                                                                ?.user?.email ||
                                                             "-"}
                                                     </div>
                                                 </div>
@@ -280,9 +286,7 @@ export default function Index({
                                             </div>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {getStatusBadge(
-                                                credit.credit_status,
-                                            )}
+                                            {getStatusBadge(credit.status)}
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
                                             <Link

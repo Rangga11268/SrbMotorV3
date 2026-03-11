@@ -29,14 +29,14 @@ import { motion } from "framer-motion";
 
 export default function CreditOrderForm({ motor, auth, leasingProviders }) {
     const { data, setData, post, processing, errors } = useForm({
-        customer_name: "",
-        customer_nik: "",
-        customer_phone: "",
-        customer_occupation: "",
-        customer_monthly_income: "",
-        customer_employment_duration: "",
-        customer_address: "",
-        down_payment: "",
+        name: "",
+        nik: "",
+        phone: "",
+        occupation: "",
+        monthly_income: "",
+        employment_duration: "",
+        address: "",
+        dp_amount: "",
         tenor: "12",
         payment_method: "Transfer Bank",
         leasing_provider_id: "",
@@ -69,11 +69,11 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
 
     const handleDownPaymentChange = (value) => {
         const cleaned = parseFormattedNumber(value);
-        setData("down_payment", cleaned);
+        setData("dp_amount", cleaned);
     };
 
     useEffect(() => {
-        const dp = parseFloat(data.down_payment) || 0;
+        const dp = parseFloat(data.dp_amount) || 0;
         const tenor = parseInt(data.tenor) || 0;
 
         if (tenor > 0) {
@@ -85,7 +85,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         } else {
             setCalculatedInstallment(0);
         }
-    }, [data.down_payment, data.tenor, motor.price]);
+    }, [data.dp_amount, data.tenor, motor.price]);
 
     const submit = (e) => {
         e.preventDefault();
@@ -94,34 +94,31 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         const minDP = motor.price * 0.2;
         const validationErrors = [];
 
-        if (!data.customer_name.trim()) {
+        if (!data.name.trim()) {
             validationErrors.push("Nama lengkap harus diisi");
         }
-        if (!data.customer_nik.trim()) {
+        if (!data.nik.trim()) {
             validationErrors.push("NIK harus diisi");
         }
-        if (
-            data.customer_nik &&
-            data.customer_nik.replace(/\D/g, "").length !== 16
-        ) {
+        if (data.nik && data.nik.replace(/\D/g, "").length !== 16) {
             validationErrors.push("NIK harus 16 digit");
         }
-        if (!data.customer_phone.trim()) {
+        if (!data.phone.trim()) {
             validationErrors.push("Nomor WhatsApp harus diisi");
         }
-        if (!data.customer_occupation.trim()) {
+        if (!data.occupation.trim()) {
             validationErrors.push("Pekerjaan harus diisi");
         }
-        if (!data.customer_monthly_income) {
+        if (!data.monthly_income) {
             validationErrors.push("Penghasilan bulanan harus diisi");
         }
-        if (!data.customer_employment_duration.trim()) {
+        if (!data.employment_duration.trim()) {
             validationErrors.push("Lama bekerja harus diisi");
         }
-        if (!data.customer_address.trim()) {
+        if (!data.address.trim()) {
             validationErrors.push("Alamat lengkap harus diisi");
         }
-        if (!data.down_payment || parseFloat(data.down_payment) < minDP) {
+        if (!data.dp_amount || parseFloat(data.dp_amount) < minDP) {
             validationErrors.push(
                 `DP minimum ${new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(minDP)}`,
             );
@@ -173,24 +170,29 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                     <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                                 </div>
 
-                                {hasValidationErrors &&
-                                    Array.isArray(hasValidationErrors) && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="p-4 bg-red-50 border-l-4 border-red-500 m-4"
-                                        >
-                                            <div className="flex items-start gap-3">
-                                                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                                                <div>
-                                                    <p className="font-bold text-red-900 mb-2">
-                                                        Data tidak lengkap:
-                                                    </p>
-                                                    <ul className="space-y-1">
-                                                        {hasValidationErrors.map(
+                                {(hasValidationErrors ||
+                                    Object.keys(errors).length > 0) && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-4 bg-red-50 border-l-4 border-red-500 m-4"
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-bold text-red-900 mb-2">
+                                                    Data tidak lengkap atau ada
+                                                    masalah:
+                                                </p>
+                                                <ul className="space-y-1">
+                                                    {hasValidationErrors &&
+                                                        Array.isArray(
+                                                            hasValidationErrors,
+                                                        ) &&
+                                                        hasValidationErrors.map(
                                                             (err, idx) => (
                                                                 <li
-                                                                    key={idx}
+                                                                    key={`fe-${idx}`}
                                                                     className="text-sm text-red-700 flex items-center gap-2"
                                                                 >
                                                                     <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
@@ -198,11 +200,29 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                 </li>
                                                             ),
                                                         )}
-                                                    </ul>
-                                                </div>
+                                                    {Object.keys(errors)
+                                                        .length > 0 &&
+                                                        Object.entries(
+                                                            errors,
+                                                        ).map(
+                                                            (
+                                                                [field, errMsg],
+                                                                idx,
+                                                            ) => (
+                                                                <li
+                                                                    key={`be-${idx}`}
+                                                                    className="text-sm text-red-700 flex items-center gap-2"
+                                                                >
+                                                                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                                                    {errMsg}
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                </ul>
                                             </div>
-                                        </motion.div>
-                                    )}
+                                        </div>
+                                    </motion.div>
+                                )}
 
                                 <CardBody className="p-8">
                                     <form
@@ -222,22 +242,18 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="Sesuai KTP"
                                                         required
-                                                        value={
-                                                            data.customer_name
-                                                        }
+                                                        value={data.name}
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_name",
+                                                                "name",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_name && (
+                                                {errors.name && (
                                                     <ErrorMessage
-                                                        message={
-                                                            errors.customer_name
-                                                        }
+                                                        message={errors.name}
                                                     />
                                                 )}
                                             </div>
@@ -254,20 +270,18 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="0812..."
                                                         required
-                                                        value={
-                                                            data.customer_phone
-                                                        }
+                                                        value={data.phone}
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_phone",
+                                                                "phone",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_phone && (
+                                                {errors.phone && (
                                                     <ErrorMessage>
-                                                        {errors.customer_phone}
+                                                        {errors.phone}
                                                     </ErrorMessage>
                                                 )}
                                             </div>
@@ -287,12 +301,10 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         placeholder="Contoh: 1234567890123456"
                                                         maxLength="16"
                                                         required
-                                                        value={
-                                                            data.customer_nik
-                                                        }
+                                                        value={data.nik}
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_nik",
+                                                                "nik",
                                                                 e.target.value.replace(
                                                                     /\D/g,
                                                                     "",
@@ -301,11 +313,9 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_nik && (
+                                                {errors.nik && (
                                                     <ErrorMessage
-                                                        message={
-                                                            errors.customer_nik
-                                                        }
+                                                        message={errors.nik}
                                                     />
                                                 )}
                                             </div>
@@ -322,21 +332,19 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="Contoh: Karyawan Swasta, Wiraswasta"
                                                         required
-                                                        value={
-                                                            data.customer_occupation
-                                                        }
+                                                        value={data.occupation}
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_occupation",
+                                                                "occupation",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_occupation && (
+                                                {errors.occupation && (
                                                     <ErrorMessage
                                                         message={
-                                                            errors.customer_occupation
+                                                            errors.occupation
                                                         }
                                                     />
                                                 )}
@@ -358,20 +366,20 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         required
                                                         min="0"
                                                         value={
-                                                            data.customer_monthly_income
+                                                            data.monthly_income
                                                         }
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_monthly_income",
+                                                                "monthly_income",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_monthly_income && (
+                                                {errors.monthly_income && (
                                                     <ErrorMessage
                                                         message={
-                                                            errors.customer_monthly_income
+                                                            errors.monthly_income
                                                         }
                                                     />
                                                 )}
@@ -390,20 +398,20 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                         placeholder="Contoh: 3 tahun 6 bulan"
                                                         required
                                                         value={
-                                                            data.customer_employment_duration
+                                                            data.employment_duration
                                                         }
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_employment_duration",
+                                                                "employment_duration",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_employment_duration && (
+                                                {errors.employment_duration && (
                                                     <ErrorMessage
                                                         message={
-                                                            errors.customer_employment_duration
+                                                            errors.employment_duration
                                                         }
                                                     />
                                                 )}
@@ -421,20 +429,18 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                     className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]"
                                                     placeholder="Alamat pengiriman unit..."
                                                     required
-                                                    value={
-                                                        data.customer_address
-                                                    }
+                                                    value={data.address}
                                                     onChange={(e) =>
                                                         setData(
-                                                            "customer_address",
+                                                            "address",
                                                             e.target.value,
                                                         )
                                                     }
                                                 ></textarea>
                                             </div>
-                                            {errors.customer_address && (
+                                            {errors.address && (
                                                 <ErrorMessage>
-                                                    {errors.customer_address}
+                                                    {errors.address}
                                                 </ErrorMessage>
                                             )}
                                         </div>
@@ -452,18 +458,18 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                             type="text"
                                                             className={`w-full bg-white border-2 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-gray-900 ${
                                                                 parseFloat(
-                                                                    data.down_payment,
+                                                                    data.dp_amount,
                                                                 ) >=
                                                                     motor.price *
                                                                         0.2 &&
-                                                                data.down_payment
+                                                                data.dp_amount
                                                                     ? "border-green-500"
                                                                     : "border-gray-200 focus:border-blue-500"
                                                             }`}
                                                             placeholder="Masukkan jumlah uang muka"
                                                             required
                                                             value={formatNumberDisplay(
-                                                                data.down_payment,
+                                                                data.dp_amount,
                                                             )}
                                                             onChange={(e) =>
                                                                 handleDownPaymentChange(
@@ -500,7 +506,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                             type="button"
                                                             onClick={() =>
                                                                 setData(
-                                                                    "down_payment",
+                                                                    "dp_amount",
                                                                     Math.round(
                                                                         motor.price *
                                                                             0.2,
@@ -515,9 +521,9 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                     </div>
 
                                                     {/* Dynamic Loan Info */}
-                                                    {data.down_payment &&
+                                                    {data.dp_amount &&
                                                         parseFloat(
-                                                            data.down_payment,
+                                                            data.dp_amount,
                                                         ) > 0 && (
                                                             <motion.div
                                                                 initial={{
@@ -530,7 +536,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                 }}
                                                                 className={`p-3 rounded-lg border ${
                                                                     parseFloat(
-                                                                        data.down_payment,
+                                                                        data.dp_amount,
                                                                     ) >=
                                                                     motor.price *
                                                                         0.2
@@ -543,7 +549,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                         <span
                                                                             className={`text-xs font-bold uppercase tracking-wider ${
                                                                                 parseFloat(
-                                                                                    data.down_payment,
+                                                                                    data.dp_amount,
                                                                                 ) >=
                                                                                 motor.price *
                                                                                     0.2
@@ -568,14 +574,14 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                                     0,
                                                                                     motor.price -
                                                                                         parseFloat(
-                                                                                            data.down_payment,
+                                                                                            data.dp_amount,
                                                                                         ),
                                                                                 ),
                                                                             )}
                                                                         </span>
                                                                     </div>
                                                                     {parseFloat(
-                                                                        data.down_payment,
+                                                                        data.dp_amount,
                                                                     ) <
                                                                         motor.price *
                                                                             0.2 && (
@@ -595,14 +601,14 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                                 motor.price *
                                                                                     0.2 -
                                                                                     parseFloat(
-                                                                                        data.down_payment,
+                                                                                        data.dp_amount,
                                                                                     ),
                                                                             )}{" "}
                                                                             lagi
                                                                         </p>
                                                                     )}
                                                                     {parseFloat(
-                                                                        data.down_payment,
+                                                                        data.dp_amount,
                                                                     ) >=
                                                                         motor.price *
                                                                             0.2 && (
@@ -616,10 +622,10 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                             </motion.div>
                                                         )}
 
-                                                    {errors.down_payment && (
+                                                    {errors.dp_amount && (
                                                         <ErrorMessage
                                                             message={
-                                                                errors.down_payment
+                                                                errors.dp_amount
                                                             }
                                                         />
                                                     )}

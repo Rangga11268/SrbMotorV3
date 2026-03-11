@@ -1,4 +1,20 @@
 import React from "react";
+import {
+    Inbox,
+    FileCheck,
+    Send,
+    Calendar,
+    HardHat,
+    Hourglass,
+    CheckCircle,
+    XCircle,
+    CreditCard,
+    PartyPopper,
+    AlertCircle,
+    Activity,
+    FileText,
+    Info,
+} from "lucide-react";
 
 export default function CreditStatusDisplay({ credit }) {
     const statusMap = {
@@ -7,68 +23,74 @@ export default function CreditStatusDisplay({ credit }) {
             description:
                 "Aplikasi kredit Anda telah kami terima dan sedang diproses.",
             color: "blue",
-            icon: "📨",
+            icon: Inbox,
         },
         verifikasi_dokumen: {
             label: "Verifikasi Dokumen",
             description:
                 "Tim kami sedang memverifikasi dokumen yang Anda kirimkan.",
             color: "yellow",
-            icon: "📋",
+            icon: FileCheck,
         },
         dikirim_ke_leasing: {
             label: "Dikirim ke Leasing",
             description:
                 "Aplikasi Anda telah dikirim ke perusahaan leasing untuk diproses.",
             color: "blue",
-            icon: "📤",
+            icon: Send,
         },
         survey_dijadwalkan: {
             label: "Survey Dijadwalkan",
             description: "Jadwal survey atas jaminan Anda telah dikonfirmasi.",
             color: "yellow",
-            icon: "📅",
+            icon: Calendar,
         },
         survey_berjalan: {
             label: "Survey Sedang Berlangsung",
             description:
                 "Proses survey sedang berlangsung. Mohon koordinasikan dengan surveyor.",
             color: "yellow",
-            icon: "👷",
+            icon: HardHat,
         },
         menunggu_keputusan_leasing: {
             label: "Menunggu Keputusan",
             description:
                 "Survey telah selesai. Kami menunggu keputusan dari pihak leasing.",
             color: "blue",
-            icon: "⏳",
+            icon: Hourglass,
         },
         disetujui: {
             label: "Disetujui",
             description:
                 "Selamat! Kredit Anda telah disetujui. Silakan hubungi kami untuk melanjutkan.",
             color: "green",
-            icon: "✅",
+            icon: CheckCircle,
         },
         ditolak: {
             label: "Ditolak",
             description: "Maaf, pengajuan kredit Anda telah ditolak.",
             color: "red",
-            icon: "❌",
+            icon: XCircle,
         },
         dp_dibayar: {
             label: "DP Diterima",
             description:
                 "Kami telah menerima pembayaran DP. Proses penyelesaian sedang berjalan.",
             color: "green",
-            icon: "💳",
+            icon: CreditCard,
         },
         selesai: {
             label: "Selesai",
             description:
                 "Proses kredit Anda telah selesai. Terima kasih telah memilih kami!",
             color: "green",
-            icon: "🎉",
+            icon: PartyPopper,
+        },
+        waiting_credit_approval: {
+            label: "Menunggu Persetujuan",
+            description: "Pesanan Anda sedang dalam antrian verifikasi kredit.",
+            color: "blue",
+            icon: Hourglass,
         },
     };
 
@@ -76,9 +98,9 @@ export default function CreditStatusDisplay({ credit }) {
         return (
             statusMap[status] || {
                 label: "Tidak Diketahui",
-                description: "Status tidak dikenali.",
+                description: `Status tidak dikenali: ${status}`,
                 color: "gray",
-                icon: "❓",
+                icon: AlertCircle,
             }
         );
     };
@@ -103,7 +125,9 @@ export default function CreditStatusDisplay({ credit }) {
                 className={`border-l-4 rounded-lg p-6 ${getColorClass(statusInfo.color)}`}
             >
                 <div className="flex items-start gap-4">
-                    <span className="text-4xl">{statusInfo.icon}</span>
+                    <div className="p-3 bg-white bg-opacity-50 rounded-xl">
+                        <statusInfo.icon className="w-8 h-8" />
+                    </div>
                     <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-800 mb-2">
                             {statusInfo.label}
@@ -187,12 +211,10 @@ export default function CreditStatusDisplay({ credit }) {
                     </div>
                 )}
             </div>
-
-            {/* Survey Information (if applicable) */}
             {credit.survey_scheduled_date && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h4 className="font-bold text-gray-900 mb-3">
-                        📅 Jadwal Survey
+                    <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <Calendar className="w-5 h-5" /> Jadwal Survey
                     </h4>
                     <div className="space-y-2 text-gray-700">
                         <p>
@@ -225,21 +247,19 @@ export default function CreditStatusDisplay({ credit }) {
                 </div>
             )}
 
-            {/* Survey Notes (if completed) */}
             {credit.survey_notes && (
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-bold text-gray-900 mb-3">
-                        📝 Catatan Survey
+                    <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <FileText className="w-5 h-5" /> Catatan Survey
                     </h4>
                     <p className="text-gray-700">{credit.survey_notes}</p>
                 </div>
             )}
 
-            {/* Rejection Reason (if rejected) */}
             {credit.rejection_reason && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <h4 className="font-bold text-red-900 mb-3">
-                        ⚠️ Alasan Penolakan
+                    <h4 className="font-bold text-red-900 mb-3 flex items-center gap-2">
+                        <AlertCircle className="w-5 h-5" /> Alasan Penolakan
                     </h4>
                     <p className="text-red-700">{credit.rejection_reason}</p>
                 </div>
@@ -247,8 +267,8 @@ export default function CreditStatusDisplay({ credit }) {
 
             {/* Timeline */}
             <div className="bg-white border rounded-lg p-6">
-                <h4 className="font-bold text-gray-900 mb-6">
-                    📋 Riwayat Perubahan Status
+                <h4 className="font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <Activity className="w-5 h-5" /> Riwayat Perubahan Status
                 </h4>
                 <div className="space-y-6">
                     {/* Submission */}
@@ -411,8 +431,8 @@ export default function CreditStatusDisplay({ credit }) {
 
             {/* Help Section */}
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                <h4 className="font-bold text-amber-900 mb-2">
-                    💡 Butuh Bantuan?
+                <h4 className="font-bold text-amber-900 mb-2 flex items-center gap-2">
+                    <Info className="w-5 h-5" /> Butuh Bantuan?
                 </h4>
                 <p className="text-amber-800 text-sm">
                     Jika Anda memiliki pertanyaan tentang status kredit Anda,

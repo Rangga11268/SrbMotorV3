@@ -294,7 +294,7 @@ export default function Index({
                                         <CTableDataCell>
                                             <div className="fw-bold text-dark">
                                                 {formatCurrency(
-                                                    trx.total_amount,
+                                                    trx.total_price,
                                                 )}
                                             </div>
                                         </CTableDataCell>

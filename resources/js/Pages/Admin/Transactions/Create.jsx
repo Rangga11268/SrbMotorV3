@@ -23,7 +23,7 @@ export default function Create({ motors, users }) {
     const { data, setData, post, processing, errors } = useForm({
         user_id: "",
         motor_id: "",
-        customer_address: "",
+        address: "",
         booking_fee: 0,
         notes: "",
         status: "new_order",
@@ -201,24 +201,21 @@ export default function Create({ motors, users }) {
 
                             {/* Alamat */}
                             <CCol md={12}>
-                                <CFormLabel htmlFor="customer_address">
+                                <CFormLabel htmlFor="address">
                                     Alamat Pengiriman
                                 </CFormLabel>
                                 <CFormTextarea
-                                    id="customer_address"
-                                    value={data.customer_address}
+                                    id="address"
+                                    value={data.address}
                                     onChange={(e) =>
-                                        setData(
-                                            "customer_address",
-                                            e.target.value,
-                                        )
+                                        setData("address", e.target.value)
                                     }
                                     rows={3}
                                     placeholder="Masukkan alamat pengiriman..."
                                 />
-                                {errors.customer_address && (
+                                {errors.address && (
                                     <div className="invalid-feedback d-block">
-                                        {errors.customer_address}
+                                        {errors.address}
                                     </div>
                                 )}
                             </CCol>

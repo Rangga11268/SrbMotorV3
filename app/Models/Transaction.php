@@ -20,13 +20,18 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'motor_id',
+        'name',
+        'nik',
+        'phone',
+        'address',
+        'city',
+        'occupation',
+        'monthly_income',
+        'employment_duration',
         'reference_number',
         'transaction_type',
         'status',
         'motor_price',
-        'phone',
-        'address',
-        'city',
         'total_price',
         'discount_amount',
         'final_price',
@@ -42,6 +47,20 @@ class Transaction extends Model
     ];
 
     /**
+     * The attributes that should be appends to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'customer_name',
+        'customer_phone',
+        'customer_occupation',
+        'customer_address',
+        'status_text',
+        'unified_status'
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -51,6 +70,7 @@ class Transaction extends Model
         'total_price' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'final_price' => 'decimal:2',
+        'monthly_income' => 'decimal:2',
         'payment_date' => 'datetime',
         'is_cancelled' => 'boolean',
         'cancelled_at' => 'datetime',
@@ -107,6 +127,7 @@ class Transaction extends Model
             'jadwal_survey' => 'Jadwal Survey',
             'disetujui' => 'Kredit Disetujui',
             'ditolak' => 'Kredit Ditolak',
+            'waiting_credit_approval' => 'Menunggu Persetujuan Kredit',
         ];
 
         return $statusMap[$this->status] ?? $this->status;
@@ -122,6 +143,7 @@ class Transaction extends Model
         }
 
         $creditMap = [
+            'pengajuan_masuk' => 'Pengajuan Masuk',
             'menunggu_persetujuan' => 'Menunggu Persetujuan',
             'data_tidak_valid' => 'Data Tidak Valid',
             'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
@@ -130,7 +152,7 @@ class Transaction extends Model
             'ditolak' => 'Ditolak',
         ];
 
-        return $creditMap[$this->creditDetail->credit_status] ?? $this->creditDetail->credit_status;
+        return $creditMap[$this->creditDetail->status] ?? $this->creditDetail->status;
     }
 
     /**
@@ -143,9 +165,9 @@ class Transaction extends Model
         if ($this->status === 'cancelled') return 'Dibatalkan';
         if ($this->status === 'completed') return 'Selesai';
 
-        // 2. For credit transactions, the credit_status is usually more relevant in the early stages
+        // 2. For credit transactions, the status is usually more relevant in the early stages
         if ($this->transaction_type === 'CREDIT' && $this->creditDetail) {
-            $creditStatus = $this->creditDetail->credit_status;
+            $creditStatus = $this->creditDetail->status;
 
             // If it's still in the "order" stage but credit is already processed
             if ($this->status === 'new_order' || $this->status === 'menunggu_persetujuan' || $this->status === 'waiting_payment') {
@@ -168,8 +190,32 @@ class Transaction extends Model
             'payment_confirmed' => 'Pembayaran Berhasil',
             'unit_preparation' => 'Persiapan Unit',
             'ready_for_delivery' => 'Siap Dikirim',
+            'waiting_credit_approval' => 'Menunggu Persetujuan Kredit',
         ];
 
         return $statusMap[$this->status] ?? $this->status;
+    }
+
+    /**
+     * Backward compatibility accessors for old frontend field names
+     */
+    public function getCustomerNameAttribute()
+    {
+        return $this->name ?? $this->user->name ?? '';
+    }
+
+    public function getCustomerPhoneAttribute()
+    {
+        return $this->phone ?? $this->user->phone ?? '';
+    }
+
+    public function getCustomerOccupationAttribute()
+    {
+        return $this->occupation ?? '';
+    }
+
+    public function getCustomerAddressAttribute()
+    {
+        return $this->address ?? '';
     }
 }

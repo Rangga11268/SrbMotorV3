@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useForm, Link } from "@inertiajs/react";
+import { useForm, Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import Swal from "sweetalert2";
 import {
     CCard,
     CCardBody,
@@ -32,6 +33,8 @@ import {
     cilCalendar,
     cilMoney,
     cilBike,
+    cilTrash,
+    cilBan,
 } from "@coreui/icons";
 
 export default function Show({
@@ -51,14 +54,9 @@ export default function Show({
         }).format(amount || 0);
 
     const statuses = {
-        pengajuan_masuk: {
-            label: "Pengajuan Masuk",
-            color: "info",
-        },
-        verifikasi_dokumen: {
-            label: "Verifikasi Dokumen",
-            color: "warning",
-        },
+        pengajuan_masuk: { label: "Pengajuan Masuk", color: "info" },
+        menunggu_persetujuan: { label: "Menunggu Persetujuan", color: "info" },
+        verifikasi_dokumen: { label: "Verifikasi Dokumen", color: "warning" },
         dikirim_ke_leasing: {
             label: "Dikirim ke Leasing",
             color: "info",
@@ -79,9 +77,10 @@ export default function Show({
         ditolak: { label: "Ditolak", color: "danger" },
         dp_dibayar: { label: "DP Dibayar", color: "success" },
         selesai: { label: "Selesai", color: "success" },
+        dibatalkan: { label: "Dibatalkan", color: "secondary" },
     };
 
-    const currentStatus = statuses[credit.credit_status] || {};
+    const currentStatus = statuses[credit.status] || {};
 
     // Modal Components
     function VerifyDocumentsModal() {
@@ -474,8 +473,8 @@ export default function Show({
 
     function ApproveCreditModal() {
         const { data, setData, post, processing } = useForm({
-            approved_amount: credit.transaction?.credit_amount || "",
-            interest_rate: "0.015",
+            approved_amount: credit.transaction?.credit_amount || (credit.transaction?.motor?.price - credit.dp_amount) || "",
+            interest_rate: "2.5",
         });
 
         const handleSubmit = (e) => {
@@ -685,6 +684,41 @@ export default function Show({
             </CModal>
         );
     }
+    const handleCancel = () => {
+        Swal.fire({
+            title: "Batalkan Pengajuan?",
+            text: "Status akan diubah menjadi Dibatalkan secara permanen.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Batalkan",
+            cancelButtonText: "Tutup",
+            confirmButtonColor: "#6c757d",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.credits.cancel", credit.id));
+            }
+        });
+    };
+
+    const handleDelete = () => {
+        Swal.fire({
+            title: "Hapus Pengajuan?",
+            text: "Data pengajuan dan transaksi terkait akan dihapus permanen.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Hapus Sekarang",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#dc3545",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("admin.credits.destroy", credit.id), {
+                    onSuccess: () => {
+                        router.visit(route("admin.credits.index"));
+                    },
+                });
+            }
+        });
+    };
 
     return (
         <AdminLayout title={`Detail Pengajuan Kredit #${credit.id}`}>
@@ -700,6 +734,30 @@ export default function Show({
                 <h3 className="mb-0">
                     Transaksi #{credit.transaction_id} - {currentStatus.label}
                 </h3>
+                <div className="d-flex gap-2">
+                    {credit.status !== "dibatalkan" && credit.status !== "selesai" && (
+                        <CButton
+                            color="secondary"
+                            variant="outline"
+                            size="sm"
+                            className="d-flex align-items-center gap-2"
+                            onClick={handleCancel}
+                        >
+                            <CIcon icon={cilBan} size="sm" />
+                            Batalkan
+                        </CButton>
+                    )}
+                    <CButton
+                        color="danger"
+                        variant="outline"
+                        size="sm"
+                        className="d-flex align-items-center gap-2"
+                        onClick={handleDelete}
+                    >
+                        <CIcon icon={cilTrash} size="sm" />
+                        Hapus
+                    </CButton>
+                </div>
             </div>
 
             <CRow>
@@ -714,7 +772,7 @@ export default function Show({
                                 color={currentStatus.color}
                                 className="fs-5"
                             >
-                                {currentStatus.label || credit.credit_status}
+                                {currentStatus.label || credit.status}
                             </CBadge>
                         </CCardBody>
                     </CCard>
@@ -732,7 +790,8 @@ export default function Show({
                                             Nama
                                         </small>
                                         <strong>
-                                            {credit.transaction?.user?.name}
+                                            {credit.transaction?.name ||
+                                                credit.transaction?.user?.name}
                                         </strong>
                                     </p>
                                     <p className="mb-2">
@@ -743,12 +802,86 @@ export default function Show({
                                             {credit.transaction?.user?.email}
                                         </strong>
                                     </p>
-                                    <p className="mb-0">
+                                    <p className="mb-2">
                                         <small className="text-body-secondary d-block">
                                             No. HP
                                         </small>
                                         <strong>
-                                            {credit.transaction?.user?.phone ||
+                                            {credit.transaction?.phone ||
+                                                credit.transaction?.user
+                                                    ?.phone ||
+                                                "-"}
+                                        </strong>
+                                    </p>
+                                    <p className="mb-2">
+                                        <small className="text-body-secondary d-block">
+                                            NIK
+                                        </small>
+                                        <strong>
+                                            {credit.transaction?.nik ||
+                                                credit.transaction?.user?.nik ||
+                                                "-"}
+                                        </strong>
+                                    </p>
+                                    <p className="mb-2">
+                                        <small className="text-body-secondary d-block">
+                                            Pekerjaan
+                                        </small>
+                                        <strong>
+                                            {credit.transaction?.occupation ||
+                                                credit.transaction?.user
+                                                    ?.pekerjaan ||
+                                                "-"}
+                                        </strong>
+                                    </p>
+                                    <p className="mb-2">
+                                        <small className="text-body-secondary d-block">
+                                            Pemasukan Bulanan
+                                        </small>
+                                        <strong>
+                                            {credit.transaction?.monthly_income
+                                                ? new Intl.NumberFormat(
+                                                      "id-ID",
+                                                      {
+                                                          style: "currency",
+                                                          currency: "IDR",
+                                                      },
+                                                  ).format(
+                                                      credit.transaction
+                                                          .monthly_income,
+                                                  )
+                                                : credit.transaction?.user
+                                                        ?.pendapatan_bulanan
+                                                  ? new Intl.NumberFormat(
+                                                        "id-ID",
+                                                        {
+                                                            style: "currency",
+                                                            currency: "IDR",
+                                                        },
+                                                    ).format(
+                                                        credit.transaction.user
+                                                            .pendapatan_bulanan,
+                                                    )
+                                                  : "-"}
+                                        </strong>
+                                    </p>
+                                    <p className="mb-2">
+                                        <small className="text-body-secondary d-block">
+                                            Lama Bekerja
+                                        </small>
+                                        <strong>
+                                            {credit.transaction
+                                                ?.employment_duration || "-"}
+                                        </strong>
+                                    </p>
+                                    <p className="mb-0">
+                                        <small className="text-body-secondary d-block">
+                                            Alamat
+                                        </small>
+                                        <strong>
+                                            {credit.transaction?.address ||
+                                                credit.transaction?.user
+                                                    ?.alamat ||
                                                 "-"}
                                         </strong>
                                     </p>
@@ -789,8 +922,9 @@ export default function Show({
                                         </small>
                                         <strong>
                                             {formatCurrency(
-                                                credit.transaction
-                                                    ?.credit_amount,
+                                                (credit.transaction?.motor
+                                                    ?.price || 0) -
+                                                    (credit.dp_amount || 0),
                                             )}
                                         </strong>
                                     </p>
@@ -815,9 +949,7 @@ export default function Show({
                                             Uang Muka
                                         </small>
                                         <strong>
-                                            {formatCurrency(
-                                                credit.down_payment,
-                                            )}
+                                            {formatCurrency(credit.dp_amount)}
                                         </strong>
                                     </p>
                                     <p className="mb-2">
@@ -861,7 +993,7 @@ export default function Show({
                                             Penyedia
                                         </small>
                                         <strong>
-                                            {credit.leasingProvider?.name ||
+                                            {credit.leasing_provider?.name ||
                                                 "Belum ditentukan"}
                                         </strong>
                                     </p>
@@ -870,8 +1002,7 @@ export default function Show({
                                             No. Referensi
                                         </small>
                                         <strong>
-                                            {credit.leasing_application_ref ||
-                                                "-"}
+                                            {credit.reference_number || "-"}
                                         </strong>
                                     </p>
                                     <p className="mb-2">
@@ -923,8 +1054,13 @@ export default function Show({
                                                 {new Date(
                                                     credit.survey_scheduled_date,
                                                 ).toLocaleDateString("id-ID")}
-                                                {" jam "}
-                                                {credit.survey_scheduled_time}
+                                                {credit.survey_schedules
+                                                    ?.length > 0 &&
+                                                    credit.survey_schedules[
+                                                        credit.survey_schedules
+                                                            .length - 1
+                                                    ].scheduled_time &&
+                                                    ` jam ${credit.survey_schedules[credit.survey_schedules.length - 1].scheduled_time.slice(0, 5)}`}
                                             </strong>
                                         </p>
                                         <p className="mb-2">
@@ -932,8 +1068,10 @@ export default function Show({
                                                 Surveyor
                                             </small>
                                             <strong>
-                                                {credit.surveyor_name} (
-                                                {credit.surveyor_phone})
+                                                {credit.survey_schedules
+                                                    ?.length > 0
+                                                    ? `${credit.survey_schedules[credit.survey_schedules.length - 1].surveyor_name} (${credit.survey_schedules[credit.survey_schedules.length - 1].surveyor_phone})`
+                                                    : "-"}
                                             </strong>
                                         </p>
                                     </>
@@ -983,7 +1121,8 @@ export default function Show({
                                             </div>
                                             <div className="flex-grow-1">
                                                 <h6 className="mb-1">
-                                                    {item.label}
+                                                    {statuses[item.status]
+                                                        ?.label || item.status}
                                                 </h6>
                                                 <p className="text-muted small mb-1">
                                                     {new Date(
@@ -1093,8 +1232,8 @@ export default function Show({
                         </CCard>
                     ) : (
                         <CAlert color="info" className="sticky-top">
-                            <strong>Status:</strong> {credit.credit_status} |
-                            Tidak ada aksi tersedia
+                            <strong>Status:</strong> {credit.status} | Tidak ada
+                            aksi tersedia
                         </CAlert>
                     )}
                 </CCol>

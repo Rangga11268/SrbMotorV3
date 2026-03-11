@@ -45,6 +45,15 @@ class CreditDetail extends Model
     ];
 
     /**
+     * The attributes that should be appends to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'down_payment'
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -151,5 +160,13 @@ class CreditDetail extends Model
         ];
 
         return $statusMap[$this->status] ?? $this->status;
+    }
+
+    /**
+     * Backward compatibility accessor for old frontend field name
+     */
+    public function getDownPaymentAttribute()
+    {
+        return $this->dp_amount;
     }
 }

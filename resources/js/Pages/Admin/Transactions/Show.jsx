@@ -30,10 +30,10 @@ export default function Show({ transaction, motors, users }) {
     const { data, setData, put, processing, errors } = useForm({
         user_id: transaction.user_id || "",
         motor_id: transaction.motor_id || "",
-        customer_address: transaction.customer_address || "",
+        address: transaction.address || "",
         notes: transaction.notes || "",
         status: transaction.status || "new_order",
-        booking_fee: transaction.booking_fee || 0,
+        booking_fee: transaction.total_price - transaction.motor_price || 0,
     });
 
     const formatCurrency = (n) =>
@@ -139,6 +139,31 @@ export default function Show({ transaction, motors, users }) {
                                 Edit
                             </CButton>
                             {getStatusBadge(transaction.status)}
+                            {transaction.status !== "cancelled" && (
+                                <CButton
+                                    color="secondary"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        Swal.fire({
+                                            title: "Batalkan Transaksi?",
+                                            text: "Status akan diubah menjadi Dibatalkan.",
+                                            icon: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Ya",
+                                            cancelButtonText: "Tidak",
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                router.post(route("admin.transactions.updateStatus", transaction.id), {
+                                                    status: "cancelled"
+                                                });
+                                            }
+                                        });
+                                    }}
+                                >
+                                    Batalkan
+                                </CButton>
+                            )}
                             <CButton
                                 color="danger"
                                 variant="outline"
@@ -224,10 +249,10 @@ export default function Show({ transaction, motors, users }) {
                                     <CCol md={12}>
                                         <CFormLabel>Alamat</CFormLabel>
                                         <CFormTextarea
-                                            value={data.customer_address}
+                                            value={data.address}
                                             onChange={(e) =>
                                                 setData(
-                                                    "customer_address",
+                                                    "address",
                                                     e.target.value,
                                                 )
                                             }
@@ -332,7 +357,9 @@ export default function Show({ transaction, motors, users }) {
                                             </p>
                                             <p className="fw-semibold">
                                                 {formatCurrency(
-                                                    data.booking_fee,
+                                                    transaction.total_price -
+                                                        transaction.motor_price ||
+                                                        0,
                                                 )}
                                             </p>
                                         </div>
@@ -343,7 +370,7 @@ export default function Show({ transaction, motors, users }) {
                                                 Alamat
                                             </p>
                                             <p className="fw-semibold">
-                                                {data.customer_address || "-"}
+                                                {transaction.address || "-"}
                                             </p>
                                         </div>
                                     </CCol>
@@ -401,7 +428,7 @@ export default function Show({ transaction, motors, users }) {
                                     Total Bayar
                                 </p>
                                 <p className="fw-bold fs-5 text-dark">
-                                    {formatCurrency(transaction.total_amount)}
+                                    {formatCurrency(transaction.total_price)}
                                 </p>
                             </div>
                             <div>

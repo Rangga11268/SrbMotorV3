@@ -174,6 +174,8 @@ class MotorGalleryController extends Controller
             'payment_status' => 'pending',
             'phone' => $request->phone,
             'address' => $request->address,
+            'name' => $request->name,
+            'occupation' => $request->occupation,
         ]);
 
 
@@ -291,6 +293,11 @@ class MotorGalleryController extends Controller
             'payment_status' => 'pending',
             'phone' => $request->phone,
             'address' => $request->address,
+            'name' => $request->name,
+            'nik' => $request->nik,
+            'occupation' => $request->occupation,
+            'monthly_income' => $request->monthly_income,
+            'employment_duration' => $request->employment_duration,
         ]);
 
 
@@ -337,7 +344,7 @@ class MotorGalleryController extends Controller
 
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
-        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'installments'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.leasingProvider', 'installments', 'user'])->findOrFail($transactionId);
 
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this transaction');
@@ -435,7 +442,7 @@ class MotorGalleryController extends Controller
             $adminPhone = config('services.fonnte.admin_phone');
             if ($adminPhone) {
                 $transaction->load('motor');
-                $adminMsg = "*[ADMIN] Dokumen Kredit Diunggah*\n\nPelanggan: {$transaction->customer_name}\nUnit: {$transaction->motor->name}\nOrder ID: #{$transaction->id}\n\nSilakan cek & verifikasi dokumen di dashboard admin.";
+                $adminMsg = "*[ADMIN] Dokumen Kredit Diunggah*\n\nPelanggan: {$transaction->name}\nUnit: {$transaction->motor->name}\nOrder ID: #{$transaction->id}\n\nSilakan cek & verifikasi dokumen di dashboard admin.";
                 \App\Services\WhatsAppService::sendMessage($adminPhone, $adminMsg);
             }
         } catch (\Exception $e) {

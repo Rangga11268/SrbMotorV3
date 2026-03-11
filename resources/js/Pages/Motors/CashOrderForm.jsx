@@ -27,10 +27,10 @@ import { motion } from "framer-motion";
 
 export default function CashOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
-        customer_name: "",
-        customer_phone: "",
-        customer_occupation: "",
-        customer_address: "",
+        name: "",
+        phone: "",
+        occupation: "",
+        address: "",
         notes: "",
         booking_fee: 0,
         payment_method: "Transfer Bank",
@@ -71,16 +71,16 @@ export default function CashOrderForm({ motor, auth }) {
         const validationErrors = [];
         const bookingFee = parseFloat(data.booking_fee) || 0;
 
-        if (!data.customer_name.trim()) {
+        if (!data.name.trim()) {
             validationErrors.push("Nama lengkap harus diisi");
         }
-        if (!data.customer_phone.trim()) {
+        if (!data.phone.trim()) {
             validationErrors.push("Nomor WhatsApp harus diisi");
         }
-        if (!data.customer_occupation.trim()) {
+        if (!data.occupation.trim()) {
             validationErrors.push("Pekerjaan harus diisi");
         }
-        if (!data.customer_address.trim()) {
+        if (!data.address.trim()) {
             validationErrors.push("Alamat lengkap harus diisi");
         }
         if (bookingFee < 0 || bookingFee >= motor.price) {
@@ -134,24 +134,29 @@ export default function CashOrderForm({ motor, auth }) {
                                     <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
                                 </div>
 
-                                {hasValidationErrors &&
-                                    Array.isArray(hasValidationErrors) && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="p-4 bg-red-50 border-l-4 border-red-500 m-4"
-                                        >
-                                            <div className="flex items-start gap-3">
-                                                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                                                <div>
-                                                    <p className="font-bold text-red-900 mb-2">
-                                                        Data tidak lengkap:
-                                                    </p>
-                                                    <ul className="space-y-1">
-                                                        {hasValidationErrors.map(
+                                {(hasValidationErrors ||
+                                    Object.keys(errors).length > 0) && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-4 bg-red-50 border-l-4 border-red-500 m-4"
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-bold text-red-900 mb-2">
+                                                    Data tidak lengkap atau ada
+                                                    masalah:
+                                                </p>
+                                                <ul className="space-y-1">
+                                                    {hasValidationErrors &&
+                                                        Array.isArray(
+                                                            hasValidationErrors,
+                                                        ) &&
+                                                        hasValidationErrors.map(
                                                             (err, idx) => (
                                                                 <li
-                                                                    key={idx}
+                                                                    key={`fe-${idx}`}
                                                                     className="text-sm text-red-700 flex items-center gap-2"
                                                                 >
                                                                     <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
@@ -159,11 +164,29 @@ export default function CashOrderForm({ motor, auth }) {
                                                                 </li>
                                                             ),
                                                         )}
-                                                    </ul>
-                                                </div>
+                                                    {Object.keys(errors)
+                                                        .length > 0 &&
+                                                        Object.entries(
+                                                            errors,
+                                                        ).map(
+                                                            (
+                                                                [field, errMsg],
+                                                                idx,
+                                                            ) => (
+                                                                <li
+                                                                    key={`be-${idx}`}
+                                                                    className="text-sm text-red-700 flex items-center gap-2"
+                                                                >
+                                                                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                                                    {errMsg}
+                                                                </li>
+                                                            ),
+                                                        )}
+                                                </ul>
                                             </div>
-                                        </motion.div>
-                                    )}
+                                        </div>
+                                    </motion.div>
+                                )}
 
                                 <CardBody className="p-8">
                                     <form
@@ -183,20 +206,18 @@ export default function CashOrderForm({ motor, auth }) {
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="Sesuai KTP"
                                                         required
-                                                        value={
-                                                            data.customer_name
-                                                        }
+                                                        value={data.name}
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_name",
+                                                                "name",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_name && (
+                                                {errors.name && (
                                                     <ErrorMessage>
-                                                        {errors.customer_name}
+                                                        {errors.name}
                                                     </ErrorMessage>
                                                 )}
                                             </div>
@@ -213,20 +234,18 @@ export default function CashOrderForm({ motor, auth }) {
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                         placeholder="0812..."
                                                         required
-                                                        value={
-                                                            data.customer_phone
-                                                        }
+                                                        value={data.phone}
                                                         onChange={(e) =>
                                                             setData(
-                                                                "customer_phone",
+                                                                "phone",
                                                                 e.target.value,
                                                             )
                                                         }
                                                     />
                                                 </div>
-                                                {errors.customer_phone && (
+                                                {errors.phone && (
                                                     <ErrorMessage>
-                                                        {errors.customer_phone}
+                                                        {errors.phone}
                                                     </ErrorMessage>
                                                 )}
                                             </div>
@@ -244,17 +263,20 @@ export default function CashOrderForm({ motor, auth }) {
                                                     className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
                                                     placeholder="Contoh: Karyawan Swasta"
                                                     required
-                                                    value={
-                                                        data.customer_occupation
-                                                    }
+                                                    value={data.occupation}
                                                     onChange={(e) =>
                                                         setData(
-                                                            "customer_occupation",
+                                                            "occupation",
                                                             e.target.value,
                                                         )
                                                     }
                                                 />
                                             </div>
+                                            {errors.occupation && (
+                                                <ErrorMessage>
+                                                    {errors.occupation}
+                                                </ErrorMessage>
+                                            )}
                                         </div>
 
                                         <div className="space-y-2">
@@ -268,20 +290,18 @@ export default function CashOrderForm({ motor, auth }) {
                                                     className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]"
                                                     placeholder="Alamat pengiriman unit..."
                                                     required
-                                                    value={
-                                                        data.customer_address
-                                                    }
+                                                    value={data.address}
                                                     onChange={(e) =>
                                                         setData(
-                                                            "customer_address",
+                                                            "address",
                                                             e.target.value,
                                                         )
                                                     }
                                                 ></textarea>
                                             </div>
-                                            {errors.customer_address && (
+                                            {errors.address && (
                                                 <ErrorMessage>
-                                                    {errors.customer_address}
+                                                    {errors.address}
                                                 </ErrorMessage>
                                             )}
                                         </div>

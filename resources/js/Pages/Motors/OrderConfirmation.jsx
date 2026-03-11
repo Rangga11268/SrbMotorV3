@@ -241,7 +241,9 @@ export default function OrderConfirmation({ transaction }) {
                                                 Nama Lengkap
                                             </label>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.customer_name}
+                                                {transaction.name ||
+                                                    transaction.user?.name ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div>
@@ -249,7 +251,9 @@ export default function OrderConfirmation({ transaction }) {
                                                 Nomor Telepon
                                             </label>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.customer_phone}
+                                                {transaction.phone ||
+                                                    transaction.user?.phone ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div>
@@ -257,9 +261,40 @@ export default function OrderConfirmation({ transaction }) {
                                                 Pekerjaan
                                             </label>
                                             <p className="font-semibold text-gray-900">
-                                                {
-                                                    transaction.customer_occupation
-                                                }
+                                                {transaction.occupation ||
+                                                    transaction.user
+                                                        ?.pekerjaan ||
+                                                    "-"}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                NIK
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {transaction.nik ||
+                                                    transaction.user?.nik ||
+                                                    "-"}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                Pekerjaan
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {transaction.occupation ||
+                                                    transaction.user?.pekerjaan ||
+                                                    "-"}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-600 mb-1">
+                                                Alamat
+                                            </label>
+                                            <p className="font-semibold text-gray-900">
+                                                {transaction.address ||
+                                                    transaction.user?.alamat ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div>
@@ -287,7 +322,23 @@ export default function OrderConfirmation({ transaction }) {
                                                 Simulasi Kredit
                                             </h2>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    Penyedia Leasing
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {transaction.creditDetail?.leasing_provider?.name || transaction.credit_detail?.leasing_provider?.name || "Belum ditentukan"}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    No. Referensi
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {transaction.creditDetail?.reference_number || transaction.credit_detail?.reference_number || "-"}
+                                                </p>
+                                            </div>
                                             <div>
                                                 <label className="block text-sm text-gray-600 mb-1">
                                                     Uang Muka
@@ -295,8 +346,7 @@ export default function OrderConfirmation({ transaction }) {
                                                 <p className="font-semibold text-gray-900">
                                                     {formatCurrency(
                                                         transaction
-                                                            .credit_detail
-                                                            .down_payment,
+                                                            .credit_detail?.dp_amount || transaction.creditDetail?.dp_amount || 0,
                                                     )}
                                                 </p>
                                             </div>
@@ -307,9 +357,17 @@ export default function OrderConfirmation({ transaction }) {
                                                 <p className="font-semibold text-gray-900">
                                                     {
                                                         transaction
-                                                            .credit_detail.tenor
+                                                            .credit_detail?.tenor || transaction.creditDetail?.tenor || 0
                                                     }{" "}
                                                     Bulan
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    Bunga/Bulan
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {transaction.credit_detail?.interest_rate || transaction.creditDetail?.interest_rate || 0}%
                                                 </p>
                                             </div>
                                             <div>
@@ -319,8 +377,7 @@ export default function OrderConfirmation({ transaction }) {
                                                 <p className="font-semibold text-gray-900">
                                                     {formatCurrency(
                                                         transaction
-                                                            .credit_detail
-                                                            .monthly_installment,
+                                                            .credit_detail?.monthly_installment || transaction.creditDetail?.monthly_installment || 0,
                                                     )}
                                                 </p>
                                             </div>
