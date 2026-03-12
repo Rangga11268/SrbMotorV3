@@ -3,6 +3,7 @@ import { Link, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import SurveyScheduleCard from "@/Components/SurveyScheduleCard";
 import CreditStatusDisplay from "@/Components/CreditStatusDisplay";
+import CashStatusDisplay from "@/Components/CashStatusDisplay";
 import Swal from "sweetalert2";
 import {
     ChevronLeft,
@@ -52,17 +53,19 @@ export default function TransactionDetail({ transaction }) {
             survey_selesai: "success",
             dibayar: "success",
             cancelled: "danger",
+            // Transaction & Cash statuses
             new_order: "warning",
-            pending: "warning",
-            approved: "success",
-            rejected: "danger",
+            waiting_payment: "warning",
+            pembayaran_dikonfirmasi: "success",
+            unit_preparation: "info",
+            ready_for_delivery: "info",
+            dalam_pengiriman: "info",
             completed: "success",
+            cancelled: "danger",
             // Transaction statuses
             waiting_credit_approval: "warning",
             survey_scheduled: "warning",
             survey_in_progress: "warning",
-            unit_preparation: "info",
-            ready_for_delivery: "success",
         };
 
         return statusMap[status] || "secondary";
@@ -89,17 +92,17 @@ export default function TransactionDetail({ transaction }) {
             survey_selesai: "Survey Selesai",
             dibayar: "Dibayar",
             cancelled: "Dibatalkan",
-            new_order: "Order Baru",
-            pending: "Tertunda",
-            approved: "Disetujui",
-            rejected: "Ditolak",
+            new_order: "Pesanan Masuk",
+            waiting_payment: "Menunggu Pembayaran",
+            pembayaran_dikonfirmasi: "Pembayaran Dikonfirmasi",
+            unit_preparation: "Motor Disiapkan",
+            ready_for_delivery: "Siap Dikirim/Ambil",
+            dalam_pengiriman: "Dalam Pengiriman",
             completed: "Selesai",
-            // Transaction statuses
+            cancelled: "Dibatalkan",
             waiting_credit_approval: "Menunggu Persetujuan Kredit",
             survey_scheduled: "Survey Dijadwalkan",
             survey_in_progress: "Survey Sedang Berlangsung",
-            unit_preparation: "Persiapan Unit",
-            ready_for_delivery: "Siap Dikirim",
         };
 
         return labels[status] || status;
@@ -430,10 +433,16 @@ export default function TransactionDetail({ transaction }) {
                                     </div>
                                 </div>
 
-                                {/* Credit Status - Using new CreditStatusDisplay component */}
-                                <CreditStatusDisplay
-                                    credit={transaction.creditDetail}
-                                />
+                                {/* Status Display */}
+                                {isCreditOrder ? (
+                                    <CreditStatusDisplay
+                                        credit={transaction.creditDetail}
+                                    />
+                                ) : (
+                                    <CashStatusDisplay
+                                        transaction={transaction}
+                                    />
+                                )}
                             </div>
                         )}
 
@@ -574,9 +583,8 @@ export default function TransactionDetail({ transaction }) {
                             </div>
                         )}
 
-                        {/* Installments */}
-                        {isCreditOrder &&
-                            transaction.installments &&
+                        {/* Installments / Payments */}
+                        {transaction.installments &&
                             transaction.installments.length > 0 && (
                                 <div className="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
                                     <button
@@ -591,7 +599,7 @@ export default function TransactionDetail({ transaction }) {
                                         className="w-full flex justify-between items-center mb-4"
                                     >
                                         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                                            Jadwal Cicilan (
+                                            Riwayat Pembayaran (
                                             {transaction.installments.length})
                                         </h2>
                                         {expandedSection === "installments" ? (
@@ -619,10 +627,9 @@ export default function TransactionDetail({ transaction }) {
                                                         <div className="flex justify-between items-start">
                                                             <div>
                                                                 <p className="font-semibold text-slate-900 dark:text-white">
-                                                                    {installment.installment_number ===
-                                                                    0
-                                                                        ? "DP"
-                                                                        : `Cicilan #${installment.installment_number}`}
+                                                                    {installment.installment_number === 0
+                                                                        ? (transaction.transaction_type === 'CASH' ? 'Booking Fee' : 'DP')
+                                                                        : `Pembayaran #${installment.installment_number}`}
                                                                 </p>
                                                                 <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
                                                                     {new Date(
@@ -820,6 +827,30 @@ export default function TransactionDetail({ transaction }) {
                                                 x{" "}
                                                 {transaction.creditDetail.tenor}{" "}
                                                 bulan
+                                            </p>
+                                        </div>
+                                    </>
+                                )}
+                                {!isCreditOrder && (
+                                    <>
+                                        <div className="pb-4 border-b border-blue-400/30">
+                                            <p className="text-blue-100 text-sm mb-1">
+                                                Booking Fee
+                                            </p>
+                                            <p className="text-2xl font-bold">
+                                                {formatCurrency(
+                                                    transaction.booking_fee || 0,
+                                                )}
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p className="text-blue-100 text-sm mb-1">
+                                                Sisa Pelunasan
+                                            </p>
+                                            <p className="text-2xl font-bold">
+                                                {formatCurrency(
+                                                    Math.max(0, transaction.total_price - (transaction.booking_fee || 0)),
+                                                )}
                                             </p>
                                         </div>
                                     </>

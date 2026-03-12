@@ -219,6 +219,18 @@ class CreditController extends Controller
             $credit
         );
 
+        // WhatsApp Notification
+        try {
+            $user = $credit->transaction->user;
+            $phone = $credit->transaction->phone ?? $user->phone;
+            if ($phone) {
+                $msg = "Halo *{$credit->transaction->name}*,\n\nSelamat! Pengajuan kredit motor *{$credit->transaction->motor->name}* Anda telah *DISETUJUI*.\n\nSilakan lakukan pembayaran Down Payment (DP) agar kami dapat segera menyiapkan unit motor Anda.\n\nTerima kasih.\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($phone, $msg);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Credit Approval Error: ' . $e->getMessage());
+        }
+
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Credit approved successfully');
     }
@@ -253,6 +265,12 @@ class CreditController extends Controller
             auth()->id()
         );
 
+        // Stock Locking: If DP is recorded, mark motor as unavailable
+        if ($credit->transaction && $credit->transaction->motor) {
+            $credit->transaction->motor->update(['tersedia' => false]);
+            \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$credit->transaction->motor_id} (Manual Credit DP Recording)");
+        }
+
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'DP payment recorded successfully');
     }
@@ -278,6 +296,12 @@ class CreditController extends Controller
     public function cancel(CreditDetail $credit)
     {
         $this->creditService->cancelCredit($credit);
+
+        // Stock Unlocking: If credit is cancelled
+        if ($credit->transaction && $credit->transaction->motor) {
+            $credit->transaction->motor->update(['tersedia' => true]);
+            \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$credit->transaction->motor_id} (Manual Credit Cancellation)");
+        }
 
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Kredit berhasil dibatalkan');

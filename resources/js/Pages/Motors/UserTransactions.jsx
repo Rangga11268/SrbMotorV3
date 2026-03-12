@@ -86,47 +86,77 @@ export default function UserTransactions({ transactions: initialTransactions, fi
 
     // Status Helper
     const getStatusInfo = (transaction) => {
-        const status = transaction.unified_status || transaction.status;
+        const status = transaction.status;
 
         const successStatuses = [
-            "Selesai",
-            "Kredit Disetujui",
-            "Pembayaran Berhasil",
-            "Persiapan Unit",
-            "Siap Dikirim",
             "completed",
+            "pembayaran_dikonfirmasi",
             "disetujui",
+            "dp_dibayar"
+        ];
+        const infoStatuses = [
+            "unit_preparation",
             "ready_for_delivery",
-            "payment_confirmed",
+            "dalam_pengiriman",
+            "dikirim_ke_leasing",
+            "survey_dijadwalkan",
+            "survey_berjalan"
         ];
-        const warningStatuses = [
-            "Perbaiki Dokumen",
-            "Data Tidak Valid",
-            "Kredit Ditolak",
-            "Ditolak",
+        const dangerStatuses = [
+            "cancelled",
             "ditolak",
-            "data_tidak_valid",
+            "data_tidak_valid"
         ];
+
+        const labels = {
+            new_order: "PESANAN MASUK",
+            waiting_payment: "MENUNGGU PEMBAYARAN",
+            pembayaran_dikonfirmasi: "PEMBAYARAN DIKONFIRMASI",
+            unit_preparation: "MOTOR DISIAPKAN",
+            ready_for_delivery: "SIAP DIKIRIM/AMBIL",
+            dalam_pengiriman: "DALAM PENGIRIMAN",
+            completed: "SELESAI",
+            cancelled: "DIBATALKAN",
+            waiting_credit_approval: "VERIFIKASI BERKAS",
+            menunggu_persetujuan: "VERIFIKASI BERKAS",
+            pengajuan_masuk: "PENGAJUAN MASUK",
+            verifikasi_dokumen: "VERIFIKASI DOKUMEN",
+            dikirim_ke_leasing: "DIKIRIM KE LEASING",
+            survey_dijadwalkan: "SURVEY DIJADWALKAN",
+            survey_berjalan: "SURVEY BERJALAN",
+            menunggu_keputusan_leasing: "MENUNGGU KEPUTUSAN",
+            disetujui: "DISETUJUI",
+            ditolak: "DITOLAK",
+            dp_dibayar: "DP DITERIMA"
+        };
 
         if (successStatuses.includes(status)) {
             return {
-                label: status.toUpperCase(),
+                label: labels[status] || status.toUpperCase(),
                 color: "text-green-600 border-green-100 bg-green-50",
                 icon: CheckCircle,
             };
         }
 
-        if (warningStatuses.includes(status)) {
+        if (dangerStatuses.includes(status)) {
             return {
-                label: status.toUpperCase(),
+                label: labels[status] || status.toUpperCase(),
                 color: "text-red-600 border-red-100 bg-red-50",
                 icon: XCircle,
             };
         }
 
+        if (infoStatuses.includes(status)) {
+            return {
+                label: labels[status] || status.toUpperCase(),
+                color: "text-blue-600 border-blue-100 bg-blue-50",
+                icon: Clock,
+            };
+        }
+
         return {
-            label: status.toUpperCase(),
-            color: "text-blue-600 border-blue-100 bg-blue-50",
+            label: labels[status] || status.toUpperCase(),
+            color: "text-amber-600 border-amber-100 bg-amber-50",
             icon: Activity,
         };
     };
@@ -212,11 +242,11 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         className="w-full h-14 pl-12 pr-10 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-bold text-gray-700 appearance-none"
                                     >
                                         <option value="">Semua Status</option>
-                                        <option value="new_order">Pesanan Baru</option>
+                                        <option value="new_order">Pesanan Masuk</option>
                                         <option value="waiting_payment">Menunggu Pembayaran</option>
-                                        <option value="menunggu_persetujuan">Verifikasi Berkas</option>
-                                        <option value="waiting_credit_approval">Sedang Diproses</option>
-                                        <option value="disetujui">Disetujui</option>
+                                        <option value="pembayaran_dikonfirmasi">Pembayaran Lunas</option>
+                                        <option value="unit_preparation">Motor Disiapkan</option>
+                                        <option value="ready_for_delivery">Siap Dikirim/Ambil</option>
                                         <option value="completed">Selesai</option>
                                         <option value="cancelled">Dibatalkan</option>
                                     </select>

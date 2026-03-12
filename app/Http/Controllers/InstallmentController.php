@@ -313,6 +313,15 @@ class InstallmentController extends Controller
             'status' => 'paid',
         ]);
 
+        // Stock Locking: If DP/Booking Fee (0) paid, mark motor as unavailable
+        if ($installment->installment_number == 0) {
+            $transaction = $installment->transaction;
+            if ($transaction && $transaction->motor) {
+                $transaction->motor->update(['tersedia' => false]);
+                \Illuminate\Support\Facades\Log::info("Stock Locked for Motor ID: {$transaction->motor_id} due to payment of installment 0 for Transaction ID: {$transaction->id}");
+            }
+        }
+
 
         try {
             $user = $installment->transaction->user;

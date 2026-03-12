@@ -217,6 +217,12 @@ class CreditService
                 'cancellation_reason' => $reason ?? 'Dibatalkan oleh pelanggan',
             ]);
 
+            // Stock Unlocking
+            if ($transaction->motor) {
+                $transaction->motor->update(['tersedia' => true]);
+                \Illuminate\Support\Facades\Log::info("Stock Unlocked for Motor ID: {$transaction->motor_id} due to cancellation of Transaction ID: {$transaction->id}");
+            }
+
             if ($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail) {
                 $transaction->creditDetail->update([
                     'status' => 'dibatalkan',

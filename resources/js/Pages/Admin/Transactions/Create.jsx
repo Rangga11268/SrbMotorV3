@@ -23,6 +23,12 @@ export default function Create({ motors, users }) {
     const { data, setData, post, processing, errors } = useForm({
         user_id: "",
         motor_id: "",
+        name: "",
+        nik: "",
+        phone: "",
+        email: "",
+        motor_color: "",
+        delivery_method: "Ambil di Dealer",
         address: "",
         booking_fee: 0,
         notes: "",
@@ -67,8 +73,7 @@ export default function Create({ motors, users }) {
         });
     };
 
-    const totalAmount =
-        (selectedMotor?.price || 0) + (parseFloat(data.booking_fee) || 0);
+    const totalAmount = selectedMotor?.price || 0;
 
     return (
         <AdminLayout title="Buat Transaksi Tunai Baru">
@@ -147,6 +152,78 @@ export default function Create({ motors, users }) {
                                         {errors.motor_id}
                                     </div>
                                 )}
+                            </CCol>
+
+                            <CCol md={12}>
+                                <hr />
+                                <h6>Informasi Pembeli (Sesuai KTP)</h6>
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="name">Nama Lengkap <span className="text-danger">*</span></CFormLabel>
+                                <CFormInput
+                                    id="name"
+                                    value={data.name}
+                                    onChange={(e) => setData("name", e.target.value)}
+                                    placeholder="Nama Lengkap KTP"
+                                />
+                                {errors.name && <div className="text-danger small">{errors.name}</div>}
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="nik">NIK</CFormLabel>
+                                <CFormInput
+                                    id="nik"
+                                    value={data.nik}
+                                    onChange={(e) => setData("nik", e.target.value)}
+                                    placeholder="16 Digit NIK"
+                                />
+                                {errors.nik && <div className="text-danger small">{errors.nik}</div>}
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="phone">Nomor WA <span className="text-danger">*</span></CFormLabel>
+                                <CFormInput
+                                    id="phone"
+                                    value={data.phone}
+                                    onChange={(e) => setData("phone", e.target.value)}
+                                    placeholder="62812..."
+                                />
+                                {errors.phone && <div className="text-danger small">{errors.phone}</div>}
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="email">Email</CFormLabel>
+                                <CFormInput
+                                    id="email"
+                                    type="email"
+                                    value={data.email}
+                                    onChange={(e) => setData("email", e.target.value)}
+                                    placeholder="email@example.com"
+                                />
+                                {errors.email && <div className="text-danger small">{errors.email}</div>}
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="motor_color">Warna Motor</CFormLabel>
+                                <CFormInput
+                                    id="motor_color"
+                                    value={data.motor_color}
+                                    onChange={(e) => setData("motor_color", e.target.value)}
+                                    placeholder="Pilihan Warna"
+                                />
+                            </CCol>
+
+                            <CCol md={6}>
+                                <CFormLabel htmlFor="delivery_method">Metode Penyerahan</CFormLabel>
+                                <CFormSelect
+                                    id="delivery_method"
+                                    value={data.delivery_method}
+                                    onChange={(e) => setData("delivery_method", e.target.value)}
+                                >
+                                    <option value="Ambil di Dealer">Ambil di Dealer</option>
+                                    <option value="Kirim ke Rumah">Kirim ke Rumah</option>
+                                </CFormSelect>
                             </CCol>
 
                             {/* Harga Motor */}
@@ -237,21 +314,25 @@ export default function Create({ motors, users }) {
                                     }
                                 >
                                     <option value="new_order">
-                                        Pesanan Baru
+                                        Pesanan Masuk
                                     </option>
                                     <option value="waiting_payment">
                                         Menunggu Pembayaran
                                     </option>
-                                    <option value="payment_confirmed">
+                                    <option value="pembayaran_dikonfirmasi">
                                         Pembayaran Dikonfirmasi
                                     </option>
                                     <option value="unit_preparation">
-                                        Persiapan Unit
+                                        Motor Disiapkan
                                     </option>
                                     <option value="ready_for_delivery">
-                                        Siap Dikirim
+                                        Siap Dikirim/Ambil
+                                    </option>
+                                    <option value="dalam_pengiriman">
+                                        Dalam Pengiriman
                                     </option>
                                     <option value="completed">Selesai</option>
+                                    <option value="cancelled">Dibatalkan</option>
                                 </CFormSelect>
                                 {errors.status && (
                                     <div className="invalid-feedback d-block">

@@ -258,12 +258,11 @@ export default function OrderConfirmation({ transaction }) {
                                         </div>
                                         <div>
                                             <label className="block text-sm text-gray-600 mb-1">
-                                                Pekerjaan
+                                                Email
                                             </label>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.occupation ||
-                                                    transaction.user
-                                                        ?.pekerjaan ||
+                                                {transaction.email ||
+                                                    transaction.user?.email ||
                                                     "-"}
                                             </p>
                                         </div>
@@ -277,17 +276,42 @@ export default function OrderConfirmation({ transaction }) {
                                                     "-"}
                                             </p>
                                         </div>
-                                        <div>
-                                            <label className="block text-sm text-gray-600 mb-1">
-                                                Pekerjaan
-                                            </label>
-                                            <p className="font-semibold text-gray-900">
-                                                {transaction.occupation ||
-                                                    transaction.user?.pekerjaan ||
-                                                    "-"}
-                                            </p>
-                                        </div>
-                                        <div>
+                                        
+                                        {isCredit && (
+                                            <div>
+                                                <label className="block text-sm text-gray-600 mb-1">
+                                                    Pekerjaan
+                                                </label>
+                                                <p className="font-semibold text-gray-900">
+                                                    {transaction.occupation ||
+                                                        transaction.user?.pekerjaan ||
+                                                        "-"}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {!isCredit && (
+                                            <>
+                                                <div>
+                                                    <label className="block text-sm text-gray-600 mb-1">
+                                                        Warna Motor
+                                                    </label>
+                                                    <p className="font-semibold text-gray-900">
+                                                        {transaction.motor_color || "-"}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm text-gray-600 mb-1">
+                                                        Metode Penyerahan
+                                                    </label>
+                                                    <p className="font-semibold text-gray-900">
+                                                        {transaction.delivery_method || "-"}
+                                                    </p>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        <div className="sm:col-span-2">
                                             <label className="block text-sm text-gray-600 mb-1">
                                                 Alamat
                                             </label>

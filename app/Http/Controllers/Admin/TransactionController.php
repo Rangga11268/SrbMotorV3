@@ -67,12 +67,10 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        $transaction->load(['user', 'motor', 'payments']);
+        $transaction->load(['user', 'motor', 'installments', 'creditDetail']);
 
         $motors = Motor::all();
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'customer');
-        })->get();
+        $users = User::where('role', 'customer')->get();
 
         return Inertia::render('Admin/Transactions/Show', [
             'transaction' => $transaction,
@@ -87,9 +85,7 @@ class TransactionController extends Controller
     public function create()
     {
         $motors = Motor::all();
-        $users = User::whereHas('roles', function ($query) {
-            $query->where('name', 'customer');
-        })->get();
+        $users = User::where('role', 'customer')->get();
 
         return Inertia::render('Admin/Transactions/Create', [
             'motors' => $motors,
@@ -105,29 +101,46 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'motor_id' => 'required|exists:motors,id',
+            'name' => 'required|string|max:255',
+            'nik' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'motor_color' => 'nullable|string',
+            'delivery_method' => 'nullable|string',
             'booking_fee' => 'required|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
-            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
         ]);
 
         // Get motor and calculate total
         $motor = Motor::findOrFail($validated['motor_id']);
-        $final_price = $motor->price + $validated['booking_fee'];
-
-        // Create transaction
         $transaction = Transaction::create([
             'user_id' => $validated['user_id'],
             'motor_id' => $validated['motor_id'],
             'reference_number' => 'TRX-' . strtoupper(uniqid()),
-            'final_price' => $final_price,
+            'final_price' => $motor->price,
             'motor_price' => $motor->price,
+            'booking_fee' => $validated['booking_fee'],
             'address' => $validated['address'],
-            'total_price' => $final_price,
+            'total_price' => $motor->price,
             'notes' => $validated['notes'],
             'status' => $validated['status'],
-            'transaction_type' => 'cash',
+            'transaction_type' => 'CASH',
+            'name' => $validated['name'],
+            'nik' => $validated['nik'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'motor_color' => $validated['motor_color'],
+            'delivery_method' => $validated['delivery_method'],
         ]);
+        
+        // Stock Locking: If created with a "lock" status
+        $lockStatuses = ['pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
+        if (in_array($validated['status'], $lockStatuses)) {
+            $motor->update(['tersedia' => false]);
+            \Illuminate\Support\Facades\Log::info("Stock Locked for Motor ID: {$motor->id} (Manual Cash Order Creation)");
+        }
 
         return redirect()->route('admin.transactions.show', $transaction)
             ->with('success', 'Transaksi berhasil dibuat');
@@ -150,27 +163,55 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'motor_id' => 'required|exists:motors,id',
+            'name' => 'required|string|max:255',
+            'nik' => 'nullable|string|max:20',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'motor_color' => 'nullable|string',
+            'delivery_method' => 'nullable|string',
             'booking_fee' => 'required|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
-            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'frame_number' => 'nullable|string|max:255',
+            'engine_number' => 'nullable|string|max:255',
+            'delivery_date' => 'nullable|date',
         ]);
 
         // Get motor and calculate total
         $motor = Motor::findOrFail($validated['motor_id']);
-        $final_price = $motor->price + $validated['booking_fee'];
-
         $transaction->update([
             'user_id' => $validated['user_id'],
             'motor_id' => $validated['motor_id'],
-            'final_price' => $final_price,
+            'final_price' => $motor->price,
             'motor_price' => $motor->price,
+            'booking_fee' => $validated['booking_fee'],
             'address' => $validated['address'],
-            'total_price' => $final_price,
+            'total_price' => $motor->price,
             'notes' => $validated['notes'],
             'status' => $validated['status'],
-            'transaction_type' => 'cash',
+            'name' => $validated['name'],
+            'nik' => $validated['nik'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'motor_color' => $validated['motor_color'],
+            'delivery_method' => $validated['delivery_method'],
+            'frame_number' => $validated['frame_number'],
+            'engine_number' => $validated['engine_number'],
+            'delivery_date' => $validated['delivery_date'],
         ]);
+
+        // Stock Balancing: Update motor availability based on status change
+        $lockStatuses = ['pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
+        $unlockStatuses = ['new_order', 'waiting_payment', 'cancelled'];
+
+        if (in_array($validated['status'], $lockStatuses)) {
+            $motor->update(['tersedia' => false]);
+            \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$motor->id} (Manual Cash Order Update)");
+        } elseif (in_array($validated['status'], $unlockStatuses)) {
+            $motor->update(['tersedia' => true]);
+            \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$motor->id} (Manual Cash Order Update)");
+        }
 
         return redirect()->route('admin.transactions.show', $transaction)
             ->with('success', 'Transaksi berhasil diperbarui');
@@ -193,7 +234,7 @@ class TransactionController extends Controller
     public function updateStatus(Request $request, Transaction $transaction)
     {
         $validated = $request->validate([
-            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
         ]);
 
         $oldStatus = $transaction->status;
@@ -205,8 +246,40 @@ class TransactionController extends Controller
                 'status' => $newStatus,
             ]);
 
+            // Stock Balancing: Update motor availability based on status change
+            $lockStatuses = ['pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
+            $unlockStatuses = ['new_order', 'waiting_payment', 'cancelled'];
+
+            if (in_array($newStatus, $lockStatuses)) {
+                $transaction->motor->update(['tersedia' => false]);
+                \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$transaction->motor_id} (Manual Cash Status Quick Update)");
+            } elseif (in_array($newStatus, $unlockStatuses)) {
+                $transaction->motor->update(['tersedia' => true]);
+                \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$transaction->motor_id} (Manual Cash Status Quick Update)");
+            }
+
             // Send notification to user
             $transaction->user->notify(new \App\Notifications\TransactionStatusChanged($transaction));
+
+            // WhatsApp Notification
+            try {
+                $statusLabels = [
+                    'pembayaran_dikonfirmasi' => 'Pembayaran Anda telah dikonfirmasi/lunas',
+                    'unit_preparation' => 'Unit motor Anda sedang disiapkan oleh tim teknis kami',
+                    'ready_for_delivery' => 'Unit motor Anda telah siap untuk dikirim atau diambil di dealer',
+                    'dalam_pengiriman' => 'Unit motor Anda sedang dalam perjalanan menuju alamat Anda',
+                    'completed' => 'Transaksi Anda telah selesai. Terima kasih!',
+                    'cancelled' => 'Mohon maaf, transaksi Anda telah dibatalkan',
+                ];
+
+                $phone = $transaction->phone ?? $transaction->user->phone;
+                if ($phone && isset($statusLabels[$newStatus])) {
+                    $msg = "Halo *{$transaction->name}*,\n\nStatus pesanan motor *{$transaction->motor->name}* Anda telah diperbarui menjadi:\n\n👉 *{$statusLabels[$newStatus]}*\n\nSilakan cek detail pesanan Anda di website SRB Motor.\n\nTerima kasih atas kepercayaan Anda.\n- SRB Motor";
+                    \App\Services\WhatsAppService::sendMessage($phone, $msg);
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('WA Direct Status Update Error: ' . $e->getMessage());
+            }
         }
 
         return back()->with('success', 'Status transaksi berhasil diperbarui' . ($oldStatus === $newStatus ? ' (tidak ada perubahan)' : ' dan notifikasi dikirim ke customer'));

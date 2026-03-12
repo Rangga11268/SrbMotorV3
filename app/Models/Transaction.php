@@ -23,8 +23,14 @@ class Transaction extends Model
         'name',
         'nik',
         'phone',
+        'email',
         'address',
         'city',
+        'delivery_method',
+        'frame_number',
+        'engine_number',
+        'delivery_date',
+        'motor_color',
         'occupation',
         'monthly_income',
         'employment_duration',
@@ -32,6 +38,7 @@ class Transaction extends Model
         'transaction_type',
         'status',
         'motor_price',
+        'booking_fee',
         'total_price',
         'discount_amount',
         'final_price',
@@ -67,11 +74,13 @@ class Transaction extends Model
      */
     protected $casts = [
         'motor_price' => 'decimal:2',
+        'booking_fee' => 'decimal:2',
         'total_price' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'final_price' => 'decimal:2',
         'monthly_income' => 'decimal:2',
         'payment_date' => 'datetime',
+        'delivery_date' => 'date',
         'is_cancelled' => 'boolean',
         'cancelled_at' => 'datetime',
     ];
@@ -114,12 +123,13 @@ class Transaction extends Model
     public function getStatusTextAttribute()
     {
         $statusMap = [
-            'new_order' => 'Pesanan Baru',
+            'new_order' => 'Pesanan Masuk',
             'waiting_payment' => 'Menunggu Pembayaran',
-            'payment_confirmed' => 'Pembayaran Berhasil',
-            'unit_preparation' => 'Persiapan Unit',
-            'ready_for_delivery' => 'Siap Dikirim',
-            'completed' => 'Selesai',
+            'pembayaran_dikonfirmasi' => 'Pembayaran Dikonfirmasi',
+            'unit_preparation' => 'Motor Disiapkan',
+            'ready_for_delivery' => 'Motor Siap Dikirim/Ambil',
+            'dalam_pengiriman' => 'Dalam Pengiriman',
+            'completed' => 'Pesanan Selesai',
             'cancelled' => 'Dibatalkan',
             'menunggu_persetujuan' => 'Verifikasi Berkas',
             'data_tidak_valid' => 'Perbaiki Dokumen',
@@ -185,11 +195,12 @@ class Transaction extends Model
 
         // 3. Fallback to standard transaction statuses
         $statusMap = [
-            'new_order' => 'Pesanan Baru',
+            'new_order' => 'Pesanan Masuk',
             'waiting_payment' => 'Menunggu Pembayaran',
-            'payment_confirmed' => 'Pembayaran Berhasil',
-            'unit_preparation' => 'Persiapan Unit',
-            'ready_for_delivery' => 'Siap Dikirim',
+            'pembayaran_dikonfirmasi' => 'Pembayaran Dikonfirmasi',
+            'unit_preparation' => 'Motor Disiapkan',
+            'ready_for_delivery' => 'Motor Siap Dikirim/Ambil',
+            'dalam_pengiriman' => 'Dalam Pengiriman',
             'waiting_credit_approval' => 'Menunggu Persetujuan Kredit',
         ];
 

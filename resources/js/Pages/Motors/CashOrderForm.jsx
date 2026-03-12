@@ -22,15 +22,23 @@ import {
     Info,
     AlertTriangle,
     MapPin,
+    Fingerprint,
+    Mail,
+    Palette,
+    Truck,
+    Store,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function CashOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
-        name: "",
-        phone: "",
-        occupation: "",
+        name: auth.user?.name || "",
+        phone: auth.user?.phone || "",
+        email: auth.user?.email || "",
+        nik: "",
         address: "",
+        motor_color: "",
+        delivery_method: "Ambil di Dealer",
         notes: "",
         booking_fee: 0,
         payment_method: "Transfer Bank",
@@ -77,8 +85,14 @@ export default function CashOrderForm({ motor, auth }) {
         if (!data.phone.trim()) {
             validationErrors.push("Nomor WhatsApp harus diisi");
         }
-        if (!data.occupation.trim()) {
-            validationErrors.push("Pekerjaan harus diisi");
+        if (!data.email.trim()) {
+            validationErrors.push("Email harus diisi");
+        }
+        if (!data.nik.trim()) {
+            validationErrors.push("NIK harus diisi untuk STNK/BPKB");
+        }
+        if (!data.motor_color) {
+            validationErrors.push("Warna motor harus dipilih");
         }
         if (!data.address.trim()) {
             validationErrors.push("Alamat lengkap harus diisi");
@@ -251,32 +265,117 @@ export default function CashOrderForm({ motor, auth }) {
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <Label htmlFor="customer_occupation">
-                                                Pekerjaan
-                                            </Label>
-                                            <div className="relative">
-                                                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                <input
-                                                    id="customer_occupation"
-                                                    type="text"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                    placeholder="Contoh: Karyawan Swasta"
-                                                    required
-                                                    value={data.occupation}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "occupation",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_email">
+                                                    Email
+                                                </Label>
+                                                <div className="relative">
+                                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_email"
+                                                        type="email"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="nama@email.com"
+                                                        required
+                                                        value={data.email}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "email",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.email && (
+                                                    <ErrorMessage>
+                                                        {errors.email}
+                                                    </ErrorMessage>
+                                                )}
                                             </div>
-                                            {errors.occupation && (
-                                                <ErrorMessage>
-                                                    {errors.occupation}
-                                                </ErrorMessage>
-                                            )}
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_nik">
+                                                    NIK (Sesuai KTP)
+                                                </Label>
+                                                <div className="relative">
+                                                    <Fingerprint className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_nik"
+                                                        type="text"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="16 Digit NIK"
+                                                        required
+                                                        value={data.nik}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "nik",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.nik && (
+                                                    <ErrorMessage>
+                                                        {errors.nik}
+                                                    </ErrorMessage>
+                                                )}
+                                            </div>
+                                        </div>
+                                        
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="motor_color">
+                                                    Pilihan Warna
+                                                </Label>
+                                                <div className="relative">
+                                                    <Palette className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <select
+                                                        id="motor_color"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 appearance-none"
+                                                        required
+                                                        value={data.motor_color}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "motor_color",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    >
+                                                        <option value="">Pilih Warna</option>
+                                                        <option value="Merah">Merah</option>
+                                                        <option value="Hitam">Hitam</option>
+                                                        <option value="Putih">Putih</option>
+                                                        <option value="Biru">Biru</option>
+                                                        <option value="Silver/Abu-abu">Silver/Abu-abu</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="delivery_method">
+                                                    Metode Penyerahan
+                                                </Label>
+                                                <div className="flex gap-4">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setData("delivery_method", "Ambil di Dealer")}
+                                                        className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                    >
+                                                        <Store className="w-5 h-5" />
+                                                        Ambil
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setData("delivery_method", "Kirim ke Rumah")}
+                                                        className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                    >
+                                                        <Truck className="w-5 h-5" />
+                                                        Kirim
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div className="space-y-2">
@@ -510,11 +609,9 @@ export default function CashOrderForm({ motor, auth }) {
                                                 </label>
                                             </div>
                                             {errors.payment_method && (
-                                                <ErrorMessage
-                                                    message={
-                                                        errors.payment_method
-                                                    }
-                                                />
+                                                <ErrorMessage>
+                                                    {errors.payment_method}
+                                                </ErrorMessage>
                                             )}
                                         </div>
 

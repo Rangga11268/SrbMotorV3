@@ -30,10 +30,19 @@ export default function Show({ transaction, motors, users }) {
     const { data, setData, put, processing, errors } = useForm({
         user_id: transaction.user_id || "",
         motor_id: transaction.motor_id || "",
+        name: transaction.name || "",
+        nik: transaction.nik || "",
+        phone: transaction.phone || "",
+        email: transaction.email || "",
+        motor_color: transaction.motor_color || "",
+        delivery_method: transaction.delivery_method || "Ambil di Dealer",
         address: transaction.address || "",
         notes: transaction.notes || "",
         status: transaction.status || "new_order",
-        booking_fee: transaction.total_price - transaction.motor_price || 0,
+        booking_fee: transaction.booking_fee || 0,
+        frame_number: transaction.frame_number || "",
+        engine_number: transaction.engine_number || "",
+        delivery_date: transaction.delivery_date || "",
     });
 
     const formatCurrency = (n) =>
@@ -45,14 +54,15 @@ export default function Show({ transaction, motors, users }) {
 
     const getStatusBadge = (status) => {
         const map = {
-            new_order: { color: "warning", label: "Pesanan Baru" },
+            new_order: { color: "warning", label: "Pesanan Masuk" },
             waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
-            payment_confirmed: {
+            pembayaran_dikonfirmasi: {
                 color: "success",
                 label: "Pembayaran Dikonfirmasi",
             },
-            unit_preparation: { color: "info", label: "Persiapan Unit" },
-            ready_for_delivery: { color: "primary", label: "Siap Dikirim" },
+            unit_preparation: { color: "info", label: "Motor Disiapkan" },
+            ready_for_delivery: { color: "primary", label: "Siap Dikirim/Ambil" },
+            dalam_pengiriman: { color: "info", label: "Dalam Pengiriman" },
             completed: { color: "success", label: "Selesai" },
             cancelled: { color: "danger", label: "Dibatalkan" },
         };
@@ -269,19 +279,22 @@ export default function Show({ transaction, motors, users }) {
                                             }
                                         >
                                             <option value="new_order">
-                                                Pesanan Baru
+                                                Pesanan Masuk
                                             </option>
                                             <option value="waiting_payment">
                                                 Menunggu Pembayaran
                                             </option>
-                                            <option value="payment_confirmed">
+                                            <option value="pembayaran_dikonfirmasi">
                                                 Pembayaran Dikonfirmasi
                                             </option>
                                             <option value="unit_preparation">
-                                                Persiapan Unit
+                                                Motor Disiapkan
                                             </option>
                                             <option value="ready_for_delivery">
-                                                Siap Dikirim
+                                                Siap Dikirim/Ambil
+                                            </option>
+                                            <option value="dalam_pengiriman">
+                                                Dalam Pengiriman
                                             </option>
                                             <option value="completed">
                                                 Selesai
@@ -306,6 +319,37 @@ export default function Show({ transaction, motors, users }) {
                                         />
                                     </CCol>
                                     <CCol md={12}>
+                                        <hr />
+                                        <h6>Data Teknis (Opsional)</h6>
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <CFormLabel>No. Rangka</CFormLabel>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={data.frame_number}
+                                            onChange={(e) => setData("frame_number", e.target.value)}
+                                        />
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <CFormLabel>No. Mesin</CFormLabel>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={data.engine_number}
+                                            onChange={(e) => setData("engine_number", e.target.value)}
+                                        />
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <CFormLabel>Estimasi Pengiriman</CFormLabel>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            value={data.delivery_date}
+                                            onChange={(e) => setData("delivery_date", e.target.value)}
+                                        />
+                                    </CCol>
+                                    <CCol md={12}>
                                         <CFormLabel>Catatan</CFormLabel>
                                         <CFormTextarea
                                             value={data.notes}
@@ -321,10 +365,50 @@ export default function Show({ transaction, motors, users }) {
                                     <CCol md={6}>
                                         <div>
                                             <p className="text-body-secondary small mb-1">
-                                                Pelanggan
+                                                Nama Lengkap (KTP)
                                             </p>
                                             <p className="fw-semibold">
-                                                {user?.name || "N/A"}
+                                                {transaction.name || user?.name || "N/A"}
+                                            </p>
+                                        </div>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <div>
+                                            <p className="text-body-secondary small mb-1">
+                                                NIK
+                                            </p>
+                                            <p className="fw-semibold">
+                                                {transaction.nik || "-"}
+                                            </p>
+                                        </div>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <div>
+                                            <p className="text-body-secondary small mb-1">
+                                                WhatsApp
+                                            </p>
+                                            <p className="d-flex align-items-center gap-2">
+                                                <span className="fw-semibold">{transaction.phone || user?.phone || "N/A"}</span>
+                                                {(transaction.phone || user?.phone) && (
+                                                    <a 
+                                                        href={`https://wa.me/${(transaction.phone || user?.phone).replace(/\D/g, '')}?text=${encodeURIComponent(`Halo ${transaction.name || user?.name}, saya admin dari SRB Motor. Terkait pesanan motor ${motor?.name} Anda...`)}`}
+                                                        target="_blank"
+                                                        className="btn btn-success btn-sm py-0 px-2 rounded-pill"
+                                                        style={{ fontSize: '10px' }}
+                                                    >
+                                                        Hubungi WA
+                                                    </a>
+                                                )}
+                                            </p>
+                                        </div>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <div>
+                                            <p className="text-body-secondary small mb-1">
+                                                Email
+                                            </p>
+                                            <p className="fw-semibold">
+                                                {transaction.email || user?.email || "-"}
                                             </p>
                                         </div>
                                     </CCol>
@@ -334,14 +418,27 @@ export default function Show({ transaction, motors, users }) {
                                                 Motor
                                             </p>
                                             <p className="fw-semibold">
-                                                {motor?.name || "N/A"}
+                                                {motor?.name || "N/A"} 
+                                                {transaction.motor_color && <span className="text-body-secondary ms-1">({transaction.motor_color})</span>}
                                             </p>
                                         </div>
                                     </CCol>
                                     <CCol md={6}>
                                         <div>
                                             <p className="text-body-secondary small mb-1">
-                                                Harga
+                                                Metode Penyerahan
+                                            </p>
+                                            <p className="fw-semibold">
+                                                <CBadge color={transaction.delivery_method === 'Ambil di Dealer' ? 'info' : 'primary'} variant="outline">
+                                                    {transaction.delivery_method || "Ambil di Dealer"}
+                                                </CBadge>
+                                            </p>
+                                        </div>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <div>
+                                            <p className="text-body-secondary small mb-1">
+                                                Harga Unit
                                             </p>
                                             <p className="fw-semibold text-primary">
                                                 {formatCurrency(motor?.price)}
@@ -354,32 +451,58 @@ export default function Show({ transaction, motors, users }) {
                                                 Booking Fee
                                             </p>
                                             <p className="fw-semibold">
-                                                {formatCurrency(
-                                                    transaction.total_price -
-                                                        transaction.motor_price ||
-                                                        0,
-                                                )}
+                                                {formatCurrency(transaction.booking_fee || 0)}
                                             </p>
                                         </div>
                                     </CCol>
+
+                                    {/* Data Teknis Display */}
+                                    {(transaction.frame_number || transaction.engine_number || transaction.delivery_date) && (
+                                        <CCol md={12}>
+                                            <div className="p-3 bg-light rounded shadow-sm border-start border-4 border-info">
+                                                <h7 className="d-block mb-3 fw-bold text-info">DATA TEKNIS PENGIRIMAN</h7>
+                                                <CRow>
+                                                    <CCol md={4}>
+                                                        <p className="text-body-secondary small mb-1">No. Rangka</p>
+                                                        <p className="fw-bold mb-0">{transaction.frame_number || "-"}</p>
+                                                    </CCol>
+                                                    <CCol md={4}>
+                                                        <p className="text-body-secondary small mb-1">No. Mesin</p>
+                                                        <p className="fw-bold mb-0">{transaction.engine_number || "-"}</p>
+                                                    </CCol>
+                                                    <CCol md={4}>
+                                                        <p className="text-body-secondary small mb-1">Estimasi Tiba</p>
+                                                        <p className="fw-bold mb-0 text-primary">
+                                                            {transaction.delivery_date ? new Date(transaction.delivery_date).toLocaleDateString("id-ID", {
+                                                                year: "numeric",
+                                                                month: "long",
+                                                                day: "numeric",
+                                                            }) : "-"}
+                                                        </p>
+                                                    </CCol>
+                                                </CRow>
+                                            </div>
+                                        </CCol>
+                                    )}
+
                                     <CCol md={12}>
                                         <div>
                                             <p className="text-body-secondary small mb-1">
-                                                Alamat
+                                                Alamat Lengkap
                                             </p>
                                             <p className="fw-semibold">
                                                 {transaction.address || "-"}
                                             </p>
                                         </div>
                                     </CCol>
-                                    {data.notes && (
+                                    {transaction.notes && (
                                         <CCol md={12}>
                                             <div>
                                                 <p className="text-body-secondary small mb-1">
-                                                    Catatan
+                                                    Catatan Pembeli
                                                 </p>
-                                                <p className="fw-semibold">
-                                                    {data.notes}
+                                                <p className="fw-semibold italic">
+                                                    "{transaction.notes}"
                                                 </p>
                                             </div>
                                         </CCol>

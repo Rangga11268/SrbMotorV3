@@ -131,18 +131,19 @@ class MotorGalleryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
-            'occupation' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'nik' => 'required|string|max:20',
             'address' => 'required|string|max:1000',
+            'motor_color' => 'required|string',
+            'delivery_method' => 'required|string',
             'notes' => 'nullable|string',
             'booking_fee' => 'nullable|numeric|min:0',
             'payment_method' => 'required|string',
         ]);
 
-
         if ($request->booking_fee && $request->booking_fee >= $motor->price) {
             return back()->withErrors(['booking_fee' => 'Booking fee tidak boleh melebihi atau sama dengan harga motor.'])->withInput();
         }
-
 
         // Cek ketersediaan motor
         if (!$motor->tersedia) {
@@ -158,6 +159,7 @@ class MotorGalleryController extends Controller
             return back()->withErrors(['motor' => 'Anda sudah memiliki pesanan aktif untuk motor ini.'])->withInput();
         }
 
+        $bookingFee = (float) ($request->booking_fee ?? 0);
 
         $transaction = Transaction::create([
             'user_id' => Auth::id(),
@@ -167,30 +169,32 @@ class MotorGalleryController extends Controller
             'status' => 'new_order',
             'notes' => $request->notes ?? '',
             'motor_price' => $motor->price,
-            'total_price' => $motor->price + ($request->booking_fee ?? 0),
+            'booking_fee' => $bookingFee,
+            'total_price' => $motor->price,
             'discount_amount' => 0,
-            'final_price' => $motor->price + ($request->booking_fee ?? 0),
+            'final_price' => $motor->price,
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
             'phone' => $request->phone,
+            'email' => $request->email,
             'address' => $request->address,
             'name' => $request->name,
-            'occupation' => $request->occupation,
+            'nik' => $request->nik,
+            'motor_color' => $request->motor_color,
+            'delivery_method' => $request->delivery_method,
         ]);
 
-
-        if ($transaction->booking_fee > 0) {
+        if ($bookingFee > 0) {
             \App\Models\Installment::create([
                 'transaction_id' => $transaction->id,
                 'installment_number' => 0,
-                'amount' => $transaction->booking_fee,
+                'amount' => $bookingFee,
                 'due_date' => now()->addDays(1),
                 'status' => 'pending',
             ]);
         }
 
-
-        $remainingAmount = $motor->price - ($transaction->booking_fee ?? 0);
+        $remainingAmount = $motor->price - $bookingFee;
 
         if ($remainingAmount > 0) {
             \App\Models\Installment::create([

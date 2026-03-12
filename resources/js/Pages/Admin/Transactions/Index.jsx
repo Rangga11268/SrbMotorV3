@@ -96,14 +96,15 @@ export default function Index({
 
     const getStatusBadge = (status) => {
         const map = {
-            new_order: { color: "warning", label: "Pesanan Baru" },
+            new_order: { color: "warning", label: "Pesanan Masuk" },
             waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
-            payment_confirmed: {
+            pembayaran_dikonfirmasi: {
                 color: "success",
                 label: "Pembayaran Dikonfirmasi",
             },
-            unit_preparation: { color: "info", label: "Persiapan Unit" },
-            ready_for_delivery: { color: "primary", label: "Siap Dikirim" },
+            unit_preparation: { color: "info", label: "Motor Disiapkan" },
+            ready_for_delivery: { color: "primary", label: "Siap Dikirim/Ambil" },
+            dalam_pengiriman: { color: "info", label: "Dalam Pengiriman" },
             completed: { color: "success", label: "Selesai" },
             cancelled: { color: "danger", label: "Dibatalkan" },
         };
@@ -241,11 +242,15 @@ export default function Index({
                                 <option value="">Semua Status</option>
                                 {statuses?.map((s) => (
                                     <option key={s} value={s}>
-                                        {s
-                                            .replace(/_/g, " ")
-                                            .replace(/\b\w/g, (l) =>
-                                                l.toUpperCase(),
-                                            )}
+                                        {s === 'new_order' ? 'Pesanan Masuk' : 
+                                         s === 'waiting_payment' ? 'Menunggu Pembayaran' :
+                                         s === 'pembayaran_dikonfirmasi' ? 'Pembayaran Dikonfirmasi' :
+                                         s === 'unit_preparation' ? 'Motor Disiapkan' :
+                                         s === 'ready_for_delivery' ? 'Siap Dikirim/Ambil' :
+                                         s === 'dalam_pengiriman' ? 'Dalam Pengiriman' :
+                                         s === 'completed' ? 'Selesai' :
+                                         s === 'cancelled' ? 'Dibatalkan' :
+                                         s.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
                                     </option>
                                 ))}
                             </CFormSelect>
@@ -340,18 +345,19 @@ export default function Index({
                                                     className="fw-bold"
                                                 >
                                                     {getInitials(
-                                                        trx.customer_name ||
+                                                        trx.name ||
                                                             trx.user?.name,
                                                     )}
                                                 </CAvatar>
                                                 <div>
                                                     <div className="fw-semibold">
-                                                        {trx.customer_name ||
+                                                        {trx.name ||
                                                             trx.user?.name ||
                                                             "N/A"}
                                                     </div>
                                                     <div className="text-body-tertiary small">
-                                                        {trx.customer_phone ||
+                                                        {trx.phone ||
+                                                            trx.user?.phone ||
                                                             "-"}
                                                     </div>
                                                 </div>
