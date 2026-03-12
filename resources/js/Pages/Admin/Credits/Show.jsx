@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Swal from "sweetalert2";
@@ -215,6 +215,15 @@ export default function Show({
             leasing_application_ref: "",
         });
 
+        // Auto-fill if user already selected leasing during order
+        useEffect(() => {
+            if (activeModal === "sendLeasing") {
+                if (credit.leasing_provider_id) {
+                    setData("leasing_provider_id", credit.leasing_provider_id);
+                }
+            }
+        }, [activeModal]);
+
         const handleSubmit = (e) => {
             e.preventDefault();
             setIsLoading(true);
@@ -236,6 +245,18 @@ export default function Show({
                 </CModalHeader>
                 <CForm onSubmit={handleSubmit}>
                     <CModalBody>
+                        {/* Info if user already selected leasing */}
+                        {credit.leasing_provider_id && (
+                            <CAlert color="info" className="mb-4">
+                                <strong>
+                                    Penyedia Leasing Dipilih Pengguna:
+                                </strong>{" "}
+                                {credit.leasingProvider?.name}
+                                <div className="small mt-2">
+                                    Anda dapat mengubah pilihan jika diperlukan
+                                </div>
+                            </CAlert>
+                        )}
                         <div className="mb-3">
                             <CFormLabel>Pilih Penyedia Leasing</CFormLabel>
                             <CFormSelect
@@ -270,7 +291,7 @@ export default function Show({
                                         e.target.value,
                                     )
                                 }
-                                placeholder="Masukkan nomor referensi..."
+                                placeholder="Masukkan nomor referensi (opsional)"
                             />
                         </div>
                     </CModalBody>
