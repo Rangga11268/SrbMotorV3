@@ -858,12 +858,12 @@ export default function Show({
                 </div>
             </div>
 
-            <CRow>
+            <CRow className="g-4">
                 <CCol xl={8}>
                     {/* Current Status */}
-                    <CCard className="mb-4">
-                        <CCardHeader className="bg-transparent border-bottom">
-                            <strong>Status Saat Ini</strong>
+                    <CCard className="mb-4 border-0 shadow-sm">
+                        <CCardHeader className="bg-transparent border-bottom border-light py-3">
+                            <strong className="fs-6">Status Saat Ini</strong>
                         </CCardHeader>
                         <CCardBody className="text-center py-4">
                             <CBadge
@@ -876,15 +876,23 @@ export default function Show({
                     </CCard>
 
                     {/* Customer & Motor Info */}
-                    <CRow className="mb-4">
+                    <CRow className="mb-4 g-4">
                         <CCol md={6}>
-                            <CCard>
-                                <CCardHeader className="bg-transparent border-bottom">
-                                    <strong>Data Pelanggan</strong>
+                            <CCard className="h-100 border-0 shadow-sm">
+                                <CCardHeader className="bg-transparent border-bottom border-light">
+                                    <strong className="fs-6">
+                                        Data Pelanggan
+                                    </strong>
                                 </CCardHeader>
-                                <CCardBody>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                <CCardBody className="p-4">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Nama
                                         </small>
                                         <strong>
@@ -892,16 +900,28 @@ export default function Show({
                                                 credit.transaction?.user?.name}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Email
                                         </small>
                                         <strong>
                                             {credit.transaction?.user?.email}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             No. HP
                                         </small>
                                         <strong>
@@ -911,8 +931,14 @@ export default function Show({
                                                 "-"}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             NIK
                                         </small>
                                         <strong>
@@ -921,8 +947,14 @@ export default function Show({
                                                 "-"}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Pekerjaan
                                         </small>
                                         <strong>
@@ -932,8 +964,14 @@ export default function Show({
                                                 "-"}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Pemasukan Bulanan
                                         </small>
                                         <strong>
@@ -963,8 +1001,14 @@ export default function Show({
                                                   : "-"}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Lama Bekerja
                                         </small>
                                         <strong>
@@ -973,7 +1017,13 @@ export default function Show({
                                         </strong>
                                     </p>
                                     <p className="mb-0">
-                                        <small className="text-body-secondary d-block">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Alamat
                                         </small>
                                         <strong>
@@ -987,24 +1037,36 @@ export default function Show({
                             </CCard>
                         </CCol>
                         <CCol md={6}>
-                            <CCard>
-                                <CCardHeader className="bg-transparent border-bottom">
-                                    <strong className="d-flex align-items-center gap-2">
+                            <CCard className="h-100 border-0 shadow-sm">
+                                <CCardHeader className="bg-transparent border-bottom border-light">
+                                    <strong className="d-flex align-items-center gap-2 fs-6">
                                         <CIcon icon={cilBike} size="sm" />
                                         Data Motor
                                     </strong>
                                 </CCardHeader>
-                                <CCardBody>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                <CCardBody className="p-4">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Motor
                                         </small>
                                         <strong>
                                             {credit.transaction?.motor?.name}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Harga
                                         </small>
                                         <strong>
@@ -1015,7 +1077,13 @@ export default function Show({
                                         </strong>
                                     </p>
                                     <p className="mb-0">
-                                        <small className="text-body-secondary d-block">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Jumlah Kredit
                                         </small>
                                         <strong>
@@ -1032,32 +1100,50 @@ export default function Show({
                     </CRow>
 
                     {/* Credit Details */}
-                    <CRow className="mb-4">
+                    <CRow className="mb-4 g-4">
                         <CCol md={6}>
-                            <CCard>
-                                <CCardHeader className="bg-transparent border-bottom">
-                                    <strong className="d-flex align-items-center gap-2">
+                            <CCard className="h-100 border-0 shadow-sm">
+                                <CCardHeader className="bg-transparent border-bottom border-light">
+                                    <strong className="d-flex align-items-center gap-2 fs-6">
                                         <CIcon icon={cilMoney} size="sm" />
                                         Detail Kredit
                                     </strong>
                                 </CCardHeader>
-                                <CCardBody>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                <CCardBody className="p-4">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Uang Muka
                                         </small>
                                         <strong>
                                             {formatCurrency(credit.dp_amount)}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Tenor
                                         </small>
                                         <strong>{credit.tenor} bulan</strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Cicilan Bulanan
                                         </small>
                                         <strong>
@@ -1067,7 +1153,13 @@ export default function Show({
                                         </strong>
                                     </p>
                                     <p className="mb-0">
-                                        <small className="text-body-secondary d-block">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Suku Bunga
                                         </small>
                                         <strong>
@@ -1081,13 +1173,21 @@ export default function Show({
                             </CCard>
                         </CCol>
                         <CCol md={6}>
-                            <CCard>
-                                <CCardHeader className="bg-transparent border-bottom">
-                                    <strong>Info Leasing</strong>
+                            <CCard className="h-100 border-0 shadow-sm">
+                                <CCardHeader className="bg-transparent border-bottom border-light">
+                                    <strong className="fs-6">
+                                        Info Leasing
+                                    </strong>
                                 </CCardHeader>
-                                <CCardBody>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                <CCardBody className="p-4">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Penyedia
                                         </small>
                                         <strong>
@@ -1095,16 +1195,28 @@ export default function Show({
                                                 "Belum ditentukan"}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             No. Referensi
                                         </small>
                                         <strong>
                                             {credit.reference_number || "-"}
                                         </strong>
                                     </p>
-                                    <p className="mb-2">
-                                        <small className="text-body-secondary d-block">
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Tangal Keputusan
                                         </small>
                                         <strong>
@@ -1116,7 +1228,13 @@ export default function Show({
                                         </strong>
                                     </p>
                                     <p className="mb-0">
-                                        <small className="text-body-secondary d-block">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             DP Dibayar
                                         </small>
                                         <strong>
@@ -1151,11 +1269,22 @@ export default function Show({
                                     color={
                                         pendingCount > 0 ? "warning" : "success"
                                     }
-                                    className="mb-4"
+                                    className="mb-4 border-0"
                                 >
-                                    <strong>Status Dokumen:</strong>{" "}
-                                    {approvedCount} Disetujui • {rejectedCount}{" "}
-                                    Ditolak • {pendingCount} Menunggu
+                                    <strong className="mb-2 d-block">
+                                        Status Dokumen
+                                    </strong>
+                                    <div className="small mb-2">
+                                        <span className="badge bg-success me-2">
+                                            {approvedCount} Disetujui
+                                        </span>
+                                        <span className="badge bg-danger me-2">
+                                            {rejectedCount} Ditolak
+                                        </span>
+                                        <span className="badge bg-warning">
+                                            {pendingCount} Menunggu
+                                        </span>
+                                    </div>
                                     {pendingCount > 0 && (
                                         <div className="small mt-2">
                                             ⚠️ Semua dokumen harus disetujui
@@ -1169,44 +1298,58 @@ export default function Show({
 
                     {/* Documents Section */}
                     {credit.documents && credit.documents.length > 0 && (
-                        <CCard className="mb-4">
-                            <CCardHeader className="bg-transparent border-bottom">
-                                <strong className="d-flex align-items-center gap-2">
+                        <CCard className="mb-4 border-0 shadow-sm">
+                            <CCardHeader className="bg-transparent border-bottom border-light py-3">
+                                <strong className="d-flex align-items-center gap-2 fs-6">
                                     <CIcon icon={cilNotes} size="sm" />
                                     Dokumen Pendukung ({credit.documents.length}
                                     )
                                 </strong>
                             </CCardHeader>
-                            <CCardBody>
+                            <CCardBody className="p-0">
                                 <div className="table-responsive">
-                                    <table className="table table-sm table-hover mb-0">
-                                        <thead>
+                                    <table
+                                        className="table table-sm table-hover mb-0"
+                                        style={{ fontSize: "0.9rem" }}
+                                    >
+                                        <thead className="table-light border-top border-bottom">
                                             <tr>
-                                                <th>Tipe Dokumen</th>
-                                                <th>Nama File</th>
-                                                <th>Status</th>
-                                                <th>Aksi</th>
+                                                <th className="ps-4 pe-3">
+                                                    Tipe Dokumen
+                                                </th>
+                                                <th className="px-3">
+                                                    Nama File
+                                                </th>
+                                                <th className="px-3">Status</th>
+                                                <th className="ps-3 pe-4 text-end">
+                                                    Aksi
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {credit.documents.map((doc) => (
-                                                <tr key={doc.id}>
-                                                    <td>
+                                                <tr
+                                                    key={doc.id}
+                                                    style={{
+                                                        verticalAlign: "middle",
+                                                    }}
+                                                >
+                                                    <td className="ps-4 pe-3">
                                                         <small>
                                                             {doc.document_type}
                                                         </small>
                                                     </td>
-                                                    <td>
+                                                    <td className="px-3">
                                                         <a
                                                             href={`/storage/${doc.file_path}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="text-decoration-none"
+                                                            className="text-decoration-none fw-500"
                                                         >
                                                             {doc.original_name}
                                                         </a>
                                                     </td>
-                                                    <td>
+                                                    <td className="px-3">
                                                         <CBadge
                                                             color={
                                                                 doc.approval_status ===
@@ -1227,8 +1370,8 @@ export default function Show({
                                                                   : "Menunggu"}
                                                         </CBadge>
                                                     </td>
-                                                    <td>
-                                                        <div className="d-flex gap-2">
+                                                    <td className="ps-3 pe-4 text-end">
+                                                        <div className="d-flex gap-2 justify-content-end">
                                                             {doc.approval_status ===
                                                                 "pending" && (
                                                                 <>
@@ -1342,14 +1485,14 @@ export default function Show({
 
                     {/* Survey Information */}
                     {(credit.survey_scheduled_date || credit.survey_notes) && (
-                        <CCard className="mb-4">
-                            <CCardHeader className="bg-transparent border-bottom">
-                                <strong className="d-flex align-items-center gap-2">
+                        <CCard className="mb-4 border-0 shadow-sm">
+                            <CCardHeader className="bg-transparent border-bottom border-light py-3">
+                                <strong className="d-flex align-items-center gap-2 fs-6">
                                     <CIcon icon={cilCalendar} size="sm" />
                                     Info Survey
                                 </strong>
                             </CCardHeader>
-                            <CCardBody>
+                            <CCardBody className="p-4">
                                 {credit.survey_scheduled_date && (
                                     <>
                                         <p className="mb-2">
@@ -1405,14 +1548,14 @@ export default function Show({
                     )}
 
                     {/* Timeline */}
-                    <CCard>
-                        <CCardHeader className="bg-transparent border-bottom">
-                            <strong className="d-flex align-items-center gap-2">
+                    <CCard className="border-0 shadow-sm">
+                        <CCardHeader className="bg-transparent border-bottom border-light py-3">
+                            <strong className="d-flex align-items-center gap-2 fs-6">
                                 <CIcon icon={cilNotes} size="sm" />
                                 Riwayat Perubahan
                             </strong>
                         </CCardHeader>
-                        <CCardBody>
+                        <CCardBody className="p-4">
                             {timeline && timeline.length > 0 ? (
                                 <div className="timeline">
                                     {timeline.map((item, index) => (
@@ -1466,11 +1609,14 @@ export default function Show({
                 <CCol xl={4}>
                     {availableTransitions &&
                     Object.keys(availableTransitions).length > 0 ? (
-                        <CCard className="sticky-top" style={{ top: "20px" }}>
-                            <CCardHeader className="bg-transparent border-bottom">
-                                <strong>Aksi Tersedia</strong>
+                        <CCard
+                            className="sticky-top border-0 shadow-sm"
+                            style={{ top: "20px" }}
+                        >
+                            <CCardHeader className="bg-transparent border-bottom border-light py-3">
+                                <strong className="fs-6">Aksi Tersedia</strong>
                             </CCardHeader>
-                            <CCardBody className="d-flex flex-column gap-2">
+                            <CCardBody className="d-flex flex-column gap-3 p-3">
                                 {Object.entries(availableTransitions).map(
                                     ([key, label]) => {
                                         let handleClick = () => {}; // Default
