@@ -30,7 +30,7 @@ class InstallmentController extends Controller
         $pdf = Pdf::loadView('installments.receipt', compact('installment'));
         return $pdf->download('kuitansi-pembayaran-cicilan-' . $installment->installment_number . '.pdf');
     }
-    public function checkPaymentStatus(Installment $installment)
+    public function checkPaymentStatus(Installment $installment, \App\Services\PaymentService $paymentService)
     {
         if ($installment->transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403);
@@ -40,100 +40,23 @@ class InstallmentController extends Controller
             return response()->json(['message' => 'Belum ada riwayat pembayaran online'], 404);
         }
 
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
 
         try {
-            $status = MidtransTransaction::status($installment->midtrans_booking_code);
-
-            $transactionStatus = $status->transaction_status;
-            $type = $status->payment_type;
-            $fraud = $status->fraud_status;
-
-            if ($transactionStatus == 'capture') {
-                if ($type == 'credit_card') {
-                    if ($fraud == 'challenge') {
-                        $installment->update(['status' => 'waiting_approval']);
-                    } else {
-                        $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => 'midtrans_' . $type]);
-                    }
-                }
-            } else if ($transactionStatus == 'settlement') {
-
-                $methodStr = 'midtrans_' . $type;
-
-
-                if ($type == 'bank_transfer' && isset($status->va_numbers)) {
-
-                    $vaNumbers = $status->va_numbers;
-                    if (is_array($vaNumbers) && count($vaNumbers) > 0) {
-                        $bank = $vaNumbers[0]->bank ?? 'other';
-                        $methodStr = 'midtrans_' . $bank . '_va';
-                    }
-                } else if ($type == 'gopay' || $type == 'shopeepay') {
-                    $methodStr = 'midtrans_' . $type;
-                } else if ($type == 'cstore') {
-                    $store = $status->store ?? 'store';
-                    $methodStr = 'midtrans_' . $store;
-                }
-
-                $installment->update(['status' => 'paid', 'paid_at' => now(), 'payment_method' => $methodStr]);
-
-                $transaction = $installment->transaction;
-                if ($transaction) {
-                    $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
-                    $newStatus = null;
-                    
-                    if ($unpaid == 0) {
-                        $newStatus = ($transaction->transaction_type == 'CASH') ? 'payment_confirmed' : 'completed';
-                    } elseif ($installment->installment_number === 0) {
-                        // If DP/Booking Fee paid, advance to unit preparation
-                        $newStatus = 'unit_preparation';
-                    }
-
-                    if ($newStatus) {
-                        $transaction->update(['status' => $newStatus]);
-                        
-                        // Stock Locking: If status is locking status, mark motor as unavailable
-                        $lockStatuses = ['payment_confirmed', 'pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
-                        if (in_array($newStatus, $lockStatuses)) {
-                            $transaction->motor->update(['tersedia' => false]);
-                            \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$transaction->motor_id} (Automated Midtrans Settlement)");
-                        }
-
-                        // WhatsApp Notification for status update
-                        try {
-                            $statusLabels = [
-                                'payment_confirmed' => 'Pembayaran Anda telah kami terima (Lunas)',
-                                'unit_preparation' => 'Pembayaran Booking Fee/DP diterima. Motor Anda sedang disiapkan',
-                                'completed' => 'Pesanan Anda telah dinyatakan selesai',
-                            ];
-
-                            $phone = $transaction->phone ?? $transaction->user->phone;
-                            if ($phone && isset($statusLabels[$newStatus])) {
-                                $msg = "Halo *{$transaction->name}*,\n\nTerima kasih! Pembayaran Anda via Midtrans telah berhasil diverifikasi.\n\nStatus pesanan Anda kini: *{$statusLabels[$newStatus]}*\n\nUnit: {$transaction->motor->name}\n\n- SRB Motor";
-                                \App\Services\WhatsAppService::sendMessage($phone, $msg);
-                            }
-                        } catch (\Exception $e) {
-                            \Illuminate\Support\Facades\Log::error('WA Notification Error (Midtrans Callback): ' . $e->getMessage());
-                        }
-                    }
-                }
-            } else if ($transactionStatus == 'pending') {
-                $installment->update(['status' => 'pending']);
-            } else if ($transactionStatus == 'deny') {
-                $installment->update(['status' => 'waiting_approval']);
-            } else if ($transactionStatus == 'expire') {
-                $installment->update(['status' => 'overdue']);
-            } else if ($transactionStatus == 'cancel') {
-                $installment->update(['status' => 'overdue']);
-            }
+            $status = \Midtrans\Transaction::status($installment->midtrans_booking_code);
+            $transactionStatus = $paymentService->updatePaymentStatus($installment, $status);
 
             return response()->json([
                 'status' => $transactionStatus,
                 'message' => 'Status pembayaran diperbarui: ' . $transactionStatus
             ]);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Check Status Midtrans Error: ' . $e->getMessage(), [
+                'installment_id' => $installment->id,
+                'booking_code' => $installment->midtrans_booking_code,
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -177,7 +100,7 @@ class InstallmentController extends Controller
                 'id' => 'INST-' . $inst->id,
                 'price' => (int) ($inst->amount + $inst->penalty_amount),
                 'quantity' => 1,
-                'name' => 'Cicilan Ke-' . $inst->installment_number . ' ' . $transaction->motor->name,
+                'name' => substr('Cicilan Ke-' . $inst->installment_number . ' ' . ($transaction->motor->name ?? 'Motor'), 0, 50),
             ];
         }
 
@@ -187,8 +110,8 @@ class InstallmentController extends Controller
                 'gross_amount' => (int) $totalAmount,
             ],
             'customer_details' => [
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
+                'first_name' => $transaction->name ?? Auth::user()->name ?? 'Customer',
+                'email' => Auth::user()->email ?? 'customer@example.com',
             ],
             'item_details' => $itemDetails,
             'callbacks' => [
@@ -199,7 +122,12 @@ class InstallmentController extends Controller
         ];
 
         try {
-            $snapToken = Snap::getSnapToken($params);
+            \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('midtrans.is_production');
+            \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
+            \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
+
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
 
             // Update all selected installments with the same booking code and token
             foreach ($installments as $inst) {
@@ -211,6 +139,9 @@ class InstallmentController extends Controller
 
             return response()->json(['snap_token' => $snapToken]);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Midtrans Multiple Pay Error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -234,15 +165,15 @@ class InstallmentController extends Controller
                 'gross_amount' => (int) ($installment->amount + $installment->penalty_amount),
             ],
             'customer_details' => [
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
+                'first_name' => $installment->transaction->name ?? Auth::user()->name ?? 'Customer',
+                'email' => Auth::user()->email ?? 'customer@example.com',
             ],
             'item_details' => [
                 [
                     'id' => 'INST-' . $installment->id,
                     'price' => (int) ($installment->amount + $installment->penalty_amount),
                     'quantity' => 1,
-                    'name' => 'Cicilan Ke-' . $installment->installment_number . ' ' . $installment->transaction->motor->name . ($installment->penalty_amount > 0 ? ' (+Denda)' : ''),
+                    'name' => substr(($installment->installment_number == 0 ? 'DP ' : 'Cicilan Ke-' . $installment->installment_number . ' ') . ($installment->transaction->motor->name ?? 'Motor') . ($installment->penalty_amount > 0 ? ' (+Denda)' : ''), 0, 50),
                 ]
             ],
             'callbacks' => [
@@ -253,7 +184,12 @@ class InstallmentController extends Controller
         ];
 
         try {
-            $snapToken = Snap::getSnapToken($params);
+            \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('midtrans.is_production');
+            \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
+            \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
+
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
 
             $installment->update([
                 'snap_token' => $snapToken,
@@ -262,17 +198,25 @@ class InstallmentController extends Controller
 
             return response()->json(['snap_token' => $snapToken]);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Midtrans Create Payment Error: ' . $e->getMessage(), [
+                'installment_id' => $installment->id,
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     public function index()
     {
-        $transactions = Transaction::where('user_id', Auth::id())
-            ->whereHas('installments')
-            ->with(['installments' => function ($query) {
+        $transactions = Transaction::with(['installments' => function ($query) {
                 $query->orderBy('installment_number', 'asc');
             }, 'motor'])
+            ->where(function ($q) {
+                if (!Auth::user()->isAdmin()) {
+                    $q->where('user_id', Auth::id());
+                }
+            })
+            ->whereHas('installments')
             ->latest()
             ->get();
 

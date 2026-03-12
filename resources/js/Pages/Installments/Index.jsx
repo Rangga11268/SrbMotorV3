@@ -412,11 +412,24 @@ export default function InstallmentIndex({ transactions }) {
                         <div className="space-y-8">
                             {transactions.map((transaction) => (
                                 <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
                                     key={transaction.id}
-                                    className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+                                    className={`bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative transition-all ${
+                                        transaction.status === "cancelled" ||
+                                        transaction.is_cancelled
+                                            ? "opacity-60 saturate-50"
+                                            : ""
+                                    }`}
                                 >
+                                    {/* CANCELLED BANNER */}
+                                    {(transaction.status === "cancelled" ||
+                                        transaction.is_cancelled) && (
+                                        <div className="bg-red-600 py-1.5 px-4 text-center">
+                                            <p className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+                                                <X size={12} strokeWidth={4} />
+                                                Transaksi ini telah dibatalkan
+                                            </p>
+                                        </div>
+                                    )}
                                     {/* TRANSACTION HEADER - SIMPLIFIED */}
                                     <div className="px-6 md:px-8 py-6 md:py-8 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
                                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
@@ -441,7 +454,8 @@ export default function InstallmentIndex({ transactions }) {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end gap-3 w-full md:w-auto">
-                                                {transaction.status === "cancelled" ? (
+                                                {transaction.status === "cancelled" ||
+                                                transaction.is_cancelled ? (
                                                     <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-black border border-red-200 uppercase tracking-widest">
                                                         <X size={14} strokeWidth={3} />
                                                         Pesanan Dibatalkan
@@ -461,7 +475,15 @@ export default function InstallmentIndex({ transactions }) {
                                                     <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
                                                         Sisa Kewajiban
                                                     </p>
-                                                    <p className="text-3xl font-black text-blue-600">
+                                                    <p
+                                                        className={`text-3xl font-black ${
+                                                            transaction.status ===
+                                                                "cancelled" ||
+                                                            transaction.is_cancelled
+                                                                ? "text-gray-400 line-through decoration-red-500 decoration-4"
+                                                                : "text-blue-600"
+                                                        }`}
+                                                    >
                                                         {formatCurrency(
                                                             transaction.total_amount,
                                                         )}
@@ -502,7 +524,18 @@ export default function InstallmentIndex({ transactions }) {
                                                         (inst) => (
                                                             <tr
                                                                 key={inst.id}
-                                                                className={`hover:bg-blue-50/30 transition-colors ${selectedIds.includes(inst.id) ? "bg-blue-50" : ""}`}
+                                                                className={`hover:bg-blue-50/30 transition-colors ${
+                                                                    selectedIds.includes(
+                                                                        inst.id,
+                                                                    )
+                                                                        ? "bg-blue-50"
+                                                                        : ""
+                                                                } ${
+                                                                    transaction.status ===
+                                                                    "cancelled"
+                                                                        ? "opacity-40 grayscale pointer-events-none"
+                                                                        : ""
+                                                                }`}
                                                             >
                                                                 <td className="px-4 py-4">
                                                                     {inst.status ===
