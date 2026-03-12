@@ -21,14 +21,14 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-export default function OrderConfirmation({ transaction }) {
+export default function OrderConfirmation({ transaction, midtransClientKey }) {
     const [isLoadingPay, setIsLoadingPay] = useState(false);
     const { auth, config } = usePage().props;
 
     // Load Snap.js
     useEffect(() => {
         const snapUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
-        const clientKey = config.midtrans_client_key;
+        const clientKey = midtransClientKey || config.midtrans_client_key;
         const script = document.createElement("script");
         script.src = snapUrl;
         script.setAttribute("data-client-key", clientKey);
@@ -41,6 +41,14 @@ export default function OrderConfirmation({ transaction }) {
     }, []);
 
     const handleOnlinePayment = async (installment) => {
+        if (!installment || !installment.id) {
+            Swal.fire({
+                title: "Data Tidak Valid",
+                text: "Informasi pembayaran tidak ditemukan. Silakan hubungi admin.",
+                icon: "warning",
+            });
+            return;
+        }
         setIsLoadingPay(true);
         try {
             const response = await axios.post(
@@ -121,6 +129,7 @@ export default function OrderConfirmation({ transaction }) {
     };
 
     const formatCurrency = (amount) => {
+        if (amount === null || amount === undefined || isNaN(amount)) return "Rp 0";
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
@@ -235,57 +244,47 @@ export default function OrderConfirmation({ transaction }) {
                                             Informasi Pelanggan
                                         </h2>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
                                         <div>
-                                            <label className="block text-sm text-gray-600 mb-1">
+                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                 Nama Lengkap
-                                            </label>
+                                            </h4>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.name ||
-                                                    transaction.user?.name ||
-                                                    "-"}
+                                                {transaction.name || (transaction.user && transaction.user.name) || "-"}
                                             </p>
                                         </div>
                                         <div>
-                                            <label className="block text-sm text-gray-600 mb-1">
+                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                 Nomor Telepon
-                                            </label>
+                                            </h4>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.phone ||
-                                                    transaction.user?.phone ||
-                                                    "-"}
+                                                {transaction.phone || (transaction.user && transaction.user.phone) || "-"}
                                             </p>
                                         </div>
                                         <div>
-                                            <label className="block text-sm text-gray-600 mb-1">
+                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                 Email
-                                            </label>
+                                            </h4>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.email ||
-                                                    transaction.user?.email ||
-                                                    "-"}
+                                                {transaction.email || (transaction.user && transaction.user.email) || "-"}
                                             </p>
                                         </div>
                                         <div>
-                                            <label className="block text-sm text-gray-600 mb-1">
-                                                NIK
-                                            </label>
+                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
+                                                NIK (No. KTP)
+                                            </h4>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.nik ||
-                                                    transaction.user?.nik ||
-                                                    "-"}
+                                                {transaction.nik || (transaction.user && transaction.user.nik) || "-"}
                                             </p>
                                         </div>
                                         
                                         {isCredit && (
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
+                                                <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                     Pekerjaan
-                                                </label>
+                                                </h4>
                                                 <p className="font-semibold text-gray-900">
-                                                    {transaction.occupation ||
-                                                        transaction.user?.pekerjaan ||
-                                                        "-"}
+                                                    {transaction.occupation || (transaction.user && transaction.user.pekerjaan) || "-"}
                                                 </p>
                                             </div>
                                         )}
@@ -293,17 +292,17 @@ export default function OrderConfirmation({ transaction }) {
                                         {!isCredit && (
                                             <>
                                                 <div>
-                                                    <label className="block text-sm text-gray-600 mb-1">
+                                                    <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                         Warna Motor
-                                                    </label>
+                                                    </h4>
                                                     <p className="font-semibold text-gray-900">
                                                         {transaction.motor_color || "-"}
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm text-gray-600 mb-1">
+                                                    <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                         Metode Penyerahan
-                                                    </label>
+                                                    </h4>
                                                     <p className="font-semibold text-gray-900">
                                                         {transaction.delivery_method || "-"}
                                                     </p>
@@ -312,21 +311,19 @@ export default function OrderConfirmation({ transaction }) {
                                         )}
 
                                         <div className="sm:col-span-2">
-                                            <label className="block text-sm text-gray-600 mb-1">
-                                                Alamat
-                                            </label>
+                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
+                                                Alamat Lengkap
+                                            </h4>
                                             <p className="font-semibold text-gray-900">
-                                                {transaction.address ||
-                                                    transaction.user?.alamat ||
-                                                    "-"}
+                                                {transaction.address || (transaction.user && transaction.user.alamat) || "-"}
                                             </p>
                                         </div>
-                                        <div>
-                                            <label className="block text-sm text-gray-600 mb-1">
+                                        <div className="sm:col-span-2 pt-4 border-t border-gray-100">
+                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
                                                 Jenis Transaksi
-                                            </label>
-                                            <p className="font-semibold text-gray-900">
-                                                {isCredit ? "Kredit" : "Cash"}
+                                            </h4>
+                                            <p className="font-semibold text-gray-900 capitalize">
+                                                {transaction.transaction_type.toLowerCase()}
                                             </p>
                                         </div>
                                     </div>
@@ -449,13 +446,18 @@ export default function OrderConfirmation({ transaction }) {
                                                 />
                                             )}
 
-                                            {/* Pelunasan (if booking fee paid) */}
+                                            {/* Pelunasan (if booking fee paid OR no booking fee exists) */}
                                             {!isCredit &&
-                                                transaction.installments?.find(
+                                                (transaction.installments?.find(
                                                     (i) =>
                                                         i.installment_number ===
                                                         0,
-                                                )?.status === "paid" &&
+                                                )?.status === "paid" || 
+                                                !transaction.installments?.find(
+                                                    (i) =>
+                                                        i.installment_number ===
+                                                        0,
+                                                )) &&
                                                 transaction.installments?.find(
                                                     (i) =>
                                                         i.installment_number ===

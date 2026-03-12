@@ -70,7 +70,7 @@ class TransactionController extends Controller
         $transaction->load(['user', 'motor', 'installments', 'creditDetail']);
 
         $motors = Motor::all();
-        $users = User::where('role', 'customer')->get();
+        $users = User::where('role', 'user')->get();
 
         return Inertia::render('Admin/Transactions/Show', [
             'transaction' => $transaction,
@@ -85,7 +85,7 @@ class TransactionController extends Controller
     public function create()
     {
         $motors = Motor::all();
-        $users = User::where('role', 'customer')->get();
+        $users = User::where('role', 'user')->get();
 
         return Inertia::render('Admin/Transactions/Create', [
             'motors' => $motors,

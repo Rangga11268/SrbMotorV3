@@ -149,6 +149,14 @@ export default function Show({ transaction, motors, users }) {
                                 Edit
                             </CButton>
                             {getStatusBadge(transaction.status)}
+                            <a
+                                href={route("admin.transactions.invoice.preview", transaction.id)}
+                                target="_blank"
+                                className="btn btn-info btn-sm text-white d-flex align-items-center gap-2"
+                            >
+                                <CIcon icon={cilSave} size="sm" />
+                                Invoice
+                            </a>
                             {transaction.status !== "cancelled" && (
                                 <CButton
                                     color="secondary"
@@ -229,9 +237,10 @@ export default function Show({ transaction, motors, users }) {
                                                 )
                                             }
                                         >
+                                            <option value="" disabled>Pilih Pelanggan</option>
                                             {users.map((u) => (
                                                 <option key={u.id} value={u.id}>
-                                                    {u.name}
+                                                    {u.name} ({u.email})
                                                 </option>
                                             ))}
                                         </CFormSelect>

@@ -64,7 +64,8 @@ class Transaction extends Model
         'customer_occupation',
         'customer_address',
         'status_text',
-        'unified_status'
+        'unified_status',
+        'total_amount'
     ];
 
     /**
@@ -228,5 +229,16 @@ class Transaction extends Model
     public function getCustomerAddressAttribute()
     {
         return $this->address ?? '';
+    }
+
+    /**
+     * Accessor for total_amount (calculated from installments or final_price)
+     */
+    public function getTotalAmountAttribute()
+    {
+        // For CASH, it's the final price minus paid installments
+        // For CREDIT, it depends on what we want to show (usually remaining balance)
+        // Given the UI shows it as "Sisa Kewajiban", we calculate unpaid installments
+        return (float) $this->installments()->where('status', '!=', 'paid')->sum(\Illuminate\Support\Facades\DB::raw('amount + penalty_amount'));
     }
 }

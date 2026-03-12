@@ -314,13 +314,15 @@ export default function InstallmentIndex({ transactions }) {
         );
     };
 
-    const formatCurrency = (amount) =>
-        new Intl.NumberFormat("id-ID", {
+    const formatCurrency = (amount) => {
+        if (amount === null || amount === undefined || isNaN(amount)) return "Rp 0";
+        return new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
         }).format(amount);
+    };
 
     const formatDate = (dateString, showTime = false) => {
         const options = {

@@ -32,7 +32,7 @@ class InstallmentController extends Controller
     }
     public function checkPaymentStatus(Installment $installment)
     {
-        if ($installment->transaction->user_id !== Auth::id()) {
+        if ($installment->transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403);
         }
 
@@ -82,15 +82,41 @@ class InstallmentController extends Controller
                 $transaction = $installment->transaction;
                 if ($transaction) {
                     $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
+                    $newStatus = null;
+                    
                     if ($unpaid == 0) {
-                        if ($transaction->transaction_type == 'CASH') {
-                            $transaction->update(['status' => 'payment_confirmed']);
-                        } else {
-                            $transaction->update(['status' => 'completed']);
-                        }
+                        $newStatus = ($transaction->transaction_type == 'CASH') ? 'payment_confirmed' : 'completed';
                     } elseif ($installment->installment_number === 0) {
                         // If DP/Booking Fee paid, advance to unit preparation
-                        $transaction->update(['status' => 'unit_preparation']);
+                        $newStatus = 'unit_preparation';
+                    }
+
+                    if ($newStatus) {
+                        $transaction->update(['status' => $newStatus]);
+                        
+                        // Stock Locking: If status is locking status, mark motor as unavailable
+                        $lockStatuses = ['payment_confirmed', 'pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
+                        if (in_array($newStatus, $lockStatuses)) {
+                            $transaction->motor->update(['tersedia' => false]);
+                            \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$transaction->motor_id} (Automated Midtrans Settlement)");
+                        }
+
+                        // WhatsApp Notification for status update
+                        try {
+                            $statusLabels = [
+                                'payment_confirmed' => 'Pembayaran Anda telah kami terima (Lunas)',
+                                'unit_preparation' => 'Pembayaran Booking Fee/DP diterima. Motor Anda sedang disiapkan',
+                                'completed' => 'Pesanan Anda telah dinyatakan selesai',
+                            ];
+
+                            $phone = $transaction->phone ?? $transaction->user->phone;
+                            if ($phone && isset($statusLabels[$newStatus])) {
+                                $msg = "Halo *{$transaction->name}*,\n\nTerima kasih! Pembayaran Anda via Midtrans telah berhasil diverifikasi.\n\nStatus pesanan Anda kini: *{$statusLabels[$newStatus]}*\n\nUnit: {$transaction->motor->name}\n\n- SRB Motor";
+                                \App\Services\WhatsAppService::sendMessage($phone, $msg);
+                            }
+                        } catch (\Exception $e) {
+                            \Illuminate\Support\Facades\Log::error('WA Notification Error (Midtrans Callback): ' . $e->getMessage());
+                        }
                     }
                 }
             } else if ($transactionStatus == 'pending') {
@@ -121,7 +147,9 @@ class InstallmentController extends Controller
 
         $installments = Installment::whereIn('id', $request->installment_ids)
             ->whereHas('transaction', function ($q) {
-                $q->where('user_id', Auth::id());
+                if (!Auth::user()->isAdmin()) {
+                    $q->where('user_id', Auth::id());
+                }
             })
             ->where('status', '!=', 'paid')
             ->get();
@@ -189,7 +217,7 @@ class InstallmentController extends Controller
 
     public function createPayment(Installment $installment)
     {
-        if ($installment->transaction->user_id !== Auth::id()) {
+        if ($installment->transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403);
         }
 
@@ -241,7 +269,7 @@ class InstallmentController extends Controller
     public function index()
     {
         $transactions = Transaction::where('user_id', Auth::id())
-            ->whereHas('creditDetail')
+            ->whereHas('installments')
             ->with(['installments' => function ($query) {
                 $query->orderBy('installment_number', 'asc');
             }, 'motor'])
@@ -262,7 +290,7 @@ class InstallmentController extends Controller
         ]);
 
 
-        if ($installment->transaction->user_id !== Auth::id()) {
+        if ($installment->transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403);
         }
 

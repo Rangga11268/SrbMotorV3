@@ -322,6 +322,15 @@ class MotorGalleryController extends Controller
             'reference_number' => 'REF-' . strtoupper(uniqid()),
         ]);
 
+        // Create DP Installment (#0)
+        \App\Models\Installment::create([
+            'transaction_id' => $transaction->id,
+            'installment_number' => 0,
+            'amount' => $request->dp_amount,
+            'due_date' => now()->addDays(1),
+            'status' => 'pending',
+        ]);
+
 
         try {
 
@@ -359,7 +368,11 @@ class MotorGalleryController extends Controller
             ? $transaction->creditDetail->hasRequiredDocuments()
             : true;
 
-        return \Inertia\Inertia::render('Motors/OrderConfirmation', compact('transaction'));
+        $midtransClientKey = config('services.midtrans.client_key') ?? config('midtrans.client_key');
+        return \Inertia\Inertia::render('Motors/OrderConfirmation', [
+            'transaction' => $transaction,
+            'midtransClientKey' => $midtransClientKey
+        ]);
     }
 
 
