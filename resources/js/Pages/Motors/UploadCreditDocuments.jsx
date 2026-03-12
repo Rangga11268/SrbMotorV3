@@ -162,8 +162,7 @@ export default function UploadCreditDocuments({ transaction }) {
                                                 <span className="font-semibold text-gray-900">
                                                     {
                                                         transaction
-                                                            .credit_detail
-                                                            .tenor_in_months
+                                                            .credit_detail.tenor
                                                     }{" "}
                                                     Bulan
                                                 </span>

@@ -36,6 +36,7 @@ import {
     cilTrash,
     cilBan,
 } from "@coreui/icons";
+import { CheckCircle, XCircle, Eye } from "lucide-react";
 
 export default function Show({
     credit,
@@ -473,7 +474,10 @@ export default function Show({
 
     function ApproveCreditModal() {
         const { data, setData, post, processing } = useForm({
-            approved_amount: credit.transaction?.credit_amount || (credit.transaction?.motor?.price - credit.dp_amount) || "",
+            approved_amount:
+                credit.transaction?.credit_amount ||
+                credit.transaction?.motor?.price - credit.dp_amount ||
+                "",
             interest_rate: "2.5",
         });
 
@@ -684,6 +688,78 @@ export default function Show({
             </CModal>
         );
     }
+
+    // Create a function to handle document reject modals dynamically
+    function DocumentRejectModal({ documentId }) {
+        const { data, setData, post, processing } = useForm({
+            rejection_reason: "",
+        });
+
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            setIsLoading(true);
+            post(route("admin.documents.reject", documentId), {
+                onFinish: () => {
+                    setIsLoading(false);
+                    setActiveModal(null);
+                },
+                onSuccess: () => {
+                    Swal.fire("Berhasil!", "Dokumen telah ditolak.", "success");
+                    window.location.reload();
+                },
+                onError: () => {
+                    Swal.fire("Error", "Gagal menolak dokumen", "error");
+                },
+            });
+        };
+
+        return (
+            <CModal
+                visible={activeModal === `rejectDoc-${documentId}`}
+                onClose={() => setActiveModal(null)}
+            >
+                <CModalHeader onClose={() => setActiveModal(null)}>
+                    <CModalTitle>Tolak Dokumen</CModalTitle>
+                </CModalHeader>
+                <CForm onSubmit={handleSubmit}>
+                    <CModalBody>
+                        <div className="mb-3">
+                            <CFormLabel>Alasan Penolakan</CFormLabel>
+                            <CFormTextarea
+                                rows="3"
+                                value={data.rejection_reason}
+                                onChange={(e) =>
+                                    setData("rejection_reason", e.target.value)
+                                }
+                                placeholder="Jelaskan alasan penolakan dokumen..."
+                                required
+                            />
+                        </div>
+                    </CModalBody>
+                    <CModalFooter>
+                        <CButton
+                            type="button"
+                            color="secondary"
+                            onClick={() => setActiveModal(null)}
+                        >
+                            Batal
+                        </CButton>
+                        <CButton
+                            type="submit"
+                            color="danger"
+                            disabled={processing || isLoading}
+                        >
+                            {processing || isLoading ? (
+                                <CSpinner size="sm" />
+                            ) : null}{" "}
+                            Tolak
+                        </CButton>
+                    </CModalFooter>
+                </CForm>
+            </CModal>
+        );
+    }
+
     const handleCancel = () => {
         Swal.fire({
             title: "Batalkan Pengajuan?",
@@ -735,18 +811,19 @@ export default function Show({
                     Transaksi #{credit.transaction_id} - {currentStatus.label}
                 </h3>
                 <div className="d-flex gap-2">
-                    {credit.status !== "dibatalkan" && credit.status !== "selesai" && (
-                        <CButton
-                            color="secondary"
-                            variant="outline"
-                            size="sm"
-                            className="d-flex align-items-center gap-2"
-                            onClick={handleCancel}
-                        >
-                            <CIcon icon={cilBan} size="sm" />
-                            Batalkan
-                        </CButton>
-                    )}
+                    {credit.status !== "dibatalkan" &&
+                        credit.status !== "selesai" && (
+                            <CButton
+                                color="secondary"
+                                variant="outline"
+                                size="sm"
+                                className="d-flex align-items-center gap-2"
+                                onClick={handleCancel}
+                            >
+                                <CIcon icon={cilBan} size="sm" />
+                                Batalkan
+                            </CButton>
+                        )}
                     <CButton
                         color="danger"
                         variant="outline"
@@ -1034,6 +1111,214 @@ export default function Show({
                         </CCol>
                     </CRow>
 
+                    {/* Document Status Alert */}
+                    {credit.documents &&
+                        credit.documents.length > 0 &&
+                        (() => {
+                            const pendingCount = credit.documents.filter(
+                                (d) => d.approval_status === "pending",
+                            ).length;
+                            const approvedCount = credit.documents.filter(
+                                (d) => d.approval_status === "approved",
+                            ).length;
+                            const rejectedCount = credit.documents.filter(
+                                (d) => d.approval_status === "rejected",
+                            ).length;
+
+                            return (
+                                <CAlert
+                                    color={
+                                        pendingCount > 0 ? "warning" : "success"
+                                    }
+                                    className="mb-4"
+                                >
+                                    <strong>Status Dokumen:</strong>{" "}
+                                    {approvedCount} Disetujui • {rejectedCount}{" "}
+                                    Ditolak • {pendingCount} Menunggu
+                                    {pendingCount > 0 && (
+                                        <div className="small mt-2">
+                                            ⚠️ Semua dokumen harus disetujui
+                                            atau ditolak sebelum melanjutkan
+                                            verifikasi.
+                                        </div>
+                                    )}
+                                </CAlert>
+                            );
+                        })()}
+
+                    {/* Documents Section */}
+                    {credit.documents && credit.documents.length > 0 && (
+                        <CCard className="mb-4">
+                            <CCardHeader className="bg-transparent border-bottom">
+                                <strong className="d-flex align-items-center gap-2">
+                                    <CIcon icon={cilNotes} size="sm" />
+                                    Dokumen Pendukung ({credit.documents.length}
+                                    )
+                                </strong>
+                            </CCardHeader>
+                            <CCardBody>
+                                <div className="table-responsive">
+                                    <table className="table table-sm table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipe Dokumen</th>
+                                                <th>Nama File</th>
+                                                <th>Status</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {credit.documents.map((doc) => (
+                                                <tr key={doc.id}>
+                                                    <td>
+                                                        <small>
+                                                            {doc.document_type}
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <a
+                                                            href={`/storage/${doc.file_path}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-decoration-none"
+                                                        >
+                                                            {doc.original_name}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <CBadge
+                                                            color={
+                                                                doc.approval_status ===
+                                                                "approved"
+                                                                    ? "success"
+                                                                    : doc.approval_status ===
+                                                                        "rejected"
+                                                                      ? "danger"
+                                                                      : "warning"
+                                                            }
+                                                        >
+                                                            {doc.approval_status ===
+                                                            "approved"
+                                                                ? "Disetujui"
+                                                                : doc.approval_status ===
+                                                                    "rejected"
+                                                                  ? "Ditolak"
+                                                                  : "Menunggu"}
+                                                        </CBadge>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex gap-2">
+                                                            {doc.approval_status ===
+                                                                "pending" && (
+                                                                <>
+                                                                    <CButton
+                                                                        color="success"
+                                                                        size="sm"
+                                                                        onClick={() => {
+                                                                            Swal.fire(
+                                                                                {
+                                                                                    title: "Setujui Dokumen?",
+                                                                                    text: doc.original_name,
+                                                                                    icon: "question",
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonText:
+                                                                                        "Setujui",
+                                                                                    cancelButtonText:
+                                                                                        "Batal",
+                                                                                },
+                                                                            ).then(
+                                                                                (
+                                                                                    result,
+                                                                                ) => {
+                                                                                    if (
+                                                                                        result.isConfirmed
+                                                                                    ) {
+                                                                                        router.post(
+                                                                                            route(
+                                                                                                "admin.documents.approve",
+                                                                                                doc.id,
+                                                                                            ),
+                                                                                            {},
+                                                                                            {
+                                                                                                onSuccess:
+                                                                                                    () => {
+                                                                                                        Swal.fire(
+                                                                                                            "Berhasil",
+                                                                                                            "Dokumen disetujui",
+                                                                                                            "success",
+                                                                                                        );
+                                                                                                        window.location.reload();
+                                                                                                    },
+                                                                                                onError:
+                                                                                                    () => {
+                                                                                                        Swal.fire(
+                                                                                                            "Gagal",
+                                                                                                            "Error approve dokumen",
+                                                                                                            "error",
+                                                                                                        );
+                                                                                                    },
+                                                                                            },
+                                                                                        );
+                                                                                    }
+                                                                                },
+                                                                            );
+                                                                        }}
+                                                                        className="d-flex align-items-center gap-2"
+                                                                        title="Setujui Dokumen"
+                                                                    >
+                                                                        <CheckCircle
+                                                                            size={
+                                                                                16
+                                                                            }
+                                                                        />
+                                                                        Setujui
+                                                                    </CButton>
+                                                                    <CButton
+                                                                        color="danger"
+                                                                        size="sm"
+                                                                        onClick={() => {
+                                                                            setActiveModal(
+                                                                                `rejectDoc-${doc.id}`,
+                                                                            );
+                                                                        }}
+                                                                        className="d-flex align-items-center gap-2"
+                                                                        title="Tolak Dokumen"
+                                                                    >
+                                                                        <XCircle
+                                                                            size={
+                                                                                16
+                                                                            }
+                                                                        />
+                                                                        Tolak
+                                                                    </CButton>
+                                                                </>
+                                                            )}
+                                                            <CButton
+                                                                color="info"
+                                                                size="sm"
+                                                                as="a"
+                                                                href={`/storage/${doc.file_path}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="d-flex align-items-center gap-2"
+                                                                title="Download/Lihat Dokumen"
+                                                            >
+                                                                <Eye
+                                                                    size={16}
+                                                                />
+                                                                Lihat
+                                                            </CButton>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </CCardBody>
+                        </CCard>
+                    )}
+
                     {/* Survey Information */}
                     {(credit.survey_scheduled_date || credit.survey_notes) && (
                         <CCard className="mb-4">
@@ -1248,6 +1533,11 @@ export default function Show({
             <ApproveCreditModal />
             <RecordDPModal />
             <CompleteCreditModal />
+            {/* Document Reject Modals */}
+            {credit.documents &&
+                credit.documents.map((doc) => (
+                    <DocumentRejectModal key={doc.id} documentId={doc.id} />
+                ))}
         </AdminLayout>
     );
 }

@@ -7,6 +7,7 @@ use App\Models\CreditDetail;
 use App\Models\LeasingProvider;
 use App\Services\CreditService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CreditController extends Controller
@@ -84,6 +85,7 @@ class CreditController extends Controller
             'leasingProvider',
             'dPConfirmedByUser',
             'surveySchedules',
+            'documents',
         ]);
 
         $availableTransitions = $this->creditService->getAvailableTransitions($credit);
@@ -103,6 +105,14 @@ class CreditController extends Controller
      */
     public function verifyDocuments(Request $request, CreditDetail $credit)
     {
+        // Check if all documents are approved or rejected
+        $pendingCount = $credit->documents()->where('approval_status', 'pending')->count();
+
+        if ($pendingCount > 0) {
+            return redirect()->route('admin.credits.show', $credit)
+                ->with('error', 'Semua dokumen harus disetujui atau ditolak terlebih dahulu sebelum verifikasi');
+        }
+
         $validated = $request->validate([
             'notes' => 'nullable|string|max:1000',
         ]);
@@ -279,7 +289,7 @@ class CreditController extends Controller
     public function destroy(CreditDetail $credit)
     {
         $transaction = $credit->transaction;
-        
+
         DB::transaction(function () use ($credit, $transaction) {
             $credit->delete();
             if ($transaction) {
@@ -289,6 +299,38 @@ class CreditController extends Controller
 
         return redirect()->route('admin.credits.index')
             ->with('success', 'Pengajuan kredit berhasil dihapus');
+    }
+
+    /**
+     * Approve a document
+     */
+    public function approveDocument(Request $request, \App\Models\Document $document)
+    {
+        try {
+            $document->approve();
+
+            return back()->with('success', 'Dokumen telah disetujui.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menyetujui dokumen.');
+        }
+    }
+
+    /**
+     * Reject a document upload
+     */
+    public function rejectDocumentUpload(Request $request, \App\Models\Document $document)
+    {
+        try {
+            $validated = $request->validate([
+                'rejection_reason' => 'required|string|max:500',
+            ]);
+
+            $document->reject($validated['rejection_reason']);
+
+            return back()->with('success', 'Dokumen telah ditolak.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menolak dokumen.');
+        }
     }
 
     /**

@@ -154,9 +154,15 @@ export default function Show({ transaction, motors, users }) {
                                             cancelButtonText: "Tidak",
                                         }).then((result) => {
                                             if (result.isConfirmed) {
-                                                router.post(route("admin.transactions.updateStatus", transaction.id), {
-                                                    status: "cancelled"
-                                                });
+                                                router.post(
+                                                    route(
+                                                        "admin.transactions.updateStatus",
+                                                        transaction.id,
+                                                    ),
+                                                    {
+                                                        status: "cancelled",
+                                                    },
+                                                );
                                             }
                                         });
                                     }}
@@ -164,14 +170,6 @@ export default function Show({ transaction, motors, users }) {
                                     Batalkan
                                 </CButton>
                             )}
-                            <CButton
-                                color="danger"
-                                variant="outline"
-                                size="sm"
-                                onClick={confirmDelete}
-                            >
-                                <CIcon icon={cilTrash} size="sm" />
-                            </CButton>
                         </>
                     ) : (
                         <>

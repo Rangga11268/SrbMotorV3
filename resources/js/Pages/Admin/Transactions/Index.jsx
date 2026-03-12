@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
     CCard,
     CCardBody,
@@ -32,6 +33,7 @@ import {
     cilZoom,
     cilReload,
     cilBike,
+    cilTrash,
 } from "@coreui/icons";
 
 export default function Index({
@@ -39,7 +41,8 @@ export default function Index({
     filters,
     statuses,
 }) {
-    const [localTransactions, setLocalTransactions] = useState(initialTransactions);
+    const [localTransactions, setLocalTransactions] =
+        useState(initialTransactions);
     const [search, setSearch] = useState(filters.search || "");
     const [status, setStatus] = useState(filters.status || "");
     const [loading, setLoading] = useState(false);
@@ -48,10 +51,13 @@ export default function Index({
     const fetchTransactions = async (params) => {
         setLoading(true);
         try {
-            const response = await axios.get(route("admin.transactions.index"), {
-                params,
-                headers: { "X-Requested-With": "XMLHttpRequest" },
-            });
+            const response = await axios.get(
+                route("admin.transactions.index"),
+                {
+                    params,
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                },
+            );
             setLocalTransactions(response.data);
         } catch (error) {
             console.error("Error fetching transactions:", error);
@@ -127,6 +133,41 @@ export default function Index({
         setSearch(value);
     };
 
+    const handleDelete = (transactionId) => {
+        Swal.fire({
+            title: "Hapus Transaksi?",
+            text: "Data transaksi akan dihapus permanen dan tidak bisa dipulihkan.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Hapus",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#dc3545",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(
+                    route("admin.transactions.destroy", transactionId),
+                    {
+                        onSuccess: () => {
+                            Swal.fire(
+                                "Terhapus!",
+                                "Transaksi berhasil dihapus.",
+                                "success",
+                            );
+                            fetchTransactions({ search, status });
+                        },
+                        onError: () => {
+                            Swal.fire(
+                                "Error",
+                                "Gagal menghapus transaksi",
+                                "error",
+                            );
+                        },
+                    },
+                );
+            }
+        });
+    };
+
     const handleStatusFilter = (value) => {
         setStatus(value);
     };
@@ -141,7 +182,7 @@ export default function Index({
         const urlObj = new URL(url);
         const params = Object.fromEntries(urlObj.searchParams);
         fetchTransactions(params);
-        
+
         // Update URL
         window.history.replaceState({}, "", url);
     };
@@ -243,7 +284,10 @@ export default function Index({
                         </div>
                     </div>
                 )}
-                <CCardBody className="p-0" style={{ opacity: loading ? 0.6 : 1 }}>
+                <CCardBody
+                    className="p-0"
+                    style={{ opacity: loading ? 0.6 : 1 }}
+                >
                     <CTable hover responsive className="mb-0">
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
@@ -399,6 +443,23 @@ export default function Index({
                                                         className="text-white"
                                                     />
                                                 </Link>
+                                                <button
+                                                    onClick={() =>
+                                                        handleDelete(trx.id)
+                                                    }
+                                                    className="btn btn-sm btn-danger d-flex align-items-center justify-content-center shadow-sm"
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                    }}
+                                                    title="Hapus"
+                                                >
+                                                    <CIcon
+                                                        icon={cilTrash}
+                                                        size="sm"
+                                                        className="text-white"
+                                                    />
+                                                </button>
                                             </div>
                                         </CTableDataCell>
                                     </CTableRow>
@@ -419,30 +480,37 @@ export default function Index({
                 </CCardBody>
 
                 {/* Pagination */}
-                {localTransactions.links && localTransactions.links.length > 3 && (
-                    <div className="card-footer d-flex justify-content-center py-3 bg-white border-top-0">
-                        <CPagination className="mb-0">
-                            {localTransactions.links.map((link, index) => {
-                                if (!link.url && !link.label) return null;
-                                return (
-                                    <CPaginationItem
-                                        key={index}
-                                        active={link.active}
-                                        disabled={!link.url}
-                                        onClick={() => handlePageChange(link.url)}
-                                        style={{ cursor: link.url ? "pointer" : "default" }}
-                                    >
-                                        <span
-                                            dangerouslySetInnerHTML={{
-                                                __html: link.label,
+                {localTransactions.links &&
+                    localTransactions.links.length > 3 && (
+                        <div className="card-footer d-flex justify-content-center py-3 bg-white border-top-0">
+                            <CPagination className="mb-0">
+                                {localTransactions.links.map((link, index) => {
+                                    if (!link.url && !link.label) return null;
+                                    return (
+                                        <CPaginationItem
+                                            key={index}
+                                            active={link.active}
+                                            disabled={!link.url}
+                                            onClick={() =>
+                                                handlePageChange(link.url)
+                                            }
+                                            style={{
+                                                cursor: link.url
+                                                    ? "pointer"
+                                                    : "default",
                                             }}
-                                        />
-                                    </CPaginationItem>
-                                );
-                            })}
-                        </CPagination>
-                    </div>
-                )}
+                                        >
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: link.label,
+                                                }}
+                                            />
+                                        </CPaginationItem>
+                                    );
+                                })}
+                            </CPagination>
+                        </div>
+                    )}
             </CCard>
         </AdminLayout>
     );
