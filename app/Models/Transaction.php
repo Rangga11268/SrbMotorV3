@@ -236,6 +236,9 @@ class Transaction extends Model
      */
     public function getTotalAmountAttribute()
     {
+        if ($this->status === 'cancelled') {
+            return 0.0;
+        }
         // For CASH, it's the final price minus paid installments
         // For CREDIT, it depends on what we want to show (usually remaining balance)
         // Given the UI shows it as "Sisa Kewajiban", we calculate unpaid installments

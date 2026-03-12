@@ -292,6 +292,7 @@ export default function InstallmentIndex({ transactions }) {
             waiting_approval: "DIVERIFIKASI",
             paid: "LUNAS",
             overdue: "TERLAMBAT",
+            cancelled: "DIBATALKAN",
         };
 
         const Icon =
@@ -436,21 +437,36 @@ export default function InstallmentIndex({ transactions }) {
                                                         <span className="font-semibold text-gray-900">
                                                             Tanggal:
                                                         </span>{" "}
-                                                        {formatDate(
-                                                            transaction.created_at,
-                                                        )}
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="text-right w-full md:w-auto">
-                                                <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
-                                                    Sisa Kewajiban
-                                                </p>
-                                                <p className="text-3xl font-black text-blue-600">
-                                                    {formatCurrency(
-                                                        transaction.total_amount,
-                                                    )}
-                                                </p>
+                                            <div className="flex flex-col items-end gap-3 w-full md:w-auto">
+                                                {transaction.status === "cancelled" ? (
+                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-black border border-red-200 uppercase tracking-widest">
+                                                        <X size={14} strokeWidth={3} />
+                                                        Pesanan Dibatalkan
+                                                    </span>
+                                                ) : transaction.status === "completed" ? (
+                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-100 text-green-600 text-xs font-black border border-green-200 uppercase tracking-widest">
+                                                        <ShieldCheck size={14} strokeWidth={3} />
+                                                        Selesai
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-xs font-black border border-blue-100 uppercase tracking-widest">
+                                                        <Activity size={14} strokeWidth={3} />
+                                                        {transaction.status_text || "Aktif"}
+                                                    </span>
+                                                )}
+                                                <div className="text-right">
+                                                    <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                                                        Sisa Kewajiban
+                                                    </p>
+                                                    <p className="text-3xl font-black text-blue-600">
+                                                        {formatCurrency(
+                                                            transaction.total_amount,
+                                                        )}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -500,6 +516,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                 inst.id,
                                                                             )}
                                                                             onChange={() =>
+                                                                                transaction.status !== "cancelled" &&
                                                                                 toggleSelection(
                                                                                     inst.id,
                                                                                     inst.amount,
@@ -507,6 +524,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         0,
                                                                                 )
                                                                             }
+                                                                            disabled={transaction.status === "cancelled"}
                                                                         />
                                                                     ) : (
                                                                         <div className="w-4 h-4 rounded bg-gray-100 border border-gray-200" />
@@ -596,7 +614,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingPay
                                                                                     }
                                                                                     title="Bayar langsung via online gateway"
-                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
                                                                                     <Zap className="w-3.5 h-3.5" />
                                                                                     Bayar
@@ -608,8 +626,9 @@ export default function InstallmentIndex({ transactions }) {
                                                                                             inst,
                                                                                         )
                                                                                     }
+                                                                                    disabled={transaction.status === "cancelled" || processing}
                                                                                     title="Upload struk transfer manual dari bank"
-                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg transition-colors whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
                                                                                     <Upload className="w-3.5 h-3.5" />
                                                                                     Transfer
