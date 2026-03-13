@@ -121,12 +121,6 @@ function AdminLayoutContent({ children, title }) {
             active: route().current("admin.leasing-providers.*"),
         },
         {
-            name: "Skema Cicilan",
-            href: route("admin.financing-schemes.index"),
-            icon: cilCalculator,
-            active: route().current("admin.financing-schemes.*"),
-        },
-        {
             name: "Pesan Masuk",
             href: route("admin.contact.index"),
             icon: cilEnvelopeClosed,

@@ -255,10 +255,10 @@ class MotorGalleryController extends Controller
             'payment_method' => 'required|string',
         ]);
 
-        // Validasi DP minimum 20% dari harga motor
-        $minDownPayment = $motor->price * 0.20;
+        // Validasi DP minimum dari data motor
+        $minDownPayment = $motor->min_dp_amount ?? ($motor->price * 0.20);
         if ($request->dp_amount < $minDownPayment) {
-            return back()->withErrors(['dp_amount' => 'Uang muka minimum adalah 20% dari harga motor (Rp ' . number_format($minDownPayment, 0, ',', '.') . ').'])->withInput();
+            return back()->withErrors(['dp_amount' => 'Uang muka minimum untuk motor ini adalah Rp ' . number_format($minDownPayment, 0, ',', '.') . '.'])->withInput();
         }
 
 

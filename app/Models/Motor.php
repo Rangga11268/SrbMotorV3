@@ -25,6 +25,7 @@ class Motor extends Model
         'image_path',
         'details',
         'tersedia',
+        'min_dp_amount',
     ];
 
     /**
@@ -35,6 +36,7 @@ class Motor extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'tersedia' => 'boolean',
+        'min_dp_amount' => 'decimal:2',
     ];
 
     /**
@@ -50,13 +52,6 @@ class Motor extends Model
             });
     }
 
-    /**
-     * Get the financing schemes for the motor.
-     */
-    public function financingSchemes()
-    {
-        return $this->hasMany(FinancingScheme::class);
-    }
 
     /**
      * Get the full image URL

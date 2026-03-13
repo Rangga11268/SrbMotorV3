@@ -31,6 +31,7 @@ export default function Create({ promotions }) {
         tersedia: 1,
         image: null,
         description: "",
+        min_dp_amount: 0,
         promotion_ids: [],
     });
 
@@ -144,6 +145,19 @@ export default function Create({ promotions }) {
                                             placeholder="0"
                                             invalid={!!errors.price}
                                             feedbackInvalid={errors.price}
+                                        />
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormLabel>DP Minimum (Rp)</CFormLabel>
+                                        <CFormInput
+                                            type="number"
+                                            value={data.min_dp_amount}
+                                            onChange={(e) =>
+                                                setData("min_dp_amount", e.target.value)
+                                            }
+                                            placeholder="Contoh: 600000"
+                                            invalid={!!errors.min_dp_amount}
+                                            feedbackInvalid={errors.min_dp_amount}
                                         />
                                     </CCol>
                                     <CCol md={6}>

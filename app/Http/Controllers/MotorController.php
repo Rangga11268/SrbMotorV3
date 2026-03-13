@@ -68,6 +68,7 @@ class MotorController extends Controller
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
             'tersedia' => 'required|boolean',
+            'min_dp_amount' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
             'promotion_ids' => 'nullable|array',
@@ -84,6 +85,7 @@ class MotorController extends Controller
             'year' => $request->year,
             'type' => $request->type,
             'tersedia' => $request->tersedia,
+            'min_dp_amount' => $request->min_dp_amount,
             'image_path' => $imagePath,
             'description' => $request->description,
         ]);
@@ -126,6 +128,7 @@ class MotorController extends Controller
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
             'tersedia' => 'required|boolean',
+            'min_dp_amount' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
             'promotion_ids' => 'nullable|array',
@@ -140,6 +143,7 @@ class MotorController extends Controller
             'year' => $request->year,
             'type' => $request->type,
             'tersedia' => $request->tersedia,
+            'min_dp_amount' => $request->min_dp_amount,
             'description' => $request->description,
         ];
 

@@ -91,7 +91,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         e.preventDefault();
 
         // Validation check
-        const minDP = motor.price * 0.2;
+        const minDP = parseFloat(motor.min_dp_amount || motor.price * 0.2);
         const validationErrors = [];
 
         if (!data.name.trim()) {
@@ -448,7 +448,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
                                                 <Label htmlFor="down_payment">
-                                                    Uang Muka (DP) - Minimum 20%
+                                                    Uang Muka (DP) - Minimum Rp {parseInt(motor.min_dp_amount || motor.price * 0.2).toLocaleString('id-ID')}
                                                 </Label>
                                                 <div className="space-y-3">
                                                     <div className="relative">
@@ -460,8 +460,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                 parseFloat(
                                                                     data.dp_amount,
                                                                 ) >=
-                                                                    motor.price *
-                                                                        0.2 &&
+                                                                    parseFloat(motor.min_dp_amount || motor.price * 0.2) &&
                                                                 data.dp_amount
                                                                     ? "border-green-500"
                                                                     : "border-gray-200 focus:border-blue-500"
@@ -484,7 +483,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                     <div className="grid grid-cols-2 gap-3">
                                                         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                                             <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">
-                                                                Min. DP (20%)
+                                                                Min. DP
                                                             </p>
                                                             <p className="text-sm font-black text-blue-900">
                                                                 {new Intl.NumberFormat(
@@ -496,8 +495,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                         minimumFractionDigits: 0,
                                                                     },
                                                                 ).format(
-                                                                    motor.price *
-                                                                        0.2,
+                                                                    motor.min_dp_amount || motor.price * 0.2,
                                                                 )}
                                                             </p>
                                                         </div>
@@ -508,8 +506,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                 setData(
                                                                     "dp_amount",
                                                                     Math.round(
-                                                                        motor.price *
-                                                                            0.2,
+                                                                        motor.min_dp_amount || motor.price * 0.2,
                                                                     ),
                                                                 )
                                                             }
@@ -538,8 +535,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                     parseFloat(
                                                                         data.dp_amount,
                                                                     ) >=
-                                                                    motor.price *
-                                                                        0.2
+                                                                    parseFloat(motor.min_dp_amount || motor.price * 0.2)
                                                                         ? "bg-green-50 border-green-200"
                                                                         : "bg-yellow-50 border-yellow-200"
                                                                 }`}
@@ -551,8 +547,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                                 parseFloat(
                                                                                     data.dp_amount,
                                                                                 ) >=
-                                                                                motor.price *
-                                                                                    0.2
+                                                                                parseFloat(motor.min_dp_amount || motor.price * 0.2)
                                                                                     ? "text-green-700"
                                                                                     : "text-yellow-700"
                                                                             }`}
@@ -583,8 +578,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                     {parseFloat(
                                                                         data.dp_amount,
                                                                     ) <
-                                                                        motor.price *
-                                                                            0.2 && (
+                                                                        parseFloat(motor.min_dp_amount || motor.price * 0.2) && (
                                                                         <p className="text-xs text-yellow-700 font-medium">
                                                                             ⚠️
                                                                             Masih
@@ -598,8 +592,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                                     minimumFractionDigits: 0,
                                                                                 },
                                                                             ).format(
-                                                                                motor.price *
-                                                                                    0.2 -
+                                                                                (motor.min_dp_amount || motor.price * 0.2) -
                                                                                     parseFloat(
                                                                                         data.dp_amount,
                                                                                     ),
@@ -610,8 +603,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                                     {parseFloat(
                                                                         data.dp_amount,
                                                                     ) >=
-                                                                        motor.price *
-                                                                            0.2 && (
+                                                                        parseFloat(motor.min_dp_amount || motor.price * 0.2) && (
                                                                         <p className="text-xs text-green-700 font-medium flex items-center gap-1.5">
                                                                             DP
                                                                             sudah

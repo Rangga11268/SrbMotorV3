@@ -91,7 +91,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($id, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with(['promotions', 'financingSchemes.provider']);
+            $query = $query->with(['promotions']);
             
             return $query->find($id);
         });

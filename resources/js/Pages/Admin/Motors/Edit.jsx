@@ -32,6 +32,7 @@ export default function Edit({ motor, promotions }) {
         tersedia: motor.tersedia,
         image: null,
         description: motor.description || "",
+        min_dp_amount: motor.min_dp_amount || 0,
         promotion_ids: motor.promotions
             ? motor.promotions.map((p) => p.id)
             : [],
@@ -169,6 +170,19 @@ export default function Edit({ motor, promotions }) {
                                             }
                                             invalid={!!errors.price}
                                             feedbackInvalid={errors.price}
+                                        />
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormLabel>DP Minimum (Rp)</CFormLabel>
+                                        <CFormInput
+                                            type="number"
+                                            value={data.min_dp_amount}
+                                            onChange={(e) =>
+                                                setData("min_dp_amount", e.target.value)
+                                            }
+                                            placeholder="Contoh: 600000"
+                                            invalid={!!errors.min_dp_amount}
+                                            feedbackInvalid={errors.min_dp_amount}
                                         />
                                     </CCol>
                                     <CCol md={6}>

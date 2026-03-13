@@ -28,38 +28,22 @@ import Badge from "@/Components/UI/Badge";
 
 export default function Show({ motor, relatedMotors }) {
     const { auth } = usePage().props;
-    const [selectedProviderId, setSelectedProviderId] = React.useState(
-        motor.financing_schemes?.[0]?.provider_id || null,
-    );
-    const [selectedTenor, setSelectedTenor] = React.useState(
-        motor.financing_schemes?.[0]?.tenor || null,
-    );
+    const [selectedTenor, setSelectedTenor] = useState(36);
+    const [dpAmount, setDpAmount] = useState(parseFloat(motor.min_dp_amount || motor.price * 0.2));
 
-    const schemesByProvider = React.useMemo(() => {
-        if (!motor.financing_schemes) return {};
-        return motor.financing_schemes.reduce((acc, scheme) => {
-            const providerId = scheme.provider_id;
-            if (!acc[providerId]) {
-                acc[providerId] = {
-                    provider: scheme.provider,
-                    schemes: [],
-                };
-            }
-            acc[providerId].schemes.push(scheme);
-            return acc;
-        }, {});
-    }, [motor.financing_schemes]);
+    const monthlyInstallment = useMemo(() => {
+        const principal = parseFloat(motor.price) - dpAmount;
+        if (principal <= 0) return 0;
+        
+        const interestRate = 0.015; // 1.5% Flat
+        const totalInterest = principal * interestRate * selectedTenor;
+        return Math.round((principal + totalInterest) / selectedTenor);
+    }, [motor.price, dpAmount, selectedTenor]);
 
-    const activeProvider = schemesByProvider[selectedProviderId];
-    const activeScheme =
-        activeProvider?.schemes.find((s) => s.tenor === selectedTenor) ||
-        activeProvider?.schemes[0];
-
-    React.useEffect(() => {
-        if (activeProvider && !activeScheme) {
-            setSelectedTenor(activeProvider.schemes[0]?.tenor);
-        }
-    }, [selectedProviderId, activeProvider, activeScheme]);
+    const handleDpChange = (e) => {
+        const val = parseFloat(e.target.value) || 0;
+        setDpAmount(val);
+    };
 
     const openWhatsApp = (e) => {
         e.preventDefault();
@@ -367,8 +351,8 @@ export default function Show({ motor, relatedMotors }) {
                                     </CardBody>
                                 </Card>
 
-                                {/* LEASING QUICK SIMULATION (If available) */}
-                                {motor.financing_schemes?.length > 0 && (
+                                {/* DYNAMIC LEASING SIMULATION */}
+                                {motor.tersedia && (
                                     <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-white space-y-6">
                                         <div className="flex items-center justify-between">
                                             <h3 className="font-black text-gray-900 uppercase tracking-widest text-sm">
@@ -380,41 +364,59 @@ export default function Show({ motor, relatedMotors }) {
                                         </div>
 
                                         <div className="space-y-4">
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-1">
-                                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
-                                                        Uang Muka (DP)
-                                                    </p>
-                                                    <p className="font-black text-gray-900">
-                                                        Rp{" "}
-                                                        {parseInt(
-                                                            activeScheme?.dp_amount ||
-                                                                0,
-                                                        ).toLocaleString(
-                                                            "id-ID",
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <div className="flex justify-between items-center">
+                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                            Uang Muka (DP)
+                                                        </label>
+                                                        {dpAmount < parseFloat(motor.min_dp_amount) && (
+                                                            <span className="text-[10px] font-bold text-red-500 uppercase">
+                                                                Min. DP: Rp {parseInt(motor.min_dp_amount).toLocaleString('id-ID')}
+                                                            </span>
                                                         )}
-                                                    </p>
+                                                    </div>
+                                                    <div className="relative">
+                                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">Rp</span>
+                                                        <input 
+                                                            type="number"
+                                                            value={dpAmount}
+                                                            onChange={handleDpChange}
+                                                            className={`w-full pl-10 pr-4 py-3 bg-gray-50 border-2 rounded-xl font-bold text-gray-900 focus:outline-none transition-colors ${dpAmount < parseFloat(motor.min_dp_amount) ? 'border-red-200 focus:border-red-500' : 'border-gray-100 focus:border-primary'}`}
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div className="space-y-1">
-                                                    <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
-                                                        Tenor
-                                                    </p>
-                                                    <p className="font-black text-gray-900">
-                                                        {activeScheme?.tenor}{" "}
-                                                        Bulan
-                                                    </p>
+
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                        Tenor (Bulan)
+                                                    </label>
+                                                    <div className="grid grid-cols-3 gap-2">
+                                                        {[12, 24, 36].map((t) => (
+                                                            <button
+                                                                key={t}
+                                                                onClick={() => setSelectedTenor(t)}
+                                                                className={`py-2 rounded-xl font-black text-xs transition-all border-2 ${selectedTenor === t ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20' : 'bg-white border-gray-100 text-gray-400 hover:border-primary/30'}`}
+                                                            >
+                                                                {t} bln
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="p-4 bg-primary/5 rounded-xl border border-primary/10">
+
+                                            <div className="p-6 bg-primary/5 rounded-2xl border border-primary/10 relative overflow-hidden group">
+                                                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
+                                                    <Activity className="w-12 h-12" />
+                                                </div>
                                                 <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">
-                                                    Angsuran Per Bulan
+                                                    Estimasi Angsuran
                                                 </p>
-                                                <p className="text-2xl font-black text-primary">
-                                                    Rp{" "}
-                                                    {parseInt(
-                                                        activeScheme?.monthly_installment ||
-                                                            0,
-                                                    ).toLocaleString("id-ID")}
+                                                <p className="text-3xl font-black text-primary">
+                                                    Rp {monthlyInstallment.toLocaleString("id-ID")}
+                                                </p>
+                                                <p className="text-[9px] text-gray-400 font-bold mt-2 italic uppercase">
+                                                    *Bunga flat 1.5% per bulan
                                                 </p>
                                             </div>
                                         </div>
@@ -424,9 +426,9 @@ export default function Show({ motor, relatedMotors }) {
                                                 "motors.credit-order",
                                                 motor.id,
                                             )}
-                                            className="flex items-center justify-center gap-2 text-primary font-black uppercase text-xs tracking-widest hover:gap-3 transition-all"
+                                            className="flex items-center justify-center gap-2 text-primary font-black uppercase text-xs tracking-widest hover:gap-3 transition-all pt-2"
                                         >
-                                            Sesuaikan simulasi{" "}
+                                            Ajukan Sekarang{" "}
                                             <ChevronRight className="w-4 h-4" />
                                         </Link>
                                     </div>
