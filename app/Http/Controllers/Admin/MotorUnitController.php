@@ -91,37 +91,6 @@ class MotorUnitController extends Controller
     }
 
     /**
-     * Store multiple units at once.
-     */
-    public function batchStore(Request $request)
-    {
-        $validated = $request->validate([
-            'motor_id' => 'required|exists:motors,id',
-            'quantity' => 'required|integer|min:1|max:100',
-            'status' => 'required|string|in:available,booked,sold,maintenance',
-            'color' => 'nullable|string|max:100',
-            'arrival_date' => 'nullable|date',
-            'notes' => 'nullable|string',
-        ]);
-
-        \Illuminate\Support\Facades\DB::transaction(function () use ($validated) {
-            for ($i = 0; $i < $validated['quantity']; $i++) {
-                MotorUnit::create([
-                    'motor_id' => $validated['motor_id'],
-                    'frame_number' => 'AUTO-F-' . strtoupper(bin2hex(random_bytes(4))),
-                    'engine_number' => 'AUTO-E-' . strtoupper(bin2hex(random_bytes(4))),
-                    'color' => $validated['color'],
-                    'status' => $validated['status'],
-                    'arrival_date' => $validated['arrival_date'],
-                    'notes' => $validated['notes'] ? $validated['notes'] . " (Batch entry #" . ($i + 1) . ")" : "Batch entry #" . ($i + 1),
-                ]);
-            }
-        });
-
-        return back()->with('success', $validated['quantity'] . ' Unit motor berhasil ditambahkan secara massal');
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(MotorUnit $motorUnit)
