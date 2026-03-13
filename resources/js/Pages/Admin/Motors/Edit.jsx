@@ -29,7 +29,6 @@ export default function Edit({ motor, promotions }) {
         price: motor.price || "",
         year: motor.year || new Date().getFullYear(),
         type: motor.type || "",
-        tersedia: motor.tersedia,
         image: null,
         description: motor.description || "",
         min_dp_amount: motor.min_dp_amount || 0,
@@ -195,39 +194,6 @@ export default function Edit({ motor, promotions }) {
                                             }
                                         />
                                     </CCol>
-                                    <CCol md={6}>
-                                        <CFormLabel>Ketersediaan</CFormLabel>
-                                        <div className="d-flex gap-2">
-                                            <CButton
-                                                type="button"
-                                                color={
-                                                    data.tersedia == 1
-                                                        ? "success"
-                                                        : "light"
-                                                }
-                                                onClick={() =>
-                                                    setData("tersedia", 1)
-                                                }
-                                                className="flex-fill"
-                                            >
-                                                Tersedia
-                                            </CButton>
-                                            <CButton
-                                                type="button"
-                                                color={
-                                                    data.tersedia == 0
-                                                        ? "danger"
-                                                        : "light"
-                                                }
-                                                onClick={() =>
-                                                    setData("tersedia", 0)
-                                                }
-                                                className="flex-fill"
-                                            >
-                                                Kosong
-                                            </CButton>
-                                        </div>
-                                    </CCol>
                                     <CCol md={12}>
                                         <CFormLabel>
                                             Gambar Motor (opsional)
@@ -376,21 +342,12 @@ export default function Edit({ motor, promotions }) {
                                                   ).format(data.price)
                                                 : "0"}
                                         </div>
-                                        {data.tersedia == 1 ? (
-                                            <CBadge
-                                                color="success"
-                                                shape="rounded-pill"
-                                            >
-                                                Tersedia
-                                            </CBadge>
-                                        ) : (
-                                            <CBadge
-                                                color="danger"
-                                                shape="rounded-pill"
-                                            >
-                                                Kosong
-                                            </CBadge>
-                                        )}
+                                        <CBadge
+                                            color={motor.available_units_count > 0 ? "success" : "danger"}
+                                            shape="rounded-pill"
+                                        >
+                                            Stok: {motor.available_units_count} Unit
+                                        </CBadge>
                                     </div>
                                 </CCardBody>
                             </CCard>

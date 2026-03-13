@@ -35,6 +35,7 @@ import {
     cilZoom,
     cilReload,
     cilBike,
+    cilStorage,
 } from "@coreui/icons";
 
 export default function Index({ motors: initialMotors, filters }) {
@@ -44,6 +45,10 @@ export default function Index({ motors: initialMotors, filters }) {
     const [status, setStatus] = useState(filters.status || "");
     const [isFirstRender, setIsFirstRender] = useState(true);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLocalMotors(initialMotors);
+    }, [initialMotors]);
 
     const fetchMotors = async (currentFilters) => {
         setLoading(true);
@@ -219,7 +224,7 @@ export default function Index({ motors: initialMotors, filters }) {
                                 <CTableHeaderCell>Motor</CTableHeaderCell>
                                 <CTableHeaderCell>Merk / Tipe</CTableHeaderCell>
                                 <CTableHeaderCell>Harga</CTableHeaderCell>
-                                <CTableHeaderCell>Status</CTableHeaderCell>
+                                <CTableHeaderCell>Stok & Status</CTableHeaderCell>
                                 <CTableHeaderCell className="text-end">
                                     Aksi
                                 </CTableHeaderCell>
@@ -235,6 +240,18 @@ export default function Index({ motors: initialMotors, filters }) {
                                             key={`skeleton-${index}`}
                                             className="align-middle"
                                         >
+                                            <CTableDataCell>
+                                                <div
+                                                    style={{
+                                                        height: "20px",
+                                                        backgroundColor:
+                                                            "#e9ecef",
+                                                        borderRadius: "4px",
+                                                        animation:
+                                                            "pulse 1.5s ease-in-out infinite",
+                                                    }}
+                                                />
+                                            </CTableDataCell>
                                             <CTableDataCell>
                                                 <div
                                                     style={{
@@ -424,21 +441,21 @@ export default function Index({ motors: initialMotors, filters }) {
                                             </span>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            {motor.tersedia ? (
-                                                <CBadge
-                                                    color="success"
-                                                    shape="rounded-pill"
-                                                >
-                                                    Tersedia
-                                                </CBadge>
-                                            ) : (
-                                                <CBadge
-                                                    color="danger"
-                                                    shape="rounded-pill"
-                                                >
-                                                    Kosong
-                                                </CBadge>
-                                            )}
+                                            <div className="d-flex align-items-center gap-2">
+                                                {motor.available_units_count > 0 ? (
+                                                    <CBadge color="success" shape="rounded-pill">Tersedia</CBadge>
+                                                ) : (
+                                                    <CBadge color="danger" shape="rounded-pill">Kosong</CBadge>
+                                                )}
+                                                <div className="d-flex flex-column lh-1">
+                                                    <div className="fw-bold small">
+                                                        {motor.available_units_count} / {motor.units_count}
+                                                    </div>
+                                                    <div className="text-body-tertiary" style={{ fontSize: '9px' }}>
+                                                        Stok Unit
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <div className="d-flex gap-1 justify-content-end">
@@ -452,6 +469,19 @@ export default function Index({ motors: initialMotors, filters }) {
                                                 >
                                                     <CIcon
                                                         icon={cilZoom}
+                                                        size="sm"
+                                                    />
+                                                </Link>
+                                                <Link
+                                                    href={route(
+                                                        "admin.motor-units.index",
+                                                        { motor_id: motor.id }
+                                                    )}
+                                                    className="btn btn-sm btn-outline-info"
+                                                    title="Lihat Unit (Stok)"
+                                                >
+                                                    <CIcon
+                                                        icon={cilStorage}
                                                         size="sm"
                                                     />
                                                 </Link>

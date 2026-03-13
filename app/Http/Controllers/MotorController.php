@@ -102,7 +102,8 @@ class MotorController extends Controller
 
     public function show(Motor $motor): \Inertia\Response
     {
-        $motor->load('promotions');
+        $motor->load(['promotions', 'units.transaction']);
+        $motor->loadCount(['availableUnits', 'units']);
         return \Inertia\Inertia::render('Admin/Motors/Show', compact('motor'));
     }
 

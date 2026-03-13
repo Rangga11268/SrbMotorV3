@@ -22,7 +22,7 @@ class MotorRepository implements MotorRepositoryInterface
             $query = Motor::query();
             
             // Always load promotions to support badges on the frontend
-            $query = $query->with('promotions');
+            $query = $query->with('promotions')->withCount(['units', 'availableUnits']);
             
             return $query->orderBy('created_at', 'desc')->paginate($perPage);
         });
@@ -39,7 +39,7 @@ class MotorRepository implements MotorRepositoryInterface
             $query = Motor::query();
             
             // Always load promotions to support badges on the frontend
-            $query = $query->with('promotions');
+            $query = $query->with('promotions')->withCount(['units', 'availableUnits']);
             
             // Apply filters
             if (isset($filters['search']) && !empty($filters['search'])) {
@@ -74,7 +74,11 @@ class MotorRepository implements MotorRepositoryInterface
             }
             
             if (isset($filters['tersedia']) && $filters['tersedia'] !== null) {
-                $query->where('tersedia', $filters['tersedia']);
+                if ($filters['tersedia'] == 1) {
+                    $query->having('available_units_count', '>', 0);
+                } else {
+                    $query->having('available_units_count', '=', 0);
+                }
             }
             
             return $query->orderBy('created_at', 'desc')->paginate($perPage);
@@ -91,7 +95,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($id, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with(['promotions']);
+            $query = $query->with(['promotions'])->withCount(['units', 'availableUnits']);
             
             return $query->find($id);
         });
@@ -107,7 +111,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($limit, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with('promotions');
+            $query = $query->with('promotions')->withCount(['units', 'availableUnits']);
             
             return $query->orderBy('created_at', 'desc')->limit($limit)->get();
         });

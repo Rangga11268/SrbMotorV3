@@ -23,11 +23,23 @@ class CreditService
      */
     public function verifyDocuments(CreditDetail $credit, string $notes = ''): bool
     {
-        return $credit->update([
+        $oldStatus = $credit->status;
+        $res = $credit->update([
             'status' => 'verifikasi_dokumen',
             'verification_notes' => $notes,
             'verified_at' => now(),
         ]);
+
+        if ($res) {
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'verifikasi_dokumen',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Dokumen diverifikasi: ' . $notes,
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -36,10 +48,22 @@ class CreditService
      */
     public function rejectDocument(CreditDetail $credit, string $reason): bool
     {
-        return $credit->update([
+        $oldStatus = $credit->status;
+        $res = $credit->update([
             'status' => 'ditolak',
             'verification_notes' => $reason,
         ]);
+
+        if ($res) {
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'ditolak',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Aplikasi ditolak (dokumen tidak valid): ' . $reason,
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -49,11 +73,23 @@ class CreditService
      */
     public function sendToLeasing(CreditDetail $credit, int $leasingProviderId, string $appRef = ''): bool
     {
-        return $credit->update([
+        $oldStatus = $credit->status;
+        $res = $credit->update([
             'status' => 'dikirim_ke_leasing',
             'leasing_provider_id' => $leasingProviderId,
             'reference_number' => $appRef ?: $credit->reference_number,
         ]);
+
+        if ($res) {
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'dikirim_ke_leasing',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Data dikirim ke leasing. Ref: ' . $appRef,
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -77,6 +113,14 @@ class CreditService
             'status' => 'survey_dijadwalkan',
             'survey_scheduled_date' => $surveyData['survey_scheduled_date'],
         ]);
+
+        $credit->transaction->logs()->create([
+            'status_from' => 'dikirim_ke_leasing',
+            'status_to' => 'survey_dijadwalkan',
+            'actor_id' => auth()->id(),
+            'actor_type' => 'admin',
+            'notes' => 'Survey dijadwalkan pada ' . $surveyData['survey_scheduled_date'],
+        ]);
     }
 
     /**
@@ -85,11 +129,23 @@ class CreditService
      */
     public function completeSurvey(CreditDetail $credit, string $surveyNotes = ''): bool
     {
-        return $credit->update([
+        $oldStatus = $credit->status;
+        $res = $credit->update([
             'survey_notes' => $surveyNotes,
             'survey_completed_at' => now(),
             'status' => 'menunggu_keputusan_leasing',
         ]);
+
+        if ($res) {
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'menunggu_keputusan_leasing',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Survey selesai: ' . $surveyNotes,
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -98,6 +154,7 @@ class CreditService
     public function approveCredit(
         CreditDetail $credit
     ): bool {
+        $oldStatus = $credit->status;
         // Create DP Installment
         if ($credit->transaction->installments()->where('installment_number', 0)->count() === 0) {
             \App\Models\Installment::create([
@@ -109,10 +166,21 @@ class CreditService
             ]);
         }
 
-        return $credit->update([
+        $res = $credit->update([
             'status' => 'disetujui',
             'verified_at' => now(),
         ]);
+
+        if ($res) {
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'disetujui',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Kredit disetujui oleh leasing',
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -121,10 +189,23 @@ class CreditService
      */
     public function rejectCredit(CreditDetail $credit, string $reason): bool
     {
-        return $credit->update([
+        $oldStatus = $credit->status;
+        $res = $credit->update([
             'status' => 'ditolak',
             'verification_notes' => $reason,
         ]);
+
+        if ($res) {
+            $credit->transaction->update(['status' => 'cancelled']);
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'ditolak',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Kredit ditolak oleh leasing: ' . $reason,
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -135,11 +216,24 @@ class CreditService
         CreditDetail $credit,
         string $paymentMethod
     ): bool {
-        return $credit->update([
+        $oldStatus = $credit->status;
+        $res = $credit->update([
             'status' => 'dp_dibayar',
             'dp_paid_at' => now(),
             'dp_payment_method' => $paymentMethod,
         ]);
+
+        if ($res) {
+            $credit->transaction->update(['status' => 'pembayaran_dikonfirmasi']);
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'dp_dibayar',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Pembayaran DP dikonfirmasi: ' . $paymentMethod,
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -148,6 +242,7 @@ class CreditService
      */
     public function completeCredit(CreditDetail $credit, string $notes = ''): bool
     {
+        $oldStatus = $credit->status;
         // Generate monthly installments
         if ($credit->transaction->installments()->where('installment_number', '>', 0)->count() === 0) {
             $amount = $credit->monthly_installment;
@@ -163,12 +258,30 @@ class CreditService
             }
         }
 
-        return $credit->update([
+        $res = $credit->update([
             'status' => 'selesai',
             'completion_notes' => $notes,
             'completed_at' => now(),
             'is_completed' => true,
         ]);
+
+        if ($res) {
+            $credit->transaction->update(['status' => 'completed']);
+            
+            // Opsi B: Mark unit as sold if allocated
+            if ($credit->transaction->motor_unit_id) {
+                $credit->transaction->motorUnit()->update(['status' => 'sold']);
+            }
+
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'selesai',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Proses kredit selesai. Unit siap dikirim.',
+            ]);
+        }
+        return $res;
     }
 
     /**
@@ -177,8 +290,25 @@ class CreditService
     public function cancelCredit(CreditDetail $credit): bool
     {
         DB::transaction(function () use ($credit) {
+            $oldStatus = $credit->status;
             $credit->update(['status' => 'dibatalkan']);
             $credit->transaction->update(['status' => 'cancelled']);
+
+            // Opsi B: Release unit if allocated
+            if ($credit->transaction->motor_unit_id) {
+                \App\Models\MotorUnit::where('id', $credit->transaction->motor_unit_id)->update([
+                    'status' => 'available',
+                    'transaction_id' => null
+                ]);
+            }
+
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'dibatalkan',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'admin',
+                'notes' => 'Aplikasi kredit dibatalkan oleh admin',
+            ]);
         });
 
         return true;
@@ -221,6 +351,14 @@ class CreditService
             if ($transaction->motor) {
                 $transaction->motor->update(['tersedia' => true]);
                 \Illuminate\Support\Facades\Log::info("Stock Unlocked for Motor ID: {$transaction->motor_id} due to cancellation of Transaction ID: {$transaction->id}");
+            }
+
+            // Opsi B: Release unit if allocated
+            if ($transaction->motor_unit_id) {
+                \App\Models\MotorUnit::where('id', $transaction->motor_unit_id)->update([
+                    'status' => 'available',
+                    'transaction_id' => null
+                ]);
             }
 
             if ($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail) {

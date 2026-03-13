@@ -221,6 +221,10 @@ function UpdateProfileForm({ user }) {
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
+        phone: user.phone || "",
+        nik: user.profile?.nik || "",
+        alamat: user.profile?.alamat || "",
+        pekerjaan: user.profile?.pekerjaan || "",
     });
 
     const submit = (e) => {
@@ -255,29 +259,108 @@ function UpdateProfileForm({ user }) {
                 )}
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-900">
+                        Email
+                    </label>
+                    <div className="relative">
+                        <Mail
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            size={18}
+                        />
+                        <input
+                            type="email"
+                            value={data.email}
+                            onChange={(e) => setData("email", e.target.value)}
+                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            placeholder="Masukkan email Anda"
+                        />
+                    </div>
+                    {errors.email && (
+                        <span className="text-sm text-red-600 flex items-center gap-1">
+                            <AlertCircle size={14} />
+                            {errors.email}
+                        </span>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-900">
+                        Nomor WhatsApp
+                    </label>
+                    <div className="relative">
+                        <Phone
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            size={18}
+                        />
+                        <input
+                            type="tel"
+                            value={data.phone}
+                            onChange={(e) => setData("phone", e.target.value)}
+                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            placeholder="0812..."
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-900">
+                        NIK (KTP)
+                    </label>
+                    <div className="relative">
+                        <FileText
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            size={18}
+                        />
+                        <input
+                            type="text"
+                            value={data.nik}
+                            onChange={(e) => setData("nik", e.target.value)}
+                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            placeholder="16 digit NIK"
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="block text-sm font-semibold text-gray-900">
+                        Pekerjaan
+                    </label>
+                    <div className="relative">
+                        <Briefcase
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            size={18}
+                        />
+                        <input
+                            type="text"
+                            value={data.pekerjaan}
+                            onChange={(e) => setData("pekerjaan", e.target.value)}
+                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            placeholder="Sesuai KTP"
+                        />
+                    </div>
+                </div>
+            </div>
+
             <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-900">
-                    Email
+                    Alamat Lengkap
                 </label>
                 <div className="relative">
-                    <Mail
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    <MapPin
+                        className="absolute left-3 top-3 text-gray-400"
                         size={18}
                     />
-                    <input
-                        type="email"
-                        value={data.email}
-                        onChange={(e) => setData("email", e.target.value)}
-                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                        placeholder="Masukkan email Anda"
+                    <textarea
+                        value={data.alamat}
+                        onChange={(e) => setData("alamat", e.target.value)}
+                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all min-h-[100px]"
+                        placeholder="Alamat lengkap sesuai KTP"
                     />
                 </div>
-                {errors.email && (
-                    <span className="text-sm text-red-600 flex items-center gap-1">
-                        <AlertCircle size={14} />
-                        {errors.email}
-                    </span>
-                )}
             </div>
 
             <div className="pt-6 flex justify-end">

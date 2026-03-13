@@ -46,6 +46,8 @@ import {
     cilNewspaper,
     cilImage,
     cilCreditCard,
+    cilStorage,
+    cilHistory,
 } from "@coreui/icons";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -83,6 +85,12 @@ function AdminLayoutContent({ children, title }) {
             href: route("admin.motors.index"),
             icon: cilBike,
             active: route().current("admin.motors.*"),
+        },
+        {
+            name: "Unit Motor (Stok)",
+            href: route("admin.motor-units.index"),
+            icon: cilStorage,
+            active: route().current("admin.motor-units.*"),
         },
         {
             name: "Pengajuan Kredit",

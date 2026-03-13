@@ -144,6 +144,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // Cash Transaction Management Routes (CASH ONLY - tunai)
     Route::resource('transactions', AdminTransactionController::class);
     Route::post('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+    Route::post('/transactions/{transaction}/allocate-unit', [AdminTransactionController::class, 'allocateUnit'])->name('transactions.allocate-unit');
+
+    // Inventory Unit Management
+    Route::resource('motor-units', \App\Http\Controllers\Admin\MotorUnitController::class);
 
 
 

@@ -21,6 +21,8 @@ import {
     Shield,
     Settings,
     ArrowLeft,
+    MapPin,
+    Briefcase,
 } from "lucide-react";
 
 export default function Show({ user }) {
@@ -214,6 +216,48 @@ export default function Show({ user }) {
                                                     {user.role === "admin"
                                                         ? "Administrator"
                                                         : "Public User"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                                                Nomor WhatsApp
+                                            </p>
+                                            <p className="text-xl font-black text-gray-900 flex items-center gap-3">
+                                                <Phone className="w-6 h-6 text-gray-200" />{" "}
+                                                {user.phone || "-"}
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                                                NIK (KTP)
+                                            </p>
+                                            <p className="text-xl font-black text-gray-900 flex items-center gap-3">
+                                                <Fingerprint className="w-6 h-6 text-gray-200" />{" "}
+                                                {user.profile?.nik || "-"}
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                                                Pekerjaan
+                                            </p>
+                                            <p className="text-xl font-black text-gray-900 flex items-center gap-3">
+                                                <Briefcase className="w-6 h-6 text-gray-200" />{" "}
+                                                {user.profile?.pekerjaan || "-"}
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-2 md:col-span-2">
+                                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                                                Alamat Lengkap (KTP)
+                                            </p>
+                                            <div className="flex items-start gap-3">
+                                                <MapPin className="w-6 h-6 text-gray-200 shrink-0 mt-1" />
+                                                <p className="text-xl font-black text-gray-900">
+                                                    {user.profile?.alamat || "-"}
                                                 </p>
                                             </div>
                                         </div>

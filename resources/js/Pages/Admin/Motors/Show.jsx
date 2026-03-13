@@ -11,13 +11,14 @@ import {
     CBadge,
     CButton,
     CTable,
+    CTableHead,
     CTableBody,
     CTableRow,
     CTableHeaderCell,
     CTableDataCell,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPencil, cilTrash, cilArrowLeft, cilBike } from "@coreui/icons";
+import { cilPencil, cilTrash, cilArrowLeft, cilBike, cilStorage } from "@coreui/icons";
 
 export default function Show({ motor }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -113,18 +114,23 @@ export default function Show({ motor }) {
                                 <span className="text-body-secondary small fw-semibold">
                                     Status
                                 </span>
-                                {motor.tersedia ? (
-                                    <CBadge
-                                        color="success"
-                                        shape="rounded-pill"
-                                    >
-                                        Tersedia
-                                    </CBadge>
-                                ) : (
-                                    <CBadge color="danger" shape="rounded-pill">
-                                        Kosong
-                                    </CBadge>
-                                )}
+                                <div className="d-flex flex-column align-items-end">
+                                    {motor.available_units_count > 0 ? (
+                                        <CBadge
+                                            color="success"
+                                            shape="rounded-pill"
+                                        >
+                                            Tersedia
+                                        </CBadge>
+                                    ) : (
+                                        <CBadge color="danger" shape="rounded-pill">
+                                            Kosong
+                                        </CBadge>
+                                    )}
+                                    <div className="text-body-tertiary small mt-1 fw-bold">
+                                        {motor.available_units_count} / {motor.units_count} Unit
+                                    </div>
+                                </div>
                             </div>
                             <div className="text-center p-3 bg-primary-subtle rounded-3">
                                 <div className="text-body-secondary small mb-1">
@@ -203,6 +209,60 @@ export default function Show({ motor }) {
                                     Belum ada deskripsi.
                                 </p>
                             )}
+                        </CCardBody>
+                    </CCard>
+
+                    {/* Physical Inventory Units Section */}
+                    <CCard>
+                        <CCardHeader className="bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                            <h5 className="mb-0 fw-bold">
+                                <CIcon icon={cilStorage} className="me-2" />
+                                Inventaris Fisik (Unit)
+                            </h5>
+                            <Link 
+                                href={route('admin.motor-units.index', { motor_id: motor.id })}
+                                className="btn btn-sm btn-link"
+                            >
+                                Kelola Semua Unit
+                            </Link>
+                        </CCardHeader>
+                        <CCardBody className="p-0">
+                            <CTable hover responsive className="mb-0">
+                                <CTableHead className="bg-light">
+                                    <CTableRow>
+                                        <CTableHeaderCell className="small">No. Rangka</CTableHeaderCell>
+                                        <CTableHeaderCell className="small">No. Mesin</CTableHeaderCell>
+                                        <CTableHeaderCell className="small">Warna</CTableHeaderCell>
+                                        <CTableHeaderCell className="small">Status</CTableHeaderCell>
+                                    </CTableRow>
+                                </CTableHead>
+                                <CTableBody>
+                                    {motor.units && motor.units.length > 0 ? (
+                                        motor.units.map(unit => (
+                                            <CTableRow key={unit.id} className="small">
+                                                <CTableDataCell><code>{unit.frame_number}</code></CTableDataCell>
+                                                <CTableDataCell><code>{unit.engine_number}</code></CTableDataCell>
+                                                <CTableDataCell>{unit.color || '-'}</CTableDataCell>
+                                                <CTableDataCell>
+                                                    <CBadge color={
+                                                        unit.status === 'available' ? 'success' : 
+                                                        unit.status === 'booked' ? 'warning' : 
+                                                        unit.status === 'sold' ? 'info' : 'secondary'
+                                                    } shape="rounded-pill" style={{fontSize: '9px'}}>
+                                                        {unit.status.toUpperCase()}
+                                                    </CBadge>
+                                                </CTableDataCell>
+                                            </CTableRow>
+                                        ))
+                                    ) : (
+                                        <CTableRow>
+                                            <CTableDataCell colSpan={4} className="text-center py-3 text-body-tertiary small">
+                                                Belum ada unit fisik yang didaftarkan untuk model ini.
+                                            </CTableDataCell>
+                                        </CTableRow>
+                                    )}
+                                </CTableBody>
+                            </CTable>
                         </CCardBody>
                     </CCard>
                 </CCol>

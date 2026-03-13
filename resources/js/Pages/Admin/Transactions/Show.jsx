@@ -13,6 +13,13 @@ import {
     CFormSelect,
     CFormLabel,
     CFormTextarea,
+    CTable,
+    CTableHead,
+    CTableHeaderCell,
+    CTableBody,
+    CTableRow,
+    CTableDataCell,
+    CAlert,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -24,8 +31,13 @@ import {
     cilBike,
 } from "@coreui/icons";
 
-export default function Show({ transaction, motors, users }) {
+export default function Show({ transaction, motors, users, availableUnits }) {
     const [isEditMode, setIsEditMode] = useState(false);
+    
+    // Form for unit allocation
+    const allocationForm = useForm({
+        motor_unit_id: transaction.motor_unit_id || "",
+    });
 
     const { data, setData, put, processing, errors } = useForm({
         user_id: transaction.user_id || "",
@@ -518,6 +530,142 @@ export default function Show({ transaction, motors, users }) {
                                     )}
                                 </CRow>
                             )}
+                        </CCardBody>
+                    </CCard>
+
+                    {/* Unit Allocation Card (Opsi B) */}
+                    <CCard className="mb-4 border-top-primary border-top-3">
+                        <CCardHeader className="bg-transparent">
+                            <strong>Alokasi Unit Motor (Stok)</strong>
+                        </CCardHeader>
+                        <CCardBody>
+                            {transaction.motor_unit ? (
+                                <div className="p-3 bg-light rounded border border-success">
+                                    <div className="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <div className="text-success fw-bold small mb-2 text-uppercase">UNIT TERALOKASI</div>
+                                            <CRow>
+                                                <CCol md={6} className="mb-2">
+                                                    <div className="small text-body-secondary">No. Rangka</div>
+                                                    <div className="fw-bold"><code>{transaction.motor_unit.frame_number}</code></div>
+                                                </CCol>
+                                                <CCol md={6} className="mb-2">
+                                                    <div className="small text-body-secondary">No. Mesin</div>
+                                                    <div className="fw-bold"><code>{transaction.motor_unit.engine_number}</code></div>
+                                                </CCol>
+                                                <CCol md={6}>
+                                                    <div className="small text-body-secondary">Warna</div>
+                                                    <div>{transaction.motor_unit.color || "-"}</div>
+                                                </CCol>
+                                                <CCol md={6}>
+                                                    <div className="small text-body-secondary">Status Unit</div>
+                                                    <CBadge color={transaction.motor_unit.status === 'sold' ? 'info' : 'warning'}>
+                                                        {transaction.motor_unit.status === 'sold' ? 'Terjual' : 'Dipesan'}
+                                                    </CBadge>
+                                                </CCol>
+                                            </CRow>
+                                        </div>
+                                        <CButton color="warning" size="sm" variant="outline" onClick={() => {
+                                            if (confirm("Ganti alokasi unit ini? Unit lama akan dikembalikan ke status 'available'.")) {
+                                                allocationForm.setData("motor_unit_id", "");
+                                            }
+                                        }}>
+                                            Ganti Unit
+                                        </CButton>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="p-3 bg-light rounded border border-warning dashed">
+                                    <CAlert color="warning" className="small py-2 mb-3">
+                                        Belum ada unit spesifik yang dialokasikan untuk transaksi ini.
+                                    </CAlert>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        allocationForm.post(route("admin.transactions.allocate-unit", transaction.id), {
+                                            onSuccess: () => {
+                                                Swal.fire({
+                                                    title: "Berhasil!",
+                                                    text: "Unit telah dialokasikan.",
+                                                    icon: "success",
+                                                    timer: 2000,
+                                                    showConfirmButton: false,
+                                                });
+                                            },
+                                            preserveScroll: true
+                                        });
+                                    }}>
+                                        <div className="d-flex gap-2">
+                                            <CFormSelect 
+                                                value={allocationForm.data.motor_unit_id}
+                                                onChange={e => allocationForm.setData("motor_unit_id", e.target.value)}
+                                            >
+                                                <option value="">-- Pilih Unit Tersedia --</option>
+                                                {availableUnits.map(unit => (
+                                                    <option key={unit.id} value={unit.id}>
+                                                        Frame: {unit.frame_number} | Engine: {unit.engine_number} {unit.color ? `(${unit.color})` : ""}
+                                                    </option>
+                                                ))}
+                                            </CFormSelect>
+                                            <CButton 
+                                                color="primary" 
+                                                type="submit" 
+                                                disabled={!allocationForm.data.motor_unit_id || allocationForm.processing}
+                                            >
+                                                Alokasikan
+                                            </CButton>
+                                        </div>
+                                        {availableUnits.length === 0 && (
+                                            <p className="text-danger small mt-2 mb-0">
+                                                Stok unit untuk model ini kosong. Mohon tambah unit di menu Unit Motor.
+                                            </p>
+                                        )}
+                                    </form>
+                                </div>
+                            )}
+                        </CCardBody>
+                    </CCard>
+
+                    {/* Transaction Logs (PHASE 6) */}
+                    <CCard className="mb-4">
+                        <CCardHeader className="bg-transparent">
+                            <strong>Riwayat Status & Log Transaksi</strong>
+                        </CCardHeader>
+                        <CCardBody className="p-0">
+                            <CTable hover responsive className="mb-0 small">
+                                <CTableHead className="bg-light">
+                                    <CTableRow>
+                                        <CTableHeaderCell>Waktu</CTableHeaderCell>
+                                        <CTableHeaderCell>Status</CTableHeaderCell>
+                                        <CTableHeaderCell>Actor</CTableHeaderCell>
+                                        <CTableHeaderCell>Catatan</CTableHeaderCell>
+                                    </CTableRow>
+                                </CTableHead>
+                                <CTableBody>
+                                    {transaction.logs && transaction.logs.length > 0 ? (
+                                        transaction.logs.map(log => (
+                                            <CTableRow key={log.id}>
+                                                <CTableDataCell className="text-nowrap">
+                                                    {new Date(log.created_at).toLocaleString('id-ID')}
+                                                </CTableDataCell>
+                                                <CTableDataCell>
+                                                    <CBadge color="secondary" variant="outline" className="me-1">{log.status_from}</CBadge>
+                                                    &rarr;
+                                                    <CBadge color="primary" className="ms-1">{log.status_to}</CBadge>
+                                                </CTableDataCell>
+                                                <CTableDataCell>
+                                                    {log.actor?.name || 'System'}
+                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>{log.actor_type.toUpperCase()}</div>
+                                                </CTableDataCell>
+                                                <CTableDataCell>{log.notes || '-'}</CTableDataCell>
+                                            </CTableRow>
+                                        ))
+                                    ) : (
+                                        <CTableRow>
+                                            <CTableDataCell colSpan={4} className="text-center py-3">Belum ada log rincian.</CTableDataCell>
+                                        </CTableRow>
+                                    )}
+                                </CTableBody>
+                            </CTable>
                         </CCardBody>
                     </CCard>
                 </CCol>

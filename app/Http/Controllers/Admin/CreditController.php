@@ -79,9 +79,10 @@ class CreditController extends Controller
     public function show(CreditDetail $credit)
     {
         $credit->load([
-            'transaction',
             'transaction.user',
             'transaction.motor',
+            'transaction.motorUnit',
+            'transaction.logs.actor',
             'leasingProvider',
             'dPConfirmedByUser',
             'surveySchedules',
@@ -92,11 +93,20 @@ class CreditController extends Controller
         $timeline = $this->creditService->getTimeline($credit);
         $leasingProviders = LeasingProvider::all();
 
+        // Fetch available units for this specific motor model (from the transaction)
+        $availableUnits = \App\Models\MotorUnit::where('motor_id', $credit->transaction->motor_id)
+            ->where(function($q) use ($credit) {
+                $q->where('status', 'available')
+                  ->orWhere('id', $credit->transaction->motor_unit_id);
+            })
+            ->get();
+
         return Inertia::render('Admin/Credits/Show', [
             'credit' => $credit,
             'availableTransitions' => $availableTransitions,
             'timeline' => $timeline,
             'leasingProviders' => $leasingProviders,
+            'availableUnits' => $availableUnits,
         ]);
     }
 

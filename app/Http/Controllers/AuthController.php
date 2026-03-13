@@ -105,6 +105,8 @@ class AuthController extends Controller
             'role' => 'user', // Default role
         ]);
 
+        $user->profile()->create();
+
         Auth::login($user);
 
         // Send email verification notification

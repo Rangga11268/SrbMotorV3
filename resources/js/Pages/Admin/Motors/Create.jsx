@@ -28,7 +28,6 @@ export default function Create({ promotions }) {
         price: "",
         year: new Date().getFullYear(),
         type: "",
-        tersedia: 1,
         image: null,
         description: "",
         min_dp_amount: 0,
@@ -170,39 +169,6 @@ export default function Create({ promotions }) {
                                             }
                                             placeholder="2025"
                                         />
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <CFormLabel>Ketersediaan</CFormLabel>
-                                        <div className="d-flex gap-2">
-                                            <CButton
-                                                type="button"
-                                                color={
-                                                    data.tersedia == 1
-                                                        ? "success"
-                                                        : "light"
-                                                }
-                                                onClick={() =>
-                                                    setData("tersedia", 1)
-                                                }
-                                                className="flex-fill"
-                                            >
-                                                Tersedia
-                                            </CButton>
-                                            <CButton
-                                                type="button"
-                                                color={
-                                                    data.tersedia == 0
-                                                        ? "danger"
-                                                        : "light"
-                                                }
-                                                onClick={() =>
-                                                    setData("tersedia", 0)
-                                                }
-                                                className="flex-fill"
-                                            >
-                                                Kosong
-                                            </CButton>
-                                        </div>
                                     </CCol>
                                     <CCol md={12}>
                                         <CFormLabel>Gambar Motor</CFormLabel>
@@ -352,21 +318,12 @@ export default function Create({ promotions }) {
                                                   ).format(data.price)
                                                 : "0"}
                                         </div>
-                                        {data.tersedia == 1 ? (
-                                            <CBadge
-                                                color="success"
-                                                shape="rounded-pill"
-                                            >
-                                                Tersedia
-                                            </CBadge>
-                                        ) : (
-                                            <CBadge
-                                                color="danger"
-                                                shape="rounded-pill"
-                                            >
-                                                Kosong
-                                            </CBadge>
-                                        )}
+                                        <CBadge
+                                            color="info"
+                                            shape="rounded-pill"
+                                        >
+                                            Stok: 0 Unit
+                                        </CBadge>
                                     </div>
                                 </CCardBody>
                             </CCard>

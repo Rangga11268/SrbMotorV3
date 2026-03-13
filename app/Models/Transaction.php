@@ -51,6 +51,7 @@ class Transaction extends Model
         'cancellation_reason',
         'notes',
         'internal_notes',
+        'motor_unit_id',
     ];
 
     /**
@@ -111,11 +112,27 @@ class Transaction extends Model
     }
 
     /**
+     * Get the specific motor unit associated with this transaction.
+     */
+    public function motorUnit(): BelongsTo
+    {
+        return $this->belongsTo(MotorUnit::class);
+    }
+
+    /**
      * Get the installments for the transaction.
      */
     public function installments(): HasMany
     {
         return $this->hasMany(Installment::class);
+    }
+
+    /**
+     * Get the logs for the transaction.
+     */
+    public function logs(): HasMany
+    {
+        return $this->hasMany(TransactionLog::class);
     }
 
     /**

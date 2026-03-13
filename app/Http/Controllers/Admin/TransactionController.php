@@ -67,15 +67,24 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        $transaction->load(['user', 'motor', 'installments', 'creditDetail']);
+        $transaction->load(['user', 'motor', 'installments', 'creditDetail', 'motorUnit', 'logs.actor']);
 
         $motors = Motor::all();
         $users = User::where('role', 'user')->get();
+        
+        // Fetch available units for this specific motor model
+        $availableUnits = \App\Models\MotorUnit::where('motor_id', $transaction->motor_id)
+            ->where(function($q) use ($transaction) {
+                $q->where('status', 'available')
+                  ->orWhere('id', $transaction->motor_unit_id);
+            })
+            ->get();
 
         return Inertia::render('Admin/Transactions/Show', [
             'transaction' => $transaction,
             'motors' => $motors,
             'users' => $users,
+            'availableUnits' => $availableUnits,
         ]);
     }
 
@@ -141,6 +150,14 @@ class TransactionController extends Controller
             $motor->update(['tersedia' => false]);
             \Illuminate\Support\Facades\Log::info("Stock Locked for Motor ID: {$motor->id} (Manual Cash Order Creation)");
         }
+
+        $transaction->logs()->create([
+            'status_from' => null,
+            'status_to' => $validated['status'],
+            'actor_id' => Auth::id(),
+            'actor_type' => 'admin',
+            'notes' => 'Transaksi tunai dibuat manual oleh admin',
+        ]);
 
         return redirect()->route('admin.transactions.show', $transaction)
             ->with('success', 'Transaksi berhasil dibuat');
@@ -213,6 +230,16 @@ class TransactionController extends Controller
             \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$motor->id} (Manual Cash Order Update)");
         }
 
+        if ($oldStatus !== $validated['status']) {
+            $transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => $validated['status'],
+                'actor_id' => Auth::id(),
+                'actor_type' => 'admin',
+                'notes' => 'Status diperbarui oleh admin melalui form edit',
+            ]);
+        }
+
         return redirect()->route('admin.transactions.show', $transaction)
             ->with('success', 'Transaksi berhasil diperbarui');
     }
@@ -222,6 +249,14 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        // Opsi B: Release unit if allocated
+        if ($transaction->motor_unit_id) {
+            \App\Models\MotorUnit::where('id', $transaction->motor_unit_id)->update([
+                'status' => 'available',
+                'transaction_id' => null
+            ]);
+        }
+
         $transaction->delete();
 
         return redirect()->route('admin.transactions.index')
@@ -246,6 +281,14 @@ class TransactionController extends Controller
                 'status' => $newStatus,
             ]);
 
+            $transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => $newStatus,
+                'actor_id' => Auth::id(),
+                'actor_type' => 'admin',
+                'notes' => 'Status diperbarui cepat oleh admin',
+            ]);
+
             // Stock Balancing: Update motor availability based on status change
             $lockStatuses = ['pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
             $unlockStatuses = ['new_order', 'waiting_payment', 'cancelled'];
@@ -253,9 +296,20 @@ class TransactionController extends Controller
             if (in_array($newStatus, $lockStatuses)) {
                 $transaction->motor->update(['tersedia' => false]);
                 \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$transaction->motor_id} (Manual Cash Status Quick Update)");
+                
+                // Opsi B: Mark unit as sold if completed
+                if ($newStatus === 'completed' && $transaction->motor_unit_id) {
+                    $transaction->motorUnit()->update(['status' => 'sold']);
+                }
             } elseif (in_array($newStatus, $unlockStatuses)) {
                 $transaction->motor->update(['tersedia' => true]);
                 \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$transaction->motor_id} (Manual Cash Status Quick Update)");
+                
+                // Opsi B: Release unit if cancelled
+                if ($newStatus === 'cancelled' && $transaction->motor_unit_id) {
+                    $transaction->motorUnit()->update(['status' => 'available']);
+                    $transaction->update(['motor_unit_id' => null]);
+                }
             }
 
             // Send notification to user
@@ -283,5 +337,69 @@ class TransactionController extends Controller
         }
 
         return back()->with('success', 'Status transaksi berhasil diperbarui' . ($oldStatus === $newStatus ? ' (tidak ada perubahan)' : ' dan notifikasi dikirim ke customer'));
+    }
+
+    /**
+     * Allocate a specific unit to the transaction
+     */
+    public function allocateUnit(Request $request, Transaction $transaction)
+    {
+        $validated = $request->validate([
+            'motor_unit_id' => 'required|exists:motor_units,id',
+        ]);
+
+        $unit = \App\Models\MotorUnit::findOrFail($validated['motor_unit_id']);
+
+        // Security check: Unit must belong to the same motor model
+        if ($unit->motor_id !== $transaction->motor_id) {
+            return back()->with('error', 'Unit motor yang dipilih tidak sesuai dengan model motor dalam transaksi ini.');
+        }
+
+        // Check if unit is available or already allocated to THIS transaction
+        if ($unit->status !== 'available' && $unit->transaction_id !== $transaction->id) {
+            return back()->with('error', 'Unit motor ini sudah dipesan atau tidak tersedia.');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($transaction, $unit) {
+            // Unlink old unit if exists
+            if ($transaction->motor_unit_id && $transaction->motor_unit_id !== $unit->id) {
+                $oldUnit = \App\Models\MotorUnit::find($transaction->motor_unit_id);
+                if ($oldUnit) {
+                    $oldUnit->update([
+                        'status' => 'available',
+                        'transaction_id' => null
+                    ]);
+                }
+            }
+
+            // Map transaction status to unit status
+            $unitStatus = 'booked';
+            if (in_array($transaction->status, ['completed', 'dalam_pengiriman'])) {
+                $unitStatus = 'sold';
+            }
+
+            // Link new unit
+            $transaction->update([
+                'motor_unit_id' => $unit->id,
+                'frame_number' => $unit->frame_number,
+                'engine_number' => $unit->engine_number,
+            ]);
+
+            $unit->update([
+                'status' => $unitStatus,
+                'transaction_id' => $transaction->id
+            ]);
+
+            // Log the allocation
+            $transaction->logs()->create([
+                'status_from' => $transaction->status,
+                'status_to' => $transaction->status,
+                'actor_id' => \Illuminate\Support\Facades\Auth::id(),
+                'actor_type' => 'admin',
+                'notes' => "Unit dialokasikan: Frame #{$unit->frame_number}, Engine #{$unit->engine_number}",
+            ]);
+        });
+
+        return back()->with('success', 'Unit motor berhasil dialokasikan ke transaksi ini.');
     }
 }

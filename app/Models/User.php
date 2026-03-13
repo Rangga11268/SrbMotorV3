@@ -26,15 +26,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_path',
         'email_verified_at',
         'phone',
-        'alamat',
-        'nik',
-        'no_ktp',
-        'no_hp_backup',
-        'jenis_kelamin',
-        'tanggal_lahir',
-        'pekerjaan',
-        'pendapatan_bulanan',
-        'nama_ibu_kandung',
     ];
 
     /**
@@ -66,5 +57,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    /**
+     * Get the profile associated with the user.
+     */
+    public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserProfile::class);
     }
 }

@@ -184,6 +184,14 @@ class MotorGalleryController extends Controller
             'delivery_method' => $request->delivery_method,
         ]);
 
+        $transaction->logs()->create([
+            'status_from' => null,
+            'status_to' => 'new_order',
+            'actor_id' => Auth::id(),
+            'actor_type' => 'user',
+            'notes' => 'Pesanan tunai baru dibuat',
+        ]);
+
         if ($bookingFee > 0) {
             \App\Models\Installment::create([
                 'transaction_id' => $transaction->id,
@@ -302,6 +310,14 @@ class MotorGalleryController extends Controller
             'occupation' => $request->occupation,
             'monthly_income' => $request->monthly_income,
             'employment_duration' => $request->employment_duration,
+        ]);
+
+        $transaction->logs()->create([
+            'status_from' => null,
+            'status_to' => 'menunggu_persetujuan',
+            'actor_id' => Auth::id(),
+            'actor_type' => 'user',
+            'notes' => 'Pengajuan kredit baru dibuat',
         ]);
 
 
