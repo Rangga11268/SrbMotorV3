@@ -66,6 +66,18 @@ export default function Index({ units: initialUnits, motors, filters }) {
         arrival_date: "",
         notes: "",
     });
+    
+    // Batch form
+    const batchForm = useForm({
+        motor_id: "",
+        quantity: 1,
+        color: "",
+        status: "available",
+        arrival_date: new Date().toISOString().split('T')[0],
+        notes: "",
+    });
+
+    const [batchModalVisible, setBatchModalVisible] = useState(false);
 
     const fetchUnits = async (currentFilters) => {
         setLoading(true);
@@ -157,6 +169,18 @@ export default function Index({ units: initialUnits, motors, filters }) {
         }
     };
 
+    const handleBatchSubmit = (e) => {
+        e.preventDefault();
+        batchForm.post(route("admin.motor-units.batch-store"), {
+            onSuccess: () => {
+                setBatchModalVisible(false);
+                toast.success("Batch unit berhasil ditambahkan");
+                batchForm.reset();
+                fetchUnits({ search, status, motor_id: motorId });
+            },
+        });
+    };
+
     const confirmDelete = (unit) => {
         Swal.fire({
             title: "Hapus Unit?",
@@ -197,10 +221,16 @@ export default function Index({ units: initialUnits, motors, filters }) {
                     <h2 className="h4 fw-bold mb-1">Daftar Unit Motor</h2>
                     <p className="text-body-secondary mb-0 small text-uppercase">Opsi B: Unique Unit Tracking</p>
                 </div>
-                <CButton color="primary" onClick={() => handleOpenModal()}>
-                    <CIcon icon={cilPlus} className="me-2" />
-                    Tambah Unit
-                </CButton>
+                <div className="d-flex gap-2">
+                    <CButton color="info" variant="outline" onClick={() => setBatchModalVisible(true)}>
+                        <CIcon icon={cilPlus} className="me-2" />
+                        Tambah Stok (Batch)
+                    </CButton>
+                    <CButton color="primary" onClick={() => handleOpenModal()}>
+                        <CIcon icon={cilPlus} className="me-2" />
+                        Tambah Unit
+                    </CButton>
+                </div>
             </div>
 
             {/* Filter Card */}
@@ -396,6 +426,101 @@ export default function Index({ units: initialUnits, motors, filters }) {
                         <CButton color="secondary" onClick={() => setModalVisible(false)} disabled={processing}>Batal</CButton>
                         <CButton color="primary" type="submit" disabled={processing}>
                             {processing ? "Menyimpan..." : (isEdit ? "Simpan Perubahan" : "Tambah Unit")}
+                        </CButton>
+                    </CModalFooter>
+                </form>
+            </CModal>
+
+            {/* Batch Add Modal */}
+            <CModal visible={batchModalVisible} onClose={() => setBatchModalVisible(false)} size="lg">
+                <CModalHeader>
+                    <CModalTitle>Tambah Stok Sekaligus (Batch)</CModalTitle>
+                </CModalHeader>
+                <form onSubmit={handleBatchSubmit}>
+                    <CModalBody>
+                        <CRow className="g-3">
+                            <CCol md={8}>
+                                <CFormLabel>Model Motor</CFormLabel>
+                                <CFormSelect 
+                                    value={batchForm.data.motor_id} 
+                                    onChange={e => batchForm.setData("motor_id", e.target.value)}
+                                    invalid={!!batchForm.errors.motor_id}
+                                >
+                                    <option value="">Pilih Model Motor</option>
+                                    {motors.map(m => <option key={m.id} value={m.id}>{m.name}</option>)}
+                                </CFormSelect>
+                                <CFormFeedback invalid>{batchForm.errors.motor_id}</CFormFeedback>
+                            </CCol>
+                            <CCol md={4}>
+                                <CFormLabel>Jumlah Unit (Pcs)</CFormLabel>
+                                <CFormInput
+                                    type="number"
+                                    min="1"
+                                    max="100"
+                                    value={batchForm.data.quantity} 
+                                    onChange={e => batchForm.setData("quantity", e.target.value)}
+                                    invalid={!!batchForm.errors.quantity}
+                                />
+                                <CFormFeedback invalid>{batchForm.errors.quantity}</CFormFeedback>
+                                <div className="small text-muted mt-1">Sistem akan generate Frame/Engine otomatis.</div>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Warna</CFormLabel>
+                                <CFormInput 
+                                    value={batchForm.data.color} 
+                                    onChange={e => batchForm.setData("color", e.target.value)}
+                                    invalid={!!batchForm.errors.color}
+                                    placeholder="Contoh: Merah Glossy"
+                                />
+                                <CFormFeedback invalid>{batchForm.errors.color}</CFormFeedback>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Status Awal</CFormLabel>
+                                <CFormSelect 
+                                    value={batchForm.data.status} 
+                                    onChange={e => batchForm.setData("status", e.target.value)}
+                                    invalid={!!batchForm.errors.status}
+                                >
+                                    <option value="available">Tersedia</option>
+                                    <option value="maintenance">Perawatan</option>
+                                </CFormSelect>
+                                <CFormFeedback invalid>{batchForm.errors.status}</CFormFeedback>
+                            </CCol>
+                            <CCol md={6}>
+                                <CFormLabel>Tanggal Kedatangan</CFormLabel>
+                                <CFormInput 
+                                    type="date"
+                                    value={batchForm.data.arrival_date} 
+                                    onChange={e => batchForm.setData("arrival_date", e.target.value)}
+                                    invalid={!!batchForm.errors.arrival_date}
+                                />
+                                <CFormFeedback invalid>{batchForm.errors.arrival_date}</CFormFeedback>
+                            </CCol>
+                            <CCol md={12}>
+                                <CFormLabel>Catatan (Opsional)</CFormLabel>
+                                <CFormTextarea 
+                                    rows={2}
+                                    value={batchForm.data.notes} 
+                                    onChange={e => batchForm.setData("notes", e.target.value)}
+                                    placeholder="Catatan untuk batch unit ini..."
+                                />
+                            </CCol>
+                        </CRow>
+                        <div className="mt-3">
+                            <div className="alert alert-info border-0 shadow-sm d-flex align-items-center gap-3">
+                                <div>
+                                    <CIcon icon={cilBike} size="xl" className="text-info" />
+                                </div>
+                                <div className="small">
+                                    <strong>Info:</strong> Fitur ini mempercepat penginputan stok. Kamu tetap bisa mengedit Nomor Rangka/Mesin asli nanti melalui daftar unit.
+                                </div>
+                            </div>
+                        </div>
+                    </CModalBody>
+                    <CModalFooter>
+                        <CButton color="secondary" onClick={() => setBatchModalVisible(false)} disabled={batchForm.processing}>Batal</CButton>
+                        <CButton color="info" type="submit" disabled={batchForm.processing} className="text-white">
+                            {batchForm.processing ? "Sedang Memproses..." : "Tambah Batch Unit Sekarang"}
                         </CButton>
                     </CModalFooter>
                 </form>

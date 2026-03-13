@@ -147,6 +147,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/transactions/{transaction}/allocate-unit', [AdminTransactionController::class, 'allocateUnit'])->name('transactions.allocate-unit');
 
     // Inventory Unit Management
+    Route::post('/motor-units/batch', [\App\Http\Controllers\Admin\MotorUnitController::class, 'batchStore'])->name('motor-units.batch-store');
     Route::resource('motor-units', \App\Http\Controllers\Admin\MotorUnitController::class);
 
 
