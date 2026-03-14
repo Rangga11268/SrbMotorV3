@@ -431,6 +431,15 @@ export default function Index({ motors: initialMotors, filters }) {
                                             <div className="text-body-tertiary small">
                                                 {motor.type} • {motor.year}
                                             </div>
+                                            {motor.colors && motor.colors.length > 0 && (
+                                                <div className="mt-1 d-flex flex-wrap gap-1">
+                                                    {motor.colors.map((c, i) => (
+                                                        <CBadge key={i} color="light" textColor="dark" shape="rounded-pill" style={{fontSize: '9px'}}>
+                                                            {c}
+                                                        </CBadge>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <span className="fw-bold text-primary">
@@ -442,19 +451,11 @@ export default function Index({ motors: initialMotors, filters }) {
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <div className="d-flex align-items-center gap-2">
-                                                {motor.available_units_count > 0 ? (
+                                                {motor.tersedia || motor.tersedia === 1 ? (
                                                     <CBadge color="success" shape="rounded-pill">Tersedia</CBadge>
                                                 ) : (
                                                     <CBadge color="danger" shape="rounded-pill">Kosong</CBadge>
                                                 )}
-                                                <div className="d-flex flex-column lh-1">
-                                                    <div className="fw-bold small">
-                                                        {motor.available_units_count} / {motor.units_count}
-                                                    </div>
-                                                    <div className="text-body-tertiary" style={{ fontSize: '9px' }}>
-                                                        Stok Unit
-                                                    </div>
-                                                </div>
                                             </div>
                                         </CTableDataCell>
                                         <CTableDataCell>
@@ -472,19 +473,7 @@ export default function Index({ motors: initialMotors, filters }) {
                                                         size="sm"
                                                     />
                                                 </Link>
-                                                <Link
-                                                    href={route(
-                                                        "admin.motor-units.index",
-                                                        { motor_id: motor.id }
-                                                    )}
-                                                    className="btn btn-sm btn-outline-info"
-                                                    title="Lihat Unit (Stok)"
-                                                >
-                                                    <CIcon
-                                                        icon={cilStorage}
-                                                        size="sm"
-                                                    />
-                                                </Link>
+
                                                 <Link
                                                     href={route(
                                                         "admin.motors.edit",

@@ -10,15 +10,9 @@ import {
     CRow,
     CBadge,
     CButton,
-    CTable,
-    CTableHead,
-    CTableBody,
-    CTableRow,
-    CTableHeaderCell,
-    CTableDataCell,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilPencil, cilTrash, cilArrowLeft, cilBike, cilStorage } from "@coreui/icons";
+import { cilPencil, cilTrash, cilArrowLeft, cilBike } from "@coreui/icons";
 
 export default function Show({ motor }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -115,7 +109,7 @@ export default function Show({ motor }) {
                                     Status
                                 </span>
                                 <div className="d-flex flex-column align-items-end">
-                                    {motor.available_units_count > 0 ? (
+                                    {motor.tersedia || motor.tersedia === 1 ? (
                                         <CBadge
                                             color="success"
                                             shape="rounded-pill"
@@ -127,9 +121,6 @@ export default function Show({ motor }) {
                                             Kosong
                                         </CBadge>
                                     )}
-                                    <div className="text-body-tertiary small mt-1 fw-bold">
-                                        {motor.available_units_count} / {motor.units_count} Unit
-                                    </div>
                                 </div>
                             </div>
                             <div className="text-center p-3 bg-primary-subtle rounded-3">
@@ -212,57 +203,25 @@ export default function Show({ motor }) {
                         </CCardBody>
                     </CCard>
 
-                    {/* Physical Inventory Units Section */}
+                    {/* Colors Section */}
                     <CCard>
-                        <CCardHeader className="bg-transparent border-bottom d-flex justify-content-between align-items-center">
+                        <CCardHeader className="bg-transparent border-bottom">
                             <h5 className="mb-0 fw-bold">
-                                <CIcon icon={cilStorage} className="me-2" />
-                                Inventaris Fisik (Unit)
+                                Warna Tersedia
                             </h5>
-                            <Link 
-                                href={route('admin.motor-units.index', { motor_id: motor.id })}
-                                className="btn btn-sm btn-link"
-                            >
-                                Kelola Semua Unit
-                            </Link>
                         </CCardHeader>
-                        <CCardBody className="p-0">
-                            <CTable hover responsive className="mb-0">
-                                <CTableHead className="bg-light">
-                                    <CTableRow>
-                                        <CTableHeaderCell className="small">No. Rangka</CTableHeaderCell>
-                                        <CTableHeaderCell className="small">No. Mesin</CTableHeaderCell>
-                                        <CTableHeaderCell className="small">Warna</CTableHeaderCell>
-                                        <CTableHeaderCell className="small">Status</CTableHeaderCell>
-                                    </CTableRow>
-                                </CTableHead>
-                                <CTableBody>
-                                    {motor.units && motor.units.length > 0 ? (
-                                        motor.units.map(unit => (
-                                            <CTableRow key={unit.id} className="small">
-                                                <CTableDataCell><code>{unit.frame_number}</code></CTableDataCell>
-                                                <CTableDataCell><code>{unit.engine_number}</code></CTableDataCell>
-                                                <CTableDataCell>{unit.color || '-'}</CTableDataCell>
-                                                <CTableDataCell>
-                                                    <CBadge color={
-                                                        unit.status === 'available' ? 'success' : 
-                                                        unit.status === 'booked' ? 'warning' : 
-                                                        unit.status === 'sold' ? 'info' : 'secondary'
-                                                    } shape="rounded-pill" style={{fontSize: '9px'}}>
-                                                        {unit.status.toUpperCase()}
-                                                    </CBadge>
-                                                </CTableDataCell>
-                                            </CTableRow>
-                                        ))
-                                    ) : (
-                                        <CTableRow>
-                                            <CTableDataCell colSpan={4} className="text-center py-3 text-body-tertiary small">
-                                                Belum ada unit fisik yang didaftarkan untuk model ini.
-                                            </CTableDataCell>
-                                        </CTableRow>
-                                    )}
-                                </CTableBody>
-                            </CTable>
+                        <CCardBody>
+                            <div className="d-flex flex-wrap gap-2">
+                                {motor.colors && motor.colors.length > 0 ? (
+                                    motor.colors.map((color, idx) => (
+                                        <CBadge key={idx} color="info" shape="rounded-pill" className="px-3 py-2 fw-semibold">
+                                            {color}
+                                        </CBadge>
+                                    ))
+                                ) : (
+                                    <span className="text-body-tertiary fst-italic">Belum ada warna yang ditentukan.</span>
+                                )}
+                            </div>
                         </CCardBody>
                     </CCard>
                 </CCol>

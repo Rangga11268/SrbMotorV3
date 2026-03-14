@@ -26,7 +26,9 @@ class Motor extends Model
         'details',
         'tersedia',
         'min_dp_amount',
+        'colors',
     ];
+
 
     /**
      * The attributes that should be cast.
@@ -37,22 +39,8 @@ class Motor extends Model
         'price' => 'decimal:2',
         'tersedia' => 'boolean',
         'min_dp_amount' => 'decimal:2',
+        'colors' => 'array',
     ];
-
-    /**
-     * Determine if the motor is available based on physical units.
-     * This overrides the static database column if unit counts are loaded.
-     */
-    public function getTersediaAttribute($value)
-    {
-        // If the relation count is loaded, it is the source of truth
-        if (array_key_exists('available_units_count', $this->getAttributes())) {
-            return $this->available_units_count > 0;
-        }
-        
-        // Fallback to static column if count not loaded
-        return (bool) $value;
-    }
 
     /**
      * Get the active promotions for the motor.
@@ -65,22 +53,6 @@ class Motor extends Model
                 $query->whereNull('valid_until')
                     ->orWhere('valid_until', '>=', now());
             });
-    }
-
-    /**
-     * Get the individual units available for this motor.
-     */
-    public function units()
-    {
-        return $this->hasMany(MotorUnit::class);
-    }
-
-    /**
-     * Get units that are actually in stock and ready for sale.
-     */
-    public function availableUnits()
-    {
-        return $this->hasMany(MotorUnit::class)->where('status', 'available');
     }
 
 

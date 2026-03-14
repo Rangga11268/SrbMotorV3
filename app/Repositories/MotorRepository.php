@@ -22,7 +22,7 @@ class MotorRepository implements MotorRepositoryInterface
             $query = Motor::query();
             
             // Always load promotions to support badges on the frontend
-            $query = $query->with('promotions')->withCount(['units', 'availableUnits']);
+            $query = $query->with('promotions');
             
             return $query->orderBy('created_at', 'desc')->paginate($perPage);
         });
@@ -39,7 +39,7 @@ class MotorRepository implements MotorRepositoryInterface
             $query = Motor::query();
             
             // Always load promotions to support badges on the frontend
-            $query = $query->with('promotions')->withCount(['units', 'availableUnits']);
+            $query = $query->with('promotions');
             
             // Apply filters
             if (isset($filters['search']) && !empty($filters['search'])) {
@@ -74,11 +74,7 @@ class MotorRepository implements MotorRepositoryInterface
             }
             
             if (isset($filters['tersedia']) && $filters['tersedia'] !== null) {
-                if ($filters['tersedia'] == 1) {
-                    $query->having('available_units_count', '>', 0);
-                } else {
-                    $query->having('available_units_count', '=', 0);
-                }
+                $query->where('tersedia', $filters['tersedia'] == 1);
             }
             
             return $query->orderBy('created_at', 'desc')->paginate($perPage);

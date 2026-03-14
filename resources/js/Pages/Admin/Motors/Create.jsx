@@ -11,8 +11,10 @@ import {
     CButton,
     CFormInput,
     CFormSelect,
+    CFormSelect,
     CFormLabel,
     CFormTextarea,
+    CFormSwitch,
     CCallout,
     CBadge,
 } from "@coreui/react";
@@ -29,12 +31,30 @@ export default function Create({ promotions }) {
         year: new Date().getFullYear(),
         type: "",
         image: null,
+        image: null,
         description: "",
         min_dp_amount: 0,
         promotion_ids: [],
+        tersedia: true,
+        colors: [],
     });
 
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [colorInput, setColorInput] = useState("");
+
+    const handleAddColor = (e) => {
+        if (e.key === 'Enter' && colorInput.trim() !== '') {
+            e.preventDefault();
+            if (!data.colors.includes(colorInput.trim())) {
+                setData("colors", [...data.colors, colorInput.trim()]);
+            }
+            setColorInput("");
+        }
+    };
+
+    const handleRemoveColor = (colorToRemove) => {
+        setData("colors", data.colors.filter(c => c !== colorToRemove));
+    };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -159,7 +179,7 @@ export default function Create({ promotions }) {
                                             feedbackInvalid={errors.min_dp_amount}
                                         />
                                     </CCol>
-                                    <CCol md={6}>
+                                    <CCol md={4}>
                                         <CFormLabel>Tahun</CFormLabel>
                                         <CFormInput
                                             type="number"
@@ -169,6 +189,45 @@ export default function Create({ promotions }) {
                                             }
                                             placeholder="2025"
                                         />
+                                    </CCol>
+                                    <CCol md={8}>
+                                        <CFormLabel>Warna Tersedia (Tekan Enter untuk menambah)</CFormLabel>
+                                        <CFormInput
+                                            value={colorInput}
+                                            onChange={(e) => setColorInput(e.target.value)}
+                                            onKeyDown={handleAddColor}
+                                            placeholder="Contoh: Merah, Hitam Doff..."
+                                        />
+                                        <div className="d-flex flex-wrap gap-2 mt-2">
+                                            {data.colors.map((color, index) => (
+                                                <CBadge key={index} color="info" shape="rounded-pill" className="p-2 d-flex align-items-center gap-1">
+                                                    {color}
+                                                    <span 
+                                                        className="ms-1 cursor-pointer fw-bold" 
+                                                        style={{cursor: 'pointer'}} 
+                                                        onClick={() => handleRemoveColor(color)}
+                                                    >
+                                                        &times;
+                                                    </span>
+                                                </CBadge>
+                                            ))}
+                                            {data.colors.length === 0 && <span className="text-muted small">Belum ada warna yang ditambahkan.</span>}
+                                        </div>
+                                    </CCol>
+                                    <CCol md={12}>
+                                        <CCard className="bg-light border-0">
+                                            <CCardBody className="py-2 px-3 d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <div className="fw-semibold">Status Ketersediaan</div>
+                                                    <div className="small text-muted">Tentukan apakah motor ini sedang tersedia di dealer.</div>
+                                                </div>
+                                                <CFormSwitch 
+                                                    size="xl" 
+                                                    checked={data.tersedia}
+                                                    onChange={(e) => setData("tersedia", e.target.checked)}
+                                                />
+                                            </CCardBody>
+                                        </CCard>
                                     </CCol>
                                     <CCol md={12}>
                                         <CFormLabel>Gambar Motor</CFormLabel>

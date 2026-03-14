@@ -73,6 +73,8 @@ class MotorController extends Controller
             'description' => 'nullable|string',
             'promotion_ids' => 'nullable|array',
             'promotion_ids.*' => 'exists:promotions,id',
+            'colors' => 'nullable|array',
+            'colors.*' => 'string|max:100',
         ]);
 
         $imagePath = $request->file('image')->store('motors', 'public');
@@ -84,10 +86,11 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
-            'tersedia' => $request->tersedia,
+            'tersedia' => $request->boolean('tersedia'),
             'min_dp_amount' => $request->min_dp_amount,
             'image_path' => $imagePath,
             'description' => $request->description,
+            'colors' => $request->colors ?? [],
         ]);
 
         if ($request->has('promotion_ids')) {
@@ -102,8 +105,7 @@ class MotorController extends Controller
 
     public function show(Motor $motor): \Inertia\Response
     {
-        $motor->load(['promotions', 'units.transaction']);
-        $motor->loadCount(['availableUnits', 'units']);
+        $motor->load(['promotions']);
         return \Inertia\Inertia::render('Admin/Motors/Show', compact('motor'));
     }
 
@@ -134,6 +136,8 @@ class MotorController extends Controller
             'description' => 'nullable|string',
             'promotion_ids' => 'nullable|array',
             'promotion_ids.*' => 'exists:promotions,id',
+            'colors' => 'nullable|array',
+            'colors.*' => 'string|max:100',
         ]);
 
         $data = [
@@ -143,9 +147,10 @@ class MotorController extends Controller
             'price' => $request->price,
             'year' => $request->year,
             'type' => $request->type,
-            'tersedia' => $request->tersedia,
+            'tersedia' => $request->boolean('tersedia'),
             'min_dp_amount' => $request->min_dp_amount,
             'description' => $request->description,
+            'colors' => $request->colors ?? [],
         ];
 
         if ($request->hasFile('image')) {

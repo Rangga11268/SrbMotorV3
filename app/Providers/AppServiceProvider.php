@@ -31,6 +31,5 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register observers
         CreditDetail::observe(CreditDetailObserver::class);
-        MotorUnit::observe(MotorUnitObserver::class);
     }
 }
