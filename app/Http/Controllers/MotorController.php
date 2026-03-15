@@ -49,7 +49,10 @@ class MotorController extends Controller
     }
 
 
+    public function create(): \Inertia\Response
+    {
         return \Inertia\Inertia::render('Admin/Motors/Create');
+    }
 
 
     public function store(Request $request): RedirectResponse
