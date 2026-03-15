@@ -121,23 +121,7 @@ export default function Show({ motor, relatedMotors }) {
                                         </div>
                                     </div>
 
-                                    {/* Ribbons */}
-                                    {motor.promotions?.length > 0 && (
-                                        <div className="absolute bottom-10 left-0 flex flex-col gap-3 pointer-events-none">
-                                            {motor.promotions.map(
-                                                (promo, idx) => (
-                                                    <div
-                                                        key={idx}
-                                                        className="bg-gradient-to-r from-primary to-blue-900 text-white text-[10px] md:text-xs font-black uppercase tracking-widest px-8 py-4 rounded-r-full shadow-2xl border-l-[6px] border-white/50 flex items-center gap-3 transform -translate-x-1"
-                                                    >
-                                                        <Star className="w-4 h-4 fill-white animate-pulse" />
-                                                        {promo.badge_text ||
-                                                            promo.title}
-                                                    </div>
-                                                ),
-                                            )}
-                                        </div>
-                                    )}
+
                                 </div>
                             </motion.div>
 

@@ -24,7 +24,6 @@ export default function Footer() {
             { label: "Pesanan Saya", href: route("motors.user-transactions") },
         ],
         bantuan: [
-            { label: "Hubungi Kami", href: "/#contact" },
             { label: "Panduan Pemesanan", href: "#" },
             { label: "Syarat & Ketentuan", href: "#" },
             { label: "Kebijakan Privasi", href: "#" },

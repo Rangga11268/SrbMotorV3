@@ -32,7 +32,6 @@ import {
 
 export default function Dashboard({
     motorsCount,
-    contactMessagesCount,
     usersCount,
     transactionsCount,
     cashTransactionsCount,
@@ -68,14 +67,7 @@ export default function Dashboard({
             iconColor: "#10b981",
             subtext: `${cashTransactionsCount} Tunai • ${creditTransactionsCount} Kredit`,
         },
-        {
-            title: "Pesan Masuk",
-            value: contactMessagesCount,
-            icon: cilEnvelopeClosed,
-            colorClass: "stat-card-warning",
-            iconBg: "rgba(245,158,11,.1)",
-            iconColor: "#f59e0b",
-        },
+
     ];
 
     const getStatusBadge = (status) => {

@@ -264,8 +264,7 @@ export default function Compare({ motors }) {
                                             </tr>
                                             <tr className="hover:bg-blue-50/5 transition-colors">
                                                 <td className="p-4 bg-gray-50/30 border-b border-r border-gray-100 font-bold text-gray-600 sticky left-0 z-10 align-top">
-                                                    Deskripsi (Spesifikasi &
-                                                    Promo)
+                                                    Deskripsi & Spesifikasi
                                                 </td>
                                                 {motors.map((motor) => (
                                                     <td

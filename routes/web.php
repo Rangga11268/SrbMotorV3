@@ -59,10 +59,6 @@ Route::get('/berita', [App\Http\Controllers\NewsController::class, 'index'])->na
 Route::get('/berita/{post:slug}', [App\Http\Controllers\NewsController::class, 'show'])->name('berita.show');
 Route::get('/api/berita/search', [App\Http\Controllers\NewsController::class, 'search'])->name('api.berita.search');
 
-Route::get('/contact', function () {
-    return redirect('/#contact');
-})->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
 
 
 Route::middleware(['guest', 'throttle:5,1'])->group(function () {
@@ -134,11 +130,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
 
     Route::resource('motors', MotorController::class);
-
-
-    Route::resource('contact', ContactMessageController::class)->only(['index', 'show', 'destroy']);
-
-
     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
 
     // Cash Transaction Management Routes (CASH ONLY - tunai)
@@ -165,8 +156,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
     Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
 
-
-    Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class);
     Route::resource('leasing-providers', \App\Http\Controllers\Admin\LeasingProviderController::class);
 
     // Settings Management
@@ -175,9 +164,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::put('/settings/{category}', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
     Route::delete('/settings/{setting}', [\App\Http\Controllers\Admin\SettingController::class, 'destroy'])->name('settings.destroy');
-
-    // Banner Management
-    Route::resource('banners', \App\Http\Controllers\Admin\BannerController::class);
 
     // News & Categories Management
     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);

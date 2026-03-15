@@ -21,8 +21,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($withSpecs, $perPage) {
             $query = Motor::query();
             
-            // Always load promotions to support badges on the frontend
-            $query = $query->with('promotions');
+
             
             return $query->orderBy('created_at', 'desc')->paginate($perPage);
         });
@@ -38,8 +37,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($filters, $withSpecs, $perPage) {
             $query = Motor::query();
             
-            // Always load promotions to support badges on the frontend
-            $query = $query->with('promotions');
+
             
             // Apply filters
             if (isset($filters['search']) && !empty($filters['search'])) {
@@ -91,7 +89,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($id, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with(['promotions']);
+            $query = $query->with([]);
             
             return $query->find($id);
         });
@@ -107,7 +105,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($limit, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with('promotions');
+
             
             return $query->orderBy('created_at', 'desc')->limit($limit)->get();
         });

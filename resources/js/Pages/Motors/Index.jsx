@@ -380,38 +380,7 @@ export default function Index({
                                                                 </Badge>
                                                             </div>
 
-                                                            {/* Promo Ribbons (Momotor Style) */}
-                                                            {motor.promotions &&
-                                                                motor.promotions
-                                                                    .length >
-                                                                    0 && (
-                                                                    <div className="absolute bottom-3 left-0 flex flex-col gap-2 z-10 pointer-events-none w-full pr-4">
-                                                                        {motor.promotions
-                                                                            .slice(
-                                                                                0,
-                                                                                2,
-                                                                            )
-                                                                            .map(
-                                                                                (
-                                                                                    promo,
-                                                                                    pIndex,
-                                                                                ) => (
-                                                                                    <div
-                                                                                        key={
-                                                                                            pIndex
-                                                                                        }
-                                                                                        className="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-2 rounded-r-xl shadow-xl shadow-blue-500/20 border border-blue-400/30 self-start truncate max-w-full"
-                                                                                    >
-                                                                                        <span className="mr-1.5">
-                                                                                            ✨
-                                                                                        </span>
-                                                                                        {promo.badge_text ||
-                                                                                            promo.title}
-                                                                                    </div>
-                                                                                ),
-                                                                            )}
-                                                                    </div>
-                                                                )}
+
                                                         </div>
 
                                                         {/* Card Body */}

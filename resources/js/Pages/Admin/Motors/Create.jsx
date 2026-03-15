@@ -246,58 +246,12 @@ export default function Create({ promotions }) {
                             </CCardBody>
                         </CCard>
 
-                        <CCard className="mb-4 shadow-sm border-0">
-                            <CCardHeader className="bg-white border-bottom">
-                                <strong>Pilih Promosi Aktif</strong>
-                            </CCardHeader>
-                            <CCardBody>
-                                <div className="d-flex flex-wrap gap-2">
-                                    {promotions.map((promo) => (
-                                        <CButton
-                                            key={promo.id}
-                                            type="button"
-                                            color={
-                                                data.promotion_ids.includes(
-                                                    promo.id,
-                                                )
-                                                    ? promo.badge_color
-                                                    : "light"
-                                            }
-                                            variant={
-                                                data.promotion_ids.includes(
-                                                    promo.id,
-                                                )
-                                                    ? "solid"
-                                                    : "outline"
-                                            }
-                                            size="sm"
-                                            onClick={() =>
-                                                togglePromotion(promo.id)
-                                            }
-                                            className="d-flex align-items-center gap-2"
-                                        >
-                                            <span
-                                                className={`badge bg-${data.promotion_ids.includes(promo.id) ? "white text-" + promo.badge_color : promo.badge_color}`}
-                                            >
-                                                {promo.badge_text}
-                                            </span>
-                                            {promo.title}
-                                        </CButton>
-                                    ))}
-                                    {promotions.length === 0 && (
-                                        <div className="text-muted small italic">
-                                            Tidak ada promosi aktif yang
-                                            tersedia.
-                                        </div>
-                                    )}
-                                </div>
-                            </CCardBody>
-                        </CCard>
+
 
                         <CCard className="mb-4">
                             <CCardHeader className="bg-transparent border-bottom">
                                 <strong>
-                                    Deskripsi Motor (Spesifikasi & Promo)
+                                    Deskripsi & Spesifikasi Motor
                                 </strong>
                             </CCardHeader>
                             <CCardBody>
@@ -312,7 +266,7 @@ export default function Create({ promotions }) {
                                             onChange={(html) =>
                                                 setData("description", html)
                                             }
-                                            placeholder="Tuliskan spesifikasi lengkap, keunggulan, dan promo motor ini dengan formatting..."
+                                            placeholder="Tuliskan spesifikasi lengkap dan keunggulan motor ini dengan formatting..."
                                             minHeight="400px"
                                         />
                                     </CCol>

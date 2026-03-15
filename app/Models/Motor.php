@@ -98,8 +98,6 @@ class Motor extends Model
                 }
             }
 
-            // Delete associated promotions
-            $motor->promotions()->detach();
         });
     }
 }

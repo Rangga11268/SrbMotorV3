@@ -76,8 +76,7 @@ export default function Register() {
                     </h1>
                     <p className="text-lg text-gray-300 max-w-md">
                         Buat akun sekarang dan nikmati kemudahan bertransaksi,
-                        klaim promo eksklusif, serta pantau status pengiriman
-                        motor idaman Anda dengan mudah.
+                        serta pantau status pengiriman motor idaman Anda dengan mudah.
                     </p>
 
                     {/* Minimalist Pattern */}

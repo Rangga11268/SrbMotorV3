@@ -67,7 +67,7 @@ export default function BeritaIndex({ posts, categories, filters }) {
                         </h1>
                         <p className="text-lg text-blue-100">
                             Dapatkan informasi terbaru tentang dunia otomotif
-                            dan promo kami
+                            dari SRB Motor.
                         </p>
                     </div>
                 </div>

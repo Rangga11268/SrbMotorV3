@@ -116,24 +116,14 @@ function AdminLayoutContent({ children, title }) {
             icon: cilChartLine,
             active: route().current("admin.reports.*"),
         },
-        {
-            name: "Promo & Badge",
-            href: route("admin.promotions.index"),
-            icon: cilTag,
-            active: route().current("admin.promotions.*"),
-        },
+
         {
             name: "Provider Leasing",
             href: route("admin.leasing-providers.index"),
             icon: cilBuilding,
             active: route().current("admin.leasing-providers.*"),
         },
-        {
-            name: "Pesan Masuk",
-            href: route("admin.contact.index"),
-            icon: cilEnvelopeClosed,
-            active: route().current("admin.contact.*"),
-        },
+
     ];
 
     const contentMenuItems = [
@@ -149,12 +139,7 @@ function AdminLayoutContent({ children, title }) {
             icon: cilTag,
             active: route().current("admin.categories.*"),
         },
-        {
-            name: "Banner",
-            href: route("admin.banners.index"),
-            icon: cilImage,
-            active: route().current("admin.banners.*"),
-        },
+
     ];
 
     useEffect(() => {

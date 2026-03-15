@@ -352,75 +352,7 @@ export default function Index({ motors: initialMotors, filters }) {
                                                     <div className="fw-semibold">
                                                         {motor.name}
                                                     </div>
-                                                    <div className="d-flex flex-wrap gap-1 mt-1">
-                                                        {motor.promotions?.map(
-                                                            (promo) => {
-                                                                const lightColors =
-                                                                    [
-                                                                        "orange",
-                                                                        "yellow",
-                                                                        "lime",
-                                                                        "cyan",
-                                                                        "aqua",
-                                                                        "gold",
-                                                                        "silver",
-                                                                        "white",
-                                                                        "lightyellow",
-                                                                        "lightblue",
-                                                                        "yellowgreen",
-                                                                    ];
-                                                                const isLight =
-                                                                    lightColors.includes(
-                                                                        (
-                                                                            promo.badge_color ||
-                                                                            ""
-                                                                        ).toLowerCase(),
-                                                                    ) ||
-                                                                    (
-                                                                        promo.badge_color ||
-                                                                        ""
-                                                                    ).startsWith(
-                                                                        "#ff",
-                                                                    ) ||
-                                                                    (
-                                                                        promo.badge_color ||
-                                                                        ""
-                                                                    ).startsWith(
-                                                                        "#fd",
-                                                                    ) ||
-                                                                    (
-                                                                        promo.badge_color ||
-                                                                        ""
-                                                                    ).startsWith(
-                                                                        "#fe",
-                                                                    );
-                                                                return (
-                                                                    <span
-                                                                        key={
-                                                                            promo.id
-                                                                        }
-                                                                        className="badge rounded-pill"
-                                                                        style={{
-                                                                            backgroundColor:
-                                                                                promo.badge_color ||
-                                                                                "#3b82f6",
-                                                                            color: isLight
-                                                                                ? "#111827"
-                                                                                : "#ffffff",
-                                                                            fontSize:
-                                                                                "10px",
-                                                                            padding:
-                                                                                "3px 8px",
-                                                                        }}
-                                                                    >
-                                                                        {
-                                                                            promo.badge_text
-                                                                        }
-                                                                    </span>
-                                                                );
-                                                            },
-                                                        )}
-                                                    </div>
+
                                                 </div>
                                             </div>
                                         </CTableDataCell>

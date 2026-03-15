@@ -354,13 +354,7 @@ export default function Navbar({ auth }) {
                             </Link>
                         )}
 
-                        <div className="hidden md:flex items-center gap-4 border-l border-gray-100 ml-2 pl-4">
-                            <Link href="/#contact">
-                                <Button size="md" className="font-black px-6">
-                                    Hubungi Kami
-                                </Button>
-                            </Link>
-                        </div>
+
 
                         {/* Mobile Toggle */}
                         <button
@@ -392,13 +386,13 @@ export default function Navbar({ auth }) {
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <a
-                            href="/#contact"
+                        <Link
+                            href="/about"
                             className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-primary uppercase tracking-widest"
                         >
                             <HelpCircle className="w-3 h-3" />
                             Bantuan
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

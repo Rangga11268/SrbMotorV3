@@ -167,17 +167,7 @@ export default function Show({ motor }) {
                                             {motor.year}
                                         </CBadge>
                                     </div>
-                                    <div className="d-flex flex-wrap gap-2 mt-2">
-                                        {motor.promotions?.map((promo) => (
-                                            <CBadge
-                                                key={promo.id}
-                                                color={promo.badge_color}
-                                                textColor="white"
-                                            >
-                                                {promo.badge_text}
-                                            </CBadge>
-                                        ))}
-                                    </div>
+
                                 </div>
                                 <span className="text-body-tertiary small">
                                     ID: #{motor.id.toString().padStart(6, "0")}
@@ -186,7 +176,7 @@ export default function Show({ motor }) {
                         </CCardHeader>
                         <CCardBody>
                             <h6 className="fw-semibold mb-3 text-body-secondary">
-                                Deskripsi (Spesifikasi & Promo)
+                                Deskripsi & Spesifikasi
                             </h6>
                             {motor.description ? (
                                 <div

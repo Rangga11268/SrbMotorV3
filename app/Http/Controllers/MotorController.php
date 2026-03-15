@@ -49,13 +49,7 @@ class MotorController extends Controller
     }
 
 
-    public function create(): \Inertia\Response
-    {
-        $promotions = \App\Models\Promotion::where('is_active', true)->get(['id', 'title', 'badge_text']);
-        return \Inertia\Inertia::render('Admin/Motors/Create', [
-            'promotions' => $promotions
-        ]);
-    }
+        return \Inertia\Inertia::render('Admin/Motors/Create');
 
 
     public function store(Request $request): RedirectResponse
@@ -71,8 +65,7 @@ class MotorController extends Controller
             'min_dp_amount' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
-            'promotion_ids' => 'nullable|array',
-            'promotion_ids.*' => 'exists:promotions,id',
+
             'colors' => 'nullable|array',
             'colors.*' => 'string|max:100',
         ]);
@@ -93,9 +86,6 @@ class MotorController extends Controller
             'colors' => $request->colors ?? [],
         ]);
 
-        if ($request->has('promotion_ids')) {
-            $motor->promotions()->sync($request->promotion_ids);
-        }
 
         $this->motorRepository->clearCache();
 
@@ -105,18 +95,15 @@ class MotorController extends Controller
 
     public function show(Motor $motor): \Inertia\Response
     {
-        $motor->load(['promotions']);
+
         return \Inertia\Inertia::render('Admin/Motors/Show', compact('motor'));
     }
 
 
     public function edit(Motor $motor): \Inertia\Response
     {
-        $motor->load('promotions');
-        $promotions = \App\Models\Promotion::where('is_active', true)->get(['id', 'title', 'badge_text']);
         return \Inertia\Inertia::render('Admin/Motors/Edit', [
             'motor' => $motor,
-            'promotions' => $promotions
         ]);
     }
 
@@ -134,8 +121,7 @@ class MotorController extends Controller
             'min_dp_amount' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'nullable|string',
-            'promotion_ids' => 'nullable|array',
-            'promotion_ids.*' => 'exists:promotions,id',
+
             'colors' => 'nullable|array',
             'colors.*' => 'string|max:100',
         ]);
@@ -162,9 +148,6 @@ class MotorController extends Controller
 
         $motor->update($data);
 
-        if ($request->has('promotion_ids')) {
-            $motor->promotions()->sync($request->promotion_ids);
-        }
 
         $this->motorRepository->clearCache();
 

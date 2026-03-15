@@ -32,36 +32,7 @@ import "swiper/css/effect-fade";
 
 export default function Home({ auth, popularMotors = [] }) {
     const [searchQuery, setSearchQuery] = useState("");
-    const { data, setData, post, processing, reset } = useForm({
-        name: "",
-        email: "",
-        message: "",
-    });
-
-    const submitContact = (e) => {
-        e.preventDefault();
-        post(route("contact.submit"), {
-            onSuccess: () => {
-                toast.success("Pesan berhasil dikirim!");
-                reset();
-            },
-            onError: () => toast.error("Gagal mengirim pesan."),
-        });
-    };
-
-    const banners = [
-        {
-            image: "/assets/img/banner.png",
-            title: "Promo Kredit Motor Honda 2026",
-            subtitle: "DP Mulai 1 Jutaan, Angsuran Ringan & Proses Cepat",
-        },
-        {
-            image: "/assets/img/banner.png", // Reusing for demo, in real scenarios these would be different
-            title: "Gebyar Yamaha Awal Tahun",
-            subtitle:
-                "Dapatkan Cashback hingga 5 Juta Rupiah untuk unit tertentu",
-        },
-    ];
+    const { data, setData, post, processing, reset } = useForm({});
 
     const brands = [
         {
@@ -78,178 +49,51 @@ export default function Home({ auth, popularMotors = [] }) {
             {/* HERO SLIDER SECTION (Momotor Style) */}
             <section className="relative pt-[120px] md:pt-[140px] pb-12 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Swiper
-                        modules={[Autoplay, Pagination, EffectFade]}
-                        effect="fade"
-                        autoplay={{ delay: 6000, disableOnInteraction: false }}
-                        pagination={{
-                            clickable: true,
-                            dynamicBullets: true,
-                        }}
-                        className="rounded-3xl overflow-hidden h-[300px] md:h-[520px] shadow-2xl border border-gray-100"
-                    >
-                        {banners.map((banner, index) => (
-                            <SwiperSlide key={index}>
-                                {({ isActive }) => (
-                                    <div className="relative w-full h-full group overflow-hidden">
-                                        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                                        <img
-                                            src={banner.image}
-                                            alt={banner.title}
-                                            className="relative w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
-                                            onLoad={(e) =>
-                                                e.target.previousSibling.remove()
-                                            }
-                                        />
-                                        {/* High-Contrast Overlay Gradient */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20 flex items-center p-8 md:px-24 md:py-0">
-                                            <AnimatePresence mode="wait">
-                                                {isActive && (
-                                                    <div className="max-w-3xl space-y-6 pb-20 md:pb-28">
-                                                        <div className="space-y-4 md:space-y-6">
-                                                            <motion.div
-                                                                initial={{
-                                                                    opacity: 0,
-                                                                    y: -20,
-                                                                }}
-                                                                animate={{
-                                                                    opacity: 1,
-                                                                    y: 0,
-                                                                }}
-                                                                transition={{
-                                                                    duration: 0.5,
-                                                                }}
-                                                                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600 border border-blue-400 shadow-lg"
-                                                            >
-                                                                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                                                                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white">
-                                                                    Trusted
-                                                                    Dealer 2026
-                                                                </span>
-                                                            </motion.div>
-
-                                                            <motion.h1
-                                                                initial={{
-                                                                    opacity: 0,
-                                                                    x: -50,
-                                                                }}
-                                                                animate={{
-                                                                    opacity: 1,
-                                                                    x: 0,
-                                                                }}
-                                                                exit={{
-                                                                    opacity: 0,
-                                                                    x: 50,
-                                                                }}
-                                                                transition={{
-                                                                    duration: 0.7,
-                                                                    ease: "easeOut",
-                                                                }}
-                                                                className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]"
-                                                            >
-                                                                {banner.title
-                                                                    .split(" ")
-                                                                    .map(
-                                                                        (
-                                                                            word,
-                                                                            i,
-                                                                        ) => (
-                                                                            <span
-                                                                                key={
-                                                                                    i
-                                                                                }
-                                                                                className={
-                                                                                    i <
-                                                                                    2
-                                                                                        ? "text-blue-400"
-                                                                                        : "text-white"
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    word
-                                                                                }{" "}
-                                                                            </span>
-                                                                        ),
-                                                                    )}
-                                                            </motion.h1>
-
-                                                            <motion.p
-                                                                initial={{
-                                                                    opacity: 0,
-                                                                    x: -50,
-                                                                }}
-                                                                animate={{
-                                                                    opacity: 1,
-                                                                    x: 0,
-                                                                }}
-                                                                exit={{
-                                                                    opacity: 0,
-                                                                    x: 50,
-                                                                }}
-                                                                transition={{
-                                                                    duration: 0.7,
-                                                                    delay: 0.2,
-                                                                    ease: "easeOut",
-                                                                }}
-                                                                className="text-xs sm:text-sm md:text-base lg:text-lg !text-white font-medium max-w-xl leading-relaxed drop-shadow-lg"
-                                                            >
-                                                                {
-                                                                    banner.subtitle
-                                                                }
-                                                            </motion.p>
-                                                        </div>
-
-                                                        <motion.div
-                                                            initial={{
-                                                                opacity: 0,
-                                                                scale: 0.9,
-                                                            }}
-                                                            animate={{
-                                                                opacity: 1,
-                                                                scale: 1,
-                                                            }}
-                                                            exit={{
-                                                                opacity: 0,
-                                                                scale: 0.9,
-                                                            }}
-                                                            transition={{
-                                                                duration: 0.4,
-                                                                delay: 0.4,
-                                                            }}
-                                                            className="flex flex-wrap gap-3 sm:gap-5 pt-4"
-                                                        >
-                                                            <Link href="/motors">
-                                                                <button className="group relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 rounded-2xl font-black text-sm sm:text-lg transition-all hover:pr-12 sm:hover:pr-14 hover:bg-blue-50 active:scale-95 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
-                                                                    <span className="relative z-10">
-                                                                        Lihat
-                                                                        Katalog
-                                                                    </span>
-                                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                                                        <ArrowRight className="w-6 h-6 translate-x-4 group-hover:translate-x-0 transition-transform" />
-                                                                    </div>
-                                                                    {/* Shine effect logic handled by tailwind animation if available, otherwise static hover */}
-                                                                    <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 skew-x-12" />
-                                                                </button>
-                                                            </Link>
-                                                            <a
-                                                                href="https://wa.me/6281234567890"
-                                                                target="_blank"
-                                                                className="px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-white/30 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 active:scale-95 flex items-center gap-2 sm:gap-3"
-                                                            >
-                                                                <MessageCircle className="w-6 h-6" />
-                                                                Konsultasi
-                                                                Gratis
-                                                            </a>
-                                                        </motion.div>
-                                                    </div>
-                                                )}
-                                            </AnimatePresence>
-                                        </div>
+                    <div className="relative w-full h-[300px] md:h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-gray-100 group">
+                        <img
+                            src="/assets/img/banner.png"
+                            alt="SRB Motor Hero"
+                            className="relative w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20 flex items-center p-8 md:px-24 md:py-0">
+                            <div className="max-w-3xl space-y-6 pb-20 md:pb-28">
+                                <div className="space-y-4 md:space-y-6">
+                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600 border border-blue-400 shadow-lg">
+                                        <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white">
+                                            Trusted Dealer 2026
+                                        </span>
                                     </div>
-                                )}
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                                    <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
+                                        <span className="text-blue-400">Selamat </span>
+                                        <span className="text-blue-400">Datang </span>
+                                        <span className="text-white">di SRB Motor</span>
+                                    </h1>
+                                    <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-medium max-w-xl leading-relaxed drop-shadow-lg">
+                                        Temukan motor impian Anda dengan layanan terbaik dari kami.
+                                    </p>
+                                </div>
+                                <div className="flex flex-wrap gap-3 sm:gap-5 pt-4">
+                                    <Link href="/motors">
+                                        <button className="group relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 rounded-2xl font-black text-sm sm:text-lg transition-all hover:pr-12 sm:hover:pr-14 hover:bg-blue-50 shadow-xl">
+                                            <span className="relative z-10">Lihat Katalog</span>
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                <ArrowRight className="w-6 h-6 translate-x-4 group-hover:translate-x-0 transition-transform" />
+                                            </div>
+                                        </button>
+                                    </Link>
+                                    <a
+                                        href="https://wa.me/6281234567890"
+                                        target="_blank"
+                                        className="px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-white/30 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 flex items-center gap-2 sm:gap-3"
+                                    >
+                                        <MessageCircle className="w-6 h-6" />
+                                        Konsultasi Gratis
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Quick Search & Categories Overlay */}
                     <div className="relative -mt-12 md:-mt-20 z-20 px-4 sm:px-8 md:px-12">
@@ -635,65 +479,7 @@ export default function Home({ auth, popularMotors = [] }) {
                             </div>
                         </div>
 
-                        <div className="lg:w-1/2">
-                            <form
-                                onSubmit={submitContact}
-                                className="space-y-6"
-                            >
-                                <div className="grid sm:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
-                                            Nama Lengkap
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={data.name}
-                                            onChange={(e) =>
-                                                setData("name", e.target.value)
-                                            }
-                                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-bold text-gray-900"
-                                            placeholder="John Doe"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            value={data.email}
-                                            onChange={(e) =>
-                                                setData("email", e.target.value)
-                                            }
-                                            className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-bold text-gray-900"
-                                            placeholder="john@example.com"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
-                                        Pesan Anda
-                                    </label>
-                                    <textarea
-                                        rows="4"
-                                        value={data.message}
-                                        onChange={(e) =>
-                                            setData("message", e.target.value)
-                                        }
-                                        className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all font-bold text-gray-900 resize-none"
-                                        placeholder="Saya tertarik dengan motor Honda..."
-                                    />
-                                </div>
-                                <Button
-                                    fullWidth
-                                    size="lg"
-                                    className="h-16 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 group flex items-center justify-center gap-3"
-                                >
-                                    <span>Kirim Pesan</span>
-                                    <ArrowRight className="group-hover:translate-x-2 transition-transform h-5 w-5" />
-                                </Button>
-                            </form>
-                        </div>
+
                     </div>
                 </div>
             </section>
