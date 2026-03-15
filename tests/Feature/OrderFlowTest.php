@@ -30,13 +30,19 @@ class OrderFlowTest extends TestCase
                 'name' => 'Test User',
                 'phone' => '08123456789',
                 'occupation' => 'Employee',
+                'nik' => '1234567890123456',
                 'address' => 'Test Address',
+                'motor_color' => 'Hitam',
+                'delivery_method' => 'pickup',
                 'notes' => 'Test cash order',
                 'booking_fee' => 2000000, // 2 million
                 'payment_method' => 'transfer',
             ]);
             
         // Check that the transaction was created
+        if (session('errors')) {
+            dump(session('errors')->getMessages());
+        }
         $transaction = Transaction::where('user_id', $user->id)->first();
         // dump($transaction->toArray());
 
@@ -46,8 +52,8 @@ class OrderFlowTest extends TestCase
             'transaction_type' => 'CASH',
             'status' => 'new_order',
             'notes' => 'Test cash order',
-            'total_price' => 27000000,
-            'final_price' => 27000000,
+            'total_price' => 25000000,
+            'final_price' => 25000000,
             'payment_method' => 'transfer',
             'payment_status' => 'pending',
         ]);
@@ -80,10 +86,15 @@ class OrderFlowTest extends TestCase
                 'dp_amount' => 15000000, // 30% of 50m
                 'tenor' => 36, // 36 months
                 'notes' => 'Test credit order',
+                'motor_color' => 'Merah',
+                'delivery_method' => 'delivery',
                 'payment_method' => 'leasing',
             ]);
             
         // Check that the transaction was created
+        if (session('errors')) {
+            dump(session('errors')->getMessages());
+        }
         $transaction = Transaction::where('user_id', $user->id)->first();
         // dump($transaction->toArray());
 

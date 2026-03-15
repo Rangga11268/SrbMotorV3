@@ -91,7 +91,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($id, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with(['promotions'])->withCount(['units', 'availableUnits']);
+            $query = $query->with(['promotions']);
             
             return $query->find($id);
         });
@@ -107,7 +107,7 @@ class MotorRepository implements MotorRepositoryInterface
         return Cache::remember($cacheKey, $this->cacheTime, function () use ($limit, $withSpecs) {
             $query = Motor::query();
             
-            $query = $query->with('promotions')->withCount(['units', 'availableUnits']);
+            $query = $query->with('promotions');
             
             return $query->orderBy('created_at', 'desc')->limit($limit)->get();
         });

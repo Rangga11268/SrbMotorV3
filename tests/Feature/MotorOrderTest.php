@@ -44,7 +44,7 @@ class MotorOrderTest extends TestCase
             ]);
 
         $response->assertRedirect(route('motors.cash-order', $motor));
-        $response->assertSessionHasErrors(['name', 'phone', 'occupation', 'address', 'payment_method']);
+        $response->assertSessionHasErrors(['name', 'phone', 'address', 'payment_method', 'nik', 'motor_color', 'delivery_method']);
     }
 
     /**
@@ -52,16 +52,21 @@ class MotorOrderTest extends TestCase
      */
     public function test_user_can_submit_cash_order()
     {
+        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         $motor = Motor::factory()->create(['price' => 15000000, 'tersedia' => true]);
 
         $response = $this->actingAs($user)->post(route('motors.process-cash-order', $motor), [
             'name' => 'John Doe',
+            'email' => 'john@example.com',
             'phone' => '081234567890',
             'occupation' => 'Employee',
+            'nik' => '1234567890123456',
             'address' => 'Test Address',
             'notes' => 'Test order',
             'payment_method' => 'transfer',
+            'motor_color' => 'Hitam',
+            'delivery_method' => 'pickup',
         ]);
 
         if (session('errors')) {
@@ -112,7 +117,7 @@ class MotorOrderTest extends TestCase
             ]);
 
         $response->assertRedirect(route('motors.credit-order', $motor));
-        $response->assertSessionHasErrors(['name', 'phone', 'address', 'dp_amount', 'tenor', 'occupation', 'nik', 'monthly_income', 'employment_duration']);
+        $response->assertSessionHasErrors(['name', 'phone', 'address', 'dp_amount', 'tenor', 'occupation', 'nik', 'monthly_income', 'employment_duration', 'motor_color', 'delivery_method']);
     }
 
     /**
@@ -135,6 +140,8 @@ class MotorOrderTest extends TestCase
                 'dp_amount' => 16000000, // More than price
                 'tenor' => 12,
                 'payment_method' => 'transfer',
+                'motor_color' => 'Merah',
+                'delivery_method' => 'pickup',
             ]);
 
         $response->assertRedirect(route('motors.credit-order', $motor));
@@ -151,6 +158,7 @@ class MotorOrderTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('motors.process-credit-order', $motor), [
             'name' => 'John Doe',
+            'email' => 'john@example.com',
             'phone' => '081234567890',
             'occupation' => 'Employee',
             'nik' => '1234567890123456',
@@ -160,6 +168,8 @@ class MotorOrderTest extends TestCase
             'dp_amount' => 15000000, // 30% of 50m
             'tenor' => 12,
             'payment_method' => 'transfer',
+            'motor_color' => 'Merah',
+            'delivery_method' => 'pickup',
         ]);
 
         $transaction = Transaction::where('user_id', $user->id)->where('motor_id', $motor->id)->first();

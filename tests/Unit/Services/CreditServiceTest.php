@@ -95,13 +95,18 @@ class CreditServiceTest extends BaseTestCase
 
     public function test_schedule_survey(): void
     {
-        $date = '2024-03-20';
-        $result = $this->creditService->scheduleSurvey($this->credit, $date);
+        $surveyData = [
+            'survey_scheduled_date' => '2024-03-20',
+            'survey_scheduled_time' => '10:00',
+            'surveyor_name' => 'John Doe',
+            'surveyor_phone' => '08123456789',
+        ];
+        $result = $this->creditService->scheduleSurvey($this->credit, $surveyData);
 
         $this->assertTrue($result);
         $this->credit->refresh();
         $this->assertEquals('survey_dijadwalkan', $this->credit->status);
-        $this->assertEquals($date, $this->credit->survey_scheduled_date->format('Y-m-d'));
+        $this->assertEquals($surveyData['survey_scheduled_date'], $this->credit->survey_scheduled_date->format('Y-m-d'));
     }
 
     public function test_complete_survey(): void

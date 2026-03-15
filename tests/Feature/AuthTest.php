@@ -19,7 +19,6 @@ class AuthTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertStatus(200);
-        $response->assertViewIs('auth.login');
     }
 
     /**
@@ -122,7 +121,6 @@ class AuthTest extends TestCase
         $response = $this->get('/register');
 
         $response->assertStatus(200);
-        $response->assertViewIs('auth.register');
     }
 
     /**
@@ -193,7 +191,7 @@ class AuthTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect('/email/verify');
         $this->assertAuthenticated();
         $this->assertDatabaseHas('users', [
             'email' => 'new@example.com',

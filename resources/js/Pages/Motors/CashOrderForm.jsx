@@ -34,7 +34,6 @@ export default function CashOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
         name: auth.user?.name || "",
         phone: auth.user?.phone || "",
-        email: auth.user?.email || "",
         nik: auth.user?.profile?.nik || "",
         address: auth.user?.profile?.alamat || "",
         motor_color: "",
@@ -84,9 +83,6 @@ export default function CashOrderForm({ motor, auth }) {
         }
         if (!data.phone.trim()) {
             validationErrors.push("Nomor WhatsApp harus diisi");
-        }
-        if (!data.email.trim()) {
-            validationErrors.push("Email harus diisi");
         }
         if (!data.nik.trim()) {
             validationErrors.push("NIK harus diisi untuk STNK/BPKB");
@@ -266,34 +262,6 @@ export default function CashOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-2">
-                                                <Label htmlFor="customer_email">
-                                                    Email
-                                                </Label>
-                                                <div className="relative">
-                                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                    <input
-                                                        id="customer_email"
-                                                        type="email"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="nama@email.com"
-                                                        required
-                                                        value={data.email}
-                                                        onChange={(e) =>
-                                                            setData(
-                                                                "email",
-                                                                e.target.value,
-                                                            )
-                                                        }
-                                                    />
-                                                </div>
-                                                {errors.email && (
-                                                    <ErrorMessage>
-                                                        {errors.email}
-                                                    </ErrorMessage>
-                                                )}
-                                            </div>
-
                                             <div className="space-y-2">
                                                 <Label htmlFor="customer_nik">
                                                     NIK (Sesuai KTP)

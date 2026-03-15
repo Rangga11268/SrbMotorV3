@@ -131,7 +131,6 @@ class MotorGalleryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
-            'email' => 'required|email|max:255',
             'nik' => 'required|string|max:20',
             'address' => 'required|string|max:1000',
             'motor_color' => 'required|string',
@@ -176,7 +175,6 @@ class MotorGalleryController extends Controller
             'payment_method' => $request->payment_method,
             'payment_status' => 'pending',
             'phone' => $request->phone,
-            'email' => $request->email,
             'address' => $request->address,
             'name' => $request->name,
             'nik' => $request->nik,
@@ -185,11 +183,12 @@ class MotorGalleryController extends Controller
         ]);
 
         $transaction->logs()->create([
-            'status_from' => null,
-            'status_to' => 'new_order',
-            'actor_id' => Auth::id(),
-            'actor_type' => 'user',
-            'notes' => 'Pesanan tunai baru dibuat',
+            'status' => 'new_order',
+            'description' => 'Pesanan tunai baru dibuat',
+            'payload' => [
+                'actor_id' => Auth::id(),
+                'actor_type' => 'user',
+            ]
         ]);
 
         if ($bookingFee > 0) {
@@ -259,6 +258,8 @@ class MotorGalleryController extends Controller
             'dp_amount' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1|max:60',
             'leasing_provider_id' => 'nullable|exists:leasing_providers,id',
+            'motor_color' => 'required|string',
+            'delivery_method' => 'required|string',
             'notes' => 'nullable|string',
             'payment_method' => 'required|string',
         ]);
@@ -307,17 +308,20 @@ class MotorGalleryController extends Controller
             'address' => $request->address,
             'name' => $request->name,
             'nik' => $request->nik,
+            'motor_color' => $request->motor_color,
+            'delivery_method' => $request->delivery_method,
             'occupation' => $request->occupation,
             'monthly_income' => $request->monthly_income,
             'employment_duration' => $request->employment_duration,
         ]);
 
         $transaction->logs()->create([
-            'status_from' => null,
-            'status_to' => 'menunggu_persetujuan',
-            'actor_id' => Auth::id(),
-            'actor_type' => 'user',
-            'notes' => 'Pengajuan kredit baru dibuat',
+            'status' => 'menunggu_persetujuan',
+            'description' => 'Pengajuan kredit baru dibuat',
+            'payload' => [
+                'actor_id' => Auth::id(),
+                'actor_type' => 'user',
+            ]
         ]);
 
 
