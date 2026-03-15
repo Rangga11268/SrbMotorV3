@@ -27,8 +27,6 @@ class Transaction extends Model
         'address',
         'city',
         'delivery_method',
-        'frame_number',
-        'engine_number',
         'delivery_date',
         'motor_color',
         'occupation',
@@ -51,7 +49,6 @@ class Transaction extends Model
         'cancellation_reason',
         'notes',
         'internal_notes',
-        'motor_unit_id',
     ];
 
     /**
@@ -109,14 +106,6 @@ class Transaction extends Model
     public function creditDetail(): HasOne
     {
         return $this->hasOne(CreditDetail::class);
-    }
-
-    /**
-     * Get the specific motor unit associated with this transaction.
-     */
-    public function motorUnit(): BelongsTo
-    {
-        return $this->belongsTo(MotorUnit::class);
     }
 
     /**

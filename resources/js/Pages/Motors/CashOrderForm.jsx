@@ -34,8 +34,8 @@ export default function CashOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
         name: auth.user?.name || "",
         phone: auth.user?.phone || "",
-        nik: auth.user?.profile?.nik || "",
-        address: auth.user?.profile?.alamat || "",
+        nik: auth.user?.nik || "",
+        address: auth.user?.alamat || "",
         motor_color: "",
         delivery_method: "Ambil di Dealer",
         notes: "",

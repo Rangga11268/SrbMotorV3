@@ -283,11 +283,6 @@ class CreditService
 
         if ($res) {
             $credit->transaction->update(['status' => 'completed']);
-            
-            // Opsi B: Mark unit as sold if allocated
-            if ($credit->transaction->motor_unit_id) {
-                $credit->transaction->motorUnit()->update(['status' => 'sold']);
-            }
 
             $credit->transaction->logs()->create([
                 'status' => 'selesai',
@@ -311,14 +306,6 @@ class CreditService
             $oldStatus = $credit->status;
             $credit->update(['status' => 'dibatalkan']);
             $credit->transaction->update(['status' => 'cancelled']);
-
-            // Opsi B: Release unit if allocated
-            if ($credit->transaction->motor_unit_id) {
-                \App\Models\MotorUnit::where('id', $credit->transaction->motor_unit_id)->update([
-                    'status' => 'available',
-                    'transaction_id' => null
-                ]);
-            }
 
             $credit->transaction->logs()->create([
                 'status' => 'dibatalkan',
@@ -371,14 +358,6 @@ class CreditService
             if ($transaction->motor) {
                 $transaction->motor->update(['tersedia' => true]);
                 \Illuminate\Support\Facades\Log::info("Stock Unlocked for Motor ID: {$transaction->motor_id} due to cancellation of Transaction ID: {$transaction->id}");
-            }
-
-            // Opsi B: Release unit if allocated
-            if ($transaction->motor_unit_id) {
-                \App\Models\MotorUnit::where('id', $transaction->motor_unit_id)->update([
-                    'status' => 'available',
-                    'transaction_id' => null
-                ]);
             }
 
             if ($transaction->transaction_type === 'CREDIT' && $transaction->creditDetail) {

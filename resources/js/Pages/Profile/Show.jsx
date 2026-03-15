@@ -236,7 +236,7 @@ export default function Show({ user }) {
                                             </p>
                                             <p className="text-xl font-black text-gray-900 flex items-center gap-3">
                                                 <Fingerprint className="w-6 h-6 text-gray-200" />{" "}
-                                                {user.profile?.nik || "-"}
+                                                {user.nik || "-"}
                                             </p>
                                         </div>
 
@@ -246,7 +246,7 @@ export default function Show({ user }) {
                                             </p>
                                             <p className="text-xl font-black text-gray-900 flex items-center gap-3">
                                                 <Briefcase className="w-6 h-6 text-gray-200" />{" "}
-                                                {user.profile?.pekerjaan || "-"}
+                                                {user.occupation || "-"}
                                             </p>
                                         </div>
 
@@ -257,7 +257,7 @@ export default function Show({ user }) {
                                             <div className="flex items-start gap-3">
                                                 <MapPin className="w-6 h-6 text-gray-200 shrink-0 mt-1" />
                                                 <p className="text-xl font-black text-gray-900">
-                                                    {user.profile?.alamat || "-"}
+                                                    {user.alamat || "-"}
                                                 </p>
                                             </div>
                                         </div>

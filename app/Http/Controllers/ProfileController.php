@@ -13,14 +13,14 @@ class ProfileController extends Controller
 
     public function show()
     {
-        $user = Auth::user()->load('profile');
+        $user = Auth::user();
         return \Inertia\Inertia::render('Profile/Show', compact('user'));
     }
 
 
     public function edit()
     {
-        $user = Auth::user()->load('profile');
+        $user = Auth::user();
         return \Inertia\Inertia::render('Profile/Edit', compact('user'));
     }
 
@@ -48,22 +48,16 @@ class ProfileController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'nik' => $request->nik,
+            'alamat' => $request->alamat,
+            'occupation' => $request->pekerjaan,
+            'no_ktp' => $request->no_ktp ?? $user->no_ktp,
+            'no_hp_backup' => $request->no_hp_backup ?? $user->no_hp_backup,
+            'jenis_kelamin' => $request->jenis_kelamin ?? $user->jenis_kelamin,
+            'tanggal_lahir' => $request->tanggal_lahir ?? $user->tanggal_lahir,
+            'monthly_income' => $request->pendapatan_bulanan ?? $user->monthly_income,
+            'nama_ibu_kandung' => $request->nama_ibu_kandung ?? $user->nama_ibu_kandung,
         ]);
-
-        $user->profile()->updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'nik' => $request->nik,
-                'alamat' => $request->alamat,
-                'pekerjaan' => $request->pekerjaan,
-                'no_ktp' => $request->no_ktp ?? $user->profile?->no_ktp,
-                'no_hp_backup' => $request->no_hp_backup ?? $user->profile?->no_hp_backup,
-                'jenis_kelamin' => $request->jenis_kelamin ?? $user->profile?->jenis_kelamin,
-                'tanggal_lahir' => $request->tanggal_lahir ?? $user->profile?->tanggal_lahir,
-                'pendapatan_bulanan' => $request->pendapatan_bulanan ?? $user->profile?->pendapatan_bulanan,
-                'nama_ibu_kandung' => $request->nama_ibu_kandung ?? $user->profile?->nama_ibu_kandung,
-            ]
-        );
 
         return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
     }

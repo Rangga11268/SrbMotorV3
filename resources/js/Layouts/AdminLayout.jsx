@@ -86,12 +86,7 @@ function AdminLayoutContent({ children, title }) {
             icon: cilBike,
             active: route().current("admin.motors.*"),
         },
-        {
-            name: "Unit Motor (Stok)",
-            href: route("admin.motor-units.index"),
-            icon: cilStorage,
-            active: route().current("admin.motor-units.*"),
-        },
+
         {
             name: "Pengajuan Kredit",
             href: route("admin.credits.index"),

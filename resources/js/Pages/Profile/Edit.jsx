@@ -222,9 +222,9 @@ function UpdateProfileForm({ user }) {
         name: user.name,
         email: user.email,
         phone: user.phone || "",
-        nik: user.profile?.nik || "",
-        alamat: user.profile?.alamat || "",
-        pekerjaan: user.profile?.pekerjaan || "",
+        nik: user.nik || "",
+        alamat: user.alamat || "",
+        pekerjaan: user.occupation || "",
     });
 
     const submit = (e) => {
@@ -290,10 +290,9 @@ function UpdateProfileForm({ user }) {
                         Nomor WhatsApp
                     </label>
                     <div className="relative">
-                        <Phone
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                            size={18}
-                        />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                             <CheckCircle size={18} />
+                        </div>
                         <input
                             type="tel"
                             value={data.phone}
@@ -311,10 +310,9 @@ function UpdateProfileForm({ user }) {
                         NIK (KTP)
                     </label>
                     <div className="relative">
-                        <FileText
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                            size={18}
-                        />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                             <CheckCircle size={18} />
+                        </div>
                         <input
                             type="text"
                             value={data.nik}
@@ -330,10 +328,9 @@ function UpdateProfileForm({ user }) {
                         Pekerjaan
                     </label>
                     <div className="relative">
-                        <Briefcase
-                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                            size={18}
-                        />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                             <CheckCircle size={18} />
+                        </div>
                         <input
                             type="text"
                             value={data.pekerjaan}
@@ -350,10 +347,9 @@ function UpdateProfileForm({ user }) {
                     Alamat Lengkap
                 </label>
                 <div className="relative">
-                    <MapPin
-                        className="absolute left-3 top-3 text-gray-400"
-                        size={18}
-                    />
+                    <div className="absolute left-3 top-3 text-gray-400">
+                         <CheckCircle size={18} />
+                    </div>
                     <textarea
                         value={data.alamat}
                         onChange={(e) => setData("alamat", e.target.value)}

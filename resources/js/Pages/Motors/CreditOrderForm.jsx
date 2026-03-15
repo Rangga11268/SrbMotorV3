@@ -30,12 +30,12 @@ import { motion } from "framer-motion";
 export default function CreditOrderForm({ motor, auth, leasingProviders }) {
     const { data, setData, post, processing, errors } = useForm({
         name: auth.user?.name || "",
-        nik: auth.user?.profile?.nik || "",
+        nik: auth.user?.nik || "",
         phone: auth.user?.phone || "",
-        occupation: auth.user?.profile?.pekerjaan || "",
-        monthly_income: auth.user?.profile?.pendapatan_bulanan || "",
-        employment_duration: auth.user?.profile?.employment_duration || "",
-        address: auth.user?.profile?.alamat || "",
+        occupation: auth.user?.occupation || "",
+        monthly_income: auth.user?.monthly_income || "",
+        employment_duration: auth.user?.employment_duration || "",
+        address: auth.user?.alamat || "",
         dp_amount: "",
         tenor: "12",
         payment_method: "Transfer Bank",
