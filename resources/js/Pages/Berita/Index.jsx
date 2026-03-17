@@ -147,7 +147,7 @@ export default function BeritaIndex({
                                     <button
                                         onClick={() => handleCategoryFilter("")}
                                         className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                                            selectedCategory === ""
+                                            values.category === ""
                                                 ? "bg-blue-600 text-white"
                                                 : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                         }`}
@@ -161,7 +161,7 @@ export default function BeritaIndex({
                                                 handleCategoryFilter(cat.id)
                                             }
                                             className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                                                selectedCategory ===
+                                                values.category ===
                                                 cat.id.toString()
                                                     ? "bg-blue-600 text-white"
                                                     : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
@@ -184,7 +184,7 @@ export default function BeritaIndex({
                                             handleSortChange("newest")
                                         }
                                         className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                                            sort === "newest"
+                                            values.sort === "newest"
                                                 ? "bg-blue-600 text-white"
                                                 : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                         }`}
@@ -196,7 +196,7 @@ export default function BeritaIndex({
                                             handleSortChange("oldest")
                                         }
                                         className={`w-full text-left px-3 py-2 rounded-lg transition ${
-                                            sort === "oldest"
+                                            values.sort === "oldest"
                                                 ? "bg-blue-600 text-white"
                                                 : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                                         }`}
@@ -206,9 +206,9 @@ export default function BeritaIndex({
                                 </div>
                             </div>
 
-                            {(searchInput ||
-                                selectedCategory ||
-                                sort !== "newest") && (
+                            {(values.search ||
+                                values.category ||
+                                values.sort !== "newest") && (
                                 <button
                                     onClick={handleClearFilters}
                                     className="w-full px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg hover:bg-slate-300 transition font-medium"
@@ -219,7 +219,26 @@ export default function BeritaIndex({
                         </aside>
 
                         {/* Content */}
-                        <div className="lg:col-span-3">
+                        <div className="lg:col-span-3 relative min-h-[400px]">
+                            {/* Loading Overlay */}
+                            <AnimatePresence>
+                                {isLoading && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        className="absolute inset-0 z-10 bg-white/60 dark:bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center rounded-2xl"
+                                    >
+                                        <div className="flex flex-col items-center gap-3">
+                                            <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+                                            <p className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+                                                Memuat...
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
                             {posts.data.length === 0 ? (
                                 <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-12 text-center">
                                     <h3 className="text-xl font-black text-slate-900 dark:text-white mb-2 uppercase">

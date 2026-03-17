@@ -380,31 +380,28 @@ export default function InstallmentIndex({ transactions }) {
 
     return (
         <PublicLayout title="Cicilan Saya - SRB Motors">
-            {/* BACK BUTTON */}
-            <div className="bg-gray-50/50 border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            {/* HERO HEADER */}
+            <div className="bg-white border-b border-gray-100 pt-32 pb-12">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* BACK BUTTON */}
                     <Link
                         href={route("home")}
-                        className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-gray-400 hover:text-blue-600 transition-colors group mb-8"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                         Kembali ke Beranda
                     </Link>
-                </div>
 
-                {/* HERO HEADER - SIMPLE */}
-                <div className="bg-white border-b border-gray-100 section-py-sm">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
-                            Manajemen Cicilan
-                        </h1>
-                        <p className="text-gray-500 text-base md:text-lg max-w-2xl font-medium">
-                            Bayar cicilan Anda dengan mudah. Pilih metode
-                            pembayaran: bayar langsung online atau transfer
-                            kemudian upload bukti
-                        </p>
-                    </div>
+                    <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
+                        Manajemen Cicilan
+                    </h1>
+                    <p className="text-gray-500 text-base md:text-lg max-w-2xl font-medium">
+                        Bayar cicilan Anda dengan mudah. Pilih metode
+                        pembayaran: bayar langsung online atau transfer
+                        kemudian upload bukti
+                    </p>
                 </div>
+            </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-20">
                     {transactions.length > 0 ? (
@@ -806,7 +803,7 @@ export default function InstallmentIndex({ transactions }) {
                         </div>
                     )}
                 </div>
-            </div>
+            
 
             {/* MANUAL UPLOAD MODAL */}
             <AnimatePresence>

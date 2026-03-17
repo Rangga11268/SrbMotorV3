@@ -40,14 +40,21 @@ class MotorRepository implements MotorRepositoryInterface
 
             
             // Apply filters
-            if (isset($filters['search']) && !empty($filters['search'])) {
-                $search = $filters['search'];
-                $query->where(function($q) use ($search) {
-                    $q->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('model', 'like', '%' . $search . '%')
-                      ->orWhere('brand', 'like', '%' . $search . '%')
-                      ->orWhere('type', 'like', '%' . $search . '%')
-                      ->orWhere('description', 'like', '%' . $search . '%');
+            if (isset($filters['search']) && !empty(trim($filters['search']))) {
+                $search = trim($filters['search']);
+                $terms = explode(' ', $search);
+                
+                $query->where(function($q) use ($terms) {
+                    foreach ($terms as $term) {
+                        if (empty($term)) continue;
+                        $q->where(function($subQ) use ($term) {
+                            $subQ->where('name', 'like', '%' . $term . '%')
+                                 ->orWhere('model', 'like', '%' . $term . '%')
+                                 ->orWhere('brand', 'like', '%' . $term . '%')
+                                 ->orWhere('type', 'like', '%' . $term . '%')
+                                 ->orWhere('description', 'like', '%' . $term . '%');
+                        });
+                    }
                 });
             }
             

@@ -225,26 +225,26 @@ export default function TransactionDetail({ transaction }) {
                                         </h1>
                                     </div>
                                     <span
-                                        className={`px-4 py-2 rounded-full font-semibold text-sm bg-opacity-20 ${
+                                        className={`px-4 py-2 rounded-full font-black text-[10px] uppercase tracking-[0.2em] backdrop-blur-md border border-white/20 ${
                                             getStatusColor(
                                                 transaction.status,
                                             ) === "success"
-                                                ? "bg-green-500 text-green-100"
+                                                ? "bg-green-500/30 text-white"
                                                 : getStatusColor(
                                                         transaction.status,
                                                     ) === "warning"
-                                                  ? "bg-yellow-500 text-yellow-100"
+                                                  ? "bg-yellow-500/30 text-white"
                                                   : getStatusColor(
                                                           transaction.status,
                                                       ) === "danger"
-                                                    ? "bg-red-500 text-red-100"
-                                                    : "bg-blue-500 text-blue-100"
+                                                    ? "bg-red-500/30 text-white"
+                                                    : "bg-white/20 text-white"
                                         }`}
                                     >
                                         {getStatusLabel(transaction.status)}
                                     </span>
                                 </div>
-                                <p className="text-blue-100">
+                                <p className="text-xl font-medium text-white/90">
                                     {transaction.motor.name}
                                 </p>
                                 {canCancel && (
@@ -780,10 +780,10 @@ export default function TransactionDetail({ transaction }) {
                             </h3>
                             <div className="space-y-4">
                                 <div className="pb-4 border-b border-blue-400/30">
-                                    <p className="text-blue-100 text-sm mb-1">
+                                    <p className="text-blue-100/80 text-[10px] font-black uppercase tracking-widest mb-1">
                                         Harga Motor
                                     </p>
-                                    <p className="text-2xl font-bold">
+                                    <p className="text-2xl font-black text-white">
                                         {formatCurrency(
                                             transaction.motor.price,
                                         )}
@@ -792,10 +792,10 @@ export default function TransactionDetail({ transaction }) {
                                 {isCreditOrder && (
                                     <>
                                         <div className="pb-4 border-b border-blue-400/30">
-                                            <p className="text-blue-100 text-sm mb-1">
+                                            <p className="text-blue-100/80 text-[10px] font-black uppercase tracking-widest mb-1">
                                                 DP (Down Payment)
                                             </p>
-                                            <p className="text-2xl font-bold">
+                                            <p className="text-2xl font-black text-white">
                                                 {formatCurrency(
                                                     transaction.creditDetail
                                                         .down_payment,
@@ -803,10 +803,10 @@ export default function TransactionDetail({ transaction }) {
                                             </p>
                                         </div>
                                         <div className="pb-4 border-b border-blue-400/30">
-                                            <p className="text-blue-100 text-sm mb-1">
+                                            <p className="text-blue-100/80 text-[10px] font-black uppercase tracking-widest mb-1">
                                                 Sisa Pembayaran
                                             </p>
-                                            <p className="text-2xl font-bold">
+                                            <p className="text-2xl font-black text-white">
                                                 {formatCurrency(
                                                     transaction.motor.price -
                                                         transaction.creditDetail
@@ -815,19 +815,18 @@ export default function TransactionDetail({ transaction }) {
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-blue-100 text-sm mb-1">
+                                            <p className="text-blue-100/80 text-[10px] font-black uppercase tracking-widest mb-1">
                                                 Cicilan Bulanan
                                             </p>
-                                            <p className="text-2xl font-bold">
+                                            <p className="text-2xl font-black text-white">
                                                 {formatCurrency(
                                                     transaction.creditDetail
                                                         .monthly_installment,
                                                 )}
                                             </p>
-                                            <p className="text-xs text-blue-200 mt-1">
-                                                x{" "}
+                                            <p className="text-[10px] font-black text-blue-200 mt-2 bg-blue-500/30 w-fit px-2 py-1 rounded-lg uppercase tracking-widest">
                                                 {transaction.creditDetail.tenor}{" "}
-                                                bulan
+                                                Bulan Tenor
                                             </p>
                                         </div>
                                     </>
@@ -835,22 +834,24 @@ export default function TransactionDetail({ transaction }) {
                                 {!isCreditOrder && (
                                     <>
                                         <div className="pb-4 border-b border-blue-400/30">
-                                            <p className="text-blue-100 text-sm mb-1">
+                                            <p className="text-blue-100/80 text-[10px] font-black uppercase tracking-widest mb-1">
                                                 Booking Fee
                                             </p>
-                                            <p className="text-2xl font-bold">
+                                            <p className="text-2xl font-black text-white">
                                                 {formatCurrency(
                                                     transaction.booking_fee || 0,
                                                 )}
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-blue-100 text-sm mb-1">
+                                            <p className="text-blue-100/80 text-[10px] font-black uppercase tracking-widest mb-1">
                                                 Sisa Pelunasan
                                             </p>
-                                            <p className="text-2xl font-bold">
+                                            <p className="text-2xl font-black text-white">
                                                 {formatCurrency(
-                                                    Math.max(0, transaction.total_price - (transaction.booking_fee || 0)),
+                                                    transaction.motor.price -
+                                                        (transaction.booking_fee ||
+                                                            0),
                                                 )}
                                             </p>
                                         </div>
