@@ -94,7 +94,7 @@ export default function Navbar({ auth }) {
                     <div className="hidden md:flex flex-1 items-center gap-2 max-w-3xl relative">
                         {/* Location Picker */}
                         <div className="relative flex-shrink-0">
-                            <button className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                            <button className="flex items-center gap-2 px-5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] font-black text-gray-700 hover:bg-gray-100 transition-colors uppercase tracking-widest">
                                 <MapPin className="w-4 h-4 text-primary" />
                                 <span>Bekasi Only</span>
                                 <ChevronDown className="w-3 h-3 text-gray-400" />
@@ -102,8 +102,8 @@ export default function Navbar({ auth }) {
                         </div>
 
                         {/* Search Bar */}
-                        <div className="relative flex-1 group">
-                            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                        <div className="flex-1 relative group">
+                            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
                                 <Search className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
                             </div>
                             <input
@@ -111,34 +111,34 @@ export default function Navbar({ auth }) {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => setShowResults(true)}
-                                placeholder="Cari Motor Impianmu disini..."
-                                className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                placeholder="Cari Honda Vario, Yamaha NMAX..."
+                                className="w-full h-12 pl-12 pr-5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700 placeholder:text-gray-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none"
                             />
 
                             {/* Search Results Dropdown */}
                             <AnimatePresence>
-                                {showResults &&
-                                    (searchQuery || isSearching) && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: 10 }}
-                                            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-[400px] overflow-y-auto"
-                                        >
-                                            <div
-                                                className="fixed inset-0 z-[-1]"
-                                                onClick={() =>
-                                                    setShowResults(false)
-                                                }
-                                            />
-                                            {isSearching ? (
-                                                <div className="p-8 text-center text-gray-500">
-                                                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                                                    <p className="text-xs font-bold uppercase tracking-wider">
-                                                        Mencari...
-                                                    </p>
-                                                </div>
-                                            ) : results.length > 0 ? (
+                                {showResults && (searchQuery || isSearching) && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-[400px] overflow-y-auto"
+                                    >
+                                        <div
+                                            className="fixed inset-0 z-[-1]"
+                                            onClick={() =>
+                                                setShowResults(false)
+                                            }
+                                        />
+                                        {isSearching ? (
+                                            <div className="p-8 text-center text-gray-500">
+                                                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                                                <p className="text-xs font-bold uppercase tracking-wider">
+                                                    Mencari...
+                                                </p>
+                                            </div>
+                                        ) : results.length > 0 ? (
+                                            <div className="flex flex-col">
                                                 <div className="py-2">
                                                     {results.map((motor) => (
                                                         <Link
@@ -147,92 +147,73 @@ export default function Navbar({ auth }) {
                                                                 "motors.show",
                                                                 motor.id,
                                                             )}
-                                                            onClick={() =>
+                                                            onClick={() => {
                                                                 setShowResults(
                                                                     false,
-                                                                )
-                                                            }
-                                                            className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors group"
+                                                                );
+                                                                setSearchQuery(
+                                                                    "",
+                                                                );
+                                                            }}
+                                                            className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors group"
                                                         >
-                                                            <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                                                            <div className="w-16 h-12 bg-gray-100 rounded-xl overflow-hidden p-2 flex items-center justify-center shrink-0">
                                                                 <img
-                                                                    src={
-                                                                        motor.image_path
-                                                                            ? `/storage/${motor.image_path}`
-                                                                            : "/images/placeholder-motor.jpg"
-                                                                    }
+                                                                    src={`/storage/${motor.image_path}`}
                                                                     alt={
                                                                         motor.name
                                                                     }
-                                                                    className="w-full h-full object-cover"
+                                                                    className="h-full object-contain"
                                                                 />
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <p className="text-sm font-bold text-gray-900 truncate">
+                                                                <h4 className="text-sm font-black text-gray-900 truncate uppercase tracking-tight">
                                                                     {motor.name}
+                                                                </h4>
+                                                                <p className="text-xs font-black text-primary">
+                                                                    Rp{" "}
+                                                                    {parseInt(
+                                                                        motor.price,
+                                                                    ).toLocaleString(
+                                                                        "id-ID",
+                                                                    )}
                                                                 </p>
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-[10px] font-black uppercase tracking-wider text-primary">
-                                                                        {
-                                                                            motor.brand
-                                                                        }
-                                                                    </span>
-                                                                    <span className="text-[10px] font-bold text-gray-400">
-                                                                        •
-                                                                    </span>
-                                                                    <span className="text-[10px] font-bold text-gray-500">
-                                                                        Rp{" "}
-                                                                        {parseFloat(
-                                                                            motor.price,
-                                                                        ).toLocaleString(
-                                                                            "id-ID",
-                                                                        )}
-                                                                    </span>
-                                                                    {motor.promotions &&
-                                                                        motor
-                                                                            .promotions
-                                                                            .length >
-                                                                            0 && (
-                                                                            <span className="ml-auto bg-green-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter">
-                                                                                PROMO
-                                                                            </span>
-                                                                        )}
-                                                                </div>
                                                             </div>
                                                             <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" />
                                                         </Link>
                                                     ))}
-                                                    <Link
-                                                        href={route(
-                                                            "motors.index",
-                                                            {
-                                                                search: searchQuery,
-                                                            },
-                                                        )}
-                                                        onClick={() =>
-                                                            setShowResults(
-                                                                false,
-                                                            )
-                                                        }
-                                                        className="block w-full text-center py-3 bg-gray-50 hover:bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary transition-colors border-t border-gray-100"
-                                                    >
-                                                        Lihat semua hasil untuk
-                                                        "{searchQuery}"
-                                                    </Link>
                                                 </div>
-                                            ) : (
-                                                <div className="p-8 text-center text-gray-500">
-                                                    <p className="text-sm font-bold">
-                                                        Motor tidak ditemukan
-                                                    </p>
-                                                    <p className="text-xs text-gray-400 mt-1">
-                                                        Coba kata kunci lain
-                                                        atau merek yang berbeda
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </motion.div>
-                                    )}
+                                                <Link
+                                                    href={route(
+                                                        "motors.index",
+                                                        {
+                                                            search: searchQuery,
+                                                        },
+                                                    )}
+                                                    onClick={() =>
+                                                        setShowResults(
+                                                            false,
+                                                        )
+                                                    }
+                                                    className="block w-full text-center py-3 bg-gray-50 hover:bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary transition-colors border-t border-gray-100"
+                                                >
+                                                    Lihat semua hasil untuk
+                                                    "{searchQuery}"
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            <div className="p-8 text-center text-gray-500">
+                                                <p className="text-sm font-bold">
+                                                    Motor tidak ditemukan
+                                                </p>
+                                                <p className="text-xs text-gray-400 mt-1">
+                                                    Coba kata kunci lain
+                                                    atau merek yang berbeda
+                                                </p>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )}
                             </AnimatePresence>
                         </div>
                     </div>

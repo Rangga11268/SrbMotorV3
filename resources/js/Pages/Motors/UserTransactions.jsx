@@ -182,11 +182,11 @@ export default function UserTransactions({ transactions: initialTransactions, fi
         <PublicLayout auth={auth} title="Riwayat Pesanan - SRB Motors">
             <div className="flex-grow pt-[104px] pb-20">
                 {/* BACK BUTTON */}
-                <div className="bg-white border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div className="bg-gray-50/50 border-b border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
                         <Link
                             href={route("profile.show")}
-                            className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
+                            className="inline-flex items-center gap-2 text-xs font-black text-gray-500 hover:text-blue-600 transition-colors group uppercase tracking-widest"
                         >
                             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                             Kembali ke Profil
@@ -195,14 +195,14 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                 </div>
 
                 {/* HERO HEADER - SIMPLE */}
-                <div className="bg-white border-b border-gray-100 pt-8 pb-10">
+                <div className="bg-white border-b border-gray-100 section-py-sm">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                             <div>
-                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-4 uppercase tracking-tight">
+                                <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
                                     Riwayat Transaksi
                                 </h1>
-                                <p className="text-gray-500 font-medium text-sm md:text-base max-w-xl leading-relaxed">
+                                <p className="text-gray-500 font-medium text-base md:text-lg max-w-xl leading-relaxed">
                                     Lacak status pemesanan motor Anda, kelola dokumen
                                     persyaratan, dan lihat rincian transaksi secara
                                     transparan
@@ -403,7 +403,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                                         )}
                                                         className="w-full sm:w-auto flex-1 h-14 px-8 rounded-2xl bg-primary text-white hover:bg-black font-black text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn shadow-xl shadow-primary/20"
                                                     >
-                                                        Lihat Detail Pesanan
+                                                        Detail Transaksi
                                                         <ArrowRight
                                                             size={18}
                                                             strokeWidth={2.5}

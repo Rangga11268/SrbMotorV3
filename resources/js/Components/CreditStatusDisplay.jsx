@@ -16,7 +16,7 @@ import {
     Info,
 } from "lucide-react";
 
-export default function CreditStatusDisplay({ credit }) {
+export default function CreditStatusDisplay({ credit, showSurvey = true }) {
     const statusMap = {
         pengajuan_masuk: {
             label: "Aplikasi Diterima",
@@ -211,7 +211,7 @@ export default function CreditStatusDisplay({ credit }) {
                     </div>
                 )}
             </div>
-            {credit.survey_scheduled_date && (
+            {showSurvey && credit.survey_scheduled_date && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                         <Calendar className="w-5 h-5" /> Jadwal Survey
@@ -231,7 +231,7 @@ export default function CreditStatusDisplay({ credit }) {
                             <strong>Waktu:</strong>{" "}
                             {credit.survey_scheduled_time}
                         </p>
-                        {credit.surveyor_name && (
+                        {showSurvey && credit.surveyor_name && (
                             <>
                                 <p>
                                     <strong>Nama Surveyor:</strong>{" "}
@@ -247,7 +247,7 @@ export default function CreditStatusDisplay({ credit }) {
                 </div>
             )}
 
-            {credit.survey_notes && (
+            {showSurvey && credit.survey_notes && (
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                     <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                         <FileText className="w-5 h-5" /> Catatan Survey

@@ -1,6 +1,6 @@
-# SRB Motor Database ERD (Consolidated)
+# SRB Motor Database ERD (Complete & Consolidated)
 
-This document provides the latest Entity Relationship Diagram (ERD) for the SRB Motor application, reflecting the optimized schema where user profiles are merged into the `users` table and physical motor unit tracking has been simplified.
+This document provides the full Entity Relationship Diagram (ERD) for the SRB Motor application, including core business logic, content management, and system settings.
 
 ## Entity Relationship Diagram
 
@@ -8,6 +8,7 @@ This document provides the latest Entity Relationship Diagram (ERD) for the SRB 
 erDiagram
     USERS ||--o{ TRANSACTIONS : "makes"
     CATEGORIES ||--o{ MOTORS : "classifies"
+    CATEGORIES ||--o{ POSTS : "groups"
     MOTORS ||--o{ TRANSACTIONS : "is sold in"
     TRANSACTIONS ||--o{ TRANSACTION_LOGS : "has"
     TRANSACTIONS ||--o{ DOCUMENTS : "requires"
@@ -15,6 +16,7 @@ erDiagram
     LEASING_PROVIDERS ||--o{ CREDIT_DETAILS : "provides"
     CREDIT_DETAILS ||--o{ INSTALLMENTS : "has"
     CREDIT_DETAILS ||--o{ SURVEY_SCHEDULES : "has"
+    USERS ||--o{ NOTIFICATIONS : "receives"
 
     USERS {
         bigint id PK
@@ -26,7 +28,6 @@ erDiagram
         string google_id
         text alamat
         string nik
-        string no_ktp
         string no_hp_backup
         string jenis_kelamin
         date tanggal_lahir
@@ -34,98 +35,146 @@ erDiagram
         decimal monthly_income
         string nama_ibu_kandung
         timestamp created_at
+        timestamp updated_at
     }
 
     MOTORS {
         bigint id PK
         bigint category_id FK
         string name
+        string brand
+        string model
         string slug
         decimal price
+        string image_path
+        text details
+        boolean tersedia
         decimal min_dp_amount
         json colors
-        string stock_status
-        boolean is_active
+        timestamp created_at
+        timestamp updated_at
     }
 
     TRANSACTIONS {
         bigint id PK
         bigint user_id FK
         bigint motor_id FK
+        string reference_number
         string order_type
         string status
         decimal total_price
-        string color
+        decimal final_price
+        decimal motor_price
+        decimal booking_fee
         string name "Customer Name"
         string email "Customer Email"
         string phone "Customer Phone"
         string nik "Customer NIK"
         text address "Customer Address"
+        string delivery_method
+        date delivery_date
         string occupation
         decimal monthly_income
         string employment_duration
         string payment_method
+        timestamp payment_date
         text payment_proof
         string snap_token
+        timestamp cancelled_at
+        text cancellation_reason
+        text notes
         timestamp created_at
+        timestamp updated_at
     }
 
     CREDIT_DETAILS {
         bigint id PK
         bigint transaction_id FK
         bigint leasing_provider_id FK
-        decimal dp_amount
+        string status
+        string reference_number
         int tenor
         decimal interest_rate
         decimal monthly_installment
-        string leasing_status
-        date leasing_decision_date
-        timestamp dp_paid_at
-        text rejection_reason
+        decimal total_interest
+        text verification_notes
+        timestamp verified_at
+        timestamp ready_for_delivery_at
+        timestamp delivered_at
+        timestamp completed_at
+        text completion_notes
+        timestamp created_at
+        timestamp updated_at
     }
 
     INSTALLMENTS {
         bigint id PK
-        bigint credit_detail_id FK
+        bigint transaction_id FK
         int installment_number
         decimal amount
         date due_date
         timestamp paid_at
         string status
+        string payment_method
+        text payment_proof
+        string snap_token
+        string midtrans_booking_code
+        boolean is_overdue
+        int days_overdue
         decimal penalty_amount
         decimal total_with_penalty
+        boolean reminder_sent
+        timestamp reminder_sent_at
+        text notes
+        timestamp created_at
+        timestamp updated_at
     }
 
     DOCUMENTS {
         bigint id PK
-        bigint transaction_id FK
+        bigint credit_detail_id FK
         string document_type
+        text description
         string file_path
+        string original_name
+        bigint file_size
+        string status
         string approval_status
         text rejection_reason
+        timestamp reviewed_at
+        timestamp submitted_at
+        timestamp created_at
+        timestamp updated_at
     }
 
     CATEGORIES {
         bigint id PK
         string name
         string slug
+        text description
         string icon
+        int order
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
     }
 
     LEASING_PROVIDERS {
         bigint id PK
         string name
         string logo_path
+        timestamp created_at
+        timestamp updated_at
     }
 
     TRANSACTION_LOGS {
         bigint id PK
         bigint transaction_id FK
-        string status_from
-        string status_to
-        bigint actor_id
-        string actor_type
-        text notes
+        string status
+        text description
+        json payload
+        timestamp created_at
+        timestamp updated_at
     }
 
     SURVEY_SCHEDULES {
@@ -136,39 +185,72 @@ erDiagram
         string surveyor_name
         string surveyor_phone
         string status
+        string location
+        text notes
+        text customer_notes
+        boolean customer_confirms
+        timestamp customer_confirmed_at
+        timestamp completed_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    POSTS {
+        bigint id PK
+        bigint category_id FK
+        string title
+        string slug
+        text content
+        string featured_image
+        string status
+        bigint views
+        timestamp published_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    SETTINGS {
+        bigint id PK
+        string key
+        longtext value
+        string type
+        string category
+        text description
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    NOTIFICATIONS {
+        char id PK
+        string type
+        string notifiable_type
+        bigint notifiable_id
+        text data
+        timestamp read_at
+        timestamp created_at
+        timestamp updated_at
     }
 ```
 
-## Core Table Descriptions
+## Application Tables Summary
 
-### users
-*Consolidated table containing both authentication data and personal profile information.*
-- **nik/no_ktp**: Identification numbers.
-- **occupation/monthly_income**: Financial profile for credit assessment.
-- **alamat**: Detailed residential address.
+| Table | Columns | Purpose |
+|:---|:---:|:---|
+| `users` | 20 | Unified User & Profile Data |
+| `motors` | 14 | Motorcycle Catalog & Stock Status |
+| `transactions` | 33 | Core Sales Records (Cash/Credit) |
+| `credit_details` | 18 | Leasing & Approval Workflow |
+| [installments](file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php#106-113) | 21 | Payment Tracking & Deadlines |
+| [documents](file:///d:/laragon/www/SrbMotor/app/Models/CreditDetail.php#74-81) | 15 | Identity Files & Verification |
+| `categories` | 9 | Motor & Article Grouping |
+| `leasing_providers` | 5 | Financing Partners |
+| `transaction_logs` | 7 | Audit Trail for Status Changes |
+| `survey_schedules` | 19 | Survey Coordination Detail |
+| `posts` | 12 | Blog/News Content Management |
+| `settings` | 8 | Global System Configuration |
+| `notifications` | 8 | User Alert System |
 
-### motors
-*Catalog of available motorcycle models.*
-- **colors**: JSON array of available color variations (e.g. `["Merah", "Hitam", "Putih"]`).
-- **min_dp_amount**: Minimum down payment required for credit.
-- **stock_status**: General availability (tersedia, habis).
+**Total Application Tables:** 13
+**Total Application Columns:** 181
 
-### transactions
-*Main record for both Cash and Credit purchases.*
-- **order_type**: 'cash' or 'credit'.
-- **Customer Fields**: Snapshot of user data at the time of purchase to maintain historical accuracy even if the user profile changes later.
-- **color**: Selected color variation for this specific purchase.
-
-### credit_details
-*Extra information required specifically for credit transactions.*
-- **leasing_status**: Tracking the application progress with the leasing provider (pending, approved, rejected).
-- **dp_amount/tenor**: Agreed financial terms.
-
-### installments
-*Granular tracking of monthly payments for credit purchases.*
-- **penalty_amount**: Automatically calculated if payment is overdue.
-- **status**: 'unpaid', 'paid', 'late'.
-
-### documents
-*Supporting files (KTP, KK, etc.) uploaded by users for credit verification.*
-- **approval_status**: 'pending', 'approved', 'rejected'.
+*Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*

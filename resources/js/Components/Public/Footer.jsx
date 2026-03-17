@@ -32,7 +32,7 @@ export default function Footer() {
 
     return (
         <footer className="bg-gradient-to-b from-[#0d1b2e] to-[#060d18] text-gray-400 border-t border-blue-900/30">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-py-sm">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
                     {/* Brand + Contact */}
                     <div className="md:col-span-4 space-y-6">
@@ -73,8 +73,8 @@ export default function Footer() {
 
                     {/* Quick Links */}
                     <div className="md:col-span-4 grid grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">
+                        <div className="space-y-6">
+                            <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
                                 Produk
                             </h4>
                             <ul className="space-y-3">
@@ -91,8 +91,8 @@ export default function Footer() {
                                 ))}
                             </ul>
                         </div>
-                        <div className="space-y-4">
-                            <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">
+                        <div className="space-y-6">
+                            <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
                                 Bantuan
                             </h4>
                             <ul className="space-y-3">
@@ -112,8 +112,8 @@ export default function Footer() {
                     </div>
 
                     {/* Leasing Partners */}
-                    <div className="md:col-span-4 space-y-4">
-                        <h4 className="text-white text-[11px] font-bold uppercase tracking-widest">
+                    <div className="md:col-span-4 space-y-6">
+                        <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
                             Mitra Leasing
                         </h4>
                         {leasingProviders.length > 0 ? (
@@ -122,7 +122,7 @@ export default function Footer() {
                                     <div
                                         key={provider.id}
                                         title={provider.name}
-                                        className="bg-white rounded-lg p-2 flex items-center justify-center h-12 overflow-hidden"
+                                        className="bg-white rounded-xl p-2 flex items-center justify-center h-14 overflow-hidden shadow-lg shadow-black/20 group-hover:scale-105 transition-transform"
                                     >
                                         {provider.logo_path ? (
                                             <img

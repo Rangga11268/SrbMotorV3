@@ -39,6 +39,18 @@ class NewsController extends Controller
         $posts = $query->paginate(10);
         $categories = Category::active()->get(['id', 'name']);
 
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
+            return response()->json([
+                'posts' => $posts,
+                'categories' => $categories,
+                'filters' => [
+                    'search' => $request->get('search', ''),
+                    'category' => $request->get('category', ''),
+                    'sort' => $sort,
+                ],
+            ]);
+        }
+
         return Inertia::render('Berita/Index', [
             'posts' => $posts,
             'categories' => $categories,

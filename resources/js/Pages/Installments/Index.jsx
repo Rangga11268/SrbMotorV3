@@ -316,7 +316,8 @@ export default function InstallmentIndex({ transactions }) {
     };
 
     const formatCurrency = (amount) => {
-        if (amount === null || amount === undefined || isNaN(amount)) return "Rp 0";
+        if (amount === null || amount === undefined || isNaN(amount))
+            return "Rp 0";
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
@@ -380,26 +381,24 @@ export default function InstallmentIndex({ transactions }) {
     return (
         <PublicLayout title="Cicilan Saya - SRB Motors">
             {/* BACK BUTTON */}
-            <div className="bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="bg-gray-50/50 border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
                     <Link
-                        href={route("profile.show")}
+                        href={route("home")}
                         className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors group"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        Kembali ke Profil
+                        Kembali ke Beranda
                     </Link>
                 </div>
-            </div>
 
-            <div className="flex-grow pt-[104px] pb-20">
                 {/* HERO HEADER - SIMPLE */}
-                <div className="bg-white border-b border-gray-100 pt-8 pb-8">
+                <div className="bg-white border-b border-gray-100 section-py-sm">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                        <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
                             Manajemen Cicilan
                         </h1>
-                        <p className="text-gray-600 text-sm md:text-base max-w-2xl">
+                        <p className="text-gray-500 text-base md:text-lg max-w-2xl font-medium">
                             Bayar cicilan Anda dengan mudah. Pilih metode
                             pembayaran: bayar langsung online atau transfer
                             kemudian upload bukti
@@ -413,7 +412,7 @@ export default function InstallmentIndex({ transactions }) {
                             {transactions.map((transaction) => (
                                 <motion.div
                                     key={transaction.id}
-                                    className={`bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative transition-all ${
+                                    className={`bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden relative transition-all ${
                                         transaction.status === "cancelled"
                                             ? "opacity-60 saturate-50"
                                             : ""
@@ -429,10 +428,10 @@ export default function InstallmentIndex({ transactions }) {
                                         </div>
                                     )}
                                     {/* TRANSACTION HEADER - SIMPLIFIED */}
-                                    <div className="px-6 md:px-8 py-6 md:py-8 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                                    <div className="p-8 md:p-10 bg-gradient-to-r from-gray-50/50 to-white border-b border-gray-100">
                                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                                             <div>
-                                                <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                                                <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 tracking-tight">
                                                     {transaction.motor?.name ||
                                                         "Unit Motor"}
                                                 </h3>
@@ -452,32 +451,44 @@ export default function InstallmentIndex({ transactions }) {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end gap-3 w-full md:w-auto">
-                                                {transaction.status === "cancelled" ? (
+                                                {transaction.status ===
+                                                "cancelled" ? (
                                                     <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-black border border-red-200 uppercase tracking-widest">
-                                                        <X size={14} strokeWidth={3} />
+                                                        <X
+                                                            size={14}
+                                                            strokeWidth={3}
+                                                        />
                                                         Pesanan Dibatalkan
                                                     </span>
-                                                ) : transaction.status === "completed" ? (
+                                                ) : transaction.status ===
+                                                  "completed" ? (
                                                     <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-100 text-green-600 text-xs font-black border border-green-200 uppercase tracking-widest">
-                                                        <ShieldCheck size={14} strokeWidth={3} />
+                                                        <ShieldCheck
+                                                            size={14}
+                                                            strokeWidth={3}
+                                                        />
                                                         Selesai
                                                     </span>
                                                 ) : (
                                                     <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-xs font-black border border-blue-100 uppercase tracking-widest">
-                                                        <Activity size={14} strokeWidth={3} />
-                                                        {transaction.status_text || "Aktif"}
+                                                        <Activity
+                                                            size={14}
+                                                            strokeWidth={3}
+                                                        />
+                                                        {transaction.status_text ||
+                                                            "Aktif"}
                                                     </span>
                                                 )}
                                                 <div className="text-right">
-                                                    <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
                                                         Sisa Kewajiban
                                                     </p>
                                                     <p
-                                                        className={`text-3xl font-black ${
+                                                        className={`text-3xl md:text-4xl font-black ${
                                                             transaction.status ===
-                                                                "cancelled"
+                                                            "cancelled"
                                                                 ? "text-gray-400 line-through decoration-red-500 decoration-4"
-                                                                : "text-blue-600"
+                                                                : "text-blue-600 tracking-tight"
                                                         }`}
                                                     >
                                                         {formatCurrency(
@@ -490,26 +501,26 @@ export default function InstallmentIndex({ transactions }) {
                                     </div>
 
                                     {/* INSTALLMENT TABLE - IMPROVED RESPONSIVE */}
-                                    <div className="overflow-x-auto">
+                                    <div className="overflow-x-auto custom-scrollbar">
                                         <table className="w-full text-sm">
                                             <thead>
-                                                <tr className="bg-gray-50 border-b border-gray-200">
-                                                    <th className="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                                                <tr className="bg-gray-50/50 border-b border-gray-100">
+                                                    <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Pilih
                                                     </th>
-                                                    <th className="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                                                    <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Termin
                                                     </th>
-                                                    <th className="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase">
+                                                    <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Jatuh Tempo
                                                     </th>
-                                                    <th className="px-4 py-4 text-right text-xs font-semibold text-gray-600 uppercase">
+                                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Nominal
                                                     </th>
-                                                    <th className="px-4 py-4 text-center text-xs font-semibold text-gray-600 uppercase">
+                                                    <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Status
                                                     </th>
-                                                    <th className="px-4 py-4 text-center text-xs font-semibold text-gray-600 uppercase">
+                                                    <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Pembayaran
                                                     </th>
                                                 </tr>
@@ -545,7 +556,8 @@ export default function InstallmentIndex({ transactions }) {
                                                                                 inst.id,
                                                                             )}
                                                                             onChange={() =>
-                                                                                transaction.status !== "cancelled" &&
+                                                                                transaction.status !==
+                                                                                    "cancelled" &&
                                                                                 toggleSelection(
                                                                                     inst.id,
                                                                                     inst.amount,
@@ -553,7 +565,10 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         0,
                                                                                 )
                                                                             }
-                                                                            disabled={transaction.status === "cancelled"}
+                                                                            disabled={
+                                                                                transaction.status ===
+                                                                                "cancelled"
+                                                                            }
                                                                         />
                                                                     ) : (
                                                                         <div className="w-4 h-4 rounded bg-gray-100 border border-gray-200" />
@@ -643,7 +658,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingPay
                                                                                     }
                                                                                     title="Bayar langsung via online gateway"
-                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-30 disabled:grayscale whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
                                                                                     <Zap className="w-3.5 h-3.5" />
                                                                                     Bayar
@@ -655,9 +670,13 @@ export default function InstallmentIndex({ transactions }) {
                                                                                             inst,
                                                                                         )
                                                                                     }
-                                                                                    disabled={transaction.status === "cancelled" || processing}
+                                                                                    disabled={
+                                                                                        transaction.status ===
+                                                                                            "cancelled" ||
+                                                                                        processing
+                                                                                    }
                                                                                     title="Upload struk transfer manual dari bank"
-                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg transition-colors disabled:opacity-30 disabled:grayscale whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-amber-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
                                                                                     <Upload className="w-3.5 h-3.5" />
                                                                                     Transfer
@@ -672,7 +691,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingCheck
                                                                                     }
                                                                                     title="Cek apakah pembayaran sudah terverifikasi"
-                                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold rounded-lg transition-colors disabled:opacity-50 whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 whitespace-nowrap"
                                                                                 >
                                                                                     <Activity
                                                                                         className={`w-3.5 h-3.5 ${isLoadingCheck ? "animate-spin" : ""}`}
@@ -689,7 +708,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     inst.id,
                                                                                 )}
                                                                                 target="_blank"
-                                                                                className="flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors inline-flex whitespace-nowrap"
+                                                                                className="flex items-center gap-1.5 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-500/10 inline-flex whitespace-nowrap"
                                                                             >
                                                                                 <Download className="w-3.5 h-3.5" />
                                                                                 Lihat
@@ -740,12 +759,12 @@ export default function InstallmentIndex({ transactions }) {
                                                 <button
                                                     onClick={handlePayMultiple}
                                                     disabled={isLoadingPay}
-                                                    className="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                                    className="w-full md:w-auto px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-xs rounded-2xl transition-all shadow-xl shadow-blue-500/20 disabled:opacity-50 flex items-center justify-center gap-3"
                                                 >
                                                     <Zap className="w-5 h-5" />
                                                     {isLoadingPay
                                                         ? "Memproses..."
-                                                        : "Bayar Semua"}
+                                                        : "Bayar Semua Sekarang"}
                                                 </button>
                                             </div>
                                         </motion.div>

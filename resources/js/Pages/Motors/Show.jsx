@@ -58,10 +58,10 @@ export default function Show({ motor, relatedMotors }) {
 
     return (
         <PublicLayout auth={auth} title={`${motor.name} - SRB Motors`}>
-            <div className="flex-grow pt-24 md:pt-[104px] pb-20">
+            <div className="flex-grow pt-32 pb-20 bg-gray-50/30">
                 {/* BREADCRUMBS & BACK BUTTON */}
-                <div className="bg-white border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                <div className="bg-white/80 backdrop-blur-md border-y border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-xs font-bold text-gray-400">
                             <Link
                                 href="/"
@@ -98,7 +98,7 @@ export default function Show({ motor, relatedMotors }) {
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white rounded-[2.5rem] shadow-2xl shadow-gray-200/50 overflow-hidden border border-white"
+                                className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 overflow-hidden border border-white"
                             >
                                 <div className="relative aspect-[16/10] md:aspect-[16/9] bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-8 md:p-12">
                                     <img
@@ -126,7 +126,7 @@ export default function Show({ motor, relatedMotors }) {
                             </motion.div>
 
                             {/* DETAIL SPECIFICATIONS TABS (Conceptually) */}
-                            <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-gray-200/20 border border-white space-y-12">
+                            <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl shadow-gray-200/20 border border-white space-y-12">
                                 <div className="space-y-6">
                                     <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3">
                                         <Info className="w-6 h-6 text-primary" />{" "}
@@ -236,7 +236,7 @@ export default function Show({ motor, relatedMotors }) {
                         {/* RIGHT COLUMN - STICKY PRICE CARD */}
                         <div className="lg:w-[400px] shrink-0">
                             <div className="sticky top-32 space-y-6">
-                                <Card className="rounded-[2.5rem] shadow-2xl shadow-gray-200/50 border-white overflow-hidden bg-white">
+                                <Card className="rounded-[3rem] shadow-2xl shadow-gray-200/50 border-white overflow-hidden bg-white">
                                     <CardBody className="p-8 space-y-8">
                                         <div className="space-y-2">
                                             <p className="text-xs font-black text-gray-500 uppercase tracking-[0.2em]">
@@ -337,7 +337,7 @@ export default function Show({ motor, relatedMotors }) {
 
                                 {/* DYNAMIC LEASING SIMULATION */}
                                 {motor.tersedia && (
-                                    <div className="bg-white rounded-[2rem] p-8 shadow-xl border border-white space-y-6">
+                                    <div className="bg-white rounded-[3rem] p-10 shadow-xl border border-white space-y-8">
                                         <div className="flex items-center justify-between">
                                             <h3 className="font-black text-gray-900 uppercase tracking-widest text-sm">
                                                 Simulasi Cicilan
@@ -426,10 +426,10 @@ export default function Show({ motor, relatedMotors }) {
                         <div className="mt-32 space-y-12">
                             <div className="flex items-end justify-between">
                                 <div>
-                                    <Badge className="mb-3">
+                                    <Badge className="mb-4 px-4 py-1.5 bg-blue-50 text-blue-600 border-none font-black text-[10px] uppercase tracking-widest">
                                         Mungkin Anda Suka
                                     </Badge>
-                                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
+                                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none tracking-tight">
                                         UNIT{" "}
                                         <span className="text-primary">
                                             TERKAIT

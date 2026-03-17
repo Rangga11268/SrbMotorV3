@@ -411,75 +411,88 @@ export default function Home({ auth, popularMotors = [] }) {
                 </div>
             </section>
 
-            {/* CONTACT FOOTER SECTION */}
-            <section className="bg-primary pt-24 pb-32 relative overflow-hidden">
-                {/* Decorative Pattern */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none">
-                    <div className="absolute top-[-50%] left-[-20%] w-[100%] h-[150%] bg-white rounded-[50%] rotate-45" />
-                </div>
+            {/* CONTACT SECTION */}
+            <section className="section-py relative overflow-hidden" id="contact">
+                {/* Subtle Decorative Elements */}
+                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-50" />
+                <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl opacity-50" />
 
-                <div
-                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10"
-                    id="contact"
-                >
-                    <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-3xl flex flex-col lg:flex-row gap-16">
-                        <div className="lg:w-1/2 space-y-8">
-                            <div className="space-y-4 text-center lg:text-left">
-                                <Badge className="bg-primary/10 text-primary border-none">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                        <div className="space-y-8 text-center lg:text-left">
+                            <div className="space-y-4">
+                                <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest">
                                     Hubungi Kami
-                                </Badge>
-                                <h2 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
-                                    Punya{" "}
-                                    <span className="text-primary underline">
-                                        Pertanyaan?
-                                    </span>
+                                </span>
+                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.1]">
+                                    Punya <span className="text-primary italic">Pertanyaan?</span>
                                 </h2>
-                                <p className="text-gray-500 text-lg font-medium leading-relaxed">
+                                <p className="text-gray-500 text-lg md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
                                     Tim expert kami siap membantu Anda 24/7.
                                     Konsultasikan pilihan motor dan simulasi
                                     kredit Anda secara gratis.
                                 </p>
                             </div>
 
-                            <div className="grid sm:grid-cols-2 gap-6">
-                                <a
-                                    href="https://wa.me/6281212345678"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-6 rounded-[2rem] bg-blue-50/50 border border-blue-100 flex items-center gap-5 group hover:bg-blue-600 hover:border-blue-600 transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-blue-200"
-                                >
-                                    <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:bg-white group-hover:text-blue-600 group-hover:rotate-12 transition-all">
-                                        <Phone className="w-7 h-7" />
-                                    </div>
-                                    <div className="flex flex-col text-left">
-                                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest transition-colors">
-                                            Whatsapp Bekasi
-                                        </p>
-                                        <p className="text-sm font-black text-slate-900 transition-colors">
-                                            0812-1234-5678
-                                        </p>
-                                    </div>
-                                </a>
-                                <a
-                                    href="mailto:halo@srbmotor.id"
-                                    className="p-6 rounded-[2rem] bg-blue-50/50 border border-blue-100 flex items-center gap-5 group hover:bg-primary hover:border-primary transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-primary/20"
-                                >
-                                    <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-black shadow-lg shadow-primary/30 group-hover:bg-white group-hover:text-primary group-hover:rotate-12 transition-all">
-                                        <Mail className="w-7 h-7" />
-                                    </div>
-                                    <div className="flex flex-col text-left">
-                                        <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest transition-colors">
-                                            Layanan Email
-                                        </p>
-                                        <p className="text-sm font-black text-slate-900 leading-none mt-1 transition-colors">
-                                            halo@srbmotor.id
-                                        </p>
-                                    </div>
-                                </a>
+                            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                                <div className="flex items-center gap-3 px-5 py-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                    <span className="text-sm font-bold text-gray-700">Online 24/7</span>
+                                </div>
+                                <div className="flex items-center gap-3 px-5 py-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                    <ShieldCheck className="w-5 h-5 text-primary" />
+                                    <span className="text-sm font-bold text-gray-700">Respon Cepat</span>
+                                </div>
                             </div>
                         </div>
 
+                        <div className="grid gap-6">
+                            <a
+                                href="https://wa.me/6281212345678"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                            >
+                                <div className="flex items-center gap-6 p-8">
+                                    <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500">
+                                        <Phone className="w-8 h-8" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+                                            Whatsapp Bekasi
+                                        </p>
+                                        <p className="text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
+                                            0812-1234-5678
+                                        </p>
+                                    </div>
+                                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </a>
 
+                            <a
+                                href="mailto:halo@srbmotor.id"
+                                className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                            >
+                                <div className="flex items-center gap-6 p-8">
+                                    <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500">
+                                        <Mail className="w-8 h-8" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+                                            Layanan Email
+                                        </p>
+                                        <p className="text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
+                                            halo@srbmotor.id
+                                        </p>
+                                    </div>
+                                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -27,13 +27,17 @@ export default function Index({
     auth,
     motors: initialMotors,
     filters,
-    brands,
-    types,
-    years,
+    brands: initialBrands,
+    types: initialTypes,
+    years: initialYears,
 }) {
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [motors, setMotors] = useState(initialMotors);
+    const [brands, setBrands] = useState(initialBrands);
+    const [types, setTypes] = useState(initialTypes);
+    const [years, setYears] = useState(initialYears);
+
     const [values, setValues] = useState({
         search: filters.search || "",
         brand: filters.brand || "",
@@ -47,7 +51,6 @@ export default function Index({
         const { name, value } = e.target;
         setValues((values) => ({
             ...values,
-            [name]: value,
             [name]: value,
         }));
     };
@@ -69,8 +72,11 @@ export default function Index({
                 },
             });
 
-            // Update local state with new motors data
+            // Update local state with new motors and options
             setMotors(response.data.motors);
+            if (response.data.brands) setBrands(response.data.brands);
+            if (response.data.types) setTypes(response.data.types);
+            if (response.data.years) setYears(response.data.years);
 
             // Optional: Update URL without reloading to keep Inertia state clean
             const queryString = new URLSearchParams(query).toString();
@@ -108,7 +114,7 @@ export default function Index({
     return (
         <PublicLayout auth={auth} title="Katalog Motor">
             {/* HEADER SECTION */}
-            <section className="bg-white border-b border-gray-200 pt-28 pb-12">
+            <section className="bg-white border-b border-gray-100 pt-32 pb-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div className="space-y-2">
@@ -121,13 +127,13 @@ export default function Index({
                                     Katalog Motor
                                 </span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
                                 Jelajahi{" "}
                                 <span className="text-blue-600">
                                     Koleksi Kami
                                 </span>
                             </h1>
-                            <p className="text-lg text-gray-600 max-w-2xl">
+                            <p className="text-lg text-gray-500 font-medium max-w-2xl">
                                 Temukan berbagai pilihan motor berkualitas
                                 dengan harga terbaik dan kondisi terjamin untuk
                                 menemani perjalanan Anda.
@@ -143,7 +149,7 @@ export default function Index({
                                     Diperbarui hari ini
                                 </p>
                             </div>
-                            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
                                 <LayoutGrid className="w-6 h-6" />
                             </div>
                         </div>
@@ -152,15 +158,15 @@ export default function Index({
             </section>
 
             {/* MAIN CONTENT */}
-            <main className="flex-grow py-12">
+            <main className="flex-grow section-py-sm bg-gray-50/30">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid lg:grid-cols-4 gap-8">
                         {/* SIDEBAR FILTERS (Desktop) */}
                         <aside className="hidden lg:block space-y-8">
-                            <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-24">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="font-bold text-gray-900 flex items-center gap-2">
-                                        <Filter className="w-4 h-4" /> Filter
+                            <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm sticky top-24">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="font-black text-gray-900 flex items-center gap-2 uppercase tracking-wider text-sm">
+                                        <Filter className="w-4 h-4 text-primary" /> Filter
                                         Pencarian
                                     </h3>
                                     <button
@@ -173,33 +179,33 @@ export default function Index({
 
                                 <div className="space-y-6">
                                     {/* Search */}
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
                                             Cari Model
                                         </label>
-                                        <div className="relative">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                        <div className="relative group">
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-primary transition-colors" />
                                             <input
                                                 type="text"
                                                 name="search"
                                                 value={values.search}
                                                 onChange={handleChange}
                                                 placeholder="Nama motor..."
-                                                className="w-full bg-gray-50 border-gray-200 rounded-xl pl-10 pr-4 py-2.5 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                                className="w-full bg-gray-50 border-gray-100 rounded-2xl pl-12 pr-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Brand */}
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
                                             Merek
                                         </label>
                                         <select
                                             name="brand"
                                             value={values.brand}
                                             onChange={handleChange}
-                                            className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-2.5 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                            className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium appearance-none"
                                         >
                                             <option value="">
                                                 Semua Merek
@@ -213,15 +219,15 @@ export default function Index({
                                     </div>
 
                                     {/* Type */}
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
                                             Tipe
                                         </label>
                                         <select
                                             name="type"
                                             value={values.type}
                                             onChange={handleChange}
-                                            className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-2.5 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                            className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium appearance-none"
                                         >
                                             <option value="">Semua Tipe</option>
                                             {types.map((t) => (
@@ -233,18 +239,18 @@ export default function Index({
                                     </div>
 
                                     {/* Price Range */}
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
                                             Rentang Harga
                                         </label>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-2 gap-3">
                                             <input
                                                 type="number"
                                                 name="min_price"
                                                 value={values.min_price}
                                                 onChange={handleChange}
                                                 placeholder="Min"
-                                                className="w-full bg-gray-50 border-gray-200 rounded-xl px-3 py-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                                className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium"
                                             />
                                             <input
                                                 type="number"
@@ -252,7 +258,7 @@ export default function Index({
                                                 value={values.max_price}
                                                 onChange={handleChange}
                                                 placeholder="Max"
-                                                className="w-full bg-gray-50 border-gray-200 rounded-xl px-3 py-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-sm"
+                                                className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium"
                                             />
                                         </div>
                                     </div>
@@ -264,7 +270,7 @@ export default function Index({
                         <div className="lg:hidden flex gap-4 mb-6">
                             <button
                                 onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                className="flex-grow flex items-center justify-between px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 font-bold shadow-sm"
+                                className="flex-grow flex items-center justify-between px-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-gray-900 font-black uppercase tracking-widest text-xs shadow-sm"
                             >
                                 <span className="flex items-center gap-2">
                                     <SlidersHorizontal size={18} /> Filter Unit
@@ -401,7 +407,7 @@ export default function Index({
                                                                         }
                                                                     </span>
                                                                 </div>
-                                                                <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
+                                                                <h3 className="text-xl font-black text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
                                                                     {motor.name}
                                                                 </h3>
                                                             </div>

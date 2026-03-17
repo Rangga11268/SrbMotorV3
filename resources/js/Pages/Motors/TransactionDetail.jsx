@@ -437,6 +437,7 @@ export default function TransactionDetail({ transaction }) {
                                 {isCreditOrder ? (
                                     <CreditStatusDisplay
                                         credit={transaction.creditDetail}
+                                        showSurvey={false}
                                     />
                                 ) : (
                                     <CashStatusDisplay
