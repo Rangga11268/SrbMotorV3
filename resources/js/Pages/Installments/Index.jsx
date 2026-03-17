@@ -414,15 +414,13 @@ export default function InstallmentIndex({ transactions }) {
                                 <motion.div
                                     key={transaction.id}
                                     className={`bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative transition-all ${
-                                        transaction.status === "cancelled" ||
-                                        transaction.is_cancelled
+                                        transaction.status === "cancelled"
                                             ? "opacity-60 saturate-50"
                                             : ""
                                     }`}
                                 >
                                     {/* CANCELLED BANNER */}
-                                    {(transaction.status === "cancelled" ||
-                                        transaction.is_cancelled) && (
+                                    {transaction.status === "cancelled" && (
                                         <div className="bg-red-600 py-1.5 px-4 text-center">
                                             <p className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center justify-center gap-2">
                                                 <X size={12} strokeWidth={4} />
@@ -454,8 +452,7 @@ export default function InstallmentIndex({ transactions }) {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end gap-3 w-full md:w-auto">
-                                                {transaction.status === "cancelled" ||
-                                                transaction.is_cancelled ? (
+                                                {transaction.status === "cancelled" ? (
                                                     <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-black border border-red-200 uppercase tracking-widest">
                                                         <X size={14} strokeWidth={3} />
                                                         Pesanan Dibatalkan
@@ -478,8 +475,7 @@ export default function InstallmentIndex({ transactions }) {
                                                     <p
                                                         className={`text-3xl font-black ${
                                                             transaction.status ===
-                                                                "cancelled" ||
-                                                            transaction.is_cancelled
+                                                                "cancelled"
                                                                 ? "text-gray-400 line-through decoration-red-500 decoration-4"
                                                                 : "text-blue-600"
                                                         }`}

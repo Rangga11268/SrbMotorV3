@@ -349,7 +349,6 @@ class CreditService
         DB::transaction(function () use ($transaction, $reason) {
             $transaction->update([
                 'status' => 'cancelled',
-                'is_cancelled' => true,
                 'cancelled_at' => now(),
                 'cancellation_reason' => $reason ?? 'Dibatalkan oleh pelanggan',
             ]);

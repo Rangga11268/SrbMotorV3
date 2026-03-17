@@ -30,7 +30,6 @@ class StoreTransactionRequest extends FormRequest
             'booking_fee' => 'nullable|numeric|min:0|lt:final_price',
             'final_price' => 'required|numeric|min:0',
             'payment_method' => 'nullable|string',
-            'payment_status' => 'nullable|in:pending,confirmed,failed',
             'name' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'occupation' => 'nullable|string|max:255',

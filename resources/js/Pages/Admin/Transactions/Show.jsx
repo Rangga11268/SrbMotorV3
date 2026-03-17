@@ -52,8 +52,6 @@ export default function Show({ transaction, motors, users, availableUnits }) {
         notes: transaction.notes || "",
         status: transaction.status || "new_order",
         booking_fee: transaction.booking_fee || 0,
-        frame_number: transaction.frame_number || "",
-        engine_number: transaction.engine_number || "",
         delivery_date: transaction.delivery_date || "",
     });
 
@@ -339,29 +337,7 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                             }
                                         />
                                     </CCol>
-                                    <CCol md={12}>
-                                        <hr />
-                                        <h6>Data Teknis (Opsional)</h6>
-                                    </CCol>
-                                    <CCol md={4}>
-                                        <CFormLabel>No. Rangka</CFormLabel>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={data.frame_number}
-                                            onChange={(e) => setData("frame_number", e.target.value)}
-                                        />
-                                    </CCol>
-                                    <CCol md={4}>
-                                        <CFormLabel>No. Mesin</CFormLabel>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={data.engine_number}
-                                            onChange={(e) => setData("engine_number", e.target.value)}
-                                        />
-                                    </CCol>
-                                    <CCol md={4}>
+                                    <CCol md={6}>
                                         <CFormLabel>Estimasi Pengiriman</CFormLabel>
                                         <input
                                             type="date"
@@ -477,28 +453,20 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                         </div>
                                     </CCol>
 
-                                    {/* Data Teknis Display */}
-                                    {(transaction.frame_number || transaction.engine_number || transaction.delivery_date) && (
+                                    {/* Estimasi Pengiriman Display */}
+                                    {transaction.delivery_date && (
                                         <CCol md={12}>
                                             <div className="p-3 bg-light rounded shadow-sm border-start border-4 border-info">
-                                                <h7 className="d-block mb-3 fw-bold text-info">DATA TEKNIS PENGIRIMAN</h7>
+                                                <h7 className="d-block mb-3 fw-bold text-info">ESTIMASI PENGIRIMAN</h7>
                                                 <CRow>
-                                                    <CCol md={4}>
-                                                        <p className="text-body-secondary small mb-1">No. Rangka</p>
-                                                        <p className="fw-bold mb-0">{transaction.frame_number || "-"}</p>
-                                                    </CCol>
-                                                    <CCol md={4}>
-                                                        <p className="text-body-secondary small mb-1">No. Mesin</p>
-                                                        <p className="fw-bold mb-0">{transaction.engine_number || "-"}</p>
-                                                    </CCol>
-                                                    <CCol md={4}>
+                                                    <CCol md={12}>
                                                         <p className="text-body-secondary small mb-1">Estimasi Tiba</p>
                                                         <p className="fw-bold mb-0 text-primary">
-                                                            {transaction.delivery_date ? new Date(transaction.delivery_date).toLocaleDateString("id-ID", {
+                                                            {new Date(transaction.delivery_date).toLocaleDateString("id-ID", {
                                                                 year: "numeric",
                                                                 month: "long",
                                                                 day: "numeric",
-                                                            }) : "-"}
+                                                            })}
                                                         </p>
                                                     </CCol>
                                                 </CRow>

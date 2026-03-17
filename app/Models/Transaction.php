@@ -25,7 +25,6 @@ class Transaction extends Model
         'phone',
         'email',
         'address',
-        'city',
         'delivery_method',
         'delivery_date',
         'motor_color',
@@ -41,14 +40,11 @@ class Transaction extends Model
         'discount_amount',
         'final_price',
         'payment_method',
-        'payment_status',
         'payment_date',
         'payment_proof',
-        'is_cancelled',
         'cancelled_at',
         'cancellation_reason',
         'notes',
-        'internal_notes',
     ];
 
     /**
@@ -80,7 +76,6 @@ class Transaction extends Model
         'monthly_income' => 'decimal:2',
         'payment_date' => 'datetime',
         'delivery_date' => 'date',
-        'is_cancelled' => 'boolean',
         'cancelled_at' => 'datetime',
     ];
 

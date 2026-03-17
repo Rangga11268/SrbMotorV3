@@ -179,7 +179,7 @@ export default function TransactionDetail({ transaction }) {
         "waiting_credit_approval",
     ];
     const canCancel =
-        !transaction.is_cancelled &&
+        transaction.status !== "cancelled" &&
         (transaction.transaction_type === "CASH"
             ? allowedCashStatuses.includes(transaction.status)
             : allowedCreditStatuses.includes(transaction.status));

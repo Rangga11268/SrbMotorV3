@@ -23,7 +23,6 @@ class TransactionFactory extends Factory
             'total_price' => 20000000,
             'final_price' => 20000000,
             'payment_method' => 'transfer',
-            'payment_status' => 'pending',
             'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
         ];

@@ -28,16 +28,10 @@ class TransactionService
             'motor_price',
             'phone',
             'address',
-            'city',
-            'total_price',
-            'discount_amount',
-            'final_price',
             'payment_method',
-            'payment_status',
             'payment_date',
             'payment_proof',
             'notes',
-            'internal_notes',
         ]));
 
         $transaction = Transaction::create($transactionData);
@@ -63,16 +57,10 @@ class TransactionService
             'motor_price',
             'phone',
             'address',
-            'city',
-            'total_price',
-            'discount_amount',
-            'final_price',
             'payment_method',
-            'payment_status',
             'payment_date',
             'payment_proof',
             'notes',
-            'internal_notes',
         ]));
 
         $transaction->update($transactionData);
