@@ -15,8 +15,7 @@ class NewsController extends Controller
     public function index(Request $request)
     {
         $query = Post::published()
-            ->with('category')
-            ->latest('published_at');
+            ->with('category');
 
         // Filter by category if provided
         if ($request->has('category') && $request->category) {

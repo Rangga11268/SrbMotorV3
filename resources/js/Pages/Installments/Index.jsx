@@ -3,11 +3,6 @@ import { Link, usePage, useForm, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Activity,
-    AlertCircle,
-    AlertTriangle,
-    ArrowRight,
-    Calendar,
     CheckCircle,
     Clock,
     CreditCard,
@@ -16,12 +11,15 @@ import {
     Landmark,
     Shield,
     ShieldCheck,
-    TrendingUp,
     Upload,
     Wallet,
     X,
-    Zap,
     ArrowLeft,
+    RefreshCw,
+    AlertCircle,
+    AlertTriangle,
+    ArrowRight,
+    Calendar,
 } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -298,7 +296,7 @@ export default function InstallmentIndex({ transactions }) {
         const Icon =
             {
                 pending: Clock,
-                waiting_approval: Activity,
+                waiting_approval: RefreshCw,
                 paid: CheckCircle,
                 overdue: AlertTriangle,
             }[status] || Clock;
@@ -403,7 +401,7 @@ export default function InstallmentIndex({ transactions }) {
                 </div>
             </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pb-32 relative z-20">
                     {transactions.length > 0 ? (
                         <div className="space-y-8">
                             {transactions.map((transaction) => (
@@ -468,9 +466,10 @@ export default function InstallmentIndex({ transactions }) {
                                                     </span>
                                                 ) : (
                                                     <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-xs font-black border border-blue-100 uppercase tracking-widest">
-                                                        <Activity
+                                                        <RefreshCw
                                                             size={14}
                                                             strokeWidth={3}
+                                                            className="animate-spin-slow"
                                                         />
                                                         {transaction.status_text ||
                                                             "Aktif"}
@@ -758,7 +757,7 @@ export default function InstallmentIndex({ transactions }) {
                                                     disabled={isLoadingPay}
                                                     className="w-full md:w-auto px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-xs rounded-2xl transition-all shadow-xl shadow-blue-500/20 disabled:opacity-50 flex items-center justify-center gap-3"
                                                 >
-                                                    <Zap className="w-5 h-5" />
+                                                    <ShieldCheck className="w-5 h-5" />
                                                     {isLoadingPay
                                                         ? "Memproses..."
                                                         : "Bayar Semua Sekarang"}
@@ -768,14 +767,24 @@ export default function InstallmentIndex({ transactions }) {
                                     )}
 
                                     {/* FOOTER INFO */}
-                                    <div className="p-6 bg-gray-50/30 border-t border-gray-100 flex items-center gap-3">
-                                        <Shield className="w-5 h-5 text-green-500" />
-                                        <p className="text-xs font-bold text-gray-400">
-                                            Seluruh data pembayaran dijamin
-                                            keamanannya dan tercatat pada sistem
-                                            OJK melalui penyedia pembiayaan
-                                            terpilih.
-                                        </p>
+                                    <div className="p-8 bg-blue-50/50 border-t border-blue-100">
+                                        <div className="flex items-start gap-4 mb-6">
+                                            <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                                                <AlertCircle className="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-black text-blue-900 uppercase tracking-tight mb-1">Penting: Verifikasi Pembayaran</p>
+                                                <p className="text-xs text-blue-700/70 font-medium leading-relaxed">
+                                                    Jika status pembayaran tidak berubah dalam <span className="font-bold">5 menit</span> setelah transaksi berhasil, silakan klik tombol <span className="font-bold underline">Cek Status</span> atau hubungi Admin melalui WhatsApp dengan melampirkan bukti bayar.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3 pt-6 border-t border-blue-100/50">
+                                            <ShieldCheck className="w-5 h-5 text-green-500" />
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                                Seluruh data pembayaran dijamin aman & terdaftar di OJK.
+                                            </p>
+                                        </div>
                                     </div>
                                 </motion.div>
                             ))}
