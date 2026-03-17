@@ -32,13 +32,13 @@ class CreditService
 
         if ($res) {
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'verifikasi_dokumen',
                 'status' => 'verifikasi_dokumen',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => $notes,
                 'description' => 'Dokumen diverifikasi: ' . $notes,
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -58,13 +58,13 @@ class CreditService
 
         if ($res) {
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'ditolak',
                 'status' => 'ditolak',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => $reason,
                 'description' => 'Aplikasi ditolak (dokumen tidak valid): ' . $reason,
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -86,13 +86,13 @@ class CreditService
 
         if ($res) {
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'dikirim_ke_leasing',
                 'status' => 'dikirim_ke_leasing',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => 'Ref: ' . $appRef,
                 'description' => 'Data dikirim ke leasing. Ref: ' . $appRef,
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -120,13 +120,13 @@ class CreditService
         ]);
 
         $credit->transaction->logs()->create([
+            'status_from' => 'dikirim_ke_leasing',
+            'status_to' => 'survey_dijadwalkan',
             'status' => 'survey_dijadwalkan',
+            'actor_id' => auth()->id(),
+            'actor_type' => 'App\Models\User',
+            'notes' => 'Dijadwalkan: ' . $surveyData['survey_scheduled_date'],
             'description' => 'Survey dijadwalkan pada ' . $surveyData['survey_scheduled_date'],
-            'payload' => [
-                'status_from' => 'dikirim_ke_leasing',
-                'actor_id' => auth()->id(),
-                'actor_type' => 'admin',
-            ]
         ]);
     }
 
@@ -143,13 +143,13 @@ class CreditService
 
         if ($res) {
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'menunggu_keputusan_leasing',
                 'status' => 'menunggu_keputusan_leasing',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => $surveyNotes,
                 'description' => 'Survey selesai: ' . $surveyNotes,
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -180,13 +180,12 @@ class CreditService
 
         if ($res) {
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'disetujui',
                 'status' => 'disetujui',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
                 'description' => 'Kredit disetujui oleh leasing',
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -207,13 +206,13 @@ class CreditService
         if ($res) {
             $credit->transaction->update(['status' => 'cancelled']);
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'ditolak',
                 'status' => 'ditolak',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => $reason,
                 'description' => 'Kredit ditolak oleh leasing: ' . $reason,
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -237,13 +236,13 @@ class CreditService
         if ($res) {
             $credit->transaction->update(['status' => 'pembayaran_dikonfirmasi']);
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'dp_dibayar',
                 'status' => 'dp_dibayar',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => 'Metode: ' . $paymentMethod,
                 'description' => 'Pembayaran DP dikonfirmasi: ' . $paymentMethod,
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -282,13 +281,13 @@ class CreditService
             $credit->transaction->update(['status' => 'completed']);
 
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'selesai',
                 'status' => 'selesai',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => $notes,
                 'description' => 'Proses kredit selesai. Unit siap dikirim.',
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         }
         return $res;
@@ -305,13 +304,12 @@ class CreditService
             $credit->transaction->update(['status' => 'cancelled']);
 
             $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'dibatalkan',
                 'status' => 'dibatalkan',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
                 'description' => 'Aplikasi kredit dibatalkan oleh admin',
-                'payload' => [
-                    'status_from' => $oldStatus,
-                    'actor_id' => auth()->id(),
-                    'actor_type' => 'admin',
-                ]
             ]);
         });
 

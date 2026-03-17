@@ -12,14 +12,27 @@ class TransactionLog extends Model
 
     protected $fillable = [
         'transaction_id',
-        'status',
+        'status_from',
+        'status_to',
+        'status', // legacy
+        'actor_id',
+        'actor_type',
         'description',
+        'notes',
         'payload',
     ];
 
     protected $casts = [
         'payload' => 'array',
     ];
+
+    /**
+     * Get the actor of the log.
+     */
+    public function actor()
+    {
+        return $this->morphTo();
+    }
 
     /**
      * Get the transaction that owns the log.

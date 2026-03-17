@@ -170,8 +170,13 @@ erDiagram
     TRANSACTION_LOGS {
         bigint id PK
         bigint transaction_id FK
-        string status
+        string status_from
+        string status_to
+        string status "Legacy"
+        bigint actor_id
+        string actor_type
         text description
+        text notes
         json payload
         timestamp created_at
         timestamp updated_at
@@ -241,16 +246,16 @@ erDiagram
 | `transactions` | 33 | Core Sales Records (Cash/Credit) |
 | `credit_details` | 18 | Leasing & Approval Workflow |
 | [installments](file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php#106-113) | 21 | Payment Tracking & Deadlines |
-| [documents](file:///d:/laragon/www/SrbMotor/app/Models/CreditDetail.php#74-81) | 15 | Identity Files & Verification |
+| `documents` | 15 | Identity Files & Verification |
 | `categories` | 9 | Motor & Article Grouping |
 | `leasing_providers` | 5 | Financing Partners |
-| `transaction_logs` | 7 | Audit Trail for Status Changes |
+| `transaction_logs` | 12 | Audit Trail for Status Changes |
 | `survey_schedules` | 19 | Survey Coordination Detail |
 | `posts` | 12 | Blog/News Content Management |
 | `settings` | 8 | Global System Configuration |
 | `notifications` | 8 | User Alert System |
 
 **Total Application Tables:** 13
-**Total Application Columns:** 181
+**Total Application Columns:** 186
 
 *Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*

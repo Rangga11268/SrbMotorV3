@@ -1520,15 +1520,25 @@ export default function Show({
                                                     {new Date(log.created_at).toLocaleString('id-ID')}
                                                 </CTableDataCell>
                                                 <CTableDataCell className="border-0">
-                                                    <CBadge color="secondary" variant="outline" className="me-1">{log.status_from}</CBadge>
-                                                    &rarr;
-                                                    <CBadge color="primary" className="ms-1">{log.status_to}</CBadge>
+                                                    {log.status_from && (
+                                                        <>
+                                                            <CBadge color="secondary" variant="outline" className="me-1">
+                                                                {statuses[log.status_from]?.label || log.status_from}
+                                                            </CBadge>
+                                                            &rarr;
+                                                        </>
+                                                    )}
+                                                    <CBadge color="primary" className="ms-1">
+                                                        {statuses[log.status_to || log.status]?.label || log.status_to || log.status}
+                                                    </CBadge>
                                                 </CTableDataCell>
                                                 <CTableDataCell className="border-0">
-                                                    {log.actor?.name || 'System'}
-                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>{log.actor_type.toUpperCase()}</div>
+                                                    <div className="fw-semibold">{log.actor?.name || 'System'}</div>
+                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>
+                                                        {log.actor_type?.includes('User') ? 'ADMIN' : (log.actor_type || 'SYSTEM')}
+                                                    </div>
                                                 </CTableDataCell>
-                                                <CTableDataCell className="border-0">{log.notes || '-'}</CTableDataCell>
+                                                <CTableDataCell className="border-0">{log.notes || log.description || '-'}</CTableDataCell>
                                             </CTableRow>
                                         ))
                                     ) : (

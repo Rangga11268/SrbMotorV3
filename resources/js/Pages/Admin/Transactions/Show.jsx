@@ -62,19 +62,35 @@ export default function Show({ transaction, motors, users, availableUnits }) {
             minimumFractionDigits: 0,
         }).format(n || 0);
 
+    const statusLabelMap = {
+        new_order: "Pesanan Masuk",
+        waiting_payment: "Menunggu Pembayaran",
+        pembayaran_dikonfirmasi: "Pembayaran Dikonfirmasi",
+        payment_confirmed: "Pembayaran Dikonfirmasi", // Backward compatibility
+        unit_preparation: "Motor Disiapkan",
+        ready_for_delivery: "Siap Dikirim/Ambil",
+        dalam_pengiriman: "Dalam Pengiriman",
+        completed: "Selesai",
+        cancelled: "Dibatalkan",
+    };
+
     const getStatusBadge = (status) => {
         const map = {
-            new_order: { color: "warning", label: "Pesanan Masuk" },
-            waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
+            new_order: { color: "warning", label: statusLabelMap.new_order },
+            waiting_payment: { color: "warning", label: statusLabelMap.waiting_payment },
             pembayaran_dikonfirmasi: {
                 color: "success",
-                label: "Pembayaran Dikonfirmasi",
+                label: statusLabelMap.pembayaran_dikonfirmasi,
             },
-            unit_preparation: { color: "info", label: "Motor Disiapkan" },
-            ready_for_delivery: { color: "primary", label: "Siap Dikirim/Ambil" },
-            dalam_pengiriman: { color: "info", label: "Dalam Pengiriman" },
-            completed: { color: "success", label: "Selesai" },
-            cancelled: { color: "danger", label: "Dibatalkan" },
+            payment_confirmed: {
+                color: "success",
+                label: statusLabelMap.payment_confirmed,
+            },
+            unit_preparation: { color: "info", label: statusLabelMap.unit_preparation },
+            ready_for_delivery: { color: "primary", label: statusLabelMap.ready_for_delivery },
+            dalam_pengiriman: { color: "info", label: statusLabelMap.dalam_pengiriman },
+            completed: { color: "success", label: statusLabelMap.completed },
+            cancelled: { color: "danger", label: statusLabelMap.cancelled },
         };
         const badge = map[status] || { color: "secondary", label: status };
         return <CBadge color={badge.color}>{badge.label}</CBadge>;
@@ -526,15 +542,25 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                                     {new Date(log.created_at).toLocaleString('id-ID')}
                                                 </CTableDataCell>
                                                 <CTableDataCell>
-                                                    <CBadge color="secondary" variant="outline" className="me-1">{log.status_from}</CBadge>
-                                                    &rarr;
-                                                    <CBadge color="primary" className="ms-1">{log.status_to}</CBadge>
+                                                    {log.status_from && (
+                                                        <>
+                                                            <CBadge color="secondary" variant="outline" className="me-1">
+                                                                {statusLabelMap[log.status_from] || log.status_from}
+                                                            </CBadge>
+                                                            &rarr;
+                                                        </>
+                                                    )}
+                                                    <CBadge color="primary" className="ms-1">
+                                                        {statusLabelMap[log.status_to || log.status] || log.status_to || log.status}
+                                                    </CBadge>
                                                 </CTableDataCell>
                                                 <CTableDataCell>
-                                                    {log.actor?.name || 'System'}
-                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>{log.actor_type.toUpperCase()}</div>
+                                                    <div className="fw-semibold">{log.actor?.name || 'System'}</div>
+                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>
+                                                        {log.actor_type?.includes('User') ? 'ADMIN' : (log.actor_type || 'SYSTEM')}
+                                                    </div>
                                                 </CTableDataCell>
-                                                <CTableDataCell>{log.notes || '-'}</CTableDataCell>
+                                                <CTableDataCell>{log.notes || log.description || '-'}</CTableDataCell>
                                             </CTableRow>
                                         ))
                                     ) : (

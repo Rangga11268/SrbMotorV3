@@ -145,9 +145,11 @@ class TransactionController extends Controller
         $transaction->logs()->create([
             'status_from' => null,
             'status_to' => $validated['status'],
-            'actor_id' => Auth::id(),
-            'actor_type' => 'admin',
+            'status' => $validated['status'],
+            'actor_id' => auth()->id(),
+            'actor_type' => 'App\Models\User',
             'notes' => 'Transaksi tunai dibuat manual oleh admin',
+            'description' => 'Transaksi tunai dibuat manual oleh admin',
         ]);
 
         return redirect()->route('admin.transactions.show', $transaction)
@@ -183,6 +185,8 @@ class TransactionController extends Controller
             'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
             'delivery_date' => 'nullable|date',
         ]);
+
+        $oldStatus = $transaction->status;
 
         // Get motor and calculate total
         $motor = Motor::findOrFail($validated['motor_id']);
@@ -221,9 +225,11 @@ class TransactionController extends Controller
             $transaction->logs()->create([
                 'status_from' => $oldStatus,
                 'status_to' => $validated['status'],
-                'actor_id' => Auth::id(),
-                'actor_type' => 'admin',
+                'status' => $validated['status'],
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
                 'notes' => 'Status diperbarui oleh admin melalui form edit',
+                'description' => 'Status diperbarui oleh admin melalui form edit',
             ]);
         }
 
@@ -265,9 +271,11 @@ class TransactionController extends Controller
             $transaction->logs()->create([
                 'status_from' => $oldStatus,
                 'status_to' => $newStatus,
-                'actor_id' => Auth::id(),
-                'actor_type' => 'admin',
+                'status' => $newStatus,
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
                 'notes' => 'Status diperbarui cepat oleh admin',
+                'description' => 'Status diperbarui cepat oleh admin',
             ]);
 
             // Stock Balancing: Update motor availability based on status change
