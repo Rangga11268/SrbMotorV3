@@ -28,20 +28,10 @@ class CreditDetail extends Model
         'total_interest',
         'verification_notes',
         'verified_at',
-        'survey_scheduled_date',
-        'survey_completed_at',
-        'survey_notes',
-        'dp_amount',
-        'dp_paid_at',
-        'dp_payment_method',
-        'unit_prepared_at',
         'ready_for_delivery_at',
         'delivered_at',
         'completed_at',
         'completion_notes',
-        'is_completed',
-        'customer_confirms_survey',
-        'customer_survey_confirmed_at',
     ];
 
     /**
@@ -50,7 +40,12 @@ class CreditDetail extends Model
      * @var array
      */
     protected $appends = [
-        'down_payment'
+        'down_payment',
+        'dp_amount',
+        'dp_paid_at',
+        'dp_paid_date',
+        'survey_scheduled_date',
+        'survey_notes',
     ];
 
     /**
@@ -63,17 +58,9 @@ class CreditDetail extends Model
         'monthly_installment' => 'decimal:2',
         'total_interest' => 'decimal:2',
         'verified_at' => 'datetime',
-        'survey_scheduled_date' => 'date',
-        'survey_completed_at' => 'datetime',
-        'dp_amount' => 'decimal:2',
-        'dp_paid_at' => 'datetime',
-        'unit_prepared_at' => 'datetime',
         'ready_for_delivery_at' => 'datetime',
         'delivered_at' => 'datetime',
         'completed_at' => 'datetime',
-        'is_completed' => 'boolean',
-        'customer_confirms_survey' => 'boolean',
-        'customer_survey_confirmed_at' => 'datetime',
     ];
 
     /**
@@ -167,6 +154,37 @@ class CreditDetail extends Model
      */
     public function getDownPaymentAttribute()
     {
-        return $this->dp_amount;
+        return $this->getDpAmountAttribute();
+    }
+
+    public function getDpAmountAttribute()
+    {
+        return $this->transaction->installments()
+            ->where('installment_number', 0)
+            ->value('amount') ?? 0;
+    }
+
+    public function getDpPaidAtAttribute()
+    {
+        return $this->transaction->installments()
+            ->where('installment_number', 0)
+            ->value('paid_at');
+    }
+
+    public function getSurveyScheduledDateAttribute()
+    {
+        $lastSurvey = $this->surveySchedules()->latest()->first();
+        return $lastSurvey ? $lastSurvey->scheduled_date : null;
+    }
+
+    public function getSurveyNotesAttribute()
+    {
+        $lastSurvey = $this->surveySchedules()->whereNotNull('notes')->latest()->first();
+        return $lastSurvey ? $lastSurvey->notes : null;
+    }
+
+    public function getDpPaidDateAttribute()
+    {
+        return $this->dp_paid_at;
     }
 }

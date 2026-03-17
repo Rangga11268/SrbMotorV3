@@ -51,7 +51,6 @@ class ProfileController extends Controller
             'nik' => $request->nik,
             'alamat' => $request->alamat,
             'occupation' => $request->pekerjaan,
-            'no_ktp' => $request->no_ktp ?? $user->no_ktp,
             'no_hp_backup' => $request->no_hp_backup ?? $user->no_hp_backup,
             'jenis_kelamin' => $request->jenis_kelamin ?? $user->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir ?? $user->tanggal_lahir,

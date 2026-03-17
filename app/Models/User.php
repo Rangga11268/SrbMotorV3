@@ -28,7 +28,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone',
         'alamat',
         'nik',
-        'no_ktp',
         'no_hp_backup',
         'jenis_kelamin',
         'tanggal_lahir',

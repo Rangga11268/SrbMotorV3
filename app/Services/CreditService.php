@@ -117,7 +117,6 @@ class CreditService
 
         return $credit->update([
             'status' => 'survey_dijadwalkan',
-            'survey_scheduled_date' => $surveyData['survey_scheduled_date'],
         ]);
 
         $credit->transaction->logs()->create([
@@ -139,8 +138,6 @@ class CreditService
     {
         $oldStatus = $credit->status;
         $res = $credit->update([
-            'survey_notes' => $surveyNotes,
-            'survey_completed_at' => now(),
             'status' => 'menunggu_keputusan_leasing',
         ]);
 
