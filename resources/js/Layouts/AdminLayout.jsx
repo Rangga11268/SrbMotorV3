@@ -53,27 +53,54 @@ import { AnimatePresence, motion } from "framer-motion";
 
 function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
-    const [sidebarShow, setSidebarShow] = useState(true);
-    const [isMounted, setIsMounted] = useState(false);
 
-    useEffect(() => {
-        setIsMounted(true);
-        if (typeof window !== 'undefined') {
+    // Lazy initialization dari localStorage untuk avoid race condition
+    const [sidebarShow, setSidebarShow] = useState(() => {
+        if (typeof window !== "undefined") {
             const saved = localStorage.getItem("adminSidebarShow");
             if (saved !== null) {
-                setSidebarShow(JSON.parse(saved));
-            } else {
-                setSidebarShow(true);
+                try {
+                    return JSON.parse(saved);
+                } catch (e) {
+                    return true;
+                }
             }
         }
+        return true; // Default ke open
+    });
+
+    const [isMounted, setIsMounted] = useState(false);
+    const [ignoreNextChange, setIgnoreNextChange] = useState(true); // Skip first CoreUI trigger
+    const changeTimeoutRef = React.useRef(null);
+
+    // Set mounted flag
+    useEffect(() => {
+        setIsMounted(true);
+        // Skip first onVisibleChange yang dari CoreUI initialization
+        const timer = setTimeout(() => {
+            setIgnoreNextChange(false);
+        }, 100);
+        return () => clearTimeout(timer);
     }, []);
 
     // Save sidebar state to localStorage whenever it changes
     useEffect(() => {
-        if (isMounted) {
-            localStorage.setItem("adminSidebarShow", JSON.stringify(sidebarShow));
+        if (isMounted && !ignoreNextChange) {
+            localStorage.setItem(
+                "adminSidebarShow",
+                JSON.stringify(sidebarShow),
+            );
         }
-    }, [sidebarShow, isMounted]);
+    }, [sidebarShow, isMounted, ignoreNextChange]);
+
+    // Cleanup ref on unmount
+    useEffect(() => {
+        return () => {
+            if (changeTimeoutRef.current) {
+                clearTimeout(changeTimeoutRef.current);
+            }
+        };
+    }, []);
     const [showFlash, setShowFlash] = useState(false);
 
     useEffect(() => {
@@ -129,7 +156,6 @@ function AdminLayoutContent({ children, title }) {
             icon: cilBuilding,
             active: route().current("admin.leasing-providers.*"),
         },
-
     ];
 
     const contentMenuItems = [
@@ -145,7 +171,6 @@ function AdminLayoutContent({ children, title }) {
             icon: cilTag,
             active: route().current("admin.categories.*"),
         },
-
     ];
 
     useEffect(() => {
@@ -240,11 +265,20 @@ function AdminLayoutContent({ children, title }) {
                     colorScheme="dark"
                     visible={sidebarShow}
                     onVisibleChange={(visible) => {
-                        // CoreUI sometimes triggers onVisibleChange(false) on mount/resize
-                        // We only want to update if it's likely a user action or persistent state
-                        if (isMounted) {
-                            setSidebarShow(visible);
+                        // Skip CoreUI's initial change on mount
+                        if (!isMounted || ignoreNextChange) {
+                            return;
                         }
+
+                        // Debounce rapid changes (e.g., from resize events)
+                        if (changeTimeoutRef.current) {
+                            clearTimeout(changeTimeoutRef.current);
+                        }
+
+                        changeTimeoutRef.current = setTimeout(() => {
+                            setSidebarShow(visible);
+                            changeTimeoutRef.current = null;
+                        }, 50);
                     }}
                 >
                     <CSidebarHeader className="border-bottom px-3">
