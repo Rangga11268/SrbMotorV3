@@ -13,7 +13,6 @@ import {
     Calendar,
     ArrowLeft,
     CheckCircle,
-    Zap,
     MessageSquare,
     Wallet,
     CreditCard,

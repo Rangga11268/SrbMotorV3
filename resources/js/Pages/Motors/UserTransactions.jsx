@@ -20,13 +20,14 @@ import {
     DollarSign,
     Package,
     ChevronRight,
-    Zap,
+    Wallet,
     MapPin,
     ShieldCheck,
     ArrowLeft,
     Search,
     Filter,
     X,
+    Gauge,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -90,7 +91,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
 
         const successStatuses = [
             "completed",
-            "pembayaran_dikonfirmasi",
+            "payment_confirmed",
             "disetujui",
             "dp_dibayar"
         ];
@@ -111,7 +112,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
         const labels = {
             new_order: "PESANAN MASUK",
             waiting_payment: "MENUNGGU PEMBAYARAN",
-            pembayaran_dikonfirmasi: "PEMBAYARAN DIKONFIRMASI",
+            payment_confirmed: "PEMBAYARAN DIKONFIRMASI",
             unit_preparation: "MOTOR DISIAPKAN",
             ready_for_delivery: "SIAP DIKIRIM/AMBIL",
             dalam_pengiriman: "DALAM PENGIRIMAN",
@@ -180,7 +181,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
 
     return (
         <PublicLayout auth={auth} title="Riwayat Pesanan - SRB Motors">
-            <div className="flex-grow pt-[104px] pb-20">
+            <div className="flex-grow pt-[110px] sm:pt-32 pb-20">
                 {/* BACK BUTTON */}
                 <div className="bg-gray-50/50 border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
@@ -244,7 +245,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         <option value="">Semua Status</option>
                                         <option value="new_order">Pesanan Masuk</option>
                                         <option value="waiting_payment">Menunggu Pembayaran</option>
-                                        <option value="pembayaran_dikonfirmasi">Pembayaran Lunas</option>
+                                        <option value="payment_confirmed">Pembayaran Lunas</option>
                                         <option value="unit_preparation">Motor Disiapkan</option>
                                         <option value="ready_for_delivery">Siap Dikirim/Ambil</option>
                                         <option value="completed">Selesai</option>
@@ -270,148 +271,102 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                 return (
                                     <motion.div
                                         key={transaction.id}
-                                        initial={{ opacity: 0, y: 20 }}
+                                        initial={{ opacity: 0, y: 15 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-white overflow-hidden group hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500"
+                                        className="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col"
                                     >
-                                        <div className="flex flex-col lg:flex-row">
-                                            {/* IMAGE SECTION */}
-                                            <div className="lg:w-80 p-8 bg-gray-50 flex items-center justify-center relative overflow-hidden group-hover:bg-primary/5 transition-colors">
-                                                <div className="absolute top-4 left-4 z-10">
-                                                    <span
-                                                        className={`px-3 py-1.5 rounded-full text-[9px] font-black border flex items-center gap-1.5 uppercase tracking-widest shadow-sm ${statusInfo.color}`}
-                                                    >
-                                                        <StatusIcon
-                                                            size={12}
-                                                            strokeWidth={3}
-                                                        />
-                                                        {statusInfo.label}
-                                                    </span>
-                                                </div>
+                                        {/* Card Header */}
+                                        <div className="bg-gray-50/80 px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-sm font-bold text-gray-900">
+                                                    ID: #{String(transaction.id).padStart(6, "0")}
+                                                </span>
+                                                <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                                <span className="text-sm font-medium text-gray-500">
+                                                    <Calendar className="inline-block w-4 h-4 mr-1.5 -mt-0.5 text-gray-400" />
+                                                    {formatDate(transaction.created_at)}
+                                                </span>
+                                            </div>
+                                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border flex items-center gap-1.5 shadow-sm ${statusInfo.color}`}>
+                                                <StatusIcon size={14} strokeWidth={2.5} />
+                                                {statusInfo.label}
+                                            </span>
+                                        </div>
+
+                                        {/* Card Body */}
+                                        <div className="p-6 flex flex-col sm:flex-row gap-6">
+                                            {/* Image */}
+                                            <div className="w-full sm:w-48 h-32 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 border border-gray-100 p-2">
                                                 <img
                                                     src={`/storage/${transaction.motor.image_path}`}
                                                     alt={transaction.motor.name}
-                                                    className="w-full h-48 object-contain relative z-10 filter drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-700"
+                                                    className="w-full h-full object-contain"
                                                 />
                                             </div>
 
-                                            {/* CONTENT SECTION */}
-                                            <div className="flex-1 p-8 md:p-10 flex flex-col justify-between">
-                                                <div className="flex flex-col md:flex-row justify-between items-start gap-6 border-b border-gray-100 pb-8 mb-8">
-                                                    <div className="space-y-2">
-                                                        <div className="flex items-center gap-3">
-                                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                                                TXID: #
-                                                                {String(
-                                                                    transaction.id,
-                                                                ).padStart(
-                                                                    6,
-                                                                    "0",
-                                                                )}
-                                                            </span>
-                                                            <span className="w-1 h-1 rounded-full bg-gray-200" />
-                                                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                                                {formatDate(
-                                                                    transaction.created_at,
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                        <h3 className="text-3xl font-black text-gray-900 group-hover:text-primary transition-colors uppercase tracking-tight">
-                                                            {
-                                                                transaction
-                                                                    .motor.name
-                                                            }
-                                                        </h3>
-                                                        <div className="flex flex-wrap items-center gap-4 mt-2">
-                                                            <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500">
-                                                                <Calendar className="w-3.5 h-3.5 text-gray-300" />
-                                                                {
-                                                                    transaction
-                                                                        .motor
-                                                                        .year
-                                                                }
-                                                            </span>
-                                                            <span className="w-1 h-1 rounded-full bg-gray-200" />
-                                                            <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase">
-                                                                {transaction.transaction_type ===
-                                                                "CASH" ? (
-                                                                    <div className="flex items-center gap-1.5">
-                                                                        <Zap className="w-3.5 h-3.5 text-emerald-500" />
-                                                                        <span className="text-emerald-600">
-                                                                            Tunai
-                                                                            Keras
-                                                                        </span>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="flex items-center gap-1.5">
-                                                                        <CreditCard className="w-3.5 h-3.5 text-blue-500" />
-                                                                        <span className="text-blue-600">
-                                                                            Pembiayaan
-                                                                            Kredit
-                                                                        </span>
-                                                                    </div>
-                                                                )}
-                                                            </span>
-                                                            {(transaction.nik || transaction.occupation) && (
-                                                                <>
-                                                                    <span className="w-1 h-1 rounded-full bg-gray-200" />
-                                                                    <span className="flex items-center gap-1.5 text-[10px] font-black text-gray-400 uppercase tracking-tighter">
-                                                                        {transaction.occupation || "Pekerjaan -"} 
-                                                                        {transaction.nik && ` • NIK: ${transaction.nik.substring(0, 6)}...`}
-                                                                    </span>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="md:text-right">
-                                                        <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1.5">
-                                                            Nilai Transaksi
-                                                        </p>
-                                                        <p className="text-3xl font-black text-primary">
-                                                            {formatCurrency(
-                                                                transaction.final_price || transaction.total_price || 0,
-                                                            )}
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-col sm:flex-row items-center gap-4">
-                                                    {transaction.transaction_type ===
-                                                        "CREDIT" && (
-                                                        <Link
-                                                            href={route(
-                                                                "motors.manage-documents",
-                                                                transaction.id,
-                                                            )}
-                                                            className="w-full sm:w-auto h-14 px-8 rounded-2xl border border-primary/20 bg-primary/5 text-primary hover:bg-primary hover:text-white text-[11px] font-black tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn shadow-sm"
-                                                        >
-                                                            <FileText
-                                                                size={18}
-                                                                strokeWidth={
-                                                                    2.5
-                                                                }
-                                                            />
-                                                            Kelola Dokumen
-                                                        </Link>
+                                            {/* Info */}
+                                            <div className="flex-1 flex flex-col justify-center">
+                                                <h3 className="text-xl font-black text-gray-900 mb-2">
+                                                    {transaction.motor.name}
+                                                </h3>
+                                                <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-500 mb-4">
+                                                    <span className="flex items-center gap-1.5">
+                                                        <Gauge className="w-4 h-4 text-gray-400" />
+                                                        {transaction.motor.year}
+                                                    </span>
+                                                    <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                                    {transaction.transaction_type === "CASH" ? (
+                                                        <span className="flex items-center gap-1.5 text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded-md">
+                                                            <Wallet className="w-4 h-4" />
+                                                            Tunai
+                                                        </span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-1.5 text-blue-600 font-bold bg-blue-50 px-2.5 py-1 rounded-md">
+                                                            <CreditCard className="w-4 h-4" />
+                                                            Kredit
+                                                        </span>
                                                     )}
-                                                    <Link
-                                                        href={route(
-                                                            "motors.transaction.show",
-                                                            transaction.id,
-                                                        )}
-                                                        className="w-full sm:w-auto flex-1 h-14 px-8 rounded-2xl bg-primary text-white hover:bg-black font-black text-[11px] tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn shadow-xl shadow-primary/20"
-                                                    >
-                                                        Detail Transaksi
-                                                        <ArrowRight
-                                                            size={18}
-                                                            strokeWidth={2.5}
-                                                            className="group-hover/btn:translate-x-1 transition-transform"
-                                                        />
-                                                    </Link>
                                                 </div>
+
+                                                {(transaction.nik || transaction.occupation) && (
+                                                    <p className="text-xs text-gray-400 font-medium flex items-center gap-2">
+                                                        <User className="w-3.5 h-3.5" />
+                                                        {transaction.occupation || "Pekerjaan -"} 
+                                                        {transaction.nik && ` • NIK: ${transaction.nik.substring(0, 6)}...`}
+                                                    </p>
+                                                )}
                                             </div>
+
+                                            {/* Price / Subtotal Mobile */}
+                                            <div className="sm:text-right flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-gray-100 pt-4 sm:pt-0 sm:pl-6 mt-2 sm:mt-0">
+                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
+                                                    Nilai Transaksi
+                                                </p>
+                                                <p className="text-2xl font-black text-gray-900">
+                                                    {formatCurrency(transaction.final_price || transaction.total_price || 0)}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Card Footer (Actions) */}
+                                        <div className="px-6 py-4 bg-white border-t border-gray-100 flex flex-col sm:flex-row items-center justify-end gap-3 mt-auto">
+                                            {transaction.transaction_type === "CREDIT" && (
+                                                <Link
+                                                    href={route("motors.manage-documents", transaction.id)}
+                                                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-sm transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <FileText size={16} strokeWidth={2.5} />
+                                                    Kelola Dokumen
+                                                </Link>
+                                            )}
+                                            <Link
+                                                href={route("motors.transaction.show", transaction.id)}
+                                                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-sm transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                Detail Transaksi
+                                                <ArrowRight size={16} strokeWidth={2.5} />
+                                            </Link>
                                         </div>
                                     </motion.div>
                                 );

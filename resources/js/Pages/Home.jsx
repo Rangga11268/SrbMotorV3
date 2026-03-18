@@ -5,7 +5,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Zap,
     ChevronRight,
     Star,
     ShieldCheck,
@@ -16,10 +15,11 @@ import {
     MapPin,
     Smartphone,
     Mail,
-    Phone,
     Send,
     Bike,
     MessageCircle,
+    Gauge,
+    Phone,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/Components/UI/Button";
@@ -49,14 +49,14 @@ export default function Home({ auth, popularMotors = [] }) {
             {/* HERO SLIDER SECTION (Momotor Style) */}
             <section className="relative pt-[120px] md:pt-[140px] pb-12 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative w-full h-[300px] md:h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-gray-100 group">
+                    <div className="relative w-full min-h-[420px] md:h-[520px] rounded-3xl overflow-hidden shadow-2xl border border-gray-100 group">
                         <img
                             src="/assets/img/banner.png"
                             alt="SRB Motor Hero"
                             className="relative w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20 flex items-center p-8 md:px-24 md:py-0">
-                            <div className="max-w-3xl space-y-6 pb-20 md:pb-28">
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/30 flex items-center p-6 sm:p-8 md:px-24 md:py-0">
+                            <div className="max-w-3xl space-y-6 pb-16 sm:pb-20 md:pb-28">
                                 <div className="space-y-4 md:space-y-6">
                                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-600 border border-blue-400 shadow-lg">
                                         <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -64,30 +64,30 @@ export default function Home({ auth, popularMotors = [] }) {
                                             Trusted Dealer 2026
                                         </span>
                                     </div>
-                                    <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
+                                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.15] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
                                         <span className="text-blue-400">Selamat </span>
                                         <span className="text-blue-400">Datang </span>
                                         <span className="text-white">di SRB Motor</span>
                                     </h1>
-                                    <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white font-medium max-w-xl leading-relaxed drop-shadow-lg">
+                                    <p className="text-sm sm:text-base md:text-lg text-white font-medium max-w-xl leading-relaxed drop-shadow-lg">
                                         Temukan motor impian Anda dengan layanan terbaik dari kami.
                                     </p>
                                 </div>
-                                <div className="flex flex-wrap gap-3 sm:gap-5 pt-4">
-                                    <Link href="/motors">
-                                        <button className="group relative overflow-hidden px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 rounded-2xl font-black text-sm sm:text-lg transition-all hover:pr-12 sm:hover:pr-14 hover:bg-blue-50 shadow-xl">
+                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 pt-4">
+                                    <Link href="/motors" className="w-full sm:w-auto">
+                                        <button className="w-full group relative overflow-hidden px-6 sm:px-8 py-3.5 sm:py-4 bg-white text-blue-600 rounded-2xl font-black text-sm sm:text-lg transition-all hover:pr-12 sm:hover:pr-14 hover:bg-blue-50 shadow-xl flex justify-center items-center">
                                             <span className="relative z-10">Lihat Katalog</span>
                                             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                                <ArrowRight className="w-6 h-6 translate-x-4 group-hover:translate-x-0 transition-transform" />
+                                                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 translate-x-4 group-hover:translate-x-0 transition-transform" />
                                             </div>
                                         </button>
                                     </Link>
                                     <a
                                         href="https://wa.me/6281234567890"
                                         target="_blank"
-                                        className="px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-white/30 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 flex items-center gap-2 sm:gap-3"
+                                        className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-transparent border-2 border-white/40 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 flex items-center justify-center gap-2 sm:gap-3"
                                     >
-                                        <MessageCircle className="w-6 h-6" />
+                                        <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                                         Konsultasi Gratis
                                     </a>
                                 </div>
@@ -96,8 +96,8 @@ export default function Home({ auth, popularMotors = [] }) {
                     </div>
 
                     {/* Quick Search & Categories Overlay */}
-                    <div className="relative -mt-12 md:-mt-20 z-20 px-4 sm:px-8 md:px-12">
-                        <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-6 sm:p-8 md:p-12 border border-blue-50 max-w-5xl mx-auto transform transition-all hover:scale-[1.01]">
+                    <div className="relative -mt-8 md:-mt-20 z-20 px-4 sm:px-8 md:px-12">
+                        <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-2xl p-5 sm:p-8 md:p-12 border border-blue-50 max-w-5xl mx-auto transform transition-all hover:scale-[1.01]">
                             <div className="flex flex-col md:flex-row gap-6 md:gap-10">
                                 {/* Search Component */}
                                 <div className="flex-1 space-y-6">
@@ -111,7 +111,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                     </div>
 
                                     <div className="relative group">
-                                        <div className="flex gap-2 sm:gap-3 p-3 bg-gray-50 border-2 border-transparent group-focus-within:border-blue-500 group-focus-within:bg-white rounded-3xl transition-all duration-300 shadow-inner">
+                                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 p-3 bg-gray-50 border-2 border-transparent group-focus-within:border-blue-500 group-focus-within:bg-white rounded-3xl transition-all duration-300 shadow-inner">
                                             <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 sm:gap-4">
                                                 <div className="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-white shadow-sm flex items-center justify-center flex-shrink-0">
                                                     <Bike className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 group-focus-within:text-blue-500" />
@@ -124,13 +124,13 @@ export default function Home({ auth, popularMotors = [] }) {
                                                             e.target.value,
                                                         )
                                                     }
-                                                    placeholder="Lagi cari Honda PCX atau NMAX? Ketik di sini..."
+                                                    placeholder="Ketik nama motor..."
                                                     className="w-full bg-transparent border-none focus:ring-0 text-sm sm:text-base md:text-lg font-bold py-2 sm:py-4 text-gray-800 placeholder:text-gray-400"
                                                 />
                                             </div>
                                             <Button
                                                 size="lg"
-                                                className="px-6 sm:px-8 md:px-10 py-2 sm:py-3 md:py-auto rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap"
+                                                className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-auto rounded-2xl sm:rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest whitespace-nowrap"
                                             >
                                                 Cari
                                             </Button>
@@ -328,7 +328,7 @@ export default function Home({ auth, popularMotors = [] }) {
                                                 </h3>
                                                 <div className="flex items-center gap-4 text-xs font-bold text-gray-400">
                                                     <span className="flex items-center gap-1 uppercase tracking-wider">
-                                                        <Zap className="w-3 h-3 text-blue-500 fill-blue-500" />{" "}
+                                                        <Gauge className="w-3 h-3 text-blue-500" />{" "}
                                                         {motor.type}
                                                     </span>
                                                     <span className="w-1.5 h-1.5 rounded-full bg-gray-200" />
@@ -419,8 +419,8 @@ export default function Home({ auth, popularMotors = [] }) {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
-                        <div className="space-y-8 text-center lg:text-left">
-                            <div className="space-y-4">
+                        <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
+                            <div className="space-y-3 sm:space-y-4">
                                 <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest">
                                     Hubungi Kami
                                 </span>
@@ -434,12 +434,12 @@ export default function Home({ auth, popularMotors = [] }) {
                                 </p>
                             </div>
 
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-                                <div className="flex items-center gap-3 px-5 py-3 bg-white rounded-2xl shadow-sm border border-gray-100">
-                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4 mt-8">
+                                <div className="flex items-center justify-center sm:justify-start gap-3 px-5 py-3 sm:py-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 sm:flex-none">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
                                     <span className="text-sm font-bold text-gray-700">Online 24/7</span>
                                 </div>
-                                <div className="flex items-center gap-3 px-5 py-3 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <div className="flex items-center justify-center sm:justify-start gap-3 px-5 py-3 sm:py-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 sm:flex-none">
                                     <ShieldCheck className="w-5 h-5 text-primary" />
                                     <span className="text-sm font-bold text-gray-700">Respon Cepat</span>
                                 </div>
@@ -453,19 +453,19 @@ export default function Home({ auth, popularMotors = [] }) {
                                 rel="noopener noreferrer"
                                 className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
                             >
-                                <div className="flex items-center gap-6 p-8">
-                                    <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500">
-                                        <Phone className="w-8 h-8" />
+                                <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                        <Phone className="w-6 h-6 sm:w-8 sm:h-8" />
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
                                             Whatsapp Bekasi
                                         </p>
-                                        <p className="text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
+                                        <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
                                             0812-1234-5678
                                         </p>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
                                         <ArrowRight className="w-5 h-5" />
                                     </div>
                                 </div>
@@ -473,21 +473,21 @@ export default function Home({ auth, popularMotors = [] }) {
 
                             <a
                                 href="mailto:halo@srbmotor.id"
-                                className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                                className="group p-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
                             >
-                                <div className="flex items-center gap-6 p-8">
-                                    <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500">
-                                        <Mail className="w-8 h-8" />
+                                <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                        <Mail className="w-6 h-6 sm:w-8 sm:h-8" />
                                     </div>
-                                    <div className="flex-1">
-                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+                                    <div className="flex-1 max-w-full overflow-hidden">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
                                             Layanan Email
                                         </p>
-                                        <p className="text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
+                                        <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors truncate">
                                             halo@srbmotor.id
                                         </p>
                                     </div>
-                                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
                                         <ArrowRight className="w-5 h-5" />
                                     </div>
                                 </div>

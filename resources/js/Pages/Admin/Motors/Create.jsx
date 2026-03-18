@@ -11,7 +11,6 @@ import {
     CButton,
     CFormInput,
     CFormSelect,
-    CFormSelect,
     CFormLabel,
     CFormTextarea,
     CFormSwitch,

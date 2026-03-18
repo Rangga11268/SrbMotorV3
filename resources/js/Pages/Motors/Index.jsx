@@ -9,14 +9,13 @@ import {
     Filter,
     X,
     TrendingUp,
-    Zap,
     Heart,
     LayoutGrid,
     RotateCcw,
     SlidersHorizontal,
     Loader2,
     Calendar,
-    Clock,
+    Gauge,
 } from "lucide-react";
 import axios from "axios";
 import Button from "@/Components/UI/Button";
@@ -401,7 +400,7 @@ export default function Index({
                                                                     </span>
                                                                     <span className="w-1 h-1 bg-gray-300 rounded-full" />
                                                                     <span className="flex items-center gap-1 uppercase">
-                                                                        <Clock className="w-3 h-3" />{" "}
+                                                                        <Gauge className="w-3 h-3" />{" "}
                                                                         {
                                                                             motor.type
                                                                         }

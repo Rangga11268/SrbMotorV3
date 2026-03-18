@@ -258,7 +258,7 @@ export default function About() {
                                     viewport={{ once: true }}
                                     className="bg-white rounded-3xl p-6 border border-gray-200 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all group"
                                 >
-                                    <div className="bg-blue-50 rounded-2xl p-4 mb-4 w-fit group-hover:bg-primary group-hover:text-white transition-colors">
+                                    <div className="bg-blue-50 rounded-2xl p-4 mb-4 w-fit group-hover:text-white transition-colors">
                                         {mission.icon}
                                     </div>
                                     <h3 className="text-lg font-black text-gray-900 mb-3">
