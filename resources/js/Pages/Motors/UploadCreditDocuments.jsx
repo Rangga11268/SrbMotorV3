@@ -201,9 +201,9 @@ export default function UploadCreditDocuments({ transaction }) {
                                                     ))}
                                                 </ul>
                                                 <p className="text-xs text-green-700 mt-3 italic">
-                                                    💡 Anda dapat mengganti
-                                                    dokumen dengan versi yang
-                                                    lebih baik di halaman{" "}
+                                                    Anda dapat mengganti dokumen
+                                                    dengan versi yang lebih baik
+                                                    di halaman{" "}
                                                     <strong>
                                                         Kelola Dokumen
                                                     </strong>

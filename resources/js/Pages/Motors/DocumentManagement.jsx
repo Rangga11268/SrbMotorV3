@@ -200,7 +200,7 @@ export default function DocumentManagement({ transaction }) {
                                 {/* Info Banner */}
                                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                                     <p className="text-sm text-blue-800">
-                                        <strong>💡 Tip:</strong> Anda dapat
+                                        <strong>Tips:</strong> Anda dapat
                                         mengganti dokumen dengan versi yang
                                         lebih baik kapan saja.
                                     </p>

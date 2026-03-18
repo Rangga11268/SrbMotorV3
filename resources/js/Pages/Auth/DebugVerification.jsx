@@ -138,8 +138,8 @@ export default function DebugVerificationMode({ user }) {
                 {/* Info Box */}
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p className="text-xs text-gray-600">
-                        <strong>💡 Catatan untuk Developer:</strong> Mode debug
-                        ini memungkinkan Anda menguji verification flow tanpa
+                        <strong>Catatan untuk Developer:</strong> Mode debug ini
+                        memungkinkan Anda menguji verification flow tanpa
                         menunggu email/SMS nyata. Fitur ini hanya tersedia saat
                         env
                         <code className="text-red-600 font-bold">

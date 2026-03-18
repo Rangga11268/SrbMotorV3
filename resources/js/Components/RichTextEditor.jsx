@@ -258,13 +258,13 @@ export default function RichTextEditor({
             {/* Error Message */}
             {error && (
                 <div className="bg-red-50 border-t border-red-200 p-3 text-sm text-red-700 font-medium">
-                    ⚠️ {error}
+                    {error}
                 </div>
             )}
 
             {/* Helper Text */}
             <div className="bg-gray-50 border-t border-gray-300 px-4 py-2 text-xs text-gray-500">
-                💡 Gunakan toolbar untuk formatting konten. Ctrl+Z untuk undo,
+                Gunakan toolbar untuk formatting konten. Ctrl+Z untuk undo,
                 Ctrl+Y untuk redo.
             </div>
         </div>

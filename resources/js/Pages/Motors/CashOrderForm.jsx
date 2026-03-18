@@ -289,7 +289,6 @@ export default function CashOrderForm({ motor, auth }) {
                                                 )}
                                             </div>
                                         </div>
-                                        
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
@@ -310,12 +309,24 @@ export default function CashOrderForm({ motor, auth }) {
                                                             )
                                                         }
                                                     >
-                                                        <option value="">Pilih Warna</option>
-                                                        <option value="Merah">Merah</option>
-                                                        <option value="Hitam">Hitam</option>
-                                                        <option value="Putih">Putih</option>
-                                                        <option value="Biru">Biru</option>
-                                                        <option value="Silver/Abu-abu">Silver/Abu-abu</option>
+                                                        <option value="">
+                                                            Pilih Warna
+                                                        </option>
+                                                        <option value="Merah">
+                                                            Merah
+                                                        </option>
+                                                        <option value="Hitam">
+                                                            Hitam
+                                                        </option>
+                                                        <option value="Putih">
+                                                            Putih
+                                                        </option>
+                                                        <option value="Biru">
+                                                            Biru
+                                                        </option>
+                                                        <option value="Silver/Abu-abu">
+                                                            Silver/Abu-abu
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -327,7 +338,12 @@ export default function CashOrderForm({ motor, auth }) {
                                                 <div className="flex gap-4">
                                                     <button
                                                         type="button"
-                                                        onClick={() => setData("delivery_method", "Ambil di Dealer")}
+                                                        onClick={() =>
+                                                            setData(
+                                                                "delivery_method",
+                                                                "Ambil di Dealer",
+                                                            )
+                                                        }
                                                         className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
                                                     >
                                                         <Store className="w-5 h-5" />
@@ -335,7 +351,12 @@ export default function CashOrderForm({ motor, auth }) {
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setData("delivery_method", "Kirim ke Rumah")}
+                                                        onClick={() =>
+                                                            setData(
+                                                                "delivery_method",
+                                                                "Kirim ke Rumah",
+                                                            )
+                                                        }
                                                         className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
                                                     >
                                                         <Truck className="w-5 h-5" />
@@ -483,7 +504,6 @@ export default function CashOrderForm({ motor, auth }) {
                                                                     ) >=
                                                                         motor.price && (
                                                                         <p className="text-xs text-red-700 font-medium">
-                                                                            ❌
                                                                             Booking
                                                                             fee
                                                                             tidak

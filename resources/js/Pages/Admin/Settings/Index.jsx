@@ -22,7 +22,14 @@ import {
     cilColorPalette,
     cilMoney,
     cilEnvelopeClosed,
+    cilInfo,
+    cilPencil,
 } from "@coreui/icons";
+import {
+    settingsConfig,
+    getFieldLabel,
+    getFieldHelper,
+} from "@/Config/SettingsConfig";
 
 export default function SettingsIndex({ settings }) {
     const [activeTab, setActiveTab] = useState("general");
@@ -31,32 +38,32 @@ export default function SettingsIndex({ settings }) {
         general: {
             label: "Umum",
             icon: cilSettings,
-            description: "Pengaturan dasar website",
+            description: "Pengaturan dasar website dan brand",
         },
         contact: {
             label: "Kontak",
             icon: cilPhone,
-            description: "Informasi kontak bisnis",
+            description: "Informasi kontak bisnis untuk pelanggan",
         },
         social: {
             label: "Media Sosial",
             icon: cilGlobeAlt,
-            description: "Tautan media sosial",
+            description: "Link profil media sosial untuk terhubung",
         },
         branding: {
             label: "Branding",
             icon: cilColorPalette,
-            description: "Identitas visual brand",
+            description: "Identitas visual dan warna brand",
         },
         financing: {
             label: "Pembiayaan",
             icon: cilMoney,
-            description: "Pengaturan cicilan",
+            description: "Pengaturan skema cicilan dan leasing",
         },
         email: {
             label: "Email",
             icon: cilEnvelopeClosed,
-            description: "Konfigurasi email",
+            description: "Konfigurasi sistem email untuk notifikasi",
         },
     };
 
@@ -129,59 +136,150 @@ export default function SettingsIndex({ settings }) {
 
                                             {getSettingsByCategory(category)
                                                 .length > 0 ? (
-                                                <div className="space-y-2">
+                                                <div className="space-y-3">
                                                     {getSettingsByCategory(
                                                         category,
                                                     ).map((setting) => (
                                                         <div
                                                             key={setting.id}
-                                                            className="d-flex justify-content-between align-items-center p-3 bg-light rounded-3 border"
+                                                            className="p-4 bg-white rounded-3 border border-light-subtle"
                                                         >
-                                                            <div>
-                                                                <div className="fw-semibold">
-                                                                    {
-                                                                        setting.key
-                                                                    }
+                                                            <div className="d-flex justify-content-between align-items-start">
+                                                                <div className="flex-grow-1">
+                                                                    <div className="fw-bold text-dark">
+                                                                        {getFieldLabel(
+                                                                            category,
+                                                                            setting.key,
+                                                                        )}
+                                                                    </div>
+                                                                    <small className="text-muted d-block mt-1">
+                                                                        {getFieldHelper(
+                                                                            category,
+                                                                            setting.key,
+                                                                        ) ||
+                                                                            setting.description}
+                                                                    </small>
+                                                                    {setting.value && (
+                                                                        <div className="mt-2 p-2 bg-light rounded-2">
+                                                                            <small className="d-block text-truncate text-monospace">
+                                                                                <strong>
+                                                                                    Nilai:
+                                                                                </strong>{" "}
+                                                                                {setting.value &&
+                                                                                setting
+                                                                                    .value
+                                                                                    .length >
+                                                                                    60
+                                                                                    ? setting.value.substring(
+                                                                                          0,
+                                                                                          60,
+                                                                                      ) +
+                                                                                      "..."
+                                                                                    : setting.value}
+                                                                            </small>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
-                                                                <small className="text-muted">
-                                                                    {
-                                                                        setting.description
-                                                                    }
-                                                                </small>
-                                                            </div>
-                                                            <div className="text-end">
-                                                                <small className="d-block text-truncate mw-300">
-                                                                    {setting.value &&
-                                                                    setting
-                                                                        .value
-                                                                        .length >
-                                                                        50
-                                                                        ? setting.value.substring(
-                                                                              0,
-                                                                              50,
-                                                                          ) +
-                                                                          "..."
-                                                                        : setting.value}
-                                                                </small>
-                                                                <span className="badge bg-secondary">
-                                                                    {
-                                                                        setting.type
-                                                                    }
-                                                                </span>
                                                             </div>
                                                         </div>
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <div className="alert alert-info">
-                                                    Belum ada pengaturan di
-                                                    kategori ini
+                                                <div className="alert alert-info d-flex align-items-center gap-3">
+                                                    <CIcon
+                                                        icon={cilInfo}
+                                                        size="lg"
+                                                    />
+                                                    <div>
+                                                        <strong>
+                                                            Belum ada pengaturan
+                                                        </strong>
+                                                        <p className="mb-0 small text-muted">
+                                                            Pengaturan untuk
+                                                            kategori ini akan
+                                                            muncul setelah
+                                                            diatur
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             )}
+
+                                            <div className="mt-4 d-flex justify-content-between">
+                                                <p className="text-muted small">
+                                                    Terakhir diubah:{" "}
+                                                    {new Date().toLocaleDateString(
+                                                        "id-ID",
+                                                    )}
+                                                </p>
+                                                <Link
+                                                    href={route(
+                                                        "admin.settings.edit",
+                                                        category,
+                                                    )}
+                                                >
+                                                    <CButton
+                                                        color="primary"
+                                                        size="sm"
+                                                    >
+                                                        <CIcon
+                                                            icon={cilPencil}
+                                                            className="me-2"
+                                                        />
+                                                        Edit{" "}
+                                                        {
+                                                            categories[
+                                                                activeTab
+                                                            ]?.label
+                                                        }
+                                                    </CButton>
+                                                </Link>
+                                            </div>
                                         </CTabPane>
                                     ),
                                 )}
                             </CTabContent>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
+
+            {/* Info Box */}
+            <CRow>
+                <CCol xs={12}>
+                    <CCard className="bg-light border-0">
+                        <CCardBody>
+                            <div className="d-flex align-items-start gap-3">
+                                <CIcon
+                                    icon={cilInfo}
+                                    size="xl"
+                                    className="text-primary flex-shrink-0 mt-1"
+                                />
+                                <div>
+                                    <strong className="d-block mb-2">
+                                        Panduan Pengaturan
+                                    </strong>
+                                    <ul className="mb-0 small">
+                                        <li>
+                                            Klik tombol <strong>"Edit"</strong>{" "}
+                                            untuk mengubah pengaturan di
+                                            kategori masing-masing
+                                        </li>
+                                        <li>
+                                            Setiap field memiliki penjelasan
+                                            untuk memandu Anda mengisi nilai
+                                            yang benar
+                                        </li>
+                                        <li>
+                                            Perubahan akan tersimpan otomatis
+                                            dan langsung berdampak ke website
+                                        </li>
+                                        <li>
+                                            Hubungi tim teknis jika tidak yakin
+                                            dengan pengaturan yang diperlukan
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </CCardBody>
                     </CCard>
                 </CCol>

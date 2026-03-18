@@ -169,7 +169,7 @@ export default function SurveyScheduleModal({
                 {/* Info Alert */}
                 <CAlert color="info" className="mb-4">
                     <small>
-                        <strong>⚠️ Catatan:</strong> Pastikan data surveyor dan
+                        <strong>Perhatian:</strong> Pastikan data surveyor dan
                         lokasi sudah akurat. Notifikasi WhatsApp akan dikirim
                         otomatis ke customer setelah survey dijadwalkan.
                     </small>
