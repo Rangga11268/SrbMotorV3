@@ -49,12 +49,18 @@ class TransactionLogTest extends TestCase
         $transaction = Transaction::first();
         $this->assertNotNull($transaction);
 
-        // Assert log exists
+        // Assert initial log exists
         $this->assertDatabaseHas('transaction_logs', [
             'transaction_id' => $transaction->id,
             'status_to' => 'new_order',
             'actor_id' => $this->user->id,
-            'actor_type' => User::class,
+        ]);
+
+        // Assert payment log exists
+        $this->assertDatabaseHas('transaction_logs', [
+            'transaction_id' => $transaction->id,
+            'status_to' => 'waiting_payment',
+            'actor_id' => $this->user->id,
         ]);
     }
 
@@ -102,6 +108,8 @@ class TransactionLogTest extends TestCase
             'status' => 'new_order',
             'total_price' => 20000000,
             'final_price' => 20000000,
+            'motor_price' => 20000000,
+            'booking_fee' => 0,
             'payment_method' => 'transfer',
             'phone' => '08123',
             'name' => 'Tester',

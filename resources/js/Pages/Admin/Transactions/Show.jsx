@@ -319,7 +319,7 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                             <option value="waiting_payment">
                                                 Menunggu Pembayaran
                                             </option>
-                                            <option value="pembayaran_dikonfirmasi">
+                                            <option value="payment_confirmed">
                                                 Pembayaran Dikonfirmasi
                                             </option>
                                             <option value="unit_preparation">
@@ -557,7 +557,7 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                                 <CTableDataCell>
                                                     <div className="fw-semibold">{log.actor?.name || 'System'}</div>
                                                     <div className="text-body-secondary" style={{fontSize: '9px'}}>
-                                                        {log.actor_type?.includes('User') ? 'ADMIN' : (log.actor_type || 'SYSTEM')}
+                                                        {log.actor?.role === 'admin' ? 'ADMIN' : (log.actor?.role === 'user' ? 'PELANGGAN' : (log.actor_type?.includes('User') ? 'ADMIN' : 'SYSTEM'))}
                                                     </div>
                                                 </CTableDataCell>
                                                 <CTableDataCell>{log.notes || log.description || '-'}</CTableDataCell>

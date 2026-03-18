@@ -40,6 +40,16 @@ class TransactionService
             $this->handleCreditDetail($transaction, $data['credit_detail']);
         }
 
+        $transaction->logs()->create([
+            'status_from' => null,
+            'status_to' => $transaction->status,
+            'status' => $transaction->status,
+            'actor_id' => auth()->id() ?? $transaction->user_id,
+            'actor_type' => \App\Models\User::class,
+            'notes' => 'Transaksi dibuat',
+            'description' => 'Transaksi dibuat',
+        ]);
+
         return $transaction;
     }
 
@@ -63,7 +73,21 @@ class TransactionService
             'notes',
         ]));
 
+        $oldStatus = $transaction->status;
         $transaction->update($transactionData);
+        $newStatus = $transaction->status;
+
+        if ($oldStatus !== $newStatus) {
+            $transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => $newStatus,
+                'status' => $newStatus,
+                'actor_id' => auth()->id() ?? $transaction->user_id,
+                'actor_type' => \App\Models\User::class,
+                'notes' => 'Status transaksi diperbarui',
+                'description' => 'Status transaksi diperbarui',
+            ]);
+        }
 
         if ($data['transaction_type'] === 'CREDIT' && isset($data['credit_detail'])) {
             $this->handleCreditDetail($transaction, $data['credit_detail']);
@@ -209,7 +233,21 @@ class TransactionService
      */
     public function updateStatus(Transaction $transaction, string $status): void
     {
+        $oldStatus = $transaction->status;
         $transaction->update(['status' => $status]);
+        
+        if ($oldStatus !== $status) {
+            $transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => $status,
+                'status' => $status,
+                'actor_id' => auth()->id(),
+                'actor_type' => \App\Models\User::class,
+                'notes' => 'Status transaksi diperbarui via service',
+                'description' => 'Status transaksi diperbarui',
+            ]);
+        }
+
         $this->sendStatusNotification($transaction, ['status' => $status]);
     }
 }

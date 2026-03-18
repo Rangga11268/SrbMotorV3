@@ -401,6 +401,7 @@ export default function InstallmentIndex({ transactions }) {
                 </div>
             </div>
 
+            <main className="flex-1 pt-32 pb-24">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pb-32 relative z-20">
                     {transactions.length > 0 ? (
                         <div className="space-y-8">
@@ -656,7 +657,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     title="Bayar langsung via online gateway"
                                                                                     className="flex items-center gap-1.5 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
-                                                                                    <Zap className="w-3.5 h-3.5" />
+                                                                                    <CreditCard className="w-3.5 h-3.5" />
                                                                                     Bayar
                                                                                     Online
                                                                                 </button>
@@ -689,7 +690,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     title="Cek apakah pembayaran sudah terverifikasi"
                                                                                     className="flex items-center gap-1.5 px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 whitespace-nowrap"
                                                                                 >
-                                                                                    <Activity
+                                                                                    <RefreshCw
                                                                                         className={`w-3.5 h-3.5 ${isLoadingCheck ? "animate-spin" : ""}`}
                                                                                     />
                                                                                     Cek
@@ -811,6 +812,23 @@ export default function InstallmentIndex({ transactions }) {
                             </Link>
                         </div>
                     )}
+                </div>
+
+                {/* Status Check Notice */}
+                <div className="mt-8 mb-12 bg-blue-50/50 border border-blue-100/50 rounded-2xl p-6">
+                    <div className="flex gap-4">
+                        <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                            <AlertCircle className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <h4 className="text-sm font-black text-blue-900 uppercase tracking-wider mb-1">
+                                Informasi Verifikasi Pembayaran
+                            </h4>
+                            <p className="text-[11px] font-bold text-blue-700/70 leading-relaxed uppercase">
+                                Setelah melakukan pembayaran, mohon klik tombol <span className="text-blue-900 font-extrabold">"CEK STATUS"</span> secara manual untuk memperbarui status transaksi Anda. Verifikasi manual oleh admin dapat memakan waktu maksimal 1x24 jam pada hari kerja.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             
 
@@ -970,7 +988,7 @@ export default function InstallmentIndex({ transactions }) {
                                     className="w-full h-16 bg-primary text-white font-black uppercase tracking-widest rounded-2xl hover:bg-black disabled:opacity-50 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
                                 >
                                     {processing ? (
-                                        <Activity className="animate-spin" />
+                                        <RefreshCw className="animate-spin" />
                                     ) : (
                                         <>
                                             KIRIM UNTUK VERIFIKASI{" "}
@@ -983,6 +1001,7 @@ export default function InstallmentIndex({ transactions }) {
                     </div>
                 )}
             </AnimatePresence>
+            </main>
         </PublicLayout>
     );
 }

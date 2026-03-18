@@ -91,6 +91,17 @@ export default function Show({
         dp_dibayar: { label: "DP Dibayar", color: "success" },
         selesai: { label: "Selesai", color: "success" },
         dibatalkan: { label: "Dibatalkan", color: "secondary" },
+
+        // Common transaction statuses (for log mapping)
+        new_order: { label: "Pesanan Masuk", color: "warning" },
+        waiting_payment: { label: "Menunggu Pembayaran", color: "warning" },
+        pembayaran_dikonfirmasi: { label: "Pembayaran Dikonfirmasi", color: "success" },
+        payment_confirmed: { label: "Pembayaran Dikonfirmasi", color: "success" },
+        unit_preparation: { label: "Motor Disiapkan", color: "info" },
+        ready_for_delivery: { label: "Siap Dikirim/Ambil", color: "primary" },
+        dalam_pengiriman: { label: "Dalam Pengiriman", color: "info" },
+        completed: { label: "Selesai", color: "success" },
+        cancelled: { label: "Dibatalkan", color: "danger" },
     };
 
     const currentStatus = statuses[credit.status] || {};
@@ -1535,7 +1546,7 @@ export default function Show({
                                                 <CTableDataCell className="border-0">
                                                     <div className="fw-semibold">{log.actor?.name || 'System'}</div>
                                                     <div className="text-body-secondary" style={{fontSize: '9px'}}>
-                                                        {log.actor_type?.includes('User') ? 'ADMIN' : (log.actor_type || 'SYSTEM')}
+                                                        {log.actor?.role === 'admin' ? 'ADMIN' : (log.actor?.role === 'user' ? 'PELANGGAN' : (log.actor_type?.includes('User') ? 'ADMIN' : 'SYSTEM'))}
                                                     </div>
                                                 </CTableDataCell>
                                                 <CTableDataCell className="border-0">{log.notes || log.description || '-'}</CTableDataCell>

@@ -182,21 +182,33 @@ class MotorGalleryController extends Controller
         ]);
 
         $transaction->logs()->create([
+            'status_from' => null,
+            'status_to' => 'new_order',
             'status' => 'new_order',
+            'actor_id' => Auth::id(),
+            'actor_type' => \App\Models\User::class,
+            'notes' => 'Pesanan tunai baru dibuat oleh pelanggan',
             'description' => 'Pesanan tunai baru dibuat',
-            'payload' => [
-                'actor_id' => Auth::id(),
-                'actor_type' => 'user',
-            ]
         ]);
 
         if ($bookingFee > 0) {
+            $transaction->update(['status' => 'waiting_payment']);
             \App\Models\Installment::create([
                 'transaction_id' => $transaction->id,
                 'installment_number' => 0,
                 'amount' => $bookingFee,
                 'due_date' => now()->addDays(1),
                 'status' => 'pending',
+            ]);
+
+            $transaction->logs()->create([
+                'status_from' => 'new_order',
+                'status_to' => 'waiting_payment',
+                'status' => 'waiting_payment',
+                'actor_id' => Auth::id(),
+                'actor_type' => \App\Models\User::class,
+                'notes' => 'Menunggu pembayaran awal (Booking Fee) sebesar Rp ' . number_format($bookingFee, 0, ',', '.'),
+                'description' => 'Tagihan booking fee dibuat',
             ]);
         }
 
@@ -314,12 +326,13 @@ class MotorGalleryController extends Controller
         ]);
 
         $transaction->logs()->create([
+            'status_from' => null,
+            'status_to' => 'menunggu_persetujuan',
             'status' => 'menunggu_persetujuan',
+            'actor_id' => Auth::id(),
+            'actor_type' => \App\Models\User::class,
+            'notes' => 'Pengajuan kredit baru dibuat oleh pelanggan',
             'description' => 'Pengajuan kredit baru dibuat',
-            'payload' => [
-                'actor_id' => Auth::id(),
-                'actor_type' => 'user',
-            ]
         ]);
 
 

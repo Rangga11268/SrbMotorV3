@@ -110,7 +110,7 @@ class TransactionController extends Controller
             'booking_fee' => 'required|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
-            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
         ]);
 
         // Get motor and calculate total
@@ -136,7 +136,7 @@ class TransactionController extends Controller
         ]);
         
         // Stock Locking: If created with a "lock" status
-        $lockStatuses = ['pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
+        $lockStatuses = ['payment_confirmed', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
         if (in_array($validated['status'], $lockStatuses)) {
             $motor->update(['tersedia' => false]);
             \Illuminate\Support\Facades\Log::info("Stock Locked for Motor ID: {$motor->id} (Manual Cash Order Creation)");
@@ -147,7 +147,7 @@ class TransactionController extends Controller
             'status_to' => $validated['status'],
             'status' => $validated['status'],
             'actor_id' => auth()->id(),
-            'actor_type' => 'App\Models\User',
+            'actor_type' => \App\Models\User::class,
             'notes' => 'Transaksi tunai dibuat manual oleh admin',
             'description' => 'Transaksi tunai dibuat manual oleh admin',
         ]);
@@ -182,7 +182,7 @@ class TransactionController extends Controller
             'booking_fee' => 'required|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
-            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
             'delivery_date' => 'nullable|date',
         ]);
 
@@ -227,7 +227,7 @@ class TransactionController extends Controller
                 'status_to' => $validated['status'],
                 'status' => $validated['status'],
                 'actor_id' => auth()->id(),
-                'actor_type' => 'App\Models\User',
+                'actor_type' => \App\Models\User::class,
                 'notes' => 'Status diperbarui oleh admin melalui form edit',
                 'description' => 'Status diperbarui oleh admin melalui form edit',
             ]);
@@ -256,7 +256,7 @@ class TransactionController extends Controller
     public function updateStatus(Request $request, Transaction $transaction)
     {
         $validated = $request->validate([
-            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
         ]);
 
         $oldStatus = $transaction->status;
@@ -273,7 +273,7 @@ class TransactionController extends Controller
                 'status_to' => $newStatus,
                 'status' => $newStatus,
                 'actor_id' => auth()->id(),
-                'actor_type' => 'App\Models\User',
+                'actor_type' => \App\Models\User::class,
                 'notes' => 'Status diperbarui cepat oleh admin',
                 'description' => 'Status diperbarui cepat oleh admin',
             ]);

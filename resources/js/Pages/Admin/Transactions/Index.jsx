@@ -102,6 +102,10 @@ export default function Index({
                 color: "success",
                 label: "Pembayaran Dikonfirmasi",
             },
+            payment_confirmed: {
+                color: "success",
+                label: "Pembayaran Dikonfirmasi",
+            },
             unit_preparation: { color: "info", label: "Motor Disiapkan" },
             ready_for_delivery: { color: "primary", label: "Siap Dikirim/Ambil" },
             dalam_pengiriman: { color: "info", label: "Dalam Pengiriman" },
@@ -245,6 +249,7 @@ export default function Index({
                                         {s === 'new_order' ? 'Pesanan Masuk' : 
                                          s === 'waiting_payment' ? 'Menunggu Pembayaran' :
                                          s === 'pembayaran_dikonfirmasi' ? 'Pembayaran Dikonfirmasi' :
+                                         s === 'payment_confirmed' ? 'Pembayaran Dikonfirmasi' :
                                          s === 'unit_preparation' ? 'Motor Disiapkan' :
                                          s === 'ready_for_delivery' ? 'Siap Dikirim/Ambil' :
                                          s === 'dalam_pengiriman' ? 'Dalam Pengiriman' :
