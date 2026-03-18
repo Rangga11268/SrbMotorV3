@@ -10,14 +10,6 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-
-
-    public function showLoginForm()
-    {
-        return \Inertia\Inertia::render('Auth/Login');
-    }
-
-
     public function login(Request $request)
     {
         $request->validate([
@@ -70,13 +62,6 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-
-    public function showRegistrationForm()
-    {
-        return \Inertia\Inertia::render('Auth/Register');
-    }
-
-
     public function register(Request $request)
     {
         $request->validate([
@@ -105,9 +90,13 @@ class AuthController extends Controller
             'role' => 'user', // Default role
         ]);
 
-
-
         Auth::login($user);
+
+        // Debug mode: skip email verification
+        if (config('app.debug') && env('DEBUG_MODE') === true) {
+            $user->markEmailAsVerified();
+            return redirect()->route('motors.user-transactions')->with('status', 'Akun berhasil dibuat! (Debug Mode - Email tidak perlu diverifikasi)');
+        }
 
         // Send email verification notification
         $user->sendEmailVerificationNotification();

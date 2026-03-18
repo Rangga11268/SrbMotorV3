@@ -62,17 +62,32 @@ Route::get('/api/berita/search', [App\Http\Controllers\NewsController::class, 's
 
 
 Route::middleware(['guest', 'throttle:5,1'])->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 
 // Email Verification Routes
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', function () {
+        // Check if debug mode is enabled
+        if (config('app.debug') && env('DEBUG_MODE') === true) {
+            return \Inertia\Inertia::render('Auth/DebugVerification', [
+                'user' => auth()->user(),
+            ]);
+        }
         return view('auth.verify-email');
     })->name('verification.notice');
+
+    Route::post('/email/verify-debug/{method}', function (\Illuminate\Http\Request $request, $method) {
+        if (!config('app.debug') || env('DEBUG_MODE') !== true) {
+            abort(403, 'Debug mode is not enabled');
+        }
+
+        $user = $request->user();
+        $user->markEmailAsVerified();
+
+        return back()->with('status', 'Email anda telah berhasil diverifikasi!');
+    })->name('verification.verify-debug');
 
     Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
         $request->fulfill();

@@ -2,6 +2,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import Button from "../UI/Button";
 import Logo from "./Logo";
+import AuthModal from "../Auth/AuthModal";
 import {
     Menu,
     X,
@@ -32,6 +33,7 @@ export default function Navbar({ auth }) {
     const [results, setResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [showResults, setShowResults] = useState(false);
+    const [authModalVisible, setAuthModalVisible] = useState(false);
     const { url } = usePage();
 
     useEffect(() => {
@@ -117,103 +119,110 @@ export default function Navbar({ auth }) {
 
                             {/* Search Results Dropdown */}
                             <AnimatePresence>
-                                {showResults && (searchQuery || isSearching) && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-[400px] overflow-y-auto"
-                                    >
-                                        <div
-                                            className="fixed inset-0 z-[-1]"
-                                            onClick={() =>
-                                                setShowResults(false)
-                                            }
-                                        />
-                                        {isSearching ? (
-                                            <div className="p-8 text-center text-gray-500">
-                                                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                                                <p className="text-xs font-bold uppercase tracking-wider">
-                                                    Mencari...
-                                                </p>
-                                            </div>
-                                        ) : results.length > 0 ? (
-                                            <div className="flex flex-col">
-                                                <div className="py-2">
-                                                    {results.map((motor) => (
-                                                        <Link
-                                                            key={motor.id}
-                                                            href={route(
-                                                                "motors.show",
-                                                                motor.id,
-                                                            )}
-                                                            onClick={() => {
-                                                                setShowResults(
-                                                                    false,
-                                                                );
-                                                                setSearchQuery(
-                                                                    "",
-                                                                );
-                                                            }}
-                                                            className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors group"
-                                                        >
-                                                            <div className="w-16 h-12 bg-gray-100 rounded-xl overflow-hidden p-2 flex items-center justify-center shrink-0">
-                                                                <img
-                                                                    src={`/storage/${motor.image_path}`}
-                                                                    alt={
-                                                                        motor.name
-                                                                    }
-                                                                    className="h-full object-contain"
-                                                                />
-                                                            </div>
-                                                            <div className="flex-1 min-w-0">
-                                                                <h4 className="text-sm font-black text-gray-900 truncate uppercase tracking-tight">
-                                                                    {motor.name}
-                                                                </h4>
-                                                                <p className="text-xs font-black text-primary">
-                                                                    Rp{" "}
-                                                                    {parseInt(
-                                                                        motor.price,
-                                                                    ).toLocaleString(
-                                                                        "id-ID",
-                                                                    )}
-                                                                </p>
-                                                            </div>
-                                                            <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" />
-                                                        </Link>
-                                                    ))}
+                                {showResults &&
+                                    (searchQuery || isSearching) && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-[400px] overflow-y-auto"
+                                        >
+                                            <div
+                                                className="fixed inset-0 z-[-1]"
+                                                onClick={() =>
+                                                    setShowResults(false)
+                                                }
+                                            />
+                                            {isSearching ? (
+                                                <div className="p-8 text-center text-gray-500">
+                                                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                                                    <p className="text-xs font-bold uppercase tracking-wider">
+                                                        Mencari...
+                                                    </p>
                                                 </div>
-                                                <Link
-                                                    href={route(
-                                                        "motors.index",
-                                                        {
-                                                            search: searchQuery,
-                                                        },
-                                                    )}
-                                                    onClick={() =>
-                                                        setShowResults(
-                                                            false,
-                                                        )
-                                                    }
-                                                    className="block w-full text-center py-3 bg-gray-50 hover:bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary transition-colors border-t border-gray-100"
-                                                >
-                                                    Lihat semua hasil untuk
-                                                    "{searchQuery}"
-                                                </Link>
-                                            </div>
-                                        ) : (
-                                            <div className="p-8 text-center text-gray-500">
-                                                <p className="text-sm font-bold">
-                                                    Motor tidak ditemukan
-                                                </p>
-                                                <p className="text-xs text-gray-400 mt-1">
-                                                    Coba kata kunci lain
-                                                    atau merek yang berbeda
-                                                </p>
-                                            </div>
-                                        )}
-                                    </motion.div>
-                                )}
+                                            ) : results.length > 0 ? (
+                                                <div className="flex flex-col">
+                                                    <div className="py-2">
+                                                        {results.map(
+                                                            (motor) => (
+                                                                <Link
+                                                                    key={
+                                                                        motor.id
+                                                                    }
+                                                                    href={route(
+                                                                        "motors.show",
+                                                                        motor.id,
+                                                                    )}
+                                                                    onClick={() => {
+                                                                        setShowResults(
+                                                                            false,
+                                                                        );
+                                                                        setSearchQuery(
+                                                                            "",
+                                                                        );
+                                                                    }}
+                                                                    className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors group"
+                                                                >
+                                                                    <div className="w-16 h-12 bg-gray-100 rounded-xl overflow-hidden p-2 flex items-center justify-center shrink-0">
+                                                                        <img
+                                                                            src={`/storage/${motor.image_path}`}
+                                                                            alt={
+                                                                                motor.name
+                                                                            }
+                                                                            className="h-full object-contain"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <h4 className="text-sm font-black text-gray-900 truncate uppercase tracking-tight">
+                                                                            {
+                                                                                motor.name
+                                                                            }
+                                                                        </h4>
+                                                                        <p className="text-xs font-black text-primary">
+                                                                            Rp{" "}
+                                                                            {parseInt(
+                                                                                motor.price,
+                                                                            ).toLocaleString(
+                                                                                "id-ID",
+                                                                            )}
+                                                                        </p>
+                                                                    </div>
+                                                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" />
+                                                                </Link>
+                                                            ),
+                                                        )}
+                                                    </div>
+                                                    <Link
+                                                        href={route(
+                                                            "motors.index",
+                                                            {
+                                                                search: searchQuery,
+                                                            },
+                                                        )}
+                                                        onClick={() =>
+                                                            setShowResults(
+                                                                false,
+                                                            )
+                                                        }
+                                                        className="block w-full text-center py-3 bg-gray-50 hover:bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary transition-colors border-t border-gray-100"
+                                                    >
+                                                        Lihat semua hasil untuk
+                                                        "{searchQuery}"
+                                                    </Link>
+                                                </div>
+                                            ) : (
+                                                <div className="p-8 text-center text-gray-500">
+                                                    <p className="text-sm font-bold">
+                                                        Motor tidak ditemukan
+                                                    </p>
+                                                    <p className="text-xs text-gray-400 mt-1">
+                                                        Coba kata kunci lain
+                                                        atau merek yang berbeda
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </motion.div>
+                                    )}
                             </AnimatePresence>
                         </div>
                     </div>
@@ -327,15 +336,13 @@ export default function Navbar({ auth }) {
                                 </AnimatePresence>
                             </div>
                         ) : (
-                            <Link
-                                href={route("login")}
+                            <button
+                                onClick={() => setAuthModalVisible(true)}
                                 className="text-sm font-bold text-gray-700 hover:text-primary transition-colors px-2"
                             >
                                 Masuk/Daftar
-                            </Link>
+                            </button>
                         )}
-
-
 
                         {/* Mobile Toggle */}
                         <button
@@ -475,7 +482,12 @@ export default function Navbar({ auth }) {
 
                             {!auth.user && (
                                 <div className="grid grid-cols-2 gap-3 pt-4">
-                                    <Link href={route("login")}>
+                                    <button
+                                        onClick={() => {
+                                            setMobileMenuOpen(false);
+                                            setAuthModalVisible(true);
+                                        }}
+                                    >
                                         <Button
                                             fullWidth
                                             variant="secondary"
@@ -483,18 +495,29 @@ export default function Navbar({ auth }) {
                                         >
                                             Masuk
                                         </Button>
-                                    </Link>
-                                    <Link href={route("register")}>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setMobileMenuOpen(false);
+                                            setAuthModalVisible(true);
+                                        }}
+                                    >
                                         <Button fullWidth className="font-bold">
                                             Daftar
                                         </Button>
-                                    </Link>
+                                    </button>
                                 </div>
                             )}
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Auth Modal */}
+            <AuthModal
+                visible={authModalVisible}
+                onClose={() => setAuthModalVisible(false)}
+            />
         </nav>
     );
 }
