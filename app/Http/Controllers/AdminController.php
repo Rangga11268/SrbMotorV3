@@ -28,6 +28,7 @@ class AdminController extends Controller
         $recentTransactions = Transaction::with(['user', 'motor'])->latest()->limit(5)->get();
         
         $recentMotors = Motor::latest()->limit(5)->get();
+        $totalRevenue = Transaction::sum('final_price');
 
 
 
@@ -58,6 +59,16 @@ class AdminController extends Controller
                     'value' => $item->count
                 ];
             });
+
+        $brandStats = Motor::select('brand', DB::raw('count(*) as count'))
+            ->groupBy('brand')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => $item->brand,
+                    'value' => $item->count
+                ];
+            });
         
         return Inertia::render('Admin/Dashboard', [
             'motorsCount' => $motorsCount, 
@@ -69,6 +80,8 @@ class AdminController extends Controller
             'recentMotors' => $recentMotors,
             'monthlyStats' => $monthlyStats,
             'statusStats' => $statusStats,
+            'brandStats' => $brandStats,
+            'totalRevenue' => $totalRevenue,
         ]);
     }
 }

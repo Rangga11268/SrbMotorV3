@@ -54,9 +54,11 @@ import { AnimatePresence, motion } from "framer-motion";
 function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
     const [sidebarShow, setSidebarShow] = useState(() => {
-        // Load sidebar state from localStorage, default to true (open)
-        const saved = localStorage.getItem("adminSidebarShow");
-        return saved !== null ? JSON.parse(saved) : true;
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem("adminSidebarShow");
+            return saved !== null ? JSON.parse(saved) : true;
+        }
+        return true;
     });
 
     // Save sidebar state to localStorage whenever it changes

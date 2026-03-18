@@ -24,6 +24,8 @@ import {
     cilArrowRight,
     cilChartLine,
     cilArrowTop,
+    cilNewspaper,
+    cilSettings,
 } from "@coreui/icons";
 import {
     RevenueChart,
@@ -40,7 +42,12 @@ export default function Dashboard({
     recentMotors,
     monthlyStats,
     statusStats,
+    brandStats,
+    totalRevenue,
 }) {
+    const formatCurrency = (val) =>
+        new Intl.NumberFormat("id-ID").format(val || 0);
+
     const stats = [
         {
             title: "Total Motor",
@@ -67,7 +74,15 @@ export default function Dashboard({
             iconColor: "#10b981",
             subtext: `${cashTransactionsCount} Tunai • ${creditTransactionsCount} Kredit`,
         },
-
+        {
+            title: "Total Pendapatan",
+            value: `Rp ${formatCurrency(totalRevenue)}`,
+            icon: cilChartLine,
+            colorClass: "stat-card-warning",
+            iconBg: "rgba(245,158,11,.1)",
+            iconColor: "#f59e0b",
+            subtext: "Total Penjualan Selesai",
+        },
     ];
 
     const getStatusBadge = (status) => {
@@ -101,8 +116,7 @@ export default function Dashboard({
         );
     };
 
-    const formatCurrency = (val) =>
-        new Intl.NumberFormat("id-ID").format(val || 0);
+
 
     return (
         <AdminLayout title="Dashboard">
@@ -123,8 +137,8 @@ export default function Dashboard({
                                 👋 Selamat Datang Kembali!
                             </h4>
                             <p
-                                className="mb-0"
-                                style={{ opacity: 0.85, fontSize: 14 }}
+                                className="mb-0 text-white"
+                                style={{ fontSize: 14, fontWeight: 500 }}
                             >
                                 Pantau dan kelola seluruh operasional SRB Motors
                                 dari sini.
@@ -187,6 +201,53 @@ export default function Dashboard({
                     </CCol>
                 ))}
             </CRow>
+            
+            {/* Quick Actions Sections */}
+            <CRow className="mb-4 g-3">
+                <CCol md={12}>
+                    <CCard className="border-0 shadow-sm">
+                        <CCardHeader className="bg-transparent">
+                            <strong style={{ color: "#0f172a" }}>Aksi Cepat</strong>
+                        </CCardHeader>
+                        <CCardBody className="p-3">
+                            <div className="d-flex flex-wrap gap-3">
+                                <Link 
+                                    href={route("admin.motors.create")} 
+                                    className="btn btn-primary d-flex align-items-center gap-2"
+                                    style={{ padding: '10px 20px', borderRadius: '10px' }}
+                                >
+                                    <CIcon icon={cilBike} />
+                                    <span>Tambah Motor</span>
+                                </Link>
+                                <Link 
+                                    href={route("admin.transactions.index")} 
+                                    className="btn btn-outline-primary d-flex align-items-center gap-2"
+                                    style={{ padding: '10px 20px', borderRadius: '10px' }}
+                                >
+                                    <CIcon icon={cilCart} />
+                                    <span>Kelola Transaksi</span>
+                                </Link>
+                                <Link 
+                                    href={route("admin.news.create")} 
+                                    className="btn btn-outline-info d-flex align-items-center gap-2"
+                                    style={{ padding: '10px 20px', borderRadius: '10px' }}
+                                >
+                                    <CIcon icon={cilNewspaper} />
+                                    <span>Tulis Berita</span>
+                                </Link>
+                                <Link 
+                                    href={route("admin.settings.index")} 
+                                    className="btn btn-outline-secondary d-flex align-items-center gap-2"
+                                    style={{ padding: '10px 20px', borderRadius: '10px' }}
+                                >
+                                    <CIcon icon={cilSettings} />
+                                    <span>Pengaturan</span>
+                                </Link>
+                            </div>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
 
             {/* Charts Section */}
             <CRow className="mb-4 g-3">
@@ -221,11 +282,16 @@ export default function Dashboard({
                     <CCard className="h-100">
                         <CCardHeader>
                             <strong style={{ color: "#0f172a" }}>
-                                Distribusi Status
+                                Sebaran Unit per Brand
                             </strong>
                         </CCardHeader>
                         <CCardBody>
-                            <StatusPieChart data={statusStats} />
+                            <StatusPieChart 
+                                data={brandStats?.map(b => ({
+                                    label: b.name,
+                                    total: b.value
+                                }))} 
+                            />
                         </CCardBody>
                     </CCard>
                 </CCol>
