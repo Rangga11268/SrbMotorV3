@@ -50,13 +50,9 @@ class MotorRepository implements MotorRepositoryInterface
     {
         $query = Motor::query();
 
-        // Debug logging
-        \Log::info('Building filtered query:', ['filters' => $filters]);
-
         // Apply filters
         if (isset($filters['search']) && !empty(trim($filters['search']))) {
             $search = trim($filters['search']);
-            \Log::info('Applying search filter:', ['search' => $search]);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
                     ->orWhere('model', 'like', '%' . $search . '%')

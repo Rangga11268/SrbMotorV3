@@ -66,9 +66,6 @@ class MotorGalleryController extends Controller
             $filters['max_price'] = $request->max_price;
         }
 
-        // Debug logging
-        \Log::info('Motor search filters:', ['filters' => $filters, 'request_all' => $request->all()]);
-
         $motors = $this->motorRepository->getWithFilters($filters, true, 12);
 
         $filterOptions = $this->motorRepository->getFilterOptions($request->get('search'));
