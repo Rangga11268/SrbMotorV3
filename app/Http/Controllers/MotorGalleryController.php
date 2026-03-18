@@ -75,7 +75,7 @@ class MotorGalleryController extends Controller
         $types = $filterOptions['types'];
         $years = $filterOptions['years'];
 
-        if ($request->wantsJson() && !$request->header('X-Inertia')) {
+        if ($request->wantsJson()) {
             return response()->json([
                 'motors' => $motors,
                 'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),
@@ -652,8 +652,6 @@ class MotorGalleryController extends Controller
                 ->orWhere('brand', 'LIKE', "%{$query}%")
                 ->orWhere('model', 'LIKE', "%{$query}%");
         })
-            ->where('tersedia', true)
-
             ->limit(8)
             ->get();
 

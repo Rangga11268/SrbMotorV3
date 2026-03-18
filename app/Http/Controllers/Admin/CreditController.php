@@ -46,6 +46,12 @@ class CreditController extends Controller
                                 // Search by user name or phone
                                 $uq->where('name', 'like', "%{$search}%")
                                     ->orWhere('phone', 'like', "%{$search}%");
+                            })
+                            ->orWhereHas('motor', function ($mq) use ($search) {
+                                // Search by motor name, brand, or type
+                                $mq->where('name', 'like', "%{$search}%")
+                                    ->orWhere('brand', 'like', "%{$search}%")
+                                    ->orWhere('type', 'like', "%{$search}%");
                             });
                     });
             });

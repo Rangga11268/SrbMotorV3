@@ -107,7 +107,10 @@ export default function Index({
                 label: "Pembayaran Dikonfirmasi",
             },
             unit_preparation: { color: "info", label: "Motor Disiapkan" },
-            ready_for_delivery: { color: "primary", label: "Siap Dikirim/Ambil" },
+            ready_for_delivery: {
+                color: "primary",
+                label: "Siap Dikirim/Ambil",
+            },
             dalam_pengiriman: { color: "info", label: "Dalam Pengiriman" },
             completed: { color: "success", label: "Selesai" },
             cancelled: { color: "danger", label: "Dibatalkan" },
@@ -225,7 +228,7 @@ export default function Index({
                                 </CInputGroupText>
                                 <CFormInput
                                     className="border-start-0"
-                                    placeholder="ID / nama pelanggan..."
+                                    placeholder="ID, nama pelanggan, motor..."
                                     value={search}
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
@@ -246,16 +249,34 @@ export default function Index({
                                 <option value="">Semua Status</option>
                                 {statuses?.map((s) => (
                                     <option key={s} value={s}>
-                                        {s === 'new_order' ? 'Pesanan Masuk' : 
-                                         s === 'waiting_payment' ? 'Menunggu Pembayaran' :
-                                         s === 'pembayaran_dikonfirmasi' ? 'Pembayaran Dikonfirmasi' :
-                                         s === 'payment_confirmed' ? 'Pembayaran Dikonfirmasi' :
-                                         s === 'unit_preparation' ? 'Motor Disiapkan' :
-                                         s === 'ready_for_delivery' ? 'Siap Dikirim/Ambil' :
-                                         s === 'dalam_pengiriman' ? 'Dalam Pengiriman' :
-                                         s === 'completed' ? 'Selesai' :
-                                         s === 'cancelled' ? 'Dibatalkan' :
-                                         s.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                        {s === "new_order"
+                                            ? "Pesanan Masuk"
+                                            : s === "waiting_payment"
+                                              ? "Menunggu Pembayaran"
+                                              : s === "pembayaran_dikonfirmasi"
+                                                ? "Pembayaran Dikonfirmasi"
+                                                : s === "payment_confirmed"
+                                                  ? "Pembayaran Dikonfirmasi"
+                                                  : s === "unit_preparation"
+                                                    ? "Motor Disiapkan"
+                                                    : s === "ready_for_delivery"
+                                                      ? "Siap Dikirim/Ambil"
+                                                      : s === "dalam_pengiriman"
+                                                        ? "Dalam Pengiriman"
+                                                        : s === "completed"
+                                                          ? "Selesai"
+                                                          : s === "cancelled"
+                                                            ? "Dibatalkan"
+                                                            : s
+                                                                  .replace(
+                                                                      /_/g,
+                                                                      " ",
+                                                                  )
+                                                                  .replace(
+                                                                      /\b\w/g,
+                                                                      (l) =>
+                                                                          l.toUpperCase(),
+                                                                  )}
                                     </option>
                                 ))}
                             </CFormSelect>

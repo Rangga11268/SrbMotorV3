@@ -143,7 +143,7 @@ export default function Index({
         const urlObj = new URL(url);
         const params = Object.fromEntries(urlObj.searchParams);
         fetchCredits(params);
-        
+
         // Update URL
         window.history.replaceState({}, "", url);
     };
@@ -174,7 +174,7 @@ export default function Index({
                                 </CInputGroupText>
                                 <CFormInput
                                     className="border-start-0"
-                                    placeholder="No. transaksi / nama pelanggan..."
+                                    placeholder="No. kredit, nama pelanggan, motor..."
                                     value={search}
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
@@ -251,7 +251,10 @@ export default function Index({
                         </div>
                     </div>
                 )}
-                <CCardBody className="p-0" style={{ opacity: loading ? 0.6 : 1 }}>
+                <CCardBody
+                    className="p-0"
+                    style={{ opacity: loading ? 0.6 : 1 }}
+                >
                     <CTable hover responsive className="mb-0">
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
@@ -268,7 +271,8 @@ export default function Index({
                             </CTableRow>
                         </CTableHead>
                         <CTableBody>
-                            {localCredits.data && localCredits.data.length > 0 ? (
+                            {localCredits.data &&
+                            localCredits.data.length > 0 ? (
                                 localCredits.data.map((credit) => (
                                     <CTableRow key={credit.id}>
                                         <CTableDataCell className="ps-4">
@@ -393,8 +397,14 @@ export default function Index({
                                         key={index}
                                         active={link.active}
                                         disabled={!link.url}
-                                        onClick={() => handlePageChange(link.url)}
-                                        style={{ cursor: link.url ? "pointer" : "default" }}
+                                        onClick={() =>
+                                            handlePageChange(link.url)
+                                        }
+                                        style={{
+                                            cursor: link.url
+                                                ? "pointer"
+                                                : "default",
+                                        }}
                                     >
                                         <span
                                             dangerouslySetInnerHTML={{

@@ -29,6 +29,21 @@ class MotorController extends Controller
         if (request('search')) {
             $filters['search'] = request('search');
         }
+        if (request('brand')) {
+            $filters['brand'] = request('brand');
+        }
+        if (request('type')) {
+            $filters['type'] = request('type');
+        }
+        if (request('year')) {
+            $filters['year'] = request('year');
+        }
+        if (request('min_price')) {
+            $filters['min_price'] = request('min_price');
+        }
+        if (request('max_price')) {
+            $filters['max_price'] = request('max_price');
+        }
         if (request('tersedia') !== null) {
             $filters['tersedia'] = request('tersedia');
         }
@@ -38,7 +53,10 @@ class MotorController extends Controller
         if (!request()->hasHeader('X-Inertia-Version') && request()->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
                 'motors' => $motors,
-                'filters' => request()->all(['search', 'brand', 'status']),
+                'brands' => $this->motorRepository->getDistinctBrands(),
+                'types' => $this->motorRepository->getDistinctTypes(),
+                'years' => $this->motorRepository->getDistinctYears(),
+                'filters' => request()->all(),
             ]);
         }
 

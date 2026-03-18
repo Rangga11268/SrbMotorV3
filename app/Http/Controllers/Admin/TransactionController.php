@@ -31,6 +31,11 @@ class TransactionController extends Controller
                     ->orWhereHas('user', function ($subQ) use ($search) {
                         $subQ->where('name', 'like', "%{$search}%")
                             ->orWhere('phone', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('motor', function ($motorQ) use ($search) {
+                        $motorQ->where('name', 'like', "%{$search}%")
+                            ->orWhere('brand', 'like', "%{$search}%")
+                            ->orWhere('type', 'like', "%{$search}%");
                     });
             });
         }
@@ -71,7 +76,7 @@ class TransactionController extends Controller
 
         $motors = Motor::all();
         $users = User::where('role', 'user')->get();
-        
+
         return Inertia::render('Admin/Transactions/Show', [
             'transaction' => $transaction,
             'motors' => $motors,
@@ -134,7 +139,7 @@ class TransactionController extends Controller
             'motor_color' => $validated['motor_color'],
             'delivery_method' => $validated['delivery_method'],
         ]);
-        
+
         // Stock Locking: If created with a "lock" status
         $lockStatuses = ['payment_confirmed', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
         if (in_array($validated['status'], $lockStatuses)) {
@@ -285,7 +290,6 @@ class TransactionController extends Controller
             if (in_array($newStatus, $lockStatuses)) {
                 $transaction->motor->update(['tersedia' => false]);
                 \Illuminate\Support\Facades\Log::info("Stock Locked: Motor ID {$transaction->motor_id} (Manual Cash Status Quick Update)");
-                
             } elseif (in_array($newStatus, $unlockStatuses)) {
                 $transaction->motor->update(['tersedia' => true]);
                 \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$transaction->motor_id} (Manual Cash Status Quick Update)");
@@ -317,6 +321,4 @@ class TransactionController extends Controller
 
         return back()->with('success', 'Status transaksi berhasil diperbarui' . ($oldStatus === $newStatus ? ' (tidak ada perubahan)' : ' dan notifikasi dikirim ke customer'));
     }
-
-
 }

@@ -32,6 +32,21 @@ interface MotorRepositoryInterface
     public function getFilterOptions($search = null);
 
     /**
+     * Get distinct brands from motors
+     */
+    public function getDistinctBrands();
+
+    /**
+     * Get distinct types from motors
+     */
+    public function getDistinctTypes();
+
+    /**
+     * Get distinct years from motors
+     */
+    public function getDistinctYears();
+
+    /**
      * Clear cache for motors
      */
     public function clearCache();

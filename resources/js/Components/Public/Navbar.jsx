@@ -162,6 +162,12 @@ export default function Navbar({ auth }) {
                                                                         );
                                                                     }}
                                                                     className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors group"
+                                                                    style={{
+                                                                        opacity:
+                                                                            motor.tersedia
+                                                                                ? 1
+                                                                                : 0.7,
+                                                                    }}
                                                                 >
                                                                     <div className="w-16 h-12 bg-gray-100 rounded-xl overflow-hidden p-2 flex items-center justify-center shrink-0">
                                                                         <img
@@ -169,15 +175,26 @@ export default function Navbar({ auth }) {
                                                                             alt={
                                                                                 motor.name
                                                                             }
-                                                                            className="h-full object-contain"
+                                                                            className={`h-full object-contain ${
+                                                                                !motor.tersedia
+                                                                                    ? "grayscale opacity-50"
+                                                                                    : ""
+                                                                            }`}
                                                                         />
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
-                                                                        <h4 className="text-sm font-black text-gray-900 truncate uppercase tracking-tight">
-                                                                            {
-                                                                                motor.name
-                                                                            }
-                                                                        </h4>
+                                                                        <div className="flex items-start justify-between gap-2">
+                                                                            <h4 className="text-sm font-black text-gray-900 truncate uppercase tracking-tight">
+                                                                                {
+                                                                                    motor.name
+                                                                                }
+                                                                            </h4>
+                                                                            {!motor.tersedia && (
+                                                                                <span className="text-[9px] font-black bg-red-100 text-red-700 px-2 py-0.5 rounded whitespace-nowrap">
+                                                                                    HABIS
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
                                                                         <p className="text-xs font-black text-primary">
                                                                             Rp{" "}
                                                                             {parseInt(
