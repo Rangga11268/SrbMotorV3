@@ -32,49 +32,65 @@ class MotorRepository implements MotorRepositoryInterface
      */
     public function getWithFilters($filters = [], $withSpecs = true, $perPage = 10): \Illuminate\Pagination\LengthAwarePaginator
     {
-        $cacheKey = $this->generateCacheKey('filtered', $filters, $withSpecs, $perPage);
+        // Don't cache searches for better real-time results
+        $hasSearch = isset($filters['search']) && !empty($filters['search']);
 
-        return Cache::remember($cacheKey, $this->cacheTime, function () use ($filters, $withSpecs, $perPage) {
-            $query = Motor::query();
+        if (!$hasSearch) {
+            $cacheKey = $this->generateCacheKey('filtered', $filters, $withSpecs, $perPage);
+            return Cache::remember($cacheKey, $this->cacheTime, function () use ($filters, $withSpecs, $perPage) {
+                return $this->buildFilteredQuery($filters, $perPage);
+            });
+        }
 
-            // Apply filters
-            if (isset($filters['search']) && !empty(trim($filters['search']))) {
-                $search = trim($filters['search']);
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', '%' . $search . '%')
-                        ->orWhere('model', 'like', '%' . $search . '%')
-                        ->orWhere('brand', 'like', '%' . $search . '%')
-                        ->orWhere('type', 'like', '%' . $search . '%')
-                        ->orWhere('description', 'like', '%' . $search . '%');
-                });
-            }
+        // Direct query without cache for search
+        return $this->buildFilteredQuery($filters, $perPage);
+    }
 
-            if (isset($filters['brand']) && !empty($filters['brand'])) {
-                $query->where('brand', $filters['brand']);
-            }
+    private function buildFilteredQuery($filters = [], $perPage = 10): \Illuminate\Pagination\LengthAwarePaginator
+    {
+        $query = Motor::query();
 
-            if (isset($filters['type']) && !empty($filters['type'])) {
-                $query->where('type', $filters['type']);
-            }
+        // Debug logging
+        \Log::info('Building filtered query:', ['filters' => $filters]);
 
-            if (isset($filters['year']) && !empty($filters['year'])) {
-                $query->where('year', $filters['year']);
-            }
+        // Apply filters
+        if (isset($filters['search']) && !empty(trim($filters['search']))) {
+            $search = trim($filters['search']);
+            \Log::info('Applying search filter:', ['search' => $search]);
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('model', 'like', '%' . $search . '%')
+                    ->orWhere('brand', 'like', '%' . $search . '%')
+                    ->orWhere('type', 'like', '%' . $search . '%')
+                    ->orWhere('details', 'like', '%' . $search . '%');
+            });
+        }
 
-            if (isset($filters['min_price']) && !empty($filters['min_price'])) {
-                $query->where('price', '>=', $filters['min_price']);
-            }
+        if (isset($filters['brand']) && !empty($filters['brand'])) {
+            $query->where('brand', $filters['brand']);
+        }
 
-            if (isset($filters['max_price']) && !empty($filters['max_price'])) {
-                $query->where('price', '<=', $filters['max_price']);
-            }
+        if (isset($filters['type']) && !empty($filters['type'])) {
+            $query->where('type', $filters['type']);
+        }
 
-            if (isset($filters['tersedia']) && $filters['tersedia'] !== null) {
-                $query->where('tersedia', $filters['tersedia'] == 1);
-            }
+        if (isset($filters['year']) && !empty($filters['year'])) {
+            $query->where('year', $filters['year']);
+        }
 
-            return $query->orderBy('created_at', 'desc')->paginate($perPage);
-        });
+        if (isset($filters['min_price']) && !empty($filters['min_price'])) {
+            $query->where('price', '>=', $filters['min_price']);
+        }
+
+        if (isset($filters['max_price']) && !empty($filters['max_price'])) {
+            $query->where('price', '<=', $filters['max_price']);
+        }
+
+        if (isset($filters['tersedia']) && $filters['tersedia'] !== null) {
+            $query->where('tersedia', $filters['tersedia'] == 1);
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
     /**
@@ -125,7 +141,7 @@ class MotorRepository implements MotorRepositoryInterface
                         ->orWhere('model', 'like', '%' . $search . '%')
                         ->orWhere('brand', 'like', '%' . $search . '%')
                         ->orWhere('type', 'like', '%' . $search . '%')
-                        ->orWhere('description', 'like', '%' . $search . '%');
+                        ->orWhere('details', 'like', '%' . $search . '%');
                 });
             }
 

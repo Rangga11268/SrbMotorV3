@@ -66,16 +66,18 @@ class MotorGalleryController extends Controller
             $filters['max_price'] = $request->max_price;
         }
 
+        // Debug logging
+        \Log::info('Motor search filters:', ['filters' => $filters, 'request_all' => $request->all()]);
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 12);
-
 
         $filterOptions = $this->motorRepository->getFilterOptions($request->get('search'));
         $brands = $filterOptions['brands'];
         $types = $filterOptions['types'];
         $years = $filterOptions['years'];
 
-        if ($request->wantsJson()) {
+        // Check if this is an AJAX request or if JSON is explicitly requested
+        if ($request->header('X-Requested-With') === 'XMLHttpRequest' || $request->wantsJson()) {
             return response()->json([
                 'motors' => $motors,
                 'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),
