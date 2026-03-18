@@ -134,7 +134,7 @@ export default function Dashboard({
                                 className="mb-2 fw-bold welcome-title"
                                 style={{ fontSize: 22 }}
                             >
-                                👋 Selamat Datang Kembali!
+                                Selamat Datang Kembali!
                             </h4>
                             <p
                                 className="mb-0 text-white"

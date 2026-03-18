@@ -1312,7 +1312,7 @@ export default function Show({
                                     </div>
                                     {pendingCount > 0 && (
                                         <div className="small mt-2">
-                                            ⚠️ Semua dokumen harus disetujui
+                                            Semua dokumen harus disetujui
                                             atau ditolak sebelum melanjutkan
                                             verifikasi.
                                         </div>

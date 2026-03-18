@@ -53,18 +53,27 @@ import { AnimatePresence, motion } from "framer-motion";
 
 function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
-    const [sidebarShow, setSidebarShow] = useState(() => {
+    const [sidebarShow, setSidebarShow] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem("adminSidebarShow");
-            return saved !== null ? JSON.parse(saved) : true;
+            if (saved !== null) {
+                setSidebarShow(JSON.parse(saved));
+            } else {
+                setSidebarShow(true);
+            }
         }
-        return true;
-    });
+    }, []);
 
     // Save sidebar state to localStorage whenever it changes
     useEffect(() => {
-        localStorage.setItem("adminSidebarShow", JSON.stringify(sidebarShow));
-    }, [sidebarShow]);
+        if (isMounted) {
+            localStorage.setItem("adminSidebarShow", JSON.stringify(sidebarShow));
+        }
+    }, [sidebarShow, isMounted]);
     const [showFlash, setShowFlash] = useState(false);
 
     useEffect(() => {
@@ -230,7 +239,13 @@ function AdminLayoutContent({ children, title }) {
                     className="sidebar-admin"
                     colorScheme="dark"
                     visible={sidebarShow}
-                    onVisibleChange={(visible) => setSidebarShow(visible)}
+                    onVisibleChange={(visible) => {
+                        // CoreUI sometimes triggers onVisibleChange(false) on mount/resize
+                        // We only want to update if it's likely a user action or persistent state
+                        if (isMounted) {
+                            setSidebarShow(visible);
+                        }
+                    }}
                 >
                     <CSidebarHeader className="border-bottom px-3">
                         <a
