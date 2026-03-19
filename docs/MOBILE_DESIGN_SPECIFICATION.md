@@ -82,22 +82,51 @@ SRB Motor adalah platform penjualan dan pembiayaan motor online berbasis web (La
 
 ## SYSTEM ANALYSIS
 
-### Current Web System (Backend Reference)
+### Current Web System (Backend Reference - VERIFIED)
 
 ```
 Web Version Stack:
-├── Backend:     Laravel 12 (PHP 8.2+)
-├── Frontend:    React 19 + Inertia.js
-├── Database:    MySQL 8.0+
-├── Payment:     Midtrans
-├── Messaging:   Fonnte WhatsApp API
-├── Storage:     Local filesystem
-└── Auth:        JWT + Session
+├── Backend:       Laravel 12 (PHP 8.2+)
+├── Frontend:      React 19.2+ Inertia.js (Server-driven rendering)
+├── Database:      MySQL 8.0+ (shared with mobile)
+├── Payment:       Midtrans Snap API
+├── Messaging:     Fonnte WhatsApp API (via WhatsAppService)
+├── File Storage:  Local filesystem (public/storage path)
+├── Authentication: Laravel Session + Google OAuth (will add JWT for mobile)
+└── Architecture:  Repository pattern + Service layer
 
-Tables (13 main): users, motors, transactions, credit_details,
-                  installments, documents, categories, leasing_providers,
-                  transaction_logs, survey_schedules, posts, settings,
-                  notifications
+Active Tables (13 total):
+  ├── users - User accounts (20 cols), role-based (admin/customer), consolidated
+  ├── motors - Motor inventory (14 cols), tersedia boolean, colors JSON
+  ├── transactions - BOTH cash & credit orders (33 cols), statuses enum
+  ├── credit_details - Credit-specific workflow (18 cols), 8-stage processing
+  ├── installments - Payment schedule (21 cols), Midtrans integration
+  ├── documents - File uploads (15 cols), approval workflow
+  ├── categories - Motor + Post categories (9 cols)
+  ├── leasing_providers - Finance partners (5 cols)
+  ├── transaction_logs - Audit trail (12 cols), every status change logged
+  ├── survey_schedules - Property assessments (19 cols), credit workflow
+  ├── posts - Blog/News articles (12 cols), featured images, slug-based
+  ├── settings - Global configuration (8 cols), category-grouped
+  └── notifications - User alerts (8 cols), database-stored
+
+Dropped Features (NOT in mobile spec):
+  ✗ Promotions (was motor discount badges)
+  ✗ Banners (was homepage carousel)
+  ✗ ContactMessages (was form submissions)
+
+Key Services (Business Logic):
+  ├── TransactionService - Create orders, manage installments
+  ├── CreditService - 8-stage credit approval workflow (FSM pattern)
+  ├── PaymentService - Midtrans status mapping & settlement
+  └── WhatsAppService - Customer notifications via Fonnte
+
+Key Controllers:
+  ├── Public: HomeController, MotorGalleryController, NewsController
+  ├── Auth: AuthController, GoogleAuthController
+  ├── Customer: TransactionController, InstallmentController, ProfileController
+  └── Admin: CreditController, MotorController, UserController, NewsController,
+             CategoriesController, LeasingProviderController
 ```
 
 ### Existing Infrastructure We'll Leverage
@@ -1244,13 +1273,13 @@ Drawer Navigation (Side Menu when more options):
 
 ## TECHNOLOGY STACK
 
-### Flutter Ecosystem
+### Flutter Ecosystem (Recommended for Mobile)
 
 ```
 Core Framework:
-├── Flutter 3.24.0+ (Dart 3.5+)
+├── Flutter 3.25.0+ (Latest stable, Dart 3.5+)
 ├── Null Safety (enforced)
-└── Material Design 3
+└── Material Design 3 (matches web design system)
 
 State Management:
 ├── Riverpod 2.4+ (Recommended)
@@ -1478,8 +1507,8 @@ dependencies:
     flutter_secure_storage: ^9.0.0
 
     # Payment
-    midtrans_sdk: ^2.1.0
-
+  midtrans_sdk: ^2.1.0  # Official Midtrans Flutter SDK
+  snap_webview: ^0.1.0  # Alternative: Webview for Snap
     # Firebase
     firebase_core: ^2.21.0
     firebase_messaging: ^14.6.0
@@ -2259,88 +2288,249 @@ Version control:
 
 ### Appendix A: Database Validation Checklist
 
-✅ **Validated**: All 13 tables from current web version:
+✅ **ACTIVE Tables** (Currently in use - verified against actual code):
 
-- users (20 columns) → ✓ Mobile-compatible
-- motors (14 columns) → ✓ All fields needed
-- transactions (33 columns) → ✓ Optimized for mobile queries
-- credit_details (18 columns) → ✓ Normalized properly
-- installments (21 columns) → ✓ Payment tracking ready
-- documents (15 columns) → ✓ File handling ready
-- categories (9 columns) → ✓ For filtering
-- leasing_providers (5 columns) → ✓ For credit schemes
-- transaction_logs (12 columns) → ✓ For status history
-- survey_schedules (19 columns) → ✓ For credit appointments
-- posts (12 columns) → ✓ For blog (stretch goal)
-- settings (8 columns) → ✓ For app config
-- notifications (8 columns) → ✓ For notification data
+- users (20 columns) → ✓ Mobile-compatible (id, name, email, password, role, phone, NIK, address, income, employment, mother_name, gender, DOB, google_id, email_verified_at, etc.)
+- motors (14 columns) → ✓ All fields needed (id, name, brand, model, price, year, type, image_path, details_HTML, tersedia_boolean, min_dp, colors_JSON)
+- transactions (33 columns) → ✓ Optimized for mobile (handles both CASH & CREDIT orders)
+- credit_details (18 columns) → ✓ 8-stage workflow tracking
+- installments (21 columns) → ✓ Payment tracking with Midtrans integration
+- documents (15 columns) → ✓ File handling with approval status
+- categories (9 columns) → ✓ For motors AND post filtering
+- leasing_providers (5 columns) → ✓ Finance partner management
+- transaction_logs (12 columns) → ✓ Audit trail of status changes
+- survey_schedules (19 columns) → ✓ Credit property assessment
+- posts (12 columns) → ✓ Blog/news articles (ACTIVE - not stretch goal)
+- settings (8 columns) → ✓ System configuration
+- notifications (8 columns) → ✓ User alert system
 
-**Status**: ✅ No schema changes needed. Database ready for mobile access.
+❌ **DROPPED Tables** (No longer exist - confirmed in migrations):
+
+- promotions (motor discount schemes) - DROPPED in migration 2026_03_15
+- banners (homepage promotional banners) - DROPPED in migration 2026_03_15
+- contact_messages (form submissions) - DROPPED in migration 2026_03_15
+- motor_units (consolidated into motors table)
+- user_profiles (consolidated into users table)
+
+**Status**: ✅ No schema changes needed. Current 13 tables ready for mobile access. Remove promotions/banners/contact features from mobile spec.
 
 ### Appendix B: Feature Comparison Matrix
 
-| Feature            | Web |  Mobile   | Notes                     |
-| :----------------- | :-: | :-------: | :------------------------ |
-| Browse Motors      |  ✓  |     ✓     | Identical backend         |
-| Search/Filter      |  ✓  |     ✓     | Enhanced UX               |
-| Place Order        |  ✓  |     ✓     | Mobile form optimization  |
-| Payment (Midtrans) |  ✓  |     ✓     | Same gateway              |
-| Document Upload    |  ✓  |     ✓     | Camera feature            |
-| Track Orders       |  ✓  |     ✓     | Real-time via FCM         |
-| Installments       |  ✓  |     ✓     | Full parity               |
-| Admin Dashboard    |  ✓  | ⚠ Limited | Mobile-optimized subset   |
-| Biometric Auth     |  ✗  |     ✓     | Mobile-only **NEW**       |
-| Offline Mode       |  ✗  |     ✓     | Mobile-only **NEW**       |
-| Push Notifications |  ✗  |     ✓     | Native **NEW**            |
-| Camera Integration |  ✗  |     ✓     | Native **NEW**            |
-| Dark Mode          |  ✗  |     ✓     | System preference **NEW** |
+| Feature                  | Web ✓ |   Mobile   | Priority | Notes                                                  |
+| :----------------------- | :---: | :--------: | :------- | :----------------------------------------------------- |
+| **Browse Motors**        |   ✓   |     ✓      | P0       | 2-column grid, filter by brand/type/year/price         |
+| Search & Filter          |   ✓   |     ✓      | P0       | Real-time search, fixed search bar + modal filters     |
+| Motor Detail View        |   ✓   |     ✓      | P0       | Images carousel, specs, financing schemes              |
+| Motor Comparison         |   ✓   |     ✓      | P2       | Compare 3-4 motors side-by-side                        |
+| Cash Order (Tunai)       |   ✓   |     ✓      | P0       | Simple checkout (name, phone, occupation, booking_fee) |
+| Credit Order (Cicilan)   |   ✓   |     ✓      | P0       | Complex form with multi-stage document upload          |
+| Document Upload          |   ✓   | ✓ (Camera) | P0       | Camera capture + gallery picker + file preview         |
+| Order Tracking           |   ✓   |     ✓      | P0       | Real-time status with timeline view                    |
+| Payment (Midtrans)       |   ✓   |     ✓      | P0       | Snap modal/webview, status callback                    |
+| Installment Management   |   ✓   |     ✓      | P0       | List, pay, receipt download, monthly reminders         |
+| Notifications            |   ✓   |  ✓ (Push)  | P0       | FCM push + in-app center + deep linking                |
+| News/Blog Browsing       |   ✓   |     ✓      | P1       | Read-only posts by category (NEW in mobile spec)       |
+| User Profile             |   ✓   |     ✓      | P1       | View & edit personal info, change password             |
+| Invoice Download         |   ✓   |     ✓      | P1       | PDF generation & local storage                         |
+| Biometric Auth           |   ✗   |     ✓      | P1       | Touch/Face ID (mobile only)                            |
+| Offline Motor Catalog    |   ✗   |     ✓      | P2       | SQLite/Hive cache, sync on network                     |
+| Favorite Motors          |   ✗   |     ✓      | P2       | Heart icon, dedicated favorites tab (stored locally)   |
+| Admin Dashboard          |   ✓   |  Limited   | P2       | KPI cards + transaction list (tablet-optimized)        |
+| Admin Credit Approvals   |   ✓   |     ✓      | P2       | 8-stage workflow, view docs, approve/reject            |
+| Admin Transaction Status |   ✓   |     ✓      | P2       | Update status, send WhatsApp messages                  |
+| Admin Motor Management   |   ✓   |     ✗      | P3       | Create/edit motors (future phase)                      |
+| Admin News Management    |   ✓   |     ✗      | P3       | Blog post CRUD (future - content editors)              |
+| Promotions/Banners       |   ✓   |     ✗      | P3       | DROPPED from web - not in mobile spec                  |
+| Contact Form             |   ✓   |     ✗      | P3       | DROPPED from web - not in mobile spec                  |
 
-### Appendix C: API Endpoints Summary
+### Appendix C: API Endpoints Summary (Real Routes)
+
+#### Public/Guest Routes
+
+```
+GET    /                              → Home
+GET    /motors                        → Motor catalog with search/filter
+GET    /motors/{id}                   → Motor detail
+GET    /motors/compare?ids=1,2,3     → Motor comparison
+GET    /berita                        → News/Blog listing
+GET    /berita/{slug}                 → News/Blog detail
+GET    /about                         → About page
+POST   /contact                       → Contact form submission
+```
+
+#### Authentication Routes
+
+```
+POST   /login                         → Email/password login
+POST   /register                      → Register new user
+GET    /auth/google                   → Google OAuth redirect
+GET    /auth/google/callback          → Google OAuth callback
+POST   /logout                        → Logout (auth required)
+POST   /forgot-password               → Password reset request
+POST   /reset-password/{token}        → Password reset
+POST   /email/verification-notification  → Resend verification
+```
+
+#### Customer Routes (Protected - auth + verified)
+
+```
+Order Processing:
+GET    /motors/{id}/cash-order        → Cash order form
+POST   /motors/{id}/process-cash-order → Submit cash order
+GET    /motors/{id}/credit-order      → Credit order form
+POST   /motors/{id}/process-credit-order → Submit credit order
+GET    /motors/order-confirmation/{id} → Order confirmation
+
+Payment & Installments:
+GET    /installments                  → Installments listing
+POST   /installments/{id}/pay-online  → Pay installment (Midtrans)
+POST   /installments/{id}/check-status → Check payment status
+GET    /installments/{id}/receipt     → Download receipt/invoice
+POST   /installments/pay-multiple     → Pay multiple (batch)
+
+Documents (Credit Orders):
+POST   /documents/{id}/upload         → Upload document
+GET    /documents                     → List user documents
+DELETE /documents/{id}                → Delete document
+
+Transaction Tracking:
+GET    /transactions                  → User transactions list
+GET    /transactions/{id}             → Transaction detail
+GET    /motors/my-transactions        → Alternative: my transactions
+
+Profile:
+GET    /profile                       → Profile view
+GET    /profile/edit                  → Profile edit form
+PUT    /profile                       → Update profile
+PUT    /profile/password              → Update password
+
+Invoice:
+GET    /transactions/{id}/invoice     → View invoice preview
+GET    /transactions/{id}/invoice/download → Download invoice PDF
+```
+
+#### Admin Routes (Protected - auth + admin role)
+
+```
+Dashboard:
+GET    /admin                         → Admin dashboard (KPIs)
+
+Transaction Management:
+GET    /admin/transactions            → Transactions list
+GET    /admin/transactions/{id}       → Transaction detail
+POST   /admin/transactions/{id}/status → Update transaction status
+
+Credit Management:
+GET    /admin/credits                 → Credit applications list
+GET    /admin/credits/{id}            → Credit detail + approval interface
+POST   /admin/credits/{id}/verify-documents → Verify docs (stage 2)
+POST   /admin/credits/{id}/send-to-leasing → Send to leasing (stage 3)
+POST   /admin/credits/{id}/schedule-survey → Schedule survey (stage 3.5)
+POST   /admin/credits/{id}/start-survey → Start survey
+POST   /admin/credits/{id}/complete-survey → Complete survey (stage 4)
+POST   /admin/credits/{id}/approve    → Approve credit (stage 6)
+POST   /admin/credits/{id}/reject     → Reject credit
+POST   /admin/credits/{id}/record-dp-payment → Record DP payment
+GET    /admin/credits/export          → Export credits to Excel
+
+Document Approval:
+POST   /admin/documents/{id}/approve  → Approve document
+POST   /admin/documents/{id}/reject   → Reject document upload
+
+Installment Management:
+POST   /admin/installments/{id}/approve → Approve installment
+POST   /admin/installments/{id}/reject → Reject installment
+
+Motor Management:
+GET    /admin/motors                  → Motors list
+GET    /admin/motors/create           → Create motor form
+POST   /admin/motors                  → Store motor
+GET    /admin/motors/{id}             → Motor detail
+GET    /admin/motors/{id}/edit        → Edit motor form
+PUT    /admin/motors/{id}             → Update motor
+DELETE /admin/motors/{id}             → Delete motor
+
+User Management:
+GET    /admin/users                   → Users list
+GET    /admin/users/{id}              → User detail
+GET    /admin/users/{id}/edit         → Edit user form
+PUT    /admin/users/{id}              → Update user
+
+Content Management:
+GET    /admin/news                    → News/Blog posts list
+GET    /admin/news/create             → Create post form
+POST   /admin/news                    → Store post
+GET    /admin/news/{id}/edit          → Edit post form
+PUT    /admin/news/{id}               → Update post
+DELETE /admin/news/{id}               → Delete post
+
+GET    /admin/categories              → Categories list (for motors & posts)
+GET    /admin/categories/create       → Create category
+POST   /admin/categories              → Store category
+GET    /admin/categories/{id}/edit    → Edit category
+PUT    /admin/categories/{id}         → Update category
+DELETE /admin/categories/{id}         → Delete category
+
+GET    /admin/leasing-providers       → Leasing providers list
+GET    /admin/leasing-providers/create → Create leasing provider
+POST   /admin/leasing-providers       → Store provider
+GET    /admin/leasing-providers/{id}/edit → Edit provider
+PUT    /admin/leasing-providers/{id}  → Update provider
+DELETE /admin/leasing-providers/{id}  → Delete provider
+
+Settings:
+GET    /admin/settings               → Settings overview
+GET    /admin/settings/{category}/edit → Edit setting category
+PUT    /admin/settings/{category}     → Update settings
+POST   /admin/settings                → Store new setting
+DELETE /admin/settings/{id}           → Delete setting
+
+Reports:
+GET    /admin/reports                → Reports overview
+GET    /admin/reports/generate        → Generate custom report
+GET    /admin/reports/export          → Export report (CSV/Excel)
+
+Admin Profile:
+GET    /admin/profile                 → Admin profile view
+GET    /admin/profile/edit            → Admin profile edit
+PUT    /admin/profile                 → Update admin profile
+PUT    /admin/profile/password        → Change password
+```
+
+#### New Mobile-Specific Endpoints (To be implemented)
 
 ```
 Authentication:
-POST   /api/auth/login
-POST   /api/auth/register
-POST   /api/auth/logout
-POST   /api/auth/refresh
+POST   /api/mobile/auth/login         → Mobile JWT login
+POST   /api/mobile/auth/register      → Mobile registration
+POST   /api/mobile/auth/logout        → Logout (invalidate token)
+POST   /api/mobile/auth/refresh       → Refresh JWT token
+
+Devices:
+POST   /api/mobile/fcm-token          → Register FCM token for notifications
 
 Motors:
-GET    /motors (existing)
-GET    /motors/{id} (existing)
-POST   /api/mobile/motors/{id}/favorites
-
-Transactions:
-POST   /transactions (existing)
-GET    /transactions/{id} (existing)
-PATCH  /transactions/{id}/status
-
-Installments:
-GET    /installments?transaction_id=X
-POST   /installments/{id}/pay-online (existing)
-GET    /installments/{id}/receipt
-
-Documents:
-POST   /api/mobile/documents/upload
-GET    /api/mobile/documents?transaction_id=X
-DELETE /api/mobile/documents/{id}
+GET    /api/mobile/motors             → Paginated motor list with caching
+GET    /api/mobile/motors/{id}        → Motor detail
+POST   /api/mobile/motors/{id}/favorites → Favorite a motor
+GET    /api/mobile/motors/favorites   → List favorite motors
 
 Notifications:
-GET    /api/mobile/notifications
-PATCH  /api/mobile/notifications/{id}/read
-POST   /api/mobile/fcm-token
+GET    /api/mobile/notifications      → Paginated notifications
+PATCH  /api/mobile/notifications/{id}/read → Mark as read
+GET    /api/mobile/notifications/unread-count → Badge count
 
 Profile:
-GET    /api/mobile/profile
-PATCH  /api/mobile/profile
-POST   /api/mobile/profile/avatar
-
-Admin:
-GET    /admin/transactions
-GET    /admin/credit-details
-PATCH  /admin/credit-details/{id}/approve
-PATCH  /admin/documents/{id}/approve
-PATCH  /admin/survey-schedules/{id}/complete
+GET    /api/mobile/profile            → User profile
+PATCH  /api/mobile/profile            → Update profile
+POST   /api/mobile/profile/avatar     → Upload avatar
 ```
+
+**Notes**:
+
+- All web routes currently render via Inertia.js (React)
+- Mobile app will use REST API (existing routes + new mobile-specific endpoints)
+- Payment webhooks: POST /api/midtrans/notification (PaymentCallbackController)
 
 ### Appendix D: Testing Scenarios
 
