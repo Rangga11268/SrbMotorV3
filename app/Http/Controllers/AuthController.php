@@ -92,15 +92,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        // Debug mode: skip email verification
-        if (config('app.debug') && env('DEBUG_MODE') === true) {
-            $user->markEmailAsVerified();
-            return redirect()->route('motors.user-transactions')->with('status', 'Akun berhasil dibuat! (Debug Mode - Email tidak perlu diverifikasi)');
-        }
-
-        // Send email verification notification
-        $user->sendEmailVerificationNotification();
-
-        return redirect()->route('verification.notice')->with('status', 'Silakan verifikasi email Anda untuk melanjutkan.');
+        return redirect()->route('motors.index')->with('status', 'Akun berhasil dibuat! Selamat datang di SRB Motor.');
     }
 }

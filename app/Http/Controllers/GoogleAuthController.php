@@ -36,13 +36,12 @@ class GoogleAuthController extends Controller
                     'google_id'           => $googleUser->getId(),
                     'profile_photo_path'  => $googleUser->getAvatar(),
                     'password'            => bcrypt(\Illuminate\Support\Str::random(24)),
-                    'email_verified_at'   => now(),
                     'role'                => 'user',
                 ]);
                 Auth::login($user, true);
             }
 
-            return redirect()->intended(route('profile.show'));
+            return redirect()->intended(route('motors.index'));
         } catch (\Exception $e) {
             // Log real error for debugging
             Log::error('Google OAuth failed', [

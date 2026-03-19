@@ -26,33 +26,33 @@ Route::get('/api/search/motors', [MotorGalleryController::class, 'search'])->nam
 Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
 Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
 // Order routes - auth + email verification required (security fix: prevent unauthenticated access + applying rate limits)
-Route::middleware(['auth', 'verified', 'throttle:15,1'])->group(function () {
+Route::middleware(['auth', 'throttle:15,1'])->group(function () {
     Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
     Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
     Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
     Route::post('/motors/{motor}/process-credit-order', [MotorGalleryController::class, 'processCreditOrder'])->name('motors.process-credit-order');
 });
-Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware(['auth', 'verified']);
-Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware(['auth', 'verified']);
-Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware(['auth', 'verified']);
-Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware(['auth', 'verified']);
-Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware(['auth', 'verified']);
-Route::post('/motors/{transaction}/cancel', [MotorGalleryController::class, 'cancelOrder'])->name('motors.cancel')->middleware(['auth', 'verified']);
-Route::post('/documents/{document}/approve', [MotorGalleryController::class, 'approveDocument'])->name('documents.approve')->middleware(['auth', 'verified']);
-Route::post('/documents/{document}/reject', [MotorGalleryController::class, 'rejectDocument'])->name('documents.reject')->middleware(['auth', 'verified']);
+Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware(['auth']);
+Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware(['auth']);
+Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware(['auth']);
+Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware(['auth']);
+Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware(['auth']);
+Route::post('/motors/{transaction}/cancel', [MotorGalleryController::class, 'cancelOrder'])->name('motors.cancel')->middleware(['auth']);
+Route::post('/documents/{document}/approve', [MotorGalleryController::class, 'approveDocument'])->name('documents.approve')->middleware(['auth']);
+Route::post('/documents/{document}/reject', [MotorGalleryController::class, 'rejectDocument'])->name('documents.reject')->middleware(['auth']);
 Route::get('/credit-details/{creditDetail}/schedule-survey', function ($creditDetailId) {
     return redirect()->back()->with('error', 'Akses tidak valid. Gunakan form di halaman transaksi.');
-})->middleware(['auth', 'verified']);
-Route::post('/credit-details/{creditDetail}/schedule-survey', [MotorGalleryController::class, 'scheduleSurvey'])->name('credit-details.schedule-survey')->middleware(['auth', 'verified']);
-Route::post('/survey-schedules/{surveySchedule}/confirm-completion', [MotorGalleryController::class, 'confirmSurveyCompletion'])->name('survey-schedules.confirm-completion')->middleware(['auth', 'verified']);
+})->middleware(['auth']);
+Route::post('/credit-details/{creditDetail}/schedule-survey', [MotorGalleryController::class, 'scheduleSurvey'])->name('credit-details.schedule-survey')->middleware(['auth']);
+Route::post('/survey-schedules/{surveySchedule}/confirm-completion', [MotorGalleryController::class, 'confirmSurveyCompletion'])->name('survey-schedules.confirm-completion')->middleware(['auth']);
 
 // Customer transaction & survey routes
-Route::get('/motors/transactions/{transaction}', [MotorGalleryController::class, 'showTransaction'])->name('motors.transaction.show')->middleware(['auth', 'verified']);
-Route::get('/motors/transactions/{transaction}/installments', [MotorGalleryController::class, 'showInstallments'])->name('motors.installments')->middleware(['auth', 'verified']);
-Route::get('/credit-status/{transaction}', [MotorGalleryController::class, 'showCreditStatus'])->name('credit-status.show')->middleware(['auth', 'verified']);
-Route::post('/survey-schedules/{surveySchedule}/confirm-attendance', [MotorGalleryController::class, 'confirmSurveyAttendance'])->name('survey.confirm-attendance')->middleware(['auth', 'verified']);
-Route::post('/survey-schedules/{surveySchedule}/request-reschedule', [MotorGalleryController::class, 'requestSurveyReschedule'])->name('survey.request-reschedule')->middleware(['auth', 'verified']);
-Route::get('/api/survey-history/{creditDetail}', [MotorGalleryController::class, 'getSurveyHistory'])->name('api.survey-history')->middleware(['auth', 'verified']);
+Route::get('/motors/transactions/{transaction}', [MotorGalleryController::class, 'showTransaction'])->name('motors.transaction.show')->middleware(['auth']);
+Route::get('/motors/transactions/{transaction}/installments', [MotorGalleryController::class, 'showInstallments'])->name('motors.installments')->middleware(['auth']);
+Route::get('/credit-status/{transaction}', [MotorGalleryController::class, 'showCreditStatus'])->name('credit-status.show')->middleware(['auth']);
+Route::post('/survey-schedules/{surveySchedule}/confirm-attendance', [MotorGalleryController::class, 'confirmSurveyAttendance'])->name('survey.confirm-attendance')->middleware(['auth']);
+Route::post('/survey-schedules/{surveySchedule}/request-reschedule', [MotorGalleryController::class, 'requestSurveyReschedule'])->name('survey.request-reschedule')->middleware(['auth']);
+Route::get('/api/survey-history/{creditDetail}', [MotorGalleryController::class, 'getSurveyHistory'])->name('api.survey-history')->middleware(['auth']);
 
 // Customer-facing news routes
 Route::get('/berita', [App\Http\Controllers\NewsController::class, 'index'])->name('berita.index');
@@ -69,13 +69,9 @@ Route::middleware(['guest', 'throttle:5,1'])->group(function () {
 // Email Verification Routes
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', function () {
-        // Check if debug mode is enabled
-        if (config('app.debug') && env('DEBUG_MODE') === true) {
-            return \Inertia\Inertia::render('Auth/DebugVerification', [
-                'user' => auth()->user(),
-            ]);
-        }
-        return view('auth.verify-email');
+        return \Inertia\Inertia::render('Auth/VerifyEmail', [
+            'user' => auth()->user(),
+        ]);
     })->name('verification.notice');
 
     Route::post('/email/verify-debug/{method}', function (\Illuminate\Http\Request $request, $method) {
@@ -117,7 +113,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/installments', [\App\Http\Controllers\InstallmentController::class, 'index'])->name('installments.index');
     Route::post('/installments/pay-multiple', [\App\Http\Controllers\InstallmentController::class, 'payMultiple'])->name('installments.pay-multiple');
     Route::post('/installments/{installment}/pay', [\App\Http\Controllers\InstallmentController::class, 'store'])->name('installments.pay');
