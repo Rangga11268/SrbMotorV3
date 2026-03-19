@@ -663,7 +663,163 @@ $credit->load(['documents', 'leasingProvider']);
 
 ---
 
-## 📋 Commit Message Format
+## �️ Database Best Practices
+
+### Migrations & Schema
+
+- Always use migrations for schema changes
+- Never use raw `DB::statement()` for migrations
+- Add meaningful comments to complex migrations
+- Include both `up()` and `down()` methods
+- Test rollback locally before pushing
+
+### Queries & Performance
+
+```php
+// GOOD - Eager load relationships
+$transactions = Transaction::with(['user', 'motor', 'installments'])->get();
+
+// BAD - N+1 queries (loops cause DB hits)
+foreach ($transactions as $t) {
+    echo $t->user->name; // Extra query per iteration
+}
+
+// GOOD - Use whereRelation() for filtering
+$credits = CreditDetail::whereRelation('documents', 'verification_status', '!=', 'approved')->get();
+
+// BAD - Avoid unnecessary relations
+$credits = CreditDetail::with('survey_schedules', 'notifications', 'logs')->get();
+```
+
+### Data Integrity
+
+- Always use `foreign key()` and `on delete` constraints
+- Validate data at model level (rules in casts)
+- Use `transactional` operations for critical flows
+
+```php
+DB::transaction(function () {
+    $transaction->update(['status' => 'approved']);
+    $creditDetail->update(['credit_status' => 'approved']);
+    Log::info("Transaction approved", ['transaction_id' => $transaction->id]);
+});
+```
+
+---
+
+## 🔌 API Design Standards
+
+### Request Validation
+
+```php
+// Use Form Request classes (not in controller)
+class StoreTransactionRequest extends FormRequest
+{
+    public function authorize()
+    {
+        return auth()->check();
+    }
+
+    public function rules()
+    {
+        return [
+            'motor_id' => 'required|exists:motors,id',
+            'customer_name' => 'required|max:255',
+            'customer_phone' => 'required|regex:/^(\+62|0)[0-9]{9,12}$/',
+            'address' => 'required|min:10',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'customer_phone.regex' => 'Nomor telepon tidak valid',
+        ];
+    }
+}
+```
+
+### Response Format
+
+All API responses must follow:
+
+```json
+{
+    "status": "success|error",
+    "message": "Human readable message",
+    "data": {},
+    "meta": {} // optional
+}
+```
+
+### Status Codes
+
+```php
+// ✅ Success
+200 OK
+201 Created
+204 No Content
+
+// ❌ Client Error
+400 Bad Request
+422 Unprocessable Entity (validation)
+404 Not Found
+401 Unauthorized (no token)
+403 Forbidden (no permission)
+429 Too Many Requests (rate limited)
+
+// ❌ Server Error
+500 Internal Server Error
+503 Service Unavailable
+```
+
+---
+
+## 🔐 Security Best Practices
+
+### Authentication & Authorization
+
+```php
+// GOOD - Check authorization
+if ($transaction->user_id !== auth()->id()) {
+    abort(403, 'Tidak memiliki akses');
+}
+
+// BETTER - Use gate/policy
+Gate::authorize('view', $transaction);
+$this->authorize('view', $transaction);
+```
+
+### Payment Handling
+
+```php
+// ✅ NEVER log sensitive data
+Log::info("Payment started", ['transaction_id' => $id]); // OK
+
+// ❌ NEVER log card numbers or tokens
+Log::info("Payment started", ['card' => $cardNumber]); // BAD!
+
+// ✅ Use Midtrans tokenization
+$snapToken = \Midtrans\Snap::getSnapToken($transactionDetails);
+```
+
+### File Uploads
+
+```php
+// GOOD - Validate file
+$request->validate([
+    'document' => 'required|file|mimes:pdf,jpg,png|max:5120' // 5MB
+]);
+
+Storage::put('documents/verified_' . time(), $request->file('document'));
+
+// BAD - No validation
+move_uploaded_file($_FILES['doc']['tmp_name'], 'public/');
+```
+
+---
+
+## �📋 Commit Message Format
 
 ```
 [TYPE] Brief description
@@ -692,6 +848,6 @@ Related to: Credit workflow
 
 ---
 
-**Last Updated**: March 12, 2026  
+**Last Updated**: March 19, 2026  
 **Status**: 🟢 Active Standard  
 **Reviewed By**: Development Team

@@ -20,8 +20,16 @@ Dokumentasi lengkap untuk SRB Motor project - Laravel 12 + React 19 + Inertia.js
 | **[ARCHITECTURE.md](ARCHITECTURE.md)**     | 🏗️ Overall system architecture, layer breakdown, data flow                  | All              |
 | **[BUSINESS_LOGIC.md](BUSINESS_LOGIC.md)** | 💼 Business rules, credit workflow, domain logic                            | Product, Backend |
 | **[CREDIT_FLOW.md](CREDIT_FLOW.md)**       | 🔄 Complete credit approval workflow (8 stages), user journeys, transitions | All (Critical!)  |
-| **[DATABASE.md](DATABASE.md)**             | 🗄️ Database schema, tables, relationships, migrations                       | Backend, DBA     |
+| **[DATABASE.md](DATABASE.md)**             | 🗄️ Database schema (13 tables), relationships, keys, migrations             | Backend, DBA     |
+| **[API_REFERENCE.md](API_REFERENCE.md)**   | 🔌 REST API endpoints, request/response, authentication, error handling     | Backend, Mobile  |
 | **[DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)**   | 🎨 UI components, colors, typography, spacing                               | Frontend, Design |
+
+### **For Mobile Development**
+
+| File                                                                   | Purpose                                                              | Audience   |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------- |
+| **[MOBILE_DESIGN_COURSE_PROJECT.md](MOBILE_DESIGN_COURSE_PROJECT.md)** | 📱 Flutter course project (simplified), MVP features, quick start    | Students   |
+| **[MOBILE_DESIGN_SPECIFICATION.md](MOBILE_DESIGN_SPECIFICATION.md)**   | 📱 Production-grade mobile spec, comprehensive features, all screens | Mobile Dev |
 
 ---
 
@@ -76,15 +84,18 @@ From [INSTRUCTIONS.md](INSTRUCTIONS.md):
 
 ## 📋 Documentation Status
 
-| Doc               | Status    | Last Updated | Maintainer   |
-| ----------------- | --------- | ------------ | ------------ |
-| AGENT.md          | 🟢 Active | Mar 12, 2026 | Dev Team     |
-| INSTRUCTIONS.md   | 🟢 Active | Mar 12, 2026 | Dev Team     |
-| ARCHITECTURE.md   | 🟢 Active | Mar 12, 2026 | Arch Team    |
-| BUSINESS_LOGIC.md | 🟢 Active | Mar 12, 2026 | Product      |
-| CREDIT_FLOW.md    | 🟢 Active | Mar 12, 2026 | Dev Team     |
-| DATABASE.md       | 🟢 Active | Mar 12, 2026 | Backend Team |
-| DESIGN_SYSTEM.md  | 🟢 Active | Mar 12, 2026 | Design Team  |
+| Doc                             | Status    | Last Updated | Maintainer   |
+| ------------------------------- | --------- | ------------ | ------------ |
+| AGENT.md                        | 🟢 Active | Mar 19, 2026 | Dev Team     |
+| INSTRUCTIONS.md                 | 🟢 Active | Mar 19, 2026 | Dev Team     |
+| ARCHITECTURE.md                 | 🟢 Active | Mar 19, 2026 | Arch Team    |
+| BUSINESS_LOGIC.md               | 🟢 Active | Mar 19, 2026 | Product      |
+| CREDIT_FLOW.md                  | 🟢 Active | Mar 19, 2026 | Dev Team     |
+| DATABASE.md                     | 🟢 Active | Mar 19, 2026 | Backend Team |
+| API_REFERENCE.md                | 🟢 New    | Mar 19, 2026 | Backend Team |
+| DESIGN_SYSTEM.md                | 🟢 Active | Mar 19, 2026 | Design Team  |
+| MOBILE_DESIGN_COURSE_PROJECT.md | 🟢 New    | Mar 19, 2026 | Mobile Team  |
+| MOBILE_DESIGN_SPECIFICATION.md  | 🟢 Active | Mar 19, 2026 | Mobile Team  |
 
 ---
 
@@ -107,6 +118,6 @@ From [INSTRUCTIONS.md](INSTRUCTIONS.md):
 
 ---
 
-**Last Updated**: March 12, 2026  
+**Last Updated**: March 19, 2026  
 **Project**: SRB Motor Dealer Platform  
-**Status**: 🟢 Documentation Complete & Organized
+**Status**: 🟢 Documentation Complete & Up-to-Date

@@ -47,15 +47,19 @@
 │  │    └── WhatsAppService                              │  │
 │  │        └── sendMessage()                            │  │
 │  │                                                      │  │
-│  │  Models (Data Mapping)                              │  │
-│  │    ├── User                                         │  │
+│  │  Models (Data Mapping)
+ │  │    ├── User                                         │  │
 │  │    ├── Motor                                        │  │
 │  │    ├── Transaction                                  │  │
 │  │    ├── CreditDetail                                 │  │
 │  │    ├── Installment                                  │  │
 │  │    ├── Document                                     │  │
-│  │    ├── ContactMessage                               │  │
-│  │    └── MotorSpecification                           │  │
+│  │    ├── Category                                     │  │
+│  │    ├── Post (News/Articles)                         │  │
+│  │    ├── LeasingProvider                              │  │
+│  │    ├── SurveySchedule                               │  │
+│  │    ├── TransactionLog                               │  │
+│  │    └── Setting                                      │  │
 │  │                                                      │  │
 │  │  Repositories (Data Access with Caching)            │  │
 │  │    └── MotorRepository                              │  │
@@ -71,34 +75,44 @@
 │  │                                                      │  │
 │  │  Middleware (Request Pipeline)                      │  │
 │  │    ├── AdminMiddleware                              │  │
+│  │    ├── VerifiedMiddleware                           │  │
 │  │    ├── HandleInertiaRequests                        │  │
 │  │    └── RedirectIfAuthenticated                      │  │
 │  │                                                      │  │
 │  │  Helpers & Utilities                                │  │
-│  │    └── StatusHelper (status mapping)                │  │
+│  │    ├── StatusHelper (status mapping)                │  │
+│  │    └── CreditFlowHelper (transition validation)     │  │
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
 │                    DATABASE LAYER                            │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │  MySQL 8.0+ Database                                 │  │
+│  │  MySQL 8.0+ Database (utf8mb4 collation)             │  │
 │  │                                                      │  │
-│  │  Tables:                                             │  │
-│  │  ├── users                                           │  │
-│  │  ├── motors                                          │  │
-│  │  ├── motor_specifications                            │  │
-│  │  ├── transactions                                    │  │
-│  │  ├── credit_details                                  │  │
-│  │  ├── documents                                       │  │
-│  │  ├── installments                                    │  │
-│  │  ├── contact_messages                                │  │
-│  │  ├── notifications                                   │  │
-│  │  ├── sessions                                        │  │
-│  │  └── password_reset_tokens                           │  │
+│  │  CORE Tables (13 active):                            │  │
+│  │  ├── users (authentication + profile)                │  │
+│  │  ├── motors (product catalog)                        │  │
+│  │  ├── categories (motor categories)                   │  │
+│  │  ├── transactions (order management)                 │  │
+│  │  ├── credit_details (financing details)              │  │
+│  │  ├── documents (credit documents)                    │  │
+│  │  ├── installments (payment schedule)                 │  │
+│  │  ├── leasing_providers (finance partners)            │  │
+│  │  ├── survey_schedules (credit survey)                │  │
+│  │  ├── transaction_logs (audit trail)                  │  │
+│  │  ├── posts (news & articles)                         │  │
+│  │  ├── settings (app configuration)                    │  │
+│  │  └── notifications (in-app notifications)            │  │
+│  │                                                      │  │
+│  │  SYSTEM Tables (auto-managed):                       │  │
+│  │  ├── sessions (Laravel session)                      │  │
+│  │  ├── password_reset_tokens (password reset)          │  │
+│  │  └── personal_access_tokens (API auth)               │  │
 │  │                                                      │  │
 │  │  Relationships: One-to-Many, One-to-One             │  │
-│  │  Indexing: Foreign keys + frequently queried cols    │  │
+│  │  Indexing: Strategic for common queries               │  │
+│  │  Caching: 1-hour TTL on motor catalog                │  │
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             ↓

@@ -1,8 +1,9 @@
 # 🤖 AI Agent Customization - SRB Motor Project
 
 **Project**: SRB Motor Dealer Platform with Credit Financing  
-**Stack**: Laravel 12 + React 19 + Inertia.js  
-**Last Updated**: March 12, 2026
+**Stack**: Laravel 12 + React 19 + Inertia.js + Flutter (Mobile)  
+**Last Updated**: March 19, 2026  
+**Status**: 🟢 Production-Ready with Mobile Development Plan
 
 ---
 
@@ -131,11 +132,19 @@ export default function PageName({ data, errors }) {
 
 ### Key Tables
 
-- **credit_details**: Main credit application data
-- **documents**: User-uploaded documents with approval_status
+- **users**: Customer && admin accounts (includes profile fields)
+- **motors**: Motor catalog
+- **categories**: Motor categories (skuter matik, matic sport, dll)
 - **transactions**: Order/credit request records
-- **leasing_providers**: Available financing partners
-- **survey_schedules**: Survey appointment records
+- **credit_details**: Credit application data with financing details
+- **documents**: User-uploaded documents with approval_status
+- **installments**: Payment schedule (cicilan) with Midtrans integration
+- **leasing_providers**: Available financing partners (Astra, BCA Finance, dll)
+- **survey_schedules**: Survey appointment records for credit verification
+- **transaction_logs**: Audit trail for all transaction status changes
+- **posts**: News & articles for customer information
+- **settings**: System configuration (can be changed without code)
+- **notifications**: In-app notification system
 
 ### Status Fields
 
@@ -283,6 +292,67 @@ When working on this project:
 
 ---
 
-**Last Review**: March 12, 2026  
+## 📱 Mobile Development Context (Flutter)
+
+### What Changed (March 2026)
+
+The project now includes a **Flutter mobile app development** parallel track:
+
+- **MOBILE_DESIGN_COURSE_PROJECT.md**: Simplified mobile spec for MP-1 course project (MVP features)
+- **MOBILE_DESIGN_SPECIFICATION.md**: Production-grade comprehensive mobile specification
+- **API_REFERENCE.md**: Complete REST API documentation for mobile integration
+
+### Mobile vs Web Differences to Know
+
+- Mobile uses **JWT tokens** (not Laravel session cookies)
+- Mobile database models same, but API payloads may differ
+- Mobile has **iOS & Android safe area handling** requirements
+- Mobile queries may be filtered for **performance** (smaller payloads)
+
+### Key APIs for Mobile Agents
+
+When helping with mobile development, refer to [API_REFERENCE.md](API_REFERENCE.md):
+
+- Authentication endpoints (`/login`, `/register`, `/otp-verify`)
+- Motor search & filtering (`/api/search/motors`)
+- Transaction creation (`/motors/{motor}/process-cash-order`, `/process-credit-order`)
+- Installment tracking (`/installments`, `/installments/{id}/pay`)
+- Admin endpoints for credit approval
+
+### Cross-Platform Consistency
+
+- Web and mobile should show **same data**, access **same database**
+- Status flows must be **identical** on both platforms
+- Credit workflow rules apply **everywhere**
+
+---
+
+## 📚 Documentation Structure (Updated March 19, 2026)
+
+### For Web Developers
+
+- [INSTRUCTIONS.md](INSTRUCTIONS.md) - Code style & patterns
+- [ARCHITECTURE.md](ARCHITECTURE.md) - System design
+- [DATABASE.md](DATABASE.md) - All 13 active tables + schema
+- [CREDIT_FLOW.md](CREDIT_FLOW.md) - Critical workflow
+- [API_REFERENCE.md](API_REFERENCE.md) - REST API docs
+
+### For Mobile Developers
+
+- [MOBILE_DESIGN_COURSE_PROJECT.md](MOBILE_DESIGN_COURSE_PROJECT.md) - Course project MVP (~800 lines, simplified)
+- [MOBILE_DESIGN_SPECIFICATION.md](MOBILE_DESIGN_SPECIFICATION.md) - Production spec (~5,300 lines, comprehensive)
+- [API_REFERENCE.md](API_REFERENCE.md) - Same REST API docs
+- [DATABASE.md](DATABASE.md) - Same database schema (13 tables)
+
+### For Architects & Team Leads
+
+- [AGENT.md](AGENT.md) - This file (agent context & patterns)
+- [ARCHITECTURE.md](ARCHITECTURE.md) - System design overview
+- [BUSINESS_LOGIC.md](BUSINESS_LOGIC.md) - Domain rules
+
+---
+
+**Last Review**: March 19, 2026
+**Updated Sections**: Mobile context, Documentation structure
 **Maintained By**: Development Team  
-**Status**: 🟢 Active & Up-to-Date
+**Status**: 🟢 Active & Current
