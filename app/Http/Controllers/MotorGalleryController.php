@@ -73,8 +73,9 @@ class MotorGalleryController extends Controller
         $types = $filterOptions['types'];
         $years = $filterOptions['years'];
 
-        // Check if this is an AJAX request or if JSON is explicitly requested
-        if ($request->header('X-Requested-With') === 'XMLHttpRequest' || $request->wantsJson()) {
+        // Always return Inertia response for page requests
+        // Only return JSON for true AJAX requests (but not Inertia requests)
+        if ($request->header('X-Requested-With') === 'XMLHttpRequest' && !$request->header('X-Inertia')) {
             return response()->json([
                 'motors' => $motors,
                 'filters' => $request->only(['search', 'brand', 'type', 'year', 'min_price', 'max_price']),
