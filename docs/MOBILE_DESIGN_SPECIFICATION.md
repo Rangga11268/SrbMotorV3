@@ -18,24 +18,25 @@
 6. [UI/UX Specification](#uiux-specification)
     - 6.1 [Design System](#design-system-tokens)
     - 6.2 [Comprehensive Page Designs](#comprehensive-page-designs)
-        - Onboarding Screens
-        - Authentication Screens
-        - Home Screen
-        - Search & Filter
-        - Motor Detail
-        - Order Forms
-        - Payment Flow
-        - Order Tracking
-        - Admin Screens
-        - Profile & Settings
-        - Notifications
-        - Navigation Patterns
-7. [Technology Stack](#technology-stack)
-8. [API Integration & Backend Adaptation](#api-integration--backend-adaptation)
-9. [Data Security & Sync Strategy](#data-security--sync-strategy)
-10. [Development Roadmap](#development-roadmap)
-11. [Performance & Optimization](#performance--optimization)
-12. [Appendices](#appendix-a-database-validation-checklist)
+    - 6.3 [Micro-interactions & Animations](#micro-interactions--animations)
+7. [Responsive & Adaptive Design](#responsive--adaptive-design-system)
+    - 7.1 [Device Breakpoints & Screen Categories](#device-breakpoints--screen-categories)
+    - 7.2 [Responsive Layout Strategies](#responsive-layout-strategies)
+    - 7.3 [Orientation-Specific Behaviors](#orientation-specific-behaviors)
+    - 7.4 [Safe Area & Notch Handling](#safe-area--notch-handling)
+    - 7.5 [Responsive Spacing Scale](#responsive-spacing-scale)
+    - 7.6 [Adaptive Typography](#adaptive-typography)
+    - 7.7 [Adaptive Component Sizing](#adaptive-component-sizing)
+    - 7.8 [Adaptive Navigation Patterns](#adaptive-navigation-patterns)
+    - 7.9 [Keyboard Avoidance Strategies](#keyboard-avoidance)
+    - 7.10 [QA Testing Grid](#quality-assurance-testing-grid)
+8. [Component Library & Consistency](#component-library--consistency)
+9. [Technology Stack](#technology-stack)
+10. [API Integration & Backend Adaptation](#api-integration--backend-adaptation)
+11. [Data Security & Sync Strategy](#data-security--sync-strategy)
+12. [Development Roadmap](#development-roadmap)
+13. [Performance & Optimization](#performance--optimization)
+14. [Appendices](#appendix-a-database-validation-checklist)
     - Appendix A: Database Validation
     - Appendix B: Feature Comparison Matrix
     - Appendix C: API Endpoints Summary
@@ -3141,6 +3142,738 @@ Text overflow:
 
 ---
 
+## RESPONSIVE & ADAPTIVE DESIGN SYSTEM
+
+### Device Breakpoints & Screen Categories
+
+```
+Device Classification:
+┌─────────────────────────────────────────────────────────┐
+│                                                          │
+│ Phone (Compact)    Tablet (Medium)    Large Device       │
+│ <600dp             600-1024dp         >1024dp            │
+│                                                          │
+│ • 360px - 480px    • 600px - 720px    • 1024px+          │
+│ • Small phones     • iPad              • Desktop/Folds    │
+│ • Typical: 410px   • Typical: 720px    • Typical: 1440px │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+
+Standard Breakpoints (Flutter/Responsive):
+
+Breakpoint     | Size      | Devices                | Grid Cols
+───────────────┼───────────┼──────────────────────────┼──────────
+Compact        | <600dp    | Phone (all orientations) | 1-2
+Medium         | 600-840dp | Tablet (portrait)        | 3
+Expanded       | >840dp    | Tablet (landscape)       | 4-6
+              |           | Desktop/Folds            |
+
+Common Phone Sizes:
+- Small:    360x640px  (Budget Android phones)
+- Standard: 375x812px  (iPhone, most Android)
+- Large:    411x823px  (Pixel, Galaxy)
+- XL:       480x854px  (Large Android phones)
+
+Tablet Sizes:
+- iPad Mini:    768x1024px (portrait)
+- iPad:         810x1080px (portrait)
+- iPad Pro:     1024x1366px (portrait)
+- Landscape:    +432px width
+
+Safe Areas (Notches, Curves, Sensors):
+- Top padding: Account for notch/status bar (24-40dp)
+- Bottom padding: Account for home indicator (16-34dp)
+- Sides: System buttons on curved edges
+- Ears: Avoid placing content in notch area
+```
+
+### Responsive Layout Strategies
+
+#### **1. Phone (Compact) - Portrait Mode**
+
+```
+Standard Layout (375x667px):
+
+┌──────────────────────┐
+│ [STATUSBAR - 24dp]   │
+├──────────────────────┤
+│ [APPBAR - 56dp]      │
+├──────────────────────┤
+│ │ Content Area       │  ← 16dp padding left/right
+│ │ (343dp width)      │
+│ │                    │
+│ │ • Full-width       │
+│ │   cards            │
+│ │                    │
+│ │ • 1-column layout  │
+│ │   for lists        │
+│ │                    │
+│ │ • Bottom sheet     │
+│ │   takes 85% height │
+│ │                    │
+│ │ Content...         │
+│ │                    │
+├──────────────────────┤
+│ [TAB NAV - 56dp]     │  ← Fixed at bottom
+└──────────────────────┘
+
+Typography Adjustments for Compact:
+- Display: 24px (from 28px) - Scale down for smaller screens
+- H1: 20px (from 24px)
+- H2: 18px (from 20px)
+- Body: 14px (standard, works well)
+- Small: 12px (standard)
+
+Spacing Adjustments:
+- Padding: 12px (from 16px) for content edges
+- Card spacing: 8px (from 12px) between cards
+- Bottom margin (before tab nav): 8px
+
+Image Dimensions:
+- Featured card: Full width, 200px height
+- Motor card (2-column): 160px height
+- Detail image: Full width, 240px height
+- Avatar: 80px circle
+
+Component Widths:
+- Buttons: Full width - 24px (12px margin each side)
+- Input fields: Full width - 24px
+- Cards: Full width - 24px margin
+```
+
+#### **2. Phone (Compact) - Landscape Mode**
+
+```
+Landscape Layout (812x375px):
+
+┌────────────────────────────────────────────┐
+│ [STATUS] [APPBAR - 48dp compact]   [MENU]  │
+├────────────────────────────────────────────┤
+│      │ Content Area │       │ Sidebar (opt)│
+│ 12dp │ (half-width) │ 12dp  │  (optional)   │
+│      │              │       │               │
+│ Left │ • 1-column   │ Right │ • Quick info  │
+│ Pane │   for       │ Pane  │ • Navigation  │
+│ 100% │   portrait   │ (hide │ • Related     │
+│      │   scroll     │ on    │   items       │
+│      │            │ small) │               │
+│      │              │       │               │
+│      │              │       │               │
+└────────────────────────────────────────────┘
+       [TAB NAV - 48dp compact - minimal labels]
+
+Landscape Strategy:
+- AppBar: Compact (48dp instead of 56dp)
+- Hide redundant tabs (show icons only)
+- Consider side-by-side layout for detail+related
+- Reduce top/bottom padding (24dp → 12dp)
+- Bottom nav: Horizontal scroll tabs or icons-only
+- Content: Max width 600dp to avoid stretching
+
+Motor Card Grid (Landscape):
+- Can show 3 cards in 1 row (instead of 2)
+- Card height: 180px → 160px (shorter)
+- Image aspect ratio: Keep 3:4, adjust container
+
+Forms (Landscape):
+- 2-column layout for input fields:
+  ┌──────────────┬──────────────┐
+  │ Label 1: []  │ Label 2: []  │
+  ├──────────────┼──────────────┤
+  │ Address:     │              │
+  │ [Large Text] │ [Continue]   │
+  └──────────────┴──────────────┘
+- Button: Half-width side-by-side
+  [← Back] [Next →]
+```
+
+#### **3. Tablet (Medium) - Portrait Mode**
+
+```
+iPad/Tablet Portrait (720x1080px):
+
+┌─────────────────────────────────────────────┐
+│ [STATUSBAR - 24dp]                          │
+├─────────────────────────────────────────────┤
+│ [APPBAR - 56dp]         [Extra actions ⋮]  │
+├─────────────────────────────────────────────┤
+│  │        Content Area (600dp max)       │   │
+│  │   ┌──────────────┬──────────────┐    │   │
+│  │   │ Motor Card 1 │ Motor Card 2 │    │   │
+│  │   │    (3:4)     │    (3:4)     │    │   │
+│  │   │              │              │    │   │
+│  │   ├──────────────┼──────────────┤    │   │
+│  │   │ Motor Card 3 │ Motor Card 4 │    │   │
+│  │   │              │              │    │   │
+│  │   └──────────────┴──────────────┘    │   │
+│  │                                       │   │
+│  │ Related Content (3 columns):          │   │
+│  │ ┌─────┬─────┬─────┐                 │   │
+│  │ │ #1  │ #2  │ #3  │                 │   │
+│  │ └─────┴─────┴─────┘                 │   │
+│  │                                       │   │
+├─────────────────────────────────────────────┤
+│        [TAB NAVIGATION - 56dp]              │
+│  [🏠] [🔍] [👤] [🔔] [☰]                   │
+│  Home Search Profile Notif Menu            │
+└─────────────────────────────────────────────┘
+
+Tablet Portrait Strategy:
+- Content max-width: 600-720dp (centered if screen wider)
+- Grid columns: 2-3 columns (instead of 1-2)
+- Featured section: Still full width or 2-column split
+- Horizontal scrolling: Reserve for 4+ items
+
+Motor Card Grid (Tablet):
+```
+
+┌─────────────────┬─────────────────┐
+│ Card 1 │ Card 2 │
+│ (280x420dp) │ (280x420dp) │ ← 2-column grid
+│ 56px margin │ 56px margin │
+└─────────────────┴─────────────────┘
+
+- Card height: Maintain 3:4 aspect ratio
+- Padding: 28dp each side
+- Gap between cards: 16dp
+
+Detail Screen (Tablet):
+
+```
+┌────────────────────────────────────────┐
+│              Image (full)               │
+│              (700x500dp)                │
+├─────────────────┬──────────────────────┤
+│  Left Panel     │  Right Panel           │
+│  (350dp)        │  (350dp)               │
+│                 │                        │
+│ • Specs         │ • Financing schemes    │
+│ • Color picker  │ • Reviews              │
+│ • Description   │ • Related motors       │
+│ • Action btns   │ • Quick actions        │
+└─────────────────┴──────────────────────┘
+
+Forms (Tablet - 2 Column Layout):
+```
+
+┌────────────────┬────────────────┐
+│ Nama Lengkap │ Nomor HP │
+│ [____________] │ [____________] │
+├────────────────┼────────────────┤
+│ Email │ Pekerjaan │
+│ [____________] │ [____________] │
+├────────────────┴────────────────┤
+│ Alamat │
+│ [_____________________________] │
+│ [_____________________________] │
+├────────────────┬────────────────┤
+│ [← Kembali] │ [Lanjut →] │
+└────────────────┴────────────────┘
+
+Typography (Tablet):
+
+- Display: 28px (restored from smaller phones)
+- H1: 24px
+- H2: 20px
+- Body: 14-16px (slightly larger for reading distance)
+- Spacing: Back to 16px padding
+
+Toolbar/AppBar (Tablet):
+
+- Add more action buttons (visible instead of menu)
+- Wider spacing for easier touch targets
+- Display product name/title more prominently
+
+```
+
+#### **4. Tablet (Large) - Landscape Mode**
+
+```
+
+Landscape (1080x720px):
+
+┌─────────────────────────────────────────────────────────────┐
+│ [Menu] [Title] [Search] [Notif] [⋮] │
+├─────────────────────────────────────────────────────────────┤
+│ │ Sidebar │ Main Content (700-800dp wide) │ Pane │
+│ │ Navigation │ ┌────────┬────────┬────────┐ │ │
+│ │ ┌─────────┐ │ │Motor 1 │Motor 2 │Motor 3 │ Rela │ Info │
+│ │ │Home │ │ │ │ │ │ teds │ │
+│ │ │Browse │ │ ├────────┼────────┼────────┤ │ │
+│ │ │Orders │ │ │Motor 4 │Motor 5 │Motor 6 │ │ │
+│ │ │Installs │ │ │ │ │ │ │ │
+│ │ │Favs │ │ └────────┴────────┴────────┘ │ │
+│ │ └─────────┘ │ │ │
+│ │ │ Description & Specs Below │ │
+│ │ [Logout] │ [Full interactions] │ │
+│ │ │ │ │
+├──────────────────┴─────────────────────────────────────┴──────┤
+│ [Tab Nav: Horizontal w/ Icons] │
+└──────────────────────────────────────────────────────────────┘
+
+Landscape Strategy:
+
+- Drawer/Sidebar: Always visible (250-300dp wide)
+- 3-column grid for motor cards (instead of 2)
+- Optional right panel: Related items/quick info
+- Bottom tab nav: Horizontal with text + icons
+- Content area: Utilizes full width (700-800dp)
+
+Master-Detail Pattern (Ideal for Tablet Landscape):
+
+```
+┌── Sidebar ──┬────── Detail View ──────┬─ Related ─┐
+│  Motors:    │ [Large Image]           │ Similar   │
+│ Motor 1 ✓   │ ┌─────────────────────┐ │ Motors    │
+│ Motor 2     │ │    [200x300dp]      │ │ ┌───────┐ │
+│ Motor 3     │ │                     │ │ │Motor 7│ │
+│ Motor 4     │ └─────────────────────┘ │ └───────┘ │
+│ Motor 5     │ Honda PCX               │ ┌───────┐ │
+│             │ Harga: Rp 24M           │ │Motor 8│ │
+│ [Load more] │ ⭐⭐⭐⭐⭐ (145)        │ └───────┘ │
+│             │ ┌──────────┬──────────┐ │ ┌───────┐ │
+│             │ │ Specs    │ Reviews  │ │ │Motor 9│ │
+│             │ │ Tables   │ List     │ │ └───────┘ │
+│             │ │ Details  │ Buttons  │ │           │
+│             │ └──────────┴──────────┘ │ [View All]│
+△             │                         │           │
+│             │ [Favorite] [Order]      │           │
+└─────────────┴─────────────────────────┴───────────┘
+
+Admin Dashboard (Tablet Landscape):
+```
+
+┌─────────────────────────────────────────────────┐
+│ [Menu] Admin Panel [Profile] [⋮] │
+├─────────────────────────────────────────────────┤
+│ ┌─ KPI Cards (4 columns) ──────────────────────┐│
+│ │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ││
+│ │ │New O │ │Pend. │ │Appr. │ │Revnu │ ││
+│ │ │5 │ │2 │ │12 │ │851M │ ││
+│ │ └──────┘ └──────┘ └──────┘ └──────┘ ││
+│ └─────────────────────────────────────────────┘│
+│ ┌─ Transactions (Left) ─ Approvals (Right) ──┐│
+│ │ ┌──────────────┐ ┌──────────────────────┐ ││
+│ │ │ ORD-00125 │ │ Cicilan: Siti N. │ ││
+│ │ │ Budi - Cash │ │ Status: Verifikasi │ ││
+│ │ │ Rp 34,2M │ │ [Approve] [Reject] │ ││
+│ │ │ Status: Baru │ │ │ ││
+│ │ │ [View →] │ │ Cicilan: Rudi H. │ ││
+│ │ │ │ │ Status: Survey │ ││
+│ │ │ ORD-00124 │ │ [View] [Confirm] │ ││
+│ │ │ Siti - Credit│ └──────────────────────┘ ││
+│ │ │ Rp 32,4M │ ││
+│ │ │ Status: Ver. │ ││
+│ │ │ [View →] │ ││
+│ │ └──────────────┘ ││
+│ └───────────────────────────────────────────┘│
+└─────────────────────────────────────────────────┘
+
+```
+
+---
+
+### Orientation-Specific Behaviors
+
+#### **Portrait Mode (All Sizes)**
+```
+
+✓ Full attention on single task
+✓ Content flows vertically (natural scroll)
+✓ Full-width forms comfortable to fill
+✓ Bottom navigation always accessible
+✓ Top-heavy layouts less problematic
+
+Guidelines:
+
+- Max content width: 800dp
+- Full-width components: Motor cards, forms, lists
+- Vertical scrolling: Default interaction pattern
+- Bottom-relative positioning: Tab nav, action buttons
+- AppBar: Standard 56dp height
+- Padding: 16-28dp based on screen size
+
+```
+
+#### **Landscape Mode (All Sizes)**
+```
+
+✓ More horizontal space available
+✓ Multi-column layouts possible
+✓ Reduced vertical scrolling needed
+✓ Can show more items at once
+
+Challenges:
+✗ Limited vertical space (esp. keyboard open)
+✗ AppBar takes more visual space
+✗ Bottom navigation less convenient
+✗ Notches/curves on sides
+
+Guidelines:
+
+- Reduce top/bottom padding (12dp instead of 16dp)
+- AppBar: Compact (48dp) with icon-only buttons
+- Bottom nav: Switch to icon-only or hamburger menu
+- Use side panels/drawers for navigation
+- 2-3 column grids (instead of 1-2)
+- Max content width: 900-1000dp
+- Enable soft keyboard avoidance
+
+```
+
+---
+
+### Safe Area & Notch Handling
+
+```
+
+iOS Safe Areas:
+┌──────────────────────────────────┐
+│ [Notch Area - 39.3dp top] │ T = 39.3dp (iPhone 14)
+├──────────────────────────────────┤ B = 34dp (home indicator)
+│ [Safe area: top 44dp, bottom 34] │
+│ ┌────────────────────────────┐ │
+│ │ Content Area │ │
+│ │ (avoids notch & indicator) │ │
+│ │ │ │
+│ │ Padding respected here │ │
+│ └────────────────────────────┘ │
+│ │ B = 34dp
+├──────────────────────────────────┘
+
+Android Safe Areas:
+┌──────────────────────────────────┐
+│ [Status Bar: 24dp] │ T = 24dp standard
+├──────────────────────────────────┤
+│ [No home indicator (soft nav)] │
+│ ┌────────────────────────────┐ │
+│ │ Content Area │ │
+│ │ Full padding applied │ │
+│ │ │ │
+│ └────────────────────────────┘ │
+│ │ B = varies or 0
+├──────────────────────────────────┘
+
+Flutter Implementation:
+
+- Use MediaQuery.of(context).viewPadding for safe areas
+- Use MediaQuery.of(context).viewInsets for keyboard
+- Apply automatic padding with SafeArea widget
+- Test on actual devices with notches
+
+Content Positioning Rules:
+✓ Critical UI: Keep within safe area boundaries
+✓ AppBar: Extends under status bar (color fills)
+✓ Buttons: Min 48dp from edges (safe click area)
+✓ Text: 16dp padding from screen edge
+✓ Images: Can extend under notch if designed carefully
+
+```
+
+---
+
+### Responsive Spacing Scale
+
+```
+
+Based on screen size:
+
+Screen Width | Base Padding | Card Margin | Gap
+────────────────┼──────────────┼─────────────┼────────
+360px (Compact) | 16dp | 8dp | 8dp
+420px (Phone) | 16dp | 12dp | 12dp
+720px (Tablet) | 24dp | 16dp | 16dp
+1024px (Large) | 32dp | 24dp | 20dp
+
+Responsive Implementation in Flutter:
+
+```
+// Calculate padding based on width
+width < 600 ? EdgeInsets.all(16) :
+width < 900 ? EdgeInsets.all(24) :
+EdgeInsets.all(32)
+
+// Or use device orientation
+context.isLandscape ? SizedBox(width: 12) :
+                      SizedBox(width: 24)
+```
+
+---
+
+### Adaptive Typography
+
+```
+Desktop Reading Distance = 60cm
+Mobile Reading Distance = 30cm
+Tablet Reading Distance = 45cm
+
+Responsive Font Size Adjustments:
+
+Level      | Mobile  | Tablet  | iPad Landscape
+───────────┼─────────┼─────────┼─────────────
+Display    | 24px    | 28px    | 32px
+H1         | 20px    | 24px    | 28px
+H2         | 18px    | 20px    | 24px
+Body Large | 14px    | 16px    | 16px
+Body       | 14px    | 14px    | 14px
+Small      | 12px    | 12px    | 12px
+
+Line Height Adjustments:
+- Compact screens: 1.4 (tighter leading)
+- Tablet: 1.5 (standard)
+- Large screens: 1.6 (more breathing room)
+
+Flutter Implementation:
+```
+
+double getBodyFontSize(BuildContext context) {
+var width = MediaQuery.of(context).size.width;
+if (width < 600) return 14;
+if (width < 900) return 16;
+return 18;
+}
+
+```
+
+---
+
+### Adaptive Component Sizing
+
+```
+
+Button Sizing:
+Compact | Default (48dp) | Expanded width
+Width <600 | Full-width | 16dp margins
+─────────────────────────────────────────────
+Tablet | Full-width | Max 400dp width
+Width 600+ | Paired (2 col) | Centered
+─────────────────────────────────────────────
+
+Input Field Widths:
+One-column layout: Full width - 16dp padding
+Two-column layout: (Width - 40dp) / 2
+Three-column: (Width - 56dp) / 3
+
+Card Heights (Motor):
+Compact: 180px (3:4 aspect)
+Tablet: 220px (3:4 aspect)
+Large: 260px (3:4 aspect)
+
+Grid Configurations:
+Screen Size | Grid Pattern | Card Width
+─────────────┼────────────────────────┼──────────
+<600dp | 2-column | ~160px
+600-900dp | 3-column | ~200px
+
+> 900dp | 4-5 column | ~240px
+
+Motor Catalog Grid:
+✓ Compact: ┌──┬──┐ (2x∞)
+✓ Tablet: ┌──┬──┬──┐ (3x∞)
+✓ Large: ┌──┬──┬──┬──┐ (4x∞)
+
+```
+
+---
+
+### Adaptive Navigation Patterns
+
+```
+
+Navigation Mode by Device:
+
+Phone (Width < 600):
+└─ Bottom Tab Navigation (5 tabs, icon + label)
+└─ Hamburger menu for secondary options
+└─ Gesture navigation (swipe back)
+
+Tablet Portrait (600-840):
+├─ Option A: Bottom Tab Nav (same as phone)
+├─ Option B: Side panel nav (drawer)
+│ └─ Show for wider portrait
+└─ Recommendation: Drawer for 720+ width
+
+Tablet Landscape (840+):
+├─ Left Sidebar Navigation (200-250dp)
+│ ├─ Main menu items always visible
+│ ├─ Secondary options in drawer/popover
+│ └─ User profile at bottom
+├─ Top AppBar (with extra actions)
+└─ Bottom nav: Optional (hidden or horizontal)
+
+Drawer vs Tab Nav Decision:
+
+- Phone: Always tabs (space-efficient)
+- Tablet portrait: Tabs preferred (consistency)
+- Tablet landscape: Drawer preferred (utilizes space)
+- Large screen: Drawer + persistent top menu
+
+Tab Navigation (Compact Phones):
+
+```
+[🏠 Home] [🔍 Explore] [👤 Profile] [🔔 Notif] [☰]
+
+Tab Navigation (Tablet):
+```
+
+[🏠] [🔍] [👤] [🔔] [☰] + Wide spacing
+Text labels always visible
+─── OR ───
+[🏠 Home] [🔍 Explore] [👤 Profile]
+[🔔 Notif] [☰ Menu]
+(2x2 or 2x3 grid)
+
+Drawer Navigation (Landscape Tablet):
+
+```
+┌─────────────────┐
+│ [SRB MOTOR Logo]│
+├─────────────────┤
+│ ▶ Home          │
+│ ▶ Browse Motors │
+│ ▶ My Orders     │
+│ ▶ Favorites     │
+├─────────────────┤
+│ Help & Support  │
+│ Settings        │
+├─────────────────┤
+│ [User Profile]  │
+│ Logout          │
+└─────────────────┘
+```
+
+---
+
+### Keyboard Avoidance
+
+```
+When Keyboard Opens (Height varies by device):
+
+Phone (Landscape + Keyboard):
+```
+
+┌─────────────────────────────────┐ ← 48dp AppBar
+├─────────────────────────────────┤
+│ Form Fields │ ← Only 200-300dp height!
+├─────────────────────────────────┤ ← Input field in view
+│ [Android Soft Keys] │ ← 200-350dp
+│ │
+│ [Number] [Symbols] [ABC] │
+└─────────────────────────────────┘
+
+Handling Strategies:
+✓ Scroll form to position field above keyboard
+✓ Reduce spacing temporarily (padding: 8dp instead of 16dp)
+✓ Use SingleChildScrollView with resizeToAvoidViewInsets
+✓ Position action buttons above keyboard
+✓ Consider bottom sheet modal (keyboard pushes content up)
+
+Implementation:
+
+```
+SingleChildScrollView(
+  child: Column(
+    children: [
+      // Form fields
+      SizedBox(height: 100), // Space for keyboard
+      // buttons
+    ],
+  ),
+)
+
+// Or use Scaffold's resizeToAvoidViewInsets
+Scaffold(
+  resizeToAvoidViewInsets: true,
+  floatingActionButtonLocation:
+    FloatingActionButtonLocation.centerFloat,
+)
+```
+
+---
+
+### Quality Assurance Testing Grid
+
+```
+Required Device Testing Matrix:
+
+PHONES:
+Device          | Screen Size | OS Version | Priority
+────────────────┼─────────────┼────────────┼──────
+iPhone 11       | 390x844     | iOS 15+    | High
+iPhone 13 Max   | 428x926     | iOS 15+    | High
+Pixel 5         | 393x851     | A13+       | High
+Galaxy S21      | 360x800     | A12+       | High
+Redmi Note 10   | 360x800     | A11+       | Medium
+
+TABLETS:
+Device          | Screen Size | OS Version | Priority
+────────────────┼─────────────┼────────────┼──────
+iPad (9th Gen)  | 768x1024    | iOS 15+    | High
+iPad Pro 11     | 834x1194    | iOS 15+    | Medium
+Galaxy Tab A7   | 720x1280    | A11+       | Medium
+OnePlus Pad     | 720x1280    | A13+       | Medium
+
+Test Scenarios per Device:
+
+✓ Orientation Changes
+  - Portrait → Landscape → Portrait (verify layout snap)
+  - Show/hide UI elements correctly
+  - Keyboard behavior changes
+
+✓ Notch/Safe Area Handling
+  - Critical UI not hidden behind notch
+  - Bottom nav accessible with home indicator
+  - Padding respected on all edges
+
+✓ Keyboard Interactions
+  - Form scrolls up when focused
+  - Buttons stay accessible
+  - TextFields visible above keyboard
+
+✓ Screen Rotation
+  - Forms retain data when rotating
+  - Scroll position preserved (if logical)
+  - Images re-layout smoothly
+
+✓ Multi-Column Layouts
+  - Check grid columns at each breakpoint
+  - Cards don't become too wide (>400dp)
+  - Verify spacing between columns
+
+✓ Touch Targets
+  - All buttons/links ≥ 48x48dp
+  - Spacing between targets ≥ 8dp
+  - No accidental taps due to proximity
+
+✓ Typography Readability
+  - Text sizes appropriate for distance
+  - Line lengths not too long (>80 chars)
+  - Contrast ratios WCAG AA compliant
+
+Automated Testing:
+```
+
+void testResponsiveayout() {
+testWidgets('Motor grid adapts to screen size', (tester) {
+// Test at 375dp width (2 columns)
+await tester.binding.window.physicalSizeTestValue =
+Size(375, 600);
+expect(find.byType(GridView), findsWidgets(with 2 columns));
+
+    // Test at 720dp width (3 columns)
+    await tester.binding.window.physicalSizeTestValue =
+      Size(720, 600);
+    expect(find.byType(GridView), findsWidgets(with 3 columns));
+
+});
+}
+
+```
+
+```
+
+---
+
 ## COMPONENT LIBRARY & CONSISTENCY
 
 ### Reusable Components
@@ -3251,6 +3984,131 @@ Caption:
 - Very small labels, footnotes
 - 11px, regular (400)
 - Color: #D1D5DB
+```
+
+---
+
+## DARK MODE & ACCESSIBILITY
+
+### Dark Mode Color Palettes
+
+```
+Light Mode (Default):
+┌─────────────────────────────────────────────────┐
+│ Primary:      #2563EB (Blue)                    │
+│ Secondary:    #10B981 (Green)                   │
+│ Background:   #FFFFFF (White)                   │
+│ Surface:      #F9FAFB (Off-white)               │
+│ Text Primary: #111827 (Dark Gray)               │
+│ Text Sec:     #6B7280 (Gray)                    │
+│ Border:       #E5E7EB (Light Gray)              │
+│ Danger:       #EF4444 (Red)                     │
+│ Warning:      #F59E0B (Amber)                   │
+│ Success:      #10B981 (Green)                   │
+└─────────────────────────────────────────────────┘
+
+Dark Mode (Inverted):
+┌─────────────────────────────────────────────────┐
+│ Primary:      #60A5FA (Lighter Blue)            │
+│ Secondary:    #34D399 (Lighter Green)           │
+│ Background:   #111827 (Very Dark Gray)          │
+│ Surface:      #1F2937 (Dark Gray)               │
+│ Text Primary: #F3F4F6 (Near White)              │
+│ Text Sec:     #D1D5DB (Light Gray)              │
+│ Border:       #374151 (Gray)                    │
+│ Danger:       #F87171 (Lighter Red)             │
+│ Warning:      #FBBF24 (Lighter Amber)           │
+│ Success:      #6EE7B7 (Lighter Green)           │
+└─────────────────────────────────────────────────┘
+
+Dark Mode Implementation (Flutter):
+ThemeData.dark().copyWith(
+  primaryColor: Color(0xFF60A5FA),
+  scaffoldBackgroundColor: Color(0xFF111827),
+  cardColor: Color(0xFF1F2937),
+  textTheme: TextTheme(
+    bodyMedium: TextStyle(
+      color: Color(0xFFF3F4F6),
+    ),
+  ),
+)
+```
+
+### Contrast Ratios (WCAG Accessibility)
+
+```
+Standard Text (14px+):
+✓ WCAG AA: 4.5:1 contrast ratio minimum
+✓ Example: #111827 text on #FFFFFF = 17.3:1 ✓✓✓
+
+Large Text (18px+ bold):
+✓ WCAG AA: 3:1 minimum
+✓ Example: #2563EB button on #FFFFFF = 3.5:1 ✓✓
+
+Dark Mode Adjustments:
+- Text on dark: Light colors (#F3F4F6) = 17:1 ratio
+- Buttons: Use lighter primary (#60A5FA) = 3:1 minimum
+```
+
+### Touch Target Sizing
+
+```
+Minimum Touch Target Size: 48x48 dp
+- Buttons, Links, Icons
+- Spacing between targets: 8dp minimum
+- Landscape: Maintain 48x48 (no reduction)
+- Forms: Input fields 48x48 minimum
+```
+
+### Screen Reader Support
+
+```
+Semantic Labels:
+✓ All buttons have meaningful labels
+✓ Images have semanticLabel or alt text
+✓ Icons without text: Wrap with Tooltip()
+✓ Focus navigation: Logical tab order
+
+Platforms:
+- iOS: VoiceOver (Settings → Accessibility)
+- Android: TalkBack (Settings → Accessibility)
+```
+
+### Dynamic Type & Text Scaling
+
+```
+Support System Text Sizing:
+- Device settings can scale text 85% → 200%
+- Layout must reflow at all scales
+- Touch targets maintain 48x48 at all scales
+- Test at 200% text size minimum
+```
+
+### Color Blind Friendly Palette
+
+```
+Do NOT rely on color alone:
+✗ "Click the red button"
+✓ "Click the red Cancel button" + ✕ icon
+
+Status Indicators (accessible):
+- Available: ● Green + "Available"
+- Sold:      ◐ Red + "Sold"
+- Processing: ◑ Orange + "Processing"
+```
+
+### Orientation & Multi-Window Support
+
+```
+Orientations Supported:
+✓ Phone: Portrait + Landscape (enabled)
+✓ Tablet: Portrait + Landscape (enabled)
+✓ Split-screen: App usable at 300-400dp width
+
+Implementation:
+- Allow all orientations by default
+- May lock specific screens (e.g., payment)
+- Test layout at variable widths (multi-window)
 ```
 
 ---
