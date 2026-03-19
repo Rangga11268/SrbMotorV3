@@ -16,11 +16,29 @@
 4. [Database Strategy](#database-strategy)
 5. [Mobile Features & User Flows](#mobile-features--user-flows)
 6. [UI/UX Specification](#uiux-specification)
+    - 6.1 [Design System](#design-system-tokens)
+    - 6.2 [Comprehensive Page Designs](#comprehensive-page-designs)
+        - Onboarding Screens
+        - Authentication Screens
+        - Home Screen
+        - Search & Filter
+        - Motor Detail
+        - Order Forms
+        - Payment Flow
+        - Order Tracking
+        - Admin Screens
+        - Profile & Settings
+        - Notifications
+        - Navigation Patterns
 7. [Technology Stack](#technology-stack)
 8. [API Integration & Backend Adaptation](#api-integration--backend-adaptation)
 9. [Data Security & Sync Strategy](#data-security--sync-strategy)
 10. [Development Roadmap](#development-roadmap)
 11. [Performance & Optimization](#performance--optimization)
+12. [Appendices](#appendix-a-database-validation-checklist)
+    - Appendix A: Database Validation
+    - Appendix B: Feature Comparison Matrix
+    - Appendix C: API Endpoints Summary
 
 ---
 
@@ -1238,6 +1256,7 @@ Bottom Tab Navigation (Customer):
 │                         │
 │                         │
 ├─────────────────────────┤
+├─────────────────────────┤
 │ [🏠] [🔍] [👤] [🔔] [☰]│  ← 5 tabs
 │ Home Explore Profile... Menu
 
@@ -1267,6 +1286,1971 @@ Drawer Navigation (Side Menu when more options):
 │ Logout         │
 │                │
 └────────────────┘
+```
+
+---
+
+## COMPREHENSIVE PAGE DESIGNS
+
+### 1. ONBOARDING SCREENS
+
+#### Screen 1: Welcome/Splash
+
+```
+┌─────────────────────────┐
+│                         │
+│                         │
+│    [SRB Motor Logo]     │  ← 120x120 SVG
+│                         │
+│    SRB MOTOR            │  ← Title
+│    Jamin Harga Terbaik  │  ← Tagline
+│                         │
+│                         │
+│                         │
+│      [Loading...]       │  ← Animated spinner
+│                         │
+│    Memproses...         │  ← Loading message
+│                         │
+└─────────────────────────┘
+
+Duration: 2-3 seconds
+Animation: Fade-in + subtle scale
+Transitions to:
+  - If logged in → Home Screen
+  - If not → Intro Slides
+```
+
+#### Screen 2: Intro Slide 1
+
+```
+┌─────────────────────────┐
+│                         │
+│  [Illustration]         │  ← 240x240 vector
+│   (Browse Motors)       │
+│                         │
+│  Jelajahi Ribuan Motor  │  ← Title (H1)
+│                         │
+│  Cari dan bandingkan    │  ← Subtitle
+│  motor pilihan Anda     │
+│  dengan mudah.          │
+│                         │
+│  ● ○ ○                  │  ← Dots (current: filled)
+│                         │
+│  [Lanjut]               │  ← Button (full width)
+│                         │
+└─────────────────────────┘
+
+Slide Content Details:
+- Illustration: SVG animated (subtle bounce/rotation)
+- Font: Poppins Bold 24px
+- Subtitle: Gray, 14px, line-height 1.4
+- Button: Primary blue, 48px height, rounded 8px
+- Gesture: Swipe right/left for next slide OR tap Lanjut
+```
+
+#### Screen 3: Intro Slide 2
+
+```
+┌─────────────────────────┐
+│                         │
+│  [Illustration]         │
+│   (Financing Options)   │
+│                         │
+│  Cicilan Mudah          │
+│                         │
+│  Pilih cicilan dengan   │
+│  tenor yang sesuai      │
+│  dengan kemampuan.      │
+│                         │
+│  ○ ● ○                  │
+│                         │
+│  [Lanjut]               │
+│                         │
+└─────────────────────────┘
+```
+
+#### Screen 4: Intro Slide 3
+
+```
+┌─────────────────────────┐
+│                         │
+│  [Illustration]         │
+│   (Fast Payment)        │
+│                         │
+│  Pembayaran Aman        │
+│                         │
+│  Transaksi dilindungi   │
+│  dengan teknologi       │
+│  keamanan terkini.      │
+│                         │
+│  ○ ○ ●                  │
+│                         │
+│  [Mulai]                │  ← Different text
+│                         │
+└─────────────────────────┘
+
+Gesture: Final slide - bottom action is "Mulai" (Start)
+Taps: Transitions to Login/Register screen
+```
+
+---
+
+### 2. AUTHENTICATION SCREENS
+
+#### Screen: Login
+
+```
+┌─────────────────────────┐
+│                         │
+│  [SRB Motor Logo]       │  ← 80x80
+│                         │
+│  Masuk ke Akun Anda     │  ← H1 Title
+│                         │
+│  ─────────────────      │
+│  Email                  │  ← Label
+│  [📧 user@email.com..] │  ← Input field
+│  Hint text              │  ← Min 12px helper
+│                         │
+│  Password               │
+│  [🔒 ••••••••••••]     │  ← Input field
+│  [👁️]                   │  ← Show/hide toggle
+│  Forgot? [Link]         │  ← Text link (blue)
+│                         │
+│  [☐] Ingat saya         │  ← Checkbox
+│                         │
+│  [Masuk] (full width)   │  ← 48px button
+│                         │
+│  Belum punya akun?      │  ← Text
+│  [Daftar sekarang]      │  ← Text link (blue)
+│                         │
+│  ─────────────────      │
+│  [🔵] Masuk dengan      │
+│        Google           │  ← OAuth button
+│                         │
+└─────────────────────────┘
+
+Input Field Details:
+- Height: 48px
+- Padding: 12px
+- Border: 1px solid #E5E7EB
+- Border-radius: 8px
+- Focus state: Border color → #2563EB, shadow
+- Disabled: Background #F9FAFB, opacity 0.5
+
+Button States:
+- Default: Blue bg, white text
+- Hover: Darker blue (#1E40AF)
+- Active/Press: Scale 0.98, darker
+- Disabled: Gray bg, disabled text color
+```
+
+#### Screen: Register
+
+```
+┌─────────────────────────┐
+│  ← Tombol Kembali       │
+│                         │
+│  Buat Akun Baru         │  ← H1
+│                         │
+│  Full Name              │
+│  [Nama lengkap.....]   │
+│                         │
+│  Email                  │
+│  [user@email.com.....]│
+│                         │
+│  Phone                  │
+│  [+62 8123456789....]│  ← Formatted input
+│                         │
+│  Password               │
+│  [🔒 ••••••••••••]     │
+│  Min. 8 karakter,      │  ← Helper text
+│  kombinasi huruf & angka│
+│                         │
+│  Confirm Password       │
+│  [🔒 ••••••••••••]     │
+│                         │
+│  [☐] Setuju dengan     │
+│      Syarat & Ketentuan │  ← Long text link
+│  [☐] Menerima notifikasi│
+│      promo & update     │
+│                         │
+│  [Daftar]              │  ← 48px button
+│                         │
+│  Sudah punya akun?      │
+│  [Masuk sekarang]       │  ← Text link
+│                         │
+└─────────────────────────┘
+
+Progressive Disclosure:
+- Show password strength indicator during typing
+  - Weak: Red (Lemah)
+  - Fair: Yellow (Sedang)
+  - Strong: Green (Kuat)
+- Validate email in real-time
+- Show phone format guide
+- Disable submit button until all required fields valid
+
+Validation Messages (Below field):
+- "Email sudah terdaftar" (red error, 12px)
+- "Password tidak sesuai" (red error)
+- "Nomor telepon tidak valid" (red error)
+```
+
+#### Screen: OTP Verification
+
+```
+┌─────────────────────────┐
+│                         │
+│  Verifikasi Email       │  ← H1
+│                         │
+│  Kami telah mengirimkan │
+│  kode verifikasi ke     │  ← Subtitle
+│  user@email.com         │
+│                         │
+│  Kode OTP (6 digit)     │  ← Label
+│  ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐│  ← 6 input boxes
+│  │1│ │2│ │3│ │4│ │5│ │6││     Each 40x48px
+│  └─┘ └─┘ └─┘ └─┘ └─┘ └─┘│     Auto-focus next
+│                         │
+│  Kode tiba dalam       │
+│  [00:59] detik          │  ← Countdown timer
+│                         │
+│  [Kirim Ulang Kode]     │  ← Link (initially disabled)
+│                         │
+│  [Verifikasi]           │  ← Button (disabled until all filled)
+│                         │
+│  Tidak menerima kode?   │  ← Support text
+│  [Hubungi Support]      │  ← Link
+│                         │
+└─────────────────────────┘
+
+OTP Input Behavior:
+- Auto-focus to next field on digit entry
+- Auto-submit when all 6 digits filled
+- Backspace moves to previous field
+- Tapping field brings up numeric keyboard
+- Visual feedback: Field gets blue border when focused
+```
+
+---
+
+### 3. HOME SCREEN - DETAILED LAYOUT
+
+```
+┌─────────────────────────┐
+│ ☰ SRB Motor       🔔   │  ← AppBar (56px)
+│                    (2) │     - Hamburger menu (left)
+├─────────────────────────┤     - Notification badge (right)
+│                         │
+│ Welcome, Budi! 👋       │  ← Greeting section (16px padding)
+│ Mau cari motor apa?     │
+│                         │
+│ ┌─────────────────────┐ │  ← Search bar (48px)
+│ │ 🔍 Cari motor...   │ │     - Tappable
+│ └─────────────────────┘ │     - Opens search/filter screen
+│                         │
+│ ═════════════════════   │  ← Section divider
+│ Featured Motor          │  ← Section title (Body Bold, 14px)
+│ ═════════════════════   │
+│                         │
+│ ┌─────────────────────┐ │  ← Featured card (full width - 16px margin)
+│ │   [Motor Image]    │ │     Height: 200px
+│ │  Yamaha NMAX 2024  │ │
+│ │  Rp 31.200.000     │ │
+│ │  ★★★★★ (245)      │ │
+│ │                     │ │
+│ │  [Lihat Detil] ► │ │
+│ └─────────────────────┘ │
+│                         │
+│ ═════════════════════   │
+│ Filter by Type          │
+│ ═════════════════════   │
+│                         │
+│ [Sport] [Matic] [Cub]  │  ← Horizontal scroll (8px gap)
+│ [Scooter] [Cruiser]    │     - Chips/pills
+│ [View More]            │     - Tappable
+│                         │
+│ ═════════════════════   │
+│ Terbaru & Terpopuler    │  ← With segmented control? Or tabs?
+│ ═════════════════════   │
+│                         │
+│ ┌──────────────────┐ ┌──────────┐│  ← 2-column grid
+│ │   [Image]        │ │[Image]   ││     - Card height: 260px
+│ │   Honda PCX      │ │Yamaha    ││     - Rounded 8px
+│ │   Rp 24M         │ │NMAX      ││     - Shadow on bottom
+│ │   ⭐(145)        │ │Rp 31,2M  ││
+│ │   [AVAILABLE]    │ │⭐(245)   ││
+│ └──────────────────┘ └──────────┘│
+│                                   │
+│ ┌──────────────────┐ ┌──────────┐│
+│ │   [Image]        │ │[Image]   ││
+│ │   Suzuki GSX150  │ │Honda CB  ││
+│ │   Rp 19,5M       │ │Rp 21M    ││
+│ │   ⭐(89)         │ │⭐(134)   ││
+│ │   [TERJUAL]      │ │Available ││
+│ └──────────────────┘ └──────────┘│
+│                                   │
+│ [Lihat Semua Motor →]             │  ← CTA Link
+│                         │
+└─────────────────────────┘
+
+Home Screen Scroll Behavior:
+- AppBar: Static (does not scroll)
+- Content: Scrollable
+- Search bar: Sticky (floats when scrolling)
+- Padding: 16px left/right for all content
+- Bottom padding: 20px (above bottom nav)
+
+Interactive Elements:
+- Search bar: → Search/Filter screen
+- Category chips: → Filter by type
+- Featured card: → Motor detail
+- Motor cards: → Motor detail
+- "View All" CTA: → Full catalog
+```
+
+---
+
+### 4. SEARCH & FILTER SCREEN
+
+```
+┌─────────────────────────┐
+│ ← [Search Motors......]│  ← Sticky search bar
+│    (48px height)        │
+├─────────────────────────┤
+│ [⚙️ Filter] [Sort ▼]   │  ← Quick action buttons
+│ Motors found: 12        │  ← Result count (gray text)
+├─────────────────────────┤
+│                         │
+│ ┌──────────────────┐ ┌──────────┐ ← 2-column grid
+│ │   [Image]        │ │[Image]   │   - Each card: 120px x 200px
+│ │   Honda PCX      │ │Yamaha    │   - Aspect ratio: portrait
+│ │   Rp 24M         │ │NMAX      │   - Bottom info zone: 80px
+│ │ [⭐ 145]         │ │Rp 31,2M  │
+│ │ [Available]      │ │[⭐ 245]  │
+│ │ [❤️]             │ │[Sold]    │   ← Favorite button (bottom-right)
+│ └──────────────────┘ └──────────┘     on hover/long-press
+│
+│ ... (more cards) ...
+│
+│ [Load More] or Infinite Scroll │
+│
+└─────────────────────────┘
+
+Filter Panel (Bottom Sheet - Draggable)
+┌─────────────────────────┐
+│ ≡ Filters      [✕]      │  ← Handle + close button
+├─────────────────────────┤
+│ ─────────────────       │
+│ Brand                   │  ← Expandable section
+│ ▼                       │
+│ ☑ Honda                 │  ← Checkboxes
+│ ☑ Yamaha                │     (Multi-select)
+│ ☐ Suzuki                │
+│ ☐ Kawasaki              │
+│ [View More] ▼           │  ← Show remaining
+│                         │
+│ ─────────────────       │
+│ Tipe Motor              │
+│ ▼                       │
+│ ○ Sport (selected)      │  ← Radio/Pills
+│ ○ Matic                 │
+│ ○ Cub                   │
+│                         │
+│ ─────────────────       │
+│ Tahun                   │
+│ ▼                       │
+│ [Min: 2020] [Max: 2024] │  ← Range inputs
+│                         │
+│ ─────────────────       │
+│ Harga                   │
+│ ▼                       │
+│ Rp 15M ←────●──→ Rp 40M │  ← Slider (dual handle)
+│                         │
+│ ─────────────────       │
+│ Status Stok             │
+│ ▼                       │
+│ ☑ Tersedia              │  ← Checkboxes
+│ ☐ Terjual               │
+│ ☑ Dalam Pesanan         │
+│                         │
+│ ─────────────────       │
+│ [Reset Semua]           │  ← Clear filters
+│                         │
+│ ┌─────────────────────┐ │
+│ │ Terapkan Filter     │ │  ← Action at bottom
+│ └─────────────────────┘ │     (Sticky/floating)
+│                         │
+└─────────────────────────┘
+
+Sort Options (Dropdown/Modal)
+┌─────────────────────────┐
+│ Urutkan Berdasarkan     │  ← Popup/Dropdown
+├─────────────────────────┤
+│ ○ Terbaru              │
+│ ○ Harga: Tertinggi     │
+│ ● Harga: Terendah      │  ← Currently selected
+│ ○ Rating Tertinggi     │
+│ ○ Paling Populer       │
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 5. MOTOR DETAIL SCREEN - COMPREHENSIVE
+
+```
+┌─────────────────────────┐
+│ ← Yamaha NMAX 2024      │  ← AppBar (40px)
+│              [⭐] [↗]   │     - Back button
+│                    Share│     - Favorite heart icon
+│                         │     - Share button
+├─────────────────────────┤
+│                         │
+│  [Large Motor Image]    │  ← Image carousel
+│      250px height       │     - Full width
+│  [◀  1/5  ▶]           │     - Auto-scroll (5s)
+│                         │     - Indicator dots
+│  ┌─┬─┬─┬─┬─┐           │
+│  │ │ │ │ │ │           │  ← Thumbnail strip (48px height)
+│  └─┴─┴─┴─┴─┘           │     - Scrollable
+│                         │
+│ ═════════════════════   │
+│ HARGA & INFO DASAR      │  ← Section header
+│ ═════════════════════   │
+│                         │
+│ Yamaha NMAX Turbo       │  ← Product name (H2: 20px Bold)
+│ 2024                    │
+│                         │
+│ Rp 31.200.000           │  ← Price (Display: 28px Bold, Blue)
+│ ★★★★★ 4,8              │  ← Rating + count
+│ (245 reviews)           │     - Clickable → Reviews section
+│                         │
+│ Status: [TERSEDIA ✓]    │  ← Green badge
+│ Stok: 5 unit            │
+│                         │
+│ ═════════════════════   │
+│ SPESIFIKASI             │  ← Section
+│ ═════════════════════   │
+│                         │
+│ Engine Type    │ 155cc  │  ← 2 columns
+│ Transmission   │ Matic  │     Label | Value
+│ Bore x Stroke  │ 58x58.7│
+│ Max Power      │ 15.3 PS│
+│ Max Torque     │ 14.4 Nm│
+│ Fuel Tank      │ 5.5L   │
+│ Weight         │ 125kg  │
+│ Seat Height    │ 790mm  │
+│                         │
+│ [Lihat Spesifikasi Lengkap] ← Expandable link
+│                         │
+│ ═════════════════════   │
+│ SKEMA PEMBIAYAAN        │
+│ ═════════════════════   │
+│                         │
+│ Opsi Pembayaran:        │
+│ [TUNAI] [CICILAN]       │  ← Segmented buttons/tabs
+│                         │
+│ Cicilan 12 Bulan:       │
+│ Rp 2.600.000/bulan      │  ← Monthly payment
+│ DP: Rp 6.240.000        │
+│ Interest: 6% p.a        │
+│                         │
+│ [Lihat Semua Tenor →]   │  ← Link to full options
+│                         │
+│ ═════════════════════   │
+│ DESKRIPSI               │
+│ ═════════════════════   │
+│                         │
+│ Motor andalan untuk     │  ← Rich text from web
+│ keliling kota dengan    │
+│ konsumsi bahan bakar    │
+│ yang irit. Desain sporty│
+│ dengan performa maksimal.│
+│                         │
+│ ...                     │
+│                         │
+│ [Baca Selengkapnya]     │  ← Expandable
+│                         │
+│ ═════════════════════   │
+│ WARNA TERSEDIA          │
+│ ═════════════════════   │
+│                         │
+│ [⚫] Hitam              │  ← Color chips (32px circles)
+│ [⚪] Putih              │     - Tappable
+│ [🔴] Merah              │     - Shows selected with border
+│ [🟡] Biru               │
+│                         │
+│ ═════════════════════   │
+│ ULASAN PELANGGAN        │
+│ ═════════════════════   │
+│                         │
+│ Rating Overview:        │
+│ ⭐⭐⭐⭐⭐ 4.8 (245)    │  ← Summary
+│                         │
+│ Filters:                │
+│ [Terbaru] [Rating Tinggi] ← Chips to filter reviews
+│                         │
+│ Review #1:              │
+│ ┌─────────────────────┐ │
+│ │ Budi Santoso ⭐⭐⭐ │ │  ← Avatar + name
+│ │★★★  3 weeks ago     │ │
+│ │                     │ │
+│ │ Motor mantap, cepat │ │  ← Review text (max 3 lines, expandable)
+│ │ dan hemat bensin.   │ │
+│ │ Recommended!        │ │
+│ │                     │ │
+│ │ [👍 23]  [💬 2]     │ │  ← Vote interactions
+│ └─────────────────────┘ │
+│                         │
+│ Review #2:              │
+│ ... (more reviews) ...  │
+│                         │
+│ [Lihat Semua Review →]  │
+│                         │
+│ ═════════════════════   │
+│ INFO TAMBAHAN           │
+│ ═════════════════════   │
+│                         │
+│ Garansi: 2 tahun       │
+│ Service: Gratis 1 tahun │
+│ After-sales: Tersedia  │
+│                         │
+│ ═════────────────────   │
+│                         │
+│ ┌─────────────────────┐ │  ← Sticky action buttons
+│ │[❤️ Favorit] [Pesan] │ │     - Fixed at bottom
+│ └─────────────────────┘ │     - Full width with 16px margin
+│                         │
+└─────────────────────────┘
+
+Motor Detail - Interaction Details:
+
+Image Carousel:
+- Swipe left/right to change image
+- Auto-scroll every 5 seconds (pause if interacting)
+- Show progress indicator dots
+- Thumbnails below: Tap to jump to image
+- Double-tap image to zoom
+
+Expandable sections:
+- "Lihat Spesifikasi Lengkap" ← Click to expand full specs
+- "Baca Selengkapnya" ← Click to expand description
+- Smooth animation: height 0 → content height
+
+Financing Options:
+- Click tenor row → Opens bottom sheet with full details
+- Shows: Monthly payment, DP required, interest rate, total
+- "Cicilan" tab shows all available tenors in table
+
+Reviews:
+- Sort by: Latest, Highest Rating
+- Helpful votes: ✓ Helpful, ✗ Not helpful
+- Read full review: Click review card → Detail modal
+
+Action Buttons:
+- ❤️ Favorite: Toggles between filled/outline (red when filled)
+- Pesan: Opens order type selector → Cash or Credit order form
+
+Color Picker:
+- Tap color chip → Shows radio selected state
+- Display in purchase form when ordering
+- Shows price variation if different colors have different prices
+```
+
+---
+
+### 6. ORDER FORM SCREENS
+
+#### Cash Order Form
+
+```
+┌─────────────────────────┐
+│ ← Pesan Motor (Tunai)   │
+├─────────────────────────┤
+│ Step 1 of 5             │  ← Progress indicator
+│ ━━━━━━━━━━━━━━━━━━━━━━━ │     (Linear progress bar)
+│ ░░░░░░░░░░░░░░░░░░░░░░░ │
+├─────────────────────────┤
+│                         │
+│ Motor Pilihan           │  ← Order summary
+│ ┌─────────────────────┐ │
+│ │ [Thumb] Yamaha NMAX│ │     Small image + details
+│ │ Rp 31,200,000      │ │
+│ │ Warna: Hitam       │ │
+│ └─────────────────────┘ │
+│                         │
+│ ─────────────────────   │
+│ DATA PRIBADI            │  ← Form section
+│ ─────────────────────   │
+│                         │
+│ Nama Lengkap *          │  ← Required field (*)
+│ [Budi Santoso.........]│  ← Pre-filled from profile
+│                         │
+│ Nomor HP *              │
+│ [+62 81234567890......]│  ← Pre-filled, editable
+│                         │
+│ Pekerjaan *             │
+│ [Guru           ▼]     │  ← Dropdown (enum)
+│                         │
+│ Alamat Pengiriman *     │
+│ [..........................│  ← Textarea (3 rows)
+│ ..........................│
+│ ........................]│
+│                         │
+│ ─────────────────────   │
+│ CICILAN                 │  ← Optional finance
+│ ─────────────────────   │
+│                         │
+│ Paket Cicilan:          │
+│ [TANPA CICILAN ▼]      │  ← Dropdown
+│                         │
+│ or                      │
+│                         │
+│ Cicilan 12 Bulan        │  ← Chip/pills option
+│ Rp 2.6M/bulan          │
+│ DP: Rp 6.24M           │
+│                         │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Kembali] [Lanjut]  │ │  ← Navigation buttons
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+
+Form Validation:
+- Real-time validation (show errors below field)
+- Phone: Auto-format (00-XXXX-XXXX)
+- Required fields: Show red asterisk & error msg if empty
+- Disable "Lanjut" button until form is valid
+- Show success checkmark when field is valid
+
+States:
+- Empty: Placeholder text, light border
+- Focused: Blue border, keyboard open
+- Filled: Checkmark icon (right side)
+- Error: Red border, error message (red text, 12px)
+- Disabled: Gray background, disabled opacity
+```
+
+#### Credit Order Form (Multi-step)
+
+```
+STEP 1: Personal & Financial Info
+┌─────────────────────────┐
+│ ← Pesan Motor (Cicilan) │
+│ Step 1 of 4             │  ← Progress
+├─────────────────────────┤
+│                         │
+│ Informasi Pribadi       │
+│ [Form fields same...]   │  ← Name, phone, occupation, address
+│                         │
+│ Penghasilan Bulanan *   │
+│ [Rp .................]  │  ← Currency input
+│ Rupiah (min Rp 3juta)   │  ← Helper text
+│                         │
+│ Pekerjaan Tetap? *     │
+│ ○ Ya   ○ Tidak         │  ← Radio buttons
+│                         │
+│ Nama Ibu Kandung        │  ← Optional
+│ [........................] │
+│                         │
+│ Jenis Kelamin *         │
+│ [Pilih...        ▼]    │  ← Dropdown
+│                         │
+│ Tanggal Lahir *         │
+│ [DD/MM/YYYY]    [📅]   │  ← Date picker
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Kembali] [Lanjut]  │ │
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+
+STEP 2: Financing Options
+┌─────────────────────────┐
+│ ← Pilih Tenor Cicilan   │
+│ Step 2 of 4             │
+├─────────────────────────┤
+│                         │
+│ Motor: Yamaha NMAX      │
+│ Harga: Rp 31.2M         │  ← Summary
+│                         │
+│ ─────────────────────   │
+│ OPSI TENOR              │
+│ ─────────────────────   │
+│                         │
+│ Tenor  │ DP      │ Cicilan│  ← Table/Cards
+│ ═══════╪═════════╪════════│
+│ 6 bln  │ 9.36M   │ 3.9M   │  ← Option 1 (clickable)
+│ │ Interest 5%  │  ← Helper
+
+│ │ Total: 32.06M │
+│                  │
+│ 12 bln │ 6.24M  │ 2.6M   │ ← Option 2 (selected)
+│ │ Interest 6%  │
+│ │ Total: 32.4M │
+│ ✓ Recommended   │
+│                  │
+│ 18 bln │ 4.68M  │ 1.95M  │ ← Option 3
+│ │ Interest 7%  │
+│ │ Total: 32.66M│
+│                  │
+│ 24 bln │ 3.12M  │ 1.56M  │ ← Option 4
+│ │ Interest 8%  │
+│ │ Total: 32.88M│
+│                  │
+│ ┌──────────────────────┐ │
+│ │ [Kembali] [Lanjut]   │ │
+│ └──────────────────────┘ │
+│                          │
+└──────────────────────────┘
+
+STEP 3: Document Upload
+[As shown in section 6 above]
+
+STEP 4: Review & Submit
+┌─────────────────────────┐
+│ ← Konfirmasi Aplikasi   │
+│ Step 4 of 4             │
+├─────────────────────────┤
+│                         │
+│ RINGKASAN PESANAN       │  ← Summary section
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Thumb] Yamaha NMAX│ │
+│ │ Rp 31,200,000      │ │
+│ │ Warna: Hitam       │ │
+│ └─────────────────────┘ │
+│                         │
+│ DATA PRIBADI            │
+│ Nama: Budi Santoso      │
+│ Phone: +62 812345...    │
+│ Pekerjaan: Guru         │
+│ Penghasilan: Rp 5M/bulan│
+│                         │
+│ OPSI CICILAN            │
+│ Tenor: 12 Bulan         │
+│ Cicilan: Rp 2.6M/bulan  │
+│ DP: Rp 6.24M            │
+│ Interest: 6% p.a        │
+│ Total Bayar: Rp 32.4M   │
+│                         │
+│ DOKUMEN                 │
+│ ✓ KTP (ter upload)      │  ← Status
+│ ✓ NPWP (ter upload)     │
+│ ✓ Bank Statement        │
+│                         │
+│ PERNYATAAN              │
+│ [☑] Saya menyatakan...  │  ← Checkbox + long text
+│ [☑] Setuju dengan...    │
+│                         │
+│ Dengan mensubmit, Anda  │  ← Final notice
+│ akan menerima WhatsApp  │
+│ update dari kami.       │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Kembali] [Submit]  │ │
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 7. PAYMENT FLOW
+
+#### Checkout Summary
+
+```
+┌─────────────────────────┐
+│ ← Konfirmasi Pembayaran │
+├─────────────────────────┤
+│                         │
+│ RINGKASAN PESANAN       │
+│                         │
+│ ┌─────────────────────┐ │
+│ │[Thumb]│ Yamaha NMAX │ │
+│ │       │ Rp 31,2M    │ │
+│ │       │ Hitam       │ │
+│ └─────────────────────┘ │
+│                         │
+│ ─────────────────────   │
+│ PERINCIAN PEMBAYARAN    │  ← Price breakdown
+│ ─────────────────────   │
+│                         │
+│ Harga Motor             │
+│ Rp 31.200.000           │
+│                         │
+│ Booking Fee             │
+│ Rp 3.000.000            │
+│                         │
+│ [─────────────────────] │
+│ Total Pembayaran        │  ← Bold, large font (H1)
+│ Rp 34.200.000           │
+│                         │
+│ ─────────────────────   │
+│ METODE PEMBAYARAN       │
+│ ─────────────────────   │
+│                         │
+│ [Bank Transfer]         │  ← Payment method options
+│ [Kartu Kredit]          │
+│ [E-Wallet]              │  ← Pre-filled from profile/settings
+│ [BNPL (Cicilan)]        │
+│                         │
+│ Pembayaran Dipercaya ✓  │  ← Trust badge
+│ Powered by Midtrans     │
+│                         │
+│ ─────────────────────   │
+│ INFO PEMBELI             │
+│ ─────────────────────   │
+│                         │
+│ Nama: Budi Santoso      │  ← Show, not editable
+│ Email: budi@email.com   │
+│ Phone: +62 812345...    │
+│                         │
+│ [Edit Info]             │  ← Optional edit link
+│                         │
+│ ─────────────────────   │
+│                         │
+│ [☐] Saya setuju dengan  │
+│     Syarat & Ketentuan  │  ← Required checkbox
+│                         │
+│ [☐] Terima notifikasi   │
+│     order & pembayaran  │  ← Optional checkbox
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Kembali] [Bayar]   │ │  ← Actions
+│ └─────────────────────┘ │     - Button disabled until checkbox checked
+│                         │
+└─────────────────────────┘
+```
+
+#### Payment Processing
+
+```
+┌─────────────────────────┐
+│                         │
+│    ⏳ Memproses...      │  ← Loading state
+│                         │
+│    Mohon tunggu...      │
+│    Jangan tutup halaman │
+│    ini.                 │
+│                         │
+│    [Loading spinner]    │  ← Animated
+│                         │
+│    Koneksi ke gateway   │
+│    pembayaran...        │
+│                         │
+└─────────────────────────┘
+
+Midtrans Snap Modal: (WebView overlay)
+- Midtrans payment interface
+- Multiple payment options
+- Real payment processing
+- Returns to app on success/failure
+```
+
+#### Payment Success
+
+```
+┌─────────────────────────┐
+│                         │
+│      ✅ BERHASIL!       │  ← Success icon (large, green)
+│                         │
+│ Pembayaran Diterima     │  ← H1, bold
+│                         │
+│ Nomor Pesanan           │
+│ ORD-2024-00123          │  ← Reference number (copyable)
+│                         │
+│ Total Pembayaran        │
+│ Rp 34.200.000           │
+│                         │
+│ Waktu Transaksi         │
+│ 19 Mar 2026, 14:32      │
+│                         │
+│ Nomor Referensi         │
+│ TRX-MIDTRANS-12345      │  ← Midtrans ref
+│                         │
+│ ─────────────────────   │
+│ Status Pesanan:         │  ← Next steps
+│ Menunggu Konfirmasi     │
+│                         │
+│ Motor Anda sedang       │
+│ diproses. Kami akan     │
+│ mengirimkan update      │
+│ melalui WhatsApp dalam  │
+│ 2x24 jam.               │
+│ Nomor Pesanan: ORD-... │
+│                         │
+│ ─────────────────────   │
+│ Apa selanjutnya?        │
+│ 1. Terima telepon dari  │
+│    sales kami           │
+│ 2. Serah terima unit    │
+│ 3. Pembayaran cicilan   │
+│    (jika cicilan)       │
+│                         │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Lacak Pesanan]     │ │
+│ └─────────────────────┘ │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Kembali ke Home]   │ │
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 8. ORDER TRACKING SCREEN - DETAILED
+
+```
+┌─────────────────────────┐
+│ ← Pesanan #ORD-00123    │  ← AppBar
+│              [Share]    │
+├─────────────────────────┤
+│                         │
+│ Status: DIPROSES        │  ← Status badge (blue)
+│ Diperbarui: 2 jam lalu  │  ← Last update time
+│                         │
+│ Motor:                  │
+│ ┌─────────────────────┐ │
+│ │[Thumb] Yamaha NMAX │ │
+│ │ Rp 34,200,000 (DP) │ │
+│ │ Warna: Hitam       │ │
+│ └─────────────────────┘ │
+│                         │
+│ ─────────────────────   │
+│ TAHAPAN PESANAN         │  ← Timeline
+│ ─────────────────────   │
+│                         │
+│ ✅ Pesanan Diterima     │  ← Completed (green checkmark)
+│    19 Mar 14:32         │
+│    Pembayaran diterima  │  ← Description
+│    dan pesanan dikonfirmasi │
+│                         │
+│ ◼━━━━━━━ Garis koneksi  │  ← Timeline connector (full)
+│                         │
+│ ⏳ Verifikasi Stok       │  ← In Progress (yellow/orange)
+│    Dimulai 1 jam lalu   │
+│    Sistem kami memverifikasi│  ← Description
+│    ketersediaan unit    │
+│    motor pilihan Anda    │
+│                         │
+│ ○─────── Garis koneksi  │  ← Timeline connector (partial)
+│                         │
+│ ○ Persiapan Unit        │  ← Upcoming (gray)
+│    Estimasi: 2 hari     │
+│    Motor akan disiapkan  │
+│    dan dilengkapi       │
+│                         │
+│ ○─────── Garis koneksi  │
+│                         │
+│ ○ Siap Pengiriman        │  ← Upcoming
+│    Estimasi: 5 hari     │
+│    Unit siap dikirim    │
+│                         │
+│ ○─────── Garis koneksi  │
+│                         │
+│ ○ Serah Terima          │  ← Final
+│    Anda akan menerima   │
+│    motor pilihan        │
+│                         │
+│ ─────────────────────   │
+│ DETAIL PESANAN          │  ← Summary section
+│ ─────────────────────   │
+│                         │
+│ Tipe: Tunai             │
+│ Referensi: TRX-123456   │
+│ Tanggal Pesanan:        │
+│ 19 Mar 2026, 14:30      │
+│                         │
+│ ─────────────────────   │
+│ PEMBAYARAN              │
+│ ─────────────────────   │
+│                         │
+│ ✓ Pembayaran Diterima   │
+│   Rp 34,200,000         │
+│   Tanggal: 19 Mar 14:32 │
+│   Metode: Transfer Bank │
+│   Ref: TRX-MIDTRANS-... │
+│                         │
+│ ─────────────────────   │
+│ KONTAK                  │
+│ ─────────────────────   │
+│                         │
+│ Sales Officer: Agus     │
+│ Phone: 0812-XXXX-XXXX   │
+│ Jam Kerja: 09:00-17:00  │
+│ (Senin-Jumat)           │
+│                         │
+│ [📞 Hubungi] [💬 Chat]  │  ← Action buttons
+│                         │
+│ ─────────────────────   │
+│ AKSI                    │
+│ ─────────────────────   │
+│                         │
+│ [📄 Download Invoice]   │  ← PDF download
+│ [↗️ Bagikan Pesanan]     │  ← Share order
+│ [❓ Bantuan & FAQ]       │  ← Help
+│                         │
+│ ─────────────────────   │
+│ Notifikasi              │
+│ ─────────────────────   │
+│                         │
+│ [☑] Terima update via   │  ← Push notification toggle
+│     WhatsApp            │
+│ [☑] Terima update via   │
+│     notifikasi aplikasi │
+│                         │
+├─────────────────────────┤
+│ [← Kembali] [Riwayat ▶] │  ← Bottom navigation
+│                         │
+└─────────────────────────┘
+
+Timeline Interactions:
+- Tap timeline step → Expand/collapse details
+- Completed steps: Green checkmark, visible details
+- In-progress: Animated progress indicator
+- Upcoming: Grayed out, estimated time shown
+- Swipe down: Refresh order status
+```
+
+#### Installment Payment Screen
+
+```
+┌─────────────────────────┐
+│ ← Cicilan Saya          │
+├─────────────────────────┤
+│                         │
+│ Motor: Yamaha NMAX      │  ← Summary
+│ Pesanan: ORD-00123      │
+│ Tenor: 12 Bulan         │
+│ Total Cicilan: 12 x     │
+│ Rp 2.6M                 │
+│                         │
+│ ─────────────────────   │
+│ RINGKASAN PEMBAYARAN    │
+│ ─────────────────────   │
+│                         │
+│ Total Hutang: Rp 31,2M  │
+│ Sudah Dibayar: Rp 6,24M │  ← Progress bar
+│ ━━━━━━━━━━━━━░░░░░░([20%]) │
+│ Sisa Hutang: Rp 24,96M  │
+│                         │
+│ ─────────────────────   │
+│ JADWAL CICILAN          │
+│ ─────────────────────   │
+│                         │
+│ Cicilan #1              │  ← Paid
+│ Rp 2.600.000            │
+│ Jatuh Tempo: 28 Mar 2026│
+│ ✓ Lunas (28 Mar)        │  ← Green badge
+│ Bukti: [Lihat Invoice]  │
+│                         │
+│ Cicilan #2              │  ← Current/upcoming
+│ Rp 2.600.000            │
+│ Jatuh Tempo: 28 Apr 2026│
+│ Status: Menunggu        │  ← Neutral badge
+│ Hari Tersisa: 18 hari   │  ← Countdown
+│                         │
+│ [💳 Bayar Sekarang]     │  ← Quick pay button
+│                         │
+│ Cicilan #3              │
+│ Rp 2.600.000            │
+│ Jatuh Tempo: 28 Mei 2026│
+│ Status: Akan Datang     │  ← Gray badge
+│ (39 hari lagi)          │
+│                         │
+│ ... (more installments) │
+│                         │
+│ Cicilan #12             │
+│ Rp 2.600.000            │
+│ Jatuh Tempo: 28 Mar 2027│
+│ Status: Akan Datang     │
+│ (434 hari lagi)         │
+│                         │
+│ ─────────────────────   │
+│ KARTU KREDIT TERSIMPAN  │  ← Saved cards
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │💳 BRI Kredit       │ │
+│ │ ...4567            │ │
+│ │ Berlaku hingga:    │ │
+│ │ 12/2028            │ │
+│ │ [Gunakan]          │ │
+│ └─────────────────────┘ │
+│                         │
+│ [+ Tambah Kartu Baru]   │
+│                         │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [Kembali] [Bayar]   │ │
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 9. ADMIN SCREENS
+
+#### Admin Dashboard
+
+```
+┌─────────────────────────┐
+│ 👤 Halo, Admin!         │  ← Greeting
+│              [⚙️] [🚪]  │     Settings, Logout
+├─────────────────────────┤
+│ Hari ini                │  ← Date context
+│                         │
+│ ┌────────────┬────────┐ │
+│ │ Pesanan    │ Cicilan│ │  ← KPI Cards (4-column or 2x2 grid)
+│ │ Baru       │Menungu │ │
+│ │    3       │    2   │ │
+│ │ [→]        │ [→]    │ │  ← Tap to view list
+│ └────────────┴────────┘ │
+│                         │
+│ ┌────────────┬────────┐ │
+│ │ Approval   │ Revenue│ │
+│ │ Dokumen    │ Bulan  │ │
+│ │    5       │ 1.2M   │ │
+│ │ [→]        │ [→]    │ │
+│ └────────────┴────────┘ │
+│                         │
+│ ─────────────────────   │
+│ PESANAN TERBARU         │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ ORD-00125          │ │  ← Order card
+│ │ Budi Santoso       │ │
+│ │ 081234567890       │ │
+│ │ Honda PCX (Tunai)  │ │
+│ │ Rp 24M             │ │
+│ │ Status: Baru       │ │
+│ │ 1 jam lalu         │ │
+│ │                     │ │
+│ │ [Lihat Detail] →    │ │
+│ └─────────────────────┘ │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ ORD-00124          │ │
+│ │ Siti Nurhaliza     │ │
+│ │ 081999888777       │ │
+│ │ Yamaha NMAX (Cicilan)║
+│ │ Rp 31.2M            │ │
+│ │ Status: Verifikasi  │ │
+│ │ 3 jam lalu          │ │
+│ │                     │ │
+│ │ [Lihat Detail] →    │ │
+│ └─────────────────────┘ │
+│                         │
+│ [Lihat Semua Pesanan →] │  ← CTA
+│                         │
+│ ─────────────────────   │
+│ CICILAN PERLU APPROVAL  │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ Rudi Hermawan       │ │  ← Pending approval card
+│ │ Cicilan: Yamaha NMAX│ │
+│ │ Status:             │ │
+│ │   Verifikasi Dokumen│ │
+│ │ Dokumen: KTP, NPWP, │ │
+│ │           Bank Stmt  │ │
+│ │ [Approve] [Reject]  │ │
+│ └─────────────────────┘ │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ Diana Kusuma        │ │
+│ │ Cicilan: Honda CB   │ │
+│ │ Status:             │ │
+│ │   Survey Dijadwalkan│ │
+│ │ Jadwal: 25 Mar 2026│ │
+│ │ [Lihat] [Konfirmasi]│ │
+│ └─────────────────────┘ │
+│                         │
+│ ─────────────────────   │
+│ QUICK ACTIONS           │
+│ ─────────────────────   │
+│                         │
+│ [📊 Reports] [👥 Users] │  ← Button grid
+│ [🏍️ Motors]  [📝 Content]│
+│                         │
+└─────────────────────────┘
+```
+
+#### Admin Transaction Detail
+
+```
+┌─────────────────────────┐
+│ ← Detail Pesanan        │  ← AppBar
+│              [Share]    │
+├─────────────────────────┤
+│                         │
+│ STATUS: BARU            │  ← Status badge with dropdown
+│ [Ubah Status ▼]         │
+│   - Baru                │
+│   - Mengatasi Masalah   │
+│   - Siap Dikirim        │
+│   - Dikirim             │
+│   - Berhasil            │
+│   - Batal               │
+│                         │
+│ ─────────────────────   │
+│ INFO PESANAN            │
+│ ─────────────────────   │
+│                         │
+│ No. Pesanan: ORD-00125  │
+│ Tipe: Tunai             │
+│ Total: Rp 34,200,000    │
+│ Tanggal: 19 Mar 14:32   │
+│ Motor: Honda PCX        │
+│ Warna: Merah            │
+│                         │
+│ ─────────────────────   │
+│ PEMBELI                 │
+│ ─────────────────────   │
+│                         │
+│ Budi Santoso            │
+│ Email: budi@email.com   │
+│ Phone: 0812-XXXX-XXXX   │
+│ NIK: 1234567890123456   │
+│                         │
+│ Pekerjaan: Guru         │
+│ Penghasilan: Rp 5M/bulan│
+│                         │
+│ Alamat Pengiriman:      │
+│ Jl. Jend. Ahmad Yani    │
+│ No. 123, Jakarta Pusat  │
+│                         │
+│ ─────────────────────   │
+│ PEMBAYARAN              │
+│ ─────────────────────   │
+│                         │
+│ Status: Lunas ✓         │
+│ Jumlah: Rp 34,200,000   │
+│ Metode: Transfer Bank   │
+│ Tanggal: 19 Mar 14:32   │
+│ Ref: TRX-MIDTRANS-...   │
+│                         │
+│ ─────────────────────   │
+│ TIMELINE                │
+│ ─────────────────────   │
+│                         │
+│ ✅ Pesanan Diterima     │
+│    19 Mar 14:32         │
+│    Budi P. membayar     │
+│    Rp 34,2M             │
+│                         │
+│ ⏳ Verifikasi Stok      │
+│    Dimulai 1 jam lalu   │
+│    (Admin action)       │
+│                         │
+│ ─────────────────────   │
+│ AKSI ADMIN              │
+│ ─────────────────────   │
+│                         │
+│ [📞 Hubungi Pembeli]    │
+│ [💬 Kirim WhatsApp]     │
+│ [📄 Print Invoice]      │
+│ [📧 Email Invoice]      │
+│ [⚠️ Tandai Ada Masalah] │
+│                         │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [← Kembali] [Selesai]│ │
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+```
+
+#### Admin Credit Approval
+
+```
+┌─────────────────────────┐
+│ ← Cicilan: Siti Z.      │  ← AppBar
+│              [⋮]        │     More options
+├─────────────────────────┤
+│                         │
+│ STATUS: VERIFIKASI      │  ← Status badge
+│ DOKUMEN                 │
+│                         │
+│ ─────────────────────   │
+│ INFO PEMOHON            │
+│ ─────────────────────   │
+│                         │
+│ Siti Nurhaliza          │
+│ 0819999888777          │
+│ EMAIL: siti@email.com   │
+│                         │
+│ Penghasilan: Rp 6M/bulan│
+│ Pekerjaan: Perawat      │
+│ KTK Jenis: Tetap        │
+│                         │
+│ ─────────────────────   │
+│ MOTOR & PEMBIAYAAN      │
+│ ─────────────────────   │
+│                         │
+│ Motor: Yamaha NMAX      │
+│ Harga: Rp 31,200,000    │
+│                         │
+│ Tenor: 12 Bulan         │
+│ Cicilan: Rp 2.6M/bulan  │
+│ DP: Rp 6.24M            │
+│ Interest: 6% p.a        │
+│ Total: Rp 32,400,000    │
+│                         │
+│ ─────────────────────   │
+│ DOKUMEN SUBMITTED       │  ← Document list
+│ ─────────────────────   │
+│                         │
+│ ☑ KTP                   │  ← Approved
+│   Status: Diterima       │
+│   File: ktp_siti.pdf     │
+│   Dimuat: 18 Mar 10:30   │
+│   Action: [Lihat] [Reject]
+│                         │
+│ ☑ NPWP                  │
+│   Status: Diterima       │
+│   File: npwp_siti.pdf    │
+│   Dimuat: 18 Mar 10:35   │
+│   Action: [Lihat] [Reject]
+│                         │
+│ ◐ Bank Statement        │  ← Under review
+│   Status: Dalam Review   │
+│   File: bank_stmt_3m.pdf │
+│   Dimuat: 18 Mar 10:40   │
+│   Action: [Lihat] [Reject]
+│   Catatan: [Lihat...]    │
+│                         │
+│ ─────────────────────   │
+│ NEXT STEPS              │
+│ ─────────────────────   │
+│                         │
+│ Semua dokumen sudah      │
+│ valid. Lanjutkan ke      │
+│ tahap survey?            │
+│                         │
+│ ─────────────────────   │
+│ ACTION BUTTONS          │  ← Admin actions
+│ ─────────────────────   │
+│                         │
+│ [🔄 Minta Dokumen Ulang]│
+│ [✓ Terima Semua Dokumen]│
+│                         │
+│ [→ Kirim ke Leasing]    │  ← Next stage
+│ [← Kembali ke Draft]    │
+│ [🚫 Tolak Aplikasi]      │
+│                         │
+│ Notes (Internal):       │
+│ ┌─────────────────────┐ │
+│ │ [Catatan untuk      │ │
+│ │  admin yg handle    │ │
+│ │  case ini...]       │ │
+│ └─────────────────────┘ │
+│                         │
+│ ─────────────────────   │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ [← Kembali] [Lanjut]│ │
+│ └─────────────────────┘ │
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 10. PROFILE & SETTINGS
+
+#### User Profile Screen
+
+```
+┌─────────────────────────┐
+│ Profil Saya             │
+├─────────────────────────┤
+│                         │
+│      [👤 Image]         │  ← Avatar (120px circle)
+│    [Ubah Foto]          │  ← Tap/camera icon
+│                         │
+│    Budi Santoso         │  ← Name (H2, 20px)
+│    081234567890         │  ← Phone (gray, 14px)
+│                         │
+│ [Edit Profil]           │  ← Button
+│                         │
+│ ─────────────────────   │
+│ AKUN                    │  ← Section
+│ ─────────────────────   │
+│                         │
+│ Email                   │  ← Field label
+│ budi@email.com          │  ← Value
+│ [↗ Ubah]                │  ← Edit link
+│                         │
+│ Nomor HP                │
+│ +62 81234567890         │
+│ [↗ Ubah]                │
+│                         │
+│ Tanggal Lahir           │
+│ 15 Januari 1990         │
+│ [↗ Ubah]                │
+│                         │
+│ Jenis Kelamin           │
+│ Laki-laki               │
+│ [↗ Ubah]                │
+│                         │
+│ NIK                     │
+│ 1234567890123456        │
+│ [↗ Ubah]                │
+│                         │
+│ ─────────────────────   │
+│ ALAMAT                  │
+│ ─────────────────────   │
+│                         │
+│ Jl. Jend. Ahmad Yani    │
+│ No. 123                 │
+│ Jakarta Pusat           │
+│ DKI Jakarta 12190       │
+│                         │
+│ [↗ Ubah Alamat]         │
+│                         │
+│ ─────────────────────   │
+│ KEAMANAN                │
+│ ─────────────────────   │
+│                         │
+│ Password                │
+│ [↗ Ganti Password]      │
+│                         │
+│ Login Terakhir          │
+│ 19 Mar 2026, 14:32      │  ← Last login info
+│ dari Chrome, Jakarta     │
+│                         │
+│ ─────────────────────   │
+│ PREFERENSI              │
+│ ─────────────────────   │
+│                         │
+│ Theme                   │
+│ [Terang ▼]              │  ← Light/Dark/Auto
+│                         │
+│ Bahasa                  │
+│ [Bahasa Indonesia ▼]    │
+│                         │
+│ Notifikasi              │
+│ [☑] Push Notification   │
+│ [☑] Email               │
+│ [☑] WhatsApp            │
+│                         │
+│ ─────────────────────   │
+│ TENTANG APP             │
+│ ─────────────────────   │
+│                         │
+│ [❓ Help & FAQ]         │
+│ [📋 Privacy Policy]     │
+│ [⚖️ Terms & Conditions] │
+│ [🐛 Report Bug]         │
+│ [⭐ Rate App]           │
+│                         │
+│ ─────────────────────   │
+│ VERSI                   │
+│ ─────────────────────   │
+│                         │
+│ App Version: 1.0.0      │
+│ Build: 15               │
+│ API Version: 1.2        │
+│                         │
+│ ─────────────────────   │
+│                         │
+│ [Logout]                │  ← Bottom action
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 11. NOTIFICATIONS CENTER
+
+```
+┌─────────────────────────┐
+│ Notifikasi              │  ← Title
+│              [⚙️] [All] │
+├─────────────────────────┤
+│ Filter:                 │
+│ [Semua] [Pesanan]       │  ← Quick filter chips
+│ [Cicilan] [Sistem]      │
+├─────────────────────────┤
+│                         │
+│ HARI INI                │  ← Date separator
+│                         │
+│ ┌─────────────────────┐ │
+│ │ 🟢 Pesanan Dikonfirmasi
+│ │ 🔔 (Unread indicator) │  ← Notification card
+│ │ ORD-00125            │
+│ │ Pesanan Anda sudah   │
+│ │ dikonfirmasi. Mohon  │
+│ │ menunggu update      │
+│ │ selanjutnya...       │
+│ │ 14:32 - 19 Mar 2026  │
+│ │ [Buang] [Lihat]      │  ← Actions
+│ └─────────────────────┘ │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ ⏳ Verifikasi Stok  │
+│ │ 🔔 Pesanan #ORD-... │
+│ │ Motor sedang         │
+│ │ diverifikasi...      │
+│ │ 13:15 - 19 Mar 2026  │
+│ │ [Buang] [Lihat]      │
+│ └─────────────────────┘ │
+│                         │
+│ KEMARIN                 │  ← Yesterday
+│                         │
+│ ┌─────────────────────┐ │
+│ │ ✓ Pembayaran Sukses │
+│ │ 💳 Cicilan #1 ORD... │
+│ │ Pembayaran Anda      │
+│ │ diterima. Sisanya    │
+│ │ 11 cicilan.          │
+│ │ 10:22 - 18 Mar 2026  │
+│ │ [Buang] [Lihat]      │
+│ └─────────────────────┘ │
+│                         │
+│ ... (more notifications)│
+│                         │
+│ 2 MINGGU LALU           │
+│                         │
+│ ┌─────────────────────┐ │
+│ │ 📰 Berita Terbaru   │
+│ │ 📰 Promo Motor      │
+│ │ Yamaha....          │
+│ │ 05:32 - 10 Mar 2026 │
+│ │ [Buang] [Lihat]     │
+│ └─────────────────────┘ │
+│                         │
+│ [Hapus Semua]           │  ← Clear all action
+│                         │
+└─────────────────────────┘
+```
+
+---
+
+### 12. NAVIGATION PATTERNS
+
+#### Bottom Navigation Tabs
+
+```
+Default State (Customer View):
+┌─────────────────────────┐
+│ [Screen Content]        │
+│                         │
+│                         │
+├─────────────────────────┤
+│ [🏠] [🔍] [👤] [🔔] [☰]│  ← Bottom tab bar (56px)
+│Home Explore Profile Notif Menu
+
+Each tab has:
+- Icon (24x24)
+- Label (12px text)
+- Badge count (if applicable) on icon
+- Active state: Blue icon + label, Material ripple effect
+- Inactive state: Gray icon + label
+
+Badge Examples:
+- Notifications: Red dot + numeric badge (e.g., "3")
+- Orders: Shows pending count (e.g., "1")
+```
+
+#### Tab Navigation Details
+
+```
+🏠 HOME Tab
+└─ Home Screen (Featured, Categories, Quick Actions)
+   └─ [From Home] Can navigate to:
+      - Motor Detail (tap featured card or motor)
+      - Filter/Search (tap search bar)
+      - News (tap news section)
+
+🔍 EXPLORE Tab
+└─ Motor Catalog (Search & Filter)
+   └─ [From Explore] Can navigate to:
+      - Motor Detail (tap motor card)
+      - Favorites (heart icon)
+      - Compare (select multiple + compare)
+      - Advanced Filters (bottom sheet)
+
+👤 PROFILE Tab
+└─ User Profile / Auth
+   ├─ If logged in: Profile Screen
+   │  └─ Can navigate to:
+   │     - Edit Profile
+   │     - Change Password
+   │     - Settings
+   │     - Preferences
+   │     - Help & Support
+   │     - Logout
+   │
+   └─ If not logged in: Auth Screen
+      └─ Can navigate to:
+         - Login
+         - Register
+         - Forgot Password
+
+🔔 NOTIFICATIONS Tab
+└─ Notification Center
+   └─ Can navigate to:
+      - Order detail (tap notification)
+      - Transaction history
+      - Mark as read
+      - Filter notifications
+
+☰ MENU Tab
+└─ App Menu / Drawer
+   ├─ Header: User info + profile pic
+   ├─ Main Menu:
+   │  - My Orders
+   │  - Installments
+   │  - Favorites
+   │  - News
+   │  - Leasing Partners
+   │
+   ├─ Support:
+   │  - Help & FAQ
+   │  - Contact Us
+   │  - Report Bug
+   │
+   ├─ Settings:
+   │  - App Preferences
+   │  - Privacy Settings
+   │  - Notification Settings
+   │
+   └─ Account:
+      - [Admin Mode] If is_admin (blue badge)
+      - Logout
+      - Sign Out
+```
+
+---
+
+## MICRO-INTERACTIONS & ANIMATIONS
+
+### Visual Feedback & Transitions
+
+#### Button States & Interactions
+
+```
+Default Button (Primary Blue):
+- Idle: #2563EB, rounded 8px, 48px height
+- Hover: Cursor pointer, slight elevation increase (shadow)
+- Press: Scale down 0.98, deeper shadow
+- Ripple: Material ripple effect (25% opacity, 200ms)
+- Disabled: #D1D5DB background, disabled text color, no interactions
+- Loading: Spinner inside button, text hidden, button disabled
+
+Animation Specs:
+- Button press: 100ms scale animation
+- Ripple duration: 200ms
+- Elevation change: 150ms transition
+```
+
+#### Input Field Focus States
+
+```
+Idle State:
+- Border: 1px #E5E7EB
+- Shadow: None
+- Background: #FFFFFF
+
+Focus State (Animated):
+- Border: 2px #2563EB (instant)
+- Shadow: 0px 0px 0px 4px rgba(37, 99, 235, 0.1) (200ms ease-in-out)
+- Background: #FFFFFF
+- Cursor: Text cursor blinking
+
+Error State:
+- Border: 2px #EF4444
+- Error text: Red, 12px, appears 150ms after unfocus
+- Animation: Shake effect (8px left-right, 200ms)
+- Sound: Subtle error tone (optional)
+
+Filled Valid State:
+- Border: 1px #10B981
+- Icon: Green checkmark appears (right side, 150ms fade-in)
+- Background: #F0FDF4 (very light green)
+```
+
+#### List Item Interactions
+
+```
+List Item (Motor Card, Order Card):
+- Idle: Normal state
+- Hover:
+  - Background lightens slightly
+  - Elevation increases (shadow appears)
+- Press/Tap:
+  - Scale down 0.98
+  - Quick feedback ripple
+  - Navigate on release
+
+Loading List:
+- Skeleton loaders appear (pulse animation)
+- Shimmer effect (left to right, 1.5s loop)
+- On loaded: Fade in actual content
+
+Pull-to-Refresh:
+- Pull down → Shows progress indicator
+- Release → Spinner animates, data refreshes (500ms min)
+- Bounce back to top (300ms spring animation)
+```
+
+#### Modal/Bottom Sheet Animations
+
+```
+Appearing:
+- Slide up from bottom (300ms, ease-out-cubic)
+- Backdrop fades in (300ms, ease-in)
+- Handles visibility: Shows at top of sheet
+
+Disappearing:
+- Slide down (200ms, ease-in)
+- Backdrop fades out (200ms)
+
+Dragging (Dismissible bottom sheets):
+- Finger tracking: Sheet follows finger in real-time
+- Inertia: Continues scrolling after finger release
+- Snap points: Snap to position if >30% dragged
+
+Content inside Bottom Sheet:
+- Parallax scroll: Draggable handle moves slower than content
+```
+
+#### Loading States
+
+```
+Spinner Animations:
+- Circular spinner: 360° rotation, 1.5s linear loop
+- Size: 40px for primary, 32px for secondary
+- Color: Brand blue (#2563EB)
+- Opacity: 100%
+
+Skeleton Screens:
+- Height: Match real content height
+- Border-radius: Match real component radius
+- Color: #E5E7EB base, with shimmer overlay
+- Shimmer: Gradient animation, left to right, 1.5s loop
+  - Gradient: from transparent → rgba(255,255,255,0.4) → transparent
+  - Ease: linear
+
+Progress Bars:
+- Linear progress for uploads/downloads
+- Color: Gradient (blue to teal)
+- Animation: Smooth fill animation as progress updates
+- Indeterminate: Bouncing animation during unknown progress
+```
+
+#### Page Transitions
+
+```
+Between screens in Bottom Nav:
+- Fade transition (150ms ease-in-out)
+- Current screen fades out
+- Next screen fades in
+- No sliding (cleaner UX)
+
+Push Navigation (e.g., Detail → back to List):
+- Slide-right transition (200ms ease-out)
+- New screen slides in from right
+- Old screen stays behind (parallax effect)
+- Can swipe-back to previous screen
+
+Modal Navigation (Overlays):
+- Slide-up from bottom (300ms ease-out-cubic)
+- Bounce on arrival (slight overshoot)
+- Close with slide-down (200ms ease-in)
+```
+
+#### Notification & Toast Animations
+
+```
+Toast Notifications:
+- Appear: Slide up + fade in (300ms)
+- Dwell: Visible for 3-4 seconds
+- Dismiss: Slide out + fade (200ms)
+- Auto-slide out bottom if swiped up
+- Sound: Subtle chime (optional)
+
+Badge Updates:
+- Number change: Scale pulse (1 → 1.2 → 1 over 300ms)
+- Example: Notification count "3" → "4"
+- Red dot pulse on new notification
+
+Push Notification Received:
+- Device vibration (if enabled)
+- Sound notification choice
+- Badge counter increment with animation
+```
+
+#### Form Entry Animations
+
+```
+Character counter while typing:
+- Fade in: As user starts typing (100ms)
+- Count updates: Smooth number change
+- Color change: 0-80% gray, 80-100% blue, 100%+ red
+
+Autocomplete suggestions:
+- Appear: Slide down + fade (150ms)
+- Highlight: Gentle pulse on hover
+- Select: Fill color animates (100ms)
+
+Multi-step form progress:
+- Progress bar fills smoothly (800ms duration per step)
+- Step indicator: Current step highlights (100ms)
+- Step completion: Checkmark appears with pulse (300ms)
+
+Required field asterisk:
+- Initial: Always visible (red)
+- Filled: Checkmark replaces asterisk (150ms crossfade)
+- Invalid: Asterisk pulses briefly (red, 200ms)
+```
+
+#### Expansion Panel Animations
+
+```
+Expand/Collapse:
+- Height animation: 0 → content height (300ms ease-out)
+- Opacity: Gradual fade-in while expanding
+- Icon rotation: Chevron rotates 90-180° (300ms)
+- Arrow smooth curve: Arc animation, not linear
+
+Content reveal:
+- Staggered: Child elements fade in with slight delay (50ms each)
+- Smooth: No jumping or layout shift
+
+Text overflow:
+- When expanded: Text flows normally
+- When collapsed: 3-line clip with ellipsis
+```
+
+---
+
+## COMPONENT LIBRARY & CONSISTENCY
+
+### Reusable Components
+
+```
+Buttons:
+├── Primary Action
+│   └─ Solid blue, full width or fixed width
+├── Secondary Action
+│   └─ Outlined, gray border
+├── Tertiary Action
+│   └─ Text-only, no background
+└── Icon Button
+    └─ 40x40 tap target, circular ripple
+
+Cards:
+├── Motor Card
+│   ├── Image (aspect ratio: 3:4)
+│   ├── Title, price, rating
+│   └── Status badge
+├── Order Card
+│   ├── Order ID, motor name, amount
+│   ├── Status indicator
+│   └── Timestamp
+└── Info Card
+    ├── Icon + Title
+    ├── Description
+    └── Optional action
+
+Input Fields:
+├── Text Input
+│   ├── Label, placeholder, hint
+│   ├── Error state
+│   └── Counter (char/size)
+├── Dropdown
+│   ├── Label + value display
+│   ├── Chevron indicator
+│   └── Pop-up options menu
+├── Date Picker
+│   ├── Text input or calendar icon
+│   └── Native date picker (iOS/Android)
+└── Slider
+    ├── Min/max labels
+    ├── Visual track
+    └── Draggable thumb
+
+Badges:
+├── Status Badge (Available/Sold/Processing)
+├── Count Badge (Notifications: "3")
+├── Category Tag (Sport/Matic/Cub)
+└── Certification Badge (Verified/Trusted)
+
+Dividers:
+├── Simple line (1px #E5E7EB)
+├── Section divider (H3 text + lines)
+└── Bottom sheet handle (rounded pill, gray)
+
+Empty States:
+├── Icon (large, 144px)
+├── Title (H2, bold)
+├── Subtitle (gray, 14px)
+└── Action button (if applicable)
+```
+
+### Visual Hierarchy
+
+```
+Display Size (Hero):
+- App hero sections: "Selamat datang, Budi!"
+- 28px, bold, -0.5px letter-spacing
+- Line-height: 1.2
+- Usage: Main page titles, large emphasis
+
+Heading 1 (H1):
+- Page titles, major section headers
+- 24px, bold (700)
+- Line-height: 1.2
+- Color: #111827 (dark gray)
+
+Heading 2 (H2):
+- Card titles, modal titles, section headers
+- 20px, semi-bold (600)
+- Line-height: 1.25
+
+Heading 3 (H3):
+- Subsection headers, category labels
+- 16px, semi-bold (600)
+- Line-height: 1.25
+
+Body Large:
+- Important body text, labels for cards
+- 16px, medium (500)
+- Line-height: 1.5
+
+Body Regular:
+- Standard body copy, descriptions
+- 14px, regular (400)
+- Line-height: 1.5
+- Color: #6B7280 (gray for secondary)
+
+Small:
+- Helper text, timestamps, hints, counters
+- 12px, regular (400)
+- Line-height: 1.4
+- Color: #9CA3AF (light gray)
+
+Caption:
+- Very small labels, footnotes
+- 11px, regular (400)
+- Color: #D1D5DB
 ```
 
 ---
