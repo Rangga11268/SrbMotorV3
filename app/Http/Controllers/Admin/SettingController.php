@@ -70,6 +70,39 @@ class SettingController extends Controller
             ->with('success', 'Pengaturan baru berhasil ditambahkan.');
     }
 
+    public function upload(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'field' => 'required|string',
+        ]);
+
+        $field = $validated['field'];
+        $file = $validated['file'];
+
+        // Create directory if not exists
+        $dir = public_path('assets/logos');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        // Generate unique filename with timestamp
+        $timestamp = now()->format('YmdHis');
+        $filename = "{$field}-{$timestamp}." . $file->getClientOriginalExtension();
+
+        // Store file
+        $file->move($dir, $filename);
+
+        // Return path relative to public
+        $path = "/assets/logos/{$filename}";
+
+        return response()->json([
+            'path' => $path,
+            'filename' => $filename,
+            'message' => 'File uploaded successfully',
+        ]);
+    }
+
     public function destroy(Setting $setting)
     {
         $category = $setting->category;

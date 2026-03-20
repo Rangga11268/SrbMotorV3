@@ -173,6 +173,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::put('/settings/{category}', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
     Route::delete('/settings/{setting}', [\App\Http\Controllers\Admin\SettingController::class, 'destroy'])->name('settings.destroy');
+    Route::post('/settings/upload', [\App\Http\Controllers\Admin\SettingController::class, 'upload'])->name('settings.upload');
 
     // News & Categories Management
     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);

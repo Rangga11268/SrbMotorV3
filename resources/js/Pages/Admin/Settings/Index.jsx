@@ -19,8 +19,6 @@ import {
     cilSettings,
     cilPhone,
     cilGlobeAlt,
-    cilColorPalette,
-    cilMoney,
     cilEnvelopeClosed,
     cilInfo,
     cilPencil,
@@ -49,16 +47,6 @@ export default function SettingsIndex({ settings }) {
             label: "Media Sosial",
             icon: cilGlobeAlt,
             description: "Link profil media sosial untuk terhubung",
-        },
-        branding: {
-            label: "Branding",
-            icon: cilColorPalette,
-            description: "Identitas visual dan warna brand",
-        },
-        financing: {
-            label: "Pembiayaan",
-            icon: cilMoney,
-            description: "Pengaturan skema cicilan dan leasing",
         },
         email: {
             label: "Email",

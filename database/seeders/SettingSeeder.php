@@ -153,27 +153,6 @@ class SettingSeeder extends Seeder
             ]
         );
 
-        // Branding Settings
-        Setting::updateOrCreate(
-            ['key' => 'brand_primary_color'],
-            [
-                'value' => '#2563EB',
-                'type' => 'string',
-                'category' => 'branding',
-                'description' => 'Warna primary brand'
-            ]
-        );
-
-        Setting::updateOrCreate(
-            ['key' => 'brand_secondary_color'],
-            [
-                'value' => '#10B981',
-                'type' => 'string',
-                'category' => 'branding',
-                'description' => 'Warna secondary brand'
-            ]
-        );
-
         // Email Settings
         Setting::updateOrCreate(
             ['key' => 'email_from_name'],
@@ -192,37 +171,6 @@ class SettingSeeder extends Seeder
                 'type' => 'string',
                 'category' => 'email',
                 'description' => 'Email pengirim'
-            ]
-        );
-
-        // Financing Settings
-        Setting::updateOrCreate(
-            ['key' => 'min_down_payment_percent'],
-            [
-                'value' => '20',
-                'type' => 'number',
-                'category' => 'financing',
-                'description' => 'Minimum DP dalam persen'
-            ]
-        );
-
-        Setting::updateOrCreate(
-            ['key' => 'max_tenor_months'],
-            [
-                'value' => '60',
-                'type' => 'number',
-                'category' => 'financing',
-                'description' => 'Maksimum tenor dalam bulan'
-            ]
-        );
-
-        Setting::updateOrCreate(
-            ['key' => 'interest_rate_percent'],
-            [
-                'value' => '1.5',
-                'type' => 'string',
-                'category' => 'financing',
-                'description' => 'Bunga flat per bulan (%)'
             ]
         );
     }
