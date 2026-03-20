@@ -80,28 +80,32 @@ export default function BeritaIndex({
 
     return (
         <PublicLayout title="Berita & Artikel - SRB Motors">
-            <div className="flex-grow pt-32">
+            <div className="flex-grow pt-24 md:pt-32 bg-slate-50 dark:bg-slate-900">
                 {/* HEADER SECTION */}
-                <section className="bg-white border-b border-gray-100 pb-16">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800 pt-8 pb-16 relative overflow-hidden">
+                    {/* Decorative Background Elements */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-70 transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-2 text-sm font-medium text-blue-600 mb-2">
-                                    <Link href="/" className="hover:underline">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
+                                    <Link href="/" className="hover:text-blue-700 transition">
                                         Home
                                     </Link>
-                                    <ChevronRight className="w-4 h-4 text-gray-400" />
-                                    <span className="text-gray-500">
+                                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                                    <span className="text-slate-500 dark:text-slate-400">
                                         Berita & Artikel
                                     </span>
                                 </div>
-                                <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                                     Wawasan &{" "}
-                                    <span className="text-blue-600">
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">
                                         Berita Terbaru
                                     </span>
                                 </h1>
-                                <p className="text-lg text-gray-500 font-medium max-w-2xl">
+                                <p className="text-lg text-slate-600 dark:text-slate-300 font-medium max-w-2xl leading-relaxed">
                                     Dapatkan informasi terbaru tentang dunia
                                     otomotif, tips perawatan, dan update terkini
                                     dari SRB Motor.
@@ -112,10 +116,10 @@ export default function BeritaIndex({
                 </section>
 
                 {/* Main Content */}
-                <main className="container mx-auto px-4 py-12">
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                         {/* Sidebar */}
-                        <aside className="lg:col-span-1 space-y-6">
+                        <aside className="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-max">
                             {/* Search */}
                             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-6">
                                 <h3 className="font-black text-lg mb-4 text-slate-900 dark:text-white uppercase tracking-wider">
@@ -260,7 +264,7 @@ export default function BeritaIndex({
                                         {posts.data.map((post) => (
                                             <article
                                                 key={post.id}
-                                                className="bg-white dark:bg-slate-800 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-500 overflow-hidden border border-slate-100 dark:border-slate-700 group"
+                                                className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-slate-200 dark:border-slate-700 group flex flex-col"
                                             >
                                                 {post.featured_image && (
                                                     <Link
@@ -268,37 +272,25 @@ export default function BeritaIndex({
                                                             "berita.show",
                                                             post.slug,
                                                         )}
+                                                        className="block overflow-hidden relative aspect-[16/10]"
                                                     >
+                                                        <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors z-10"></div>
                                                         <img
                                                             src={
                                                                 post.featured_image
                                                             }
                                                             alt={post.title}
-                                                            className="w-full h-48 object-cover hover:brightness-90 transition"
+                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                                                         />
                                                     </Link>
                                                 )}
-                                                <div className="p-5">
-                                                    <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                                                        {post.category.name}
-                                                    </span>
-                                                    <Link
-                                                        href={route(
-                                                            "berita.show",
-                                                            post.slug,
-                                                        )}
-                                                    >
-                                                        <h3 className="text-lg font-black text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:hover:text-blue-400 line-clamp-2 transition-colors">
-                                                            {post.title}
-                                                        </h3>
-                                                    </Link>
-                                                    <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-3">
-                                                        {post.excerpt ||
-                                                            post.title}
-                                                    </p>
-                                                    <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-4 border-t border-slate-200 dark:border-slate-700 pt-4">
-                                                        <span className="flex items-center gap-1">
-                                                            <Calendar className="w-4 h-4" />
+                                                <div className="p-6 flex flex-col flex-grow">
+                                                    <div className="flex items-center justify-between mb-4">
+                                                        <span className="inline-block bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                                            {post.category.name}
+                                                        </span>
+                                                        <span className="flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+                                                            <Calendar className="w-3.5 h-3.5" />
                                                             {new Date(
                                                                 post.published_at,
                                                             ).toLocaleDateString(
@@ -316,10 +308,25 @@ export default function BeritaIndex({
                                                             "berita.show",
                                                             post.slug,
                                                         )}
-                                                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 font-semibold text-sm"
+                                                    >
+                                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:hover:text-blue-400 line-clamp-2 transition-colors leading-snug">
+                                                            {post.title}
+                                                        </h3>
+                                                    </Link>
+                                                    <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-grow">
+                                                        {post.excerpt ||
+                                                            post.title}
+                                                    </p>
+                                                    
+                                                    <Link
+                                                        href={route(
+                                                            "berita.show",
+                                                            post.slug,
+                                                        )}
+                                                        className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-bold text-sm transition-colors mt-auto"
                                                     >
                                                         Baca Selengkapnya
-                                                        <ChevronRight className="w-4 h-4" />
+                                                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                                     </Link>
                                                 </div>
                                             </article>
