@@ -112,65 +112,70 @@ export default function Index({
 
     return (
         <PublicLayout auth={auth} title="Katalog Motor">
-            {/* HEADER SECTION */}
-            <section className="bg-white border-b border-gray-100 pt-32 pb-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm font-medium text-blue-600 mb-2">
-                                <Link href="/" className="hover:underline">
-                                    Home
-                                </Link>
-                                <ChevronRight className="w-4 h-4 text-gray-400" />
-                                <span className="text-gray-500">
-                                    Katalog Motor
-                                </span>
-                            </div>
-                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
-                                Jelajahi{" "}
-                                <span className="text-blue-600">
-                                    Koleksi Kami
-                                </span>
-                            </h1>
-                            <p className="text-lg text-gray-500 font-medium max-w-2xl">
-                                Temukan berbagai pilihan motor berkualitas
-                                dengan harga terbaik dan kondisi terjamin untuk
-                                menemani perjalanan Anda.
-                            </p>
-                        </div>
+            <div className="flex-grow pt-24 md:pt-32 bg-slate-50 dark:bg-slate-900">
+                {/* HEADER SECTION */}
+                <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800 pt-8 pb-16 relative overflow-hidden">
+                    {/* Decorative Background Elements */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-70 transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
-                        <div className="flex items-center gap-3">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-sm font-medium text-gray-900">
-                                    {motors.total} Unit Tersedia
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                    Diperbarui hari ini
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
+                                    <Link href="/" className="hover:text-blue-700 transition">
+                                        Home
+                                    </Link>
+                                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                                    <span className="text-slate-500 dark:text-slate-400">
+                                        Katalog Motor
+                                    </span>
+                                </div>
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                                    Jelajahi{" "}
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">
+                                        Koleksi Kami
+                                    </span>
+                                </h1>
+                                <p className="text-lg text-slate-600 dark:text-slate-300 font-medium max-w-2xl leading-relaxed">
+                                    Temukan berbagai pilihan motor berkualitas
+                                    dengan harga terbaik dan kondisi terjamin untuk
+                                    menemani perjalanan Anda.
                                 </p>
                             </div>
-                             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-                                <LayoutGrid className="w-6 h-6" />
+
+                            <div className="flex items-center gap-3">
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white relative z-10">
+                                        {motors.total} Unit Tersedia
+                                    </p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium relative z-10">
+                                        Diperbarui hari ini
+                                    </p>
+                                </div>
+                                <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm border border-slate-100 dark:border-slate-700 relative z-10">
+                                    <LayoutGrid className="w-6 h-6" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* MAIN CONTENT */}
-            <main className="flex-grow section-py-sm bg-gray-50/30">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* MAIN CONTENT */}
+                <main className="flex-grow py-12 lg:py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid lg:grid-cols-4 gap-8">
                         {/* SIDEBAR FILTERS (Desktop) */}
                         <aside className="hidden lg:block space-y-8">
-                            <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm sticky top-24">
+                            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-700 shadow-sm sticky top-24">
                                 <div className="flex items-center justify-between mb-8">
-                                    <h3 className="font-black text-gray-900 flex items-center gap-2 uppercase tracking-wider text-sm">
-                                        <Filter className="w-4 h-4 text-primary" /> Filter
+                                    <h3 className="font-black text-slate-900 dark:text-white flex items-center gap-2 uppercase tracking-wider text-sm">
+                                        <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" /> Filter
                                         Pencarian
                                     </h3>
                                     <button
                                         onClick={resetFilters}
-                                        className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                                        className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
                                     >
                                         <RotateCcw className="w-3 h-3" /> Reset
                                     </button>
@@ -179,32 +184,32 @@ export default function Index({
                                 <div className="space-y-6">
                                     {/* Search */}
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                             Cari Model
                                         </label>
                                         <div className="relative group">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-primary transition-colors" />
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors" />
                                             <input
                                                 type="text"
                                                 name="search"
                                                 value={values.search}
                                                 onChange={handleChange}
                                                 placeholder="Nama motor..."
-                                                className="w-full bg-gray-50 border-gray-100 rounded-2xl pl-12 pr-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium"
+                                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl pl-12 pr-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Brand */}
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                             Merek
                                         </label>
                                         <select
                                             name="brand"
                                             value={values.brand}
                                             onChange={handleChange}
-                                            className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium appearance-none"
+                                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white appearance-none"
                                         >
                                             <option value="">
                                                 Semua Merek
@@ -219,14 +224,14 @@ export default function Index({
 
                                     {/* Type */}
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                             Tipe
                                         </label>
                                         <select
                                             name="type"
                                             value={values.type}
                                             onChange={handleChange}
-                                            className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium appearance-none"
+                                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white appearance-none"
                                         >
                                             <option value="">Semua Tipe</option>
                                             {types.map((t) => (
@@ -239,7 +244,7 @@ export default function Index({
 
                                     {/* Price Range */}
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                             Rentang Harga
                                         </label>
                                         <div className="grid grid-cols-2 gap-3">
@@ -249,7 +254,7 @@ export default function Index({
                                                 value={values.min_price}
                                                 onChange={handleChange}
                                                 placeholder="Min"
-                                                className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium"
+                                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                                             />
                                             <input
                                                 type="number"
@@ -257,7 +262,7 @@ export default function Index({
                                                 value={values.max_price}
                                                 onChange={handleChange}
                                                 placeholder="Max"
-                                                className="w-full bg-gray-50 border-gray-100 rounded-2xl px-4 py-3 focus:bg-white focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 outline-none transition-all text-sm font-medium"
+                                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                                             />
                                         </div>
                                     </div>
@@ -269,14 +274,14 @@ export default function Index({
                         <div className="lg:hidden flex gap-4 mb-6">
                             <button
                                 onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                className="flex-grow flex items-center justify-between px-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-gray-900 font-black uppercase tracking-widest text-xs shadow-sm"
+                                className="flex-grow flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white font-bold uppercase tracking-widest text-xs shadow-sm hover:shadow-md transition-shadow"
                             >
                                 <span className="flex items-center gap-2">
-                                    <SlidersHorizontal size={18} /> Filter Unit
+                                    <SlidersHorizontal size={18} className="text-blue-600 dark:text-blue-400" /> Filter Unit
                                 </span>
                                 {Object.values(values).filter(Boolean).length >
                                     0 && (
-                                    <Badge variant="blue" size="sm">
+                                    <Badge variant="blue" size="sm" className="bg-blue-600 dark:bg-blue-500 text-white border-transparent">
                                         {
                                             Object.values(values).filter(
                                                 Boolean,
@@ -296,13 +301,13 @@ export default function Index({
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-[2rem] p-12 shadow-sm"
+                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[2rem] p-12 shadow-sm"
                                     >
-                                        <Loader2 className="w-12 h-12 text-blue-600 animate-spin mb-4" />
-                                        <h3 className="text-xl font-bold text-gray-900">
+                                        <Loader2 className="w-12 h-12 text-blue-600 dark:text-blue-400 animate-spin mb-4" />
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                                             Memuat Data...
                                         </h3>
-                                        <p className="text-gray-500">
+                                        <p className="text-slate-500 dark:text-slate-400">
                                             Mencari motor terbaik untuk Anda
                                         </p>
                                     </motion.div>
@@ -332,10 +337,11 @@ export default function Index({
                                                 >
                                                     <Card
                                                         hoverable
-                                                        className="h-full overflow-hidden group border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+                                                        className="h-full overflow-hidden group border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-2xl hover:shadow-blue-900/5 transition-all duration-500 bg-white dark:bg-slate-800"
                                                     >
                                                         {/* Image Container */}
-                                                        <div className="relative h-56 bg-gray-100 overflow-hidden">
+                                                        <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                                                            <div className="absolute inset-0 bg-blue-900/0 group-hover:bg-blue-900/10 transition-colors duration-500 z-10" />
                                                             <img
                                                                 src={
                                                                     motor.image_path
@@ -343,7 +349,7 @@ export default function Index({
                                                                         : "/images/placeholder-motor.jpg"
                                                                 }
                                                                 alt={motor.name}
-                                                                className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${
+                                                                className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${
                                                                     !motor.tersedia
                                                                         ? "grayscale brightness-75"
                                                                         : ""
@@ -352,19 +358,19 @@ export default function Index({
 
                                                             {/* Status Overlay */}
                                                             {!motor.tersedia && (
-                                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                                                    <span className="px-6 py-2 bg-red-600 text-white font-black text-xl uppercase tracking-widest -rotate-12 border-2 border-white shadow-lg">
+                                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-20">
+                                                                    <span className="px-6 py-2 bg-red-600/90 backdrop-blur-sm text-white font-black text-xl uppercase tracking-widest -rotate-12 border-2 border-white/50 shadow-2xl">
                                                                         TERJUAL
                                                                     </span>
                                                                 </div>
                                                             )}
 
                                                             {/* Badges */}
-                                                            <div className="absolute top-3 left-3 flex flex-col items-start gap-2">
+                                                            <div className="absolute top-4 left-4 flex flex-col items-start gap-2 z-20">
                                                                 <Badge
                                                                     variant="blue"
                                                                     size="sm"
-                                                                    className="shadow-sm backdrop-blur-sm bg-white/90"
+                                                                    className="shadow-sm backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-blue-700 dark:text-blue-400 font-bold border border-white/20 dark:border-slate-700/50"
                                                                 >
                                                                     {
                                                                         motor.brand
@@ -377,47 +383,49 @@ export default function Index({
                                                                             : "default"
                                                                     }
                                                                     size="sm"
-                                                                    className="shadow-sm backdrop-blur-sm bg-white/90"
+                                                                    className={`shadow-sm backdrop-blur-md font-bold border border-white/20 dark:border-slate-700/50 ${
+                                                                        motor.tersedia
+                                                                            ? "bg-blue-600/90 text-white"
+                                                                            : "bg-slate-800/90 text-white"
+                                                                    }`}
                                                                 >
                                                                     {motor.tersedia
                                                                         ? "Tersedia"
                                                                         : "Stok Habis"}
                                                                 </Badge>
                                                             </div>
-
-
                                                         </div>
 
                                                         {/* Card Body */}
-                                                        <CardBody className="p-6 space-y-4">
-                                                            <div className="space-y-2">
-                                                                <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
-                                                                    <span className="flex items-center gap-1">
-                                                                        <Calendar className="w-3 h-3" />{" "}
+                                                        <CardBody className="p-6 lg:p-7 space-y-5">
+                                                            <div className="space-y-3">
+                                                                <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                                                                    <span className="flex items-center gap-1.5">
+                                                                        <Calendar className="w-3.5 h-3.5" />{" "}
                                                                         {
                                                                             motor.year
                                                                         }
                                                                     </span>
-                                                                    <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                                                                    <span className="flex items-center gap-1 uppercase">
-                                                                        <Gauge className="w-3 h-3" />{" "}
+                                                                    <span className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full" />
+                                                                    <span className="flex items-center gap-1.5 line-clamp-1">
+                                                                        <Gauge className="w-3.5 h-3.5" />{" "}
                                                                         {
                                                                             motor.type
                                                                         }
                                                                     </span>
                                                                 </div>
-                                                                <h3 className="text-xl font-black text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
+                                                                <h3 className="text-xl lg:text-2xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
                                                                     {motor.name}
                                                                 </h3>
                                                             </div>
 
-                                                            <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                                                            <div className="pt-5 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
                                                                 <div>
-                                                                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
+                                                                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-[0.2em] mb-1">
                                                                         Mulai
                                                                         Harga
                                                                     </p>
-                                                                    <p className="text-2xl font-black text-blue-600 tracking-tight">
+                                                                    <p className="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">
                                                                         Rp{" "}
                                                                         {parseFloat(
                                                                             motor.price,
@@ -426,7 +434,7 @@ export default function Index({
                                                                         )}
                                                                     </p>
                                                                 </div>
-                                                                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all transform group-hover:translate-x-1">
+                                                                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 group-hover:shadow-md group-hover:shadow-blue-500/20">
                                                                     <ArrowRight className="w-5 h-5" />
                                                                 </div>
                                                             </div>
@@ -442,26 +450,26 @@ export default function Index({
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-[2rem] p-12 shadow-sm"
+                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[2rem] p-12 shadow-sm"
                                     >
-                                        <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-6">
+                                        <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-300 dark:text-slate-600 mb-6">
                                             <Search size={48} />
                                         </div>
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
                                             Motor Tidak Ditemukan
                                         </h3>
-                                        <p className="text-gray-500 max-w-sm mb-8">
+                                        <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-8 font-medium">
                                             Maaf, kami tidak menemukan motor
                                             yang sesuai dengan kriteria
                                             pencarian Anda. Coba ubah filter
                                             atau kata kunci lainnya.
                                         </p>
-                                        <Button
-                                            variant="secondary"
+                                        <button
+                                            className="px-6 py-3 bg-blue-50 hover:bg-blue-100 dark:bg-slate-700 dark:hover:bg-slate-600 text-blue-700 dark:text-blue-300 font-bold rounded-xl transition-colors"
                                             onClick={resetFilters}
                                         >
                                             Hapus Semua Filter
-                                        </Button>
+                                        </button>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -495,10 +503,10 @@ export default function Index({
                                                 }}
                                                 className={`min-w-[48px] h-12 flex items-center justify-center rounded-xl font-bold text-sm transition-all border ${
                                                     link.active
-                                                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200"
+                                                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/30"
                                                         : link.url
-                                                          ? "bg-white text-gray-600 border-gray-200 hover:border-blue-600 hover:text-blue-600"
-                                                          : "opacity-40 cursor-not-allowed border-transparent text-gray-400"
+                                                          ? "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-600 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
+                                                          : "opacity-40 cursor-not-allowed border-transparent text-slate-400 dark:text-slate-500"
                                                 }`}
                                                 dangerouslySetInnerHTML={{
                                                     __html: link.label
@@ -530,7 +538,7 @@ export default function Index({
                         className="fixed inset-0 z-[60] lg:hidden"
                     >
                         <div
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                             onClick={() => setIsFiltersOpen(false)}
                         />
                         <motion.div
@@ -542,23 +550,23 @@ export default function Index({
                                 damping: 25,
                                 stiffness: 200,
                             }}
-                            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white p-8 shadow-2xl"
+                            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white dark:bg-slate-900 p-8 shadow-2xl border-l border-slate-200 dark:border-slate-800"
                         >
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-xl font-bold text-gray-900">
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                                     Filter Pencarian
                                 </h3>
                                 <button
                                     onClick={() => setIsFiltersOpen(false)}
-                                    className="p-2 hover:bg-gray-100 rounded-lg"
+                                    className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-colors"
                                 >
-                                    <X className="w-6 h-6 text-gray-500" />
+                                    <X className="w-5 h-5" />
                                 </button>
                             </div>
 
                             <div className="space-y-6">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-gray-700">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                         Cari Nama
                                     </label>
                                     <input
@@ -566,19 +574,19 @@ export default function Index({
                                         name="search"
                                         value={values.search}
                                         onChange={handleChange}
-                                        className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm"
                                         placeholder="Cari..."
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-gray-700">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                         Merek
                                     </label>
                                     <select
                                         name="brand"
                                         value={values.brand}
                                         onChange={handleChange}
-                                        className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm"
                                     >
                                         <option value="">Semua Merek</option>
                                         {brands.map((b) => (
@@ -589,14 +597,14 @@ export default function Index({
                                     </select>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-gray-700">
+                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
                                         Tipe
                                     </label>
                                     <select
                                         name="type"
                                         value={values.type}
                                         onChange={handleChange}
-                                        className="w-full bg-gray-50 border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm"
                                     >
                                         <option value="">Semua Tipe</option>
                                         {types.map((t) => (
@@ -607,25 +615,25 @@ export default function Index({
                                     </select>
                                 </div>
                                 <div className="pt-6 grid grid-cols-2 gap-4">
-                                    <Button
-                                        variant="secondary"
-                                        fullWidth
+                                    <button
                                         onClick={resetFilters}
+                                        className="px-4 py-3 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm"
                                     >
                                         Reset
-                                    </Button>
-                                    <Button
-                                        fullWidth
+                                    </button>
+                                    <button
                                         onClick={() => setIsFiltersOpen(false)}
+                                        className="px-4 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20 text-sm"
                                     >
-                                        Lihat Hasil
-                                    </Button>
+                                        Terapkan
+                                    </button>
                                 </div>
                             </div>
                         </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
+            </div>
         </PublicLayout>
     );
 }
