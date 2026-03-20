@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Head, Link } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
+import { Clock } from "lucide-react";
 import {
     CCard,
     CCardBody,
@@ -147,17 +148,18 @@ export default function SettingsIndex({ settings }) {
                                                                         ) ||
                                                                             setting.description}
                                                                     </small>
-                                                                    {setting.value && (
+                                                                    {setting.value &&
+                                                                    setting.key !==
+                                                                        "business_hours" ? (
                                                                         <div className="mt-2 p-2 bg-light rounded-2">
                                                                             <small className="d-block text-truncate text-monospace">
                                                                                 <strong>
                                                                                     Nilai:
                                                                                 </strong>{" "}
-                                                                                {setting.value &&
-                                                                                setting
+                                                                                {setting
                                                                                     .value
                                                                                     .length >
-                                                                                    60
+                                                                                60
                                                                                     ? setting.value.substring(
                                                                                           0,
                                                                                           60,
@@ -166,7 +168,26 @@ export default function SettingsIndex({ settings }) {
                                                                                     : setting.value}
                                                                             </small>
                                                                         </div>
-                                                                    )}
+                                                                    ) : setting.key ===
+                                                                      "business_hours" ? (
+                                                                        <div className="mt-2 p-2 bg-light rounded-2">
+                                                                            <small className="text-muted d-flex align-items-center gap-2">
+                                                                                <Clock
+                                                                                    size={
+                                                                                        16
+                                                                                    }
+                                                                                />
+                                                                                Klik
+                                                                                <em>
+                                                                                    Edit
+                                                                                </em>{" "}
+                                                                                untuk
+                                                                                ubah
+                                                                                jam
+                                                                                operasional
+                                                                            </small>
+                                                                        </div>
+                                                                    ) : null}
                                                                 </div>
                                                             </div>
                                                         </div>

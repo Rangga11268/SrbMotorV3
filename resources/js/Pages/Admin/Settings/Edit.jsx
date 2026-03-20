@@ -284,12 +284,28 @@ export default function SettingsEdit({ category, settings }) {
         const metadata = getMetadata(setting.key);
 
         // Special handling for business_hours
-        if (setting.key === "business_hours" && setting.type === "json") {
+        if (setting.key === "business_hours") {
             let hours = {};
             try {
-                hours = JSON.parse(setting.value || "{}");
+                const parseValue =
+                    typeof setting.value === "string"
+                        ? JSON.parse(setting.value || "{}")
+                        : setting.value;
+                hours = parseValue || {};
             } catch (e) {
-                console.error("Error parsing business hours");
+                console.error("Error parsing business hours:", e);
+                // If parse fails, try splitting by commas
+                try {
+                    const values = setting.value?.split(",") || [];
+                    if (values.length === 0) {
+                        hours = {};
+                    } else {
+                        // If it's a simple string, we'll let it show the 7-day form anyway
+                        hours = {};
+                    }
+                } catch (err) {
+                    hours = {};
+                }
             }
 
             return (
