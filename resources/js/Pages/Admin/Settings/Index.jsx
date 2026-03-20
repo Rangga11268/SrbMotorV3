@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Head, Link } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Clock } from "lucide-react";
 import {
     CCard,
     CCardBody,
@@ -133,62 +132,48 @@ export default function SettingsIndex({ settings }) {
                                                             key={setting.id}
                                                             className="p-4 bg-white rounded-3 border border-light-subtle"
                                                         >
-                                                            <div className="d-flex justify-content-between align-items-start">
-                                                                <div className="flex-grow-1">
-                                                                    <div className="fw-bold text-dark">
-                                                                        {getFieldLabel(
-                                                                            category,
-                                                                            setting.key,
-                                                                        )}
-                                                                    </div>
-                                                                    <small className="text-muted d-block mt-1">
-                                                                        {getFieldHelper(
-                                                                            category,
-                                                                            setting.key,
-                                                                        ) ||
-                                                                            setting.description}
-                                                                    </small>
-                                                                    {setting.value &&
-                                                                    setting.key !==
-                                                                        "business_hours" ? (
-                                                                        <div className="mt-2 p-2 bg-light rounded-2">
-                                                                            <small className="d-block text-truncate text-monospace">
-                                                                                <strong>
-                                                                                    Nilai:
-                                                                                </strong>{" "}
-                                                                                {setting
-                                                                                    .value
-                                                                                    .length >
-                                                                                60
-                                                                                    ? setting.value.substring(
-                                                                                          0,
-                                                                                          60,
-                                                                                      ) +
-                                                                                      "..."
-                                                                                    : setting.value}
-                                                                            </small>
-                                                                        </div>
-                                                                    ) : setting.key ===
-                                                                      "business_hours" ? (
-                                                                        <div className="mt-2 p-2 bg-light rounded-2">
-                                                                            <small className="text-muted d-flex align-items-center gap-2">
-                                                                                <Clock
-                                                                                    size={
-                                                                                        16
-                                                                                    }
-                                                                                />
-                                                                                Klik
-                                                                                <em>
-                                                                                    Edit
-                                                                                </em>{" "}
-                                                                                untuk
-                                                                                ubah
-                                                                                jam
-                                                                                operasional
-                                                                            </small>
-                                                                        </div>
-                                                                    ) : null}
+                                                            <div>
+                                                                <div className="fw-bold text-dark">
+                                                                    {getFieldLabel(
+                                                                        category,
+                                                                        setting.key,
+                                                                    )}
                                                                 </div>
+                                                                <small className="text-muted d-block mt-1">
+                                                                    {getFieldHelper(
+                                                                        category,
+                                                                        setting.key,
+                                                                    ) ||
+                                                                        setting.description}
+                                                                </small>
+                                                                {setting.value &&
+                                                                setting.key !==
+                                                                    "business_hours" ? (
+                                                                    <div className="mt-2 p-2 bg-light rounded-2">
+                                                                        <small className="d-block text-truncate text-monospace">
+                                                                            <strong>
+                                                                                Nilai:
+                                                                            </strong>{" "}
+                                                                            {setting
+                                                                                .value
+                                                                                .length >
+                                                                            60
+                                                                                ? setting.value.substring(
+                                                                                      0,
+                                                                                      60,
+                                                                                  ) +
+                                                                                  "..."
+                                                                                : setting.value}
+                                                                        </small>
+                                                                    </div>
+                                                                ) : setting.key ===
+                                                                  "business_hours" ? (
+                                                                    <div className="mt-2 p-2 bg-light rounded-2">
+                                                                        <small className="text-muted">
+                                                                            Jam operasional terpengaturan
+                                                                        </small>
+                                                                    </div>
+                                                                ) : null}
                                                             </div>
                                                         </div>
                                                     ))}
@@ -212,37 +197,6 @@ export default function SettingsIndex({ settings }) {
                                                     </div>
                                                 </div>
                                             )}
-
-                                            <div className="mt-4 d-flex justify-content-between">
-                                                <p className="text-muted small">
-                                                    Terakhir diubah:{" "}
-                                                    {new Date().toLocaleDateString(
-                                                        "id-ID",
-                                                    )}
-                                                </p>
-                                                <Link
-                                                    href={route(
-                                                        "admin.settings.edit",
-                                                        category,
-                                                    )}
-                                                >
-                                                    <CButton
-                                                        color="primary"
-                                                        size="sm"
-                                                    >
-                                                        <CIcon
-                                                            icon={cilPencil}
-                                                            className="me-2"
-                                                        />
-                                                        Edit{" "}
-                                                        {
-                                                            categories[
-                                                                activeTab
-                                                            ]?.label
-                                                        }
-                                                    </CButton>
-                                                </Link>
-                                            </div>
                                         </CTabPane>
                                     ),
                                 )}
