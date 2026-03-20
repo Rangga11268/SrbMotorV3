@@ -117,29 +117,30 @@ export default function NewsIndex({ posts }) {
                                 <CTableBody>
                                     {posts.data.map((post) => (
                                         <CTableRow key={post.id}>
-                                            <CTableDataCell>
-                                                <strong>{post.title}</strong>
-                                                <br />
-                                                <small className="text-muted">
+                                            <CTableDataCell style={{ minWidth: '200px' }}>
+                                                <div className="fw-bold text-truncate-2">
+                                                    {post.title}
+                                                </div>
+                                                <small className="text-muted text-truncate d-block" style={{ maxWidth: '180px' }}>
                                                     {post.slug}
                                                 </small>
                                             </CTableDataCell>
-                                            <CTableDataCell>
+                                            <CTableDataCell className="text-nowrap">
                                                 {post.category?.name}
                                             </CTableDataCell>
                                             <CTableDataCell>
                                                 {getStatusBadge(post.status)}
                                             </CTableDataCell>
-                                            <CTableDataCell>
+                                            <CTableDataCell className="text-nowrap">
                                                 {post.published_at
                                                     ? formatDate(
                                                           post.published_at,
                                                       )
                                                     : "-"}
                                             </CTableDataCell>
-                                            <CTableDataCell>
+                                            <CTableDataCell className="text-nowrap">
                                                 <CBadge color="info">
-                                                    {post.views} kali
+                                                    {post.views}
                                                 </CBadge>
                                             </CTableDataCell>
                                             <CTableDataCell className="text-center">

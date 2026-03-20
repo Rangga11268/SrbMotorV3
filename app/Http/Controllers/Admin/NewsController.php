@@ -64,7 +64,7 @@ class NewsController extends Controller
             ->with('success', 'Berita berhasil ditambahkan.');
     }
 
-    public function edit(Post $post)
+    public function edit(Post $news)
     {
         $categories = Category::active()->get(['id', 'name']);
 
@@ -74,7 +74,7 @@ class NewsController extends Controller
         ]);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $news)
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
@@ -110,21 +110,21 @@ class NewsController extends Controller
             $validated['published_at'] = now();
         }
 
-        $post->update($validated);
+        $news->update($validated);
 
         return redirect()->route('admin.news.index')
             ->with('success', 'Berita berhasil diperbarui.');
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $news)
     {
-        $post->delete();
+        $news->delete();
 
         return redirect()->route('admin.news.index')
             ->with('success', 'Berita berhasil dihapus.');
     }
 
-    public function show(Post $post)
+    public function show(Post $news)
     {
         return Inertia::render('Admin/News/Show', [
             'post' => $post->load('category'),

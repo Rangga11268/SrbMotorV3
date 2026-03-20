@@ -45,13 +45,14 @@ class Post extends Model
         });
 
         static::deleting(function ($post) {
-            if ($post->featured_image) {
-                if (str_starts_with($post->featured_image, 'storage/')) {
+            $imagePath = $post->getRawOriginal('featured_image');
+            if ($imagePath) {
+                if (str_starts_with($imagePath, 'storage/')) {
                     \Illuminate\Support\Facades\Storage::disk('public')->delete(
-                        str_replace('storage/', '', $post->featured_image)
+                        str_replace('storage/', '', $imagePath)
                     );
-                } elseif (file_exists(public_path($post->featured_image))) {
-                    unlink(public_path($post->featured_image));
+                } elseif (file_exists(public_path($imagePath))) {
+                    unlink(public_path($imagePath));
                 }
             }
         });
