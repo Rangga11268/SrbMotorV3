@@ -21,6 +21,9 @@ import {
     Gauge,
     Phone,
     AlertCircle,
+    Gift,
+    RefreshCw,
+    Zap,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/Components/UI/Button";
@@ -357,7 +360,11 @@ export default function Home({
                                         >
                                             <div className="relative h-60 bg-gray-100 overflow-hidden">
                                                 <img
-                                                    src={`/storage/${motor.image_path}`}
+                                                    src={
+                                                        motor.image_path
+                                                            ? `/storage/${motor.image_path}`
+                                                            : "/assets/img/no-image.png"
+                                                    }
                                                     className={`w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700 ${
                                                         !motor.tersedia
                                                             ? "opacity-50"
@@ -439,6 +446,140 @@ export default function Home({
                             ))}
                         </div>
                     )}
+                </div>
+            </section>
+
+
+            {/* NEWS & ARTICLES SECTION */}
+            <section className="py-20 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-end justify-between mb-12 gap-4 flex-col md:flex-row">
+                        <div>
+                            <Badge className="mb-3">BERITA TERKINI</Badge>
+                            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none">
+                                Halaman{" "}
+                                <span className="text-primary">Berita</span>
+                            </h2>
+                        </div>
+                        <Link
+                            href="/news"
+                            className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-widest hover:gap-3 transition-all"
+                        >
+                            Lihat Semua <ChevronRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                            {
+                                title: "Tips Perawatan Motor untuk Pemula",
+                                date: "20 Mar 2026",
+                                image: null,
+                                category: "Tips",
+                            },
+                            {
+                                title: "Perbandingan Motor Matic Terbaru 2026",
+                                date: "19 Mar 2026",
+                                image: "/assets/img/news/news2.png",
+                                category: "Review",
+                            },
+                            {
+                                title: "Program Trade-in Mobil Lama Kami",
+                                date: "18 Mar 2026",
+                                image: "/assets/img/news/news3.png",
+                                category: "Promo",
+                            },
+                        ].map((news, idx) => (
+                            <motion.div
+                                key={idx}
+                                whileHover={{ y: -8 }}
+                                className="group cursor-pointer"
+                            >
+                                <div className="relative h-48 rounded-xl overflow-hidden mb-4 shadow-md group-hover:shadow-xl transition-shadow">
+                                    <img
+                                        src={news.image || "/assets/img/no-image.png"}
+                                        alt={news.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "/assets/img/no-image.png";
+                                        }}
+                                    />
+                                    <div className="absolute top-4 left-4">
+                                        <Badge className="bg-primary text-white text-xs">
+                                            {news.category}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                                    {news.date}
+                                </p>
+                                <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
+                                    {news.title}
+                                </h3>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ SECTION */}
+            <section className="py-20 bg-white">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <Badge className="mb-3 bg-purple-100 text-purple-700">
+                            BANTUAN
+                        </Badge>
+                        <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-none mb-4">
+                            Pertanyaan yang{" "}
+                            <span className="text-primary">
+                                Sering Diajukan
+                            </span>
+                        </h2>
+                        <p className="text-lg text-gray-500">
+                            Temukan jawaban untuk pertanyaan umum Anda
+                        </p>
+                    </div>
+
+                    <div className="space-y-3">
+                        {[
+                            {
+                                question: "Berapa lama proses cicilan motor?",
+                                answer: "Proses persetujuan cicilan biasanya hanya membutuhkan waktu 24 jam. Setelah persetujuan, motor bisa langsung dibawa pulang.",
+                            },
+                            {
+                                question: "Apakah ada garansi untuk motor?",
+                                answer: "Ya, semua motor kami dilengkapi dengan garansi resmi dari pabrikan selama 2 tahun atau sesuai ketentuan pabrikan.",
+                            },
+                            {
+                                question:
+                                    "Bagaimana cara trade-in motor lama saya?",
+                                answer: "Anda bisa membawa motor lama Anda untuk dievaluasi. Tim kami akan menilai harga terbaik untuk motor Anda, kemudian diperhitungkan sebagai DP motor baru.",
+                            },
+                            {
+                                question: "Apakah ada layanan delivery?",
+                                answer: "Ya, kami menyediakan layanan pengiriman gratis untuk area Jakarta dan sekitarnya. Untuk daerah lain, silakan hubungi tim kami untuk informasi lebih lanjut.",
+                            },
+                            {
+                                question:
+                                    "Bagaimana jika ada yang tidak puas dengan motor?",
+                                answer: "Kami memberikan garansi kepuasan 7 hari. Jika ada masalah dengan motor, kami siap memberikan solusi terbaik untuk Anda.",
+                            },
+                        ].map((faq, idx) => (
+                            <details
+                                key={idx}
+                                className="group p-5 md:p-6 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all duration-300"
+                            >
+                                <summary className="flex items-center justify-between font-bold text-gray-900 text-base md:text-lg group-hover:text-primary transition-colors list-none">
+                                    <span>{faq.question}</span>
+                                    <ChevronRight className="w-5 h-5 transform group-open:rotate-90 transition-transform" />
+                                </summary>
+                                <p className="mt-4 text-gray-600 leading-relaxed font-medium">
+                                    {faq.answer}
+                                </p>
+                            </details>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -534,51 +675,53 @@ export default function Home({
                         </div>
 
                         <div className="grid gap-6">
-                             <a
-                                 href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}`}
-                                 target="_blank"
-                                 rel="noopener noreferrer"
-                                 className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
-                             >
-                                 <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
-                                     <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
-                                         <Phone className="w-6 h-6 sm:w-8 sm:h-8" />
-                                     </div>
-                                     <div className="flex-1">
-                                         <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
-                                             Whatsapp Bekasi
-                                         </p>
-                                         <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
-                                             {settings.contact_phone || "0812-1234-5678"}
-                                         </p>
-                                     </div>
-                                     <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
-                                         <ArrowRight className="w-5 h-5" />
-                                     </div>
-                                 </div>
-                             </a>
+                            <a
+                                href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                            >
+                                <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                        <Phone className="w-6 h-6 sm:w-8 sm:h-8" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
+                                            Whatsapp Bekasi
+                                        </p>
+                                        <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
+                                            {settings.contact_phone ||
+                                                "0812-1234-5678"}
+                                        </p>
+                                    </div>
+                                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </a>
 
-                             <a
-                                 href={`mailto:${settings.contact_email || "halo@srbmotor.id"}`}
-                                 className="group p-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
-                             >
-                                 <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
-                                     <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
-                                         <Mail className="w-6 h-6 sm:w-8 sm:h-8" />
-                                     </div>
-                                     <div className="flex-1 max-w-full overflow-hidden">
-                                         <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
-                                             Layanan Email
-                                         </p>
-                                         <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors truncate">
-                                             {settings.contact_email || "halo@srbmotor.id"}
-                                         </p>
-                                     </div>
-                                     <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
-                                         <ArrowRight className="w-5 h-5" />
-                                     </div>
-                                 </div>
-                             </a>
+                            <a
+                                href={`mailto:${settings.contact_email || "halo@srbmotor.id"}`}
+                                className="group p-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                            >
+                                <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
+                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                        <Mail className="w-6 h-6 sm:w-8 sm:h-8" />
+                                    </div>
+                                    <div className="flex-1 max-w-full overflow-hidden">
+                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
+                                            Layanan Email
+                                        </p>
+                                        <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors truncate">
+                                            {settings.contact_email ||
+                                                "halo@srbmotor.id"}
+                                        </p>
+                                    </div>
+                                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
+                                        <ArrowRight className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -601,11 +744,11 @@ export default function Home({
                     <div className="max-w-2xl mx-auto">
                         <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-white p-8 md:p-12 rounded-[2.5rem] border border-blue-100 shadow-2xl shadow-blue-100/30">
                             <div className="flex items-start gap-6 md:gap-8">
-                                 {/* Avatar - SRB Logo */}
+                                {/* Avatar - SRB Logo */}
                                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-lg border-4 border-blue-50 overflow-hidden p-3">
-                                    <img 
-                                        src="/assets/icon/logo trans.png" 
-                                        alt="SRB Motors" 
+                                    <img
+                                        src="/assets/icon/logo trans.png"
+                                        alt="SRB Motors"
                                         className="w-full h-full object-contain"
                                     />
                                 </div>
@@ -620,8 +763,14 @@ export default function Home({
                                         {/* Phone */}
                                         <a
                                             onClick={() => {
-                                                const phoneNumber = (settings.contact_phone || "628978638849").replace(/\D/g, "");
-                                                window.open(`https://wa.me/${phoneNumber}`, "_blank");
+                                                const phoneNumber = (
+                                                    settings.contact_phone ||
+                                                    "628978638849"
+                                                ).replace(/\D/g, "");
+                                                window.open(
+                                                    `https://wa.me/${phoneNumber}`,
+                                                    "_blank",
+                                                );
                                             }}
                                             className="flex items-center gap-4 p-4 bg-white rounded-xl hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-200 group"
                                         >

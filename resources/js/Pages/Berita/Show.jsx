@@ -128,15 +128,17 @@ export default function BeritaShow({
                         </div>
 
                         {/* Featured Image */}
-                        {post.featured_image && (
-                            <div className="relative mb-12 rounded-[2rem] overflow-hidden shadow-lg aspect-[16/9]">
-                                <img
-                                    src={post.featured_image}
-                                    alt={post.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        )}
+                        <div className="relative mb-12 rounded-[2rem] overflow-hidden shadow-lg aspect-[16/9]">
+                            <img
+                                src={post.featured_image || "/assets/img/no-image.png"}
+                                alt={post.title}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = "/assets/img/no-image.png";
+                                }}
+                            />
+                        </div>
 
                         {/* Content */}
                         <div className="article-content mb-16 px-4 md:px-0 max-w-none">

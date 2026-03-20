@@ -158,7 +158,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                         src={
                                             motor.image_path
                                                 ? `/storage/${motor.image_path}`
-                                                : "/images/placeholder-motor.jpg"
+                                                : "/assets/img/no-image.png"
                                         }
                                         alt={motor.name}
                                         className="max-w-[85%] max-h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] relative z-10 transition-transform duration-700 group-hover:scale-105"
@@ -415,7 +415,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                                     src={
                                                         m.image_path
                                                             ? `/storage/${m.image_path}`
-                                                            : "/images/placeholder-motor.jpg"
+                                                            : "/assets/img/no-image.png"
                                                     }
                                                     className="w-full h-full object-contain p-4 transform group-hover:scale-110 transition-transform duration-700"
                                                 />

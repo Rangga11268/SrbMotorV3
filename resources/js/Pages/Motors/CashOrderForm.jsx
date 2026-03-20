@@ -652,7 +652,7 @@ export default function CashOrderForm({ motor, auth }) {
                                             src={
                                                 motor.image_path
                                                     ? `/storage/${motor.image_path}`
-                                                    : "/images/placeholder-motor.jpg"
+                                                    : "/assets/img/no-image.png"
                                             }
                                             alt={motor.name}
                                             className="w-full h-full object-cover"

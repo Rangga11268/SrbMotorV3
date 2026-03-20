@@ -346,7 +346,7 @@ export default function Index({
                                                                 src={
                                                                     motor.image_path
                                                                         ? `/storage/${motor.image_path}`
-                                                                        : "/images/placeholder-motor.jpg"
+                                                                        : "/assets/img/no-image.png"
                                                                 }
                                                                 alt={motor.name}
                                                                 className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${

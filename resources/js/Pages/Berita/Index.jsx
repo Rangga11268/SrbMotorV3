@@ -266,24 +266,26 @@ export default function BeritaIndex({
                                                 key={post.id}
                                                 className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden border border-slate-200 dark:border-slate-700 group flex flex-col"
                                             >
-                                                {post.featured_image && (
-                                                    <Link
-                                                        href={route(
-                                                            "berita.show",
-                                                            post.slug,
-                                                        )}
-                                                        className="block overflow-hidden relative aspect-[16/10]"
-                                                    >
-                                                        <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors z-10"></div>
-                                                        <img
-                                                            src={
-                                                                post.featured_image
-                                                            }
-                                                            alt={post.title}
-                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                                                        />
-                                                    </Link>
-                                                )}
+                                                <Link
+                                                    href={route(
+                                                        "berita.show",
+                                                        post.slug,
+                                                    )}
+                                                    className="block overflow-hidden relative aspect-[16/10]"
+                                                >
+                                                    <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors z-10"></div>
+                                                    <img
+                                                        src={
+                                                            post.featured_image || "/assets/img/no-image.png"
+                                                        }
+                                                        alt={post.title}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.src = "/assets/img/no-image.png";
+                                                        }}
+                                                    />
+                                                </Link>
                                                 <div className="p-6 flex flex-col flex-grow">
                                                     <div className="flex items-center justify-between mb-4">
                                                         <span className="inline-block bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
