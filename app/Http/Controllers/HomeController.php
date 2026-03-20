@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Repositories\MotorRepositoryInterface;
 use App\Models\Motor;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -39,9 +40,13 @@ class HomeController extends Controller
             'Yamaha' => $brandAvailability->get('Yamaha') ?? ['name' => 'Yamaha', 'available' => false],
         ];
 
+        // Get settings from database
+        $settings = Setting::pluck('value', 'key')->toArray();
+
         return \Inertia\Inertia::render('Home', [
             'popularMotors' => $popularMotors,
-            'brandAvailability' => $brands
+            'brandAvailability' => $brands,
+            'settings' => $settings
         ]);
     }
 }

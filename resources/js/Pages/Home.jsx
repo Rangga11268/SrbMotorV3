@@ -20,6 +20,7 @@ import {
     MessageCircle,
     Gauge,
     Phone,
+    AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/Components/UI/Button";
@@ -34,6 +35,7 @@ export default function Home({
     auth,
     popularMotors = [],
     brandAvailability = {},
+    settings = {},
 }) {
     const [searchQuery, setSearchQuery] = useState("");
     const { data, setData, post, processing, reset } = useForm({});
@@ -356,8 +358,25 @@ export default function Home({
                                             <div className="relative h-60 bg-gray-100 overflow-hidden">
                                                 <img
                                                     src={`/storage/${motor.image_path}`}
-                                                    className="w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700"
+                                                    className={`w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700 ${
+                                                        !motor.tersedia
+                                                            ? "opacity-50"
+                                                            : ""
+                                                    }`}
                                                 />
+                                                {/* Status overlay for sold units */}
+                                                {!motor.tersedia && (
+                                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+                                                        <div className="text-center">
+                                                            <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
+                                                                <AlertCircle className="w-8 h-8 text-white" />
+                                                            </div>
+                                                            <p className="text-white font-black text-sm uppercase tracking-widest">
+                                                                Terjual
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 {/* Ribbon logic from Phase 6 */}
                                                 {motor.promotions?.length >
                                                     0 && (
@@ -560,6 +579,80 @@ export default function Home({
                                     </div>
                                 </div>
                             </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* SELLER INFORMATION SECTION */}
+            <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                            Informasi{" "}
+                            <span className="text-primary">Penjual</span>
+                        </h2>
+                        <p className="text-gray-500 text-lg font-medium">
+                            Hubungi langsung untuk konsultasi dan penawaran
+                            terbaik
+                        </p>
+                    </div>
+
+                    <div className="max-w-2xl mx-auto">
+                        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-white p-8 md:p-12 rounded-[2.5rem] border border-blue-100 shadow-2xl shadow-blue-100/30">
+                            <div className="flex items-start gap-6 md:gap-8">
+                                {/* Avatar */}
+                                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg">
+                                    <span className="text-white font-black text-2xl md:text-3xl">
+                                        S
+                                    </span>
+                                </div>
+
+                                {/* Info */}
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-6">
+                                        {settings.site_name || "SRB Motors"}
+                                    </h3>
+
+                                    <div className="space-y-5">
+                                        {/* Phone */}
+                                        <a
+                                            href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "")}`}
+                                            target="_blank"
+                                            className="flex items-center gap-4 p-4 bg-white rounded-xl hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-200 group"
+                                        >
+                                            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform flex-shrink-0">
+                                                <Phone className="w-5 h-5" />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">
+                                                    WhatsApp
+                                                </p>
+                                                <p className="text-lg font-black text-gray-900 truncate">
+                                                    {settings.contact_whatsapp ||
+                                                        "6281234567890"}
+                                                </p>
+                                            </div>
+                                        </a>
+
+                                        {/* Address */}
+                                        <div className="flex items-start gap-4 p-4 bg-white rounded-xl border border-transparent hover:border-blue-200 transition-colors">
+                                            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 mt-0.5">
+                                                <MapPin className="w-5 h-5" />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">
+                                                    Lokasi
+                                                </p>
+                                                <p className="text-sm md:text-base font-bold text-gray-600 leading-relaxed">
+                                                    {settings.contact_address ||
+                                                        "Jl. Raya Utama No. 123, Jakarta Selatan, DKI Jakarta 12345"}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
