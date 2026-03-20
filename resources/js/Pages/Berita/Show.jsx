@@ -139,8 +139,16 @@ export default function BeritaShow({
                         )}
 
                         {/* Content */}
-                        <div className="article-content mb-16">
+                        <div className="article-content mb-16 px-4 md:px-0 max-w-none">
                             <div
+                                className="prose prose-lg md:prose-xl prose-slate dark:prose-invert 
+                                prose-headings:font-black prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-white
+                                prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-p:leading-relaxed
+                                prose-img:rounded-[2rem] prose-img:shadow-2xl
+                                prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-bold hover:prose-a:text-blue-700
+                                prose-strong:text-slate-900 dark:prose-strong:text-white prose-strong:font-black
+                                prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:font-medium prose-blockquote:italic
+                                max-w-3xl mx-auto"
                                 dangerouslySetInnerHTML={{
                                     __html: post.content,
                                 }}

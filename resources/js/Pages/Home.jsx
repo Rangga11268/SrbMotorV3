@@ -109,7 +109,7 @@ export default function Home({
                                         </button>
                                     </Link>
                                     <a
-                                        href="https://wa.me/6281234567890"
+                                        href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "") || "6281234567890"}`}
                                         target="_blank"
                                         className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-transparent border-2 border-white/40 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 flex items-center justify-center gap-2 sm:gap-3"
                                     >
@@ -227,7 +227,7 @@ export default function Home({
                                         </div>
                                     </Link>
                                     <a
-                                        href="https://wa.me/6281234567890"
+                                        href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "") || "6281234567890"}`}
                                         target="_blank"
                                         className="flex-1 group"
                                     >
@@ -534,51 +534,51 @@ export default function Home({
                         </div>
 
                         <div className="grid gap-6">
-                            <a
-                                href="https://wa.me/6281212345678"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
-                            >
-                                <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
-                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
-                                        <Phone className="w-6 h-6 sm:w-8 sm:h-8" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
-                                            Whatsapp Bekasi
-                                        </p>
-                                        <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
-                                            0812-1234-5678
-                                        </p>
-                                    </div>
-                                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
-                                        <ArrowRight className="w-5 h-5" />
-                                    </div>
-                                </div>
-                            </a>
+                             <a
+                                 href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "") || "6281212345678"}`}
+                                 target="_blank"
+                                 rel="noopener noreferrer"
+                                 className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                             >
+                                 <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
+                                     <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                         <Phone className="w-6 h-6 sm:w-8 sm:h-8" />
+                                     </div>
+                                     <div className="flex-1">
+                                         <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
+                                             Whatsapp Bekasi
+                                         </p>
+                                         <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors">
+                                             {settings.contact_phone || "0812-1234-5678"}
+                                         </p>
+                                     </div>
+                                     <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
+                                         <ArrowRight className="w-5 h-5" />
+                                     </div>
+                                 </div>
+                             </a>
 
-                            <a
-                                href="mailto:halo@srbmotor.id"
-                                className="group p-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
-                            >
-                                <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
-                                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
-                                        <Mail className="w-6 h-6 sm:w-8 sm:h-8" />
-                                    </div>
-                                    <div className="flex-1 max-w-full overflow-hidden">
-                                        <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
-                                            Layanan Email
-                                        </p>
-                                        <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors truncate">
-                                            halo@srbmotor.id
-                                        </p>
-                                    </div>
-                                    <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
-                                        <ArrowRight className="w-5 h-5" />
-                                    </div>
-                                </div>
-                            </a>
+                             <a
+                                 href={`mailto:${settings.contact_email || "halo@srbmotor.id"}`}
+                                 className="group p-2 bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
+                             >
+                                 <div className="flex items-center gap-4 sm:gap-6 p-5 sm:p-8">
+                                     <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-all duration-500 flex-shrink-0">
+                                         <Mail className="w-6 h-6 sm:w-8 sm:h-8" />
+                                     </div>
+                                     <div className="flex-1 max-w-full overflow-hidden">
+                                         <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1 truncate">
+                                             Layanan Email
+                                         </p>
+                                         <p className="text-lg sm:text-xl font-black text-gray-900 group-hover:text-primary transition-colors truncate">
+                                             {settings.contact_email || "halo@srbmotor.id"}
+                                         </p>
+                                     </div>
+                                     <div className="hidden sm:flex w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 group-hover:bg-primary/10 group-hover:text-primary transition-all flex-shrink-0">
+                                         <ArrowRight className="w-5 h-5" />
+                                     </div>
+                                 </div>
+                             </a>
                         </div>
                     </div>
                 </div>
@@ -601,11 +601,13 @@ export default function Home({
                     <div className="max-w-2xl mx-auto">
                         <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-white p-8 md:p-12 rounded-[2.5rem] border border-blue-100 shadow-2xl shadow-blue-100/30">
                             <div className="flex items-start gap-6 md:gap-8">
-                                {/* Avatar */}
-                                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg">
-                                    <span className="text-white font-black text-2xl md:text-3xl">
-                                        S
-                                    </span>
+                                 {/* Avatar - SRB Logo */}
+                                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-lg border-4 border-blue-50 overflow-hidden p-3">
+                                    <img 
+                                        src="/assets/icon/logo trans.png" 
+                                        alt="SRB Motors" 
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
 
                                 {/* Info */}

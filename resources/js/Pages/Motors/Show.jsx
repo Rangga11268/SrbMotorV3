@@ -57,7 +57,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
 
     const openWhatsApp = (e) => {
         e.preventDefault();
-        const phoneNumber = "6281234567890";
+        const phoneNumber = settings.contact_whatsapp?.replace(/\D/g, "") || "6281234567890";
         const message = encodeURIComponent(
             `Halo SRB Motors, saya tertarik dengan unit ${
                 motor.name
@@ -68,49 +68,66 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
 
     return (
         <PublicLayout auth={auth} title={`${motor.name} - SRB Motors`}>
-            <div className="flex-grow pt-32 pb-20 bg-gray-50/30">
-                {/* BREADCRUMBS & BACK BUTTON */}
-                <div className="bg-white/80 backdrop-blur-md border-y border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-xs font-bold text-gray-400">
-                            <Link
-                                href="/"
-                                className="hover:text-primary transition-colors"
-                            >
-                                HOME
-                            </Link>
-                            <ChevronRight className="w-3 h-3" />
-                            <Link
-                                href={route("motors.index")}
-                                className="hover:text-primary transition-colors uppercase"
-                            >
-                                KATALOG
-                            </Link>
-                            <ChevronRight className="w-3 h-3" />
-                            <span className="text-gray-900 uppercase truncate max-w-[150px] md:max-w-none">
-                                {motor.name}
-                            </span>
+            {/* PREMIUM HEADER SECTION */}
+            <div className="relative pt-32 pb-16 overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute inset-0 bg-[#060d18] z-0">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-transparent opacity-50" />
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    {/* BREADCRUMBS */}
+                    <nav className="flex items-center gap-2 text-[10px] font-black tracking-widest uppercase mb-8">
+                        <Link href="/" className="text-gray-400 hover:text-white transition-colors">HOME</Link>
+                        <ChevronRight className="w-3 h-3 text-gray-600" />
+                        <Link href={route("motors.index")} className="text-gray-400 hover:text-white transition-colors">KATALOG</Link>
+                        <ChevronRight className="w-3 h-3 text-gray-600" />
+                        <span className="text-blue-400 truncate max-w-[200px]">{motor.name}</span>
+                    </nav>
+
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
+                                <Sparkles className="w-3 h-3 text-blue-400" />
+                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Premium Unit</span>
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black text-white leading-none tracking-tight">
+                                {motor.name.split(' ').map((word, i) => (
+                                    <span key={i} className={i === 0 ? "text-white" : "text-blue-500 ml-3"}>{word} </span>
+                                ))}
+                            </h1>
                         </div>
                         <Link
                             href={route("motors.index")}
-                            className="flex items-center gap-2 text-xs font-black text-gray-500 hover:text-primary transition-all"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black text-white hover:text-blue-400 transition-all uppercase tracking-widest backdrop-blur-md group"
                         >
-                            <ArrowLeft className="w-4 h-4" /> KEMBALI
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            Kembali ke Katalog
                         </Link>
                     </div>
                 </div>
+            </div>
+
+            <div className="flex-grow pb-20 bg-white dark:bg-[#060d18]">
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                     <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
                         {/* LEFT COLUMN - CONTENT */}
                         <div className="flex-grow space-y-8">
                             {/* MAIN IMAGE CARD */}
-                            <motion.div
+                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 overflow-hidden border border-white"
+                                className="bg-white dark:bg-[#0d1b2e] rounded-[3rem] shadow-2xl shadow-blue-900/10 overflow-hidden border border-gray-100 dark:border-blue-900/30 relative"
                             >
-                                <div className="relative aspect-[16/10] md:aspect-[16/9] bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-8 md:p-12">
+                                <div className="relative aspect-[16/10] md:aspect-[16/9] bg-gradient-to-br from-gray-50 to-white dark:from-[#0d1b2e] dark:to-[#060d18] flex items-center justify-center p-8 md:p-12 overflow-hidden">
+                                    {/* Decor */}
+                                    <div className="absolute inset-0 opacity-10">
+                                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/20 via-transparent to-transparent" />
+                                    </div>
+                                    
                                     <img
                                         src={
                                             motor.image_path
@@ -118,15 +135,15 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                                 : "/images/placeholder-motor.jpg"
                                         }
                                         alt={motor.name}
-                                        className="max-w-full max-h-full object-contain drop-shadow-2xl"
+                                        className="max-w-full max-h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative z-10 hover:scale-105 transition-transform duration-700"
                                     />
 
                                     {/* Brand & Type Labels */}
-                                    <div className="absolute top-8 left-8 flex flex-col gap-3">
-                                        <div className="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-2xl">
+                                    <div className="absolute top-8 left-8 flex flex-col gap-3 z-20">
+                                        <div className="bg-gray-900 dark:bg-white dark:text-gray-900 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-2xl">
                                             {motor.brand}
                                         </div>
-                                        <div className="bg-white text-primary px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border-2 border-primary/10 shadow-xl shadow-gray-200/50">
+                                        <div className="bg-blue-600 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-blue-500/20">
                                             {motor.type}
                                         </div>
                                     </div>
@@ -534,12 +551,12 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                         </h2>
                         <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-white p-6 md:p-8 rounded-[2rem] border border-blue-100 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100/50 transition-all duration-300">
                             <div className="flex items-start gap-4 md:gap-6">
-                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200/50">
-                                    <span className="text-white font-black text-lg md:text-xl">
-                                        {motor.user?.name
-                                            ?.charAt(0)
-                                            .toUpperCase() || "S"}
-                                    </span>
+                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-lg border-2 border-blue-100 overflow-hidden p-2">
+                                    <img 
+                                        src="/assets/icon/logo trans.png" 
+                                        alt="SRB Motors" 
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h3 className="text-xl md:text-2xl font-black text-gray-900 mb-2">

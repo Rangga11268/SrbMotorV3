@@ -13,7 +13,7 @@ import {
 
 export default function Footer() {
     const {
-        props: { leasingProviders = [] },
+        props: { leasingProviders = [], settings = {} },
     } = usePage();
     const currentYear = new Date().getFullYear();
 
@@ -40,32 +40,31 @@ export default function Footer() {
                             <Logo className="h-9" dark={true} />
                         </Link>
                         <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
-                            Dealer motor terpercaya dengan proses kredit mudah,
-                            transparan, dan cepat.
+                            {settings.site_description || "Dealer motor terpercaya dengan proses kredit mudah, transparan, dan cepat."}
                         </p>
                         <div className="space-y-3">
                             <div className="flex items-start gap-3">
                                 <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                                 <span className="text-sm text-gray-500">
-                                    Jl. Raya Utama No. 123, Jakarta Timur
+                                    {settings.contact_address || "Jl. Raya Utama No. 123, Jakarta Timur"}
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
                                 <a
-                                    href="https://wa.me/6281234567890"
+                                    href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, '') || "6281234567890"}`}
                                     className="text-sm text-gray-400 hover:text-white transition-colors"
                                 >
-                                    +62 812 3456 7890
+                                    {settings.contact_phone || "+62 812 3456 7890"}
                                 </a>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
                                 <a
-                                    href="mailto:halo@srbmotor.id"
+                                    href={`mailto:${settings.contact_email || "halo@srbmotor.id"}`}
                                     className="text-sm text-gray-400 hover:text-white transition-colors"
                                 >
-                                    halo@srbmotor.id
+                                    {settings.contact_email || "halo@srbmotor.id"}
                                 </a>
                             </div>
                         </div>
