@@ -100,16 +100,18 @@ class MotorGalleryController extends Controller
 
         $motor = $this->motorRepository->findById($motor->id, true);
 
-
         $relatedMotors = Motor::where('brand', $motor->brand)
             ->where('id', '!=', $motor->id)
-
             ->limit(4)
             ->get();
 
+        // Get settings from database
+        $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+
         return \Inertia\Inertia::render('Motors/Show', [
             'motor' => $motor,
-            'relatedMotors' => $relatedMotors
+            'relatedMotors' => $relatedMotors,
+            'settings' => $settings
         ]);
     }
 

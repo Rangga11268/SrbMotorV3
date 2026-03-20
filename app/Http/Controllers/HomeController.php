@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\MotorRepositoryInterface;
+use App\Models\Motor;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -20,6 +22,26 @@ class HomeController extends Controller
 
         $popularMotors = $this->motorRepository->getPopular(5, true);
 
-        return \Inertia\Inertia::render('Home', compact('popularMotors'));
+        // Get brand availability
+        $brandAvailability = Motor::select('brand', DB::raw('COUNT(*) as total_units'))
+            ->where('tersedia', true)
+            ->groupBy('brand')
+            ->get()
+            ->keyBy('brand')
+            ->map(fn($item) => [
+                'name' => $item->brand,
+                'available' => $item->total_units > 0
+            ]);
+
+        // Ensure both Honda and Yamaha are in the list
+        $brands = [
+            'Honda' => $brandAvailability->get('Honda') ?? ['name' => 'Honda', 'available' => false],
+            'Yamaha' => $brandAvailability->get('Yamaha') ?? ['name' => 'Yamaha', 'available' => false],
+        ];
+
+        return \Inertia\Inertia::render('Home', [
+            'popularMotors' => $popularMotors,
+            'brandAvailability' => $brands
+        ]);
     }
 }

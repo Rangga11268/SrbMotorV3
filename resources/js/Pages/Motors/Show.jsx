@@ -17,24 +17,34 @@ import {
     PenTool,
     ShieldCheck,
     CheckCircle2,
-    Activity,
+    Wrench,
     ShoppingCart,
     FileText,
     Phone,
+    Calendar,
+    Palette,
+    Settings,
+    Check,
+    AlertCircle,
+    User,
+    Sparkles,
+    FileCheck,
 } from "lucide-react";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
 import Badge from "@/Components/UI/Badge";
 
-export default function Show({ motor, relatedMotors }) {
+export default function Show({ motor, relatedMotors, settings = {} }) {
     const { auth } = usePage().props;
     const [selectedTenor, setSelectedTenor] = useState(36);
-    const [dpAmount, setDpAmount] = useState(parseFloat(motor.min_dp_amount || motor.price * 0.2));
+    const [dpAmount, setDpAmount] = useState(
+        parseFloat(motor.min_dp_amount || motor.price * 0.2),
+    );
 
     const monthlyInstallment = useMemo(() => {
         const principal = parseFloat(motor.price) - dpAmount;
         if (principal <= 0) return 0;
-        
+
         const interestRate = 0.015; // 1.5% Flat
         const totalInterest = principal * interestRate * selectedTenor;
         return Math.round((principal + totalInterest) / selectedTenor);
@@ -120,67 +130,123 @@ export default function Show({ motor, relatedMotors }) {
                                             {motor.type}
                                         </div>
                                     </div>
-
-
                                 </div>
                             </motion.div>
 
                             {/* DETAIL SPECIFICATIONS TABS (Conceptually) */}
                             <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl shadow-gray-200/20 border border-white space-y-12">
-                                <div className="space-y-6">
-                                    <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3">
-                                        <Info className="w-6 h-6 text-primary" />{" "}
-                                        Informasi Kendaraan
-                                    </h2>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                                Tahun
-                                            </p>
-                                            <p className="text-lg font-black text-gray-900">
-                                                {motor.year}
-                                            </p>
-                                        </div>
-                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                                Warna
-                                            </p>
-                                            <p className="text-lg font-black text-gray-900">
-                                                {motor.color || "Beragam"}
-                                            </p>
-                                        </div>
-                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                                Transmisi
-                                            </p>
-                                            <p className="text-lg font-black text-gray-900 uppercase">
-                                                {motor.type?.includes("matic")
-                                                    ? "Otomatis"
-                                                    : "Manual"}
-                                            </p>
-                                        </div>
-                                        <div className="space-y-1 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                                                Status
-                                            </p>
-                                            <p
-                                                className={`text-lg font-black ${motor.tersedia ? "text-green-600" : "text-red-600"}`}
-                                            >
-                                                {motor.tersedia
-                                                    ? "Tersedia"
-                                                    : "Terjual"}
-                                            </p>
+                                <div className="space-y-8">
+                                    <div>
+                                        <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3 mb-8">
+                                            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                                                <Info className="w-6 h-6 text-primary" />
+                                            </div>
+                                            Spesifikasi Kendaraan
+                                        </h2>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {/* Year Spec */}
+                                            <div className="relative group">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300" />
+                                                <div className="relative bg-white rounded-2xl p-5 border-2 border-blue-100 group-hover:border-blue-500 transition-all duration-300 space-y-3 h-full">
+                                                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                                                        <Calendar className="w-5 h-5 text-blue-600" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                            Tahun
+                                                        </p>
+                                                        <p className="text-2xl font-black text-gray-900">
+                                                            {motor.year}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Color Spec */}
+                                            <div className="relative group">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-400 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300" />
+                                                <div className="relative bg-white rounded-2xl p-5 border-2 border-purple-100 group-hover:border-purple-500 transition-all duration-300 space-y-3 h-full">
+                                                    <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                                                        <Palette className="w-5 h-5 text-purple-600" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                            Warna
+                                                        </p>
+                                                        <p className="text-lg font-black text-gray-900">
+                                                            {motor.color ||
+                                                                "Beragam"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Transmission Spec */}
+                                            <div className="relative group">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-red-400 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300" />
+                                                <div className="relative bg-white rounded-2xl p-5 border-2 border-orange-100 group-hover:border-orange-500 transition-all duration-300 space-y-3 h-full">
+                                                    <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center">
+                                                        <Settings className="w-5 h-5 text-orange-600" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                            Transmisi
+                                                        </p>
+                                                        <p className="text-lg font-black text-gray-900 uppercase">
+                                                            {motor.type?.includes(
+                                                                "matic",
+                                                            )
+                                                                ? "Otomatis"
+                                                                : "Manual"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Status Spec */}
+                                            <div className="relative group">
+                                                <div
+                                                    className={`absolute inset-0 bg-gradient-to-r ${motor.tersedia ? "from-green-600 to-emerald-400" : "from-red-600 to-rose-400"} rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300`}
+                                                />
+                                                <div
+                                                    className={`relative bg-white rounded-2xl p-5 border-2 ${motor.tersedia ? "border-green-100 group-hover:border-green-500" : "border-red-100 group-hover:border-red-500"} transition-all duration-300 space-y-3 h-full`}
+                                                >
+                                                    <div
+                                                        className={`w-10 h-10 rounded-lg flex items-center justify-center ${motor.tersedia ? "bg-green-50" : "bg-red-50"}`}
+                                                    >
+                                                        {motor.tersedia ? (
+                                                            <Check className="w-5 h-5 text-green-600" />
+                                                        ) : (
+                                                            <AlertCircle className="w-5 h-5 text-red-600" />
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                            Status
+                                                        </p>
+                                                        <p
+                                                            className={`text-lg font-black ${motor.tersedia ? "text-green-600" : "text-red-600"}`}
+                                                        >
+                                                            {motor.tersedia
+                                                                ? "Tersedia"
+                                                                : "Terjual"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="space-y-6 pt-8 border-t border-gray-100">
                                     <h2 className="text-2xl md:text-3xl font-black text-gray-900 flex items-center gap-3">
-                                        <PenTool className="w-6 h-6 text-primary" />{" "}
+                                        <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
+                                            <PenTool className="w-6 h-6 text-purple-600" />
+                                        </div>
                                         Deskripsi & Catatan
                                     </h2>
                                     <div
-                                        className="prose prose-lg prose-primary max-w-none text-gray-600 font-medium leading-relaxed bg-gray-50 p-6 md:p-8 rounded-[2rem] border border-gray-100"
+                                        className="prose prose-lg prose-primary max-w-none text-gray-600 font-medium leading-relaxed bg-gradient-to-br from-gray-50 to-white p-6 md:p-8 rounded-[2rem] border border-gray-100 hover:border-purple-200 hover:shadow-lg hover:shadow-purple-100/50 transition-all duration-300"
                                         dangerouslySetInnerHTML={{
                                             __html: motor.description,
                                         }}
@@ -192,40 +258,56 @@ export default function Show({ motor, relatedMotors }) {
                                     {[
                                         {
                                             icon: (
-                                                <ShieldCheck className="w-6 h-6 text-primary" />
+                                                <ShieldCheck className="w-6 h-6 text-white" />
                                             ),
                                             title: "Garansi 1 Thn",
                                             desc: "Perlindungan mesin harian",
+                                            bgGradient:
+                                                "from-blue-600 to-blue-500",
+                                            borderColor: "border-blue-200",
                                         },
                                         {
                                             icon: (
-                                                <CheckCircle2 className="w-6 h-6 text-primary" />
+                                                <FileCheck className="w-6 h-6 text-white" />
                                             ),
                                             title: "Surat Aman",
                                             desc: "STNK & BPKB ready",
+                                            bgGradient:
+                                                "from-green-600 to-green-500",
+                                            borderColor: "border-green-200",
                                         },
                                         {
                                             icon: (
-                                                <Activity className="w-6 h-6 text-primary" />
+                                                <Wrench className="w-6 h-6 text-white" />
                                             ),
                                             title: "Checkup Gratis",
                                             desc: "Servis berkala pertama",
+                                            bgGradient:
+                                                "from-purple-600 to-purple-500",
+                                            borderColor: "border-purple-200",
                                         },
                                     ].map((item, i) => (
                                         <div
                                             key={i}
-                                            className="flex items-center gap-4 p-6 rounded-2xl bg-primary/5 border border-primary/10"
+                                            className={`group relative overflow-hidden rounded-2xl p-6 border-2 ${item.borderColor} transition-all duration-300 hover:shadow-2xl hover:shadow-gray-300/50 hover:-translate-y-1`}
                                         >
-                                            <div className="w-12 h-12 rounded-xl bg-white border border-primary/20 flex items-center justify-center shrink-0 shadow-sm">
-                                                {item.icon}
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-black text-gray-900">
-                                                    {item.title}
-                                                </p>
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-                                                    {item.desc}
-                                                </p>
+                                            <div
+                                                className={`absolute inset-0 bg-gradient-to-br ${item.bgGradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}
+                                            />
+                                            <div className="relative space-y-4">
+                                                <div
+                                                    className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.bgGradient} flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300`}
+                                                >
+                                                    {item.icon}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-black text-gray-900">
+                                                        {item.title}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mt-1">
+                                                        {item.desc}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -256,7 +338,7 @@ export default function Show({ motor, relatedMotors }) {
                                             )}
                                         </div>
 
-                                        <div className="space-y-4 pt-8 border-t border-gray-50">
+                                        <div className="space-y-4 pt-8 border-t border-gray-100">
                                             {motor.tersedia ? (
                                                 <>
                                                     <Link
@@ -264,14 +346,14 @@ export default function Show({ motor, relatedMotors }) {
                                                             "motors.cash-order",
                                                             motor.id,
                                                         )}
-                                                        className="block"
+                                                        className="block group"
                                                     >
                                                         <Button
                                                             fullWidth
                                                             size="lg"
-                                                            className="h-16 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 group flex items-center justify-center gap-3"
+                                                            className="h-16 rounded-2xl font-black text-lg shadow-xl shadow-primary/30 group-hover:shadow-2xl group-hover:shadow-primary/40 transform group-hover:-translate-y-1 transition-all flex items-center justify-center gap-3"
                                                         >
-                                                            <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                                            <ShoppingCart className="w-5 h-5 group-hover:scale-125 transition-transform" />
                                                             <span>
                                                                 Beli Cash
                                                                 Sekarang
@@ -283,15 +365,15 @@ export default function Show({ motor, relatedMotors }) {
                                                             "motors.credit-order",
                                                             motor.id,
                                                         )}
-                                                        className="block"
+                                                        className="block group"
                                                     >
                                                         <Button
                                                             fullWidth
                                                             size="lg"
                                                             variant="secondary"
-                                                            className="h-16 rounded-2xl font-black text-lg border-2 group flex items-center justify-center gap-3"
+                                                            className="h-16 rounded-2xl font-black text-lg border-2 group-hover:shadow-lg transform group-hover:-translate-y-1 transition-all flex items-center justify-center gap-3"
                                                         >
-                                                            <FileText className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                                            <FileText className="w-5 h-5 group-hover:scale-125 transition-transform" />
                                                             <span>
                                                                 Ajukan Kredit
                                                             </span>
@@ -311,9 +393,9 @@ export default function Show({ motor, relatedMotors }) {
 
                                             <button
                                                 onClick={openWhatsApp}
-                                                className="w-full h-16 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-2xl font-black flex items-center justify-center gap-3 transition-all shadow-xl shadow-green-200/50 group"
+                                                className="w-full h-16 bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:shadow-2xl hover:shadow-green-200/50 text-white rounded-2xl font-black flex items-center justify-center gap-3 transition-all shadow-xl group transform hover:-translate-y-1"
                                             >
-                                                <Phone className="w-5 h-5 fill-white group-hover:rotate-12 transition-transform" />
+                                                <Phone className="w-5 h-5 fill-white group-hover:animate-bounce transition-all" />
                                                 <span>Tanya via WhatsApp</span>
                                             </button>
                                         </div>
@@ -354,19 +436,31 @@ export default function Show({ motor, relatedMotors }) {
                                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                             Uang Muka (DP)
                                                         </label>
-                                                        {dpAmount < parseFloat(motor.min_dp_amount) && (
+                                                        {dpAmount <
+                                                            parseFloat(
+                                                                motor.min_dp_amount,
+                                                            ) && (
                                                             <span className="text-[10px] font-bold text-red-500 uppercase">
-                                                                Min. DP: Rp {parseInt(motor.min_dp_amount).toLocaleString('id-ID')}
+                                                                Min. DP: Rp{" "}
+                                                                {parseInt(
+                                                                    motor.min_dp_amount,
+                                                                ).toLocaleString(
+                                                                    "id-ID",
+                                                                )}
                                                             </span>
                                                         )}
                                                     </div>
                                                     <div className="relative">
-                                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">Rp</span>
-                                                        <input 
+                                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">
+                                                            Rp
+                                                        </span>
+                                                        <input
                                                             type="number"
                                                             value={dpAmount}
-                                                            onChange={handleDpChange}
-                                                            className={`w-full pl-10 pr-4 py-3 bg-gray-50 border-2 rounded-xl font-bold text-gray-900 focus:outline-none transition-colors ${dpAmount < parseFloat(motor.min_dp_amount) ? 'border-red-200 focus:border-red-500' : 'border-gray-100 focus:border-primary'}`}
+                                                            onChange={
+                                                                handleDpChange
+                                                            }
+                                                            className={`w-full pl-10 pr-4 py-3 bg-gray-50 border-2 rounded-xl font-bold text-gray-900 focus:outline-none transition-colors ${dpAmount < parseFloat(motor.min_dp_amount) ? "border-red-200 focus:border-red-500" : "border-gray-100 focus:border-primary"}`}
                                                         />
                                                     </div>
                                                 </div>
@@ -376,15 +470,21 @@ export default function Show({ motor, relatedMotors }) {
                                                         Tenor (Bulan)
                                                     </label>
                                                     <div className="grid grid-cols-3 gap-2">
-                                                        {[12, 24, 36].map((t) => (
-                                                            <button
-                                                                key={t}
-                                                                onClick={() => setSelectedTenor(t)}
-                                                                className={`py-2 rounded-xl font-black text-xs transition-all border-2 ${selectedTenor === t ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20' : 'bg-white border-gray-100 text-gray-400 hover:border-primary/30'}`}
-                                                            >
-                                                                {t} bln
-                                                            </button>
-                                                        ))}
+                                                        {[12, 24, 36].map(
+                                                            (t) => (
+                                                                <button
+                                                                    key={t}
+                                                                    onClick={() =>
+                                                                        setSelectedTenor(
+                                                                            t,
+                                                                        )
+                                                                    }
+                                                                    className={`py-2 rounded-xl font-black text-xs transition-all border-2 ${selectedTenor === t ? "bg-primary border-primary text-white shadow-lg shadow-primary/20" : "bg-white border-gray-100 text-gray-400 hover:border-primary/30"}`}
+                                                                >
+                                                                    {t} bln
+                                                                </button>
+                                                            ),
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -397,7 +497,10 @@ export default function Show({ motor, relatedMotors }) {
                                                     Estimasi Angsuran
                                                 </p>
                                                 <p className="text-3xl font-black text-primary">
-                                                    Rp {monthlyInstallment.toLocaleString("id-ID")}
+                                                    Rp{" "}
+                                                    {monthlyInstallment.toLocaleString(
+                                                        "id-ID",
+                                                    )}
                                                 </p>
                                                 <p className="text-[9px] text-gray-400 font-bold mt-2 italic uppercase">
                                                     *Bunga flat 1.5% per bulan
@@ -417,6 +520,48 @@ export default function Show({ motor, relatedMotors }) {
                                         </Link>
                                     </div>
                                 )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SELLER INFORMATION SECTION */}
+                    <div className="mt-16 pt-12 border-t border-gray-100">
+                        <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-6 flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+                                <User className="w-6 h-6 text-blue-600" />
+                            </div>
+                            Informasi Penjual
+                        </h2>
+                        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-white p-6 md:p-8 rounded-[2rem] border border-blue-100 hover:border-blue-300 hover:shadow-lg hover:shadow-blue-100/50 transition-all duration-300">
+                            <div className="flex items-start gap-4 md:gap-6">
+                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-200/50">
+                                    <span className="text-white font-black text-lg md:text-xl">
+                                        {motor.user?.name
+                                            ?.charAt(0)
+                                            .toUpperCase() || "S"}
+                                    </span>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-xl md:text-2xl font-black text-gray-900 mb-2">
+                                        {motor.user?.name || "SRB Motors"}
+                                    </h3>
+                                    <div className="space-y-3 text-sm md:text-base">
+                                        <p className="text-gray-600 flex items-center gap-2">
+                                            <Phone className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                            <span>
+                                                {settings.contact_whatsapp ||
+                                                    "Hubungi melalui WhatsApp"}
+                                            </span>
+                                        </p>
+                                        <p className="text-gray-600 flex items-start gap-2">
+                                            <MapPin className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                            <span>
+                                                {settings.contact_address ||
+                                                    "Lokasi tidak tersedia"}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

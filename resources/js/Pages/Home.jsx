@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, useForm, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, EffectFade } from "swiper/modules";
@@ -30,18 +30,30 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-export default function Home({ auth, popularMotors = [] }) {
+export default function Home({
+    auth,
+    popularMotors = [],
+    brandAvailability = {},
+}) {
     const [searchQuery, setSearchQuery] = useState("");
     const { data, setData, post, processing, reset } = useForm({});
+
+    const brandLogos = {
+        Honda: "/assets/img/honda/Honda-Beat-Sporty-Deluxe-SmartKey-Matte-Black.png",
+        Yamaha: "/assets/img/honda/pcx 160.png",
+    };
 
     const brands = [
         {
             name: "Honda",
-            logo: "/assets/img/honda/Honda-Beat-Sporty-Deluxe-SmartKey-Matte-Black.png",
-        }, // Mockup for logo
-        { name: "Yamaha", logo: "/assets/img/honda/pcx 160.png" },
-        { name: "Kawasaki", logo: "/assets/img/honda/adv 160.png" },
-        { name: "Suzuki", logo: "/assets/img/honda/stylo.png" },
+            logo: brandLogos.Honda,
+            available: brandAvailability.Honda?.available ?? false,
+        },
+        {
+            name: "Yamaha",
+            logo: brandLogos.Yamaha,
+            available: brandAvailability.Yamaha?.available ?? false,
+        },
     ];
 
     return (
@@ -65,18 +77,30 @@ export default function Home({ auth, popularMotors = [] }) {
                                         </span>
                                     </div>
                                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.15] tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]">
-                                        <span className="text-blue-400">Selamat </span>
-                                        <span className="text-blue-400">Datang </span>
-                                        <span className="text-white">di SRB Motor</span>
+                                        <span className="text-blue-400">
+                                            Selamat{" "}
+                                        </span>
+                                        <span className="text-blue-400">
+                                            Datang{" "}
+                                        </span>
+                                        <span className="text-white">
+                                            di SRB Motor
+                                        </span>
                                     </h1>
                                     <p className="text-sm sm:text-base md:text-lg text-white font-medium max-w-xl leading-relaxed drop-shadow-lg">
-                                        Temukan motor impian Anda dengan layanan terbaik dari kami.
+                                        Temukan motor impian Anda dengan layanan
+                                        terbaik dari kami.
                                     </p>
                                 </div>
                                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 pt-4">
-                                    <Link href="/motors" className="w-full sm:w-auto">
+                                    <Link
+                                        href="/motors"
+                                        className="w-full sm:w-auto"
+                                    >
                                         <button className="w-full group relative overflow-hidden px-6 sm:px-8 py-3.5 sm:py-4 bg-white text-blue-600 rounded-2xl font-black text-sm sm:text-lg transition-all hover:pr-12 sm:hover:pr-14 hover:bg-blue-50 shadow-xl flex justify-center items-center">
-                                            <span className="relative z-10">Lihat Katalog</span>
+                                            <span className="relative z-10">
+                                                Lihat Katalog
+                                            </span>
                                             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300">
                                                 <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 translate-x-4 group-hover:translate-x-0 transition-transform" />
                                             </div>
@@ -124,14 +148,35 @@ export default function Home({ auth, popularMotors = [] }) {
                                                             e.target.value,
                                                         )
                                                     }
+                                                    onKeyDown={(e) => {
+                                                        if (
+                                                            e.key === "Enter" &&
+                                                            searchQuery.trim()
+                                                        ) {
+                                                            router.get(
+                                                                "/motors",
+                                                                {
+                                                                    search: searchQuery,
+                                                                },
+                                                            );
+                                                        }
+                                                    }}
                                                     placeholder="Ketik nama motor..."
                                                     className="w-full bg-transparent border-none focus:ring-0 text-sm sm:text-base md:text-lg font-bold py-2 sm:py-4 text-gray-800 placeholder:text-gray-400"
                                                 />
                                             </div>
                                             <Button
                                                 size="lg"
-                                                className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-auto rounded-2xl sm:rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest whitespace-nowrap"
+                                                onClick={() => {
+                                                    if (searchQuery.trim()) {
+                                                        router.get("/motors", {
+                                                            search: searchQuery,
+                                                        });
+                                                    }
+                                                }}
+                                                className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-auto rounded-2xl sm:rounded-[1.25rem] font-black shadow-xl bg-blue-600 hover:bg-blue-500 hover:shadow-2xl active:scale-95 transition-all text-sm uppercase tracking-widest whitespace-nowrap flex items-center justify-center gap-2"
                                             >
+                                                <Search className="w-4 h-4" />
                                                 Cari
                                             </Button>
                                         </div>
@@ -151,9 +196,11 @@ export default function Home({ auth, popularMotors = [] }) {
                                         ].map((tag) => (
                                             <button
                                                 key={tag}
-                                                onClick={() =>
-                                                    setSearchQuery(tag)
-                                                }
+                                                onClick={() => {
+                                                    router.get("/motors", {
+                                                        search: tag,
+                                                    });
+                                                }}
                                                 className="px-4 sm:px-5 py-2 sm:py-2.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-600 border border-gray-100 rounded-full text-xs sm:text-sm font-bold text-gray-600 transition-all active:scale-90 flex-shrink-0"
                                             >
                                                 {tag}
@@ -218,12 +265,16 @@ export default function Home({ auth, popularMotors = [] }) {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8">
                         {brands.map((brand, index) => (
                             <Link
                                 key={index}
                                 href={`/motors?brand=${brand.name}`}
-                                className="group relative p-6 md:p-10 rounded-2xl md:rounded-[32px] bg-gray-50 border border-gray-100 hover:bg-white hover:border-primary/30 hover:shadow-2xl transition-all duration-500 flex flex-col items-center justify-center overflow-hidden"
+                                className={`group relative p-6 md:p-10 rounded-2xl md:rounded-[32px] border transition-all duration-500 flex flex-col items-center justify-center overflow-hidden ${
+                                    brand.available
+                                        ? "bg-gray-50 border-gray-100 hover:bg-white hover:border-primary/30 hover:shadow-2xl cursor-pointer"
+                                        : "bg-gray-50 border-gray-200 opacity-60 hover:opacity-75"
+                                }`}
                             >
                                 <div className="relative z-10 w-24 h-24 md:w-32 md:h-32 mb-4 flex items-center justify-center">
                                     <img
@@ -235,6 +286,13 @@ export default function Home({ auth, popularMotors = [] }) {
                                 <span className="relative z-10 text-xl md:text-2xl font-black text-gray-300 group-hover:text-primary transition-colors">
                                     {brand.name}
                                 </span>
+
+                                {/* Empty State Badge */}
+                                {!brand.available && (
+                                    <div className="absolute top-4 right-4 bg-gray-300 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                                        Kosong
+                                    </div>
+                                )}
 
                                 {/* Background Decorative Element */}
                                 <div className="absolute bottom-[-20%] right-[-10%] w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
@@ -412,7 +470,10 @@ export default function Home({ auth, popularMotors = [] }) {
             </section>
 
             {/* CONTACT SECTION */}
-            <section className="section-py relative overflow-hidden" id="contact">
+            <section
+                className="section-py relative overflow-hidden"
+                id="contact"
+            >
                 {/* Subtle Decorative Elements */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-50" />
                 <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl opacity-50" />
@@ -425,7 +486,10 @@ export default function Home({ auth, popularMotors = [] }) {
                                     Hubungi Kami
                                 </span>
                                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.1]">
-                                    Punya <span className="text-primary italic">Pertanyaan?</span>
+                                    Punya{" "}
+                                    <span className="text-primary italic">
+                                        Pertanyaan?
+                                    </span>
                                 </h2>
                                 <p className="text-gray-500 text-lg md:text-xl font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
                                     Tim expert kami siap membantu Anda 24/7.
@@ -437,11 +501,15 @@ export default function Home({ auth, popularMotors = [] }) {
                             <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4 mt-8">
                                 <div className="flex items-center justify-center sm:justify-start gap-3 px-5 py-3 sm:py-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 sm:flex-none">
                                     <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
-                                    <span className="text-sm font-bold text-gray-700">Online 24/7</span>
+                                    <span className="text-sm font-bold text-gray-700">
+                                        Online 24/7
+                                    </span>
                                 </div>
                                 <div className="flex items-center justify-center sm:justify-start gap-3 px-5 py-3 sm:py-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 sm:flex-none">
                                     <ShieldCheck className="w-5 h-5 text-primary" />
-                                    <span className="text-sm font-bold text-gray-700">Respon Cepat</span>
+                                    <span className="text-sm font-bold text-gray-700">
+                                        Respon Cepat
+                                    </span>
                                 </div>
                             </div>
                         </div>
