@@ -29,6 +29,7 @@ import {
     User,
     Sparkles,
     FileCheck,
+    Activity,
 } from "lucide-react";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
@@ -55,9 +56,9 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
         setDpAmount(val);
     };
 
-    const openWhatsApp = (e) => {
+const openWhatsApp = (e) => {
         e.preventDefault();
-        const phoneNumber = settings.contact_whatsapp?.replace(/\D/g, "") || "6281234567890";
+        const phoneNumber = settings.contact_phone?.replace(/\D/g, "") || "628978638849";
         const message = encodeURIComponent(
             `Halo SRB Motors, saya tertarik dengan unit ${
                 motor.name
@@ -566,8 +567,8 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                         <p className="text-gray-600 flex items-center gap-2">
                                             <Phone className="w-4 h-4 text-blue-600 flex-shrink-0" />
                                             <span>
-                                                {settings.contact_whatsapp ||
-                                                    "Hubungi melalui WhatsApp"}
+                                                {settings.contact_phone ||
+                                                    "+62 897 8638 849"}
                                             </span>
                                         </p>
                                         <p className="text-gray-600 flex items-start gap-2">

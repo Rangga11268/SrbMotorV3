@@ -28,106 +28,11 @@ import {
     X,
 } from "lucide-react";
 
-// Settings metadata untuk user-friendly labels dan descriptions
-const settingsMetadata = {
-    site_name: {
-        label: "Nama Website",
-        description: "Nama yang ditampilkan di seluruh website",
-        placeholder: "Contoh: SRB Motors",
-        help: "Gunakan nama toko Anda yang resmi",
-    },
-    site_description: {
-        label: "Deskripsi Website",
-        description: "Deskripsi singkat tentang bisnis Anda",
-        placeholder:
-            "Contoh: Platform dealer motor terpercaya dengan layanan terbaik",
-        help: "Jelaskan singkat apa yang membuat bisnis Anda istimewa",
-    },
-    site_logo: {
-        label: "Logo Website",
-        description: "Upload logo untuk website Anda",
-        help: "Format: PNG, JPG. Max 2MB. Akan di-upload otomatis",
-        type: "file",
-    },
-    contact_email: {
-        label: "Email Kontak",
-        description: "Email utama untuk menerima pesan",
-        placeholder: "Contoh: info@srbmotors.com",
-        help: "Email yang dapat diakses untuk mengirim pesan ke pelanggan",
-    },
-    contact_phone: {
-        label: "Nomor Telepon",
-        description: "Nomor telepon utama",
-        placeholder: "Contoh: +6281234567890",
-        help: "Sertakan kode negara (+62 untuk Indonesia)",
-    },
-    contact_whatsapp: {
-        label: "Nomor WhatsApp",
-        description: "Nomor WhatsApp untuk customer service",
-        placeholder: "Contoh: 6281234567890",
-        help: "Nomor untuk chat WhatsApp (tanpa +)",
-    },
-    contact_address: {
-        label: "Alamat Kantor",
-        description: "Alamat lengkap lokasi bisnis Anda",
-        placeholder: "Contoh: Jl. Raya Utama No. 123, Jakarta Selatan",
-        help: "Sertakan jalan, nomor, kota, dan provinsi",
-    },
-    contact_city: {
-        label: "Kota",
-        description: "Nama kota kantor utama",
-        placeholder: "Contoh: Jakarta",
-        help: "Hanya nama kota saja",
-    },
-    business_hours: {
-        label: "Jam Operasional",
-        description: "Jam buka dan tutup toko untuk setiap hari",
-        help: "Edit jam untuk setiap hari dalam seminggu",
-    },
-    social_facebook: {
-        label: "Facebook",
-        description: "URL halaman Facebook Anda",
-        placeholder: "Contoh: https://facebook.com/srbmotors",
-        help: "Salin URL dari halaman Facebook Anda",
-    },
-    social_instagram: {
-        label: "Instagram",
-        description: "URL akun Instagram Anda",
-        placeholder: "Contoh: https://instagram.com/srbmotors",
-        help: "Salin URL dari profil Instagram Anda",
-    },
-    social_youtube: {
-        label: "YouTube",
-        description: "URL channel YouTube Anda",
-        placeholder: "Contoh: https://youtube.com/@srbmotors",
-        help: "Salin URL dari channel YouTube Anda",
-    },
-    social_tiktok: {
-        label: "TikTok",
-        description: "URL akun TikTok Anda",
-        placeholder: "Contoh: https://tiktok.com/@srbmotors",
-        help: "Salin URL dari profil TikTok Anda",
-    },
-    email_from_name: {
-        label: "Nama Pengirim Email",
-        description: "Nama yang tampil sebagai pengirim email",
-        placeholder: "Contoh: SRB Motors",
-        help: "Nama toko di email yang dikirim ke pelanggan",
-    },
-    email_from_address: {
-        label: "Email Pengirim",
-        description: "Email yang digunakan untuk mengirim email otomatis",
-        placeholder: "Contoh: noreply@srbmotors.com",
-        help: "Email sistem (biasanya noreply@)",
-    },
-};
+import {
+    getSettingFieldConfig,
+    getCategoryConfig,
+} from "@/Config/SettingsConfig";
 
-const categoryLabels = {
-    general: "Pengaturan Umum",
-    contact: "Informasi Kontak",
-    social: "Media Sosial",
-    email: "Konfigurasi Email",
-};
 
 export default function SettingsEdit({ category, settings }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -266,9 +171,8 @@ export default function SettingsEdit({ category, settings }) {
         put(route("admin.settings.update", category));
     };
 
-    const getMetadata = (key) => {
-        return settingsMetadata[key] || {};
-    };
+    const categoryConfig = getCategoryConfig(category);
+
 
     const daysOfWeek = [
         { key: "monday", label: "Senin" },
@@ -281,7 +185,8 @@ export default function SettingsEdit({ category, settings }) {
     ];
 
     const renderInputField = (setting, index) => {
-        const metadata = getMetadata(setting.key);
+        const fieldConfig = getSettingFieldConfig(category, setting.key);
+
 
         // Special handling for business_hours
         if (setting.key === "business_hours") {
@@ -313,9 +218,9 @@ export default function SettingsEdit({ category, settings }) {
                     <div className="mb-3">
                         <h6 className="font-weight-bold text-dark mb-2">
                             <Clock size={20} className="me-2" />
-                            {metadata.label || setting.key}
+                            {fieldConfig?.label || setting.key}
                         </h6>
-                        <p className="text-muted small mb-0">{metadata.help}</p>
+                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
                     </div>
                     <div className="row g-3">
                         {daysOfWeek.map(({ key: dayKey, label: dayLabel }) => (
@@ -434,7 +339,7 @@ export default function SettingsEdit({ category, settings }) {
         }
 
         // File upload for images
-        if (metadata.type === "file") {
+        if (fieldConfig?.type === "file" || setting.key === "site_logo") {
             return (
                 <div key={index} className="card border-0 bg-light p-4 mb-4">
                     <div className="mb-3">
@@ -522,13 +427,13 @@ export default function SettingsEdit({ category, settings }) {
             <div key={index} className="card border-0 bg-light p-4 mb-4">
                 <div className="mb-3">
                     <h6 className="font-weight-bold text-dark mb-2">
-                        {metadata.label || setting.key}
+                    {fieldConfig?.label || setting.key}
                     </h6>
-                    <p className="text-muted small mb-0">{metadata.help}</p>
+                    <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
                 </div>
                 <input
                     type={
-                        setting.type === "number"
+                        fieldConfig?.type === "number"
                             ? "number"
                             : setting.key.includes("email")
                               ? "email"
@@ -537,7 +442,7 @@ export default function SettingsEdit({ category, settings }) {
                                 : "text"
                     }
                     className="form-control"
-                    placeholder={metadata.placeholder}
+                    placeholder={fieldConfig?.placeholder}
                     value={data.settings[index].value || ""}
                     onChange={(e) =>
                         handleSettingChange(index, "value", e.target.value)
@@ -549,34 +454,34 @@ export default function SettingsEdit({ category, settings }) {
 
     return (
         <AdminLayout>
-            <Head title={`Edit ${categoryLabels[category] || category}`} />
+            <Head title={`Edit ${categoryConfig?.label || category}`} />
             <CRow>
                 <CCol xs={12}>
-                    <CCard className="mb-4 shadow-sm">
-                        <CCardHeader className="d-flex justify-content-between align-items-center bg-white py-3">
+                    <CCard className="mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
+                        <CCardHeader className="d-flex justify-content-between align-items-center bg-white border-bottom py-4 px-4">
                             <div>
-                                <strong className="h5 mb-0">
-                                    {categoryLabels[category] || category}
-                                </strong>
-                                <p className="text-muted small mb-0 mt-1">
-                                    Ubah pengaturan{" "}
-                                    {categoryLabels[category]?.toLowerCase() ||
-                                        category}
+                                <h1 className="h4 fw-black text-dark mb-1">
+                                    {categoryConfig?.label || category}
+                                </h1>
+                                <p className="text-muted small mb-0">
+                                    {categoryConfig?.description || "Kelola pengaturan website Anda"}
                                 </p>
                             </div>
                             <Link
                                 href={route("admin.settings.index")}
-                                className="btn btn-sm btn-secondary"
+                                className="btn btn-sm btn-outline-secondary rounded-pill px-3"
                             >
                                 <CIcon icon={cilArrowLeft} className="me-2" />
                                 Kembali
                             </Link>
                         </CCardHeader>
-                        <CCardBody>
+                        <CCardBody className="p-4">
                             <CForm onSubmit={handleSubmit}>
-                                {data.settings.map((setting, index) =>
-                                    renderInputField(setting, index),
-                                )}
+                                <div className="space-y-4">
+                                    {data.settings.map((setting, index) =>
+                                        renderInputField(setting, index),
+                                    )}
+                                </div>
 
                                 <div className="d-flex gap-2 mt-5">
                                     <CButton

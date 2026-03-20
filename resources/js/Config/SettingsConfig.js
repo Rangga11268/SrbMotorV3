@@ -42,43 +42,28 @@ export const settingsConfig = {
     contact: {
         label: "Informasi Kontak",
         icon: "cilPhone",
-        description: "Informasi kontak bisnis untuk pelanggan",
+        description: "Informasi kontak bisnis untuk pelanggan yang ditampilkan di Footer dan Detail Motor",
         fields: {
-            phone: {
-                label: "Nomor Telepon Utama",
+            contact_phone: {
+                label: "Nomor Telepon & WhatsApp",
                 type: "text",
-                placeholder: "+62812345678",
-                helper: "Nomor telepon bisnis utama dengan kode negara",
-                category: "Telepon",
+                placeholder: "0812345678",
+                helper: "Nomor telepon & WhatsApp bisnis (untuk tampilan teks dan link chat)",
+                category: "Kontak Utama",
             },
-            phone_secondary: {
-                label: "Nomor Telepon Alternatif",
-                type: "text",
-                placeholder: "+62812345679",
-                helper: "Nomor telepon cadangan atau WhatsApp",
-                category: "Telepon",
-            },
-            email: {
+            contact_email: {
                 label: "Email Bisnis",
                 type: "text",
                 placeholder: "info@srbmotor.com",
-                helper: "Email utama untuk pertanyaan dari pelanggan",
+                helper: "Email utama untuk bantuan dan pertanyaan pelanggan",
                 category: "Email",
             },
-            address: {
-                label: "Alamat Bisnis",
+            contact_address: {
+                label: "Alamat Lengkap",
                 type: "textarea",
                 placeholder: "Jl. Raya No. 123, Kota, Provinsi 12345",
-                helper: "Alamat lengkap showroom atau kantor pusat",
+                helper: "Alamat lengkap showroom atau kantor pusat SRB Motors",
                 category: "Lokasi",
-            },
-            operating_hours: {
-                label: "Jam Operasional",
-                type: "textarea",
-                placeholder:
-                    "Senin - Jumat: 08:00 - 17:00\nSabtu: 08:00 - 15:00\nMinggu: Tutup",
-                helper: "Jam buka tutup bisnis setiap hari",
-                category: "Operasional",
             },
         },
     },
@@ -88,28 +73,28 @@ export const settingsConfig = {
         description:
             "Link profil media sosial untuk terhubung dengan pelanggan",
         fields: {
-            facebook_url: {
+            social_facebook: {
                 label: "Facebook",
                 type: "text",
                 placeholder: "https://facebook.com/srbmotor",
                 helper: "Link profil Facebook bisnis Anda",
                 category: "Media Sosial",
             },
-            instagram_url: {
+            social_instagram: {
                 label: "Instagram",
                 type: "text",
                 placeholder: "https://instagram.com/srbmotor",
                 helper: "Link profil Instagram untuk portfolio dan update produk",
                 category: "Media Sosial",
             },
-            whatsapp_url: {
-                label: "WhatsApp Business",
+            social_tiktok: {
+                label: "TikTok",
                 type: "text",
-                placeholder: "https://wa.me/62812345678",
-                helper: "Link WhatsApp untuk customer service (format: https://wa.me/62xxxxxx)",
-                category: "Chat",
+                placeholder: "https://tiktok.com/@srbmotor",
+                helper: "Link akun TikTok SRB Motors",
+                category: "Media Sosial",
             },
-            youtube_url: {
+            social_youtube: {
                 label: "YouTube",
                 type: "text",
                 placeholder: "https://youtube.com/@srbmotor",
@@ -123,68 +108,47 @@ export const settingsConfig = {
         icon: "cilColorPalette",
         description: "Identitas visual dan warna brand",
         fields: {
-            primary_color: {
+            brand_primary_color: {
                 label: "Warna Utama (Primary)",
                 type: "text",
                 placeholder: "#4361ee",
                 helper: "Warna utama brand dalam format hex (misal: #4361ee untuk biru)",
                 category: "Warna",
             },
-            secondary_color: {
+            brand_secondary_color: {
                 label: "Warna Sekunder",
                 type: "text",
                 placeholder: "#6c83f4",
                 helper: "Warna pendamping utama untuk keperluan design",
                 category: "Warna",
             },
-            accent_color: {
-                label: "Warna Accent",
-                type: "text",
-                placeholder: "#ffc107",
-                helper: "Warna highlight/menarik perhatian",
-                category: "Warna",
-            },
-            brand_font: {
-                label: "Font Brand",
-                type: "text",
-                placeholder: "Poppins, Inter, Roboto",
-                helper: "Font yang digunakan untuk branding (coma-separated)",
-                category: "Tipografi",
-            },
         },
     },
     financing: {
-        label: "Pembiayaan",
+        label: "Simulasi Kredit",
         icon: "cilMoney",
-        description:
-            "Pengaturan skema cicilan dan bekerja sama dengan provider leasing",
+        description: "Konfigurasi perhitungan kredit motor (DP, Tenor, Bunga)",
         fields: {
-            min_dp_percentage: {
+            min_down_payment_percent: {
                 label: "Minimum DP (%)",
                 type: "number",
                 placeholder: "20",
-                helper: "Persentase minimum down payment untuk kredit (0-100%)",
-                category: "Pembayaran",
+                helper: "Persentase minimum uang muka dari harga motor (0-100%)",
+                category: "Angka Utama",
             },
-            max_installment_months: {
-                label: "Maksimum Tenor Cicilan (Bulan)",
+            max_tenor_months: {
+                label: "Maksimum Tenor (Bulan)",
                 type: "number",
                 placeholder: "60",
-                helper: "Berapa bulan maksimal untuk cicilan (misal: 60 bulan = 5 tahun)",
+                helper: "Durasi pinjaman maksimal (misal: 60 bulan = 5 tahun)",
                 category: "Tenor",
             },
-            enable_installment: {
-                label: "Aktifkan Cicilan?",
-                type: "boolean",
-                helper: "Apakah sistem cicilan diaktifkan di toko?",
-                category: "Fitur",
-            },
-            leasing_partners: {
-                label: "Partner Leasing",
-                type: "textarea",
-                placeholder: "OTO Multiwarna, Adira Finance, BCA Finance",
-                helper: "Daftar nama-nama leasing yang menjadi partner (baris baru untuk setiap leasing)",
-                category: "Partner",
+            interest_rate_percent: {
+                label: "Bunga Flat per Bulan (%)",
+                type: "text",
+                placeholder: "1.5",
+                helper: "Bunga flat bulanan yang digunakan untuk estimasi cicilan (contoh: 1.5)",
+                category: "Bunga",
             },
         },
     },
@@ -193,53 +157,19 @@ export const settingsConfig = {
         icon: "cilEnvelopeClosed",
         description: "Konfigurasi sistem email untuk notifikasi dan komunikasi",
         fields: {
-            mail_from_name: {
+            email_from_name: {
                 label: "Nama Pengirim Email",
                 type: "text",
                 placeholder: "SRB Motor",
                 helper: "Nama yang muncul sebagai pengirim di email pelanggan",
                 category: "Identitas",
             },
-            mail_from_address: {
+            email_from_address: {
                 label: "Email Pengirim",
                 type: "text",
                 placeholder: "noreply@srbmotor.com",
                 helper: "Email yang digunakan untuk mengirim notifikasi ke pelanggan",
                 category: "Email",
-            },
-            smtp_host: {
-                label: "SMTP Host",
-                type: "text",
-                placeholder: "smtp.gmail.com atau smtp.office365.com",
-                helper: "Server SMTP untuk mengirim email (hubungi email provider Anda)",
-                category: "Teknis SMTP",
-            },
-            smtp_port: {
-                label: "SMTP Port",
-                type: "number",
-                placeholder: "587",
-                helper: "Port SMTP (biasanya 587 untuk TLS atau 465 untuk SSL)",
-                category: "Teknis SMTP",
-            },
-            smtp_username: {
-                label: "SMTP Username",
-                type: "text",
-                placeholder: "email@gmail.com",
-                helper: "Username untuk autentikasi SMTP",
-                category: "Teknis SMTP",
-            },
-            smtp_password: {
-                label: "SMTP Password",
-                type: "password",
-                placeholder: "••••••••",
-                helper: "Password untuk autentikasi SMTP (hati-hati dengan keamanan!)",
-                category: "Teknis SMTP",
-            },
-            enable_email_verification: {
-                label: "Wajibkan Verifikasi Email?",
-                type: "boolean",
-                helper: "Apakah pelanggan harus verifikasi email sebelum bisa melakukan transaksi?",
-                category: "Keamanan",
             },
         },
     },

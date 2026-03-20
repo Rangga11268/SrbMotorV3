@@ -109,7 +109,7 @@ export default function Home({
                                         </button>
                                     </Link>
                                     <a
-                                        href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "") || "6281234567890"}`}
+                                        href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}`}
                                         target="_blank"
                                         className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-transparent border-2 border-white/40 hover:border-white text-white rounded-2xl font-bold text-sm sm:text-lg backdrop-blur-md transition-all hover:bg-white/10 flex items-center justify-center gap-2 sm:gap-3"
                                     >
@@ -227,7 +227,7 @@ export default function Home({
                                         </div>
                                     </Link>
                                     <a
-                                        href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "") || "6281234567890"}`}
+                                        href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}`}
                                         target="_blank"
                                         className="flex-1 group"
                                     >
@@ -535,7 +535,7 @@ export default function Home({
 
                         <div className="grid gap-6">
                              <a
-                                 href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "") || "6281212345678"}`}
+                                 href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}`}
                                  target="_blank"
                                  rel="noopener noreferrer"
                                  className="group p-2 bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-gray-100 hover:border-primary/20"
@@ -619,8 +619,10 @@ export default function Home({
                                     <div className="space-y-5">
                                         {/* Phone */}
                                         <a
-                                            href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, "")}`}
-                                            target="_blank"
+                                            onClick={() => {
+                                                const phoneNumber = (settings.contact_phone || "628978638849").replace(/\D/g, "");
+                                                window.open(`https://wa.me/${phoneNumber}`, "_blank");
+                                            }}
                                             className="flex items-center gap-4 p-4 bg-white rounded-xl hover:bg-blue-50 transition-colors border border-transparent hover:border-blue-200 group"
                                         >
                                             <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform flex-shrink-0">
@@ -631,8 +633,8 @@ export default function Home({
                                                     WhatsApp
                                                 </p>
                                                 <p className="text-lg font-black text-gray-900 truncate">
-                                                    {settings.contact_whatsapp ||
-                                                        "6281234567890"}
+                                                    {settings.contact_phone ||
+                                                        "+62 897 8638 849"}
                                                 </p>
                                             </div>
                                         </a>

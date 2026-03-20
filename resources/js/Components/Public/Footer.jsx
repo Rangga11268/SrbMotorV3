@@ -52,7 +52,7 @@ export default function Footer() {
                             <div className="flex items-center gap-3">
                                 <Phone className="w-4 h-4 text-blue-400 shrink-0" />
                                 <a
-                                    href={`https://wa.me/${settings.contact_whatsapp?.replace(/\D/g, '') || "6281234567890"}`}
+                                    href={`https://wa.me/${settings.contact_phone?.replace(/\D/g, "") || "628978638849"}`}
                                     className="text-sm text-gray-400 hover:text-white transition-colors"
                                 >
                                     {settings.contact_phone || "+62 812 3456 7890"}
@@ -189,10 +189,16 @@ export default function Footer() {
                             OJK Verified
                         </span>
                         <div className="flex items-center gap-2">
-                            {[Instagram, Facebook, Youtube].map((Icon, i) => (
+                             {[
+                                { Icon: Instagram, key: 'social_instagram' },
+                                { Icon: Facebook, key: 'social_facebook' },
+                                { Icon: Youtube, key: 'social_youtube' }
+                             ].map(({ Icon, key }, i) => (
                                 <a
                                     key={i}
-                                    href="#"
+                                    href={settings[key] || "#"}
+                                    target={settings[key] ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
                                     className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-gray-500 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
                                 >
                                     <Icon className="w-3.5 h-3.5" />
