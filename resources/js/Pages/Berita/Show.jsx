@@ -88,7 +88,7 @@ export default function BeritaShow({
                                     )}
                                 </span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-tight tracking-tight mb-6">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6">
                                 {post.title}
                             </h1>
                             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-6">

@@ -71,6 +71,11 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         setData("dp_amount", cleaned);
     };
 
+    const handleMonthlyIncomeChange = (value) => {
+        const cleaned = parseFormattedNumber(value);
+        setData("monthly_income", cleaned);
+    };
+
     useEffect(() => {
         const dp = parseFloat(data.dp_amount) || 0;
         const tenor = parseInt(data.tenor) || 0;
@@ -359,17 +364,15 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                     <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                     <input
                                                         id="customer_monthly_income"
-                                                        type="number"
+                                                        type="text"
                                                         className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Contoh: 5000000"
+                                                        placeholder="Contoh: 5.000.000"
                                                         required
-                                                        min="0"
-                                                        value={
-                                                            data.monthly_income
-                                                        }
+                                                        value={formatNumberDisplay(
+                                                            data.monthly_income,
+                                                        )}
                                                         onChange={(e) =>
-                                                            setData(
-                                                                "monthly_income",
+                                                            handleMonthlyIncomeChange(
                                                                 e.target.value,
                                                             )
                                                         }

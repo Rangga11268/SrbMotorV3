@@ -73,7 +73,7 @@ export default function About() {
                                         Tentang Kami
                                     </span>
                                 </div>
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
                                     Tentang{" "}
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">
                                         SRB Motors

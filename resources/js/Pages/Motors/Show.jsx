@@ -52,11 +52,20 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
     }, [motor.price, dpAmount, selectedTenor]);
 
     const handleDpChange = (e) => {
-        const val = parseFloat(e.target.value) || 0;
-        setDpAmount(val);
+        const value = e.target.value;
+        const cleaned = value.replace(/[^\d]/g, "");
+        setDpAmount(parseFloat(cleaned) || 0);
     };
 
-const openWhatsApp = (e) => {
+    // Format number untuk display: 4700000 -> 4.700.000
+    const formatNumberDisplay = (numStr) => {
+        if (!numStr && numStr !== 0) return "";
+        const strValue = String(numStr);
+        const cleanNum = strValue.replace(/[^\d]/g, "");
+        return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const openWhatsApp = (e) => {
         e.preventDefault();
         const phoneNumber = settings.contact_phone?.replace(/\D/g, "") || "628978638849";
         const message = encodeURIComponent(
@@ -70,13 +79,13 @@ const openWhatsApp = (e) => {
     return (
         <PublicLayout auth={auth} title={`${motor.name} - SRB Motors`}>
             {/* PREMIUM HEADER SECTION */}
-            <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800 pt-32 pb-16 relative overflow-hidden">
+            <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800 pt-24 md:pt-32 pb-12 md:pb-16 relative overflow-hidden">
                 {/* Decorative Background Elements */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-70 transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="flex flex-col items-start md:flex-row md:items-end justify-between gap-8 md:gap-6">
                         <div className="space-y-4">
                             {/* BREADCRUMBS */}
                             <nav className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
@@ -107,9 +116,9 @@ const openWhatsApp = (e) => {
                                         </Badge>
                                     )}
                                 </div>
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
                                     {motor.name.split(' ').map((word, i) => (
-                                        <span key={i} className={i === 0 ? "" : "text-blue-600 dark:text-blue-400 ml-3"}>
+                                        <span key={i} className={i === 0 ? "" : "text-blue-600 dark:text-blue-400 ml-2 md:ml-3"}>
                                             {word}
                                         </span>
                                     ))}
@@ -117,13 +126,15 @@ const openWhatsApp = (e) => {
                             </div>
                         </div>
 
-                        <Link
-                            href={route("motors.index")}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-widest text-xs rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all group shadow-sm hover:shadow-md"
-                        >
-                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                            Kembali ke Katalog
-                        </Link>
+                        <div className="mt-8 md:mt-0">
+                            <Link
+                                href={route("motors.index")}
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold uppercase tracking-widest text-[10px] md:text-xs rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all group shadow-sm hover:shadow-md"
+                            >
+                                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                                Kembali ke Katalog
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -279,8 +290,8 @@ const openWhatsApp = (e) => {
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-10 rounded-full blur-3xl -mr-16 -mt-16"></div>
                                     <div className="relative z-10 space-y-8">
                                         <div className="flex items-center justify-between">
-                                            <h3 className="text-sm font-black uppercase tracking-widest opacity-70">Simulasi Kredit</h3>
-                                            <Badge className="bg-blue-500/20 text-blue-400 border-none">ESTIMASI</Badge>
+                                            <h3 className="text-sm font-black uppercase tracking-widest text-blue-100/70">Simulasi Kredit</h3>
+                                            <Badge className="bg-blue-500/30 text-blue-200 border-none">ESTIMASI</Badge>
                                         </div>
 
                                         <div className="space-y-6">
@@ -293,8 +304,8 @@ const openWhatsApp = (e) => {
                                                 <div className="relative">
                                                     <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-slate-500 text-sm">Rp</span>
                                                     <input 
-                                                        type="number"
-                                                        value={dpAmount}
+                                                        type="text"
+                                                        value={formatNumberDisplay(dpAmount)}
                                                         onChange={handleDpChange}
                                                         className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 pl-12 pr-4 font-black text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                                                     />
@@ -318,12 +329,14 @@ const openWhatsApp = (e) => {
                                             </div>
 
                                             {/* Monthly Result */}
-                                            <div className="bg-white/5 rounded-2xl p-6 border border-white/10 flex flex-col items-center text-center">
-                                                <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-50 mb-2">Angsuran / Bulan</p>
-                                                <div className="text-3xl font-black text-blue-400">
-                                                    Rp {monthlyInstallment.toLocaleString("id-ID")}
+                                            <div className="bg-white/5 rounded-2xl p-6 border border-white/10 text-center">
+                                                <p className="text-[10px] font-bold text-blue-200 uppercase tracking-widest mb-1">Angsuran / Bulan</p>
+                                                <div className="flex items-baseline justify-center gap-2">
+                                                    <span className="text-3xl font-black text-white tracking-tight">
+                                                        Rp {monthlyInstallment.toLocaleString("id-ID")}
+                                                    </span>
                                                 </div>
-                                                <p className="text-[9px] font-bold uppercase tracking-widest mt-2 opacity-40 italic">*Bunga Flat 1.5%</p>
+                                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2">*Bunga Flat 1.5% - OTR Bekasi</p>
                                             </div>
                                         </div>
                                     </div>
