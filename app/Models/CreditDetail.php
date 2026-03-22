@@ -34,7 +34,6 @@ class CreditDetail extends Model
         'dp_paid_at',
         'dp_payment_method',
         'unit_prepared_at',
-        'survey_completed_at',
         'is_completed',
         'completed_at',
         'completion_notes',
@@ -52,6 +51,7 @@ class CreditDetail extends Model
         'dp_paid_date',
         'survey_scheduled_date',
         'survey_notes',
+        'survey_completed_at',
     ];
 
     /**
@@ -187,6 +187,12 @@ class CreditDetail extends Model
     {
         $lastSurvey = $this->surveySchedules()->whereNotNull('notes')->latest()->first();
         return $lastSurvey ? $lastSurvey->notes : null;
+    }
+
+    public function getSurveyCompletedAtAttribute()
+    {
+        $lastSurvey = $this->surveySchedules()->whereNotNull('completed_at')->latest()->first();
+        return $lastSurvey ? $lastSurvey->completed_at : null;
     }
 
     public function getDpPaidDateAttribute()

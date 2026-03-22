@@ -7,8 +7,7 @@ This document provides the full Entity Relationship Diagram (ERD) for the SRB Mo
 ```mermaid
 erDiagram
     USERS ||--o{ TRANSACTIONS : "makes"
-    CATEGORIES ||--o{ MOTORS : "classifies"
-    CATEGORIES ||--o{ POSTS : "groups"
+    CATEGORIES ||--o{ POSTS : "classifies articles"
     MOTORS ||--o{ TRANSACTIONS : "is sold in"
     TRANSACTIONS ||--o{ TRANSACTION_LOGS : "has"
     TRANSACTIONS ||--o{ DOCUMENTS : "requires"
@@ -40,7 +39,6 @@ erDiagram
 
     MOTORS {
         bigint id PK
-        bigint category_id FK
         string name
         string brand
         string model
@@ -59,18 +57,20 @@ erDiagram
         bigint id PK
         bigint user_id FK
         bigint motor_id FK
-        string reference_number
-        string order_type
-        string status
-        decimal total_price
-        decimal final_price
-        decimal motor_price
-        decimal booking_fee
         string name "Customer Name"
         string email "Customer Email"
         string phone "Customer Phone"
         string nik "Customer NIK"
         text address "Customer Address"
+        string reference_number
+        string transaction_type
+        string status
+        string motor_color
+        decimal motor_price
+        decimal booking_fee
+        decimal total_price
+        decimal discount_amount
+        decimal final_price
         string delivery_method
         date delivery_date
         string occupation
@@ -79,12 +79,12 @@ erDiagram
         string payment_method
         timestamp payment_date
         text payment_proof
-        string snap_token
         timestamp cancelled_at
         text cancellation_reason
         text notes
         timestamp created_at
         timestamp updated_at
+        timestamp deleted_at
     }
 
     CREDIT_DETAILS {
@@ -99,12 +99,18 @@ erDiagram
         decimal total_interest
         text verification_notes
         timestamp verified_at
+        decimal dp_amount
+        timestamp dp_paid_at
+        string dp_payment_method
+        timestamp unit_prepared_at
         timestamp ready_for_delivery_at
         timestamp delivered_at
         timestamp completed_at
         text completion_notes
+        boolean is_completed
         timestamp created_at
         timestamp updated_at
+        timestamp deleted_at
     }
 
     INSTALLMENTS {
@@ -242,20 +248,20 @@ erDiagram
 | Table | Columns | Purpose |
 |:---|:---:|:---|
 | `users` | 20 | Unified User & Profile Data |
-| `motors` | 14 | Motorcycle Catalog & Stock Status |
-| `transactions` | 33 | Core Sales Records (Cash/Credit) |
-| `credit_details` | 18 | Leasing & Approval Workflow |
+| `motors` | 13 | Motorcycle Catalog & Stock Status |
+| `transactions` | 31 | Core Sales Records (Cash/Credit) |
+| `credit_details` | 23 | Leasing & Approval Workflow |
 | [installments](file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php#106-113) | 21 | Payment Tracking & Deadlines |
 | `documents` | 15 | Identity Files & Verification |
-| `categories` | 9 | Motor & Article Grouping |
+| `categories` | 9 | Article Grouping |
 | `leasing_providers` | 5 | Financing Partners |
 | `transaction_logs` | 12 | Audit Trail for Status Changes |
-| `survey_schedules` | 19 | Survey Coordination Detail |
+| `survey_schedules` | 21 | Survey Coordination Detail |
 | `posts` | 12 | Blog/News Content Management |
 | `settings` | 8 | Global System Configuration |
 | `notifications` | 8 | User Alert System |
 
 **Total Application Tables:** 13
-**Total Application Columns:** 186
+**Total Application Columns:** 188
 
 *Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*
