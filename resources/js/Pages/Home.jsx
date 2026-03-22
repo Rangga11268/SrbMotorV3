@@ -39,6 +39,7 @@ export default function Home({
     popularMotors = [],
     brandAvailability = {},
     settings = {},
+    news = [],
 }) {
     const [searchQuery, setSearchQuery] = useState("");
     const { data, setData, post, processing, reset } = useForm({});
@@ -469,57 +470,49 @@ export default function Home({
                         </Link>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {[
-                            {
-                                title: "Tips Perawatan Motor untuk Pemula",
-                                date: "20 Mar 2026",
-                                image: null,
-                                category: "Tips",
-                            },
-                            {
-                                title: "Perbandingan Motor Matic Terbaru 2026",
-                                date: "19 Mar 2026",
-                                image: "/assets/img/news/news2.png",
-                                category: "Review",
-                            },
-                            {
-                                title: "Program Trade-in Mobil Lama Kami",
-                                date: "18 Mar 2026",
-                                image: "/assets/img/news/news3.png",
-                                category: "Promo",
-                            },
-                        ].map((news, idx) => (
-                            <motion.div
-                                key={idx}
-                                whileHover={{ y: -8 }}
-                                className="group cursor-pointer"
-                            >
-                                <div className="relative h-48 rounded-xl overflow-hidden mb-4 shadow-md group-hover:shadow-xl transition-shadow">
-                                    <img
-                                        src={news.image || "/assets/img/no-image.png"}
-                                        alt={news.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = "/assets/img/no-image.png";
-                                        }}
-                                    />
-                                    <div className="absolute top-4 left-4">
-                                        <Badge className="bg-primary text-white text-xs">
-                                            {news.category}
-                                        </Badge>
+                        {news.length === 0 ? (
+                            <div className="md:col-span-3 text-center py-12 bg-white rounded-xl border border-dashed border-gray-200">
+                                <p className="text-gray-400 font-medium">Belum ada berita terbaru.</p>
+                            </div>
+                        ) : (
+                            news.map((item, idx) => (
+                                <motion.div
+                                    key={item.id || idx}
+                                    whileHover={{ y: -8 }}
+                                    className="group cursor-pointer"
+                                    onClick={() => router.get(route('news.show', item.slug || item.id))}
+                                >
+                                    <div className="relative h-48 rounded-xl overflow-hidden mb-4 shadow-md group-hover:shadow-xl transition-shadow">
+                                        <img
+                                            src={item.featured_image || "/assets/img/no-image.png"}
+                                            alt={item.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "/assets/img/no-image.png";
+                                            }}
+                                        />
+                                        {item.category && (
+                                            <div className="absolute top-4 left-4">
+                                                <Badge className="bg-primary text-white text-xs">
+                                                    {item.category.name}
+                                                </Badge>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                                <p className="text-xs text-gray-500 font-bold uppercase mb-2">
-                                    {news.date}
-                                </p>
-                                <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
-                                    {news.title}
-                                </h3>
-                            </motion.div>
-                        ))}
-                    </div>
+                                    <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                                        {new Date(item.published_at || item.created_at).toLocaleDateString('id-ID', {
+                                            day: 'numeric',
+                                            month: 'short',
+                                            year: 'numeric'
+                                        })}
+                                    </p>
+                                    <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
+                                        {item.title}
+                                    </h3>
+                                </motion.div>
+                            ))
+                        )}
                 </div>
             </section>
 
