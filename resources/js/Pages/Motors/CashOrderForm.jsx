@@ -32,6 +32,7 @@ import { motion } from "framer-motion";
 export default function CashOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
         name: auth.user?.name || "",
+        email: auth.user?.email || "",
         phone: auth.user?.phone || "",
         nik: auth.user?.nik || "",
         address: auth.user?.alamat || "",
@@ -285,6 +286,33 @@ export default function CashOrderForm({ motor, auth }) {
                                                 {errors.nik && (
                                                     <ErrorMessage>
                                                         {errors.nik}
+                                                    </ErrorMessage>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label htmlFor="customer_email">
+                                                    Email (Opsional)
+                                                </Label>
+                                                <div className="relative">
+                                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <input
+                                                        id="customer_email"
+                                                        type="email"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        placeholder="contoh@email.com"
+                                                        value={data.email}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "email",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.email && (
+                                                    <ErrorMessage>
+                                                        {errors.email}
                                                     </ErrorMessage>
                                                 )}
                                             </div>

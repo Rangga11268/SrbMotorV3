@@ -132,6 +132,7 @@ class MotorGalleryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
             'phone' => 'required|string|regex:/^[\+]?[0-9\s\-\(\)]+$/|max:20',
             'nik' => 'required|string|max:20',
             'address' => 'required|string|max:1000',
@@ -176,6 +177,7 @@ class MotorGalleryController extends Controller
             'final_price' => $motor->price,
             'payment_method' => $request->payment_method,
             'phone' => $request->phone,
+            'email' => $request->email,
             'address' => $request->address,
             'name' => $request->name,
             'nik' => $request->nik,
