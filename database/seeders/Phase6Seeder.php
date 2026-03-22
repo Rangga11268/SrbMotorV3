@@ -12,17 +12,6 @@ class Phase6Seeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Create Promotions
-        $promo1 = \App\Models\Promotion::updateOrCreate(
-            ['title' => 'PROMO MEI DAHSYAT'],
-            ['badge_text' => 'Cashback 2 Juta', 'badge_color' => 'orange', 'is_active' => true]
-        );
-
-        $promo2 = \App\Models\Promotion::updateOrCreate(
-            ['title' => 'BUNGA NOL PERSEN'],
-            ['badge_text' => 'Bunga 0%', 'badge_color' => 'blue', 'is_active' => true]
-        );
-
         // 2. Create Leasing Providers
         $baf = \App\Models\LeasingProvider::updateOrCreate(['name' => 'BAF (Bussan Auto Finance)']);
         $adira = \App\Models\LeasingProvider::updateOrCreate(['name' => 'Adira Finance']);
@@ -37,9 +26,8 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Matic',
                 'details' => '<h3>Fitur Unggulan NMAX Turbo</h3><ul><li>Mesin Blue Core 155cc</li><li>Y-Connect Navigation</li><li>Electric Power Socket</li></ul><p>Nikmati berkendara dengan kenyamanan maksimal dan teknologi turbo terbaru dari Yamaha.</p>',
-                'image_path' => 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800',
-                'tersedia' => true,
-                'promos' => [$promo1->id, $promo2->id]
+                'image_path' => 'assets/img/yamaha/NMax Turbo.png',
+                'tersedia' => true
             ],
             [
                 'name' => 'Yamaha Aerox 155 Cyber City',
@@ -49,9 +37,8 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Sport Matic',
                 'details' => '<h3>Aerox 155 Cyber City</h3><p>Desain sporty yang agresif dengan performa mesin yang tangguh. Cocok untuk Anda yang berjiwa muda.</p>',
-                'image_path' => 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=800',
-                'tersedia' => true,
-                'promos' => [$promo1->id]
+                'image_path' => 'assets/img/yamaha/aerox 155.png',
+                'tersedia' => true
             ],
             [
                 'name' => 'Yamaha Fazzio Lux Edition',
@@ -61,50 +48,48 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Classy',
                 'details' => '<h3>Gaya Hidup Classy dengan Fazzio</h3><p>Motor hybrid pertama di kelasnya. Hemat bahan bakar dan tampil elegan di jalanan Bekasi.</p>',
-                'image_path' => 'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=800',
-                'tersedia' => true,
-                'promos' => [$promo2->id]
+                'image_path' => 'assets/img/yamaha/Fazzio.png',
+                'tersedia' => true
+            ],
+            [
+                'name' => 'Honda PCX 160 ABS',
+                'brand' => 'Honda',
+                'model' => 'PCX 160',
+                'price' => 36000000,
+                'year' => 2024,
+                'type' => 'Matic Premium',
+                'details' => '<h3>Elegansi dan Performa PCX 160</h3><p>Desain mewah dengan performa mesin eSP+ 160cc 4-katup yang bertenaga.</p>',
+                'image_path' => 'assets/img/honda/pcx 160.png',
+                'tersedia' => true
+            ],
+            [
+                'name' => 'Honda Vario 160',
+                'brand' => 'Honda',
+                'model' => 'Vario 160',
+                'price' => 27350000,
+                'year' => 2024,
+                'type' => 'Sport Matic',
+                'details' => '<h3>Vario 160 Bigger, Greater</h3><p>Tampil lebih besar dan tangguh dengan mesin 160cc untuk aktivitas sehari-hari gaya maksimal.</p>',
+                'image_path' => 'assets/img/honda/vario 160.png',
+                'tersedia' => true
+            ],
+            [
+                'name' => 'Honda Scoopy Prestige',
+                'brand' => 'Honda',
+                'model' => 'Scoopy',
+                'price' => 22000000,
+                'year' => 2024,
+                'type' => 'Classic',
+                'details' => '<h3>Scoopy Klasik yang Ikonik</h3><p>Fitur Smart Key System lengkap gaya retro yang abadi sepanjang masa.</p>',
+                'image_path' => 'assets/img/honda/scoopy.png',
+                'tersedia' => true
             ]
         ];
 
         foreach ($motors as $mData) {
-            $promos = $mData['promos'];
-            unset($mData['promos']);
-
-            $motor = \App\Models\Motor::updateOrCreate(
+            \App\Models\Motor::updateOrCreate(
                 ['name' => $mData['name']],
                 $mData
-            );
-
-            $motor->promotions()->sync($promos);
-
-            // 4. Create Financing Schemes
-            // BAF Schemes
-            \App\Models\FinancingScheme::updateOrCreate(
-                ['motor_id' => $motor->id, 'provider_id' => $baf->id, 'tenor' => 11],
-                ['dp_amount' => $motor->price * 0.15, 'monthly_installment' => ($motor->price * 0.85) / 10]
-            );
-            \App\Models\FinancingScheme::updateOrCreate(
-                ['motor_id' => $motor->id, 'provider_id' => $baf->id, 'tenor' => 23],
-                ['dp_amount' => $motor->price * 0.15, 'monthly_installment' => ($motor->price * 0.85) / 20]
-            );
-            \App\Models\FinancingScheme::updateOrCreate(
-                ['motor_id' => $motor->id, 'provider_id' => $baf->id, 'tenor' => 35],
-                ['dp_amount' => $motor->price * 0.15, 'monthly_installment' => ($motor->price * 0.85) / 30]
-            );
-
-            // Adira Schemes
-            \App\Models\FinancingScheme::updateOrCreate(
-                ['motor_id' => $motor->id, 'provider_id' => $adira->id, 'tenor' => 12],
-                ['dp_amount' => $motor->price * 0.20, 'monthly_installment' => ($motor->price * 0.80) / 11]
-            );
-            \App\Models\FinancingScheme::updateOrCreate(
-                ['motor_id' => $motor->id, 'provider_id' => $adira->id, 'tenor' => 24],
-                ['dp_amount' => $motor->price * 0.20, 'monthly_installment' => ($motor->price * 0.80) / 22]
-            );
-            \App\Models\FinancingScheme::updateOrCreate(
-                ['motor_id' => $motor->id, 'provider_id' => $adira->id, 'tenor' => 36],
-                ['dp_amount' => $motor->price * 0.20, 'monthly_installment' => ($motor->price * 0.80) / 33]
             );
         }
     }

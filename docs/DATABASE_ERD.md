@@ -27,12 +27,8 @@ erDiagram
         string google_id
         text alamat
         string nik
-        string no_hp_backup
-        string jenis_kelamin
-        date tanggal_lahir
         string occupation
         decimal monthly_income
-        string nama_ibu_kandung
         timestamp created_at
         timestamp updated_at
     }
@@ -69,7 +65,6 @@ erDiagram
         decimal motor_price
         decimal booking_fee
         decimal total_price
-        decimal discount_amount
         decimal final_price
         string delivery_method
         date delivery_date
@@ -77,8 +72,6 @@ erDiagram
         decimal monthly_income
         string employment_duration
         string payment_method
-        timestamp payment_date
-        text payment_proof
         timestamp cancelled_at
         text cancellation_reason
         text notes
@@ -96,15 +89,11 @@ erDiagram
         int tenor
         decimal interest_rate
         decimal monthly_installment
-        decimal total_interest
         text verification_notes
         timestamp verified_at
         decimal dp_amount
         timestamp dp_paid_at
         string dp_payment_method
-        timestamp unit_prepared_at
-        timestamp ready_for_delivery_at
-        timestamp delivered_at
         timestamp completed_at
         text completion_notes
         boolean is_completed
@@ -247,10 +236,10 @@ erDiagram
 
 | Table | Columns | Purpose |
 |:---|:---:|:---|
-| `users` | 20 | Unified User & Profile Data |
+| `users` | 16 | Unified User & Profile Data |
 | `motors` | 13 | Motorcycle Catalog & Stock Status |
-| `transactions` | 31 | Core Sales Records (Cash/Credit) |
-| `credit_details` | 23 | Leasing & Approval Workflow |
+| `transactions` | 28 | Core Sales Records (Cash/Credit) |
+| `credit_details` | 19 | Leasing & Approval Workflow |
 | [installments](file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php#106-113) | 21 | Payment Tracking & Deadlines |
 | `documents` | 15 | Identity Files & Verification |
 | `categories` | 9 | Article Grouping |
@@ -262,6 +251,6 @@ erDiagram
 | `notifications` | 8 | User Alert System |
 
 **Total Application Tables:** 13
-**Total Application Columns:** 188
+**Total Application Columns:** 177
 
 *Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*
