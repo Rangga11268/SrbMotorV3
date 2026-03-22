@@ -54,7 +54,7 @@ class NewsController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
 
         // Set published_at if status is published
-        if ($validated['status'] === 'published' && !$validated['published_at']) {
+        if ($validated['status'] === 'published' && !($validated['published_at'] ?? null)) {
             $validated['published_at'] = now();
         }
 
@@ -69,7 +69,7 @@ class NewsController extends Controller
         $categories = Category::active()->get(['id', 'name']);
 
         return Inertia::render('Admin/News/Edit', [
-            'post' => $post->load('category'),
+            'post' => $news->load('category'),
             'categories' => $categories,
         ]);
     }
@@ -89,9 +89,9 @@ class NewsController extends Controller
         // Handle image upload
         if ($request->hasFile('featured_image')) {
             // Delete old image
-            if ($post->featured_image && str_starts_with($post->featured_image, 'storage/')) {
+            if ($news->featured_image && str_starts_with($news->featured_image, 'storage/')) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete(
-                    str_replace('storage/', '', $post->featured_image)
+                    str_replace('storage/', '', $news->featured_image)
                 );
             }
 
@@ -101,12 +101,12 @@ class NewsController extends Controller
         }
 
         // Update slug if title changed
-        if ($post->title !== $validated['title']) {
+        if ($news->title !== $validated['title']) {
             $validated['slug'] = Str::slug($validated['title']);
         }
 
         // Set published_at if status is published
-        if ($validated['status'] === 'published' && !$validated['published_at']) {
+        if ($validated['status'] === 'published' && !($validated['published_at'] ?? null)) {
             $validated['published_at'] = now();
         }
 
@@ -127,7 +127,7 @@ class NewsController extends Controller
     public function show(Post $news)
     {
         return Inertia::render('Admin/News/Show', [
-            'post' => $post->load('category'),
+            'post' => $news->load('category'),
         ]);
     }
 }

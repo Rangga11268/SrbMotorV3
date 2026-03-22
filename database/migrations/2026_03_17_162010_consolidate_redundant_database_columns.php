@@ -20,11 +20,6 @@ return new class extends Migration
                 'survey_scheduled_date',
                 'survey_completed_at',
                 'survey_notes',
-                'dp_amount',
-                'dp_paid_at',
-                'dp_payment_method',
-                'unit_prepared_at',
-                'is_completed',
                 'customer_confirms_survey',
                 'customer_survey_confirmed_at',
             ]);

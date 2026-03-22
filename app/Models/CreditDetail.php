@@ -30,6 +30,12 @@ class CreditDetail extends Model
         'verified_at',
         'ready_for_delivery_at',
         'delivered_at',
+        'dp_amount',
+        'dp_paid_at',
+        'dp_payment_method',
+        'unit_prepared_at',
+        'survey_completed_at',
+        'is_completed',
         'completed_at',
         'completion_notes',
     ];

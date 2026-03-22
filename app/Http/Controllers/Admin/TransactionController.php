@@ -115,7 +115,7 @@ class TransactionController extends Controller
             'booking_fee' => 'required|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
-            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
         ]);
 
         // Get motor and calculate total
@@ -127,21 +127,21 @@ class TransactionController extends Controller
             'final_price' => $motor->price,
             'motor_price' => $motor->price,
             'booking_fee' => $validated['booking_fee'],
-            'address' => $validated['address'],
+            'address' => $request->address,
             'total_price' => $motor->price,
-            'notes' => $validated['notes'],
+            'notes' => $request->notes,
             'status' => $validated['status'],
             'transaction_type' => 'CASH',
             'name' => $validated['name'],
-            'nik' => $validated['nik'],
-            'phone' => $validated['phone'],
-            'email' => $validated['email'],
-            'motor_color' => $validated['motor_color'],
-            'delivery_method' => $validated['delivery_method'],
+            'nik' => $request->nik,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'motor_color' => $request->motor_color,
+            'delivery_method' => $request->delivery_method,
         ]);
 
         // Stock Locking: If created with a "lock" status
-        $lockStatuses = ['payment_confirmed', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
+        $lockStatuses = ['pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
         if (in_array($validated['status'], $lockStatuses)) {
             $motor->update(['tersedia' => false]);
             \Illuminate\Support\Facades\Log::info("Stock Locked for Motor ID: {$motor->id} (Manual Cash Order Creation)");
@@ -187,7 +187,7 @@ class TransactionController extends Controller
             'booking_fee' => 'required|numeric|min:0',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
-            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
             'delivery_date' => 'nullable|date',
         ]);
 
@@ -201,17 +201,17 @@ class TransactionController extends Controller
             'final_price' => $motor->price,
             'motor_price' => $motor->price,
             'booking_fee' => $validated['booking_fee'],
-            'address' => $validated['address'],
+            'address' => $request->address,
             'total_price' => $motor->price,
-            'notes' => $validated['notes'],
+            'notes' => $request->notes,
             'status' => $validated['status'],
             'name' => $validated['name'],
-            'nik' => $validated['nik'],
-            'phone' => $validated['phone'],
-            'email' => $validated['email'],
-            'motor_color' => $validated['motor_color'],
-            'delivery_method' => $validated['delivery_method'],
-            'delivery_date' => $validated['delivery_date'],
+            'nik' => $request->nik,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'motor_color' => $request->motor_color,
+            'delivery_method' => $request->delivery_method,
+            'delivery_date' => $request->delivery_date,
         ]);
 
         // Stock Balancing: Update motor availability based on status change
@@ -261,7 +261,7 @@ class TransactionController extends Controller
     public function updateStatus(Request $request, Transaction $transaction)
     {
         $validated = $request->validate([
-            'status' => 'required|string|in:new_order,waiting_payment,payment_confirmed,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
+            'status' => 'required|string|in:new_order,waiting_payment,pembayaran_dikonfirmasi,unit_preparation,ready_for_delivery,dalam_pengiriman,completed,cancelled',
         ]);
 
         $oldStatus = $transaction->status;

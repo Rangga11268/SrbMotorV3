@@ -80,24 +80,15 @@ class SettingController extends Controller
         $field = $validated['field'];
         $file = $validated['file'];
 
-        // Create directory if not exists
-        $dir = public_path('assets/logos');
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
         // Generate unique filename with timestamp
         $timestamp = now()->format('YmdHis');
         $filename = "{$field}-{$timestamp}." . $file->getClientOriginalExtension();
 
-        // Store file
-        $file->move($dir, $filename);
-
-        // Return path relative to public
-        $path = "/assets/logos/{$filename}";
+        // Store file using Storage facade for better testability and consistency
+        $path = $file->storeAs('assets/logos', $filename, 'public');
 
         return response()->json([
-            'path' => $path,
+            'path' => '/storage/' . $path,
             'filename' => $filename,
             'message' => 'File uploaded successfully',
         ]);
