@@ -40,7 +40,7 @@ E-commerce application untuk pembelian motor dengan opsi:
 ✅ Implement responsive design (support landscape & portrait)
 ✅ Integrate with existing Laravel backend
 ✅ Handle both iOS & Android safely
-✅ Clean architecture dengan Riverpod state management
+✅ Arsitektur yang rapi dengan Provider state management
 
 ### Target Features for MVP
 
@@ -62,7 +62,7 @@ E-commerce application untuk pembelian motor dengan opsi:
 Framework:           Flutter 3.25.0+
 Language:            Dart 3.5+
 State Management:    Provider (Lebih ramah untuk OOP pemula/mahasiswa)
-HTTP Client:         Dio 5.3+ atau http
+HTTP Client:         http 1.2+ (atau Dio)
 Auth:                JWT Token (dari REST API Laravel)
 Local Storage:       shared_preferences (Token) + sqflite (Fitur Favorite)
 UI:                  Material Design 3
@@ -82,8 +82,9 @@ Authentication:      Laravel Session + JWT for mobile
 ```yaml
 dependencies:
   flutter: sdk: flutter
-  riverpod: ^2.4.0
-  dio: ^5.3.0
+  provider: ^6.1.1
+  http: ^1.2.0
+  sqflite: ^2.3.0
   shared_preferences: ^2.2.0
   google_fonts: ^6.0.0
   intl: ^0.19.0
@@ -445,7 +446,7 @@ EXPANDED (> 840dp)
 | Medium      | 3       | 24dp    | 16dp   |
 | Expanded    | 4       | 32dp    | 20dp   |
 
-**Implementation** (Riverpod + MediaQuery):
+**Implementation** (Provider + MediaQuery):
 
 ```dart
 class ResponsiveHelper {
@@ -807,7 +808,7 @@ void main() {
 
 ### Phase 1: Setup (Week 1)
 
-- [ ] Create Flutter project with Riverpod + Dio
+- [ ] Create Flutter project with Provider + HTTP
 - [ ] Setup project folder structure
 - [ ] Create API service layer
 - [ ] Configure BaseUrl (localhost IP for testing)
@@ -869,13 +870,15 @@ void main() {
 - [ ] Device testing (landscape, orientation changes)
 - [ ] Bug fixes & final polish
 
-### Optional Features (if time permits)
+### Phase 2: Next Update (Advanced Features)
 
-- [ ] Image caching optimization
-- [ ] Offline mode (local storage)
-- [ ] Push notifications (FCM)
-- [ ] Admin dashboard improvements
-- [ ] Dark mode colors
+Jika MVP utama (Tunai/Cash) sudah selesai dan berjalan lancar, fitur berikut ditargetkan untuk *update* selanjutnya:
+
+- [ ] **Alur Pemesanan Kredit (Credit Workflow)**: Form multi-step dengan pemilihan tenor dan leasing.
+- [ ] **Upload Dokumen KTP & Selfie**: Menggunakan package `image_picker` atau `camera` dengan form multipart/form-data.
+- [ ] **Integrasi Midtrans (Payment Gateway)**: Menggunakan SDK / API Midtrans untuk pembayaran uang muka (DP) secara langsung dari aplikasi.
+- [ ] **Offline Mode**: Cache katalog menggunakan SQLite (`sqflite`).
+- [ ] **Push Notifications**: Menggunakan Firebase Cloud Messaging (FCM).
 
 ---
 
@@ -983,9 +986,10 @@ flutter run
 ## RESOURCES
 
 - [Flutter Documentation](https://flutter.dev/docs)
-- [Riverpod Documentation](https://riverpod.dev)
+- [Provider Documentation](https://pub.dev/packages/provider)
 - [Material Design 3](https://m3.material.io)
-- [Dio HTTP Client](https://pub.dev/packages/dio)
+- [HTTP Package Client](https://pub.dev/packages/http)
+- [SQFLite Documentation](https://pub.dev/packages/sqflite)
 - [Flutter Responsive Guide](https://flutter.dev/docs/development/ui/layout/responsive)
 
 ---
