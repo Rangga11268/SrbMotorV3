@@ -31,9 +31,8 @@
 
 E-commerce application untuk pembelian motor dengan opsi:
 
-- **Cash Purchase** (langsung beli)
-- **Credit Purchase** (dengan tenor cicilan)
-- **Admin Management** (approve/reject credit)
+- **Cash Purchase** (pemesanan tunai via API)
+- **Favorite / Wishlist** (simpan motor impian via SQLite)
 
 ### Course Project Goals
 
@@ -45,13 +44,13 @@ E-commerce application untuk pembelian motor dengan opsi:
 
 ### Target Features for MVP
 
-- ✅ Authentication (Login/Register/OTP)
-- ✅ Browse Motors (Home + Catalog)
-- ✅ Motor Detail + Reviews
-- ✅ Place Order (Cash & Credit)
-- ✅ Track Order Status
+- ✅ Authentication (Login/Register menggunakan JWT)
+- ✅ Browse Motors (Home + Catalog via API)
+- ✅ Motor Detail (Info & Specs via API)
+- ✅ Place Order (Khusus Cash/Tunai via POST API)
+- ✅ Track Order Status (Riwayat Pesanan)
+- ✅ Wishlist / Favorite (Local Storage SQLite)
 - ✅ User Profile
-- ✅ Admin Dashboard (basic)
 
 ---
 
@@ -62,10 +61,10 @@ E-commerce application untuk pembelian motor dengan opsi:
 ```
 Framework:           Flutter 3.25.0+
 Language:            Dart 3.5+
-State Management:    Riverpod 2.4+
-HTTP Client:         Dio 5.3+
-Auth:                Firebase Auth + JWT Token
-Local Storage:       Hive (optional) + shared_preferences
+State Management:    Provider (Lebih ramah untuk OOP pemula/mahasiswa)
+HTTP Client:         Dio 5.3+ atau http
+Auth:                JWT Token (dari REST API Laravel)
+Local Storage:       shared_preferences (Token) + sqflite (Fitur Favorite)
 UI:                  Material Design 3
 ```
 
@@ -100,33 +99,20 @@ dependencies:
 ### Active Tables (dari Laravel backend)
 
 ```
-users (id, email, name, phone, birthdate, gender, niknim, full_address, password...)
-├── transactions (id, user_id, motor_id, order_type: cash|credit, total_price...)
-│   ├── credit_details (id, transaction_id, monthly_payment, tenor...)
-│   │   └── installments (id, credit_detail_id, month_number, payment_date, is_paid...)
-│   └── documents (id, transaction_id, document_type, file_path, is_verified...)
-├── posts (id, title, content,  category_id, created_by...)
-└── notifications (id, user_id, type, read_at...)
+users (id, email, name, phone, password, role)
+├── transactions (hanya berfokus pada order_type: cash)
+└── transaction_logs (log riwayat status pesanan dari sistem)
 
-motors (id, name, brand, details, price, category_id...)
-├── category (id, category_name)
-└── leasing_provider (id, provider_name, monthly_rate...)
-
-transaction_logs (id, transaction_id, status, created_at...)
-survey_schedules (id, transaction_id, scheduled_date, status...)
-settings (key, value)
+motors (id, name, brand, details, price, type, image_path ...)
+└── categories (id, name, slug)
 ```
 
 ### Key Relationships
 
 ```
 User 1—→ Many Transactions
-User 1—→ Many Notifications
 Transaction 1—→ 1 Motor
-Transaction 1—→ 0|1 CreditDetail
-Transaction 1—→ Many Documents
 Transaction 1—→ Many TransactionLogs
-CreditDetail 1—→ Many Installments
 Motor 1—→ 1 Category
 ```
 
@@ -136,11 +122,10 @@ Motor 1—→ 1 Category
 
 ### 4.1 Authentication
 
-- **Login**: Email + Password
+- **Login**: Email + Password (mendapatkan JWT)
 - **Register**: Email, Password, Name, Phone
-- **OTP Verification**: 6-digit code
-- **Logout**: Clear token + shared_preferences
-- **Remember Me**: Save token persistently
+- **Logout**: Clear token dari shared_preferences
+- **Session**: Simpan token JWT menggunakan shared_preferences
 
 ### 4.2 Home Screen
 
@@ -165,15 +150,10 @@ Motor 1—→ 1 Category
 
 - Image carousel (5+ photos)
 - Specs (engine, transmission, weight, price)
-- **Financing Options Table**:
-  | Tenor | Monthly | Total |
-  |-------|---------|-------|
-  | 12 | 3.2M | 38.4M |
-  | 24 | 1.8M | 43.2M |
-  | 36 | 1.3M | 46.8M |
-- Reviews section
-- Related motors (3 items)
-- Action: **Add to Cart** / **Order Now**
+- Spesifikasi Kendaraan
+- Related motors (3 item dari API rekomendasi)
+- Action 1: **Pesan Sekarang (Tunai)**
+- Action 2: **Favoritkan (❤️ Simpan ke SQLite)**
 
 ### 4.5 Cash Order Form
 
@@ -186,74 +166,19 @@ Single form screen:
 - Notes (optional)
 - **Submit** button
 
-### 4.6 Credit Order Form
-
-4-step progress form:
-
-**Step 1: Personal Info**
-
-- Name, Phone, Birth Date
-- Gender (radio: Laki-laki/Perempuan)
-- NIK (ID number), Full Address
-
-**Step 2: Tenor Selection**
-
-- Select tenor (12/24/36/48 months)
-- Show monthly payment preview
-- Select leasing provider (display rate)
-
-**Step 3: Document Upload**
-
-- KTP (ID Card) photo/file
-- NPWP (Tax ID) photo/file
-- Payslip/Business proof
-- Bank statement
-- Selfie with ID
-
-**Step 4: Review & Submit**
-
-- Show all entered data
-- Terms & Conditions checkbox
-- Submit button
-
-### 4.7 Order Status Tracking
-
-8-stage timeline:
-
-1. Order Placed (✓ Completed)
-2. Waiting Admin Review (In Progress / Waiting)
-3. Admin Approved
-4. Waiting Payment
-5. Payment Confirmed
-6. Waiting Survey
-7. Waiting Delivery
-8. Order Complete
-
-Display:
+### 4.6 Order Status Tracking
 
 - Vertical timeline with status indicators
-- Current status highlighted
-- Timestamp for each stage
-- Contact sales button (WhatsApp)
+- Menampilkan status pesanan:
+  1. Pesanan Diterima (new_order)
+  2. Menunggu Pembayaran
+  3. Selesai
 
-### 4.8 User Profile
+### 4.7 User Profile
 
-- Avatar (placeholder or upload from camera)
-- User Info (Email, Phone, Birthdate, Gender, NIK, Address)
+- User Info (Email, Phone, Name)
 - **Settings**:
-    - Change Password
-    - Notifications toggle
-    - Dark mode toggle
-    - Language (if multilingual)
-- **Logout** button
-
-### 4.9 Admin Dashboard (Simple)
-
-- Total Users (KPI card)
-- Total Revenue (KPI card)
-- Pending Credit Approvals (KPI card)
-- Recent Transactions (list, last 10)
-- [Admin] Mark as Approved / Rejected
+    - **Logout** button (menghapus token JWT)
 
 ---
 
@@ -442,130 +367,9 @@ BottomTabNavigationBar (5 tabs):
 └─────────────────────┘
 ```
 
-### 5.6 Credit Order Form (4 Steps)
 
-**Step 1: Personal Info**
 
-```
-┌─────────────────────┐
-│ ◄ Pesan (Kredit) │
-├─────────────────────┤
-│ Step 1 of 4: Info   │
-│ [████░░░░░░░░░] 25% │  ← Progress bar
-├─────────────────────┤
-│ Nama Lengkap:       │
-│ [Budi Santoso    ]  │
-│                     │
-│ Tanggal Lahir:      │
-│ [19-03-1990      ]  │
-│                     │
-│ Jenis Kelamin:      │
-│ ◉ Laki-laki         │
-│ ○ Perempuan         │
-│                     │
-│ No. NIK:            │
-│ [3278012345678901]  │
-│                     │
-│ Alamat Lengkap:     │
-│ [Jalan Merdeka...]  │
-│                     │
-│     [Lanjut]        │
-└─────────────────────┘
-```
-
-**Step 2: Tenor Selection**
-
-```
-┌─────────────────────┐
-│ ◄ Pesan (Kredit) │
-├─────────────────────┤
-│ Step 2 of 4: Tenor  │
-│ [████████░░░░░] 50% │
-├─────────────────────┤
-│ Pilih Tenor:        │
-│                     │
-│ ✓ 12 bulan          │
-│   Rp6,542,500/bln   │
-│                     │
-│ ○ 24 bulan          │
-│   Rp3,546,000/bln   │
-│                     │
-│ ○ 36 bulan          │
-│   Rp2,569,000/bln   │
-│                     │
-│ ○ 48 bulan          │
-│   Rp2,047,500/bln   │
-│                     │
-│ Pembiayaan Leasing: │
-│ [Astra Credit    ▼] │
-│ Rate: 0.35% / bulan │
-│                     │
-│ [◄ Kembali] [Lanjut]│
-└─────────────────────┘
-```
-
-**Step 3: Upload Dokumen**
-
-```
-┌─────────────────────┐
-│ ◄ Pedan (Kredit)  │
-├─────────────────────┤
-│ Step 3 of 4: Docs   │
-│ [██████████░░░] 75% │
-├─────────────────────┤
-│ KTP Scan:           │
-│ [Upload] [Camera]   │
-│ Status: ⏳ Pending   │
-│                     │
-│ NPWP (Opsional):    │
-│ [Upload] [Camera]   │
-│ Status: ⏳ Pending   │
-│                     │
-│ Slip Gaji:          │
-│ [Upload] [Camera]   │
-│ Status: ⏳ Pending   │
-│                     │
-│ Selfie + KTP:       │
-│ [Upload] [Camera]   │
-│ Status: ⏳ Pending   │
-│                     │
-│ [◄ Kembali] [Lanjut]│
-└─────────────────────┘
-```
-
-**Step 4: Review & Submit**
-
-```
-┌─────────────────────┐
-│ ◄ Pesan (Kredit) │
-├─────────────────────┤
-│ Step 4 of 4: Review │
-│ [█████████████] 100%│
-├─────────────────────┤
-│ Data Pemesanan:     │
-│                     │
-│ Motor: Yamaha NMax  │
-│ Harga: Rp78,500jt   │
-│ Tenor: 12 bulan     │
-│ Cicilan: Rp6,542.5k │
-│                     │
-│ Data Pribadi:       │
-│ Nama: Budi Santoso  │
-│ NIK: 3278012...     │
-│ Alamat: Jalan...    │
-│                     │
-│ Dokumen:            │
-│ ✓ KTP dan selfie    │
-│ ⏳ Dalam Review      │
-│                     │
-│ □ Saya setuju dg    │
-│   T&C pembiayaan    │
-│                     │
-│ [◄ Kembali] [Pesan] │
-└─────────────────────┘
-```
-
-### 5.7 Order Status Tracking
+### 5.6 Order Status Tracking
 
 ```
 ┌─────────────────────┐
@@ -580,33 +384,17 @@ BottomTabNavigationBar (5 tabs):
 │ ✓ Pesanan Diterima  │
 │   03-19 10:30       │
 │                     │
-│ ✓ Review Admin      │
-│   03-19 14:20       │
-│                     │
-│ ✓ Admin Approve     │
-│   03-19 15:00       │
-│                     │
 │ ⏳ Tunggu Pembayaran │
 │   (Menunggu...)     │
-│                     │
-│ ○ Bayar Konfirmasi  │
-│                     │
-│ ○ Tunggu Survey     │
-│                     │
-│ ○ Tunggu Kirim      │
 │                     │
 │ ○ Pesanan Selesai   │
 │                     │
 │ ========== Actions ==│
-│ [💬 Chat Admin]     │
-│ [📄 Download Invoice]│
-├─────────────────────┤
-│ *Hubungi sales jika  │
-│ ada pertanyaan      │
+│ [💬 Chat WhatsApp]   │
 └─────────────────────┘
 ```
 
-### 5.8 User Profile
+### 5.7 User Profile
 
 ```
 ┌─────────────────────┐
@@ -622,56 +410,12 @@ BottomTabNavigationBar (5 tabs):
 │                     │
 │ Nomor Telepon:      │
 │ +6281234567890      │
-│                     │
-│ Tanggal Lahir:      │
-│ 19-03-1990          │
-│                     │
-│ Jenis Kelamin:      │
-│ Laki-laki           │
-│                     │
-│ NIK:                │
-│ 3278012345678901    │
-│                     │
-│ Alamat:             │
-│ Jalan Merdeka 123...│
-├─────────────────────┤
-│ Keamanan            │
-│ [Ubah Password]     │
-│                     │
-│ Notifikasi          │
-│ [Toggle switches]   │
-│                     │
-│ Tema:               │
-│ ◉ Light ○ Dark      │
 ├─────────────────────┤
 │      [Logout]       │
 └─────────────────────┘
 ```
 
-### 5.9 Admin Dashboard
 
-```
-┌─────────────────────┐
-│ Dashboard Admin  [≡] │
-├─────────────────────┤
-│ Total User: 1,245   │  ← KPI Cards
-│ Total Revenue: Rp.. │
-│ Pending Approval: 8 │
-├─────────────────────┤
-│ Transaksi Terbaru:  │
-│ ┌─────────────────┐ │
-│ │ORD-00123       │ │  ← 2-column
-│ │Budi Santoso    │ │
-│ │Kredit | Pending│ │
-│ │[Approve][Cls]  │ │
-│ └─────────────────┘ │
-│ ┌─────────────────┐ │
-│ │ORD-00122       │ │
-│ │Ahmad Wijaya    │ │
-│ │Cash | Approved │ │
-│ └─────────────────┘ │
-└─────────────────────┘
-```
 
 ---
 
@@ -896,19 +640,25 @@ MaterialApp(
 └────────────────────────   ┘
 ```
 
-**Implementation** (Riverpod):
+**Implementation** (Provider):
 
 ```dart
-final currentTabProvider = StateProvider<int>((ref) => 0);
+class TabProvider with ChangeNotifier {
+  int _currentIndex = 0;
+  int get currentIndex => _currentIndex;
 
-class MainNavigation extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentTab = ref.watch(currentTabProvider);
+  void setIndex(int index) {
+    _currentIndex = index;
+    notifyListeners();
+  }
+}
+
+  Widget build(BuildContext context) {
+    final tabProvider = Provider.of<TabProvider>(context);
 
     return Scaffold(
       body: IndexedStack(
-        index: currentTab,
+        index: tabProvider.currentIndex,
         children: [
           HomeScreen(),
           CatalogScreen(),
@@ -918,8 +668,8 @@ class MainNavigation extends ConsumerWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentTab,
-        onTap: (index) => ref.read(currentTabProvider.notifier).state = index,
+        currentIndex: tabProvider.currentIndex,
+        onTap: (index) => tabProvider.setIndex(index),
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Explore'),
@@ -939,20 +689,16 @@ class MainNavigation extends ConsumerWidget {
 MainNavigation
 ├── HomeScreen
 │   └── MotorDetailScreen
-│       └── OrderFormScreen (Cash/Credit)
-│           └── CheckoutScreen
-│               └── PaymentScreen
+│       └── OrderFormScreen (Cash)
 ├── CatalogScreen
 │   ├── FilterBottomSheet
 │   └── MotorDetailScreen (→ OrderForm)
 ├── ProfileScreen
-│   └── EditProfileScreen
 ├── NotificationScreen
 └── MenuScreen
     ├── OrderHistoryScreen
     │   └── OrderStatusScreen
-    ├── SettingsScreen
-    └── HelpScreen
+    └── SettingsScreen
 ```
 
 ---
@@ -961,121 +707,73 @@ MainNavigation
 
 ### 9.1 Base Configuration
 
-**Dio Setup** (Riverpod):
+**Dio or http Setup** (Example with HTTP):
 
 ```dart
-final dioProvider = Provider<Dio>((ref) {
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://192.168.1.5:8000/api', // Change to your IP
-      connectTimeout: Duration(seconds: 10),
-      receiveTimeout: Duration(seconds: 10),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    ),
-  );
-
-  // Add token interceptor
-  dio.interceptors.add(
-    InterceptorsWrapper(
-      onRequest: (options, handler) {
-        final token = ref.read(authTokenProvider);
-        if (token != null) {
-          options.headers['Authorization'] = 'Bearer $token';
-        }
-        return handler.next(options);
-      },
-      onError: (error, handler) {
-        if (error.response?.statusCode == 401) {
-          // Handle token refresh or logout
-        }
-        return handler.next(error);
-      },
-    ),
-  );
-
-  return dio;
-});
+class ApiConfig {
+  static const String baseUrl = 'http://192.168.1.5:8000/api'; // Ganti IP
+  
+  static Future<Map<String, String>> get headers async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    
+    return {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+}
 ```
 
 ### 9.2 Key API Endpoints
 
 | Method | Endpoint                         | Purpose                        |
 | ------ | -------------------------------- | ------------------------------ |
-| POST   | `/auth/login`                    | User login (email + password)  |
-| POST   | `/auth/register`                 | User registration              |
-| POST   | `/auth/otp-verify`               | OTP verification               |
+| POST   | `/login`                         | User login (email + password)  |
+| POST   | `/register`                      | User registration              |
 | GET    | `/motors`                        | List all motors (with filters) |
 | GET    | `/motors/{id}`                   | Motor detail + reviews         |
-| GET    | `/motors/{id}/financing-options` | Available tenor options        |
 | POST   | `/orders/cash`                   | Place cash order               |
-| POST   | `/orders/credit`                 | Place credit order             |
-| POST   | `/orders/{id}/documents/upload`  | Upload documents               |
+| GET    | `/orders`                        | Order history list             |
 | GET    | `/orders/{id}`                   | Order detail + status          |
-| GET    | `/orders/{id}/timeline`          | Order status timeline          |
 | GET    | `/user/profile`                  | User profile info              |
-| PUT    | `/user/profile`                  | Update profile                 |
-| GET    | `/notifications`                 | List notifications             |
-| GET    | `/admin/dashboard`               | Admin KPI cards                |
-| GET    | `/admin/transactions`            | Admin transaction list         |
 
-### 9.3 Service Layer (Riverpod)
+### 9.3 Service Layer (OOP Concept)
 
 ```dart
-// Authentication Service
-final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService(dio: ref.watch(dioProvider));
-});
-
-final authTokenProvider = StateProvider<String??>((ref) => null);
-final userProvider = StateProvider<User?>((ref) => null);
-
-// Motor Service
-final motorServiceProvider = Provider<MotorService>((ref) {
-  return MotorService(dio: ref.watch(dioProvider));
-});
-
-final motorsListProvider = FutureProvider<List<Motor>>((ref) async {
-  final service = ref.watch(motorServiceProvider);
-  return service.getMotors();
-});
-
-final motorDetailProvider = FutureProvider.family<Motor, int>((ref, id) async {
-  final service = ref.watch(motorServiceProvider);
-  return service.getMotorDetail(id);
-});
-
-// Order Service
-final orderServiceProvider = Provider<OrderService>((ref) {
-  return OrderService(dio: ref.watch(dioProvider));
-});
+class MotorService {
+  Future<List<Motor>> getMotors() async {
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/motors'),
+      headers: await ApiConfig.headers,
+    );
+    // Parse JSON to List<Motor>
+  }
+}
 ```
 
 ---
 
 ## 10. STATE MANAGEMENT
 
-### 10.1 Riverpod Structure
+### 10.1 Provider Structure
 
 ```
 lib/
 ├── providers/
-│   ├── auth_provider.dart (login, register, logout)
-│   ├── motor_provider.dart (motors list, detail, filters)
-│   ├── order_provider.dart (create order, get status)
-│   └── user_provider.dart (profile, notifications)
+│   ├── auth_provider.dart (login logic, simpan token)
+│   ├── motor_provider.dart (fetch motors via API, filtering)
+│   ├── order_provider.dart (POST pesanan, GET history)
+│   └── favorite_provider.dart (SQLite CRUD untuk wishlist)
 ├── services/
 │   ├── auth_service.dart
 │   ├── motor_service.dart
-│   ├── order_service.dart
-│   └── payment_service.dart
+│   └── order_service.dart
 ├── models/
 │   ├── user.dart
 │   ├── motor.dart
-│   ├── order.dart
-│   ├── credit_detail.dart
-│   └── transaction_log.dart
+│   └── order.dart
 ├── screens/
 │   ├── auth/
 │   ├── home/
@@ -1085,73 +783,21 @@ lib/
 └── main.dart
 ```
 
-### 10.2 Example: Order Form State
+### 10.2 Example: Integrating Provider
 
 ```dart
-// Order creation form state
-final orderFormProvider = StateNotifierProvider<OrderFormNotifier, OrderFormState>((ref) {
-  return OrderFormNotifier(ref);
-});
-
-class OrderFormState {
-  final String? motorId;
-  final String? orderType; // 'cash' or 'credit'
-  final String? customerName;
-  final String? phone;
-  final String? address;
-  final List<File> documents;
-  final bool isSubmitting;
-  final String? error;
-
-  OrderFormState({
-    this.motorId,
-    this.orderType,
-    this.customerName,
-    this.phone,
-    this.address,
-    this.documents = const [],
-    this.isSubmitting = false,
-    this.error,
-  });
-
-  OrderFormState copyWith({
-    String? motorId,
-    String? orderType,
-    String? customerName,
-    String? phone,
-    String? address,
-    List<File>? documents,
-    bool? isSubmitting,
-    String? error,
-  }) => // ...
-}
-
-// Call in UI:
-class OrderFormScreen extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final formState = ref.watch(orderFormProvider);
-    final notifier = ref.read(orderFormProvider.notifier);
-
-    return Scaffold(
-      appBar: AppBar(title: Text('Pesan Motor')),
-      body: Form(
-        child: Column(
-          children: [
-            TextFormField(
-              onChanged: (value) => notifier.setCustomerName(value),
-            ),
-            ElevatedButton(
-              onPressed: formState.isSubmitting
-                  ? null
-                  : () => notifier.submitOrder(),
-              child: Text('Pesan'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+// Di main.dart
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => MotorProvider()),
+        ChangeNotifierProvider(create: (_) => TabProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 ```
 
@@ -1171,10 +817,9 @@ class OrderFormScreen extends ConsumerWidget {
 
 - [ ] Login screen UI
 - [ ] Register screen UI
-- [ ] OTP verification flow
-- [ ] Implement auth service (Dio)
-- [ ] Store token in shared_preferences
-- [ ] Create auth guard (redirect unauthenticated users)
+- [ ] Implement auth service (POST /login)
+- [ ] Store JWT token in shared_preferences
+- [ ] Create auth validation logic
 
 ### Phase 3: Motor Catalog (Week 2-3)
 
@@ -1187,11 +832,11 @@ class OrderFormScreen extends ConsumerWidget {
 
 ### Phase 4: Order Placement (Week 3-4)
 
-- [ ] Cash order form (single step)
-- [ ] Credit order form (4-step wizard)
-- [ ] Document upload (camera + file picker)
-- [ ] Form validation & error handling
-- [ ] Spinner/loading state
+- [ ] Cash order form (Form Sederhana)
+- [ ] Handle input validation (Nama, HP, Alamat)
+- [ ] POST data ke backend
+- [ ] Notifikasi Sukses / Dialog
+- [ ] Spinner/loading state saat request
 
 ### Phase 5: Order Tracking (Week 4-5)
 
@@ -1241,7 +886,7 @@ class OrderFormScreen extends ConsumerWidget {
 ```bash
 flutter create srb_motor_app --org com.srbmotor
 cd srb_motor_app
-flutter pub add riverpod dio shared_preferences
+flutter pub add provider http shared_preferences sqflite path
 ```
 
 ### 2. Update pubspec.yaml
@@ -1250,10 +895,11 @@ flutter pub add riverpod dio shared_preferences
 dependencies:
     flutter:
         sdk: flutter
-    riverpod: ^2.4.0
-    hooks_riverpod: ^2.4.0
-    dio: ^5.3.0
+    provider: ^6.1.1
+    http: ^1.2.0
     shared_preferences: ^2.2.0
+    sqflite: ^2.3.0
+    path: ^1.9.0
     cached_network_image: ^3.3.0
     intl: ^0.19.0
     google_fonts: ^6.0.0
