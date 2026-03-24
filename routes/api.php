@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MotorController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,7 @@ Route::post('/login/google', [App\Http\Controllers\Api\GoogleAuthController::cla
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/motors', [MotorController::class, 'index']);
 Route::get('/motors/{id}', [MotorController::class, 'show']);
+Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::post('/midtrans/notification', [App\Http\Controllers\PaymentCallbackController::class, 'handle']);
 

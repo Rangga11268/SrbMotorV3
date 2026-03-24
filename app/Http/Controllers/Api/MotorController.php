@@ -20,7 +20,12 @@ class MotorController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $motors = $query->with('promotions')->get();
+        try {
+            $motors = $query->with('promotions')->get();
+        } catch (\Exception $e) {
+            // Fallback if relationship fails
+            $motors = $query->get();
+        }
 
         return response()->json($motors);
     }

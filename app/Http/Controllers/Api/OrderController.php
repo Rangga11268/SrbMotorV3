@@ -35,14 +35,16 @@ class OrderController extends Controller
         $order = Transaction::create([
             'user_id' => $request->user()->id,
             'motor_id' => $request->motor_id,
-            'customer_name' => $request->customer_name,
-            'customer_phone' => $request->customer_phone,
-            'customer_occupation' => $request->customer_occupation,
-            'customer_address' => $request->customer_address,
+            'name' => $request->customer_name,
+            'phone' => $request->customer_phone,
+            'occupation' => $request->customer_occupation,
+            'address' => $request->customer_address,
             'notes' => $request->notes,
             'transaction_type' => 'CASH',
             'status' => 'new_order',
+            'motor_price' => $motor->price,
             'total_price' => $motor->price,
+            'final_price' => $motor->price,
             'reference_number' => 'ORD-' . strtoupper(uniqid()),
         ]);
 
