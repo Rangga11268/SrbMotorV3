@@ -15,7 +15,7 @@ class OrderController extends Controller
         $orders = Transaction::where('user_id', $request->user()->id)
             ->with('motor')
             ->orderBy('created_at', 'desc')
-            .get();
+            ->get();
 
         return response()->json($orders);
     }

@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\OrderController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login/google', [App\Http\Controllers\Api\GoogleAuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/motors', [MotorController::class, 'index']);
 Route::get('/motors/{id}', [MotorController::class, 'show']);
