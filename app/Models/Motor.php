@@ -31,16 +31,6 @@ class Motor extends Model
         'colors' => 'array',
     ];
 
-    public function promotions()
-    {
-        return $this->belongsToMany(Promotion::class, 'motor_promotion')
-            ->where('promotions.is_active', true)
-            ->where(function ($query) {
-                $query->whereNull('valid_until')
-                    ->orWhere('valid_until', '>=', now());
-            });
-    }
-
     public function getImageAttribute()
     {
         if (!$this->image_path) {

@@ -20,19 +20,14 @@ class MotorController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        try {
-            $motors = $query->with('promotions')->get();
-        } catch (\Exception $e) {
-            // Fallback if relationship fails
-            $motors = $query->get();
-        }
+        $motors = $query->get();
 
         return response()->json($motors);
     }
 
     public function show($id)
     {
-        $motor = Motor::with('promotions')->findOrFail($id);
+        $motor = Motor::findOrFail($id);
         return response()->json($motor);
     }
 }
