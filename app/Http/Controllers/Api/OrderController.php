@@ -113,11 +113,9 @@ class OrderController extends Controller
                     ],
                 ];
 
-                $snapToken = Snap::getSnapToken($params);
-                $redirectUrl = "https://app.sandbox.midtrans.com/snap/v2/vtweb/" . $snapToken;
-                if (Config::$isProduction) {
-                    $redirectUrl = "https://app.midtrans.com/snap/v2/vtweb/" . $snapToken;
-                }
+                $response = Snap::createTransaction($params);
+                $snapToken = $response->token;
+                $redirectUrl = $response->redirect_url;
 
                 $installment->update([
                     'snap_token' => $snapToken,
