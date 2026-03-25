@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = Transaction::where('user_id', $request->user()->id)
-            ->with('motor')
+            ->with(['motor', 'installments'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -139,9 +139,35 @@ class OrderController extends Controller
     public function show($id, Request $request)
     {
         $order = Transaction::where('user_id', $request->user()->id)
-            ->with('motor')
+            ->with(['motor', 'installments'])
             ->findOrFail($id);
 
         return response()->json($order);
+    }
+
+    public function cancel(Transaction $order, Request $request)
+    {
+        if ($order->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'reason' => 'nullable|string|max:500',
+        ]);
+
+        $creditService = app(\App\Services\CreditService::class);
+        $result = $creditService->cancelByCustomer($order, $request->reason);
+
+        if ($result['success']) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pesanan berhasil dibatalkan',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => $result['message'],
+            ], 422);
+        }
     }
 }
