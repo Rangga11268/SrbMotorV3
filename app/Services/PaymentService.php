@@ -83,7 +83,7 @@ class PaymentService
                 $newStatus = null;
 
                 if ($unpaid == 0) {
-                    $newStatus = ($transaction->transaction_type == 'CASH') ? 'payment_confirmed' : 'completed';
+                    $newStatus = ($transaction->transaction_type == 'CASH') ? 'pembayaran_dikonfirmasi' : 'completed';
                 } elseif ($installment->installment_number === 0) {
                     // Stage: Booking Fee / DP paid
                     $newStatus = 'unit_preparation';

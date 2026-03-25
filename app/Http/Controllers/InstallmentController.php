@@ -107,7 +107,11 @@ class InstallmentController extends Controller
 
         $isMobile = $request->wantsJson() || $request->is('api/*');
         $callbackRoute = $isMobile ? 'payments.success' : 'installments.index';
-        $callbackParams = $isMobile ? ['source' => 'mobile'] : [];
+        $callbackParams = $isMobile ? [
+            'source' => 'mobile',
+            'transaction_id' => $transaction->id,
+            'installment_ids' => $installments->pluck('id')->implode(',')
+        ] : [];
 
         $params = [
             'transaction_details' => [
@@ -171,7 +175,11 @@ class InstallmentController extends Controller
 
         $isMobile = request()->wantsJson() || request()->is('api/*');
         $callbackRoute = $isMobile ? 'payments.success' : 'installments.index';
-        $callbackParams = $isMobile ? ['source' => 'mobile', 'order_id' => $installment->transaction->id] : [];
+        $callbackParams = $isMobile ? [
+            'source' => 'mobile', 
+            'transaction_id' => $installment->transaction->id,
+            'installment_id' => $installment->id
+        ] : [];
 
         $params = [
             'transaction_details' => [
@@ -249,6 +257,9 @@ class InstallmentController extends Controller
     {
         return View::make('payments.success', [
             'order_id' => $request->query('order_id'),
+            'transaction_id' => $request->query('transaction_id'),
+            'installment_id' => $request->query('installment_id'),
+            'installment_ids' => $request->query('installment_ids'),
             'status' => $request->query('status')
         ]);
     }

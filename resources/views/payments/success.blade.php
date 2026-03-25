@@ -74,6 +74,13 @@
     </style>
 </head>
 <body>
+    @php
+        $deeplink = "srbmotor://payment-success?status=" . ($status ?? 'success');
+        if (isset($transaction_id)) $deeplink .= "&transaction_id=" . $transaction_id;
+        if (isset($installment_id)) $deeplink .= "&installment_id=" . $installment_id;
+        if (isset($installment_ids)) $deeplink .= "&installment_ids=" . $installment_ids;
+    @endphp
+
     <div class="card">
         <div class="icon-container">
             <span class="icon">✓</span>
@@ -81,21 +88,23 @@
         <h1>Pembayaran Selesai</h1>
         <p>Terima kasih! Pembayaran Anda telah kami terima. Anda akan dialihkan kembali ke aplikasi dalam beberapa detik.</p>
         
-        <a href="srbmotor://payment-success" class="btn">KEMBALI KE APLIKASI</a>
+        <a href="{{ $deeplink }}" class="btn">KEMBALI KE APLIKASI</a>
         
         <div class="timer">
             Membuka aplikasi otomatis dalam <span id="countdown">3</span> detik...
         </div>
         
-        <div style="margin-top: 30px; font-size: 11px; color: #cbd5e1; border-top: 1px solid #f1f5f9; pt: 15px;">
+        <div style="margin-top: 30px; font-size: 11px; color: #cbd5e1; border-top: 1px solid #f1f5f9; padding-top: 15px;">
             ID Pesanan: {{ $order_id ?? '-' }}
         </div>
     </div>
 
     <script>
+        var deeplink = "{{ $deeplink }}";
+        
         // Auto-redirect to app scheme
         setTimeout(function() {
-            window.location.href = "srbmotor://payment-success";
+            window.location.href = deeplink;
         }, 1000);
 
         // Countdown timer
@@ -107,7 +116,7 @@
             if (seconds <= 0) {
                 clearInterval(interval);
                 // Final attempt
-                window.location.href = "srbmotor://payment-success";
+                window.location.href = deeplink;
             }
         }, 1000);
     </script>
