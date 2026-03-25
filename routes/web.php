@@ -122,6 +122,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/installments/{installment}/receipt', [\App\Http\Controllers\InstallmentController::class, 'downloadReceipt'])->name('installments.receipt');
 });
 
+Route::get('/payments/success', [\App\Http\Controllers\InstallmentController::class, 'paymentSuccess'])->name('payments.success');
+
 
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');

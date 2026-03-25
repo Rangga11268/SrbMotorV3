@@ -13,6 +13,7 @@ use Midtrans\Snap;
 
 use Midtrans\Transaction as MidtransTransaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\View;
 
 class InstallmentController extends Controller
 {
@@ -104,6 +105,10 @@ class InstallmentController extends Controller
             ];
         }
 
+        $isMobile = $request->wantsJson() || $request->is('api/*');
+        $callbackRoute = $isMobile ? 'payments.success' : 'installments.index';
+        $callbackParams = $isMobile ? ['source' => 'mobile'] : [];
+
         $params = [
             'transaction_details' => [
                 'order_id' => $orderId,
@@ -115,9 +120,9 @@ class InstallmentController extends Controller
             ],
             'item_details' => $itemDetails,
             'callbacks' => [
-                'finish' => route('installments.index'),
-                'error' => route('installments.index'),
-                'pending' => route('installments.index'),
+                'finish' => route($callbackRoute, $callbackParams),
+                'error' => route($callbackRoute, array_merge($callbackParams, ['status' => 'error'])),
+                'pending' => route($callbackRoute, array_merge($callbackParams, ['status' => 'pending'])),
             ]
         ];
 
@@ -127,7 +132,9 @@ class InstallmentController extends Controller
             \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
             \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
 
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            $snapResponse = \Midtrans\Snap::createTransaction($params);
+            $snapToken = $snapResponse->token;
+            $redirectUrl = $snapResponse->redirect_url;
 
             // Update all selected installments with the same booking code and token
             foreach ($installments as $inst) {
@@ -137,7 +144,10 @@ class InstallmentController extends Controller
                 ]);
             }
 
-            return response()->json(['snap_token' => $snapToken]);
+            return response()->json([
+                'snap_token' => $snapToken,
+                'redirect_url' => $redirectUrl
+            ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Midtrans Multiple Pay Error: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
@@ -159,6 +169,10 @@ class InstallmentController extends Controller
 
         $orderId = 'INST-' . $installment->id . '-' . time();
 
+        $isMobile = request()->wantsJson() || request()->is('api/*');
+        $callbackRoute = $isMobile ? 'payments.success' : 'installments.index';
+        $callbackParams = $isMobile ? ['source' => 'mobile', 'order_id' => $installment->transaction->id] : [];
+
         $params = [
             'transaction_details' => [
                 'order_id' => $orderId,
@@ -177,9 +191,9 @@ class InstallmentController extends Controller
                 ]
             ],
             'callbacks' => [
-                'finish' => route('installments.index'),
-                'error' => route('installments.index'),
-                'pending' => route('installments.index'),
+                'finish' => route($callbackRoute, $callbackParams),
+                'error' => route($callbackRoute, array_merge($callbackParams, ['status' => 'error'])),
+                'pending' => route($callbackRoute, array_merge($callbackParams, ['status' => 'pending'])),
             ]
         ];
 
@@ -189,14 +203,20 @@ class InstallmentController extends Controller
             \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
             \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
 
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            $snapResponse = \Midtrans\Snap::createTransaction($params);
+            $snapToken = $snapResponse->token;
+            $redirectUrl = $snapResponse->redirect_url;
 
             $installment->update([
                 'snap_token' => $snapToken,
                 'midtrans_booking_code' => $orderId
             ]);
 
-            return response()->json(['snap_token' => $snapToken]);
+            return response()->json([
+                'snap_token' => $snapToken,
+                'redirect_url' => $redirectUrl,
+                'status' => 'success'
+            ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Midtrans Create Payment Error: ' . $e->getMessage(), [
                 'installment_id' => $installment->id,
@@ -222,6 +242,14 @@ class InstallmentController extends Controller
 
         return Inertia::render('Installments/Index', [
             'transactions' => $transactions
+        ]);
+    }
+
+    public function paymentSuccess(Request $request)
+    {
+        return View::make('payments.success', [
+            'order_id' => $request->query('order_id'),
+            'status' => $request->query('status')
         ]);
     }
 
