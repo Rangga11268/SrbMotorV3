@@ -362,13 +362,11 @@ export default function Home({
                                             <div className="relative h-60 bg-gray-100 overflow-hidden">
                                                 <img
                                                     src={
-                                                        motor.image_path
-                                                            ? `/storage/${motor.image_path}`
-                                                            : "/assets/img/no-image.png"
+                                                        motor.image || "/assets/img/no-image.png"
                                                     }
                                                     className={`w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700 ${
                                                         !motor.tersedia
-                                                            ? "opacity-50"
+                                                            ? "opacity-30 grayscale"
                                                             : ""
                                                     }`}
                                                 />
@@ -385,24 +383,25 @@ export default function Home({
                                                         </div>
                                                     </div>
                                                 )}
-                                                {/* Ribbon logic from Phase 6 */}
-                                                {motor.promotions?.length >
-                                                    0 && (
-                                                    <div className="absolute top-4 left-0 flex flex-col gap-2 z-10 pointer-events-none">
-                                                        {motor.promotions.map(
-                                                            (promo, pIdx) => (
-                                                                <div
-                                                                    key={pIdx}
-                                                                    className="bg-gradient-to-r from-primary to-primary-dark text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-r-full shadow-lg border border-white/20"
-                                                                >
-                                                                    <Star className="w-3 h-3 inline-block mr-1 -mt-0.5 fill-white" />
-                                                                    {promo.badge_text ||
-                                                                        promo.title}
-                                                                </div>
-                                                            ),
-                                                        )}
-                                                    </div>
-                                                )}
+                                                {/* RIBBONS & BADGES */}
+                                                <div className="absolute top-4 left-0 flex flex-col gap-2 z-20 pointer-events-none">
+                                                    {!motor.tersedia && (
+                                                        <div className="bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-r-full shadow-lg border border-white/20">
+                                                            Terjual
+                                                        </div>
+                                                    )}
+                                                    {motor.promotions?.length > 0 &&
+                                                        motor.promotions.map((promo, pIdx) => (
+                                                            <div
+                                                                key={pIdx}
+                                                                className="bg-gradient-to-r from-primary to-primary-dark text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-r-full shadow-lg border border-white/20"
+                                                            >
+                                                                <Star className="w-3 h-3 inline-block mr-1 -mt-0.5 fill-white" />
+                                                                {promo.badge_text || promo.title}
+                                                            </div>
+                                                        ))}
+                                                </div>
+
                                                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-gray-500 border border-white/50 shadow-sm uppercase">
                                                     {motor.brand}
                                                 </div>

@@ -71,6 +71,9 @@ class OrderController extends Controller
         // Update motor availability to false
         $motor->update(['tersedia' => false]);
 
+        // Clear motor cache to ensure availability status is updated on Home/Catalog
+        app(\App\Repositories\MotorRepositoryInterface::class)->clearCache();
+
         // Create initial installment (number 0) for the amount to be paid
         $paymentAmount = ($request->booking_fee > 0) ? $request->booking_fee : $motor->price;
         
@@ -215,13 +218,26 @@ class OrderController extends Controller
             // 'logo' => public_path('assets/images/logo_srb.png'), // Disabled to prevent blank page if missing
         ];
 
-        // Debug mode: Return HTML if 'debug' parameter is present
-        if ($request->has('debug')) {
-            return view('invoices.order', $data);
-        }
+        try {
+            // Debug mode: Return HTML if 'debug' parameter is present
+            if ($request->has('debug')) {
+                return view('invoices.order', $data);
+            }
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.order', $data);
-        
-        return $pdf->stream('Invoice-' . ($order->reference_number ?? $order->id) . '.pdf');
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.order', $data);
+            
+            // Set options for better compatibility
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'defaultFont' => 'sans-serif',
+            ]);
+            
+            return $pdf->stream('Invoice-' . ($order->reference_number ?? $order->id) . '.pdf');
+        } catch (\Exception $e) {
+            \Log::error('PDF Generation Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Gagal membuat PDF: ' . $e->getMessage()], 500);
+        }
     }
 }
