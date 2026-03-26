@@ -178,4 +178,50 @@ class OrderController extends Controller
             ], 422);
         }
     }
+
+    public function getInvoiceUrl($id)
+    {
+        $order = Transaction::findOrFail($id);
+        
+        if ($order->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Generate a signed URL that expires in 30 minutes
+        $url = \Illuminate\Support\Facades\URL::temporarySignedRoute(
+            'api.orders.invoice',
+            now()->addMinutes(30),
+            ['id' => $id]
+        );
+
+        return response()->json(['url' => $url]);
+    }
+
+    public function generateInvoice(Request $request, $id)
+    {
+        // Allow if has valid signature OR is authenticated owner
+        if (!$request->hasValidSignature()) {
+            if (!auth('sanctum')->check() || Transaction::findOrFail($id)->user_id !== auth('sanctum')->id()) {
+                abort(403, 'Akses invoice ditolak atau link sudah kadaluarsa.');
+            }
+        }
+
+        $order = Transaction::with(['motor', 'installments', 'user'])->findOrFail($id);
+
+        $data = [
+            'order' => $order,
+            'motor' => $order->motor,
+            'installments' => $order->installments,
+            // 'logo' => public_path('assets/images/logo_srb.png'), // Disabled to prevent blank page if missing
+        ];
+
+        // Debug mode: Return HTML if 'debug' parameter is present
+        if ($request->has('debug')) {
+            return view('invoices.order', $data);
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.order', $data);
+        
+        return $pdf->stream('Invoice-' . ($order->reference_number ?? $order->id) . '.pdf');
+    }
 }

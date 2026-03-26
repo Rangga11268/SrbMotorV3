@@ -20,6 +20,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/motors', [MotorController::class, 'index']);
 Route::get('/motors/{id}', [MotorController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('api.orders.invoice');
 Route::get('/leasing-providers', function () {
     return response()->json(
         \DB::table('leasing_providers')->get()->map(fn($p) => [
@@ -38,8 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     
     Route::get('/orders', [OrderController::class, 'index']);
-    Route::post('/orders/cash', [OrderController::class, 'storeCashOrder']);
+    Route::get('/orders/cash', [OrderController::class, 'storeCashOrder']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::get('/orders/{id}/get-invoice-url', [OrderController::class, 'getInvoiceUrl']);
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
     
     // Installment routes for mobile

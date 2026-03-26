@@ -379,7 +379,7 @@ export default function InstallmentIndex({ transactions }) {
     return (
         <PublicLayout title="Cicilan Saya - SRB Motors">
             {/* HERO HEADER */}
-            <div className="bg-white border-b border-gray-100 pt-32 pb-12">
+            <div className="bg-white border-b border-gray-100 pt-28 pb-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* BACK BUTTON */}
                     <Link
@@ -401,8 +401,8 @@ export default function InstallmentIndex({ transactions }) {
                 </div>
             </div>
 
-            <main className="flex-1 pt-32 pb-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 pb-32 relative z-20">
+            <main className="flex-1 pt-0 pb-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-0 pb-20 relative z-20">
                     {transactions.length > 0 ? (
                         <div className="space-y-8">
                             {transactions.map((transaction) => (
@@ -423,8 +423,8 @@ export default function InstallmentIndex({ transactions }) {
                                             </p>
                                         </div>
                                     )}
-                                    {/* TRANSACTION HEADER - SIMPLIFIED */}
-                                    <div className="p-8 md:p-10 bg-gradient-to-r from-gray-50/50 to-white border-b border-gray-100">
+                                    {/* TRANSACTION HEADER - OPTIMIZED PADDING */}
+                                    <div className="p-6 md:p-10 bg-gradient-to-r from-gray-50/50 to-white border-b border-gray-100">
                                         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                                             <div>
                                                 <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 tracking-tight">
@@ -497,27 +497,27 @@ export default function InstallmentIndex({ transactions }) {
                                         </div>
                                     </div>
 
-                                    {/* INSTALLMENT TABLE - IMPROVED RESPONSIVE */}
-                                    <div className="overflow-x-auto custom-scrollbar">
+                                    {/* INSTALLMENT TABLE - HIDDEN ON MOBILE */}
+                                    <div className="hidden md:block overflow-x-auto custom-scrollbar">
                                         <table className="w-full text-sm">
                                             <thead>
                                                 <tr className="bg-gray-50/50 border-b border-gray-100">
-                                                    <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Pilih
                                                     </th>
-                                                    <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Termin
                                                     </th>
-                                                    <th className="px-6 py-5 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Jatuh Tempo
                                                     </th>
-                                                    <th className="px-6 py-5 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-3 text-right text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Nominal
                                                     </th>
-                                                    <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-3 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Status
                                                     </th>
-                                                    <th className="px-6 py-5 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                                    <th className="px-4 py-3 text-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
                                                         Pembayaran
                                                     </th>
                                                 </tr>
@@ -541,7 +541,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                         : ""
                                                                 }`}
                                                             >
-                                                                <td className="px-4 py-4">
+                                                                <td className="px-4 py-3">
                                                                     {inst.status ===
                                                                         "pending" ||
                                                                     inst.status ===
@@ -571,7 +571,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                         <div className="w-4 h-4 rounded bg-gray-100 border border-gray-200" />
                                                                     )}
                                                                 </td>
-                                                                <td className="px-4 py-4">
+                                                                <td className="px-4 py-3">
                                                                     <span
                                                                         className={`font-semibold ${inst.installment_number === 0 ? "text-blue-600" : "text-gray-900"}`}
                                                                     >
@@ -581,8 +581,8 @@ export default function InstallmentIndex({ transactions }) {
                                                                             : `Cicilan #${inst.installment_number}`}
                                                                     </span>
                                                                 </td>
-                                                                <td className="px-4 py-4">
-                                                                    <div className="flex flex-col gap-2">
+                                                                <td className="px-4 py-3">
+                                                                    <div className="flex flex-col gap-1">
                                                                         <p className="text-gray-700 font-medium">
                                                                             {formatDate(
                                                                                 inst.due_date,
@@ -593,7 +593,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                         inst.status ===
                                                                             "overdue" ? (
                                                                             <span
-                                                                                className={`inline-flex text-[10px] font-semibold px-2.5 py-1 rounded-full border w-fit ${getReminderBadge(getDaysUntilDue(inst.due_date)).color}`}
+                                                                                className={`inline-flex text-[10px] font-semibold px-2 py-0.5 rounded-full border w-fit ${getReminderBadge(getDaysUntilDue(inst.due_date)).color}`}
                                                                             >
                                                                                 {
                                                                                     getReminderBadge(
@@ -607,7 +607,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                         ) : null}
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-4 py-4 text-right">
+                                                                <td className="px-4 py-3 text-right">
                                                                     <div className="flex flex-col items-end gap-0.5">
                                                                         <p className="font-bold text-gray-900">
                                                                             {formatCurrency(
@@ -633,12 +633,12 @@ export default function InstallmentIndex({ transactions }) {
                                                                         )}
                                                                     </div>
                                                                 </td>
-                                                                <td className="px-4 py-4 text-center">
+                                                                <td className="px-4 py-3 text-center">
                                                                     {getStatusBadge(
                                                                         inst.status,
                                                                     )}
                                                                 </td>
-                                                                <td className="px-4 py-4">
+                                                                <td className="px-4 py-3">
                                                                     <div className="flex items-center justify-center">
                                                                         {inst.status ===
                                                                             "pending" ||
@@ -655,9 +655,9 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingPay
                                                                                     }
                                                                                     title="Bayar langsung via online gateway"
-                                                                                    className="flex items-center gap-1.5 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-blue-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
-                                                                                    <CreditCard className="w-3.5 h-3.5" />
+                                                                                    <CreditCard className="w-3 h-3" />
                                                                                     Bayar
                                                                                     Online
                                                                                 </button>
@@ -673,9 +673,9 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         processing
                                                                                     }
                                                                                     title="Upload struk transfer manual dari bank"
-                                                                                    className="flex items-center gap-1.5 px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-amber-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-amber-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
-                                                                                    <Upload className="w-3.5 h-3.5" />
+                                                                                    <Upload className="w-3 h-3" />
                                                                                     Transfer
                                                                                 </button>
                                                                                 <button
@@ -688,13 +688,12 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingCheck
                                                                                     }
                                                                                     title="Cek apakah pembayaran sudah terverifikasi"
-                                                                                    className="flex items-center gap-1.5 px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all disabled:opacity-50 whitespace-nowrap"
                                                                                 >
                                                                                     <RefreshCw
-                                                                                        className={`w-3.5 h-3.5 ${isLoadingCheck ? "animate-spin" : ""}`}
+                                                                                        className={`w-3 h-3 ${isLoadingCheck ? "animate-spin" : ""}`}
                                                                                     />
                                                                                     Cek
-                                                                                    Status
                                                                                 </button>
                                                                             </div>
                                                                         ) : inst.status ===
@@ -705,15 +704,14 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     inst.id,
                                                                                 )}
                                                                                 target="_blank"
-                                                                                className="flex items-center gap-1.5 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-500/10 inline-flex whitespace-nowrap"
+                                                                                className="flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-green-500/10 inline-flex whitespace-nowrap"
                                                                             >
-                                                                                <Download className="w-3.5 h-3.5" />
-                                                                                Lihat
+                                                                                <Download className="w-3 h-3" />
                                                                                 Kwitansi
                                                                             </a>
                                                                         ) : (
-                                                                            <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-lg whitespace-nowrap">
-                                                                                <Clock className="w-3.5 h-3.5" />
+                                                                            <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-yellow-100 text-yellow-700 text-[9px] font-bold rounded-lg whitespace-nowrap uppercase tracking-widest">
+                                                                                <Clock className="w-3 h-3" />
                                                                                 Verifikasi
                                                                             </span>
                                                                         )}
@@ -724,6 +722,104 @@ export default function InstallmentIndex({ transactions }) {
                                                     )}
                                             </tbody>
                                         </table>
+                                    </div>
+
+                                    {/* INSTALLMENT CARD LIST - MOBILE ONLY */}
+                                    <div className="md:hidden divide-y divide-gray-100">
+                                        {transaction.installments &&
+                                            transaction.installments.map((inst) => (
+                                                <div 
+                                                    key={inst.id} 
+                                                    className={`p-5 transition-colors ${
+                                                        selectedIds.includes(inst.id) ? "bg-blue-50/50" : ""
+                                                    }`}
+                                                >
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <div className="flex gap-3">
+                                                            {(inst.status === "pending" || inst.status === "overdue") && (
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="w-5 h-5 mt-1 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                                                    checked={selectedIds.includes(inst.id)}
+                                                                    onChange={() =>
+                                                                        transaction.status !== "cancelled" &&
+                                                                        toggleSelection(inst.id, inst.amount, inst.penalty_amount || 0)
+                                                                    }
+                                                                />
+                                                            )}
+                                                            <div>
+                                                                <p className={`text-sm font-black uppercase tracking-tight ${inst.installment_number === 0 ? "text-blue-600" : "text-gray-900"}`}>
+                                                                    {inst.installment_number === 0 ? "Uang Muka (DP)" : `Cicilan #${inst.installment_number}`}
+                                                                </p>
+                                                                <div className="flex items-center gap-2 mt-1">
+                                                                    <p className="text-xs text-gray-500 font-medium">{formatDate(inst.due_date)}</p>
+                                                                    {(inst.status === "pending" || inst.status === "overdue") && (
+                                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getReminderBadge(getDaysUntilDue(inst.due_date)).color}`}>
+                                                                            {getReminderBadge(getDaysUntilDue(inst.due_date)).text}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-sm font-black text-gray-900">
+                                                                {formatCurrency(Number(inst.amount) + Number(inst.penalty_amount || 0))}
+                                                            </p>
+                                                            {Number(inst.penalty_amount) > 0 && (
+                                                                <p className="text-[10px] font-bold text-red-500 mt-0.5">+Denda</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex flex-wrap items-center justify-between gap-4 mt-2">
+                                                        <div className="shrink-0">
+                                                            {getStatusBadge(inst.status)}
+                                                        </div>
+                                                        
+                                                        <div className="flex flex-wrap gap-2 grow justify-end">
+                                                            {inst.status === "pending" || inst.status === "overdue" ? (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => handleOnlinePayment(inst)}
+                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-500/10"
+                                                                    >
+                                                                        <CreditCard className="w-3.5 h-3.5" />
+                                                                        Bayar
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => openUploadModal(inst)}
+                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-amber-500/10"
+                                                                    >
+                                                                        <Upload className="w-3.5 h-3.5" />
+                                                                        Upload
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleCheckStatus(inst)}
+                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-gray-700 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg"
+                                                                    >
+                                                                        <RefreshCw className={`w-3.5 h-3.5 ${isLoadingCheck ? 'animate-spin' : ''}`} />
+                                                                        Cek
+                                                                    </button>
+                                                                </>
+                                                            ) : inst.status === "paid" ? (
+                                                                <a
+                                                                    href={route("installments.receipt", inst.id)}
+                                                                    target="_blank"
+                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-green-500/10"
+                                                                >
+                                                                    <Download className="w-3.5 h-3.5" />
+                                                                    Kwitansi
+                                                                </a>
+                                                            ) : (
+                                                                <span className="flex items-center gap-1.5 px-3 py-2 bg-yellow-100 text-yellow-700 text-[10px] font-black uppercase tracking-widest rounded-xl">
+                                                                    <Clock className="w-3.5 h-3.5" />
+                                                                    Diproses
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
                                     </div>
 
                                     {selectedIds.length > 0 && (
