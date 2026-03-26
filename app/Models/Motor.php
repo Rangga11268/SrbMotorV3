@@ -31,16 +31,26 @@ class Motor extends Model
         'colors' => 'array',
     ];
 
+    // Appended computed attributes — 'image' returns the full URL for the motor image
+    protected $appends = ['image'];
+
     public function getImageAttribute()
     {
         if (!$this->image_path) {
             return null;
         }
 
+        // Already a full URL
         if (str_starts_with($this->image_path, 'http')) {
             return $this->image_path;
         }
 
+        // Storage-disk path (e.g. motors/xxx.png) — use Storage::url()
+        if (str_starts_with($this->image_path, 'motors/') || str_starts_with($this->image_path, 'images/')) {
+            return Storage::disk('public')->url($this->image_path);
+        }
+
+        // Legacy assets path (e.g. assets/img/yamaha/aerox_155.png)
         return asset($this->image_path);
     }
 

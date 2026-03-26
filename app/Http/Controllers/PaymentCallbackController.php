@@ -13,6 +13,8 @@ class PaymentCallbackController extends Controller
 {
     public function handle(Request $request, \App\Services\PaymentService $paymentService)
     {
+        \Log::info('Midtrans Webhook Received', ['payload' => $request->all()]);
+        
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         \Midtrans\Config::$isProduction = config('midtrans.is_production');
         \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');

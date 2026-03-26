@@ -174,12 +174,19 @@ class InstallmentController extends Controller
         $orderId = 'INST-' . $installment->id . '-' . time();
 
         $isMobile = request()->wantsJson() || request()->is('api/*');
-        $callbackRoute = $isMobile ? 'payments.success' : 'installments.index';
-        $callbackParams = $isMobile ? [
-            'source' => 'mobile', 
-            'transaction_id' => $installment->transaction->id,
-            'installment_id' => $installment->id
-        ] : [];
+        
+        // For mobile: use custom deep link scheme so browser redirects back to the app
+        // For web: use the installments index route
+        if ($isMobile) {
+            $transactionId = $installment->transaction->id;
+            $finishUrl = 'srbmotor://payment-success?transaction_id=' . $transactionId . '&installment_id=' . $installment->id;
+            $errorUrl  = 'srbmotor://payment-error?transaction_id=' . $transactionId . '&installment_id=' . $installment->id;
+            $pendingUrl = 'srbmotor://payment-pending?transaction_id=' . $transactionId . '&installment_id=' . $installment->id;
+        } else {
+            $finishUrl  = route('installments.index');
+            $errorUrl   = route('installments.index', ['status' => 'error']);
+            $pendingUrl = route('installments.index', ['status' => 'pending']);
+        }
 
         $params = [
             'transaction_details' => [
@@ -199,9 +206,9 @@ class InstallmentController extends Controller
                 ]
             ],
             'callbacks' => [
-                'finish' => route($callbackRoute, $callbackParams),
-                'error' => route($callbackRoute, array_merge($callbackParams, ['status' => 'error'])),
-                'pending' => route($callbackRoute, array_merge($callbackParams, ['status' => 'pending'])),
+                'finish'  => $finishUrl,
+                'error'   => $errorUrl,
+                'pending' => $pendingUrl,
             ]
         ];
 

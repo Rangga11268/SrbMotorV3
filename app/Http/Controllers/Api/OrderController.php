@@ -68,6 +68,9 @@ class OrderController extends Controller
             'reference_number' => 'ORD-' . strtoupper(uniqid()),
         ]);
 
+        // Update motor availability to false
+        $motor->update(['tersedia' => false]);
+
         // Create initial installment (number 0) for the amount to be paid
         $paymentAmount = ($request->booking_fee > 0) ? $request->booking_fee : $motor->price;
         
@@ -111,6 +114,11 @@ class OrderController extends Controller
                             'name' => ($request->booking_fee > 0 ? 'Booking Fee ' : 'Full Payment ') . $motor->name,
                         ]
                     ],
+                    'callbacks' => [
+                        'finish'  => 'srbmotor://payment-success?transaction_id=' . $order->id . '&installment_id=' . $installment->id,
+                        'error'   => 'srbmotor://payment-error?transaction_id=' . $order->id . '&installment_id=' . $installment->id,
+                        'pending' => 'srbmotor://payment-pending?transaction_id=' . $order->id . '&installment_id=' . $installment->id,
+                    ]
                 ];
 
                 $response = Snap::createTransaction($params);

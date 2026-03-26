@@ -78,20 +78,77 @@ class PaymentService
 
             $transaction = $installment->transaction;
             if ($transaction) {
+                // 1. Log the payment activity
+                $transaction->logs()->create([
+                    'status_from' => $transaction->status,
+                    'status_to' => $transaction->status, // Use current status if not changing yet
+                    'status' => $transaction->status,
+                    'actor_id' => $transaction->user_id,
+                    'actor_type' => \App\Models\User::class,
+                    'notes' => "Pembayaran " . ($installment->installment_number == 0 ? "Booking Fee" : "Pelunasan") . " sukses via " . $method,
+                    'description' => "Pembayaran terverifikasi Midtrans",
+                ]);
+
                 // Refresh to get latest installments count
                 $unpaid = $transaction->installments()->where('status', '!=', 'paid')->count();
                 $newStatus = null;
 
                 if ($unpaid == 0) {
+                    // ALL installments paid, or only one existed (meaning it was the full payment)
                     $newStatus = ($transaction->transaction_type == 'CASH') ? 'pembayaran_dikonfirmasi' : 'completed';
+                    
+                    // IF it was CASH and Booking Fee (0) was the ONLY installment, we may need to create the second one 
+                    // unless it was a full payment.
                 } elseif ($installment->installment_number === 0) {
                     // Stage: Booking Fee / DP paid
                     $newStatus = 'unit_preparation';
                 }
 
+                // CASE: CASH Transaction, Booking Fee (0) Paid, but no Installment 1 exists
+                if ($transaction->transaction_type === 'CASH' && $installment->installment_number === 0) {
+                    $hasInstallmentOne = $transaction->installments()->where('installment_number', 1)->exists();
+                    $remainingBalance = (float) $transaction->final_price - (float) $transaction->booking_fee;
+                    
+                    if (!$hasInstallmentOne && $remainingBalance > 0) {
+                        \App\Models\Installment::create([
+                            'transaction_id' => $transaction->id,
+                            'installment_number' => 1,
+                            'amount' => $remainingBalance,
+                            'due_date' => now()->addDays(7), // Default 7 days for full payment
+                            'status' => 'unpaid',
+                        ]);
+                        Log::info("Auto-generated secondary installment for CASH Transaction #{$transaction->id}");
+                        
+                        // Log the generation
+                        $transaction->logs()->create([
+                            'status_from' => $transaction->status,
+                            'status_to' => $transaction->status,
+                            'status' => $transaction->status,
+                            'actor_id' => $transaction->user_id,
+                            'actor_type' => \App\Models\User::class,
+                            'notes' => "Tagihan sisa pelunasan otomatis dibuat sebesar Rp " . number_format($remainingBalance, 0, ',', '.'),
+                            'description' => "Sistem otomatis membuat tagihan sisa",
+                        ]);
+                    }
+                }
+
                 if ($newStatus) {
+                    $oldStatus = $transaction->status;
                     $transaction->update(['status' => $newStatus]);
                     
+                    // Log status change if it happened
+                    if ($oldStatus !== $newStatus) {
+                        $transaction->logs()->create([
+                            'status_from' => $oldStatus,
+                            'status_to' => $newStatus,
+                            'status' => $newStatus,
+                            'actor_id' => $transaction->user_id,
+                            'actor_type' => \App\Models\User::class,
+                            'notes' => "Status diperbarui otomatis setelah pembayaran: " . $transaction->status_text,
+                            'description' => "Status Update Otomatis",
+                        ]);
+                    }
+
                     // Stock Management
                     $lockStatuses = ['payment_confirmed', 'pembayaran_dikonfirmasi', 'unit_preparation', 'ready_for_delivery', 'dalam_pengiriman', 'completed'];
                     if ($transaction->motor && in_array($newStatus, $lockStatuses)) {
