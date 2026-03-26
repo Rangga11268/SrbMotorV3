@@ -10,7 +10,7 @@ class MotorController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Motor::query()->where('tersedia', true);
+        $query = Motor::query();
 
         if ($request->has('category')) {
             $query->where('type', $request->category);
