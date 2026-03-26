@@ -82,7 +82,8 @@ class CreditDetailObserver
 
             // Send notification
             if ($notificationData) {
-                Log::info("Credit status notification queued for customer {$customer->id}: {$status}");
+                $transaction->user->notify(new \App\Notifications\TransactionStatusChanged($transaction));
+                Log::info("Credit status notification sent to customer {$customer->id}: {$status}");
             }
         } catch (\Exception $e) {
             Log::error("Error sending credit notification: {$e->getMessage()}");
@@ -148,8 +149,8 @@ class CreditDetailObserver
     private function logStatusChange(CreditDetail $creditDetail): void
     {
         try {
-            $originalStatus = $creditDetail->getOriginal('credit_status');
-            $newStatus = $creditDetail->credit_status;
+            $originalStatus = $creditDetail->getOriginal('status');
+            $newStatus = $creditDetail->status;
             $userId = auth()->id() ?? 'system';
 
             Log::channel('credit_status')

@@ -102,7 +102,7 @@ class SurveySchedule extends Model
     public function complete()
     {
         $this->status = 'completed';
-        $this->creditDetail->credit_status = 'survey_selesai';
+        $this->creditDetail->status = 'survey_selesai';
         $this->creditDetail->save();
         $this->status = 'completed';
         $this->save();

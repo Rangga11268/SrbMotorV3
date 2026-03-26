@@ -21,11 +21,15 @@ class Installment extends Model
         'notes',
         'snap_token',
         'midtrans_booking_code',
+        'reminder_sent',
+        'reminder_sent_at',
     ];
 
     protected $casts = [
         'due_date' => 'date',
         'paid_at' => 'datetime',
+        'reminder_sent_at' => 'datetime',
+        'reminder_sent' => 'boolean',
         'amount' => 'decimal:2',
     ];
 

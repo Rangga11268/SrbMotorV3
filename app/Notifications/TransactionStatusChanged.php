@@ -128,8 +128,8 @@ class TransactionStatusChanged extends Notification
     {
         $isCreditStatusChange = false;
         if ($this->transaction->transaction_type === 'CREDIT' && $this->transaction->creditDetail) {
-            $previousCreditStatus = $this->transaction->creditDetail->getOriginal('credit_status');
-            $newCreditStatus = $this->transaction->creditDetail->credit_status;
+            $previousCreditStatus = $this->transaction->creditDetail->getOriginal('status');
+            $newCreditStatus = $this->transaction->creditDetail->status;
             if ($previousCreditStatus !== $newCreditStatus) {
                 $isCreditStatusChange = true;
             }
