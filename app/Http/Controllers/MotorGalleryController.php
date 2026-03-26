@@ -842,7 +842,7 @@ class MotorGalleryController extends Controller
             $whatsappService = app(\App\Services\WhatsAppService::class);
             $whatsappService->sendMessage(
                 $user->phone,
-                "Halo {$user->name},\n\n✓ Jadwal survey kredit Anda telah dijadwalkan:\n\n📅 Tanggal: {$request->scheduled_date}\n⏰ Waktu: {$request->scheduled_time}\n📍 Lokasi: {$request->location}\n👤 Surveyor: {$request->surveyor_name}\n📞 Telepon: {$request->surveyor_phone}\n\nMohon memastikan Anda ada di lokasi pada waktu yang telah ditentukan.\n\n- SRB Motor"
+                "Halo {$user->name},\n\nJadwal survey kredit Anda telah dijadwalkan:\n\n- Tanggal: {$request->scheduled_date}\n- Waktu: {$request->scheduled_time}\n- Lokasi: {$request->location}\n- Surveyor: {$request->surveyor_name}\n- Telepon: {$request->surveyor_phone}\n\nMohon memastikan Anda ada di lokasi pada waktu yang telah ditentukan.\n\n- SRB Motor"
             );
 
             return back()->with('success', 'Jadwal survey telah dibuat dan notifikasi telah dikirim ke customer.');
@@ -879,7 +879,7 @@ class MotorGalleryController extends Controller
             $whatsappService = app(\App\Services\WhatsAppService::class);
             $whatsappService->sendMessage(
                 $user->phone,
-                "Halo {$user->name},\n\n✓ Survey kredit Anda telah selesai dilakukan.\n\nTim kami akan segera memproses hasil survey dan memberikan keputusan persetujuan kredit Anda.\n\nTerima kasih atas waktu dan kerjasama Anda.\n\n- SRB Motor"
+                "Halo {$user->name},\n\nSurvey kredit Anda telah selesai dilakukan.\n\nTim kami akan segera memproses hasil survey dan memberikan keputusan persetujuan kredit Anda.\n\nTerima kasih atas waktu dan kerjasama Anda.\n\n- SRB Motor"
             );
 
             return back()->with('success', 'Survey telah ditandai sebagai selesai.');

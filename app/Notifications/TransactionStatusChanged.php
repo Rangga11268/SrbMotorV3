@@ -98,7 +98,7 @@ class TransactionStatusChanged extends Notification
                 case 'COMPLETED':
                     return 'Pesanan Anda telah selesai. Terima kasih telah membeli di SRB Motors.';
                 case 'selesai':
-                    return '🚚 Motor Anda telah dikirim! Silakan cek kondisi unit dan konfirmasi penerimaan. Cicilan Anda akan mulai berjalan sesuai jadwal yang telah disepakati.';
+                    return 'Motor Anda telah dikirim! Silakan cek kondisi unit dan konfirmasi penerimaan. Cicilan Anda akan mulai berjalan sesuai jadwal yang telah disepakati.';
                 case 'READY_FOR_DELIVERY':
                     return 'Motor Anda siap untuk dikirim. Tim kami akan menghubungi Anda untuk konfirmasi jadwal.';
                 case 'ready_for_delivery':

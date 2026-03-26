@@ -311,7 +311,7 @@ class TransactionController extends Controller
 
                 $phone = $transaction->phone ?? $transaction->user->phone;
                 if ($phone && isset($statusLabels[$newStatus])) {
-                    $msg = "Halo *{$transaction->name}*,\n\nStatus pesanan motor *{$transaction->motor->name}* Anda telah diperbarui menjadi:\n\n👉 *{$statusLabels[$newStatus]}*\n\nSilakan cek detail pesanan Anda di website SRB Motor.\n\nTerima kasih atas kepercayaan Anda.\n- SRB Motor";
+                    $msg = "Halo *{$transaction->name}*,\n\nStatus pesanan motor *{$transaction->motor->name}* Anda telah diperbarui menjadi:\n\n*{$statusLabels[$newStatus]}*\n\nSilakan cek detail pesanan Anda di website SRB Motor.\n\nTerima kasih atas kepercayaan Anda.\n- SRB Motor";
                     \App\Services\WhatsAppService::sendMessage($phone, $msg);
                 }
             } catch (\Exception $e) {

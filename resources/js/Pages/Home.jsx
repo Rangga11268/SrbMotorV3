@@ -463,24 +463,25 @@ export default function Home({
                             </h2>
                         </div>
                         <Link
-                            href="/news"
+                            href="/berita"
                             className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-widest hover:gap-3 transition-all"
                         >
                             Lihat Semua <ChevronRight className="w-4 h-4" />
                         </Link>
                     </div>
-
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {news.length === 0 ? (
                             <div className="md:col-span-3 text-center py-12 bg-white rounded-xl border border-dashed border-gray-200">
                                 <p className="text-gray-400 font-medium">Belum ada berita terbaru.</p>
                             </div>
                         ) : (
-                            news.map((item, idx) => (
+                            news.slice(0, 3).map((item, idx) => (
                                 <motion.div
                                     key={item.id || idx}
                                     whileHover={{ y: -8 }}
                                     className="group cursor-pointer"
-                                    onClick={() => router.get(route('news.show', item.slug || item.id))}
+                                    onClick={() => router.get(route('berita.show', item.slug || item.id))}
                                 >
                                     <div className="relative h-48 rounded-xl overflow-hidden mb-4 shadow-md group-hover:shadow-xl transition-shadow">
                                         <img
@@ -507,12 +508,13 @@ export default function Home({
                                             year: 'numeric'
                                         })}
                                     </p>
-                                    <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
+                                    <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tight leading-tight">
                                         {item.title}
                                     </h3>
                                 </motion.div>
                             ))
                         )}
+                    </div>
                 </div>
             </section>
 
