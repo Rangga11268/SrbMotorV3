@@ -148,9 +148,9 @@ class MotorRepository implements MotorRepositoryInterface
             $years = $results->pluck('year')->unique()->filter()->sort()->reverse();
 
             return [
-                'brands' => $brands,
-                'types' => $types,
-                'years' => $years
+                'brands' => $brands->values(),
+                'types' => $types->values(),
+                'years' => $years->values()
             ];
         });
     }

@@ -19,6 +19,7 @@ class Motor extends Model
         'type',
         'image_path',
         'details',
+        'description',
         'tersedia',
         'min_dp_amount',
         'colors',
@@ -32,7 +33,7 @@ class Motor extends Model
     ];
 
     // Appended computed attributes — 'image' returns the full URL for the motor image
-    protected $appends = ['image'];
+    protected $appends = ['image', 'description'];
 
     public function getImageAttribute()
     {
@@ -52,6 +53,16 @@ class Motor extends Model
 
         // Legacy assets path (e.g. assets/img/yamaha/aerox_155.png)
         return asset($this->image_path);
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->details ?? '';
+    }
+
+    public function setDescriptionAttribute($value)
+    {
+        $this->attributes['details'] = $value;
     }
 
     protected static function booted()
