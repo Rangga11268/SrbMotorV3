@@ -187,7 +187,14 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
                                         {[
                                             { icon: <Calendar size={20} />, label: "Tahun", value: motor.year, color: "text-blue-600" },
-                                            { icon: <Palette size={20} />, label: "Warna", value: motor.color || "Beragam", color: "text-purple-600" },
+                                            { 
+                                                icon: <Palette size={20} />, 
+                                                label: "Warna", 
+                                                value: Array.isArray(motor.colors) && motor.colors.length > 0 
+                                                    ? motor.colors.join(", ") 
+                                                    : "Beragam", 
+                                                color: "text-purple-600" 
+                                            },
                                             { icon: <Settings size={20} />, label: "Transmisi", value: motor.type?.toLowerCase().includes("matic") ? "Matic" : "Manual", color: "text-orange-600" },
                                             { icon: motor.tersedia ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />, label: "Status", value: motor.tersedia ? "Tersedia" : "Terjual", color: motor.tersedia ? "text-green-600" : "text-red-600" }
                                         ].map((spec, i) => (

@@ -76,7 +76,17 @@ export default function Create({ promotions }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("admin.motors.store"), {
+        
+        const finalColors = [...data.colors];
+        if (colorInput.trim() !== '' && !finalColors.includes(colorInput.trim())) {
+            finalColors.push(colorInput.trim());
+        }
+
+        router.post(route("admin.motors.store"), {
+            ...data,
+            colors: finalColors,
+        }, {
+            forceFormData: true,
             onSuccess: () => toast.success("Motor berhasil ditambahkan"),
         });
     };
@@ -190,13 +200,29 @@ export default function Create({ promotions }) {
                                         />
                                     </CCol>
                                     <CCol md={8}>
-                                        <CFormLabel>Warna Tersedia (Tekan Enter untuk menambah)</CFormLabel>
-                                        <CFormInput
-                                            value={colorInput}
-                                            onChange={(e) => setColorInput(e.target.value)}
-                                            onKeyDown={handleAddColor}
-                                            placeholder="Contoh: Merah, Hitam Doff..."
-                                        />
+                                        <div className="d-flex gap-2">
+                                            <CFormInput
+                                                value={colorInput}
+                                                onChange={(e) => setColorInput(e.target.value)}
+                                                onKeyDown={handleAddColor}
+                                                placeholder="Contoh: Merah, Hitam Doff..."
+                                            />
+                                            <CButton 
+                                                type="button" 
+                                                color="info" 
+                                                variant="outline"
+                                                onClick={() => {
+                                                    if (colorInput.trim() !== '') {
+                                                        if (!data.colors.includes(colorInput.trim())) {
+                                                            setData("colors", [...data.colors, colorInput.trim()]);
+                                                        }
+                                                        setColorInput("");
+                                                    }
+                                                }}
+                                            >
+                                                Tambah
+                                            </CButton>
+                                        </div>
                                         <div className="d-flex flex-wrap gap-2 mt-2">
                                             {data.colors.map((color, index) => (
                                                 <CBadge key={index} color="info" shape="rounded-pill" className="p-2 d-flex align-items-center gap-1">

@@ -104,7 +104,7 @@ class MotorController extends Controller
             'min_dp_amount' => $request->min_dp_amount,
             'image_path' => $imagePath,
             'description' => $request->description,
-            'colors' => $request->colors ?? [],
+            'colors' => is_string($request->colors) ? json_decode($request->colors, true) : ($request->colors ?? []),
         ]);
 
 
@@ -157,7 +157,7 @@ class MotorController extends Controller
             'tersedia' => $request->boolean('tersedia'),
             'min_dp_amount' => $request->min_dp_amount,
             'description' => $request->description,
-            'colors' => $request->colors ?? [],
+            'colors' => is_string($request->colors) ? json_decode($request->colors, true) : ($request->colors ?? []),
         ];
 
         if ($request->hasFile('image')) {
