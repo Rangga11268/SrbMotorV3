@@ -190,26 +190,27 @@ class OrderController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Generate a signed URL that expires in 30 minutes
-        $url = \Illuminate\Support\Facades\URL::temporarySignedRoute(
-            'api.orders.invoice',
-            now()->addMinutes(30),
-            ['id' => $id]
-        );
+        // Generate a simple host-independent token for dev/emulator stability
+        $token = md5($order->id . 'srb-secret-2024');
+        $url = url("/api/orders/{$id}/invoice?token={$token}");
 
         return response()->json(['url' => $url]);
     }
 
     public function generateInvoice(Request $request, $id)
     {
-        // Allow if has valid signature OR is authenticated owner
-        if (!$request->hasValidSignature()) {
-            if (!auth('sanctum')->check() || Transaction::findOrFail($id)->user_id !== auth('sanctum')->id()) {
-                abort(403, 'Akses invoice ditolak atau link sudah kadaluarsa.');
+        $order = Transaction::with(['motor', 'installments', 'user'])->findOrFail($id);
+        
+        // Host-independent token check
+        $token = $request->query('token');
+        $expectedToken = md5($order->id . 'srb-secret-2024');
+
+        if ($token !== $expectedToken) {
+            // Fallback to Sanctum auth for web/internal
+            if (!auth('sanctum')->check() || $order->user_id !== auth('sanctum')->id()) {
+                abort(403, 'Akses invoice ditolak.');
             }
         }
-
-        $order = Transaction::with(['motor', 'installments', 'user'])->findOrFail($id);
 
         $data = [
             'order' => $order,
@@ -219,25 +220,12 @@ class OrderController extends Controller
         ];
 
         try {
-            // Debug mode: Return HTML if 'debug' parameter is present
-            if ($request->has('debug')) {
-                return view('invoices.order', $data);
-            }
-
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('invoices.order', $data);
-            
-            // Set options for better compatibility
-            $pdf->setPaper('A4', 'portrait');
-            $pdf->setOptions([
-                'isHtml5ParserEnabled' => true,
-                'isRemoteEnabled' => true,
-                'defaultFont' => 'sans-serif',
-            ]);
-            
-            return $pdf->stream('Invoice-' . ($order->reference_number ?? $order->id) . '.pdf');
+            // Return HTML view for stability. 
+            // PDF conversion via dompdf is causing blank screens on some emulators.
+            return view('invoices.order', $data);
         } catch (\Exception $e) {
-            \Log::error('PDF Generation Error: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal membuat PDF: ' . $e->getMessage()], 500);
+            \Log::error('Invoice Loading Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Gagal memuat invoice: ' . $e->getMessage()], 500);
         }
     }
 }

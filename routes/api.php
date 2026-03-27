@@ -18,6 +18,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login/google', [App\Http\Controllers\Api\GoogleAuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/motors', [MotorController::class, 'index']);
+Route::get('/motors/brands', [MotorController::class, 'brands']);
 Route::get('/motors/{id}', [MotorController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('api.orders.invoice');

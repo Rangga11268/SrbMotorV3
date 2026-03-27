@@ -16,6 +16,10 @@ class MotorController extends Controller
             $query->where('type', $request->category);
         }
 
+        if ($request->has('brand')) {
+            $query->where('brand', $request->brand);
+        }
+
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
@@ -23,6 +27,12 @@ class MotorController extends Controller
         $motors = $query->get();
 
         return response()->json($motors);
+    }
+
+    public function brands()
+    {
+        $brands = Motor::distinct()->pluck('brand')->filter()->values();
+        return response()->json($brands);
     }
 
     public function show($id)

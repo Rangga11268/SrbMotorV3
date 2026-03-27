@@ -46,7 +46,7 @@ export default function Home({
 
     const brandLogos = {
         Honda: "/assets/img/honda/Honda-Beat-Sporty-Deluxe-SmartKey-Matte-Black.png",
-        Yamaha: "/assets/img/honda/pcx 160.png",
+        Yamaha: "/assets/img/yamaha/aerox_155.png",
     };
 
     const brands = [
