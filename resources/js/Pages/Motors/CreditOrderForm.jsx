@@ -23,6 +23,7 @@ import {
     ShieldCheck,
     Coins,
     MapPin,
+    Palette,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -38,6 +39,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         dp_amount: "",
         tenor: "12",
         payment_method: "Transfer Bank",
+        motor_color: motor.colors && motor.colors.length > 0 ? "" : "Beragam",
         leasing_provider_id: "",
         notes: "",
     });
@@ -727,6 +729,42 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                                 </div>
                                             </motion.div>
                                         )}
+
+                                        <div className="space-y-2">
+                                            <Label htmlFor="motor_color">
+                                                Pilihan Warna
+                                            </Label>
+                                            <div className="relative">
+                                                <Palette className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                <select
+                                                    id="motor_color"
+                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
+                                                    required
+                                                    value={data.motor_color}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "motor_color",
+                                                            e.target.value,
+                                                        )
+                                                    }
+                                                >
+                                                    <option value="">
+                                                        Pilih Warna
+                                                    </option>
+                                                    {motor.colors && motor.colors.length > 0 ? (
+                                                        motor.colors.map((color, idx) => (
+                                                            <option key={idx} value={color}>
+                                                                {color}
+                                                            </option>
+                                                        ))
+                                                    ) : (
+                                                        <option value="Beragam">
+                                                            Beragam / Sesuai Stok
+                                                        </option>
+                                                    )}
+                                                </select>
+                                            </div>
+                                        </div>
 
                                         <div className="space-y-2">
                                             <Label htmlFor="payment_method">

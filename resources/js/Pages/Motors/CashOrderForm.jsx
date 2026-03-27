@@ -36,7 +36,7 @@ export default function CashOrderForm({ motor, auth }) {
         phone: auth.user?.phone || "",
         nik: auth.user?.nik || "",
         address: auth.user?.alamat || "",
-        motor_color: "",
+        motor_color: motor.colors && motor.colors.length > 0 ? "" : "Beragam",
         delivery_method: "Ambil di Dealer",
         notes: "",
         booking_fee: 0,
@@ -340,21 +340,17 @@ export default function CashOrderForm({ motor, auth }) {
                                                         <option value="">
                                                             Pilih Warna
                                                         </option>
-                                                        <option value="Merah">
-                                                            Merah
-                                                        </option>
-                                                        <option value="Hitam">
-                                                            Hitam
-                                                        </option>
-                                                        <option value="Putih">
-                                                            Putih
-                                                        </option>
-                                                        <option value="Biru">
-                                                            Biru
-                                                        </option>
-                                                        <option value="Silver/Abu-abu">
-                                                            Silver/Abu-abu
-                                                        </option>
+                                                        {motor.colors && motor.colors.length > 0 ? (
+                                                            motor.colors.map((color, idx) => (
+                                                                <option key={idx} value={color}>
+                                                                    {color}
+                                                                </option>
+                                                            ))
+                                                        ) : (
+                                                            <option value="Beragam">
+                                                                Beragam / Sesuai Stok
+                                                            </option>
+                                                        )}
                                                     </select>
                                                 </div>
                                             </div>
