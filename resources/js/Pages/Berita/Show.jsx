@@ -130,7 +130,11 @@ export default function BeritaShow({
                         {/* Featured Image */}
                         <div className="relative mb-12 rounded-[2rem] overflow-hidden shadow-lg aspect-[16/9]">
                             <img
-                                src={post.featured_image || "/assets/img/no-image.png"}
+                                src={
+                                    post.featured_image && post.featured_image.startsWith('http')
+                                        ? new URL(post.featured_image).pathname
+                                        : (post.featured_image || "/assets/img/no-image.png")
+                                }
                                 alt={post.title}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
@@ -221,7 +225,9 @@ export default function BeritaShow({
                                                 {relatedPost.featured_image ? (
                                                     <img
                                                         src={
-                                                            relatedPost.featured_image
+                                                            relatedPost.featured_image && relatedPost.featured_image.startsWith('http')
+                                                                ? new URL(relatedPost.featured_image).pathname
+                                                                : (relatedPost.featured_image || "/assets/img/no-image.png")
                                                         }
                                                         alt={relatedPost.title}
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

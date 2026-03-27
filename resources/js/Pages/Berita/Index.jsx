@@ -276,7 +276,9 @@ export default function BeritaIndex({
                                                     <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors z-10"></div>
                                                     <img
                                                         src={
-                                                            post.featured_image || "/assets/img/no-image.png"
+                                                            post.featured_image && post.featured_image.startsWith('http')
+                                                                ? new URL(post.featured_image).pathname
+                                                                : (post.featured_image || "/assets/img/no-image.png")
                                                         }
                                                         alt={post.title}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"

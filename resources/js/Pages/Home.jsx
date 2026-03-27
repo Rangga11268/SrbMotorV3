@@ -362,7 +362,9 @@ export default function Home({
                                             <div className="relative h-60 bg-gray-100 overflow-hidden">
                                                 <img
                                                     src={
-                                                        motor.image || "/assets/img/no-image.png"
+                                                        motor.image_path
+                                                            ? `/storage/${motor.image_path}`
+                                                            : "/assets/img/no-image.png"
                                                     }
                                                     className={`w-full h-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700 ${
                                                         !motor.tersedia
@@ -484,7 +486,11 @@ export default function Home({
                                 >
                                     <div className="relative h-48 rounded-xl overflow-hidden mb-4 shadow-md group-hover:shadow-xl transition-shadow">
                                         <img
-                                            src={item.featured_image || "/assets/img/no-image.png"}
+                                            src={
+                                                item.featured_image && item.featured_image.startsWith('http')
+                                                    ? new URL(item.featured_image).pathname
+                                                    : (item.featured_image || "/assets/img/no-image.png")
+                                            }
                                             alt={item.title}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             onError={(e) => {
