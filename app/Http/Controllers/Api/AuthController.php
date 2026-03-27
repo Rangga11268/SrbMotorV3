@@ -100,4 +100,40 @@ class AuthController extends Controller
             'data' => $request->user()
         ]);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'nik' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:500',
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'nik' => $request->nik,
+            'alamat' => $request->alamat,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profil berhasil diperbarui',
+            'data' => $user
+        ]);
+    }
 }
