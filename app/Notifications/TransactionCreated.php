@@ -67,7 +67,7 @@ class TransactionCreated extends Notification
             'transaction_type' => $this->transaction->transaction_type,
             'status' => $this->transaction->status,
             'final_price' => $this->transaction->final_price,
-            'message' => 'Pesanan baru telah dibuat dengan ID: ' . $this->transaction->id,
+            'message' => 'Pesanan baru Anda berhasil dibuat dengan No #' . str_pad($this->transaction->id, 4, '0', STR_PAD_LEFT),
             'created_at' => now(),
         ];
     }

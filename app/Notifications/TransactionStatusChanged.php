@@ -142,7 +142,7 @@ class TransactionStatusChanged extends Notification
             'previous_status' => $this->transaction->getOriginal('status') ?? $this->transaction->status,
             'current_status' => $this->transaction->status,
             'is_credit_status_change' => $isCreditStatusChange,
-            'message' => 'Status transaksi dengan ID: ' . $this->transaction->id . ' telah diubah menjadi ' . $this->transaction->status,
+            'message' => 'Pesanan #' . str_pad($this->transaction->id, 4, '0', STR_PAD_LEFT) . ' saat ini: ' . str_replace('_', ' ', ucwords(strtolower($this->transaction->status))),
             'created_at' => now(),
         ];
     }
