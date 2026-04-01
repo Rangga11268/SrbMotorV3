@@ -600,7 +600,7 @@ export default function Home({
                                     <Clock className="w-12 h-12 text-primary" />
                                 ),
                                 title: "Proses Kilat",
-                                desc: "Persetujuan kredit instan dengan mitra leasing terpercaya (BAF, Astra, dll).",
+                                desc: "Persetujuan kredit instan dengan mitra leasing terpercaya (BAF & Adira).",
                             },
                             {
                                 icon: (

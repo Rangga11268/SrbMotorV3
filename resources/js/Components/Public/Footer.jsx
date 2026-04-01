@@ -36,12 +36,27 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
                     {/* Brand + Contact */}
                     <div className="md:col-span-4 space-y-6">
-                        <Link href="/" className="inline-block">
-                            <Logo className="h-9" dark={true} />
-                        </Link>
-                        <p className="text-sm font-medium text-blue-400">
-                            Dealer resmi di bawah naungan SSM
-                        </p>
+                        <div className="flex flex-col gap-4">
+                            <div className="flex items-center gap-3">
+                                <Link href="/" className="inline-block transition-transform hover:scale-105 active:scale-95">
+                                    <Logo className="h-9" dark={true} />
+                                </Link>
+                                <div className="h-6 w-px bg-white/20"></div>
+                                <img 
+                                    src="/assets/img/logoSSM.webp" 
+                                    alt="SSM Logo" 
+                                    className="h-6 w-auto object-contain brightness-125"
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 opacity-80 leading-none">
+                                    Official Authorized Dealer
+                                </p>
+                                <p className="text-sm font-bold text-gray-400">
+                                    Bagian dari Sinar Surya Motor (SSM)
+                                </p>
+                            </div>
+                        </div>
                         <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
                             {settings.site_description ||
                                 "Dealer motor terpercaya dengan proses kredit mudah, transparan, dan cepat."}
@@ -122,63 +137,36 @@ export default function Footer() {
                         <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
                             Mitra Leasing
                         </h4>
-                        {leasingProviders.length > 0 ? (
-                            <div className="grid grid-cols-3 gap-2">
-                                {leasingProviders.map((provider) => (
-                                    <div
-                                        key={provider.id}
-                                        title={provider.name}
-                                        className="bg-white rounded-xl p-2 flex items-center justify-center h-14 overflow-hidden shadow-lg shadow-black/20 group-hover:scale-105 transition-transform"
+                        <div className="grid grid-cols-2 gap-4">
+                            {[
+                                { name: "BAF", logo: "/assets/img/baf.png" },
+                                { name: "ADIRA", logo: "/assets/img/adira.png" },
+                            ].map((provider, i) => (
+                                <div
+                                    key={i}
+                                    title={provider.name}
+                                    className="bg-white rounded-xl p-3 flex items-center justify-center h-16 overflow-hidden shadow-lg shadow-black/20 hover:scale-105 transition-transform"
+                                >
+                                    <img
+                                        src={provider.logo}
+                                        alt={provider.name}
+                                        className="max-h-12 max-w-full object-contain"
+                                        onError={(e) => {
+                                            e.target.style.display = "none";
+                                            e.target.nextSibling.style.display = "block";
+                                        }}
+                                    />
+                                    <span 
+                                        className="text-[10px] font-black text-gray-800 uppercase tracking-widest"
+                                        style={{ display: "none" }}
                                     >
-                                        {provider.logo_path ? (
-                                            <img
-                                                src={provider.logo_path}
-                                                alt={provider.name}
-                                                className="max-h-8 max-w-full object-contain"
-                                                onError={(e) => {
-                                                    e.target.style.display =
-                                                        "none";
-                                                    e.target.nextSibling.style.display =
-                                                        "block";
-                                                }}
-                                            />
-                                        ) : null}
-                                        <span
-                                            className="text-[9px] font-bold text-gray-700 text-center leading-tight px-1"
-                                            style={{
-                                                display: provider.logo_path
-                                                    ? "none"
-                                                    : "block",
-                                            }}
-                                        >
-                                            {provider.name}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-3 gap-2">
-                                {[
-                                    "BAF",
-                                    "Astra Credit",
-                                    "FIF",
-                                    "ADIRA",
-                                    "WOM Finance",
-                                    "BCA Finance",
-                                ].map((name, i) => (
-                                    <div
-                                        key={i}
-                                        className="bg-white/5 border border-white/10 rounded-lg p-2 flex items-center justify-center h-12"
-                                    >
-                                        <span className="text-[9px] font-bold text-gray-500 text-center leading-tight">
-                                            {name}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        <p className="text-[11px] text-gray-600 mt-2">
-                            Tersedia berbagai pilihan leasing terpercaya.
+                                        {provider.name}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-[11px] text-gray-600 mt-4 leading-relaxed">
+                            Kami bekerja sama dengan mitra leasing terpercaya untuk memudahkan kepemilikan motor Anda.
                         </p>
                     </div>
                 </div>
@@ -187,10 +175,21 @@ export default function Footer() {
             {/* Bottom bar */}
             <div className="border-t border-blue-900/20 py-5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <p className="text-xs text-gray-600">
-                        &copy; {currentYear} SRB Motor - Powered by SSM. Hak
-                        Cipta Dilindungi.
-                    </p>
+                    <div className="flex items-center gap-3">
+                        <p className="text-[10px] text-gray-600 font-medium tracking-wide">
+                            &copy; {currentYear} SRB Motor
+                        </p>
+                        <div className="h-3 w-px bg-gray-800"></div>
+                        <div className="flex items-center gap-2 group cursor-help">
+                            <span className="text-[10px] text-gray-600">Powered by</span>
+                            <img 
+                                src="/assets/img/logoSSM.webp" 
+                                alt="SSM" 
+                                className="h-3.5 w-auto grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                            />
+                            <span className="text-[10px] font-black text-gray-500 tracking-tighter opacity-50 group-hover:opacity-100 transition-all duration-500">SSM</span>
+                        </div>
+                    </div>
                     <div className="flex items-center gap-4">
                         <span className="text-xs text-gray-600 flex items-center gap-1">
                             <ShieldCheck className="w-3 h-3 text-blue-500" />{" "}

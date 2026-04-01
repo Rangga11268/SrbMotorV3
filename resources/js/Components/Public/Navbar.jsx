@@ -88,8 +88,19 @@ export default function Navbar({ auth }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                 <div className="flex items-center justify-between gap-4 md:gap-8">
                     {/* Logo */}
-                    <Link href="/" className="flex-shrink-0">
+                    <Link href="/" className="flex flex-row items-center gap-3 md:gap-4 flex-shrink-0 group">
                         <Logo />
+                        <div className="hidden sm:block h-8 w-px bg-gray-100"></div>
+                        <div className="hidden sm:flex flex-col items-start leading-none gap-1">
+                            <img 
+                                src="/assets/img/logoSSM.webp" 
+                                alt="SSM Authorized" 
+                                className="h-4 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+                            />
+                            <span className="text-[8px] font-black uppercase tracking-widest text-blue-600/60 group-hover:text-blue-600 transition-colors">
+                                Authorized
+                            </span>
+                        </div>
                     </Link>
 
                     {/* Desktop Search & Location (Momotor Style) */}
