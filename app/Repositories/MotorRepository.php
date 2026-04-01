@@ -117,7 +117,10 @@ class MotorRepository implements MotorRepositoryInterface
 
 
 
-            return $query->orderBy('created_at', 'desc')->limit($limit)->get();
+            return $query->orderBy('tersedia', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->limit($limit)
+                ->get();
         });
     }
 
