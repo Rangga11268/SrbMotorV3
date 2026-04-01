@@ -274,7 +274,7 @@ export default function Show({
                                 <strong>
                                     Penyedia Leasing Dipilih Pengguna:
                                 </strong>{" "}
-                                {credit.leasingProvider?.name}
+                                {credit.leasing_provider || '-'}
                                 <div className="small mt-2">
                                     Anda dapat mengubah pilihan jika diperlukan
                                 </div>

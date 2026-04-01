@@ -167,8 +167,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
     Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
 
-    Route::resource('leasing-providers', \App\Http\Controllers\Admin\LeasingProviderController::class)->except(['show']);
-
     // Settings Management
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::get('/settings/{category}/edit', [\App\Http\Controllers\Admin\SettingController::class, 'edit'])->name('settings.edit');

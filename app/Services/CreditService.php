@@ -72,15 +72,15 @@ class CreditService
 
     /**
      * Stage 3: Send to leasing company
-     * @param int $leasingProviderId The leasing provider ID
+     * @param string $leasingProvider The leasing provider name
      * @param string $appRef Reference number from leasing company
      */
-    public function sendToLeasing(CreditDetail $credit, int $leasingProviderId, string $appRef = ''): bool
+    public function sendToLeasing(CreditDetail $credit, string $leasingProvider, string $appRef = ''): bool
     {
         $oldStatus = $credit->status;
         $res = $credit->update([
             'status' => 'dikirim_ke_leasing',
-            'leasing_provider_id' => $leasingProviderId,
+            'leasing_provider' => $leasingProvider,
             'reference_number' => $appRef ?: $credit->reference_number,
         ]);
 

@@ -50,15 +50,6 @@ class HandleInertiaRequests extends Middleware
             'config' => [
                 'midtrans_client_key' => config('midtrans.client_key'),
             ],
-            'leasingProviders' => fn() => \App\Models\LeasingProvider::select('id', 'name', 'logo_path')
-                ->orderBy('name')
-                ->get()
-                ->map(function ($provider) {
-                    if ($provider->logo_path) {
-                        $provider->logo_path = asset('storage/' . $provider->logo_path);
-                    }
-                    return $provider;
-                }),
         ];
     }
 }

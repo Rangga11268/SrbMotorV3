@@ -255,8 +255,7 @@ class MotorGalleryController extends Controller
 
     public function showCreditOrderForm(Motor $motor): View|\Inertia\Response
     {
-        $leasingProviders = \App\Models\LeasingProvider::all(['id', 'name']);
-        return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor', 'leasingProviders'));
+        return \Inertia\Inertia::render('Motors/CreditOrderForm', compact('motor'));
     }
 
 
@@ -392,7 +391,7 @@ class MotorGalleryController extends Controller
 
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
-        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.leasingProvider', 'installments', 'user'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'installments', 'user'])->findOrFail($transactionId);
 
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this transaction');
@@ -909,7 +908,6 @@ class MotorGalleryController extends Controller
             'motor',
             'creditDetail.documents',
             'creditDetail.surveySchedules',
-            'creditDetail.leasingProvider',
             'installments',
         ]);
 
@@ -921,7 +919,6 @@ class MotorGalleryController extends Controller
             $transactionData['creditDetail'] = $transaction->creditDetail->toArray();
             $transactionData['creditDetail']['documents'] = $transaction->creditDetail->documents->toArray();
             $transactionData['creditDetail']['surveySchedules'] = $transaction->creditDetail->surveySchedules->toArray();
-            $transactionData['creditDetail']['leasingProvider'] = $transaction->creditDetail->leasingProvider?->toArray();
         }
 
         return \Inertia\Inertia::render('Motors/TransactionDetail', [

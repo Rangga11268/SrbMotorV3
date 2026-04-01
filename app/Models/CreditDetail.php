@@ -19,7 +19,7 @@ class CreditDetail extends Model
      */
     protected $fillable = [
         'transaction_id',
-        'leasing_provider_id',
+        'leasing_provider',
         'status',
         'reference_number',
         'tenor',
@@ -83,14 +83,6 @@ class CreditDetail extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
-    }
-
-    /**
-     * Get the leasing provider for this credit application.
-     */
-    public function leasingProvider(): BelongsTo
-    {
-        return $this->belongsTo(LeasingProvider::class);
     }
 
     /**

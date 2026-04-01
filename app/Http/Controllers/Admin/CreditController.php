@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CreditDetail;
-use App\Models\LeasingProvider;
 use App\Services\CreditService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -88,7 +87,6 @@ class CreditController extends Controller
             'transaction.user',
             'transaction.motor',
             'transaction.logs.actor',
-            'leasingProvider',
             'dPConfirmedByUser',
             'surveySchedules',
             'documents',
@@ -96,13 +94,11 @@ class CreditController extends Controller
 
         $availableTransitions = $this->creditService->getAvailableTransitions($credit);
         $timeline = $this->creditService->getTimeline($credit);
-        $leasingProviders = LeasingProvider::all();
 
         return Inertia::render('Admin/Credits/Show', [
             'credit' => $credit,
             'availableTransitions' => $availableTransitions,
             'timeline' => $timeline,
-            'leasingProviders' => $leasingProviders,
         ]);
     }
 

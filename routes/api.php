@@ -22,15 +22,6 @@ Route::get('/motors/brands', [MotorController::class, 'brands']);
 Route::get('/motors/{id}', [MotorController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('api.orders.invoice');
-Route::get('/leasing-providers', function () {
-    return response()->json(
-        \DB::table('leasing_providers')->get()->map(fn($p) => [
-            'id'       => $p->id,
-            'name'     => $p->name,
-            'logo_url' => $p->logo_path ? asset('storage/' . $p->logo_path) : null,
-        ])->values()
-    );
-});
 
 Route::post('/midtrans/notification', [App\Http\Controllers\PaymentCallbackController::class, 'handle']);
 
