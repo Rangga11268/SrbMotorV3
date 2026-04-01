@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             Phase6Seeder::class,
+            MotorColorSeeder::class,
             PostSeeder::class,
             SettingSeeder::class,
         ]);
