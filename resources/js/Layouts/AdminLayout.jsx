@@ -149,13 +149,6 @@ function AdminLayoutContent({ children, title }) {
             icon: cilChartLine,
             active: route().current("admin.reports.*"),
         },
-
-        {
-            name: "Provider Leasing",
-            href: route("admin.leasing-providers.index"),
-            icon: cilBuilding,
-            active: route().current("admin.leasing-providers.*"),
-        },
     ];
 
     const contentMenuItems = [
