@@ -45,13 +45,8 @@ class CreditDetail extends Model
      * @var array
      */
     protected $appends = [
+        'credit_status_text',
         'down_payment',
-        'dp_amount',
-        'dp_paid_at',
-        'dp_paid_date',
-        'survey_scheduled_date',
-        'survey_notes',
-        'survey_completed_at',
     ];
 
     /**
@@ -157,16 +152,27 @@ class CreditDetail extends Model
 
     public function getDpAmountAttribute()
     {
-        return $this->transaction->installments()
-            ->where('installment_number', 0)
-            ->value('amount') ?? 0;
+        if ($this->relationLoaded('transaction') && $this->transaction->relationLoaded('installments')) {
+            return $this->transaction->installments
+                ->where('installment_number', 0)
+                ->first()
+                ->amount ?? 0;
+        }
+        
+        // Fallback to query but only if NOT already in a serialization loop
+        // However, for maximum safety, just return 0 if not loaded
+        return 0;
     }
 
     public function getDpPaidAtAttribute()
     {
-        return $this->transaction->installments()
-            ->where('installment_number', 0)
-            ->value('paid_at');
+        if ($this->relationLoaded('transaction') && $this->transaction->relationLoaded('installments')) {
+            return $this->transaction->installments
+                ->where('installment_number', 0)
+                ->first()
+                ->paid_at ?? null;
+        }
+        return null;
     }
 
     public function getSurveyScheduledDateAttribute()

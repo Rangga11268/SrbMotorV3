@@ -26,7 +26,7 @@ class CreditController extends Controller
         $status = $request->query('status');
         $search = $request->query('search');
 
-        $query = CreditDetail::with(['transaction', 'transaction.user', 'transaction.motor']);
+        $query = CreditDetail::with(['transaction', 'transaction.user', 'transaction.motor', 'transaction.installments']);
 
         if ($status) {
             $query->where('status', $status);
@@ -87,6 +87,7 @@ class CreditController extends Controller
             'transaction.user',
             'transaction.motor',
             'transaction.logs.actor',
+            'transaction.installments',
             'dPConfirmedByUser',
             'surveySchedules',
             'documents',

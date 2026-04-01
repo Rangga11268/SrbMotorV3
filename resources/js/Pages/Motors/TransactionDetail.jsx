@@ -72,6 +72,7 @@ export default function TransactionDetail({ transaction }) {
     };
 
     const getStatusLabel = (status) => {
+        const statusKey = (status || "").toLowerCase();
         const labels = {
             // New 10-status credit flow
             pengajuan_masuk: "Pengajuan Masuk",
@@ -95,17 +96,17 @@ export default function TransactionDetail({ transaction }) {
             new_order: "Pesanan Masuk",
             waiting_payment: "Menunggu Pembayaran",
             payment_confirmed: "Pembayaran Dikonfirmasi",
+            pembayaran_dikonfirmasi: "Pembayaran Dikonfirmasi",
             unit_preparation: "Motor Disiapkan",
             ready_for_delivery: "Siap Dikirim/Ambil",
             dalam_pengiriman: "Dalam Pengiriman",
             completed: "Selesai",
-            cancelled: "Dibatalkan",
             waiting_credit_approval: "Menunggu Persetujuan Kredit",
             survey_scheduled: "Survey Dijadwalkan",
             survey_in_progress: "Survey Sedang Berlangsung",
         };
 
-        return labels[status] || status;
+        return labels[statusKey] || status.replace(/_/g, " ").toUpperCase();
     };
 
     const isCreditOrder =
@@ -272,16 +273,6 @@ export default function TransactionDetail({ transaction }) {
                                         {transaction.motor.name}
                                     </p>
                                 </div>
-
-                                {canCancel && (
-                                    <button
-                                        onClick={handleCancel}
-                                        className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl transition-colors text-sm font-bold border border-rose-500/20"
-                                    >
-                                        <XCircle className="w-4 h-4" />
-                                        Batalkan Pesanan
-                                    </button>
-                                )}
                             </div>
 
                             <div className="px-8 sm:px-10 py-6 bg-slate-800/50 border-t border-slate-800 grid grid-cols-2 gap-6 relative z-10">
@@ -771,14 +762,15 @@ export default function TransactionDetail({ transaction }) {
                                         {formatCurrency(transaction.motor.price)}
                                     </p>
                                 </div>
-                                {isCreditOrder && (
+                                
+                                {isCreditOrder ? (
                                     <>
                                         <div className="pb-6 border-b border-slate-700/50">
                                             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
                                                 Deposit (DP) Awal
                                             </p>
                                             <p className="text-2xl font-black text-white">
-                                                {formatCurrency(transaction.creditDetail.down_payment)}
+                                                {formatCurrency(transaction.creditDetail?.down_payment || 0)}
                                             </p>
                                         </div>
                                         <div className="pb-6 border-b border-slate-700/50">
@@ -786,7 +778,7 @@ export default function TransactionDetail({ transaction }) {
                                                 Total Pembiayaan (Pokok Hutang)
                                             </p>
                                             <p className="text-2xl font-black text-white">
-                                                {formatCurrency(transaction.motor.price - transaction.creditDetail.down_payment)}
+                                                {formatCurrency(transaction.motor.price - (transaction.creditDetail?.down_payment || 0))}
                                             </p>
                                         </div>
                                         <div>
@@ -794,15 +786,14 @@ export default function TransactionDetail({ transaction }) {
                                                 Estimasi Angsuran
                                             </p>
                                             <p className="text-3xl font-black text-white">
-                                                {formatCurrency(transaction.creditDetail.monthly_installment)}
+                                                {formatCurrency(transaction.creditDetail?.monthly_installment || 0)}
                                             </p>
                                             <span className="inline-block text-[10px] font-bold text-primary mt-2 bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-lg uppercase tracking-widest">
-                                                {transaction.creditDetail.tenor} Bulan Tenor
+                                                {transaction.creditDetail?.tenor || 0} Bulan Tenor
                                             </span>
                                         </div>
                                     </>
-                                )}
-                                {!isCreditOrder && (
+                                ) : (
                                     <>
                                         <div className="pb-6 border-b border-slate-700/50">
                                             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
@@ -825,43 +816,42 @@ export default function TransactionDetail({ transaction }) {
                             </div>
                         </div>
 
-                        {/* Quick Links */}
-                        <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 space-y-4">
-                            <h3 className="font-black text-slate-900 mb-6 flex items-center gap-3">
-                                Aksi Cepat
-                            </h3>
-                            <Link
-                                href={route("motors.user-transactions")}
-                                className="block w-full px-5 py-3.5 bg-slate-50 text-slate-700 rounded-2xl hover:bg-slate-100 border border-slate-200 transition-colors text-center font-bold text-sm"
-                            >
-                                Kembali ke Riwayat Transaksi
-                            </Link>
-                            {isCreditOrder && (
-                                <Link
-                                    href={route("motors.manage-documents", transaction.id)}
-                                    className="block w-full px-5 py-3.5 bg-primary/10 text-primary border border-primary/20 rounded-2xl hover:bg-primary hover:text-white transition-all text-center font-bold text-sm"
+                        {/* Action Card - New Location for Cancel Button */}
+                        {canCancel && (
+                            <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 overflow-hidden relative group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-full blur-2xl pointer-events-none -mr-10 -mt-10 group-hover:bg-rose-100 transition-colors"></div>
+                                
+                                <h3 className="text-lg font-black text-slate-900 mb-2 relative z-10">Bantuan</h3>
+                                <p className="text-slate-500 text-sm mb-6 relative z-10 leading-relaxed font-medium">
+                                    Jika Anda ingin membatalkan pesanan ini, silakan klik tombol di bawah.
+                                </p>
+                                <button
+                                    onClick={handleCancel}
+                                    className="w-full flex items-center justify-center gap-2 py-4 bg-white hover:bg-rose-50 text-rose-500 border-2 border-rose-100 hover:border-rose-200 rounded-[1.25rem] font-black uppercase tracking-widest text-xs transition-all relative z-10 shadow-sm"
                                 >
-                                    Kelola Dokumen Persyaratan
-                                </Link>
-                            )}
-                        </div>
+                                    <XCircle className="w-5 h-5 text-rose-500" />
+                                    Batalkan Pesanan
+                                </button>
+                            </div>
+                        )}
 
-                        {/* Need Help */}
-                        <div className="bg-indigo-50/50 border border-indigo-100 rounded-[2rem] p-8 mt-6">
+                        {/* Need Help Card */}
+                        <div className="bg-indigo-50/50 border border-indigo-100 rounded-[2rem] p-8">
                             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm">
                                 <Phone className="w-6 h-6" />
                             </div>
                             <h3 className="font-black text-slate-900 mb-2">
-                                Butuh Bantuan Lanjut?
+                                Butuh Bantuan?
                             </h3>
                             <p className="text-sm font-medium text-slate-600 mb-6 leading-relaxed">
-                                Tim Customer Service representatif kami siap untuk memandu Anda melalui WhatsApp.
+                                Tim kami siap membantu Anda melalui WhatsApp jika ada kendala.
                             </p>
                             <a
                                 href="https://wa.me/628123456789"
+                                target="_blank"
                                 className="inline-flex w-full items-center justify-center gap-2 px-5 py-3.5 bg-emerald-500 text-white rounded-2xl hover:bg-black transition-colors font-bold text-sm shadow-xl shadow-emerald-500/20"
                             >
-                                Hubungi via WhatsApp
+                                Chat via WhatsApp
                             </a>
                         </div>
                     </aside>

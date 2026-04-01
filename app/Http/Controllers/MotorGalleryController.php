@@ -389,7 +389,7 @@ class MotorGalleryController extends Controller
 
     public function showOrderConfirmation($transactionId): \Inertia\Response
     {
-        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'installments', 'user'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments', 'user', 'logs.actor'])->findOrFail($transactionId);
 
         if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
             abort(403, 'Unauthorized access to this transaction');
@@ -410,7 +410,7 @@ class MotorGalleryController extends Controller
 
     public function showUploadCreditDocuments($transactionId): View|\Inertia\Response
     {
-        $transaction = Transaction::with(['motor', 'creditDetail'])->findOrFail($transactionId);
+        $transaction = Transaction::with(['motor', 'creditDetail', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments'])->findOrFail($transactionId);
 
 
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
@@ -607,7 +607,7 @@ class MotorGalleryController extends Controller
         $search = $request->query('search');
         $status = $request->query('status');
 
-        $query = Transaction::with(['motor', 'creditDetail'])
+        $query = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments'])
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc');
 
@@ -907,6 +907,8 @@ class MotorGalleryController extends Controller
             'creditDetail.documents',
             'creditDetail.surveySchedules',
             'installments',
+            'user',
+            'logs.actor',
         ]);
 
         // Prepare explicit response data
@@ -957,7 +959,7 @@ class MotorGalleryController extends Controller
             abort(404, 'Credit application not found');
         }
 
-        $transaction->load(['motor', 'creditDetail']);
+        $transaction->load(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments']);
 
         return \Inertia\Inertia::render('CreditStatus', [
             'transaction' => $transaction,

@@ -25,7 +25,7 @@ class AdminController extends Controller
         $creditTransactionsCount = Transaction::where('transaction_type', 'CREDIT')->count();
         
 
-        $recentTransactions = Transaction::with(['user', 'motor'])->latest()->limit(5)->get();
+        $recentTransactions = Transaction::with(['user', 'motor', 'creditDetail', 'installments'])->latest()->limit(5)->get();
         
         $recentMotors = Motor::latest()->limit(5)->get();
         $totalRevenue = Transaction::sum('final_price');

@@ -28,7 +28,7 @@ class TransactionController extends Controller
 
     public function index(Request $request): \Inertia\Response|JsonResponse
     {
-        $query = Transaction::with(['user', 'motor', 'creditDetail.documents'])
+        $query = Transaction::with(['user', 'motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments'])
             ->orderBy('created_at', 'desc');
 
 
@@ -107,7 +107,7 @@ class TransactionController extends Controller
     {
         $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments' => function ($q) {
             $q->orderBy('installment_number', 'asc');
-        }]);
+        }, 'logs.actor']);
 
         $transaction->documents_complete = $transaction->transaction_type === 'CREDIT' && $transaction->creditDetail
             ? $transaction->creditDetail->hasRequiredDocuments()

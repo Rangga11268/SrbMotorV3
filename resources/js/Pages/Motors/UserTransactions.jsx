@@ -15,19 +15,18 @@ import {
     Clock,
     Hash,
     ArrowRight,
-    Activity,
-    CreditCard,
-    DollarSign,
-    Package,
-    ChevronRight,
-    Wallet,
-    MapPin,
-    ShieldCheck,
     ArrowLeft,
     Search,
     Filter,
     X,
     Gauge,
+    History,
+    Wallet,
+    CreditCard,
+    ChevronRight,
+    Package,
+    MapPin,
+    ShieldCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -156,9 +155,9 @@ export default function UserTransactions({ transactions: initialTransactions, fi
         }
 
         return {
-            label: labels[status] || status.toUpperCase(),
+            label: labels[status] || status.replace(/_/g, " ").toUpperCase(),
             color: "text-amber-600 border-amber-100 bg-amber-50",
-            icon: Activity,
+            icon: History,
         };
     };
 

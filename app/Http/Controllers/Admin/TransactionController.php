@@ -20,7 +20,7 @@ class TransactionController extends Controller
         $status = $request->query('status');
 
         $query = Transaction::whereDoesntHave('creditDetail')
-            ->with(['user', 'motor'])
+            ->with(['user', 'motor', 'installments'])
             ->orderBy('created_at', 'desc');
 
         if ($search) {
@@ -72,7 +72,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        $transaction->load(['user', 'motor', 'installments', 'creditDetail', 'logs.actor']);
+        $transaction->load(['user', 'motor', 'installments', 'creditDetail.documents', 'creditDetail.surveySchedules', 'logs.actor']);
 
         $motors = Motor::all();
         $users = User::where('role', 'user')->get();

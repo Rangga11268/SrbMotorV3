@@ -54,9 +54,6 @@ class Transaction extends Model
         'customer_phone',
         'customer_occupation',
         'customer_address',
-        'status_text',
-        'unified_status',
-        'total_amount'
     ];
 
     /**
@@ -174,8 +171,8 @@ class Transaction extends Model
         if ($this->status === 'cancelled') return 'Dibatalkan';
         if ($this->status === 'completed') return 'Selesai';
 
-        // 2. For credit transactions, the status is usually more relevant in the early stages
-        if ($this->transaction_type === 'CREDIT' && $this->creditDetail) {
+        // 2. For credit transactions, only check if relation is already loaded to prevent N+1 or recursion
+        if ($this->transaction_type === 'CREDIT' && $this->relationLoaded('creditDetail') && $this->creditDetail) {
             $creditStatus = $this->creditDetail->status;
 
             // If it's still in the "order" stage but credit is already processed
