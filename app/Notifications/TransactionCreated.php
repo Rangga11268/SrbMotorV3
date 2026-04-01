@@ -41,9 +41,9 @@ class TransactionCreated extends Notification
         $transactionId = $this->transaction->id;
         
         return (new MailMessage)
-                    ->subject('Konfirmasi Pesanan Baru - SRB Motors')
+                    ->subject('Konfirmasi Pesanan Baru - SRB Motor')
                     ->greeting('Halo ' . $notifiable->name . '!')
-                    ->line('Terima kasih telah membuat pesanan di SRB Motors.')
+                    ->line('Terima kasih telah membuat pesanan di SRB Motor.')
                     ->line('Rincian pesanan Anda:')
                     ->line('ID Transaksi: ' . $transactionId)
                     ->line('Motor: ' . $motorName)

@@ -10,7 +10,7 @@ export default function Logo({
             <div className="relative flex items-center justify-center">
                 <img
                     src="/assets/icon/logo trans.png"
-                    alt="SRB Motors Logo"
+                    alt="SRB Motor Logo"
                     className="w-10 h-10 object-contain drop-shadow-md"
                 />
             </div>
@@ -20,7 +20,7 @@ export default function Logo({
                     <span
                         className={`text-xl font-black tracking-tight transition-colors ${dark ? "text-white group-hover:text-blue-300" : "text-gray-900 group-hover:text-blue-600"}`}
                     >
-                        SRB<span className="text-blue-600">MOTORS</span>
+                        SRB<span className="text-blue-600">MOTOR</span>
                     </span>
                     <span
                         className={`text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 ${dark ? "text-gray-400" : "text-gray-400"}`}

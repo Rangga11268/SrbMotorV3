@@ -76,14 +76,16 @@ export default function About() {
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
                                     Tentang{" "}
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">
-                                        SRB Motors
+                                        SRB Motor
                                     </span>
                                 </h1>
                                 <p className="text-lg text-slate-600 dark:text-slate-300 font-medium max-w-2xl leading-relaxed">
-                                    Kami adalah revolusi dalam industri dealer
-                                    motor. Menyediakan motor berkualitas tinggi
-                                    dengan transparansi penuh dan jaminan
-                                    kepuasan pelanggan.
+                                    SRB Motor merupakan dealer kendaraan yang
+                                    beroperasi di bawah naungan SSM sebagai
+                                    mitra resmi dalam distribusi dan pembiayaan
+                                    kendaraan. Menyediakan kendaraan dengan
+                                    kualitas unggul, transparansi penuh, dan
+                                    jaminan kepuasan pelanggan.
                                 </p>
                             </div>
                         </div>
@@ -122,21 +124,21 @@ export default function About() {
                                         Didirikan 2020
                                     </span>
                                     <h2 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight tracking-tight">
-                                        Revolusi Kultur Motor
+                                        Mitra Resmi SSM
                                     </h2>
                                 </div>
                                 <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                                    Kami bukan sekadar dealer motor biasa. Kami
-                                    adalah kolektif penggemar, insinyur, dan
-                                    perfeksionis yang terobsesi dengan kualitas
-                                    dan kepuasan pelanggan.
+                                    Sistem ini dibuat untuk dealer independen
+                                    yang bekerja sama dengan pihak induk (SSM)
+                                    dalam distribusi dan pembiayaan. Kami
+                                    memastikan Anda mendapat kendaraan terbaik.
                                 </p>
                                 <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
                                     Didirikan atas keyakinan bahwa membeli motor
                                     bekas seharusnya tidak terasa seperti
-                                    perjudian. Kami kurasi setiap kendaraan
-                                    dengan standar tertinggi dan inspeksi
-                                    menyeluruh 150-poin.
+                                    perjudian. Kami beroperasi di bawah naungan
+                                    SSM, merawat setiap kendaraan dengan standar
+                                    tertinggi dan inspeksi menyeluruh.
                                 </p>
                                 <div className="pt-6">
                                     <Link

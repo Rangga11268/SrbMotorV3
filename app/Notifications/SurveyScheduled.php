@@ -43,7 +43,7 @@ class SurveyScheduled extends Notification
         $time = $this->surveySchedule->scheduled_time ? $this->surveySchedule->scheduled_time->format('H:i') : 'TBA';
 
         return (new MailMessage)
-                    ->subject('Jadwal Survey Terkonfirmasi - SRB Motors')
+                    ->subject('Jadwal Survey Terkonfirmasi - SRB Motor')
                     ->greeting('Halo ' . $notifiable->name . '!')
                     ->line('Jadwal survey untuk pengajuan kredit Anda telah ditentukan.')
                     ->line('Detail Survey:')

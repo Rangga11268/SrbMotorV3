@@ -29,7 +29,7 @@
 
                             <td>
                                 <h1 class="invoice-title">INVOICE</h1>
-                                <h2 class="invoice-subtitle">SRB Motors</h2>
+                                <h2 class="invoice-subtitle">SRB Motor</h2>
                             </td>
                         </tr>
                     </table>
@@ -37,7 +37,7 @@
                     <table style="margin-bottom: 6px;">
                         <tr class="information">
                             <td style="width: 50%; padding: 1px;">
-                                <strong>SRB Motors</strong><br>
+                                <strong>SRB Motor</strong><br>
                                 Jl. Contoh Alamat No. 123, Kota<br>
                                 Telepon: (021) 123-4567<br>
                                 Email: info@srbmotors.com
@@ -195,7 +195,7 @@
                         <tr>
                             <td style="text-align: center; width: 50%;">
                                 <p style="margin: 0 0 5px 0;">Mengetahui,</p>
-                                <p style="margin: 0 0 10px 0;">SRB Motors</p>
+                                <p style="margin: 0 0 10px 0;">SRB Motor</p>
                                 <div class="signature-line" style="margin: 0 auto; width: 80%;"></div>
                                 <p style="margin: 5px 0 0 0;">(________________)</p>
                             </td>
@@ -211,7 +211,7 @@
                 </div>
 
                 <div class="footer">
-                    <p>Terima kasih telah mempercayai SRB Motors</p>
+                    <p>Terima kasih telah mempercayai SRB Motor</p>
                     <p>Invoice ini dicetak pada {{ now()->format('d M Y H:i') }}</p>
                 </div>
             </div>

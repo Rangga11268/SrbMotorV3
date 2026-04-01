@@ -43,7 +43,7 @@ class InstallmentReminder extends Notification
         $amount = number_format($this->installment->amount, 0, ',', '.');
 
         return (new MailMessage)
-                    ->subject('Pengingat Cicilan - SRB Motors')
+                    ->subject('Pengingat Cicilan - SRB Motor')
                     ->greeting('Halo ' . $notifiable->name . '!')
                     ->line('Ini adalah pengingat untuk cicilan Anda yang akan datang.')
                     ->line('Detail Cicilan:')

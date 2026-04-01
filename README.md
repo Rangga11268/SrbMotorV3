@@ -1,7 +1,7 @@
-# SRB Motors - Platform Manajemen Penjualan Motor
+# SRB Motor - Platform Manajemen Penjualan Motor
 
 <div align="center">
-  <img src="public/images/icon/logo trans.png" alt="Logo SRB Motors" width="200" />
+  <img src="public/images/icon/logo trans.png" alt="Logo SRB Motor" width="200" />
   <p><b>Platform manajemen penjualan motor modern berbasis Laravel</b></p>
   
   [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
@@ -23,7 +23,7 @@
 
 ## Gambaran Umum
 
-SRB Motors adalah platform manajemen penjualan motor yang komprehensif yang memungkinkan dealer untuk menampilkan inventaris mereka, mengelola transaksi, dan memberikan pelanggan pengalaman online yang intuitif. Dibangun dengan framework Laravel, platform ini menawarkan backend yang kuat dengan antarmuka pengguna yang ramah untuk pelanggan dan administrator.
+SRB Motor adalah sistem informasi dealer independen yang bekerja sama dengan pihak induk (SSM) dalam distribusi dan pembiayaan kendaraan, dibangun secara komprehensif untuk menampilkan inventaris, mengelola transaksi, dan memberikan pelanggan pengalaman online yang intuitif. Dibangun dengan framework Laravel untuk backend yang kuat dan React/Inertia untuk antarmuka pengguna yang modern.
 
 Platform ini mendukung transaksi tunai dan kredit, manajemen inventaris motor yang komprehensif, serta dashboard admin terperinci untuk operasional bisnis yang efisien.
 
@@ -297,7 +297,7 @@ Ini dapat diperluas dengan memodifikasi formulir pembuatan motor dan aturan vali
 
 ## Kontribusi
 
-Kami menyambut kontribusi terhadap platform SRB Motors! Berikut cara Anda dapat membantu:
+Kami menyambut kontribusi terhadap platform SRB Motor! Berikut cara Anda dapat membantu:
 
 1. **Fork repositori**
 2. **Buat branch fitur** (`git checkout -b fitur/FiturHebat`)
@@ -323,7 +323,7 @@ Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LISENSI](LICENSE) unt
 
 ## Dukungan & Kontak
 
-Jika Anda memiliki pertanyaan, saran, atau masalah dengan platform SRB Motors:
+Jika Anda memiliki pertanyaan, saran, atau masalah dengan platform SRB Motor:
 
 - **Buka Issue**: Gunakan tab GitHub Issues untuk melaporkan bug atau menyarankan fitur
 - **Email**: Hubungi kami di admin@srbmotors.com
@@ -333,7 +333,7 @@ Jika Anda memiliki pertanyaan, saran, atau masalah dengan platform SRB Motors:
 
 <div align="center">
 
-**SRB Motors** © 2025 | Dibangun dengan ❤️ menggunakan Laravel
+**SRB Motor** © 2025 | Dibangun dengan ❤️ menggunakan Laravel
 
 [Kembali ke atas](#srb-motors---platform-manajemen-penjualan-motor)
 

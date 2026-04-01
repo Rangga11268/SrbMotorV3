@@ -2,7 +2,7 @@
 
 ## 📊 Database Overview
 
-**Database Name**: SRB Motors Database  
+**Database Name**: SRB Motor Database  
 **Database Type**: MySQL 8.0+  
 **Character Set**: UTF-8  
 **Collation**: utf8mb4_unicode_ci

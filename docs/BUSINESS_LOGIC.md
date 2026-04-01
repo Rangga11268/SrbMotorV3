@@ -2,7 +2,7 @@
 
 ## 📋 Overview Alur Bisnis
 
-SRB Motors memiliki 2 model transaksi utama:
+SRB Motor memiliki 2 model transaksi utama:
 
 1. **CASH Transaction** (Tunai) - Pembayaran langsung
 2. **CREDIT Transaction** (Cicilan) - Pembayaran terjadwal dengan verifikasi

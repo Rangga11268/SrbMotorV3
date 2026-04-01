@@ -57,7 +57,7 @@ class TransactionStatusChanged extends Notification
         $statusMessage = $this->getStatusMessage($newStatus, $isCreditStatusChange);
 
         return (new MailMessage)
-            ->subject('Update Status Pesanan - SRB Motors')
+            ->subject('Update Status Pesanan - SRB Motor')
             ->greeting('Halo ' . $notifiable->name . '!')
             ->line('Status pesanan Anda telah diperbarui.')
             ->line('Rincian pesanan:')
@@ -96,7 +96,7 @@ class TransactionStatusChanged extends Notification
         } else {
             switch ($status) {
                 case 'COMPLETED':
-                    return 'Pesanan Anda telah selesai. Terima kasih telah membeli di SRB Motors.';
+                    return 'Pesanan Anda telah selesai. Terima kasih telah membeli di SRB Motor.';
                 case 'selesai':
                     return 'Motor Anda telah dikirim! Silakan cek kondisi unit dan konfirmasi penerimaan. Cicilan Anda akan mulai berjalan sesuai jadwal yang telah disepakati.';
                 case 'READY_FOR_DELIVERY':

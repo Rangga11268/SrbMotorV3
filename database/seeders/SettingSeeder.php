@@ -16,7 +16,7 @@ class SettingSeeder extends Seeder
         Setting::updateOrCreate(
             ['key' => 'site_name'],
             [
-                'value' => 'SRB Motors',
+                'value' => 'SRB Motor',
                 'type' => 'string',
                 'category' => 'general',
                 'description' => 'Nama website'
@@ -157,7 +157,7 @@ class SettingSeeder extends Seeder
         Setting::updateOrCreate(
             ['key' => 'email_from_name'],
             [
-                'value' => 'SRB Motors',
+                'value' => 'SRB Motor',
                 'type' => 'string',
                 'category' => 'email',
                 'description' => 'Nama pengirim email'
@@ -167,7 +167,7 @@ class SettingSeeder extends Seeder
         Setting::updateOrCreate(
             ['key' => 'email_from_address'],
             [
-                'value' => 'noreply@srbmotors.com',
+                'value' => 'noreply@srbmotor.id',
                 'type' => 'string',
                 'category' => 'email',
                 'description' => 'Email pengirim'

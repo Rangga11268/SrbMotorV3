@@ -290,7 +290,7 @@ function AdminLayoutContent({ children, title }) {
                             />
                             <div className="d-flex flex-column">
                                 <span className="sidebar-brand-text">
-                                    SRB Motors
+                                    SRB Motor
                                 </span>
                                 <span className="sidebar-brand-sub">
                                     Admin Panel
@@ -523,7 +523,7 @@ function AdminLayoutContent({ children, title }) {
                                 className="fw-semibold"
                                 style={{ color: "#475569" }}
                             >
-                                SRB Motors
+                                SRB Motor
                             </span>
                             <span className="ms-1" style={{ color: "#94a3b8" }}>
                                 &copy; {new Date().getFullYear()}

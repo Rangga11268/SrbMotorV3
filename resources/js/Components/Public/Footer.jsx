@@ -39,14 +39,19 @@ export default function Footer() {
                         <Link href="/" className="inline-block">
                             <Logo className="h-9" dark={true} />
                         </Link>
+                        <p className="text-sm font-medium text-blue-400">
+                            Dealer resmi di bawah naungan SSM
+                        </p>
                         <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
-                            {settings.site_description || "Dealer motor terpercaya dengan proses kredit mudah, transparan, dan cepat."}
+                            {settings.site_description ||
+                                "Dealer motor terpercaya dengan proses kredit mudah, transparan, dan cepat."}
                         </p>
                         <div className="space-y-3">
                             <div className="flex items-start gap-3">
                                 <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                                 <span className="text-sm text-gray-500">
-                                    {settings.contact_address || "Jl. Raya Utama No. 123, Jakarta Timur"}
+                                    {settings.contact_address ||
+                                        "Jl. Raya Utama No. 123, Jakarta Timur"}
                                 </span>
                             </div>
                             <div className="flex items-center gap-3">
@@ -55,7 +60,8 @@ export default function Footer() {
                                     href={`https://wa.me/${settings.contact_phone?.replace(/\D/g, "") || "628978638849"}`}
                                     className="text-sm text-gray-400 hover:text-white transition-colors"
                                 >
-                                    {settings.contact_phone || "+62 812 3456 7890"}
+                                    {settings.contact_phone ||
+                                        "+62 812 3456 7890"}
                                 </a>
                             </div>
                             <div className="flex items-center gap-3">
@@ -64,7 +70,8 @@ export default function Footer() {
                                     href={`mailto:${settings.contact_email || "halo@srbmotor.id"}`}
                                     className="text-sm text-gray-400 hover:text-white transition-colors"
                                 >
-                                    {settings.contact_email || "halo@srbmotor.id"}
+                                    {settings.contact_email ||
+                                        "halo@srbmotor.id"}
                                 </a>
                             </div>
                         </div>
@@ -181,7 +188,8 @@ export default function Footer() {
             <div className="border-t border-blue-900/20 py-5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <p className="text-xs text-gray-600">
-                        &copy; {currentYear} SRB Motors. Hak Cipta Dilindungi.
+                        &copy; {currentYear} SRB Motor - Powered by SSM. Hak
+                        Cipta Dilindungi.
                     </p>
                     <div className="flex items-center gap-4">
                         <span className="text-xs text-gray-600 flex items-center gap-1">
@@ -189,11 +197,11 @@ export default function Footer() {
                             OJK Verified
                         </span>
                         <div className="flex items-center gap-2">
-                             {[
-                                { Icon: Instagram, key: 'social_instagram' },
-                                { Icon: Facebook, key: 'social_facebook' },
-                                { Icon: Youtube, key: 'social_youtube' }
-                             ].map(({ Icon, key }, i) => (
+                            {[
+                                { Icon: Instagram, key: "social_instagram" },
+                                { Icon: Facebook, key: "social_facebook" },
+                                { Icon: Youtube, key: "social_youtube" },
+                            ].map(({ Icon, key }, i) => (
                                 <a
                                     key={i}
                                     href={settings[key] || "#"}
