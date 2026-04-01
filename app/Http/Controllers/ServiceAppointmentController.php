@@ -141,4 +141,22 @@ class ServiceAppointmentController extends Controller
 
         return back()->with('success', 'Status servis berhasil diperbarui.');
     }
+
+    /**
+     * API: Get dates that are fully booked
+     */
+    public function getUnavailableDates()
+    {
+        $quota = (int) (Setting::where('key', 'service_daily_quota')->first()->value ?? 10);
+        
+        // Find dates from today onwards that have reached the quota
+        $bookedDates = ServiceAppointment::select('service_date')
+            ->where('service_date', '>=', Carbon::today())
+            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+            ->groupBy('service_date')
+            ->havingRaw('COUNT(*) >= ?', [$quota])
+            ->pluck('service_date');
+
+        return response()->json(['unavailable_dates' => $bookedDates]);
+    }
 }

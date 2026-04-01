@@ -103,8 +103,8 @@ erDiagram
 ---
 
 ## 5. Langkah Eksekusi (Next Steps)
-1. Generate Migration & Model `ServiceAppointment`.
-2. Buat API untuk cek ketersediaan kuota per tanggal.
+1. ~~Generate Migration & Model `ServiceAppointment`~~. (DONE)
+2. ~~Buat API untuk cek ketersediaan kuota per tanggal~~. (DONE)
 3. Implementasi Kalender Interaktif di Frontend (React).
 4. Buat Dashboard Admin untuk kelola antrian servis harian.
 

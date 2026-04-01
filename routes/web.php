@@ -15,6 +15,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminProfileController;
+use App\Http\Controllers\ServiceAppointmentController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 
 
@@ -58,6 +59,15 @@ Route::get('/api/survey-history/{creditDetail}', [MotorGalleryController::class,
 Route::get('/berita', [App\Http\Controllers\NewsController::class, 'index'])->name('berita.index');
 Route::get('/berita/{post:slug}', [App\Http\Controllers\NewsController::class, 'show'])->name('berita.show');
 Route::get('/api/berita/search', [App\Http\Controllers\NewsController::class, 'search'])->name('api.berita.search');
+
+// Service Booking Routes (User)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/services', [ServiceAppointmentController::class, 'index'])->name('services.index');
+    Route::get('/services/booking', [ServiceAppointmentController::class, 'create'])->name('services.create');
+    Route::post('/services/booking', [ServiceAppointmentController::class, 'store'])->name('services.store');
+});
+// API for disabled dates in Calendar (Can be accessed by guests too)
+Route::get('/api/services/unavailable-dates', [ServiceAppointmentController::class, 'getUnavailableDates'])->name('api.services.unavailable-dates');
 
 
 
@@ -148,6 +158,9 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     // Cash Transaction Management Routes (CASH ONLY - tunai)
     Route::resource('transactions', AdminTransactionController::class);
     Route::post('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
+
+    // Admin Service Management Routes
+    Route::put('/services/{service}/status', [ServiceAppointmentController::class, 'updateStatus'])->name('services.update-status');
 
 
 
