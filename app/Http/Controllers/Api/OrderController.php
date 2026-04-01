@@ -68,13 +68,9 @@ class OrderController extends Controller
             'reference_number' => 'ORD-' . strtoupper(uniqid()),
         ]);
 
-        // Update motor availability to false
         $motor->update(['tersedia' => false]);
-
-        // Clear motor cache to ensure availability status is updated on Home/Catalog
         app(\App\Repositories\MotorRepositoryInterface::class)->clearCache();
 
-        // Create initial installment (number 0) for the amount to be paid
         $paymentAmount = ($request->booking_fee > 0) ? $request->booking_fee : $motor->price;
         
         $installment = Installment::create([
@@ -89,7 +85,6 @@ class OrderController extends Controller
         $snapToken = null;
         $redirectUrl = null;
 
-        // Generate Midtrans Snap Token if payment method is Transfer Bank
         if ($request->payment_method === 'Transfer Bank') {
             try {
                 Config::$serverKey = config('midtrans.server_key');
@@ -134,8 +129,14 @@ class OrderController extends Controller
                 ]);
             } catch (\Exception $e) {
                 \Log::error('Midtrans Snap Error (Mobile): ' . $e->getMessage());
-                // Fallback: order created but snap failed
             }
+        }
+
+        if ($request->payment_method === 'Transfer Bank' && !$redirectUrl) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal membuat link pembayaran Midtrans. Silakan coba beberapa saat lagi.',
+            ], 422);
         }
 
         return response()->json([
@@ -162,70 +163,47 @@ class OrderController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        $request->validate([
-            'reason' => 'nullable|string|max:500',
-        ]);
+        $request->validate(['reason' => 'nullable|string|max:500']);
 
         $creditService = app(\App\Services\CreditService::class);
         $result = $creditService->cancelByCustomer($order, $request->reason);
 
         if ($result['success']) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Pesanan berhasil dibatalkan',
-            ]);
+            return response()->json(['status' => 'success', 'message' => 'Pesanan berhasil dibatalkan']);
         } else {
-            return response()->json([
-                'status' => 'error',
-                'message' => $result['message'],
-            ], 422);
+            return response()->json(['status' => 'error', 'message' => $result['message']], 422);
         }
     }
 
     public function getInvoiceUrl($id)
     {
         $order = Transaction::findOrFail($id);
-        
         if ($order->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-
-        // Generate a simple host-independent token for dev/emulator stability
         $token = md5($order->id . 'srb-secret-2024');
         $url = url("/api/orders/{$id}/invoice?token={$token}");
-
         return response()->json(['url' => $url]);
     }
 
     public function generateInvoice(Request $request, $id)
     {
         $order = Transaction::with(['motor', 'installments', 'user'])->findOrFail($id);
-        
-        // Host-independent token check
         $token = $request->query('token');
         $expectedToken = md5($order->id . 'srb-secret-2024');
 
         if ($token !== $expectedToken) {
-            // Fallback to Sanctum auth for web/internal
             if (!auth('sanctum')->check() || $order->user_id !== auth('sanctum')->id()) {
                 abort(403, 'Akses invoice ditolak.');
             }
         }
 
-        $data = [
-            'order' => $order,
-            'motor' => $order->motor,
-            'installments' => $order->installments,
-            // 'logo' => public_path('assets/images/logo_srb.png'), // Disabled to prevent blank page if missing
-        ];
-
+        $data = ['order' => $order, 'motor' => $order->motor, 'installments' => $order->installments];
         try {
-            // Return HTML view for stability. 
-            // PDF conversion via dompdf is causing blank screens on some emulators.
             return view('invoices.order', $data);
         } catch (\Exception $e) {
             \Log::error('Invoice Loading Error: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal memuat invoice: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal memuat invoice'], 500);
         }
     }
 }
