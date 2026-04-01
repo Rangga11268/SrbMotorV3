@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function CreditOrderForm({ motor, auth, leasingProviders }) {
+export default function CreditOrderForm({ motor, auth }) {
     const { data, setData, post, processing, errors } = useForm({
         name: auth.user?.name || "",
         nik: auth.user?.nik || "",
@@ -40,7 +40,6 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
         tenor: "12",
         payment_method: "Transfer Bank",
         motor_color: motor.colors && motor.colors.length > 0 ? "" : "Beragam",
-        leasing_provider_id: "",
         notes: "",
     });
 
@@ -806,57 +805,7 @@ export default function CreditOrderForm({ motor, auth, leasingProviders }) {
                                             )}
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <Label htmlFor="leasing_provider_id">
-                                                Pilihan Perusahaan Pembiayaan
-                                                (Opsional)
-                                            </Label>
-                                            <div className="relative">
-                                                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                <select
-                                                    id="leasing_provider_id"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
-                                                    value={
-                                                        data.leasing_provider_id
-                                                    }
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "leasing_provider_id",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                >
-                                                    <option value="">
-                                                        Tidak pilih (Admin akan
-                                                        rekomendasikan)
-                                                    </option>
-                                                    {leasingProviders &&
-                                                        leasingProviders.map(
-                                                            (provider) => (
-                                                                <option
-                                                                    key={
-                                                                        provider.id
-                                                                    }
-                                                                    value={
-                                                                        provider.id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        provider.name
-                                                                    }
-                                                                </option>
-                                                            ),
-                                                        )}
-                                                </select>
-                                            </div>
-                                            {errors.leasing_provider_id && (
-                                                <ErrorMessage
-                                                    message={
-                                                        errors.leasing_provider_id
-                                                    }
-                                                />
-                                            )}
-                                        </div>
+
 
                                         <div className="space-y-2">
                                             <Label htmlFor="notes">

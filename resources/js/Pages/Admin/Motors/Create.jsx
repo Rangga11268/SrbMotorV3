@@ -20,6 +20,8 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilArrowLeft, cilSave, cilBike } from "@coreui/icons";
 import toast from "react-hot-toast";
+import { router } from "@inertiajs/react";
+import { Banknote, Coins } from "lucide-react";
 
 export default function Create({ promotions }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -40,6 +42,27 @@ export default function Create({ promotions }) {
 
     const [previewUrl, setPreviewUrl] = useState(null);
     const [colorInput, setColorInput] = useState("");
+
+    // Helper for currency formatting
+    const formatNumberDisplay = (numStr) => {
+        if (numStr === null || numStr === undefined || numStr === "") return "";
+        // Ambil bagian bulat saja (ignore decimal dari database)
+        const strValue = String(numStr).split('.')[0];
+        const cleanNum = strValue.replace(/[^\d]/g, "");
+        return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const parseFormattedNumber = (str) => {
+        return String(str).replace(/[^\d]/g, "");
+    };
+
+    const handlePriceChange = (value) => {
+        setData("price", parseFormattedNumber(value));
+    };
+
+    const handleMinDpChange = (value) => {
+        setData("min_dp_amount", parseFormattedNumber(value));
+    };
 
     const handleAddColor = (e) => {
         if (e.key === 'Enter' && colorInput.trim() !== '') {
@@ -163,30 +186,50 @@ export default function Create({ promotions }) {
                                         />
                                     </CCol>
                                     <CCol md={6}>
-                                        <CFormLabel>Harga (Rp)</CFormLabel>
-                                        <CFormInput
-                                            type="number"
-                                            value={data.price}
-                                            onChange={(e) =>
-                                                setData("price", e.target.value)
-                                            }
-                                            placeholder="0"
-                                            invalid={!!errors.price}
-                                            feedbackInvalid={errors.price}
-                                        />
+                                        <CFormLabel>Harga</CFormLabel>
+                                        <div className="position-relative">
+                                            <div 
+                                                className="position-absolute d-flex align-items-center justify-content-center text-secondary" 
+                                                style={{ left: '12px', top: '0', bottom: '0', zIndex: 10 }}
+                                            >
+                                                <Banknote size={18} />
+                                            </div>
+                                            <CFormInput
+                                                type="text"
+                                                className="ps-5 py-2 rounded-3"
+                                                style={{ border: '2px solid #e2e8f0' }}
+                                                value={formatNumberDisplay(data.price)}
+                                                onChange={(e) =>
+                                                    handlePriceChange(e.target.value)
+                                                }
+                                                placeholder="0"
+                                                invalid={!!errors.price}
+                                            />
+                                        </div>
+                                        {errors.price && <div className="text-danger small mt-1">{errors.price}</div>}
                                     </CCol>
                                     <CCol md={6}>
-                                        <CFormLabel>DP Minimum (Rp)</CFormLabel>
-                                        <CFormInput
-                                            type="number"
-                                            value={data.min_dp_amount}
-                                            onChange={(e) =>
-                                                setData("min_dp_amount", e.target.value)
-                                            }
-                                            placeholder="Contoh: 600000"
-                                            invalid={!!errors.min_dp_amount}
-                                            feedbackInvalid={errors.min_dp_amount}
-                                        />
+                                        <CFormLabel>DP Minimum</CFormLabel>
+                                        <div className="position-relative">
+                                            <div 
+                                                className="position-absolute d-flex align-items-center justify-content-center text-secondary" 
+                                                style={{ left: '12px', top: '0', bottom: '0', zIndex: 10 }}
+                                            >
+                                                <Coins size={18} />
+                                            </div>
+                                            <CFormInput
+                                                type="text"
+                                                className="ps-5 py-2 rounded-3"
+                                                style={{ border: '2px solid #e2e8f0' }}
+                                                value={formatNumberDisplay(data.min_dp_amount)}
+                                                onChange={(e) =>
+                                                    handleMinDpChange(e.target.value)
+                                                }
+                                                placeholder="600.000"
+                                                invalid={!!errors.min_dp_amount}
+                                            />
+                                        </div>
+                                        {errors.min_dp_amount && <div className="text-danger small mt-1">{errors.min_dp_amount}</div>}
                                     </CCol>
                                     <CCol md={4}>
                                         <CFormLabel>Tahun</CFormLabel>

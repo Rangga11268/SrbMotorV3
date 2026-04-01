@@ -271,7 +271,6 @@ class MotorGalleryController extends Controller
             'address' => 'required|string|max:1000',
             'dp_amount' => 'required|numeric|min:0',
             'tenor' => 'required|integer|min:1|max:60',
-            'leasing_provider_id' => 'nullable|exists:leasing_providers,id',
             'motor_color' => 'required|string',
             'delivery_method' => 'required|string',
             'notes' => 'nullable|string',
@@ -352,7 +351,6 @@ class MotorGalleryController extends Controller
             'monthly_installment' => $monthlyInstallment,
             'interest_rate' => $interestRate,
             'status' => 'pengajuan_masuk',
-            'leasing_provider_id' => $request->leasing_provider_id,
             'reference_number' => 'REF-' . strtoupper(uniqid()),
         ]);
 
