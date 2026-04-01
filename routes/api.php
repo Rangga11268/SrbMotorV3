@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     
     Route::get('/orders', [OrderController::class, 'index']);
-    Route::get('/orders/cash', [OrderController::class, 'storeCashOrder']);
+    Route::post('/orders/cash', [OrderController::class, 'storeCashOrder']);
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::get('/orders/{id}/get-invoice-url', [OrderController::class, 'getInvoiceUrl']);
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
