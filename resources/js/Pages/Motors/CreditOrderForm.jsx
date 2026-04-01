@@ -24,6 +24,8 @@ import {
     Coins,
     MapPin,
     Palette,
+    Store,
+    Truck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -40,6 +42,7 @@ export default function CreditOrderForm({ motor, auth }) {
         tenor: "12",
         payment_method: "Transfer Bank",
         motor_color: motor.colors && motor.colors.length > 0 ? "" : "Beragam",
+        delivery_method: "Kirim ke Rumah",
         notes: "",
     });
 
@@ -728,6 +731,38 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 </div>
                                             </motion.div>
                                         )}
+
+                                        <div className="space-y-4">
+                                            <Label>Metode Penyerahan Unit</Label>
+                                            <div className="flex gap-4">
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setData(
+                                                            "delivery_method",
+                                                            "Ambil di Dealer",
+                                                        )
+                                                    }
+                                                    className={`flex-1 flex items-center justify-center gap-2 p-3.5 rounded-xl border-2 transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-sm" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                >
+                                                    <Store className="w-5 h-5" />
+                                                    Ambil di Dealer
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setData(
+                                                            "delivery_method",
+                                                            "Kirim ke Rumah",
+                                                        )
+                                                    }
+                                                    className={`flex-1 flex items-center justify-center gap-2 p-3.5 rounded-xl border-2 transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-sm" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                >
+                                                    <Truck className="w-5 h-5" />
+                                                    Kirim ke Rumah
+                                                </button>
+                                            </div>
+                                        </div>
 
                                         <div className="space-y-2">
                                             <Label htmlFor="motor_color">
