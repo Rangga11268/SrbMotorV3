@@ -15,6 +15,7 @@ erDiagram
     CREDIT_DETAILS ||--o{ INSTALLMENTS : "has"
     CREDIT_DETAILS ||--o{ SURVEY_SCHEDULES : "has"
     USERS ||--o{ NOTIFICATIONS : "receives"
+    USERS ||--o{ SERVICE_APPOINTMENTS : "books"
 
     USERS {
         bigint id PK
@@ -221,6 +222,26 @@ erDiagram
         timestamp created_at
         timestamp updated_at
     }
+    
+    SERVICE_APPOINTMENTS {
+        bigint id PK
+        bigint user_id FK
+        string customer_name
+        string customer_phone
+        string motor_brand
+        string motor_type
+        string license_plate
+        int current_km
+        date service_date
+        time service_time
+        string service_type
+        text complaint_notes
+        decimal estimated_cost
+        string status
+        text admin_notes
+        timestamp created_at
+        timestamp updated_at
+    }
 ```
 
 ## Application Tables Summary
@@ -239,8 +260,9 @@ erDiagram
 | `posts` | 12 | Blog/News Content Management |
 | `settings` | 8 | Global System Configuration |
 | `notifications` | 8 | User Alert System |
+| `service_appointments` | 17 | Service Booking & Queue |
 
 **Total Application Tables:** 13
-**Total Application Columns:** 177
+**Total Application Columns:** 194
 
 *Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*

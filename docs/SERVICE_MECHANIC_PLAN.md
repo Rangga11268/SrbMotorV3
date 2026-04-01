@@ -1,23 +1,24 @@
-# Rencana Pengembangan Fitur Servis & Manajemen Kuota
+# Rencana Pengembangan Fitur Servis (SSM Authorized)
 
 **Sistem Informasi Dealer SRB Motor (Powered by SSM)**
 
-Dokumen ini berisi spesifikasi teknis dan desain alur kerja (workflow) untuk fitur Reservasi Servis Motor menggunakan pendekatan **Sistem Kuota Harian & Setup Admin Manual** (Gabungan Opsi 1 & 2). Sistem ini dirancang untuk menjawab tantangan jika mekanik sedang libur/berhalangan dengan cara administratif tanpa harus membuat tabel mekanik yang kompleks.
+Dokumen ini berisi spesifikasi teknis untuk fitur Reservasi Servis Motor yang dirancang sederhana namun fungsional sesuai standar **SSM Authorized Dealer**. Sistem menggunakan pendekatan **Sistem Kuota Harian** agar manajemen mekanik tetap efisien tanpa tabel yang rumit.
 
 ---
 
-## 1. Konsep Utama & Solusi
+## 1. Konsep Utama: Quota-Based Booking
 
-Untuk memecahkan masalah _"Bagaimana mencegah user set booking saat mekanik tidak ada?"_, kita akan menggunakan dua filter pertahanan utama:
+Untuk menjaga kualitas layanan resmi, sistem akan membatasi jumlah pengerjaan harian:
 
-1. **Filter Otomatis (Daily Quota):** Kalender akan otomatis dikunci (disable) di frontend jika di hari tersebut sudah ada lebih dari _X_ booking yang `confirmed`/`pending` (misal kuota max 15 motor per hari dari Admin Setting).
-2. **Filter Manual (Admin Override):** Meskipun belum limit 15 motor, bisa saja mekanik tiba-tiba sakit di pagi hari. Di tahap ini, Admin mengambil kontrol untuk langsung membatalkan (`cancelled`) atau mengirim opsi _reschedule_ melalui notifikasi WhatsApp/Email ke pelanggan baru beserta catatan aslinya (`admin_notes`).
+1. **Daily Quota Management:** Admin menetapkan batas maksimal servis per hari (Default: 10-15 motor).
+2. **Real-time Calendar Blocking:** Di sisi pelanggan, tanggal yang sudah penuh akan otomatis berwarna MERAH dan terkunci (Disabled) agar tidak terjadi penumpukan di bengkel.
+3. **Admin Quick Approval:** Admin memiliki kendali penuh untuk menyetujui, menjadwalkan ulang, atau membatalkan booking jika diperlukan.
 
 ---
 
-## 2. Struktur Database (Schema & ERD)
+## 2. Struktur Database (Lean Schema)
 
-Struktur tabel sangat _clean_, langsung merelasikan User dan Reservasi Servis miliknya. Tidak dibutuhkan tabel Mekanik tambahan.
+Hanya menggunakan satu tabel utama untuk menjaga sistem tetap ringan.
 
 ### Entity Relationship Diagram (ERD)
 
@@ -30,8 +31,8 @@ erDiagram
     }
     SETTINGS {
         bigint id PK
-        string key "Contoh: service_daily_quota"
-        string value "Contoh: 15"
+        string key "service_daily_quota"
+        string value "10"
     }
     SERVICE_APPOINTMENTS {
         bigint id PK
@@ -41,63 +42,69 @@ erDiagram
         string motor_brand
         string motor_type
         string license_plate
+        int current_km "KM Saat Ini"
         date service_date
         time service_time
-        enum service_type "Servis Berkala, Ganti Oli, dll"
+        string service_type "Servis Berkala, Ganti Oli, dll"
         text complaint_notes
+        decimal estimated_cost "Estimasi Biaya"
         enum status "pending, confirmed, in_progress, completed, cancelled"
-        text admin_notes "Untuk mencatat alasan penolakan servis mdn"
+        text admin_notes "Catatan Admin"
     }
 
     USERS ||--o{ SERVICE_APPOINTMENTS : "membuat booking"
 ```
 
----
-
-## 3. Alur Sistem (Business Logic Workflow)
-
-### A. Alur Pelanggan (User / Customer)
-
-1. User masuk ke halaman **Booking Servis**.
-2. User memilih Tanggal Servis di Kalender interaktif.
-3. **Validasi Kuota Harian & Transparansi UI Frontend (Rule Otomatis):**
-    - _Logika:_ Sistem menghitung `COUNT` (Reservasi berstatus `pending` + `confirmed`) pada tanggal tersebut.
-    - _Tampilan Visual (User Experience):_ Agar pengguna tidak bingung, komponen Kalender di halaman React akan diberikan **Indikator Warna (Legend)** yang sangat jelas:
-        - 🟩 **Hijau:** Slot mekanik tersedia.
-        - 🟥 **Merah / Abu-abu (Disabled):** Kuota sudah _Full_ atau Mekanik sedang libur. Tanggal ini **dikunci dan tidak bisa diklik**.
-        - 💬 **Pesan Peringatan / Tooltip:** Saat _user_ mengarahkan kursor/jari ke tanggal yang merah, akan muncul tulisan: _"Mohon Maaf, Kuota Servis Penuh / Mekanik Tidak Tersedia pada tanggal ini."_
-        - ℹ️ Akan dipasang _Banner Info_ di atas kalender: _"Silakan pilih jadwal yang berwarna hijau. Tanggal yang terkunci menandakan mekanik kami sudah full book atau sedang tidak beroperasi."_
-4. Jika aman (jadwal hijau dipilih), user mengisi identitas motor & waktu keluhan -> Klik Submit.
-5. Reservasi berstatus awal **`Pending`**.
-
-### B. Alur Penanganan Real-time (Admin)
-
-1. Muncul notifikasi pendaftaran servis baru di Dashboard Admin.
-2. Admin melihat _database_ kehadiran fisik mekanik hari itu.
-    - **Jika Mekanik Ada:** Admin menekan **"Konfirmasi Booking"** (status -> `confirmed`).
-    - **Jika Mekanik Sakit/Tidak Ada:** Walau kuota masih ada, admin menekan **"Tolak / Reschedule"** (status -> `cancelled`). Admin mengisi popup alasan: _"Mohon maaf, mekanik sedang sakit/absen hari ini. Silahkan booking ulang untuk hari esok."_ Alasan ini tersimpan di `admin_notes`.
-3. Selesai diklik, Sistem mengirim notifikasi via WhatsApp/Email ke Pelanggan.
-
-### C. Alur Pengerjaan (Hari H)
-
-1. Admin memantau daftar servis berstatus `confirmed` hari itu.
-2. Setelah pelanggan datang, Admin mengubah status motor tersebut menjadi `in_progress`.
-3. Setelah motor beres ditangani, sistem diubah menjadi `completed`.
+### Tabel: `service_appointments`
+| Field | Tipe | Deskripsi |
+|---|---|---|
+| `id` | PK | Primary Key |
+| `user_id` | FK | ID User (Null jika tamu/offline) |
+| `customer_name` | String | Nama Lengkap Pelanggan |
+| `customer_phone` | String | Nomor WhatsApp Aktif |
+| `motor_brand` | String | Contoh: Honda, Yamaha |
+| `motor_type` | String | Contoh: Vario 160, NMAX |
+| `license_plate` | String | Nomor Polisi (Penting untuk riwayat) |
+| **`current_km`** | Integer | **Kilometer saat ini (Standar SSM)** |
+| `service_date` | Date | Tanggal Reservasi |
+| `service_time` | Time | Jam Kedatangan |
+| `service_type` | Enum | Berkala, Ganti Oli, Perbaikan Berat, dll |
+| `complaint_notes`| Text | Keluhan atau catatan dari pelanggan |
+| **`estimated_cost`**| Decimal | **Estimasi biaya (Diisi Admin/User)** |
+| `status` | Enum | pending, confirmed, in_progress, completed, cancelled |
+| `admin_notes` | Text | Catatan/Alasan dari Admin (misal: Alasan Reject) |
 
 ---
 
-## 4. Keunggulan Sistem Secara Akademik & Praktikal
+## 3. Alur Kerja (Workflow)
 
-Jika dipertanyakan oleh Dosen terkait sistem Booking, pendekatan hibrida Opsi 1 & 2 ini memiliki beberapa justifikasi ampuh:
+### A. Alur Pelanggan (User)
+1. Akses halaman **Booking Servis**.
+2. Pilih tanggal di kalender. Jika Hijau = Tersedia, Jika Merah = Penuh.
+3. Isi data motor, plat nomor, dan **KM Saat Ini**.
+4. Submit -> Status awal: `Pending`.
 
-- **Anti Over-Engineering:** Sistem ini memuaskan sisi praktikal lapangan (bengkel kecil-menengah). Mekanik bengkel biasa sering silih berganti atau _freelance_, sehingga pendataan absen mekanik super kompleks malah menambah birokrasi yang membebani Admin.
-- **Human-in-the-Loop Backup:** Kombinasi pencegahan otomasi (_Daily Quota_) dan keputusan manusia (_Admin Approval & Reason_) menghasilkan tingkat operasional yang sangat realistis untuk bisnis _dealership independent_ (SSM).
+### B. Alur Kendali (Admin)
+1. Notifikasi masuk ke Dashboard.
+2. Admin melakukan verifikasi:
+    - **Confirmed:** Booking disetujui, slot kuota terkunci.
+    - **Cancelled:** Booking ditolak (misal: mekanik libur mendadak). Admin mengisi alasan penolakan.
+3. Saat motor dikerjakan, status diubah ke `In Progress`.
+4. Saat selesai, status diubah ke `Completed`. Estimasi biaya akhir dicatat.
 
 ---
 
-## 5. Rencana Eksekusi Teknis Berikutnya (Next Steps)
+## 4. Keunggulan untuk SRB Motor (Authorized)
 
-1. Menambahkan seeder _default_ `service_daily_quota` (contoh: 15) di `SettingSeeder`.
-2. Membuat endpoint API khusus (contoh: `/api/service/available-dates`) untuk Front-end agar bisa mencegah hari-hari penuh secara Real-time dari kalender React.
-3. Mendesain antarmuka User UI untuk Booking dan Papan Status.
-4. Mendesain halaman Dashboard Admin khusus Servis untuk menyortir status (Pending/Confirmed/dsb).
+- **Transparansi:** Pelanggan tahu kapan bengkel penuh dan tidak.
+- **Kredibilitas:** Menanyakan KM motor adalah ciri khas dealer resmi yang profesional.
+- **Efisiensi:** Admin tidak perlu mengelola jadwal mekanik satu per satu, cukup kelola total kuota harian.
+
+---
+
+## 5. Langkah Eksekusi (Next Steps)
+1. Generate Migration & Model `ServiceAppointment`.
+2. Buat API untuk cek ketersediaan kuota per tanggal.
+3. Implementasi Kalender Interaktif di Frontend (React).
+4. Buat Dashboard Admin untuk kelola antrian servis harian.
+
