@@ -255,9 +255,9 @@ export default function SettingsEdit({ category, settings }) {
                     <div className="mb-3">
                         <h6 className="font-weight-bold text-dark mb-2">
                             <Palette size={20} className="me-2" />
-                            {metadata.label || setting.key}
+                            {fieldConfig?.label || setting.key}
                         </h6>
-                        <p className="text-muted small mb-0">{metadata.help}</p>
+                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
                     </div>
                     <div className="d-flex gap-2 align-items-center">
                         <input
@@ -298,14 +298,14 @@ export default function SettingsEdit({ category, settings }) {
                     <div className="mb-3">
                         <h6 className="font-weight-bold text-dark mb-2">
                             <Globe size={20} className="me-2" />
-                            {metadata.label || setting.key}
+                            {fieldConfig?.label || setting.key}
                         </h6>
-                        <p className="text-muted small mb-3">{metadata.help}</p>
+                        <p className="text-muted small mb-3">{fieldConfig?.helper || setting.description}</p>
                     </div>
                     <input
                         type="text"
                         className="form-control"
-                        placeholder={metadata.placeholder || "https://..."}
+                        placeholder={fieldConfig?.placeholder || "https://..."}
                         value={data.settings[index].value || ""}
                         onChange={(e) =>
                             handleSettingChange(index, "value", e.target.value)
@@ -321,14 +321,14 @@ export default function SettingsEdit({ category, settings }) {
                 <div key={index} className="card border-0 bg-light p-4 mb-4">
                     <div className="mb-3">
                         <h6 className="font-weight-bold text-dark mb-2">
-                            {metadata.label || setting.key}
+                            {fieldConfig?.label || setting.key}
                         </h6>
-                        <p className="text-muted small mb-0">{metadata.help}</p>
+                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
                     </div>
                     <textarea
                         className="form-control"
                         rows="3"
-                        placeholder={metadata.placeholder}
+                        placeholder={fieldConfig?.placeholder}
                         value={data.settings[index].value || ""}
                         onChange={(e) =>
                             handleSettingChange(index, "value", e.target.value)
@@ -345,9 +345,9 @@ export default function SettingsEdit({ category, settings }) {
                     <div className="mb-3">
                         <h6 className="font-weight-bold text-dark mb-2">
                             <Upload size={20} className="me-2" />
-                            {metadata.label || setting.key}
+                            {fieldConfig?.label || setting.key}
                         </h6>
-                        <p className="text-muted small mb-0">{metadata.help}</p>
+                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
                     </div>
 
                     {/* Show preview if exists */}
