@@ -16,10 +16,12 @@ class ServiceAppointment extends Model
         'motor_brand',
         'motor_type',
         'license_plate',
+        'current_km',
         'service_date',
         'service_time',
         'service_type',
         'complaint_notes',
+        'estimated_cost',
         'status',
         'admin_notes',
     ];

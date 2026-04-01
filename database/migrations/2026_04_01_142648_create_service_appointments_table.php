@@ -23,12 +23,14 @@ return new class extends Migration
             $table->string('motor_brand');
             $table->string('motor_type');
             $table->string('license_plate');
+            $table->integer('current_km');
 
             // Service details
             $table->date('service_date');
             $table->time('service_time');
             $table->enum('service_type', ['Servis Berkala', 'Ganti Oli', 'Perbaikan Berat', 'Lainnya'])->default('Servis Berkala');
             $table->text('complaint_notes')->nullable();
+            $table->decimal('estimated_cost', 15, 2)->nullable();
 
             // Status Tracking
             $table->enum('status', ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled'])->default('pending');
