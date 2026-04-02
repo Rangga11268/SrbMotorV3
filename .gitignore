@@ -27,3 +27,4 @@ Thumbs.db
 .env
 .env.backup
 .env.production
+/public/design-md
