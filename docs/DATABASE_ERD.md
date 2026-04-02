@@ -1,20 +1,20 @@
 # SRB Motor Database ERD (Complete & Consolidated)
 
-This document provides the full Entity Relationship Diagram (ERD) for the SRB Motor application, including core business logic, content management, and system settings.
+Dokumen ini menyediakan diagram *Entity Relationship Diagram* (ERD) lengkap untuk aplikasi SRB Motor, mencakup logika bisnis inti, manajemen data, dan pengaturan sistem. Relasi antar entitas disajikan dengan penjelasan kardinalitas (seperti *One-to-Many* / *One-to-One*) beserta label dalam bahasa Indonesia.
 
 ## Entity Relationship Diagram
 
 ```mermaid
 erDiagram
-    USERS ||--o{ TRANSACTIONS : "makes"
-    MOTORS ||--o{ TRANSACTIONS : "is sold in"
-    TRANSACTIONS ||--o{ TRANSACTION_LOGS : "has"
-    TRANSACTIONS ||--o{ DOCUMENTS : "requires"
-    TRANSACTIONS ||--o| CREDIT_DETAILS : "has if credit"
-    CREDIT_DETAILS ||--o{ INSTALLMENTS : "has"
-    CREDIT_DETAILS ||--o{ SURVEY_SCHEDULES : "has"
-    USERS ||--o{ NOTIFICATIONS : "receives"
-    USERS ||--o{ SERVICE_APPOINTMENTS : "books"
+    USERS ||--o{ TRANSACTIONS : "One-to-Many (Melakukan/Membuat)"
+    MOTORS ||--o{ TRANSACTIONS : "One-to-Many (Terjual dalam)"
+    TRANSACTIONS ||--o{ TRANSACTION_LOGS : "One-to-Many (Tercatat dalam)"
+    TRANSACTIONS ||--o{ DOCUMENTS : "One-to-Many (Membutuhkan)"
+    TRANSACTIONS ||--o| CREDIT_DETAILS : "One-to-One (Memiliki riwayat kredit)"
+    CREDIT_DETAILS ||--o{ INSTALLMENTS : "One-to-Many (Memiliki angsuran)"
+    CREDIT_DETAILS ||--o{ SURVEY_SCHEDULES : "One-to-Many (Memiliki jadwal survei)"
+    USERS ||--o{ NOTIFICATIONS : "One-to-Many (Menerima)"
+    USERS ||--o{ SERVICE_APPOINTMENTS : "One-to-Many (Memesan)"
 
     USERS {
         bigint id PK
@@ -217,22 +217,34 @@ erDiagram
     }
 ```
 
-## Application Tables Summary
+## Detail Relasi & Penjelasan
 
-| Table | Columns | Purpose |
+| Entitas Utama | Entitas Terkait | Jenis Relasi | Keterangan / Sebutan Relasi |
+|:---|:---|:---|:---|
+| **Users** | `Transactions` | 1:N *(One to Many)* | Satu *User* dapat **Membeli/Memiliki** banyak *Transactions*. Sebaliknya, sebuah *Transaction* hanya dimiliki oleh satu *User*. |
+| **Users** | `Service_Appointments`| 1:N *(One to Many)* | Satu *User* dapat **Memesan** banyak riwayat *Service/Booking*. |
+| **Users** | `Notifications`| 1:N *(One to Many)* | Satu *User* **Menerima** banyak pemberitahuan (*Notifications*). |
+| **Motors** | `Transactions` | 1:N *(One to Many)* | Tipe/model *Motor* tertentu dapat **Terjual Dalam** banyak transaksi oleh *User* yang berbeda. |
+| **Transactions** | `Credit_Details`| 1:1 *(One to One)* | Sebuah transaksi kredit **Hanya Memiliki** maksimal 1 entitas *Credit Detail*. Transaksi tunai (*cash*) memiliki nol (*zero*). |
+| **Transactions** | `Documents`| 1:N *(One to Many)* | Sebuah transaksi (terutama kredit) **Membutuhkan** banyak verifikasi *Documents* (KTP, KK, Bukti Penghasilan). |
+| **Transactions** | `Transaction_Logs`| 1:N *(One to Many)* | Tiap transaksi akan **Tertulis Dalam** berbagai log pelacakan perubahan status administrasi per harinya. |
+| **Credit_Details** | `Installments` | 1:N *(One to Many)* | Informasi kredit akan **Memiliki** sekian daftar cicilan per bulan. (Satu *Credit Detail* menelurkan 12-36 *Installments*). |
+| **Credit_Details** | `Survey_Schedules`| 1:N *(One to Many)* | *Credit Detail* dapat **Mengagendakan** banyak jadwal pengajuan survei jika misal survei gagal/direschedule ulang. |
+
+## Rangkuman Tabel Aktif Aplikasi
+
+| Tabel MySQL | Total Kolom | Fungsi Utama |
 |:---|:---:|:---|
-| `users` | 16 | Unified User & Profile Data |
-| `motors` | 13 | Motorcycle Catalog & Stock Status |
-| `transactions` | 28 | Core Sales Records (Cash/Credit) |
-| `credit_details` | 19 | Leasing & Approval Workflow |
-| [installments](file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php#106-113) | 21 | Payment Tracking & Deadlines |
-| `documents` | 15 | Identity Files & Verification |
-| `transaction_logs` | 12 | Audit Trail for Status Changes |
-| `survey_schedules` | 21 | Survey Coordination Detail |
-| `settings` | 8 | Global System Configuration |
-| `notifications` | 8 | User Alert System |
-| `service_appointments` | 17 | Service Booking & Queue |
+| `users` | 13 | Data terpadu hak akses, akun, & detil pribadi pelanggan |
+| `motors` | 13 | Katalog unit sepeda motor dari DB (*Brand*, JSON *Colors*, Minimum DP, dll) |
+| `transactions` | 28 | Tabel induk catatan pembelian inti (Mendukung Pembayaran *Cash* / *Kredit*) |
+| `credit_details` | 19 | Lanjutan *Transactions*, melacak pencairan *Leasing* & alur survei khusus cicilan |
+| `installments` | 20 | Catatan individual tenggat waktu pembayaran dan histori penalti denda |
+| `documents` | 14 | Lemari arsip file KYC pendukung proses verifikasi pembelian motor |
+| `transaction_logs` | 12 | Sistem pencatatan jejak perubahan (*Audit Trail*) pergantian rute status pemesanan |
+| `survey_schedules` | 15 | Koordinasi tatap muka jadwal pengecekan kelayakan antara *Surveyor* dan akun *User* |
+| `settings` | 8 | Parameter sistem global dinamis seperti (*Site Name*, Alamat, Jam Operasional) |
+| `notifications` | 8 | Fitur penyiaran sistem berbasis riwayat acara (Disematkan ke ID Pengguna terkait) |
+| `service_appointments` | 17 | Sistem reservasi modul purna jual *Booking* rawat motor, *budgeting* keluhan, & kuota |
 
-**Total Application Tables:** 11
-
-*Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*
+*Catatan: Tabel infrastruktur dasar Laravel (seperti basis migrasi, singgahan cache, antrian job, sesi riwayat, dan basis token sandi/akses personal) ditiadakan dari ERD (*Entity Relationship Diagram*) ini demi fokus penyederhanaan dokumentasi ke logika bisnis produk.*
