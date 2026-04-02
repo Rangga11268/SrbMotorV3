@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
-import { ChevronRight, Calendar, PenTool, CheckCircle, Clock, XCircle, AlertCircle, ArrowLeft } from "lucide-react";
+import { ChevronRight, Calendar, PenTool, CheckCircle, Clock, XCircle, AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
 
 export default function History({ appointments }) {
     const { auth } = usePage().props;
@@ -20,30 +20,56 @@ export default function History({ appointments }) {
     return (
         <PublicLayout auth={auth} title="Riwayat Servis - SRB Motor">
             <div className="flex-grow pt-28 bg-white min-h-screen">
-                <section className="bg-black text-white pt-6 pb-16 border-b border-gray-800">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1c69d4]">
-                                <Link href="/" className="hover:text-white transition-colors">HOME</Link>
-                                <ChevronRight className="w-3 h-3 text-gray-600" />
-                                <span className="text-gray-400">RIWAYAT SERVIS</span>
-                            </nav>
-                        <div className="flex justify-between items-end">
-                            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
-                                CATATAN <span className="text-[#1c69d4]">PERAWATAN</span>
-                            </h1>
-                            <Link href={route('services.create')} className="px-6 py-3 bg-[#1c69d4] hover:bg-white text-white hover:text-black font-black uppercase tracking-widest text-[11px] transition-colors rounded-none">
-                                BUAT RESERVASI BARU
-                            </Link>
+                <section className="bg-black text-white pt-12 pb-24 border-b border-gray-800 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[#1c69d4] blur-[150px] opacity-10 rounded-full pointer-events-none transform -translate-y-12 scale-150"></div>
+                    
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1c69d4] mb-8">
+                            <Link href="/" className="hover:text-white transition-colors">HOME</Link>
+                            <ChevronRight className="w-3 h-3 text-gray-600" />
+                            <span className="text-gray-400">RIWAYAT SERVIS</span>
+                        </nav>
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                            <div className="space-y-4">
+                                <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                                    CATATAN <br className="hidden md:block"/>
+                                    <span className="text-[#1c69d4]">PERAWATAN</span>
+                                </h1>
+                                <p className="text-gray-400 text-sm max-w-xl font-medium tracking-wide">
+                                    Pantau jadwal rawat jalan dan rekam jejak servis kendaraan Anda di bengkel resmi SRB Motor.
+                                </p>
+                            </div>
+                            
+                            <div className="flex items-center gap-4 bg-gray-900 border border-gray-800 p-6 rounded-none">
+                                <div className="text-right flex flex-col justify-between h-full">
+                                    <p className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+                                        {appointments.data.length > 0 ? `${appointments.data.length} AGENDA` : "TIDAK AKTIF"}
+                                    </p>
+                                    <Link href={route('services.create')} className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1c69d4] hover:bg-white text-white hover:text-black font-black uppercase tracking-widest text-[11px] transition-colors rounded-none whitespace-nowrap border border-[#1c69d4] hover:border-white">
+                                        <ArrowRight className="w-4 h-4" />
+                                        BUAT RESERVASI
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {appointments.data.length === 0 ? (
-                        <div className="text-center py-24 bg-gray-50 border border-gray-200 p-12">
-                            <PenTool className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                            <h3 className="text-2xl font-black uppercase tracking-tight text-black mb-2">TIDAK ADA DATA</h3>
-                            <p className="text-gray-500 font-light text-sm">Anda belum memiliki riwayat servis atau reservasi aktif.</p>
+                        <div className="text-center py-32 bg-gray-50 border border-gray-200">
+                            <div className="w-24 h-24 bg-white border border-gray-200 flex items-center justify-center text-gray-300 mx-auto mb-8 rounded-none">
+                                <PenTool className="w-10 h-10" />
+                            </div>
+                            <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-black mb-4">TIDAK ADA DATA</h3>
+                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mb-8">Anda belum memiliki riwayat servis atau reservasi aktif.</p>
+                            
+                            <Link href={route('services.create')} className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white hover:bg-transparent hover:text-black hover:border-black border border-transparent font-black uppercase tracking-widest text-[11px] transition-colors rounded-none mx-auto">
+                                AJUKAN SERVIS SEKARANG <ArrowRight className="w-4 h-4" />
+                            </Link>
                         </div>
                     ) : (
                         <div className="space-y-4">

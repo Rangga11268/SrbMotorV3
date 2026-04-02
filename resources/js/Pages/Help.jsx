@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export default function Help() {
-    const { auth } = usePage().props;
+    const { auth, settings } = usePage().props;
     const [searchQuery, setSearchQuery] = useState("");
     const [openFaq, setOpenFaq] = useState(null);
 
@@ -57,7 +57,7 @@ export default function Help() {
             icon: <Phone size={24} />,
             title: "TELEPON LANGSUNG",
             desc: "Layanan respons cepat untuk situasi urgensi.",
-            value: "+62 897-8638-849",
+            value: settings?.contact_phone || "+62 897-8638-849",
             bg: "bg-white",
             text: "text-black",
             descClass: "text-gray-500",
@@ -68,7 +68,7 @@ export default function Help() {
             icon: <MessageSquare size={24} />,
             title: "CHAT WHATSAPP",
             desc: "Jalur komunikasi utama tim representatif kami.",
-            value: "Klik untuk Memulai Percakapan",
+            value: settings?.contact_whatsapp ? `+${settings.contact_whatsapp}` : "Klik untuk Memulai Percakapan",
             bg: "bg-black",
             text: "text-white",
             descClass: "text-gray-400",
@@ -79,7 +79,7 @@ export default function Help() {
             icon: <Mail size={24} />,
             title: "EMAIL KORPORAT",
             desc: "Untuk keperluan B2B, legal, dan kerja sama.",
-            value: "support@srbmotor.com",
+            value: settings?.contact_email || "support@srbmotor.com",
             bg: "bg-[#1c69d4]",
             text: "text-white",
             descClass: "text-blue-100",
@@ -248,10 +248,8 @@ export default function Help() {
                                         <MapPin className="w-6 h-6 text-[#1c69d4] flex-shrink-0" />
                                         <div>
                                             <p className="font-bold text-[11px] uppercase tracking-widest text-[#1c69d4] mb-1">ALAMAT SHOWROOM</p>
-                                            <p className="font-light text-gray-300 leading-relaxed uppercase">
-                                                Jalan Raya Utama No. 12<br />
-                                                Bekasi Selatan, Jawa Barat<br />
-                                                17144
+                                            <p className="font-light text-gray-300 leading-relaxed uppercase break-words">
+                                                {settings?.contact_address || "Jalan Raya Utama No. 12, Bekasi Selatan, Jawa Barat 17144"}
                                             </p>
                                         </div>
                                     </div>
@@ -260,8 +258,26 @@ export default function Help() {
                                         <div>
                                             <p className="font-bold text-[11px] uppercase tracking-widest text-[#1c69d4] mb-1">JAM OPERASIONAL</p>
                                             <p className="font-light text-gray-300 uppercase">
-                                                SENIN - SABTU : 08.00 - 17.00<br />
-                                                MINGGU / HARI BESAR : TUTUP
+                                                {settings?.business_hours ? (
+                                                    (() => {
+                                                        try {
+                                                            const hours = JSON.parse(settings.business_hours);
+                                                            return (
+                                                                <>
+                                                                    SENIN - SABTU : {hours.monday || "08.00 - 17.00"} <br/>
+                                                                    MINGGU / HARI BESAR : {hours.sunday || "TUTUP"}
+                                                                </>
+                                                            );
+                                                        } catch(e) {
+                                                            return "SENIN - SABTU : 08.00 - 17.00";
+                                                        }
+                                                    })()
+                                                ) : (
+                                                    <>
+                                                        SENIN - SABTU : 08.00 - 17.00<br />
+                                                        MINGGU / HARI BESAR : TUTUP
+                                                    </>
+                                                )}
                                             </p>
                                         </div>
                                     </div>
