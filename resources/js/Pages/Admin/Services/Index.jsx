@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { useForm, router } from "@inertiajs/react";
+import Swal from "sweetalert2";
 import {
     CCard,
     CCardBody,
@@ -50,6 +51,23 @@ export default function ServicesIndex({ appointments }) {
             onSuccess: () => {
                 setVisible(false);
                 reset();
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Status reservasi servis telah diperbarui.',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    borderRadius: '0px'
+                });
+            },
+            onError: () => {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan saat memperbarui status.',
+                    icon: 'error',
+                    confirmButtonColor: '#1c69d4',
+                    borderRadius: '0px'
+                });
             }
         });
     };

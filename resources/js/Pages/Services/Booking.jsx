@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
+import Swal from "sweetalert2";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -55,7 +55,17 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('services.store'));
+        post(route('services.store'), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Booking Berhasil!',
+                    text: 'Jadwal servis Anda telah terdaftar. Silakan cek riwayat servis untuk detailnya.',
+                    icon: 'success',
+                    confirmButtonColor: '#1c69d4',
+                    borderRadius: '0px'
+                });
+            }
+        });
     };
 
     // Calculate next 14 days

@@ -1,5 +1,5 @@
-import React from "react";
 import { Link, usePage, router } from "@inertiajs/react";
+import Swal from "sweetalert2";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { ChevronRight, Calendar, PenTool, CheckCircle, Clock, XCircle, AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -116,9 +116,36 @@ export default function History({ appointments }) {
                                                 {(app.status === 'pending' || app.status === 'confirmed') && new Date(app.service_date) >= new Date(new Date().setHours(0,0,0,0)) && (
                                                     <button 
                                                         onClick={() => {
-                                                            if (confirm("Apakah Anda yakin ingin membatalkan jadwal reservasi servis ini?")) {
-                                                                router.post(route('services.cancel', app.id));
-                                                            }
+                                                            Swal.fire({
+                                                                title: 'Batal Servis?',
+                                                                text: "Mohon berikan alasan pembatalan (opsional):",
+                                                                icon: 'warning',
+                                                                input: 'textarea',
+                                                                inputPlaceholder: 'Contoh: Ada keperluan mendadak...',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#1c69d4',
+                                                                cancelButtonColor: '#d33',
+                                                                confirmButtonText: 'YA, BATALKAN',
+                                                                cancelButtonText: 'TIDAK',
+                                                                background: '#fff',
+                                                                borderRadius: '0px'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    router.post(route('services.cancel', app.id), {
+                                                                        reason: result.value || 'Dibatalkan secara mandiri oleh pelanggan.'
+                                                                    }, {
+                                                                        onSuccess: () => {
+                                                                            Swal.fire({
+                                                                                title: 'Dibatalkan',
+                                                                                text: 'Reservasi Anda telah berhasil dibatalkan.',
+                                                                                icon: 'success',
+                                                                                borderRadius: '0px',
+                                                                                confirmButtonColor: '#1c69d4',
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
                                                         }}
                                                         className="text-[10px] uppercase font-bold text-red-500 hover:text-red-700 tracking-widest transition-colors mt-2"
                                                     >

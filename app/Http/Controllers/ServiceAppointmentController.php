@@ -267,7 +267,7 @@ class ServiceAppointmentController extends Controller
     /**
      * User: Cancel appointment
      */
-    public function cancelUser(ServiceAppointment $appointment)
+    public function cancelUser(Request $request, ServiceAppointment $appointment)
     {
         // Must belong to user
         if ($appointment->user_id !== Auth::id()) {
@@ -289,7 +289,7 @@ class ServiceAppointmentController extends Controller
         $appointment->update([
             'status' => 'cancelled',
             'cancelled_by' => 'user',
-            'cancel_reason' => 'Dibatalkan langsung secara mandiri oleh pelanggan melalui sistem.',
+            'cancel_reason' => $request->input('reason', 'Dibatalkan langsung secara mandiri oleh pelanggan melalui sistem.'),
         ]);
 
         return back()->with('success', 'Reservasi servis berhasil dibatalkan.');
