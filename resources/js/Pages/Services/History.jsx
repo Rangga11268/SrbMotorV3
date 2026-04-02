@@ -89,9 +89,10 @@ export default function History({ appointments }) {
 
                                             {/* Jadwal */}
                                             <div className="col-span-1">
-                                                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">JADWAL</p>
+                                                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">JADWAL & LOKASI</p>
                                                 <h4 className="text-lg font-black text-black uppercase tracking-tight">{new Date(app.service_date).toLocaleDateString("id-ID")}</h4>
-                                                <p className="text-sm font-bold text-gray-600 uppercase">{app.service_time}</p>
+                                                <p className="text-sm font-bold text-gray-600 uppercase mb-1">{app.service_time}</p>
+                                                <p className="text-[10px] font-black text-[#1c69d4] uppercase tracking-widest">{app.branch}</p>
                                             </div>
 
                                             {/* Estimasi / KM */}

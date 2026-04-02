@@ -11,6 +11,7 @@ export default function Booking({ user }) {
     const [isLoadingDates, setIsLoadingDates] = useState(true);
 
     const { data, setData, post, processing, errors, reset } = useForm({
+        branch: "",
         customer_name: user?.name || "",
         customer_phone: user?.phone_number || "",
         motor_brand: "",
@@ -22,6 +23,14 @@ export default function Booking({ user }) {
         service_type: "Servis Berkala",
         complaint_notes: "",
     });
+
+    const ssmBranches = [
+        "SSM JATIASIH (BEKASI)",
+        "SSM MEKAR SARI (BEKASI)",
+        "SSM DEPOK (DEPOK)",
+        "SSM BOGOR (BOGOR)",
+        "SSM TANGERANG (TANGERANG)",
+    ];
 
     useEffect(() => {
         axios.get(route('api.services.unavailable-dates'))
@@ -85,7 +94,18 @@ export default function Booking({ user }) {
                                         <div className="w-8 h-1 bg-black"></div>
                                         <h2 className="text-2xl font-black uppercase tracking-tight">IDENTITAS KENDARAAN</h2>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-300 border border-gray-300">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-300 border border-gray-300">
+                                        <div className="bg-white p-6 md:col-span-2">
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Pilih Cabang Servis</label>
+                                            <select value={data.branch} onChange={e => setData('branch', e.target.value)} required
+                                                className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs">
+                                                <option value="">PILIH LOKASI BENGKEL</option>
+                                                {ssmBranches.map(branch => (
+                                                    <option key={branch} value={branch}>{branch}</option>
+                                                ))}
+                                            </select>
+                                            {errors.branch && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.branch}</span>}
+                                        </div>
                                         <div className="bg-white p-6">
                                             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Nama Pelanggan</label>
                                             <input type="text" value={data.customer_name} onChange={e => setData('customer_name', e.target.value)} required

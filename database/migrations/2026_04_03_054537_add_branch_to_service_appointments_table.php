@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('posts');
-        Schema::dropIfExists('news');
-        Schema::dropIfExists('categories');
+        Schema::table('service_appointments', function (Blueprint $table) {
+            $table->string('branch')->nullable()->after('user_id');
+        });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        // Don't recreate as they are being removed from the system permanently
+        Schema::table('service_appointments', function (Blueprint $table) {
+            $table->dropColumn('branch');
+        });
     }
 };

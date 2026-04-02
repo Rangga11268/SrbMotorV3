@@ -11,6 +11,7 @@ class ServiceAppointment extends Model
 
     protected $fillable = [
         'user_id',
+        'branch',
         'customer_name',
         'customer_phone',
         'motor_brand',

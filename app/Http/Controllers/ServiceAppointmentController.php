@@ -47,6 +47,7 @@ class ServiceAppointmentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'branch' => 'required|string|max:100',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'motor_brand' => 'required|string|max:100',
@@ -80,6 +81,7 @@ class ServiceAppointmentController extends Controller
         $adminPhone = config('services.fonnte.admin_phone');
         if ($adminPhone) {
             $message = "*[ADMIN] Booking Servis Baru*\n\n" .
+                "Cabang: {$appointment->branch}\n" .
                 "Pelanggan: {$appointment->customer_name}\n" .
                 "Unit: {$appointment->motor_brand} {$appointment->motor_type}\n" .
                 "Plat: {$appointment->license_plate}\n" .
@@ -92,7 +94,7 @@ class ServiceAppointmentController extends Controller
 
         // 3. Notify User via WhatsApp
         $userMsg = "Halo {$appointment->customer_name},\n\n" .
-            "Terima kasih! Booking servis Anda (#{$appointment->id}) untuk motor *{$appointment->motor_brand} {$appointment->motor_type}* telah kami terima.\n\n" .
+            "Terima kasih! Booking servis Anda (#{$appointment->id}) di cabang *{$appointment->branch}* untuk motor *{$appointment->motor_brand} {$appointment->motor_type}* telah kami terima.\n\n" .
             "Jadwal: " . Carbon::parse($appointment->service_date)->format('d M Y') . " jam {$appointment->service_time}.\n\n" .
             "Silakan datang tepat waktu sesuai jadwal. Antrean Anda akan diverifikasi oleh tim kami. — SRB Motor (Powered by SSM)";
         WhatsAppService::sendMessage($appointment->customer_phone, $userMsg);

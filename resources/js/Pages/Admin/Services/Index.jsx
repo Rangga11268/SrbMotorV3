@@ -104,6 +104,7 @@ export default function ServicesIndex({ appointments }) {
                                         <CTableDataCell>
                                             <div className="fw-bold">{app.customer_name}</div>
                                             <div className="small text-secondary">{app.customer_phone}</div>
+                                            <div className="small text-primary fw-bold mt-1">{app.branch}</div>
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <div className="fw-semibold text-primary">{app.license_plate}</div>
@@ -141,7 +142,7 @@ export default function ServicesIndex({ appointments }) {
                         <div className="mb-4 p-3 bg-light rounded text-sm">
                             <div className="row mb-2">
                                 <div className="col-4 fw-bold text-secondary">Pelanggan</div>
-                                <div className="col-8">{selectedService.customer_name} ({selectedService.customer_phone})</div>
+                                <div className="col-8">{selectedService.customer_name} ({selectedService.customer_phone}) - <span className="text-primary">{selectedService.branch}</span></div>
                             </div>
                             <div className="row mb-2">
                                 <div className="col-4 fw-bold text-secondary">Keluhan</div>
