@@ -409,44 +409,89 @@ export default function TransactionDetail({ transaction }) {
                                 </div>
 
                                 {isCreditOrder ? (
-                                    <div className="space-y-8">
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-200 border border-gray-200">
-                                            <div className="bg-white p-8">
-                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">LEMBAGA PEMBIAYAAN</p>
-                                                <p className="font-bold text-black uppercase">{transaction.creditDetail.leasing_provider?.name || "DALAM PROSES"}</p>
+                                    <div className="space-y-0 border border-gray-200 overflow-hidden">
+                                        {/* CREDIT — Dark Header Bar */}
+                                        <div className="bg-black px-10 py-6 flex items-center gap-4">
+                                            <div className="w-2 h-6 bg-[#1c69d4]"></div>
+                                            <p className="text-[10px] font-black text-gray-300 tracking-[0.3em] uppercase">DETAIL PEMBIAYAAN KREDIT</p>
+                                        </div>
+
+                                        {/* Key Metrics Grid */}
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-100">
+                                            <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">UANG MUKA (DP)</p>
+                                                <p className="text-2xl font-black text-[#1c69d4] tracking-tighter">{formatCurrency(transaction.creditDetail.down_payment)}</p>
                                             </div>
-                                            <div className="bg-white p-8">
-                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">UANG MUKA (DP)</p>
-                                                <p className="text-xl font-black text-[#1c69d4]">{formatCurrency(transaction.creditDetail.down_payment)}</p>
+                                            <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">ANGSURAN / BULAN</p>
+                                                <p className="text-2xl font-black text-black tracking-tighter">{formatCurrency(transaction.creditDetail.monthly_installment)}</p>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">{transaction.creditDetail.tenor} BULAN</p>
                                             </div>
-                                            <div className="bg-white p-8">
-                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">ANGSURAN / BULAN</p>
-                                                <p className="text-xl font-black text-black">{formatCurrency(transaction.creditDetail.monthly_installment)}</p>
-                                                <p className="text-[10px] font-bold text-gray-500 mt-1 uppercase tracking-widest">TENOR {transaction.creditDetail.tenor} BULAN</p>
+                                            <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">TENOR</p>
+                                                <p className="text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.tenor}</p>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">BULAN</p>
+                                            </div>
+                                            <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">LEASING</p>
+                                                <p className="text-sm font-black text-black uppercase tracking-tight leading-tight">{transaction.creditDetail.leasing_provider?.name || "DALAM PROSES"}</p>
                                             </div>
                                         </div>
-                                        
-                                        {/* Status Display Component */}
-                                        <div className="bg-gray-50 border border-gray-200 p-8 sm:p-12">
+
+                                        {/* Secondary Info Grid */}
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-100">
+                                            <div className="bg-gray-50 px-8 py-6">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-2">POKOK PEMBIAYAAN</p>
+                                                <p className="text-lg font-black text-black tracking-tighter">
+                                                    {formatCurrency((transaction.motor.price || 0) - (transaction.creditDetail.down_payment || 0))}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-50 px-8 py-6">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-2">TOTAL PEMBIAYAAN</p>
+                                                <p className="text-lg font-black text-black tracking-tighter">
+                                                    {formatCurrency((transaction.creditDetail.monthly_installment || 0) * (transaction.creditDetail.tenor || 0))}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-50 px-8 py-6">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-2">BUNGA FLAT</p>
+                                                <p className="text-lg font-black text-black tracking-tighter">
+                                                    {transaction.creditDetail.interest_rate ? `${transaction.creditDetail.interest_rate}%` : "1.5% / BULAN"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Credit Status Display */}
+                                        <div className="bg-white border-t border-gray-100 p-8 sm:p-12">
+                                            <p className="text-[10px] font-black text-gray-400 tracking-[0.3em] uppercase mb-8">STATUS PROSES KREDIT</p>
                                             <CreditStatusDisplay credit={transaction.creditDetail} showSurvey={false} />
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="space-y-8">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 border border-gray-200">
-                                            <div className="bg-white p-8">
-                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">TOTAL PEMBAYARAN</p>
-                                                <p className="text-3xl font-black text-black">{formatCurrency(transaction.total_price)}</p>
+                                    <div className="space-y-0 border border-gray-200 overflow-hidden">
+                                        {/* CASH — Dark Header Bar */}
+                                        <div className="bg-black px-10 py-6 flex items-center gap-4">
+                                            <div className="w-2 h-6 bg-[#1c69d4]"></div>
+                                            <p className="text-[10px] font-black text-gray-300 tracking-[0.3em] uppercase">DETAIL PEMBAYARAN TUNAI</p>
+                                        </div>
+
+                                        {/* Key Metrics Grid */}
+                                        <div className="grid grid-cols-2 gap-px bg-gray-100">
+                                            <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">TOTAL PEMBAYARAN</p>
+                                                <p className="text-3xl font-black text-black tracking-tighter">{formatCurrency(transaction.total_price)}</p>
                                             </div>
-                                            <div className="bg-white p-8">
-                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">BOOKING FEE</p>
-                                                <p className="text-3xl font-black text-[#1c69d4] group">
+                                            <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">BOOKING FEE</p>
+                                                <p className="text-3xl font-black text-[#1c69d4] tracking-tighter">
                                                     {formatCurrency(transaction.booking_fee || 0)}
-                                                    <span className="block text-[8px] mt-1 text-gray-400 font-bold tracking-[0.2em] uppercase italic">SDH TERMASUK DALAM TOTAL HARGA</span>
                                                 </p>
+                                                <p className="text-[8px] font-bold text-gray-400 tracking-widest uppercase mt-2">SUDAH TERMASUK TOTAL</p>
                                             </div>
                                         </div>
-                                        <div className="bg-gray-50 border border-gray-200 p-8 sm:p-12">
+
+                                        {/* Cash Status */}
+                                        <div className="bg-white border-t border-gray-100 p-8 sm:p-12">
+                                            <p className="text-[10px] font-black text-gray-400 tracking-[0.3em] uppercase mb-8">STATUS PROSES PEMBAYARAN</p>
                                             <CashStatusDisplay transaction={transaction} />
                                         </div>
                                     </div>
