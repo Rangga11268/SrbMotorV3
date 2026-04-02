@@ -8,10 +8,11 @@ import {
     PartyPopper,
     AlertCircle,
     Activity,
-    FileText,
+    FileType,
     Info,
     Fingerprint,
-    Cpu
+    Cpu,
+    XCircle
 } from "lucide-react";
 
 export default function CashStatusDisplay({ transaction }) {

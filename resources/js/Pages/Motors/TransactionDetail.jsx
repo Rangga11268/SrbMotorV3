@@ -19,6 +19,7 @@ import {
     ChevronDown,
     ChevronUp,
     XCircle,
+    ArrowRight,
 } from "lucide-react";
 
 export default function TransactionDetail({ transaction }) {
@@ -201,74 +202,100 @@ export default function TransactionDetail({ transaction }) {
     return (
         <PublicLayout title="Detail Transaksi">
             <div className="bg-slate-50 min-h-screen pt-[110px] sm:pt-32 pb-12">
-                {/* Modern Header */}
-                <div className="bg-black text-white rounded-none border-b border-black mb-8 pt-6 pb-12 px-4 relative overflow-hidden">
-                    {/* Decorative Blurs */}
+                {/* MODERN INDUSTRIAL HEADER */}
+                <header className="bg-black text-white pt-16 pb-24 border-b border-gray-800 relative overflow-hidden mb-16">
+                    <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
                     
-                    <div className="container mx-auto max-w-7xl relative z-10">
-                        {/* Back Button */}
+                    <div className="container mx-auto max-w-7xl px-4 relative z-10">
                         <Link
                             href={route("motors.user-transactions")}
-                            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-300 hover:text-black transition-colors hover:-translate-x-1 mb-6 bg-transparent hover:bg-white py-2 px-4 rounded-none border border-white w-fit"
+                            className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.2em] text-gray-400 hover:text-[#1c69d4] transition-all group uppercase mb-12"
                         >
-                            <ChevronLeft className="w-4 h-4" />
-                            Kembali ke Daftar Transaksi
+                            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            KEMBALI KE DAFTAR TRANSAKSI
                         </Link>
 
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
                             <div>
-                                <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">
-                                    Detail Transaksi
+                                <div className="flex items-center gap-4 mb-4">
+                                    <span className="bg-[#1c69d4] text-white px-3 py-1 text-[10px] font-black tracking-widest uppercase">
+                                        ORDER #{String(transaction.id).padStart(6, "0")}
+                                    </span>
+                                    <span className="text-gray-500 font-bold text-[10px] tracking-widest uppercase">
+                                        {new Date(transaction.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+                                    </span>
+                                </div>
+                                <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                                    DETAIL <span className="text-[#1c69d4]">TRANSAKSI</span>
                                 </h1>
-                                <p className="text-slate-400 font-medium">
-                                    Kelola dan pantau detail pesanan motor Anda.
-                                </p>
+                            </div>
+
+                            <div className="flex flex-col items-start md:items-end gap-3">
+                                <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase">STATUS PESANAN SAAT INI</p>
+                                <div className={`px-6 py-3 border-2 font-black text-xs tracking-[0.2em] uppercase rounded-none ${
+                                    getStatusColor(transaction.status) === "success" ? "bg-[#1c69d4]/10 border-[#1c69d4] text-[#1c69d4]" :
+                                    getStatusColor(transaction.status) === "warning" ? "bg-amber-500/10 border-amber-500 text-amber-500" :
+                                    getStatusColor(transaction.status) === "danger" ? "bg-red-500/10 border-red-500 text-red-500" :
+                                    "bg-gray-500/10 border-gray-500 text-gray-400"
+                                }`}>
+                                    {getStatusLabel(transaction.status)}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </header>
 
             <main className="container mx-auto px-4 max-w-7xl">
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-8 space-y-12">
                         {/* Header Card */}
                         <div className="bg-black rounded-none border border-black overflow-hidden relative">
                             {/* Decorative Blur */}
                             
-                            <div className="relative z-10 p-8 sm:p-10">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
-                                    <div>
-                                        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Order ID
-                                        </p>
-                                        <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                                            #{String(transaction.id).padStart(6, "0")}
-                                        </h1>
+                             <div className="relative z-10 p-8 sm:p-12">
+                                <div className="flex flex-col lg:flex-row justify-between gap-12">
+                                    <div className="flex-grow space-y-8">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                                            <div>
+                                                <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">
+                                                    ORDER IDENTIFICATION
+                                                </p>
+                                                <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tighter uppercase leading-none">
+                                                    #{String(transaction.id).padStart(6, "0")}
+                                                </h1>
+                                            </div>
+                                            <div className="shrink-0">
+                                                <div className={`px-6 py-3 border-2 font-black text-[10px] tracking-[0.2em] uppercase ${
+                                                    getStatusColor(transaction.status) === "success" ? "bg-[#1c69d4]/10 border-[#1c69d4] text-[#1c69d4]" :
+                                                    getStatusColor(transaction.status) === "warning" ? "bg-amber-500/10 border-amber-500 text-amber-500" :
+                                                    getStatusColor(transaction.status) === "danger" ? "bg-red-500/10 border-red-500 text-red-500" :
+                                                    "bg-white/5 border-white/20 text-white"
+                                                }`}>
+                                                    {getStatusLabel(transaction.status)}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2">UNIT YANG DIPESAN</p>
+                                            <p className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter leading-tight drop-shadow-lg">
+                                                {transaction.motor.name}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="shrink-0">
-                                        <span
-                                            className={`inline-flex items-center justify-center px-4 py-2 rounded-none font-bold text-[10px] uppercase tracking-widest border ${
-                                                getStatusColor(transaction.status) === "success"
-                                                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                                                    : getStatusColor(transaction.status) === "warning"
-                                                    ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                                                    : getStatusColor(transaction.status) === "danger"
-                                                    ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                                                    : "bg-slate-500/10 text-slate-300 border-slate-500/20"
-                                            }`}
-                                        >
-                                            {getStatusLabel(transaction.status)}
-                                        </span>
+
+                                    {/* FILLING THE GAPS: Large Motor Silhouette/Image */}
+                                    <div className="hidden lg:block w-72 h-44 relative shrink-0">
+                                        <div className="absolute inset-0 bg-[#1c69d4] opacity-20 blur-[60px] rounded-full"></div>
+                                        <img
+                                            src={`/storage/${transaction.motor.image_path}`}
+                                            alt={transaction.motor.name}
+                                            className="w-full h-full object-contain relative z-10 filter brightness-110 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                                        />
                                     </div>
-                                </div>
-                                
-                                <div>
-                                    <p className="text-sm font-medium text-slate-300 mb-1">Unit yang Dipesan</p>
-                                    <p className="text-2xl font-black text-white">
-                                        {transaction.motor.name}
-                                    </p>
                                 </div>
                             </div>
 
@@ -296,562 +323,296 @@ export default function TransactionDetail({ transaction }) {
                             </div>
                         </div>
 
-                        {/* Motor Details */}
-                        <div className="bg-white rounded-none border border-slate-300 p-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                                    <MapPin className="w-5 h-5" />
+                            {/* MOTOR PRODUCT SECTION */}
+                            <section>
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-1.5 h-8 bg-[#1c69d4]"></div>
+                                    <h2 className="text-2xl font-black uppercase tracking-tight">KENDARAAN YANG DIPESAN</h2>
                                 </div>
-                                <h2 className="text-xl font-black text-slate-900">
-                                    Rincian Unit Motor
-                                </h2>
-                            </div>
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div>
-                                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                        Merk
-                                    </p>
-                                    <p className="font-bold text-slate-900">
-                                        {transaction.motor.brand}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                        Model
-                                    </p>
-                                    <p className="font-bold text-slate-900">
-                                        {transaction.motor.model}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                        Tahun
-                                    </p>
-                                    <p className="font-bold text-slate-900">
-                                        {transaction.motor.year}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                        Warna
-                                    </p>
-                                    <p className="font-bold text-slate-900">
-                                        {transaction.motor_color || "Belum dipilih"}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="mt-6 pt-6 border-t border-slate-100">
-                                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                    Harga OTR
-                                </p>
-                                <p className="text-2xl font-black text-primary">
-                                    {formatCurrency(transaction.motor.price)}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Credit Details */}
-                        {isCreditOrder && (
-                            <div className="bg-white rounded-none border border-slate-300 p-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
-                                        <DollarSign className="w-5 h-5" />
+                                
+                                <div className="bg-gray-50 border border-gray-200 p-8 sm:p-12 flex flex-col md:flex-row gap-12 items-center">
+                                    <div className="w-full md:w-1/2 aspect-video bg-white border border-gray-200 p-6 flex items-center justify-center relative shadow-sm group">
+                                        <img
+                                            src={`/storage/${transaction.motor.image_path}`}
+                                            alt={transaction.motor.name}
+                                            className="max-w-full max-h-full object-contain filter drop-shadow-2xl group-hover:scale-105 transition-transform duration-700"
+                                        />
+                                        <div className="absolute bottom-4 right-4 bg-black text-white px-3 py-1 text-[9px] font-black tracking-widest uppercase">
+                                            {transaction.motor.year} MODEL
+                                        </div>
                                     </div>
-                                    <h2 className="text-xl font-black text-slate-900">
-                                        Rincian Kredit
+                                    
+                                    <div className="w-full md:w-1/2 space-y-6">
+                                        <div>
+                                            <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase mb-1">UNIT PEMESANAN</p>
+                                            <h3 className="text-3xl font-black text-black uppercase tracking-tighter leading-tight">
+                                                {transaction.motor.name}
+                                            </h3>
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200">
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-1">BRAND</p>
+                                                <p className="text-sm font-bold uppercase">{transaction.motor.brand}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-1">VARIAN WARNA</p>
+                                                <p className="text-sm font-bold uppercase text-[#1c69d4]">{transaction.motor_color || "STANDARD"}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="pt-6">
+                                            <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase mb-1">NILAI KENDARAAN (OTR)</p>
+                                            <p className="text-3xl font-black text-black">
+                                                {formatCurrency(transaction.motor.price)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* CUSTOMER INFORMATION SECTION */}
+                            <section>
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-1.5 h-8 bg-black"></div>
+                                    <h2 className="text-2xl font-black uppercase tracking-tight">INFORMASI PELANGGAN</h2>
+                                </div>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 border border-gray-200 shadow-xl">
+                                    {[
+                                        { label: "NAMA LENGKAP (SESUAI KTP)", value: transaction.name || transaction.user?.name },
+                                        { label: "NIK KEPENDUDUKAN", value: transaction.nik || "TIDAK TERSEDIA" },
+                                        { label: "NOMOR WHATSAPP", value: transaction.phone || "TIDAK TERSEDIA" },
+                                        { label: "PEKERJAAN", value: transaction.occupation || "TIDAK TERSEDIA" }
+                                    ].map((item, i) => (
+                                        <div key={i} className="bg-white p-8">
+                                            <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">{item.label}</p>
+                                            <p className="font-bold text-black uppercase tracking-tight">{item.value}</p>
+                                        </div>
+                                    ))}
+                                    <div className="bg-white p-8 md:col-span-2 border-t border-gray-100">
+                                        <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">ALAMAT PENGIRIMAN / DOMISILI</p>
+                                        <p className="font-bold text-black uppercase tracking-tight leading-relaxed">
+                                            {transaction.address || "ALAMAT BELUM DILENGKAPI"}
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* TRANSACTION DETAILS SECTION (CASH/CREDIT) */}
+                            <section>
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-1.5 h-8 bg-[#1c69d4]"></div>
+                                    <h2 className="text-2xl font-black uppercase tracking-tight">
+                                        RINCIAN {transaction.transaction_type}
                                     </h2>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-8">
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Lembaga
-                                        </p>
-                                        <p className="font-bold text-slate-900">
-                                            {transaction.creditDetail.leasing_provider?.name || "Belum ditentukan"}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Referensi
-                                        </p>
-                                        <p className="font-bold text-slate-900">
-                                            {transaction.creditDetail.reference_number || "-"}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Deposit (DP)
-                                        </p>
-                                        <p className="font-bold text-slate-900">
-                                            {formatCurrency(transaction.creditDetail.down_payment)}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Tenor
-                                        </p>
-                                        <p className="font-bold text-slate-900">
-                                            {transaction.creditDetail.tenor} Bulan
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Bunga
-                                        </p>
-                                        <p className="font-bold text-slate-900">
-                                            {transaction.creditDetail.interest_rate}% / Bln
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5">
-                                            Angsuran
-                                        </p>
-                                        <p className="font-bold text-slate-900">
-                                            {formatCurrency(transaction.creditDetail.monthly_installment)}
-                                        </p>
-                                    </div>
-                                </div>
 
-                                <div className="bg-gray-100 rounded-none p-6 border border-gray-300 mb-8">
-                                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-                                        <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">
-                                            Estimasi Total Keseluruhan
-                                        </span>
-                                        <p className="text-2xl font-black text-blue-600">
-                                            {formatCurrency(
-                                                parseFloat(transaction.creditDetail.down_payment || 0) +
-                                                (parseFloat(transaction.creditDetail.monthly_installment || 0) * parseInt(transaction.creditDetail.tenor || 0))
-                                            )}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Status Display */}
                                 {isCreditOrder ? (
-                                    <CreditStatusDisplay
-                                        credit={transaction.creditDetail}
-                                        showSurvey={false}
-                                    />
-                                ) : (
-                                    <CashStatusDisplay
-                                        transaction={transaction}
-                                    />
-                                )}
-                            </div>
-                        )}
-
-                        {/* Customer Information */}
-                        <div className="bg-white rounded-none border border-slate-300 p-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                                    <User className="w-5 h-5" />
-                                </div>
-                                <h2 className="text-xl font-black text-slate-900">
-                                    Informasi Pelanggan
-                                </h2>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="space-y-6">
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
-                                            Nama Lengkap (Sesuai KTP)
-                                        </p>
-                                        <p className="font-bold text-slate-900">{transaction.name || transaction.user?.name}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
-                                            NIK Kependudukan
-                                        </p>
-                                        <p className="font-bold text-slate-900">{transaction.nik || "-"}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
-                                            Nomor WhatsApp
-                                        </p>
-                                        <p className="font-bold text-slate-900">{transaction.phone || "-"}</p>
-                                    </div>
-                                </div>
-                                <div className="space-y-6">
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
-                                            Pekerjaan
-                                        </p>
-                                        <p className="font-bold text-slate-900">{transaction.occupation || "-"}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
-                                            Alamat Lengkap
-                                        </p>
-                                        <p className="font-bold text-slate-900 leading-relaxed max-w-sm">{transaction.address || "-"}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Survey Schedule */}
-                        {isCreditOrder && survey && (
-                            <div className="bg-white rounded-none border border-slate-300 p-8">
-                                <button
-                                    onClick={() =>
-                                        setExpandedSection(
-                                            expandedSection === "survey"
-                                                ? null
-                                                : "survey"
-                                        )
-                                    }
-                                    className="w-full flex justify-between items-center group mb-2"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
-                                            <Calendar className="w-5 h-5" />
-                                        </div>
-                                        <h2 className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">
-                                            Jadwal Survei
-                                        </h2>
-                                    </div>
-                                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-100 transition-colors">
-                                        {expandedSection === "survey" ? (
-                                            <ChevronUp className="w-5 h-5 transition-transform" />
-                                        ) : (
-                                            <ChevronDown className="w-5 h-5 transition-transform" />
-                                        )}
-                                    </div>
-                                </button>
-
-                                {expandedSection === "survey" && (
-                                    <div className="mt-6 pt-6 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                                                <Calendar className="w-3.5 h-3.5" /> Tanggal
-                                            </p>
-                                            <p className="font-bold text-slate-900">
-                                                {new Date(survey.scheduled_date).toLocaleDateString("id-ID", {
-                                                    weekday: "long",
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                })}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                                                <Clock className="w-3.5 h-3.5" /> Waktu
-                                            </p>
-                                            <p className="font-bold text-slate-900">
-                                                {survey.scheduled_time || "Belum ditentukan"}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                                                <User className="w-3.5 h-3.5" /> Surveyor
-                                            </p>
-                                            <p className="font-bold text-slate-900">
-                                                {survey.surveyor_name}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                                                <Phone className="w-3.5 h-3.5" /> No. WhatsApp
-                                            </p>
-                                            <p className="font-bold text-slate-900">
-                                                {survey.surveyor_phone || "Belum tersedia"}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Installments / Payments */}
-                        {transaction.installments &&
-                            transaction.installments.length > 0 && (
-                                <div className="bg-white rounded-none border border-slate-300 p-8">
-                                    <button
-                                        onClick={() =>
-                                            setExpandedSection(
-                                                expandedSection === "installments"
-                                                    ? null
-                                                    : "installments"
-                                            )
-                                        }
-                                        className="w-full flex justify-between items-center group mb-2"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
-                                                <DollarSign className="w-5 h-5" />
+                                    <div className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-200 border border-gray-200">
+                                            <div className="bg-white p-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">LEMBAGA PEMBIAYAAN</p>
+                                                <p className="font-bold text-black uppercase">{transaction.creditDetail.leasing_provider?.name || "DALAM PROSES"}</p>
                                             </div>
-                                            <h2 className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">
-                                                Riwayat Pembayaran ({transaction.installments.length})
-                                            </h2>
+                                            <div className="bg-white p-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">UANG MUKA (DP)</p>
+                                                <p className="text-xl font-black text-[#1c69d4]">{formatCurrency(transaction.creditDetail.down_payment)}</p>
+                                            </div>
+                                            <div className="bg-white p-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">ANGSURAN / BULAN</p>
+                                                <p className="text-xl font-black text-black">{formatCurrency(transaction.creditDetail.monthly_installment)}</p>
+                                                <p className="text-[10px] font-bold text-gray-500 mt-1 uppercase tracking-widest">TENOR {transaction.creditDetail.tenor} BULAN</p>
+                                            </div>
                                         </div>
-                                        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-100 transition-colors">
-                                            {expandedSection === "installments" ? (
-                                                <ChevronUp className="w-5 h-5 transition-transform" />
-                                            ) : (
-                                                <ChevronDown className="w-5 h-5 transition-transform" />
-                                            )}
+                                        
+                                        {/* Status Display Component */}
+                                        <div className="bg-gray-50 border border-gray-200 p-8 sm:p-12">
+                                            <CreditStatusDisplay credit={transaction.creditDetail} showSurvey={false} />
                                         </div>
-                                    </button>
-                                    {expandedSection === "installments" && (
-                                        <div className="mt-6 pt-6 border-t border-slate-100 space-y-3">
-                                            {transaction.installments.map((installment, idx) => (
-                                                <div
-                                                    key={installment.id}
-                                                    className={`p-5 rounded-none border transition-colors ${
-                                                        installment.status === "paid"
-                                                            ? "bg-emerald-50/50 border-emerald-100"
-                                                            : installment.status === "overdue"
-                                                            ? "bg-rose-50/50 border-rose-100"
-                                                            : "bg-slate-50 border-slate-100"
-                                                    }`}
-                                                >
-                                                    <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                                    </div>
+                                ) : (
+                                    <div className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 border border-gray-200">
+                                            <div className="bg-white p-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">TOTAL PEMBAYARAN</p>
+                                                <p className="text-3xl font-black text-black">{formatCurrency(transaction.total_price)}</p>
+                                            </div>
+                                            <div className="bg-white p-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">BOOKING FEE</p>
+                                                <p className="text-3xl font-black text-[#1c69d4] group">
+                                                    {formatCurrency(transaction.booking_fee || 0)}
+                                                    <span className="block text-[8px] mt-1 text-gray-400 font-bold tracking-[0.2em] uppercase italic">SDH TERMASUK DALAM TOTAL HARGA</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="bg-gray-50 border border-gray-200 p-8 sm:p-12">
+                                            <CashStatusDisplay transaction={transaction} />
+                                        </div>
+                                    </div>
+                                )}
+                            </section>
+
+
+
+                            {/* COLLAPSIBLE SECTIONS */}
+                            <div className="space-y-4">
+                                {isCreditOrder && survey && (
+                                    <details className="group border border-gray-200 bg-white" open={expandedSection === 'survey'}>
+                                        <summary className="flex justify-between items-center p-8 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                                            <div className="flex items-center gap-6">
+                                                <Calendar className="w-6 h-6 text-[#1c69d4]" />
+                                                <h3 className="text-lg font-black uppercase tracking-widest">JADWAL SURVAI LEASING</h3>
+                                            </div>
+                                            <ChevronDown className="w-5 h-5 group-open:rotate-180 transition-transform" />
+                                        </summary>
+                                        <div className="p-8 pt-0 grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-gray-100 mt-4">
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">WAKTU PELAKSANAAN</p>
+                                                <p className="font-bold text-black uppercase">
+                                                    {new Date(survey.scheduled_date).toLocaleDateString("id-ID", { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                                                    <span className="block text-gray-500 mt-1">{survey.scheduled_time || "JAM BELUM DITENTUKAN"}</span>
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">PETUGAS SURVAI (SURVEYOR)</p>
+                                                <p className="font-bold text-black uppercase">{survey.surveyor_name || "MENUNGGU PENUGASAN"}</p>
+                                                <p className="text-[#1c69d4] font-bold text-xs mt-1">{survey.surveyor_phone || "KONTAK BELUM TERSEDIA"}</p>
+                                            </div>
+                                        </div>
+                                    </details>
+                                )}
+
+                                {transaction.installments?.length > 0 && (
+                                    <details className="group border border-gray-200 bg-white" open={expandedSection === 'installments'}>
+                                        <summary className="flex justify-between items-center p-8 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                                            <div className="flex items-center gap-6">
+                                                <DollarSign className="w-6 h-6 text-[#1c69d4]" />
+                                                <h3 className="text-lg font-black uppercase tracking-widest">RIWAYAT PEMBAYARAN ({transaction.installments.length})</h3>
+                                            </div>
+                                            <ChevronDown className="w-5 h-5 group-open:rotate-180 transition-transform" />
+                                        </summary>
+                                        <div className="p-8 pt-0 border-t border-gray-100 mt-4">
+                                            <div className="space-y-4 pt-4">
+                                                {transaction.installments.map((installment) => (
+                                                    <div key={installment.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 bg-gray-50 border border-gray-100 group/item hover:bg-white hover:border-[#1c69d4] transition-all">
                                                         <div>
-                                                            <p className="font-black text-slate-900 mb-1">
-                                                                {installment.installment_number === 0
-                                                                    ? (transaction.transaction_type === "CASH" ? "Booking Fee" : "DP")
-                                                                    : `Angsuran Bulan ke-${installment.installment_number}`}
+                                                            <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase mb-1">
+                                                                {installment.installment_number === 0 ? (transaction.transaction_type === "CASH" ? "BOOKING FEE" : "UANG MUKA / DP") : `ANGSURAN KE-${installment.installment_number}`}
                                                             </p>
-                                                            <p className="text-xs font-medium text-slate-500 flex items-center gap-1.5">
-                                                                <Calendar className="w-3.5 h-3.5" />
-                                                                Tenggat: {new Date(installment.due_date).toLocaleDateString("id-ID", {
-                                                                    day: "numeric",
-                                                                    month: "long",
-                                                                    year: "numeric",
-                                                                })}
-                                                            </p>
+                                                            <p className="font-black text-lg uppercase tracking-tight">{formatCurrency(installment.amount)}</p>
                                                         </div>
-                                                        <div className="sm:text-right">
-                                                            <p className="font-black text-slate-900 text-lg">
-                                                                {formatCurrency(installment.amount)}
-                                                            </p>
-                                                            <span
-                                                                className={`inline-flex mt-2 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest ${
-                                                                    installment.status === "paid"
-                                                                        ? "bg-emerald-100 text-emerald-700"
-                                                                        : installment.status === "overdue"
-                                                                        ? "bg-rose-100 text-rose-700"
-                                                                        : "bg-amber-100 text-amber-700"
-                                                                }`}
-                                                            >
-                                                                {installment.status === "paid"
-                                                                    ? "Lunas"
-                                                                    : installment.status === "overdue"
-                                                                    ? "Tertunggak"
-                                                                    : "Ditinjau / Menunggu"}
+                                                        <div className="mt-4 sm:mt-0 flex items-center gap-4">
+                                                            <div className="text-right hidden sm:block">
+                                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase">JATUH TEMPO</p>
+                                                                <p className="text-[11px] font-bold uppercase">{new Date(installment.due_date).toLocaleDateString("id-ID")}</p>
+                                                            </div>
+                                                            <span className={`px-4 py-1.5 text-[9px] font-black tracking-[0.2em] uppercase border ${
+                                                                installment.status === 'paid' ? 'bg-[#1c69d4]/10 border-[#1c69d4] text-[#1c69d4]' : 'bg-red-500/10 border-red-500 text-red-500'
+                                                            }`}>
+                                                                {installment.status === 'paid' ? 'LUNAS' : 'PENDING'}
                                                             </span>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                        {/* Documents */}
-                        {isCreditOrder &&
-                            transaction.creditDetail.documents &&
-                            transaction.creditDetail.documents.length > 0 && (
-                                <div className="bg-white rounded-none border border-slate-300 p-8">
-                                    <button
-                                        onClick={() =>
-                                            setExpandedSection(
-                                                expandedSection === "documents"
-                                                    ? null
-                                                    : "documents"
-                                            )
-                                        }
-                                        className="w-full flex justify-between items-center group mb-2"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                                                <FileText className="w-5 h-5" />
+                                                ))}
                                             </div>
-                                            <h2 className="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">
-                                                Dokumen Persyaratan ({transaction.creditDetail.documents.length})
-                                            </h2>
                                         </div>
-                                        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-slate-100 transition-colors">
-                                            {expandedSection === "documents" ? (
-                                                <ChevronUp className="w-5 h-5 transition-transform" />
-                                            ) : (
-                                                <ChevronDown className="w-5 h-5 transition-transform" />
-                                            )}
-                                        </div>
-                                    </button>
-                                    {expandedSection === "documents" && (
-                                        <div className="mt-6 pt-6 border-t border-slate-100 space-y-3">
-                                            {transaction.creditDetail.documents.map((doc) => (
-                                                <div
-                                                    key={doc.id}
-                                                    className={`p-4 rounded-2xl flex items-center justify-between transition-colors border ${
-                                                        doc.approval_status === "approved"
-                                                            ? "bg-emerald-50/50 border-emerald-100"
-                                                            : doc.approval_status === "rejected"
-                                                            ? "bg-rose-50/50 border-rose-100"
-                                                            : "bg-slate-50 border-slate-100"
-                                                    }`}
-                                                >
-                                                    <div className="flex items-center gap-4">
-                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                                                            doc.approval_status === "approved" ? "bg-emerald-100 text-emerald-600" :
-                                                            doc.approval_status === "rejected" ? "bg-rose-100 text-rose-600" :
-                                                            "bg-slate-200 text-slate-500"
-                                                        }`}>
-                                                            <FileText className="w-5 h-5" />
-                                                        </div>
-                                                        <div>
-                                                            <p className="font-bold text-slate-900">
-                                                                {doc.name}
-                                                            </p>
-                                                            <p className="text-xs font-medium text-slate-500">
-                                                                Diupload: {new Date(doc.created_at).toLocaleDateString("id-ID", {
-                                                                    day: "numeric",
-                                                                    month: "short",
-                                                                    year: "numeric"
-                                                                })}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <span
-                                                        className={`text-[10px] font-bold px-3 py-1 rounded-lg uppercase tracking-widest whitespace-nowrap ${
-                                                            doc.approval_status === "approved"
-                                                                ? "bg-emerald-100 text-emerald-700"
-                                                                : doc.approval_status === "rejected"
-                                                                ? "bg-rose-100 text-rose-700"
-                                                                : "bg-amber-100 text-amber-700"
-                                                        }`}
-                                                    >
-                                                        {doc.approval_status === "approved"
-                                                            ? "Terverifikasi"
-                                                            : doc.approval_status === "rejected"
-                                                            ? "Ditolak"
-                                                            : "Menunggu"}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                    </div>
-
-                    {/* Sidebar */}
-                    <aside className="space-y-6 lg:sticky lg:top-20 lg:h-fit">
-                        {/* Summary Card */}
-                        <div className="bg-black text-white rounded-none border border-black p-8 relative overflow-hidden">
-                            
-                            <h3 className="text-xl font-black mb-8 relative z-10 flex items-center gap-3">
-                                Ringkasan
-                            </h3>
-                            
-                            <div className="space-y-6 relative z-10">
-                                <div className="pb-6 border-b border-slate-700/50">
-                                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
-                                        Harga Motor
-                                    </p>
-                                    <p className="text-3xl font-black text-white">
-                                        {formatCurrency(transaction.motor.price)}
-                                    </p>
-                                </div>
-                                
-                                {isCreditOrder ? (
-                                    <>
-                                        <div className="pb-6 border-b border-slate-700/50">
-                                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
-                                                Deposit (DP) Awal
-                                            </p>
-                                            <p className="text-2xl font-black text-white">
-                                                {formatCurrency(transaction.creditDetail?.down_payment || 0)}
-                                            </p>
-                                        </div>
-                                        <div className="pb-6 border-b border-slate-700/50">
-                                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
-                                                Total Pembiayaan (Pokok Hutang)
-                                            </p>
-                                            <p className="text-2xl font-black text-white">
-                                                {formatCurrency(transaction.motor.price - (transaction.creditDetail?.down_payment || 0))}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
-                                                Estimasi Angsuran
-                                            </p>
-                                            <p className="text-3xl font-black text-white">
-                                                {formatCurrency(transaction.creditDetail?.monthly_installment || 0)}
-                                            </p>
-                                            <span className="inline-block text-[10px] font-bold text-white mt-2 bg-transparent border border-white px-3 py-1.5 rounded-none uppercase tracking-widest">
-                                                {transaction.creditDetail?.tenor || 0} Bulan Tenor
-                                            </span>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="pb-6 border-b border-slate-700/50">
-                                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
-                                                Booking Fee
-                                            </p>
-                                            <p className="text-2xl font-black text-emerald-400">
-                                                {formatCurrency(transaction.booking_fee || 0)}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
-                                                Sisa Pelunasan
-                                            </p>
-                                            <p className="text-3xl font-black text-white">
-                                                {formatCurrency(transaction.motor.price - (transaction.booking_fee || 0))}
-                                            </p>
-                                        </div>
-                                    </>
+                                    </details>
                                 )}
                             </div>
                         </div>
 
-                        {/* Action Card - New Location for Cancel Button */}
-                        {canCancel && (
-                            <div className="bg-white rounded-none shadow-none border border-slate-300 p-8 overflow-hidden relative group">
-                                
-                                <h3 className="text-lg font-black text-slate-900 mb-2 relative z-10">Bantuan</h3>
-                                <p className="text-slate-500 text-sm mb-6 relative z-10 font-bold">
-                                    Jika Anda ingin membatalkan pesanan ini, silakan klik tombol di bawah.
-                                </p>
-                                <button
-                                    onClick={handleCancel}
-                                    className="w-full flex items-center justify-center gap-2 py-4 bg-white hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase tracking-widest text-[10px] transition-all relative z-10"
-                                >
-                                    <XCircle className="w-4 h-4" />
-                                    BATALKAN PESANAN
-                                </button>
-                            </div>
-                        )}
+                        {/* RIGHT COLUMN: ACTIONS & STICKY SUMMARY */}
+                        <div className="lg:col-span-4 space-y-8">
+                            <aside className="sticky top-40 space-y-8">
+                                {/* SUMMARY CARD */}
+                                <div className="bg-black text-white p-10 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-[#1c69d4]/10 -rotate-45 translate-x-12 -translate-y-12"></div>
+                                    
+                                    <h3 className="text-xl font-black uppercase tracking-widest mb-10 border-b border-gray-800 pb-4">RINGKASAN PEMBAYARAN</h3>
+                                    
+                                    <div className="space-y-8">
+                                        <div className="flex justify-between items-end">
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">HARGA KENDARAAN</p>
+                                                <p className="text-xl font-black uppercase tracking-tight">{formatCurrency(transaction.motor.price)}</p>
+                                            </div>
+                                        </div>
 
-                        {/* Need Help Card */}
-                        <div className="bg-white border border-black rounded-none p-8">
-                            <div className="w-12 h-12 bg-black rounded-none flex items-center justify-center text-white mb-4">
-                                <Phone className="w-5 h-5" />
-                            </div>
-                            <h3 className="font-black text-black uppercase tracking-widest mb-2">
-                                Butuh Bantuan?
-                            </h3>
-                            <p className="text-sm font-bold text-gray-600 mb-6 leading-relaxed">
-                                Tim kami siap membantu Anda melalui WhatsApp jika ada kendala.
-                            </p>
-                            <a
-                                href="https://wa.me/628123456789"
-                                target="_blank"
-                                className="inline-flex w-full items-center justify-center gap-2 px-5 py-4 bg-black border border-black hover:bg-white hover:text-black text-white rounded-none transition-colors font-bold text-[10px] uppercase tracking-widest"
-                            >
-                                CHAT VIA WHATSAPP
-                            </a>
+                                        {isCreditOrder ? (
+                                            <>
+                                                <div className="flex justify-between items-end">
+                                                    <div>
+                                                        <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">UANG MUKA (DP)</p>
+                                                        <p className="text-xl font-black uppercase tracking-tight text-[#1c69d4]">{formatCurrency(transaction.creditDetail.down_payment)}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-between items-end pt-8 border-t border-gray-800">
+                                                    <div>
+                                                        <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">POKOK PEMBIAYAAN</p>
+                                                        <p className="text-2xl font-black uppercase tracking-tight">
+                                                            {formatCurrency(transaction.motor.price - transaction.creditDetail.down_payment)}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="flex justify-between items-end pt-8 border-t border-gray-800">
+                                                <div>
+                                                    <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">TOTAL PELUNASAN</p>
+                                                    <p className="text-3xl font-black uppercase tracking-tight text-[#1c69d4]">
+                                                        {formatCurrency(transaction.total_price)}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* PRIMARY ACTION BUTTONS */}
+                                    <div className="mt-12 space-y-4">
+                                        {transaction.transaction_type === "CREDIT" && (
+                                            <Link
+                                                href={route("motors.manage-documents", transaction.id)}
+                                                className="w-full bg-white text-black hover:bg-gray-200 h-16 transition-all font-black text-[10px] tracking-[0.3em] uppercase flex items-center justify-center gap-3"
+                                            >
+                                                KELOLA BERKAS <FileText size={16} />
+                                            </Link>
+                                        )}
+                                        
+                                        {transaction.transaction_type === "CREDIT" && transaction.status === "disetujui" && (
+                                            <Link
+                                                href={route("motors.installments", transaction.id)}
+                                                className="w-full bg-[#1c69d4] text-white hover:bg-[#154fa1] h-16 transition-all font-black text-[10px] tracking-[0.3em] uppercase flex items-center justify-center gap-3 shadow-lg shadow-[#1c69d4]/20"
+                                            >
+                                                LIHAT CICILAN <ArrowRight size={16} />
+                                            </Link>
+                                        )}
+                                        
+                                        {canCancel && (
+                                            <button
+                                                onClick={handleCancel}
+                                                className="w-full border border-gray-800 text-gray-400 hover:text-red-500 hover:border-red-500 h-14 transition-all font-black text-[9px] tracking-[0.3em] uppercase flex items-center justify-center gap-2"
+                                            >
+                                                BATALKAN PESANAN <XCircle size={14} />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* CONTACT SUPPORT AD */}
+                                <div className="border border-gray-200 p-8 bg-gray-50">
+                                    <h4 className="text-[10px] font-black tracking-widest uppercase mb-4">BUTUH BANTUAN?</h4>
+                                    <p className="text-xs text-gray-500 font-medium leading-relaxed mb-6 uppercase tracking-widest">
+                                        JIKA ANDA MEMILIKI KENDALA ATAU PERTANYAAN TERKAIT STATUS TRANSAKSI ANDA, HUBUNGI TIM KAMI.
+                                    </p>
+                                    <a href="https://wa.me/628123456789" className="text-black font-black text-[10px] tracking-widest uppercase flex items-center gap-2 hover:text-[#1c69d4] transition-colors">
+                                        WHATSAPP SUPPORT <ArrowRight size={14} />
+                                    </a>
+                                </div>
+                            </aside>
                         </div>
-                    </aside>
-                </div>
-            </main>
+                    </div>
+                </main>
             </div>
         </PublicLayout>
     );

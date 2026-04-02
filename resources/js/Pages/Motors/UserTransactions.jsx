@@ -290,12 +290,11 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                 return (
                                     <motion.div
                                         key={transaction.id}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="group bg-white p-6 sm:p-10 flex flex-col md:flex-row gap-8 lg:gap-16 hover:bg-gray-50 transition-colors"
+                                        className="relative bg-white p-8 sm:p-12 mb-px flex flex-col md:flex-row gap-8 lg:gap-16 transition-all duration-300 hover:bg-gray-50/50"
                                     >
-                                        {/* Status Sidebar (Desktop) */}
                                         <div className="hidden md:flex flex-col items-center justify-start gap-4 w-12 pt-2">
                                             <div className={`p-3 border-2 ${statusInfo.color.split(' ')[1]} ${statusInfo.color.split(' ')[0]} rounded-none`}>
                                                 <StatusIcon size={20} strokeWidth={2.5} />
@@ -307,7 +306,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         <div className="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                                             {/* Preview Image */}
                                             <div className="lg:col-span-3">
-                                                <div className="aspect-[4/3] bg-gray-100 border border-gray-200 p-4 relative group-hover:scale-[1.02] transition-transform duration-500">
+                                                <div className="aspect-[4/3] bg-gray-100 border border-gray-200 p-4 relative group hover:bg-gray-200 transition-colors">
                                                     <img
                                                         src={`/storage/${transaction.motor.image_path}`}
                                                         alt={transaction.motor.name}
@@ -358,7 +357,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                                     {transaction.transaction_type === "CREDIT" && (
                                                         <Link
                                                             href={route("motors.manage-documents", transaction.id)}
-                                                            className="flex-1 md:flex-none px-6 py-4 bg-white border border-black hover:bg-gray-100 text-black font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"
+                                                            className="flex-1 md:flex-none px-6 py-4 bg-white border-2 border-black hover:bg-black hover:text-white text-black font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"
                                                         >
                                                             <FileText size={16} />
                                                             DOKUMEN
@@ -366,7 +365,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                                     )}
                                                     <Link
                                                         href={route("motors.transaction.show", transaction.id)}
-                                                        className="flex-[2] md:flex-none px-10 py-4 bg-black border border-black hover:bg-[#1c69d4] hover:border-[#1c69d4] text-white font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-3"
+                                                        className="flex-[2] md:flex-none px-10 py-4 bg-black border-2 border-black hover:bg-gray-800 text-white font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-3"
                                                     >
                                                         RINCIAN <ArrowRight size={16} />
                                                     </Link>
