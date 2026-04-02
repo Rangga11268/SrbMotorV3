@@ -211,6 +211,9 @@ erDiagram
         text complaint_notes
         decimal estimated_cost
         string status
+        string branch
+        string cancelled_by
+        text cancel_reason
         text admin_notes
         timestamp created_at
         timestamp updated_at
@@ -245,6 +248,6 @@ erDiagram
 | `survey_schedules` | 15 | Koordinasi tatap muka jadwal pengecekan kelayakan antara *Surveyor* dan akun *User* |
 | `settings` | 8 | Parameter sistem global dinamis seperti (*Site Name*, Alamat, Jam Operasional) |
 | `notifications` | 8 | Fitur penyiaran sistem berbasis riwayat acara (Disematkan ke ID Pengguna terkait) |
-| `service_appointments` | 17 | Sistem reservasi modul purna jual *Booking* rawat motor, *budgeting* keluhan, & kuota |
+| `service_appointments` | 20 | Sistem reservasi modul purna jual *Booking* rawat motor, *budgeting* keluhan, & kuota |
 
 *Catatan: Tabel infrastruktur dasar Laravel (seperti basis migrasi, singgahan cache, antrian job, sesi riwayat, dan basis token sandi/akses personal) ditiadakan dari ERD (*Entity Relationship Diagram*) ini demi fokus penyederhanaan dokumentasi ke logika bisnis produk.*
