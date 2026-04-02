@@ -81,7 +81,7 @@ export default function Help() {
             bg: "bg-[#1c69d4]",
             text: "text-white",
             border: "border-[#1c69d4]",
-            hoverText: "group-hover:text-black"
+            hoverText: "group-hover:text-blue-200"
         }
     ];
 

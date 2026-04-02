@@ -228,14 +228,6 @@ export default function Dashboard({
                                     <span>Transaksi</span>
                                 </Link>
                                 <Link 
-                                    href={route("admin.news.create")} 
-                                    className="btn btn-outline-info d-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-md-grow-0"
-                                    style={{ padding: '10px 16px', borderRadius: '10px', minWidth: '140px' }}
-                                >
-                                    <CIcon icon={cilNewspaper} />
-                                    <span>Tulis Berita</span>
-                                </Link>
-                                <Link 
                                     href={route("admin.settings.index")} 
                                     className="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-md-grow-0"
                                     style={{ padding: '10px 16px', borderRadius: '10px', minWidth: '140px' }}

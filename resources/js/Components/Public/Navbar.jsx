@@ -83,7 +83,6 @@ export default function Navbar({ auth }) {
             href: "/services",
             active: url.startsWith("/services"),
         },
-        { label: "Berita", href: "/berita", active: url.startsWith("/berita") },
         { label: "Tentang Kami", href: "/about", active: url === "/about" },
     ];
 
@@ -293,7 +292,7 @@ export default function Navbar({ auth }) {
                                                         href={route(
                                                             "profile.show",
                                                         )}
-                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#f9f9f9] text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
                                                         Profil Saya
                                                     </Link>
@@ -303,7 +302,7 @@ export default function Navbar({ auth }) {
                                                             href={route(
                                                                 "admin.dashboard",
                                                             )}
-                                                            className="flex items-center gap-4 px-6 py-3 bg-[#111111] text-white hover:bg-[#1c69d4] transition-colors text-xs font-bold uppercase tracking-widest"
+                                                            className="flex items-center gap-4 px-6 py-3 bg-[#111111] text-white hover:bg-white hover:text-[#111111] border border-[#111111] transition-colors text-xs font-bold uppercase tracking-widest"
                                                         >
                                                             Dashboard Admin
                                                         </a>
@@ -312,7 +311,7 @@ export default function Navbar({ auth }) {
                                                         href={route(
                                                             "motors.user-transactions",
                                                         )}
-                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#f9f9f9] text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
                                                         Riwayat Pesanan
                                                     </Link>
@@ -320,7 +319,7 @@ export default function Navbar({ auth }) {
                                                         href={route(
                                                             "installments.index",
                                                         )}
-                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#f9f9f9] text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
                                                         Cicilan Saya
                                                     </Link>
@@ -330,7 +329,7 @@ export default function Navbar({ auth }) {
                                                     href={route("logout")}
                                                     method="post"
                                                     as="button"
-                                                    className="flex w-full items-center gap-4 px-6 py-4 hover:bg-[#262626] text-white bg-[#111111] text-xs font-bold uppercase tracking-widest transition-colors text-left"
+                                                    className="flex w-full items-center gap-4 px-6 py-4 hover:bg-white hover:text-red-600 border border-transparent hover:border-red-600 text-white bg-red-600 text-xs font-bold uppercase tracking-widest transition-colors text-left"
                                                 >
                                                     Keluar Akun
                                                 </Link>

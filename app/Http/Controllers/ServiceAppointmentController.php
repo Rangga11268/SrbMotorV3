@@ -143,6 +143,26 @@ class ServiceAppointmentController extends Controller
     }
 
     /**
+     * Admin: Display a listing for Admin Panel
+     */
+    public function adminIndex(Request $request)
+    {
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        $appointments = ServiceAppointment::with('user')
+            ->orderByRaw("CASE WHEN status = 'pending' THEN 0 WHEN status = 'confirmed' THEN 1 WHEN status = 'in_progress' THEN 2 ELSE 3 END")
+            ->orderBy('service_date', 'asc')
+            ->orderBy('service_time', 'asc')
+            ->get();
+
+        return Inertia::render('Admin/Services/Index', [
+            'appointments' => $appointments
+        ]);
+    }
+
+    /**
      * API: Get dates that are fully booked
      */
     public function getUnavailableDates()

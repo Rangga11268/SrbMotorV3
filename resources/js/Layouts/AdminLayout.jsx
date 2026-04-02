@@ -149,22 +149,14 @@ function AdminLayoutContent({ children, title }) {
             icon: cilChartLine,
             active: route().current("admin.reports.*"),
         },
+        {
+            name: "Manajemen Servis",
+            href: "/admin/services", // We will define this route
+            icon: cilSpeedometer, // Using Speedometer for now
+            active: route().current("admin.services.*"),
+        },
     ];
 
-    const contentMenuItems = [
-        {
-            name: "Berita",
-            href: route("admin.news.index"),
-            icon: cilNewspaper,
-            active: route().current("admin.news.*"),
-        },
-        {
-            name: "Kategori Berita",
-            href: route("admin.categories.index"),
-            icon: cilTag,
-            active: route().current("admin.categories.*"),
-        },
-    ];
 
     useEffect(() => {
         document.documentElement.classList.add("admin-mode");
@@ -316,21 +308,6 @@ function AdminLayoutContent({ children, title }) {
                             </li>
                         ))}
 
-                        <CNavTitle className="mt-3">Manajemen Konten</CNavTitle>
-                        {contentMenuItems.map((item) => (
-                            <li className="nav-item" key={item.name}>
-                                <Link
-                                    href={item.href}
-                                    className={`nav-link ${item.active ? "active" : ""}`}
-                                >
-                                    <CIcon
-                                        icon={item.icon}
-                                        customClassName="nav-icon"
-                                    />
-                                    {item.name}
-                                </Link>
-                            </li>
-                        ))}
 
                         <CNavTitle className="mt-3">Pengaturan</CNavTitle>
                         <li className="nav-item">

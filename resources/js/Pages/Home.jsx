@@ -338,73 +338,6 @@ export default function Home({
                 </div>
             </section>
 
-            {/* NEWS & ARTICLES SECTION */}
-            <section className="py-24 bg-[#f4f4f4] border-t border-gray-200">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                    <div className="flex justify-between items-end mb-16 border-b border-gray-300 pb-6">
-                        <h2 className="text-4xl font-light text-[#262626] uppercase tracking-tight">
-                            Info <span className="font-bold">Otomotif</span>
-                        </h2>
-                        <Link
-                            href="/berita"
-                            className="text-xs font-bold text-[#262626] uppercase tracking-widest hover:text-[#1c69d4] transition-colors flex items-center gap-2"
-                        >
-                            Selengkapnya <ArrowRight className="w-4 h-4" />
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                        {news.length === 0 ? (
-                            <p className="text-[#757575] text-sm uppercase tracking-widest">
-                                Informasi belum tesedia.
-                            </p>
-                        ) : (
-                            news.slice(0, 3).map((item, idx) => (
-                                <Link
-                                    key={item.id}
-                                    href={route("berita.show", item.slug)}
-                                    className="group block"
-                                >
-                                    <div className="relative h-[250px] bg-black overflow-hidden rounded-none mb-6">
-                                        <img
-                                            src={
-                                                item.featured_image
-                                                    ? item.featured_image.startsWith(
-                                                          "http",
-                                                      )
-                                                        ? new URL(
-                                                              item.featured_image,
-                                                          ).pathname
-                                                        : item.featured_image
-                                                    : "/assets/img/no-image.png"
-                                            }
-                                            alt={item.title}
-                                            className="w-full h-full object-cover transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src =
-                                                    "/assets/img/no-image.png";
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div className="text-[10px] text-[#757575] font-bold uppercase tracking-widest border-l-2 border-[#1c69d4] pl-2">
-                                            {item.category?.name || "UMUM"} •{" "}
-                                            {new Date(
-                                                item.published_at ||
-                                                    item.created_at,
-                                            ).toLocaleDateString("id-ID")}
-                                        </div>
-                                        <h3 className="text-xl font-bold text-[#262626] leading-snug group-hover:text-[#1c69d4] transition-colors line-clamp-2 uppercase">
-                                            {item.title}
-                                        </h3>
-                                    </div>
-                                </Link>
-                            ))
-                        )}
-                    </div>
-                </div>
-            </section>
 
             {/* CONTACT / FOOTER BANNER */}
             <section className="bg-white border-t border-gray-200">
@@ -432,7 +365,7 @@ export default function Home({
                             <a
                                 href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}`}
                                 target="_blank"
-                                className="px-8 py-4 bg-[#1c69d4] text-white hover:bg-[#0653b6] transition-colors uppercase text-xs tracking-widest font-bold flex items-center justify-center gap-3"
+                                className="px-8 py-4 bg-[#1c69d4] border border-[#1c69d4] text-white hover:bg-transparent hover:text-[#1c69d4] transition-colors uppercase text-xs tracking-widest font-bold flex items-center justify-center gap-3"
                             >
                                 <Phone className="w-4 h-4" /> Whatsapp
                             </a>

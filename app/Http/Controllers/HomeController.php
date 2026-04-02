@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Repositories\MotorRepositoryInterface;
 use App\Models\Motor;
 use App\Models\Setting;
-use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -44,17 +43,10 @@ class HomeController extends Controller
         // Get settings from database
         $settings = Setting::pluck('value', 'key')->toArray();
 
-        // Get latest published news
-        $news = Post::with('category')
-            ->published()
-            ->recent(3)
-            ->get();
-
         return \Inertia\Inertia::render('Home', [
             'popularMotors' => $popularMotors,
             'brandAvailability' => $brands,
-            'settings' => $settings,
-            'news' => $news
+            'settings' => $settings
         ]);
     }
 }
