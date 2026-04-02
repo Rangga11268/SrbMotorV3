@@ -22,16 +22,11 @@ export default function History({ appointments }) {
             <div className="flex-grow pt-28 bg-white min-h-screen">
                 <section className="bg-black text-white pt-6 pb-16 border-b border-gray-800">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="mb-8">
-                            <button onClick={() => window.history.back()} className="text-gray-400 hover:text-[#1c69d4] flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-colors mb-4">
-                                <ArrowLeft className="w-3 h-3" /> KEMBALI
-                            </button>
                             <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1c69d4]">
                                 <Link href="/" className="hover:text-white transition-colors">HOME</Link>
                                 <ChevronRight className="w-3 h-3 text-gray-600" />
                                 <span className="text-gray-400">RIWAYAT SERVIS</span>
                             </nav>
-                        </div>
                         <div className="flex justify-between items-end">
                             <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
                                 CATATAN <span className="text-[#1c69d4]">PERAWATAN</span>

@@ -7,7 +7,6 @@ This document provides the full Entity Relationship Diagram (ERD) for the SRB Mo
 ```mermaid
 erDiagram
     USERS ||--o{ TRANSACTIONS : "makes"
-    CATEGORIES ||--o{ POSTS : "classifies articles"
     MOTORS ||--o{ TRANSACTIONS : "is sold in"
     TRANSACTIONS ||--o{ TRANSACTION_LOGS : "has"
     TRANSACTIONS ||--o{ DOCUMENTS : "requires"
@@ -142,18 +141,6 @@ erDiagram
         timestamp updated_at
     }
 
-    CATEGORIES {
-        bigint id PK
-        string name
-        string slug
-        text description
-        string icon
-        int order
-        boolean is_active
-        timestamp created_at
-        timestamp updated_at
-    }
-
     TRANSACTION_LOGS {
         bigint id PK
         bigint transaction_id FK
@@ -183,20 +170,6 @@ erDiagram
         boolean customer_confirms
         timestamp customer_confirmed_at
         timestamp completed_at
-        timestamp created_at
-        timestamp updated_at
-    }
-
-    POSTS {
-        bigint id PK
-        bigint category_id FK
-        string title
-        string slug
-        text content
-        string featured_image
-        string status
-        bigint views
-        timestamp published_at
         timestamp created_at
         timestamp updated_at
     }
@@ -254,15 +227,12 @@ erDiagram
 | `credit_details` | 19 | Leasing & Approval Workflow |
 | [installments](file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php#106-113) | 21 | Payment Tracking & Deadlines |
 | `documents` | 15 | Identity Files & Verification |
-| `categories` | 9 | Article Grouping |
 | `transaction_logs` | 12 | Audit Trail for Status Changes |
 | `survey_schedules` | 21 | Survey Coordination Detail |
-| `posts` | 12 | Blog/News Content Management |
 | `settings` | 8 | Global System Configuration |
 | `notifications` | 8 | User Alert System |
 | `service_appointments` | 17 | Service Booking & Queue |
 
-**Total Application Tables:** 13
-**Total Application Columns:** 194
+**Total Application Tables:** 11
 
 *Note: System tables (migrations, cache, jobs, sessions, tokens) are excluded from this ERD as they do not contain business logic.*
