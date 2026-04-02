@@ -17,6 +17,7 @@ import {
     Phone,
     AlertCircle,
     Mail,
+    X,
 } from "lucide-react";
 
 export default function Home({
@@ -323,13 +324,12 @@ export default function Home({
                         </div>
                         
                         <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                            <a 
-                                href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}?text=Halo%20Admin,%20saya%20ingin%20booking%20service`} 
-                                target="_blank"
-                                className="px-10 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3"
+                            <Link 
+                                href="/services/booking"
+                                className="px-10 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
                             >
                                 <Clock className="w-4 h-4" /> BOOKING SERVIS
-                            </a>
+                            </Link>
                             <Link 
                                 href="/motors"
                                 className="px-10 py-5 bg-transparent border border-white hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3"
