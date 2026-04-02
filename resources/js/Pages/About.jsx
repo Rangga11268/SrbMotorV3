@@ -193,6 +193,46 @@ export default function About() {
                     </div>
                 </section>
 
+                {/* JARINGAN SSM */}
+                <section className="bg-gray-100 py-24 border-b border-gray-200">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="mb-16">
+                            <h2 className="text-4xl font-black text-black uppercase tracking-tighter mb-4">
+                                JARINGAN MITRA BENGKEL SSM
+                            </h2>
+                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px]">DUKUNGAN AFTER-SALES DI BERBAGAI KOTA</p>
+                            <p className="text-gray-600 font-light mt-4 max-w-2xl leading-relaxed">
+                                Sebagai tambahan fasilitas, kami bermitra dengan jaringan bengkel resmi SSM untuk memastikan pelanggan SRB Motor memiliki akses mudah ke layanan servis terstandarisasi. Jam operasional seluruh cabang 08.00–17.00 WIB setiap hari.
+                            </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-300 border border-gray-300">
+                            {[
+                                { name: "SSM JATIASIH", city: "BEKASI", addr: "Jl. Raya Jatimekar No.17, Jatimekar, Kec. Jatiasih" },
+                                { name: "SSM MEKAR SARI", city: "BEKASI", addr: "Jl. Mekar Sari No.39, Bekasi Jaya, Kec. Bekasi Tim." },
+                                { name: "SSM DEPOK", city: "DEPOK", addr: "Jl. Tirta Mulya 5 No.78, Tirtajaya, Kec. Sukmajaya" },
+                                { name: "SSM BOGOR", city: "BOGOR", addr: "Jl. Raya Tajur No.39D, Tajur, Kec. Bogor Tim." },
+                                { name: "SSM TANGERANG", city: "TANGERANG", addr: "Jl. Imam Bonjol No.100A, Karawaci" }
+                            ].map((branch, i) => (
+                                <div key={i} className="bg-white p-8 flex flex-col hover:bg-gray-50 cursor-pointer group">
+                                    <h4 className="text-lg font-black text-black uppercase tracking-tighter mb-2">{branch.name}</h4>
+                                    <p className="text-[#1c69d4] font-bold text-[10px] uppercase tracking-widest mb-4">{branch.city}</p>
+                                    <p className="text-gray-600 font-light text-sm flex-grow mb-6">{branch.addr}</p>
+                                    <div className="mt-auto pt-4 border-t border-gray-100">
+                                        <a href={`https://maps.google.com/?q=${encodeURIComponent(branch.addr + ', ' + branch.city)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-black group-hover:text-[#1c69d4] transition-colors">
+                                            MAPS/NAVIGASI <ChevronRight className="w-3 h-3" />
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                            {/* Empty filler block to make the grid perfect 3 cols */}
+                            <div className="bg-gray-100 p-8 flex items-center justify-center">
+                                <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">EKSPLORASI LEBIH LANJUT</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* FULL WIDTH CTA */}
                 <section className="bg-[#1c69d4] text-white py-24">
                     <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 space-y-10">

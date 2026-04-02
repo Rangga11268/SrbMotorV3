@@ -60,6 +60,7 @@ export default function Help() {
             value: "+62 897-8638-849",
             bg: "bg-white",
             text: "text-black",
+            descClass: "text-gray-500",
             border: "border-gray-200",
             hoverText: "group-hover:text-[#1c69d4]"
         },
@@ -70,6 +71,7 @@ export default function Help() {
             value: "Klik untuk Memulai Percakapan",
             bg: "bg-black",
             text: "text-white",
+            descClass: "text-gray-400",
             border: "border-black",
             hoverText: "group-hover:text-blue-400"
         },
@@ -80,6 +82,7 @@ export default function Help() {
             value: "support@srbmotor.com",
             bg: "bg-[#1c69d4]",
             text: "text-white",
+            descClass: "text-blue-100",
             border: "border-[#1c69d4]",
             hoverText: "group-hover:text-blue-200"
         }
@@ -141,7 +144,7 @@ export default function Help() {
                                     <h4 className="text-xl font-black uppercase tracking-tight mb-2">
                                         {channel.title}
                                     </h4>
-                                    <p className={`font-light text-sm mb-12 opacity-80`}>
+                                    <p className={`font-light text-sm mb-12 ${channel.descClass || 'opacity-80'}`}>
                                         {channel.desc}
                                     </p>
                                     <div className="mt-auto flex items-center justify-between">
