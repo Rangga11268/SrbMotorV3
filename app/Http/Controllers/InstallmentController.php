@@ -71,9 +71,7 @@ class InstallmentController extends Controller
 
         $installments = Installment::whereIn('id', $request->installment_ids)
             ->whereHas('transaction', function ($q) {
-                if (!Auth::user()->isAdmin()) {
-                    $q->where('user_id', Auth::id());
-                }
+                $q->where('user_id', Auth::id());
             })
             ->where('status', '!=', 'paid')
             ->get();
@@ -246,11 +244,7 @@ class InstallmentController extends Controller
         $transactions = Transaction::with(['installments' => function ($query) {
                 $query->orderBy('installment_number', 'asc');
             }, 'motor'])
-            ->where(function ($q) {
-                if (!Auth::user()->isAdmin()) {
-                    $q->where('user_id', Auth::id());
-                }
-            })
+            ->where('user_id', Auth::id())
             ->whereHas('installments')
             ->latest()
             ->get();

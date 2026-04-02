@@ -609,10 +609,8 @@ class MotorGalleryController extends Controller
 
         $query = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments']);
 
-        // Only filter by user_id if NOT an admin
-        if (!Auth::user()->isAdmin()) {
-            $query->where('user_id', Auth::id());
-        }
+        // Always filter to this user only — admins use the admin panel to see all transactions
+        $query->where('user_id', Auth::id());
 
         $query->orderBy('created_at', 'desc');
 
