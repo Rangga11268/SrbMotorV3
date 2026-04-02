@@ -182,31 +182,35 @@ export default function UserTransactions({ transactions: initialTransactions, fi
         <PublicLayout auth={auth} title="RIWAYAT PESANAN - SRB MOTOR">
             <div className="flex-grow pt-[140px] bg-white min-h-screen">
                 {/* HERO SECTION */}
-                <section className="bg-black text-white pt-16 pb-24 border-b border-gray-800 relative overflow-hidden">
+                <section className="bg-black text-white pt-24 pb-32 border-b border-gray-800 relative overflow-hidden">
                     <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
                     
                     {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                        <div className="mb-12">
+                        <div className="mb-16">
                             <Link
                                 href={route("profile.show")}
-                                className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.2em] text-gray-400 hover:text-[#1c69d4] transition-all group uppercase"
+                                className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-white transition-all group uppercase"
                             >
                                 <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
                                 KEMBALI KE PROFIL
                             </Link>
                         </div>
 
-                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-16">
                             <div className="max-w-3xl">
-                                <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
-                                    RIWAYAT <br/>
-                                    <span className="text-[#1c69d4]">PEMESANAN</span>
+                                <div className="flex items-center gap-4 mb-6">
+                                    <div className="w-8 h-px bg-[#1c69d4]"></div>
+                                    <p className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">TRANSAKSI & RIWAYAT</p>
+                                </div>
+                                <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
+                                    DAFTAR <br/>
+                                    PESANAN MOTOR
                                 </h1>
-                                <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-80">
-                                    Pantau status pesanan, kelola dokumen persyaratan, dan akses rincian transaksi kendaraan Anda secara transparan.
+                                <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-70">
+                                    Kelola dokumen persyaratan, pantau status unit secara real-time, dan akses seluruh rincian transaksi kendaraan Anda.
                                 </p>
                             </div>
 
@@ -282,7 +286,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10 transition-all duration-500">
                     <div className={`${loading ? 'opacity-30 blur-sm pointer-events-none' : 'opacity-100'} transition-all duration-300`}>
                     {localTransactions.data.length > 0 ? (
-                        <div className="grid gap-px bg-gray-200 border border-gray-200 shadow-2xl">
+                        <div className="flex flex-col gap-8">
                             {localTransactions.data.map((transaction, index) => {
                                 const statusInfo = getStatusInfo(transaction);
                                 const StatusIcon = statusInfo.icon;
@@ -293,8 +297,12 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="relative bg-white p-8 sm:p-12 mb-px flex flex-col md:flex-row gap-8 lg:gap-16 transition-all duration-300 hover:bg-gray-50/50"
+                                        className={`relative bg-white p-8 sm:p-12 border border-gray-200 flex flex-col md:flex-row gap-8 lg:gap-16 transition-all duration-300 hover:shadow-xl hover:border-black animate-in fade-in slide-in-from-bottom-5 ${transaction.status === 'cancelled' ? 'opacity-70' : ''}`}
                                     >
+                                        {/* RED ACCENT FOR CANCELLED */}
+                                        {transaction.status === "cancelled" && (
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-600 z-20"></div>
+                                        )}
                                         <div className="hidden md:flex flex-col items-center justify-start gap-4 w-12 pt-2">
                                             <div className={`p-3 border-2 ${statusInfo.color.split(' ')[1]} ${statusInfo.color.split(' ')[0]} rounded-none`}>
                                                 <StatusIcon size={20} strokeWidth={2.5} />

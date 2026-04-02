@@ -20,6 +20,7 @@ import {
     AlertTriangle,
     ArrowRight,
     Calendar,
+    MessageCircle,
 } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -304,8 +305,8 @@ export default function InstallmentIndex({ transactions }) {
         return (
             <span
                 className={`flex items-center gap-1.5 px-4 py-2 border-2 uppercase text-[9px] font-black tracking-[0.2em] w-fit ${
-                    status === "paid" ? "bg-black text-white border-black" :
-                    status === "overdue" ? "bg-red-50 text-red-600 border-red-100" :
+                    status === "paid" ? "bg-green-50 text-green-600 border-green-500" :
+                    status === "overdue" || status === "cancelled" ? "bg-red-50 text-red-600 border-red-500" :
                     status === "waiting_approval" ? "bg-blue-50 text-blue-600 border-blue-100" :
                     "bg-white text-gray-500 border-gray-100"
                 }`}
@@ -382,37 +383,50 @@ export default function InstallmentIndex({ transactions }) {
     return (
         <PublicLayout title="Cicilan Saya - SRB Motors">
             {/* BMW INDUSTRIAL HEADER */}
-            <div className="bg-white border-b-2 border-black pt-32 pb-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Link
-                        href={route("home")}
-                        className="inline-flex items-center gap-3 text-[10px] font-black text-gray-400 hover:text-black transition-colors group mb-10 uppercase tracking-widest"
-                    >
-                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        KEMBALI KE BERANDA
-                    </Link>
+            <section className="bg-black text-white pt-24 pb-32 border-b border-gray-800 relative overflow-hidden">
+                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
+                
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-                        <div>
-                            <h1 className="text-5xl md:text-7xl font-black text-black mb-6 tracking-tighter uppercase leading-[0.9]">
-                                MANAJEMEN<br />CICILAN
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="mb-16">
+                        <Link
+                            href={route("home")}
+                            className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-white transition-all group uppercase"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                            KEMBALI KE BERANDA
+                        </Link>
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-16">
+                        <div className="max-w-3xl">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-8 h-px bg-[#1c69d4]"></div>
+                                <p className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">FINANSIAL & CICILAN</p>
+                            </div>
+                            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
+                                MANAJEMEN <br/>
+                                PEMBAYARAN
                             </h1>
-                            <p className="text-gray-500 text-sm md:text-base max-w-xl font-medium uppercase tracking-widest leading-relaxed opacity-70">
-                                PANTAU DAN KELOLA KEWAJIBAN PEMBAYARAN ANDA DENGAN SISTEM TRANSPARAN DAN TERINTEGRASI.
+                            <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-70">
+                                Pantau jadwal jatuh tempo, kelola cicilan berjalan, dan akses seluruh riwayat pembayaran Anda secara transparan.
                             </p>
                         </div>
+
                         {selectedTotal > 0 && (
                             <motion.div 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="bg-black p-8 border-l-4 border-[#1c69d4] min-w-[320px]"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="bg-white p-8 border-l-4 border-[#1c69d4] min-w-[320px] shadow-2xl"
                             >
-                                <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase mb-2">TOTAL DIPILIH</p>
-                                <p className="text-4xl font-black text-white tracking-tighter mb-6">{formatCurrency(selectedTotal)}</p>
+                                <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase mb-2">TOTAL TERPILIH</p>
+                                <p className="text-4xl font-black text-black tracking-tighter mb-6">{formatCurrency(selectedTotal)}</p>
                                 <button 
                                     onClick={handlePayMultiple}
                                     disabled={isLoadingPay}
-                                    className="w-full h-14 bg-[#1c69d4] hover:bg-[#154fa1] text-white font-black uppercase text-[10px] tracking-[0.3em] transition-all flex items-center justify-center gap-3"
+                                    className="w-full h-14 bg-black hover:bg-[#1c69d4] text-white font-black uppercase text-[10px] tracking-[0.3em] transition-all flex items-center justify-center gap-3"
                                 >
                                     {isLoadingPay ? <RefreshCw className="animate-spin w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
                                     BAYAR SEKARANG
@@ -421,38 +435,37 @@ export default function InstallmentIndex({ transactions }) {
                         )}
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <main className="flex-1 pt-0 pb-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-0 pb-20 relative z-20">
+            <main className="flex-1 pb-32">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-20">
                     {transactions.length > 0 ? (
-                        <div className="space-y-8">
+                        <div className="flex flex-col gap-12">
                             {transactions.map((transaction) => (
                                 <motion.div
                                     key={transaction.id}
-                                    className={`group bg-white border-2 border-gray-100 hover:border-black relative transition-all duration-500 ${
+                                    className={`group bg-white border border-gray-200 hover:border-black relative transition-all duration-500 hover:shadow-2xl ${
                                         transaction.status === "cancelled"
-                                            ? "opacity-60 saturate-0"
-                                            : ""
+                                            ? "opacity-75"
+                                            : "shadow-sm"
                                     }`}
                                 >
-                                    {/* CANCELLED BANNER */}
+                                    {/* RED ACCENT FOR CANCELLED */}
                                     {transaction.status === "cancelled" && (
-                                        <div className="bg-red-600 py-1.5 px-4 text-center">
-                                            <p className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-                                                <X size={12} strokeWidth={4} />
-                                                Transaksi ini telah dibatalkan
-                                            </p>
-                                        </div>
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-600 z-20"></div>
                                     )}
                                     {/* TRANSACTION HEADER - BMW INDUSTRIAL STYLE */}
                                     <div className="p-8 md:p-12 border-b border-gray-100 transition-colors group-hover:bg-gray-50/50">
                                         <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
                                             <div className="space-y-6">
-                                                <div className="flex items-center gap-4 text-[10px] font-black text-gray-400 tracking-widest uppercase">
-                                                    <span>INV #{transaction.invoice_number || `INV-${transaction.id}`}</span>
+                                                <div className="flex items-center gap-4 text-[10px] font-black tracking-widest uppercase">
+                                                    <span className="text-gray-400">INV #{transaction.invoice_number || `INV-${transaction.id}`}</span>
                                                     <span className="w-1.5 h-1.5 bg-[#1c69d4]"></span>
-                                                    <span>AKTIF</span>
+                                                    {transaction.status === "cancelled" ? (
+                                                        <span className="text-red-600 font-black">TRANSAKSI DIBATALKAN</span>
+                                                    ) : (
+                                                        <span className="text-[#1c69d4]">AKTIF</span>
+                                                    )}
                                                 </div>
                                                 <h3 className="text-4xl md:text-5xl font-black text-black tracking-tighter uppercase leading-none">
                                                     {transaction.motor?.name || "UNIT MOTOR"}
@@ -781,26 +794,7 @@ export default function InstallmentIndex({ transactions }) {
                                         </motion.div>
                                     )}
 
-                                    {/* FOOTER INFO */}
-                                    <div className="p-8 bg-blue-50/50 border-t border-blue-100">
-                                        <div className="flex items-start gap-4 mb-6">
-                                            <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
-                                                <AlertCircle className="w-5 h-5" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-black text-blue-900 uppercase tracking-tight mb-1">Penting: Verifikasi Pembayaran</p>
-                                                <p className="text-xs text-blue-700/70 font-medium leading-relaxed">
-                                                    Jika status pembayaran tidak berubah dalam <span className="font-bold">5 menit</span> setelah transaksi berhasil, silakan klik tombol <span className="font-bold underline">Cek Status</span> atau hubungi Admin melalui WhatsApp dengan melampirkan bukti bayar.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-3 pt-6 border-t border-blue-100/50">
-                                            <ShieldCheck className="w-5 h-5 text-green-500" />
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                                Seluruh data pembayaran dijamin aman & terdaftar di OJK.
-                                            </p>
-                                        </div>
-                                    </div>
+
                                 </motion.div>
                             ))}
                         </div>
@@ -828,22 +822,47 @@ export default function InstallmentIndex({ transactions }) {
                     )}
                 </div>
 
-                {/* Status Check Notice */}
-                <div className="mt-8 mb-12 bg-blue-50/50 border border-blue-100/50 rounded-2xl p-6">
-                    <div className="flex gap-4">
-                        <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-                            <AlertCircle className="w-5 h-5" />
+                {/* GLOBAL PAYMENT VERIFICATION INFO */}
+                <div className="mt-20">
+                    <div className="flex flex-col md:flex-row items-center gap-8 p-10 bg-black text-white border-l-8 border-[#1c69d4] shadow-2xl relative overflow-hidden group">
+                        {/* Background Accent */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#1c69d4] opacity-[0.05] -mr-16 -mt-16 rounded-full blur-3xl"></div>
+                        
+                        <div className="flex-shrink-0 p-5 bg-white/5 border border-white/10 rounded-none text-[#1c69d4] group-hover:bg-[#1c69d4]/10 transition-colors">
+                            <ShieldCheck size={40} strokeWidth={1.5} />
                         </div>
-                        <div>
-                            <h4 className="text-sm font-black text-blue-900 uppercase tracking-wider mb-1">
-                                Informasi Verifikasi Pembayaran
-                            </h4>
-                            <p className="text-[11px] font-bold text-blue-700/70 leading-relaxed uppercase">
-                                Setelah melakukan pembayaran, mohon klik tombol <span className="text-blue-900 font-extrabold">"CEK STATUS"</span> secara manual untuk memperbarui status transaksi Anda. Verifikasi manual oleh admin dapat memakan waktu maksimal 1x24 jam pada hari kerja.
+                        
+                        <div className="space-y-4 flex-grow text-center md:text-left">
+                            <div className="flex flex-col md:flex-row md:items-center gap-3">
+                                <p className="text-sm font-black uppercase tracking-[0.3em] text-[#1c69d4]">SISTEM VERIFIKASI PEMBAYARAN</p>
+                                <div className="hidden md:block w-px h-4 bg-gray-700"></div>
+                                <div className="flex items-center justify-center md:justify-start gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">TERINTEGRASI OJK</span>
+                                </div>
+                            </div>
+                            <p className="text-xs font-medium text-gray-400 leading-relaxed uppercase tracking-[0.15em] max-w-2xl">
+                                KONFIRMASI OTOMATIS MEMAKAN WAKTU <span className="text-white font-black">1-5 MENIT</span>. 
+                                JIKA STATUS BELUM BERUBAH, SILAKAN GUNAKAN TOMBOL <span className="text-white font-black italic">'CEK STATUS'</span> PADA RIWAYAT ATAU 
+                                HUBUNGI <span className="text-white font-black">HELP DESK</span> KAMI MELALUI WHATSAPP DENGAN MENYERTAKAN BUKTI BAYAR.
                             </p>
+                        </div>
+                        
+                        <div className="flex flex-col gap-3 w-full md:w-auto">
+                            <a 
+                                href="https://wa.me/628121345678" 
+                                target="_blank"
+                                className="px-8 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn"
+                            >
+                                <MessageCircle size={18} /> 
+                                HUBUNGI SUPPORT
+                                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                            </a>
+                            <p className="text-[9px] font-bold text-gray-600 text-center uppercase tracking-widest">RESPONS CEPAT: 08:00 - 21:00</p>
                         </div>
                     </div>
                 </div>
+            </main>
             
 
             {/* MANUAL UPLOAD MODAL */}
@@ -1011,7 +1030,6 @@ export default function InstallmentIndex({ transactions }) {
                     </div>
                 )}
             </AnimatePresence>
-            </main>
         </PublicLayout>
     );
 }
