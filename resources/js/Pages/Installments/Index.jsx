@@ -408,7 +408,7 @@ export default function InstallmentIndex({ transactions }) {
                             {transactions.map((transaction) => (
                                 <motion.div
                                     key={transaction.id}
-                                    className={`bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden relative transition-all ${
+                                    className={`bg-white border-4 border-black overflow-hidden relative transition-all ${
                                         transaction.status === "cancelled"
                                             ? "opacity-60 saturate-50"
                                             : ""
@@ -449,16 +449,16 @@ export default function InstallmentIndex({ transactions }) {
                                             <div className="flex flex-col items-end gap-3 w-full md:w-auto">
                                                 {transaction.status ===
                                                 "cancelled" ? (
-                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-100 text-red-600 text-xs font-black border border-red-200 uppercase tracking-widest">
+                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-none bg-black text-white text-xs font-black border border-black uppercase tracking-widest">
                                                         <X
                                                             size={14}
                                                             strokeWidth={3}
                                                         />
-                                                        Pesanan Dibatalkan
+                                                        Dibatalkan
                                                     </span>
                                                 ) : transaction.status ===
                                                   "completed" ? (
-                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-100 text-green-600 text-xs font-black border border-green-200 uppercase tracking-widest">
+                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-none bg-black text-white text-xs font-black border border-black uppercase tracking-widest">
                                                         <ShieldCheck
                                                             size={14}
                                                             strokeWidth={3}
@@ -466,7 +466,7 @@ export default function InstallmentIndex({ transactions }) {
                                                         Selesai
                                                     </span>
                                                 ) : (
-                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-50 text-blue-600 text-xs font-black border border-blue-100 uppercase tracking-widest">
+                                                    <span className="flex items-center gap-1.5 px-4 py-2 rounded-none bg-black text-white text-xs font-black border border-black uppercase tracking-widest">
                                                         <RefreshCw
                                                             size={14}
                                                             strokeWidth={3}
@@ -644,7 +644,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                             "pending" ||
                                                                         inst.status ===
                                                                             "overdue" ? (
-                                                                            <div className="flex gap-1">
+                                                                            <div className="flex gap-1 border border-gray-300 p-1">
                                                                                 <button
                                                                                     onClick={() =>
                                                                                         handleOnlinePayment(
@@ -655,7 +655,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingPay
                                                                                     }
                                                                                     title="Bayar langsung via online gateway"
-                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-blue-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-black hover:bg-transparent hover:text-black hover:border-black border border-transparent text-white text-[9px] font-black uppercase tracking-widest transition-colors disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
                                                                                     <CreditCard className="w-3 h-3" />
                                                                                     Bayar
@@ -673,7 +673,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         processing
                                                                                     }
                                                                                     title="Upload struk transfer manual dari bank"
-                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-amber-500/10 disabled:opacity-30 disabled:grayscale whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 hover:border-black hover:text-black text-gray-700 text-[9px] font-black uppercase tracking-widest transition-colors disabled:opacity-30 disabled:grayscale whitespace-nowrap"
                                                                                 >
                                                                                     <Upload className="w-3 h-3" />
                                                                                     Transfer
@@ -688,7 +688,7 @@ export default function InstallmentIndex({ transactions }) {
                                                                                         isLoadingCheck
                                                                                     }
                                                                                     title="Cek apakah pembayaran sudah terverifikasi"
-                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-[9px] font-black uppercase tracking-widest rounded-lg transition-all disabled:opacity-50 whitespace-nowrap"
+                                                                                    className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-black border border-transparent text-[9px] font-black uppercase tracking-widest transition-colors disabled:opacity-50 whitespace-nowrap"
                                                                                 >
                                                                                     <RefreshCw
                                                                                         className={`w-3 h-3 ${isLoadingCheck ? "animate-spin" : ""}`}
@@ -704,13 +704,13 @@ export default function InstallmentIndex({ transactions }) {
                                                                                     inst.id,
                                                                                 )}
                                                                                 target="_blank"
-                                                                                className="flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-[9px] font-black uppercase tracking-widest rounded-lg transition-all shadow-lg shadow-green-500/10 inline-flex whitespace-nowrap"
+                                                                                className="flex items-center gap-1.5 px-4 py-2 bg-black text-white text-[9px] font-black uppercase tracking-widest border border-black hover:bg-transparent hover:text-black inline-flex whitespace-nowrap transition-colors"
                                                                             >
                                                                                 <Download className="w-3 h-3" />
                                                                                 Kwitansi
                                                                             </a>
                                                                         ) : (
-                                                                            <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-yellow-100 text-yellow-700 text-[9px] font-bold rounded-lg whitespace-nowrap uppercase tracking-widest">
+                                                                            <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-black border border-gray-200 text-[9px] font-bold whitespace-nowrap uppercase tracking-widest">
                                                                                 <Clock className="w-3 h-3" />
                                                                                 Verifikasi
                                                                             </span>
@@ -781,21 +781,21 @@ export default function InstallmentIndex({ transactions }) {
                                                                 <>
                                                                     <button
                                                                         onClick={() => handleOnlinePayment(inst)}
-                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-blue-500/10"
+                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-none border border-black hover:bg-transparent hover:text-black transition-colors"
                                                                     >
                                                                         <CreditCard className="w-3.5 h-3.5" />
                                                                         Bayar
                                                                     </button>
                                                                     <button
                                                                         onClick={() => openUploadModal(inst)}
-                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-amber-500/10"
+                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-none border border-gray-300 hover:border-black transition-colors"
                                                                     >
                                                                         <Upload className="w-3.5 h-3.5" />
                                                                         Upload
                                                                     </button>
                                                                     <button
                                                                         onClick={() => handleCheckStatus(inst)}
-                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-gray-700 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg"
+                                                                        className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-black text-[10px] font-black uppercase tracking-widest rounded-none border border-transparent hover:border-gray-300 transition-colors"
                                                                     >
                                                                         <RefreshCw className={`w-3.5 h-3.5 ${isLoadingCheck ? 'animate-spin' : ''}`} />
                                                                         Cek
@@ -805,13 +805,13 @@ export default function InstallmentIndex({ transactions }) {
                                                                 <a
                                                                     href={route("installments.receipt", inst.id)}
                                                                     target="_blank"
-                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-green-500/10"
+                                                                    className="flex items-center gap-1.5 px-4 py-2 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-none border border-black hover:bg-transparent hover:text-black transition-colors"
                                                                 >
                                                                     <Download className="w-3.5 h-3.5" />
                                                                     Kwitansi
                                                                 </a>
                                                             ) : (
-                                                                <span className="flex items-center gap-1.5 px-3 py-2 bg-yellow-100 text-yellow-700 text-[10px] font-black uppercase tracking-widest rounded-xl">
+                                                                <span className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-black text-[10px] font-black uppercase tracking-widest rounded-none border border-gray-200">
                                                                     <Clock className="w-3.5 h-3.5" />
                                                                     Diproses
                                                                 </span>
@@ -826,22 +826,21 @@ export default function InstallmentIndex({ transactions }) {
                                         <motion.div
                                             initial={{ opacity: 0, y: -20 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            className="px-6 md:px-8 py-6 md:py-8 bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-200"
+                                            className="px-6 md:px-8 py-6 md:py-8 bg-black border-t border-black"
                                         >
                                             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                                                 <div>
-                                                    <p className="text-xs font-semibold text-blue-600 uppercase mb-2">
-                                                        Cicilan Terpilih untuk
-                                                        Dibayar
+                                                    <p className="text-xs font-semibold text-gray-400 uppercase mb-2">
+                                                        Cicilan Terpilih
                                                     </p>
                                                     <div className="flex flex-col gap-2">
-                                                        <p className="text-2xl md:text-3xl font-black text-gray-900">
+                                                        <p className="text-2xl md:text-3xl font-black text-white">
                                                             {selectedIds.length}{" "}
                                                             Cicilan
                                                         </p>
-                                                        <p className="text-xs font-medium text-gray-600">
+                                                        <p className="text-xs font-medium text-gray-400">
                                                             Total Nominal:{" "}
-                                                            <span className="font-bold text-blue-600">
+                                                            <span className="font-bold text-white">
                                                                 {formatCurrency(
                                                                     selectedTotal,
                                                                 )}
@@ -852,12 +851,12 @@ export default function InstallmentIndex({ transactions }) {
                                                 <button
                                                     onClick={handlePayMultiple}
                                                     disabled={isLoadingPay}
-                                                    className="w-full md:w-auto px-10 py-5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-xs rounded-2xl transition-all shadow-xl shadow-blue-500/20 disabled:opacity-50 flex items-center justify-center gap-3"
+                                                    className="w-full md:w-auto px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-none transition-all disabled:opacity-50 flex items-center justify-center gap-3 border border-white hover:bg-transparent hover:text-white"
                                                 >
                                                     <ShieldCheck className="w-5 h-5" />
                                                     {isLoadingPay
-                                                        ? "Memproses..."
-                                                        : "Bayar Semua Sekarang"}
+                                                        ? "MEMPROSES..."
+                                                        : "BAYAR SEMUA SEKARANG"}
                                                 </button>
                                             </div>
                                         </motion.div>
@@ -888,10 +887,10 @@ export default function InstallmentIndex({ transactions }) {
                         </div>
                     ) : (
                         <div className="max-w-2xl mx-auto py-24 text-center">
-                            <div className="w-32 h-32 bg-white rounded-[3rem] shadow-xl shadow-gray-200/50 flex items-center justify-center mx-auto mb-8 border border-white">
-                                <CreditCard className="w-16 h-16 text-gray-400" />
+                            <div className="w-32 h-32 bg-white rounded-none border border-gray-300 flex items-center justify-center mx-auto mb-8">
+                                <CreditCard className="w-16 h-16 text-black" />
                             </div>
-                            <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tight mb-4">
+                            <h3 className="text-3xl font-black text-black uppercase tracking-tight mb-4">
                                 Tidak Ada Tagihan Aktif
                             </h3>
                             <p className="text-gray-500 font-bold mb-10 text-lg leading-relaxed">
@@ -901,8 +900,8 @@ export default function InstallmentIndex({ transactions }) {
                             </p>
 
                             <Link href="/motors">
-                                <button className="h-16 px-10 bg-primary text-black font-black uppercase tracking-widest rounded-[2rem] hover:bg-white transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
-                                    Lihat Katalog Motor{" "}
+                                <button className="h-16 px-10 bg-black text-white font-black uppercase tracking-widest rounded-none border border-black hover:bg-transparent hover:text-black transition-colors flex items-center gap-3 mx-auto">
+                                    LIHAT KATALOG MOTOR{" "}
                                     <ArrowRight className="w-5 h-5" />
                                 </button>
                             </Link>
@@ -943,18 +942,18 @@ export default function InstallmentIndex({ transactions }) {
                             initial={{ opacity: 0, scale: 0.9, y: 30 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                            className="bg-white rounded-[3rem] w-full max-w-lg shadow-2xl relative z-20 overflow-hidden"
+                            className="bg-white rounded-none w-full max-w-lg border-2 border-black relative z-20 overflow-hidden"
                         >
-                            <div className="px-10 pt-10 pb-6 flex justify-between items-center">
-                                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tight flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-2xl bg-yellow-400 flex items-center justify-center text-primary-dark shadow-lg shadow-yellow-400/20">
+                            <div className="px-10 pt-10 pb-6 flex justify-between items-center border-b border-gray-200">
+                                <h3 className="text-2xl font-black text-black uppercase tracking-tight flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-none bg-black flex items-center justify-center text-white">
                                         <Upload className="w-5 h-5" />
                                     </div>
                                     BUKTI PEMBAYARAN
                                 </h3>
                                 <button
                                     onClick={closeUploadModal}
-                                    className="w-10 h-10 rounded-2xl bg-gray-50 text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center"
+                                    className="w-10 h-10 rounded-none border border-gray-300 text-gray-400 hover:text-black hover:border-black transition-colors flex items-center justify-center"
                                 >
                                     <X className="w-6 h-6" />
                                 </button>
@@ -962,15 +961,15 @@ export default function InstallmentIndex({ transactions }) {
 
                             <form
                                 onSubmit={submitPayment}
-                                className="p-10 pt-0 space-y-8"
+                                className="p-10 pt-8 space-y-8"
                             >
                                 <div className="space-y-4">
-                                    <div className="p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 flex items-center justify-between">
+                                    <div className="p-8 bg-gray-50 rounded-none border border-gray-300 flex items-center justify-between">
                                         <div>
-                                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">
+                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
                                                 Jumlah Bayar
                                             </p>
-                                            <p className="text-4xl font-black text-primary">
+                                            <p className="text-4xl font-black text-black tracking-tight">
                                                 {formatCurrency(
                                                     Number(
                                                         selectedInstallment.amount,
@@ -983,10 +982,10 @@ export default function InstallmentIndex({ transactions }) {
                                             </p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-1">
+                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
                                                 Target
                                             </p>
-                                            <p className="text-sm font-black text-gray-900 uppercase">
+                                            <p className="text-sm font-black text-black uppercase">
                                                 #Cicilan{" "}
                                                 {selectedInstallment.installment_number ||
                                                     "DP"}
@@ -994,7 +993,7 @@ export default function InstallmentIndex({ transactions }) {
                                         </div>
                                     </div>
 
-                                    <div className="p-6 bg-primary/5 rounded-[2rem] border border-primary/10 flex items-start gap-4">
+                                    <div className="p-6 bg-white rounded-none border border-black flex items-start gap-4">
                                         <Shield className="w-6 h-6 text-primary shrink-0" />
                                         <div className="space-y-1">
                                             <p className="text-[10px] font-black text-primary uppercase tracking-widest">
@@ -1023,7 +1022,7 @@ export default function InstallmentIndex({ transactions }) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="w-full h-14 rounded-2xl bg-gray-50 border border-gray-100 px-6 font-black text-gray-900 focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all appearance-none"
+                                            className="w-full h-14 rounded-none bg-white border border-gray-300 px-6 font-bold text-black focus:ring-0 focus:border-black transition-colors appearance-none"
                                         >
                                             <option value="transfer">
                                                 TRANSFER BANK MANUAL
@@ -1051,12 +1050,12 @@ export default function InstallmentIndex({ transactions }) {
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                                 required
                                             />
-                                            <div className="w-full h-40 rounded-[2.5rem] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-3 group-hover:bg-gray-50 group-hover:border-primary/30 transition-all">
-                                                <div className="w-12 h-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-300 group-hover:text-primary transition-all">
-                                                    <Upload className="w-6 h-6" />
+                                            <div className="w-full h-40 rounded-none border border-dashed border-gray-400 flex flex-col items-center justify-center gap-3 group-hover:bg-gray-50 group-hover:border-black transition-all bg-gray-50">
+                                                <div className="w-12 h-12 rounded-none bg-white border border-gray-300 flex items-center justify-center text-black">
+                                                    <Upload className="w-5 h-5" />
                                                 </div>
                                                 {data.payment_proof ? (
-                                                    <p className="text-xs font-black text-primary uppercase">
+                                                    <p className="text-xs font-black text-black">
                                                         {
                                                             data.payment_proof
                                                                 .name
@@ -1064,12 +1063,8 @@ export default function InstallmentIndex({ transactions }) {
                                                     </p>
                                                 ) : (
                                                     <div className="text-center">
-                                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                                                        <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">
                                                             Seret gambar kesini
-                                                        </p>
-                                                        <p className="text-[10px] font-bold text-gray-300 uppercase">
-                                                            Pilih dari Galeri
-                                                            Smartphone
                                                         </p>
                                                     </div>
                                                 )}
@@ -1081,7 +1076,7 @@ export default function InstallmentIndex({ transactions }) {
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full h-16 bg-primary text-white font-black uppercase tracking-widest rounded-2xl hover:bg-black disabled:opacity-50 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-3"
+                                    className="w-full h-16 bg-black text-white font-black uppercase tracking-widest rounded-none border border-black hover:bg-white hover:text-black disabled:opacity-50 transition-colors flex items-center justify-center gap-3"
                                 >
                                     {processing ? (
                                         <RefreshCw className="animate-spin" />

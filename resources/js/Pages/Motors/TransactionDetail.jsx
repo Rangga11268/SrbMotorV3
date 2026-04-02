@@ -202,16 +202,14 @@ export default function TransactionDetail({ transaction }) {
         <PublicLayout title="Detail Transaksi">
             <div className="bg-slate-50 min-h-screen pt-[110px] sm:pt-32 pb-12">
                 {/* Modern Header */}
-                <div className="bg-slate-900 text-white rounded-b-[2.5rem] shadow-xl shadow-slate-900/10 mb-8 pt-6 pb-12 px-4 relative overflow-hidden">
+                <div className="bg-black text-white rounded-none border-b border-black mb-8 pt-6 pb-12 px-4 relative overflow-hidden">
                     {/* Decorative Blurs */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
                     
                     <div className="container mx-auto max-w-7xl relative z-10">
                         {/* Back Button */}
                         <Link
                             href={route("motors.user-transactions")}
-                            className="inline-flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-white transition-colors hover:-translate-x-1 mb-6 bg-white/5 py-2 px-4 rounded-xl border border-white/10 w-fit backdrop-blur-sm"
+                            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-300 hover:text-black transition-colors hover:-translate-x-1 mb-6 bg-transparent hover:bg-white py-2 px-4 rounded-none border border-white w-fit"
                         >
                             <ChevronLeft className="w-4 h-4" />
                             Kembali ke Daftar Transaksi
@@ -236,9 +234,8 @@ export default function TransactionDetail({ transaction }) {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Header Card */}
-                        <div className="bg-slate-900 rounded-[2rem] shadow-xl shadow-slate-900/10 overflow-hidden relative">
+                        <div className="bg-black rounded-none border border-black overflow-hidden relative">
                             {/* Decorative Blur */}
-                            <div className="absolute -right-20 -top-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
                             
                             <div className="relative z-10 p-8 sm:p-10">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
@@ -252,7 +249,7 @@ export default function TransactionDetail({ transaction }) {
                                     </div>
                                     <div className="shrink-0">
                                         <span
-                                            className={`inline-flex items-center justify-center px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest border ${
+                                            className={`inline-flex items-center justify-center px-4 py-2 rounded-none font-bold text-[10px] uppercase tracking-widest border ${
                                                 getStatusColor(transaction.status) === "success"
                                                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                                                     : getStatusColor(transaction.status) === "warning"
@@ -300,7 +297,7 @@ export default function TransactionDetail({ transaction }) {
                         </div>
 
                         {/* Motor Details */}
-                        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                        <div className="bg-white rounded-none border border-slate-300 p-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
                                     <MapPin className="w-5 h-5" />
@@ -355,7 +352,7 @@ export default function TransactionDetail({ transaction }) {
 
                         {/* Credit Details */}
                         {isCreditOrder && (
-                            <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                            <div className="bg-white rounded-none border border-slate-300 p-8">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
                                         <DollarSign className="w-5 h-5" />
@@ -415,7 +412,7 @@ export default function TransactionDetail({ transaction }) {
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 mb-8">
+                                <div className="bg-gray-100 rounded-none p-6 border border-gray-300 mb-8">
                                     <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                                         <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">
                                             Estimasi Total Keseluruhan
@@ -444,7 +441,7 @@ export default function TransactionDetail({ transaction }) {
                         )}
 
                         {/* Customer Information */}
-                        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                        <div className="bg-white rounded-none border border-slate-300 p-8">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
                                     <User className="w-5 h-5" />
@@ -493,7 +490,7 @@ export default function TransactionDetail({ transaction }) {
 
                         {/* Survey Schedule */}
                         {isCreditOrder && survey && (
-                            <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                            <div className="bg-white rounded-none border border-slate-300 p-8">
                                 <button
                                     onClick={() =>
                                         setExpandedSection(
@@ -571,7 +568,7 @@ export default function TransactionDetail({ transaction }) {
                         {/* Installments / Payments */}
                         {transaction.installments &&
                             transaction.installments.length > 0 && (
-                                <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                                <div className="bg-white rounded-none border border-slate-300 p-8">
                                     <button
                                         onClick={() =>
                                             setExpandedSection(
@@ -603,7 +600,7 @@ export default function TransactionDetail({ transaction }) {
                                             {transaction.installments.map((installment, idx) => (
                                                 <div
                                                     key={installment.id}
-                                                    className={`p-5 rounded-2xl border transition-colors ${
+                                                    className={`p-5 rounded-none border transition-colors ${
                                                         installment.status === "paid"
                                                             ? "bg-emerald-50/50 border-emerald-100"
                                                             : installment.status === "overdue"
@@ -659,7 +656,7 @@ export default function TransactionDetail({ transaction }) {
                         {isCreditOrder &&
                             transaction.creditDetail.documents &&
                             transaction.creditDetail.documents.length > 0 && (
-                                <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                                <div className="bg-white rounded-none border border-slate-300 p-8">
                                     <button
                                         onClick={() =>
                                             setExpandedSection(
@@ -746,8 +743,7 @@ export default function TransactionDetail({ transaction }) {
                     {/* Sidebar */}
                     <aside className="space-y-6 lg:sticky lg:top-20 lg:h-fit">
                         {/* Summary Card */}
-                        <div className="bg-slate-900 text-white rounded-[2rem] shadow-xl shadow-slate-900/10 p-8 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+                        <div className="bg-black text-white rounded-none border border-black p-8 relative overflow-hidden">
                             
                             <h3 className="text-xl font-black mb-8 relative z-10 flex items-center gap-3">
                                 Ringkasan
@@ -788,7 +784,7 @@ export default function TransactionDetail({ transaction }) {
                                             <p className="text-3xl font-black text-white">
                                                 {formatCurrency(transaction.creditDetail?.monthly_installment || 0)}
                                             </p>
-                                            <span className="inline-block text-[10px] font-bold text-primary mt-2 bg-primary/10 border border-primary/20 px-3 py-1.5 rounded-lg uppercase tracking-widest">
+                                            <span className="inline-block text-[10px] font-bold text-white mt-2 bg-transparent border border-white px-3 py-1.5 rounded-none uppercase tracking-widest">
                                                 {transaction.creditDetail?.tenor || 0} Bulan Tenor
                                             </span>
                                         </div>
@@ -818,40 +814,39 @@ export default function TransactionDetail({ transaction }) {
 
                         {/* Action Card - New Location for Cancel Button */}
                         {canCancel && (
-                            <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 overflow-hidden relative group">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-full blur-2xl pointer-events-none -mr-10 -mt-10 group-hover:bg-rose-100 transition-colors"></div>
+                            <div className="bg-white rounded-none shadow-none border border-slate-300 p-8 overflow-hidden relative group">
                                 
                                 <h3 className="text-lg font-black text-slate-900 mb-2 relative z-10">Bantuan</h3>
-                                <p className="text-slate-500 text-sm mb-6 relative z-10 leading-relaxed font-medium">
+                                <p className="text-slate-500 text-sm mb-6 relative z-10 font-bold">
                                     Jika Anda ingin membatalkan pesanan ini, silakan klik tombol di bawah.
                                 </p>
                                 <button
                                     onClick={handleCancel}
-                                    className="w-full flex items-center justify-center gap-2 py-4 bg-white hover:bg-rose-50 text-rose-500 border-2 border-rose-100 hover:border-rose-200 rounded-[1.25rem] font-black uppercase tracking-widest text-xs transition-all relative z-10 shadow-sm"
+                                    className="w-full flex items-center justify-center gap-2 py-4 bg-white hover:bg-black hover:text-white text-black border-2 border-black rounded-none font-bold uppercase tracking-widest text-[10px] transition-all relative z-10"
                                 >
-                                    <XCircle className="w-5 h-5 text-rose-500" />
-                                    Batalkan Pesanan
+                                    <XCircle className="w-4 h-4" />
+                                    BATALKAN PESANAN
                                 </button>
                             </div>
                         )}
 
                         {/* Need Help Card */}
-                        <div className="bg-indigo-50/50 border border-indigo-100 rounded-[2rem] p-8">
-                            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-indigo-600 mb-4 shadow-sm">
-                                <Phone className="w-6 h-6" />
+                        <div className="bg-white border border-black rounded-none p-8">
+                            <div className="w-12 h-12 bg-black rounded-none flex items-center justify-center text-white mb-4">
+                                <Phone className="w-5 h-5" />
                             </div>
-                            <h3 className="font-black text-slate-900 mb-2">
+                            <h3 className="font-black text-black uppercase tracking-widest mb-2">
                                 Butuh Bantuan?
                             </h3>
-                            <p className="text-sm font-medium text-slate-600 mb-6 leading-relaxed">
+                            <p className="text-sm font-bold text-gray-600 mb-6 leading-relaxed">
                                 Tim kami siap membantu Anda melalui WhatsApp jika ada kendala.
                             </p>
                             <a
                                 href="https://wa.me/628123456789"
                                 target="_blank"
-                                className="inline-flex w-full items-center justify-center gap-2 px-5 py-3.5 bg-emerald-500 text-white rounded-2xl hover:bg-black transition-colors font-bold text-sm shadow-xl shadow-emerald-500/20"
+                                className="inline-flex w-full items-center justify-center gap-2 px-5 py-4 bg-black border border-black hover:bg-white hover:text-black text-white rounded-none transition-colors font-bold text-[10px] uppercase tracking-widest"
                             >
-                                Chat via WhatsApp
+                                CHAT VIA WHATSAPP
                             </a>
                         </div>
                     </aside>

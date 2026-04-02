@@ -26,17 +26,16 @@ export default function Edit({ user }) {
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
                         <div className="max-w-5xl mx-auto">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="p-2 bg-blue-100 rounded-lg">
+                                <div className="p-3 bg-black text-white rounded-none border border-black">
                                     <Settings
                                         size={24}
-                                        className="text-blue-600"
                                     />
                                 </div>
-                                <h1 className="text-4xl font-bold text-gray-900">
-                                    Pengaturan Akun
+                                <h1 className="text-4xl font-black text-black tracking-widest uppercase">
+                                    LENGKAPI PROFIL
                                 </h1>
                             </div>
-                            <p className="text-gray-600">
+                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">
                                 Kelola informasi profil dan keamanan akun Anda
                             </p>
                         </div>
@@ -54,10 +53,10 @@ export default function Edit({ user }) {
                                     className="mb-8"
                                 >
                                     <div
-                                        className={`p-4 rounded-lg border flex items-center gap-3 ${
+                                        className={`p-4 rounded-none border flex items-center gap-3 ${
                                             flash.success
-                                                ? "bg-green-50 border-green-200 text-green-700"
-                                                : "bg-red-50 border-red-200 text-red-700"
+                                                ? "bg-white border-emerald-600 text-emerald-600"
+                                                : "bg-white border-rose-600 text-rose-600"
                                         }`}
                                     >
                                         {flash.success ? (
@@ -96,17 +95,17 @@ export default function Edit({ user }) {
                                 <div className="mt-8 pt-8 border-t border-gray-200">
                                     <Link
                                         href={route("profile.show")}
-                                        className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 font-medium text-sm"
+                                        className="flex items-center gap-2 px-4 py-2 text-black hover:text-[#1c69d4] font-bold text-[10px] uppercase tracking-widest transition-colors"
                                     >
-                                        <ArrowLeft size={16} />
-                                        Kembali
+                                        <ArrowLeft size={14} />
+                                        KEMBALI
                                     </Link>
                                 </div>
                             </div>
 
                             {/* Content Area */}
                             <div className="md:col-span-3">
-                                <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
+                                <div className="bg-white border border-gray-300 rounded-none p-8">
                                     <AnimatePresence mode="wait">
                                         {activeTab === "profile" ? (
                                             <motion.div
@@ -127,18 +126,13 @@ export default function Edit({ user }) {
                                                     duration: 0.3,
                                                 }}
                                             >
-                                                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                                    <div className="p-2 bg-blue-100 rounded-lg">
-                                                        <User
-                                                            className="text-blue-600"
-                                                            size={20}
-                                                        />
+                                                <h2 className="text-2xl font-black text-black uppercase tracking-widest mb-6 flex items-center gap-3 border-b border-gray-200 pb-4">
+                                                    <div className="p-2 bg-black text-white rounded-none">
+                                                        <User size={20} />
                                                     </div>
                                                     Informasi Profil
                                                 </h2>
-                                                <UpdateProfileForm
-                                                    user={user}
-                                                />
+                                                <UpdateProfileForm user={user} />
                                             </motion.div>
                                         ) : (
                                             <motion.div
@@ -159,12 +153,9 @@ export default function Edit({ user }) {
                                                     duration: 0.3,
                                                 }}
                                             >
-                                                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                                    <div className="p-2 bg-blue-100 rounded-lg">
-                                                        <Key
-                                                            className="text-blue-600"
-                                                            size={20}
-                                                        />
+                                                <h2 className="text-2xl font-black text-black uppercase tracking-widest mb-6 flex items-center gap-3 border-b border-gray-200 pb-4">
+                                                    <div className="p-2 bg-black text-white rounded-none">
+                                                        <Key size={20} />
                                                     </div>
                                                     Keamanan
                                                 </h2>
@@ -186,31 +177,31 @@ function TabButton({ active, onClick, icon: Icon, label, desc }) {
     return (
         <button
             onClick={onClick}
-            className={`w-full text-left p-4 rounded-lg border transition-all ${
+            className={`w-full text-left p-4 rounded-none border transition-all ${
                 active
-                    ? "bg-blue-50 border-blue-200 shadow-sm"
-                    : "bg-white border-gray-200 hover:border-gray-300"
+                    ? "bg-black border-black text-white"
+                    : "bg-white border-gray-300 hover:border-black text-gray-500 hover:text-black"
             }`}
         >
             <div className="flex items-center gap-3">
                 <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                    className={`w-10 h-10 rounded-none flex items-center justify-center transition-colors border ${
                         active
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-gray-100 text-gray-600"
+                            ? "bg-white text-black border-white"
+                            : "bg-gray-100 text-gray-600 border-gray-300"
                     }`}
                 >
                     <Icon size={18} />
                 </div>
                 <div>
                     <h3
-                        className={`font-semibold text-sm ${
-                            active ? "text-gray-900" : "text-gray-700"
+                        className={`font-black text-[10px] uppercase tracking-widest ${
+                            active ? "text-white" : "text-black"
                         }`}
                     >
                         {label}
                     </h3>
-                    <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
+                    <p className={`text-[9px] uppercase tracking-widest mt-0.5 ${active ? "text-gray-300" : "text-gray-400"}`}>{desc}</p>
                 </div>
             </div>
         </button>
@@ -235,7 +226,7 @@ function UpdateProfileForm({ user }) {
     return (
         <form onSubmit={submit} className="space-y-6">
             <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-900">
+                <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                     Nama Lengkap
                 </label>
                 <div className="relative">
@@ -247,8 +238,8 @@ function UpdateProfileForm({ user }) {
                         type="text"
                         value={data.name}
                         onChange={(e) => setData("name", e.target.value)}
-                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                        placeholder="Masukkan nama lengkap Anda"
+                        className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                        placeholder="NAMA SESUAI KTP"
                     />
                 </div>
                 {errors.name && (
@@ -261,7 +252,7 @@ function UpdateProfileForm({ user }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-900">
+                    <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                         Email
                     </label>
                     <div className="relative">
@@ -273,8 +264,8 @@ function UpdateProfileForm({ user }) {
                             type="email"
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                            placeholder="Masukkan email Anda"
+                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                            placeholder="EMAIL AKTIF ANDA"
                         />
                     </div>
                     {errors.email && (
@@ -286,7 +277,7 @@ function UpdateProfileForm({ user }) {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-900">
+                    <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                         Nomor WhatsApp
                     </label>
                     <div className="relative">
@@ -297,7 +288,7 @@ function UpdateProfileForm({ user }) {
                             type="tel"
                             value={data.phone}
                             onChange={(e) => setData("phone", e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
                             placeholder="0812..."
                         />
                     </div>
@@ -306,7 +297,7 @@ function UpdateProfileForm({ user }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-900">
+                    <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                         NIK (KTP)
                     </label>
                     <div className="relative">
@@ -317,14 +308,14 @@ function UpdateProfileForm({ user }) {
                             type="text"
                             value={data.nik}
                             onChange={(e) => setData("nik", e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                            placeholder="16 digit NIK"
+                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                            placeholder="16 DIGIT NIK"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-900">
+                    <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                         Pekerjaan
                     </label>
                     <div className="relative">
@@ -335,15 +326,15 @@ function UpdateProfileForm({ user }) {
                             type="text"
                             value={data.pekerjaan}
                             onChange={(e) => setData("pekerjaan", e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                            placeholder="Sesuai KTP"
+                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                            placeholder="NAMA PEKERJAAN"
                         />
                     </div>
                 </div>
             </div>
 
             <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-900">
+                <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                     Alamat Lengkap
                 </label>
                 <div className="relative">
@@ -353,8 +344,8 @@ function UpdateProfileForm({ user }) {
                     <textarea
                         value={data.alamat}
                         onChange={(e) => setData("alamat", e.target.value)}
-                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all min-h-[100px]"
-                        placeholder="Alamat lengkap sesuai KTP"
+                        className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all min-h-[100px] font-mono"
+                        placeholder="ALAMAT LENGKAP"
                     />
                 </div>
             </div>
@@ -363,10 +354,10 @@ function UpdateProfileForm({ user }) {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    className="px-8 py-4 bg-[#1c69d4] text-white font-bold text-[10px] uppercase tracking-widest rounded-none border border-[#1c69d4] hover:bg-black hover:border-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 >
-                    <Save size={18} />
-                    Simpan Perubahan
+                    <Save size={16} />
+                    SIMPAN PERUBAHAN
                 </button>
             </div>
         </form>
@@ -390,7 +381,7 @@ function UpdatePasswordForm() {
     return (
         <form onSubmit={submit} className="space-y-6">
             <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-900">
+                <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                     Password Saat Ini
                 </label>
                 <div className="relative">
@@ -404,8 +395,8 @@ function UpdatePasswordForm() {
                         onChange={(e) =>
                             setData("current_password", e.target.value)
                         }
-                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                        placeholder="Masukkan password saat ini"
+                        className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                        placeholder="PASSWORD SAAT INI"
                     />
                 </div>
                 {errors.current_password && (
@@ -417,7 +408,7 @@ function UpdatePasswordForm() {
             </div>
 
             <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-900">
+                <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                     Password Baru
                 </label>
                 <div className="relative">
@@ -429,8 +420,8 @@ function UpdatePasswordForm() {
                         type="password"
                         value={data.password}
                         onChange={(e) => setData("password", e.target.value)}
-                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                        placeholder="Minimal 8 karakter"
+                        className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                        placeholder="MIN. 8 KARAKTER"
                     />
                 </div>
                 {errors.password && (
@@ -442,7 +433,7 @@ function UpdatePasswordForm() {
             </div>
 
             <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-900">
+                <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                     Konfirmasi Password Baru
                 </label>
                 <div className="relative">
@@ -456,8 +447,8 @@ function UpdatePasswordForm() {
                         onChange={(e) =>
                             setData("password_confirmation", e.target.value)
                         }
-                        className="w-full bg-white border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                        placeholder="Ulangi password baru Anda"
+                        className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
+                        placeholder="ULANGI PASSWORD"
                     />
                 </div>
                 {errors.password_confirmation && (
@@ -472,10 +463,10 @@ function UpdatePasswordForm() {
                 <button
                     type="submit"
                     disabled={processing}
-                    className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    className="px-8 py-4 bg-black text-white font-bold text-[10px] uppercase tracking-widest rounded-none border border-black hover:bg-transparent hover:text-black disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 >
-                    <Save size={18} />
-                    {processing ? "Menyimpan..." : "Ubah Password"}
+                    <Save size={16} />
+                    {processing ? "MENYIMPAN..." : "UBAH PASSWORD"}
                 </button>
             </div>
         </form>

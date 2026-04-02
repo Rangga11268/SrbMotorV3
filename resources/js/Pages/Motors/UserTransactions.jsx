@@ -220,7 +220,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         placeholder="Cari ID atau Nama Motor..."
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
-                                        className="w-full h-14 pl-12 pr-12 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-bold placeholder:text-gray-400"
+                                        className="w-full h-14 pl-12 pr-12 rounded-none bg-gray-50 border border-gray-200 hover:border-black focus:bg-white focus:border-black focus:ring-0 transition-all text-[11px] uppercase tracking-widest font-bold placeholder:text-gray-400"
                                     />
                                     {search && (
                                         <button 
@@ -239,9 +239,9 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                     <select
                                         value={status}
                                         onChange={(e) => setStatus(e.target.value)}
-                                        className="w-full h-14 pl-12 pr-10 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-sm font-bold text-gray-700 appearance-none"
+                                        className="w-full h-14 pl-12 pr-10 rounded-none bg-gray-50 border border-gray-200 hover:border-black focus:bg-white focus:border-black focus:ring-0 transition-all text-[11px] uppercase tracking-widest font-bold text-gray-700 appearance-none"
                                     >
-                                        <option value="">Semua Status</option>
+                                        <option value="">SEMUA STATUS</option>
                                         <option value="new_order">Pesanan Masuk</option>
                                         <option value="waiting_payment">Menunggu Pembayaran</option>
                                         <option value="payment_confirmed">Pembayaran Lunas</option>
@@ -273,7 +273,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         initial={{ opacity: 0, y: 15 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col"
+                                        className="bg-white border border-gray-300 hover:border-black rounded-none transition-all flex flex-col"
                                     >
                                         {/* Card Header */}
                                         <div className="bg-gray-50/80 px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
@@ -287,7 +287,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                                     {formatDate(transaction.created_at)}
                                                 </span>
                                             </div>
-                                            <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border flex items-center gap-1.5 shadow-sm ${statusInfo.color}`}>
+                                            <span className={`px-3 py-1.5 rounded-none text-[10px] uppercase tracking-widest font-bold border flex items-center gap-1.5 ${statusInfo.color}`}>
                                                 <StatusIcon size={14} strokeWidth={2.5} />
                                                 {statusInfo.label}
                                             </span>
@@ -296,7 +296,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         {/* Card Body */}
                                         <div className="p-6 flex flex-col sm:flex-row gap-6">
                                             {/* Image */}
-                                            <div className="w-full sm:w-48 h-32 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 border border-gray-100 p-2">
+                                            <div className="w-full sm:w-48 h-32 bg-gray-100 rounded-none border border-gray-300 flex items-center justify-center p-2 flex-shrink-0">
                                                 <img
                                                     src={`/storage/${transaction.motor.image_path}`}
                                                     alt={transaction.motor.name}
@@ -316,14 +316,14 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                                     </span>
                                                     <span className="w-1 h-1 rounded-full bg-gray-300" />
                                                     {transaction.transaction_type === "CASH" ? (
-                                                        <span className="flex items-center gap-1.5 text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded-md">
+                                                        <span className="flex items-center gap-1.5 text-emerald-600 font-bold bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-none text-[10px] uppercase tracking-widest">
                                                             <Wallet className="w-4 h-4" />
-                                                            Tunai
+                                                            TUNAI
                                                         </span>
                                                     ) : (
-                                                        <span className="flex items-center gap-1.5 text-blue-600 font-bold bg-blue-50 px-2.5 py-1 rounded-md">
+                                                        <span className="flex items-center gap-1.5 text-blue-600 font-bold bg-blue-50 border border-blue-200 px-3 py-1 rounded-none text-[10px] uppercase tracking-widest">
                                                             <CreditCard className="w-4 h-4" />
-                                                            Kredit
+                                                            KREDIT
                                                         </span>
                                                     )}
                                                 </div>
@@ -353,17 +353,17 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                             {transaction.transaction_type === "CREDIT" && (
                                                 <Link
                                                     href={route("motors.manage-documents", transaction.id)}
-                                                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-sm transition-colors flex items-center justify-center gap-2"
+                                                    className="w-full sm:w-auto px-6 py-3 rounded-none border border-[#1c69d4] bg-white hover:bg-[#1c69d4] hover:text-white text-[#1c69d4] font-bold text-[10px] uppercase tracking-widest transition-colors flex items-center justify-center gap-2"
                                                 >
                                                     <FileText size={16} strokeWidth={2.5} />
-                                                    Kelola Dokumen
+                                                    KELOLA DOKUMEN
                                                 </Link>
                                             )}
                                             <Link
                                                 href={route("motors.transaction.show", transaction.id)}
-                                                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-sm transition-colors flex items-center justify-center gap-2"
+                                                className="w-full sm:w-auto px-6 py-3 rounded-none border border-black bg-black hover:bg-transparent text-white hover:text-black font-bold text-[10px] uppercase tracking-widest transition-colors flex items-center justify-center gap-2"
                                             >
-                                                Detail Transaksi
+                                                DETAIL TRANSAKSI
                                                 <ArrowRight size={16} strokeWidth={2.5} />
                                             </Link>
                                         </div>
@@ -373,21 +373,21 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                         </div>
                     ) : (
                         <div className="max-w-2xl mx-auto py-24 text-center">
-                            <div className="w-32 h-32 bg-white rounded-[3rem] shadow-xl shadow-gray-200/50 flex items-center justify-center mx-auto mb-8 border border-white">
-                                <Package className="w-16 h-16 text-gray-200" />
+                            <div className="w-32 h-32 bg-gray-100 border-2 border-gray-300 rounded-none flex items-center justify-center mx-auto mb-8">
+                                <Package className="w-16 h-16 text-gray-300" />
                             </div>
-                            <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tight mb-4">
+                            <h3 className="text-3xl font-black text-black uppercase tracking-tight mb-4">
                                 Belum Ada Transaksi
                             </h3>
-                            <p className="text-gray-500 font-bold mb-10 text-lg leading-relaxed">
+                            <p className="text-gray-500 font-light mb-10 text-lg leading-relaxed">
                                 Anda belum memiliki riwayat pemesanan motor di
                                 SRB Motors. Jelajahi katalog kami untuk
                                 menemukan motor impian Anda.
                             </p>
                             <Link href="/motors">
-                                <button className="h-16 px-10 bg-primary text-black font-black uppercase tracking-widest rounded-[2rem] hover:bg-white transition-all shadow-2xl shadow-primary/20 flex items-center gap-3 mx-auto">
-                                    Mulai Menjelajah{" "}
-                                    <ArrowRight className="w-5 h-5" />
+                                <button className="h-14 px-10 border border-black bg-black text-white font-bold uppercase tracking-widest text-[11px] rounded-none hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3 mx-auto">
+                                    MULAI MENJELAJAH{" "}
+                                    <ArrowRight className="w-4 h-4" />
                                 </button>
                             </Link>
                         </div>
@@ -402,12 +402,12 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                     key={k}
                                     onClick={() => handlePageChange(link.url)}
                                     disabled={!link.url || link.active}
-                                    className={`w-12 h-12 flex items-center justify-center rounded-2xl text-[11px] font-black transition-all border ${
+                                    className={`w-12 h-12 flex items-center justify-center rounded-none text-[10px] font-bold uppercase tracking-widest transition-all border ${
                                         link.active
-                                            ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+                                            ? "bg-black text-white border-black"
                                             : link.url
-                                              ? "bg-white text-gray-400 border-gray-100 hover:border-primary hover:text-primary shadow-sm"
-                                              : "bg-white text-gray-200 border-gray-50 cursor-not-allowed"
+                                              ? "bg-white text-gray-400 border-gray-300 hover:border-black hover:text-black"
+                                              : "bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed"
                                     }`}
                                     dangerouslySetInnerHTML={{
                                         __html: link.label,
