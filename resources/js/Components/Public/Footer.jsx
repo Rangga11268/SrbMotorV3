@@ -31,59 +31,62 @@ export default function Footer() {
     };
 
     return (
-        <footer className="bg-gradient-to-b from-[#0d1b2e] to-[#060d18] text-gray-400 border-t border-blue-900/30">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-py-sm">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+        <footer className="bg-[#111111] text-white border-t border-gray-800">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
                     {/* Brand + Contact */}
-                    <div className="md:col-span-4 space-y-6">
+                    <div className="md:col-span-4 space-y-8">
                         <div className="flex flex-col gap-4">
-                            <div className="flex items-center gap-3">
-                                <Link href="/" className="inline-block transition-transform hover:scale-105 active:scale-95">
-                                    <Logo className="h-9" dark={true} />
+                            <div className="flex items-center gap-4">
+                                <Link
+                                    href="/"
+                                    className="inline-block transition-transform hover:opacity-80"
+                                >
+                                    <Logo className="h-8" dark={true} />
                                 </Link>
-                                <div className="h-6 w-px bg-white/20"></div>
-                                <img 
-                                    src="/assets/img/logoSSM.webp" 
-                                    alt="SSM Logo" 
-                                    className="h-6 w-auto object-contain brightness-125"
+                                <div className="h-6 w-px bg-gray-700"></div>
+                                <img
+                                    src="/assets/img/logoSSM.webp"
+                                    alt="SSM Logo"
+                                    className="h-6 w-auto object-contain brightness-0 invert"
                                 />
                             </div>
                             <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 opacity-80 leading-none">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#1c69d4] leading-none">
                                     Official Authorized Dealer
                                 </p>
-                                <p className="text-sm font-bold text-gray-400">
-                                    Bagian dari Sinar Surya Motor (SSM)
+                                <p className="text-xs font-bold text-[#bbbbbb] uppercase tracking-widest">
+                                    Sinar Surya Motor (SSM)
                                 </p>
                             </div>
                         </div>
-                        <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+                        <p className="text-sm font-light text-[#bbbbbb] leading-relaxed max-w-xs">
                             {settings.site_description ||
-                                "Dealer motor terpercaya dengan proses kredit mudah, transparan, dan cepat."}
+                                "Dealer motor terpercaya dengan proses kredit mudah, transparan, dan bergaransi resmi."}
                         </p>
-                        <div className="space-y-3">
-                            <div className="flex items-start gap-3">
-                                <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                                <span className="text-sm text-gray-500">
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-4">
+                                <MapPin className="w-4 h-4 text-[#1c69d4] mt-0.5 shrink-0" />
+                                <span className="text-sm font-light text-[#bbbbbb]">
                                     {settings.contact_address ||
                                         "Jl. Raya Utama No. 123, Jakarta Timur"}
                                 </span>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <Phone className="w-4 h-4 text-blue-400 shrink-0" />
+                            <div className="flex items-center gap-4">
+                                <Phone className="w-4 h-4 text-[#1c69d4] shrink-0" />
                                 <a
                                     href={`https://wa.me/${settings.contact_phone?.replace(/\D/g, "") || "628978638849"}`}
-                                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                                    className="text-sm font-light text-[#bbbbbb] hover:text-white transition-colors"
                                 >
                                     {settings.contact_phone ||
                                         "+62 812 3456 7890"}
                                 </a>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+                            <div className="flex items-center gap-4">
+                                <Mail className="w-4 h-4 text-[#1c69d4] shrink-0" />
                                 <a
                                     href={`mailto:${settings.contact_email || "halo@srbmotor.id"}`}
-                                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                                    className="text-sm font-light text-[#bbbbbb] hover:text-white transition-colors"
                                 >
                                     {settings.contact_email ||
                                         "halo@srbmotor.id"}
@@ -94,36 +97,36 @@ export default function Footer() {
 
                     {/* Quick Links */}
                     <div className="md:col-span-4 grid grid-cols-2 gap-8">
-                        <div className="space-y-6">
-                            <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
-                                Produk
+                        <div className="space-y-8">
+                            <h4 className="text-[#757575] text-[10px] font-bold uppercase tracking-[0.2em]">
+                                Produk & Layanan
                             </h4>
-                            <ul className="space-y-3">
+                            <ul className="space-y-4">
                                 {links.produk.map((link, i) => (
                                     <li key={i}>
                                         <Link
                                             href={link.href}
-                                            className="text-sm text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors group"
+                                            className="text-xs font-bold uppercase tracking-widest text-[#bbbbbb] hover:text-white flex items-center gap-2 transition-colors group"
                                         >
-                                            <ChevronRight className="w-3 h-3 text-blue-800 group-hover:text-blue-400 transition-colors" />
+                                            <ChevronRight className="w-3 h-3 text-[#1c69d4]" />
                                             {link.label}
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
                         </div>
-                        <div className="space-y-6">
-                            <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
-                                Bantuan
+                        <div className="space-y-8">
+                            <h4 className="text-[#757575] text-[10px] font-bold uppercase tracking-[0.2em]">
+                                Bantuan Khusus
                             </h4>
-                            <ul className="space-y-3">
+                            <ul className="space-y-4">
                                 {links.bantuan.map((link, i) => (
                                     <li key={i}>
                                         <a
                                             href={link.href}
-                                            className="text-sm text-gray-500 hover:text-white flex items-center gap-1.5 transition-colors group"
+                                            className="text-xs font-bold uppercase tracking-widest text-[#bbbbbb] hover:text-white flex items-center gap-2 transition-colors group"
                                         >
-                                            <ChevronRight className="w-3 h-3 text-blue-800 group-hover:text-blue-400 transition-colors" />
+                                            <ChevronRight className="w-3 h-3 text-[#1c69d4]" />
                                             {link.label}
                                         </a>
                                     </li>
@@ -133,31 +136,35 @@ export default function Footer() {
                     </div>
 
                     {/* Leasing Partners */}
-                    <div className="md:col-span-4 space-y-6">
-                        <h4 className="text-white text-[11px] font-black uppercase tracking-[0.2em] opacity-50">
-                            Mitra Leasing
+                    <div className="md:col-span-4 space-y-8">
+                        <h4 className="text-[#757575] text-[10px] font-bold uppercase tracking-[0.2em]">
+                            Mitra Pembiayaan
                         </h4>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-2">
                             {[
                                 { name: "BAF", logo: "/assets/img/baf.png" },
-                                { name: "ADIRA", logo: "/assets/img/adira.png" },
+                                {
+                                    name: "ADIRA",
+                                    logo: "/assets/img/adira.png",
+                                },
                             ].map((provider, i) => (
                                 <div
                                     key={i}
                                     title={provider.name}
-                                    className="bg-white rounded-xl p-3 flex items-center justify-center h-16 overflow-hidden shadow-lg shadow-black/20 hover:scale-105 transition-transform"
+                                    className="bg-white border border-gray-800 p-4 flex items-center justify-center h-20 transition-colors rounded-none hover:bg-[#f9f9f9]"
                                 >
                                     <img
                                         src={provider.logo}
                                         alt={provider.name}
-                                        className="max-h-12 max-w-full object-contain"
+                                        className="max-h-8 max-w-full object-contain grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                                         onError={(e) => {
                                             e.target.style.display = "none";
-                                            e.target.nextSibling.style.display = "block";
+                                            e.target.nextSibling.style.display =
+                                                "block";
                                         }}
                                     />
-                                    <span 
-                                        className="text-[10px] font-black text-gray-800 uppercase tracking-widest"
+                                    <span
+                                        className="text-[10px] font-bold text-[#262626] uppercase tracking-widest"
                                         style={{ display: "none" }}
                                     >
                                         {provider.name}
@@ -165,35 +172,36 @@ export default function Footer() {
                                 </div>
                             ))}
                         </div>
-                        <p className="text-[11px] text-gray-600 mt-4 leading-relaxed">
-                            Kami bekerja sama dengan mitra leasing terpercaya untuk memudahkan kepemilikan motor Anda.
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-[#757575] leading-relaxed">
+                            Proses difasilitasi oleh lembaga pembiayaan resmi.
                         </p>
                     </div>
                 </div>
             </div>
 
             {/* Bottom bar */}
-            <div className="border-t border-blue-900/20 py-5">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        <p className="text-[10px] text-gray-600 font-medium tracking-wide">
-                            &copy; {currentYear} SRB Motor
+            <div className="border-t border-gray-800 py-6 bg-[#0a0a0a]">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="flex items-center gap-4">
+                        <p className="text-[10px] text-[#757575] font-bold uppercase tracking-[0.2em]">
+                            &copy; {currentYear} SRB MOTOR
                         </p>
                         <div className="h-3 w-px bg-gray-800"></div>
-                        <div className="flex items-center gap-2 group cursor-help">
-                            <span className="text-[10px] text-gray-600">Powered by</span>
-                            <img 
-                                src="/assets/img/logoSSM.webp" 
-                                alt="SSM" 
-                                className="h-3.5 w-auto grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                        <div className="flex items-center gap-3">
+                            <span className="text-[10px] text-[#757575] uppercase tracking-widest">
+                                A Part of
+                            </span>
+                            <img
+                                src="/assets/img/logoSSM.webp"
+                                alt="SSM"
+                                className="h-3 w-auto brightness-0 invert opacity-50"
                             />
-                            <span className="text-[10px] font-black text-gray-500 tracking-tighter opacity-50 group-hover:opacity-100 transition-all duration-500">SSM</span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        <span className="text-xs text-gray-600 flex items-center gap-1">
-                            <ShieldCheck className="w-3 h-3 text-blue-500" />{" "}
-                            OJK Verified
+                    <div className="flex items-center gap-6">
+                        <span className="text-[10px] font-bold text-[#757575] uppercase tracking-widest flex items-center gap-2 border border-gray-800 px-3 py-1">
+                            <ShieldCheck className="w-3 h-3 text-[#1c69d4]" />
+                            Terverifikasi
                         </span>
                         <div className="flex items-center gap-2">
                             {[
@@ -206,9 +214,9 @@ export default function Footer() {
                                     href={settings[key] || "#"}
                                     target={settings[key] ? "_blank" : "_self"}
                                     rel="noopener noreferrer"
-                                    className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-gray-500 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
+                                    className="w-10 h-10 border border-gray-800 text-[#757575] bg-transparent flex items-center justify-center hover:bg-[#111111] hover:text-white transition-colors rounded-none"
                                 >
-                                    <Icon className="w-3.5 h-3.5" />
+                                    <Icon className="w-4 h-4" />
                                 </a>
                             ))}
                         </div>

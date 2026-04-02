@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\TransactionController as AdminTransactionControll
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/bantuan', [PageController::class, 'help'])->name('help');
 Route::get('/motors/compare', [MotorGalleryController::class, 'compare'])->name('motors.compare');
 Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
 Route::get('/api/search/motors', [MotorGalleryController::class, 'search'])->name('api.motors.search');

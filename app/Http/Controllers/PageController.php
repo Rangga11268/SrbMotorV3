@@ -13,4 +13,12 @@ class PageController extends Controller
     {
         return \Inertia\Inertia::render('About');
     }
+
+    /**
+     * Show the Help / Customer Support page.
+     */
+    public function help()
+    {
+        return \Inertia\Inertia::render('Help');
+    }
 }

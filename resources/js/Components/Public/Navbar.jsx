@@ -78,54 +78,57 @@ export default function Navbar({ auth }) {
             href: "/motors",
             active: url.startsWith("/motors"),
         },
+        {
+            label: "Servis",
+            href: "/services",
+            active: url.startsWith("/services"),
+        },
         { label: "Berita", href: "/berita", active: url.startsWith("/berita") },
         { label: "Tentang Kami", href: "/about", active: url === "/about" },
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
             {/* Top Row: Logo, Search, Auth */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-                <div className="flex items-center justify-between gap-4 md:gap-8">
+            <div className="max-w-full mx-auto px-6 lg:px-12 py-4">
+                <div className="flex items-center justify-between gap-4 md:gap-12">
                     {/* Logo */}
-                    <Link href="/" className="flex flex-row items-center gap-3 md:gap-4 flex-shrink-0 group">
+                    <Link
+                        href="/"
+                        className="flex flex-row items-center gap-4 flex-shrink-0 group"
+                    >
                         <Logo />
-                        <div className="hidden sm:block h-8 w-px bg-gray-100"></div>
-                        <div className="hidden sm:flex flex-col items-start leading-none gap-1">
-                            <img 
-                                src="/assets/img/logoSSM.webp" 
-                                alt="SSM Authorized" 
-                                className="h-4 w-auto object-contain opacity-80 group-hover:opacity-100 transition-opacity"
-                            />
-                            <span className="text-[8px] font-black uppercase tracking-widest text-blue-600/60 group-hover:text-blue-600 transition-colors">
-                                Authorized
+                        <div className="hidden sm:block h-6 w-px bg-gray-300"></div>
+                        <div className="hidden sm:flex flex-col items-start leading-tight">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-[#262626]">
+                                AUTHORIZED DEALER
                             </span>
                         </div>
                     </Link>
 
-                    {/* Desktop Search & Location (Momotor Style) */}
-                    <div className="hidden md:flex flex-1 items-center gap-2 max-w-3xl relative">
+                    {/* Desktop Search & Location (BMW Style - Sharp Block) */}
+                    <div className="hidden md:flex flex-1 items-center max-w-3xl relative gap-0 border border-gray-300">
                         {/* Location Picker */}
-                        <div className="relative flex-shrink-0">
-                            <button className="flex items-center gap-2 px-5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-[11px] font-black text-gray-700 hover:bg-gray-100 transition-colors uppercase tracking-widest">
-                                <MapPin className="w-4 h-4 text-primary" />
-                                <span>Bekasi Only</span>
-                                <ChevronDown className="w-3 h-3 text-gray-400" />
+                        <div className="relative flex-shrink-0 border-r border-gray-300 bg-gray-50">
+                            <button className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold text-[#262626] hover:bg-[#f9f9f9] transition-colors uppercase tracking-[0.2em] rounded-none">
+                                <MapPin className="w-4 h-4 text-[#1c69d4]" />
+                                <span>Bekasi</span>
+                                <ChevronDown className="w-3 h-3 text-[#262626]" />
                             </button>
                         </div>
 
                         {/* Search Bar */}
-                        <div className="flex-1 relative group">
-                            <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                                <Search className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+                        <div className="flex-1 relative group bg-white">
+                            <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                                <Search className="w-4 h-4 text-[#757575] group-focus-within:text-[#1c69d4] transition-colors" />
                             </div>
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => setShowResults(true)}
-                                placeholder="Cari Honda Vario, Yamaha NMAX..."
-                                className="w-full h-12 pl-12 pr-5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700 placeholder:text-gray-400 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none"
+                                placeholder="Pencarian Unit..."
+                                className="w-full h-[46px] pl-14 pr-6 bg-transparent border-none text-sm font-light text-[#262626] placeholder:text-[#bbbbbb] focus:ring-0 outline-none uppercase tracking-widest"
                             />
 
                             {/* Search Results Dropdown */}
@@ -133,10 +136,10 @@ export default function Navbar({ auth }) {
                                 {showResults &&
                                     (searchQuery || isSearching) && (
                                         <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
+                                            initial={{ opacity: 0, y: -5 }}
                                             animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: 10 }}
-                                            className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-[400px] overflow-y-auto"
+                                            exit={{ opacity: 0, y: -5 }}
+                                            className="absolute top-full left-0 right-0 mt-0 bg-white border border-gray-300 border-t-0 shadow-lg z-50 rounded-none overflow-y-auto max-h-[400px]"
                                         >
                                             <div
                                                 className="fixed inset-0 z-[-1]"
@@ -145,10 +148,10 @@ export default function Navbar({ auth }) {
                                                 }
                                             />
                                             {isSearching ? (
-                                                <div className="p-8 text-center text-gray-500">
-                                                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                                                    <p className="text-xs font-bold uppercase tracking-wider">
-                                                        Mencari...
+                                                <div className="p-8 text-center text-[#757575]">
+                                                    <div className="w-6 h-6 border-2 border-[#1c69d4] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest">
+                                                        Memuat...
                                                     </p>
                                                 </div>
                                             ) : results.length > 0 ? (
@@ -172,15 +175,9 @@ export default function Navbar({ auth }) {
                                                                             "",
                                                                         );
                                                                     }}
-                                                                    className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors group"
-                                                                    style={{
-                                                                        opacity:
-                                                                            motor.tersedia
-                                                                                ? 1
-                                                                                : 0.7,
-                                                                    }}
+                                                                    className="flex items-center gap-6 p-4 border-b border-gray-100 hover:bg-[#f9f9f9] transition-colors group"
                                                                 >
-                                                                    <div className="w-16 h-12 bg-gray-100 rounded-xl overflow-hidden p-2 flex items-center justify-center shrink-0">
+                                                                    <div className="w-16 h-12 flex items-center justify-center shrink-0">
                                                                         <img
                                                                             src={`/storage/${motor.image_path}`}
                                                                             alt={
@@ -195,19 +192,19 @@ export default function Navbar({ auth }) {
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className="flex items-start justify-between gap-2">
-                                                                            <h4 className="text-sm font-black text-gray-900 truncate uppercase tracking-tight">
+                                                                            <h4 className="text-sm font-bold text-[#262626] uppercase tracking-widest">
                                                                                 {
                                                                                     motor.name
                                                                                 }
                                                                             </h4>
                                                                             {!motor.tersedia && (
-                                                                                <span className="text-[9px] font-black bg-red-100 text-red-700 px-2 py-0.5 rounded whitespace-nowrap">
-                                                                                    HABIS
+                                                                                <span className="text-[9px] font-bold bg-[#111111] text-white px-2 py-0.5 uppercase tracking-widest rounded-none">
+                                                                                    TERJUAL
                                                                                 </span>
                                                                             )}
                                                                         </div>
-                                                                        <p className="text-xs font-black text-primary">
-                                                                            Rp{" "}
+                                                                        <p className="text-xs font-light text-[#1c69d4] mt-1">
+                                                                            IDR{" "}
                                                                             {parseInt(
                                                                                 motor.price,
                                                                             ).toLocaleString(
@@ -215,7 +212,6 @@ export default function Navbar({ auth }) {
                                                                             )}
                                                                         </p>
                                                                     </div>
-                                                                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors" />
                                                                 </Link>
                                                             ),
                                                         )}
@@ -232,20 +228,16 @@ export default function Navbar({ auth }) {
                                                                 false,
                                                             )
                                                         }
-                                                        className="block w-full text-center py-3 bg-gray-50 hover:bg-primary/10 text-[10px] font-black uppercase tracking-widest text-primary transition-colors border-t border-gray-100"
+                                                        className="block w-full text-center py-4 bg-[#f9f9f9] hover:bg-[#1c69d4] text-[10px] hover:text-white font-bold uppercase tracking-widest transition-colors"
                                                     >
-                                                        Lihat semua hasil untuk
-                                                        "{searchQuery}"
+                                                        Lihat Seluruh Hasil
                                                     </Link>
                                                 </div>
                                             ) : (
-                                                <div className="p-8 text-center text-gray-500">
-                                                    <p className="text-sm font-bold">
-                                                        Motor tidak ditemukan
-                                                    </p>
-                                                    <p className="text-xs text-gray-400 mt-1">
-                                                        Coba kata kunci lain
-                                                        atau merek yang berbeda
+                                                <div className="p-8 text-center text-[#757575]">
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest">
+                                                        Tidak Ada Unit Yang
+                                                        Sesuai
                                                     </p>
                                                 </div>
                                             )}
@@ -256,24 +248,21 @@ export default function Navbar({ auth }) {
                     </div>
 
                     {/* Right Actions: Auth & CTA */}
-                    <div className="flex items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-4">
                         {auth?.user ? (
                             <div className="relative">
                                 <button
                                     onClick={() =>
                                         setUserMenuOpen(!userMenuOpen)
                                     }
-                                    className="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100 px-3"
+                                    className="flex items-center gap-3 py-2 px-4 hover:bg-[#f9f9f9] transition-colors border border-transparent rounded-none"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs">
+                                    <div className="w-8 h-8 rounded-none bg-[#262626] flex items-center justify-center text-white font-bold text-xs uppercase">
                                         {auth.user.name.charAt(0)}
                                     </div>
-                                    <span className="hidden sm:block text-sm font-bold text-gray-700">
-                                        Account
+                                    <span className="hidden sm:block text-[10px] uppercase tracking-[0.2em] font-bold text-[#262626]">
+                                        AKUN SAYA
                                     </span>
-                                    <ChevronDown
-                                        className={`w-3 h-3 text-gray-400 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
-                                    />
                                 </button>
 
                                 <AnimatePresence>
@@ -286,77 +275,64 @@ export default function Navbar({ auth }) {
                                                 }
                                             />
                                             <motion.div
-                                                initial={{
-                                                    opacity: 0,
-                                                    y: 10,
-                                                    scale: 0.95,
-                                                }}
-                                                animate={{
-                                                    opacity: 1,
-                                                    y: 0,
-                                                    scale: 1,
-                                                }}
-                                                exit={{
-                                                    opacity: 0,
-                                                    y: 10,
-                                                    scale: 0.95,
-                                                }}
-                                                className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden"
+                                                initial={{ opacity: 0, y: 5 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 5 }}
+                                                className="absolute right-0 mt-4 w-64 bg-white shadow-xl border border-gray-300 z-50 rounded-none"
                                             >
-                                                <div className="px-4 py-2 mb-2 border-b border-gray-50">
-                                                    <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
-                                                        Selamat Datang
+                                                <div className="px-6 py-4 border-b border-gray-200">
+                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#757575] mb-1">
+                                                        PENGGUNA
                                                     </p>
-                                                    <p className="text-sm font-bold text-gray-900 truncate">
+                                                    <p className="text-sm font-bold text-[#262626] uppercase">
                                                         {auth.user.name}
                                                     </p>
                                                 </div>
-                                                <Link
-                                                    href={route("profile.show")}
-                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"
-                                                >
-                                                    <User className="w-4 h-4 text-primary" />{" "}
-                                                    Profil Saya
-                                                </Link>
-                                                {auth.user.role === "admin" && (
-                                                    <a
+                                                <div className="py-2">
+                                                    <Link
                                                         href={route(
-                                                            "admin.dashboard",
+                                                            "profile.show",
                                                         )}
-                                                        className="flex items-center gap-3 px-4 py-2 bg-primary/5 hover:bg-primary/10 text-sm font-bold text-primary transition-colors border-y border-primary/10"
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#f9f9f9] text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
-                                                        <Shield className="w-4 h-4" />{" "}
-                                                        Dashboard Admin
-                                                    </a>
-                                                )}
-                                                <Link
-                                                    href={route(
-                                                        "motors.user-transactions",
+                                                        Profil Saya
+                                                    </Link>
+                                                    {auth.user.role ===
+                                                        "admin" && (
+                                                        <a
+                                                            href={route(
+                                                                "admin.dashboard",
+                                                            )}
+                                                            className="flex items-center gap-4 px-6 py-3 bg-[#111111] text-white hover:bg-[#1c69d4] transition-colors text-xs font-bold uppercase tracking-widest"
+                                                        >
+                                                            Dashboard Admin
+                                                        </a>
                                                     )}
-                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"
-                                                >
-                                                    <ShoppingBag className="w-4 h-4 text-primary" />{" "}
-                                                    Riwayat Pesanan
-                                                </Link>
-                                                <Link
-                                                    href={route(
-                                                        "installments.index",
-                                                    )}
-                                                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 text-sm font-bold text-gray-700 transition-colors"
-                                                >
-                                                    <CreditCardIcon className="w-4 h-4 text-primary" />{" "}
-                                                    Cicilan Saya
-                                                </Link>
-
-                                                <div className="h-px bg-gray-100 my-2 mx-2" />
+                                                    <Link
+                                                        href={route(
+                                                            "motors.user-transactions",
+                                                        )}
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#f9f9f9] text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                    >
+                                                        Riwayat Pesanan
+                                                    </Link>
+                                                    <Link
+                                                        href={route(
+                                                            "installments.index",
+                                                        )}
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#f9f9f9] text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                    >
+                                                        Cicilan Saya
+                                                    </Link>
+                                                </div>
+                                                <div className="border-t border-gray-200" />
                                                 <Link
                                                     href={route("logout")}
                                                     method="post"
                                                     as="button"
-                                                    className="flex w-full items-center gap-3 px-4 py-2 hover:bg-red-50 text-sm font-bold text-red-600 transition-colors"
+                                                    className="flex w-full items-center gap-4 px-6 py-4 hover:bg-[#262626] text-white bg-[#111111] text-xs font-bold uppercase tracking-widest transition-colors text-left"
                                                 >
-                                                    <LogOut className="w-4 h-4" />{" "}
-                                                    Keluar
+                                                    Keluar Akun
                                                 </Link>
                                             </motion.div>
                                         </>
@@ -366,16 +342,16 @@ export default function Navbar({ auth }) {
                         ) : (
                             <button
                                 onClick={() => setAuthModalVisible(true)}
-                                className="text-sm font-bold text-gray-700 hover:text-primary transition-colors px-2"
+                                className="text-[10px] font-bold text-[#262626] uppercase tracking-[0.2em] hover:text-[#1c69d4] transition-colors py-2 px-4"
                             >
-                                Masuk/Daftar
+                                Masuk / Daftar
                             </button>
                         )}
 
                         {/* Mobile Toggle */}
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className="md:hidden p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                            className="md:hidden p-2 text-[#262626] hover:bg-[#f9f9f9] rounded-none"
                         >
                             {mobileMenuOpen ? <X /> : <Menu />}
                         </button>
@@ -384,18 +360,15 @@ export default function Navbar({ auth }) {
             </div>
 
             {/* Bottom Row: Navigation Links */}
-            <div className="hidden md:block bg-gray-50/50 border-t border-gray-100 py-2">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-                    <div className="flex items-center space-x-8">
+            <div className="hidden md:block bg-white border-t border-gray-200">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
+                    <div className="flex items-center space-x-0">
                         {categories.map((cat) => (
                             <Link
                                 key={cat.label}
                                 href={cat.href}
-                                className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors ${cat.active ? "text-primary" : "text-gray-500 hover:text-primary"}`}
+                                className={`px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors border-b-2 ${cat.active ? "text-[#262626] border-[#1c69d4]" : "text-[#757575] border-transparent hover:text-[#1c69d4]"}`}
                             >
-                                {cat.label === "Motor Baru" && (
-                                    <Bike className="w-3 h-3" />
-                                )}
                                 {cat.label}
                             </Link>
                         ))}
@@ -403,11 +376,10 @@ export default function Navbar({ auth }) {
 
                     <div className="flex items-center gap-6">
                         <Link
-                            href="/about"
-                            className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-primary uppercase tracking-widest"
+                            href="/bantuan"
+                            className="text-[10px] font-bold text-[#757575] hover:text-[#262626] uppercase tracking-[0.2em] transition-colors"
                         >
-                            <HelpCircle className="w-3 h-3" />
-                            Bantuan
+                            Bantuan Pelanggan
                         </Link>
                     </div>
                 </div>
@@ -420,119 +392,44 @@ export default function Navbar({ auth }) {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-white border-t border-gray-100 overflow-hidden"
+                        className="md:hidden bg-[#111111] overflow-hidden"
                     >
-                        <div className="p-4 space-y-3">
+                        <div className="p-6 space-y-2">
                             {/* Mobile Search */}
-                            <div className="relative mb-6">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <div className="relative mb-8">
                                 <input
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) =>
                                         setSearchQuery(e.target.value)
                                     }
-                                    placeholder="Cari motor..."
-                                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm"
+                                    placeholder="Keywords..."
+                                    className="w-full px-4 py-3 bg-[#262626] border border-gray-800 text-white text-xs font-bold uppercase tracking-widest focus:ring-0 focus:border-[#1c69d4] outline-none rounded-none"
                                 />
-                                {isSearching && searchQuery.length >= 2 && (
-                                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                        <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                                    </div>
-                                )}
+                                <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                             </div>
-
-                            {/* Mobile Search Results */}
-                            <AnimatePresence>
-                                {searchQuery.length >= 2 &&
-                                    results.length > 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{
-                                                opacity: 1,
-                                                height: "auto",
-                                            }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            className="mb-4 bg-gray-50 rounded-2xl overflow-hidden divide-y divide-gray-100"
-                                        >
-                                            {results.map((motor) => (
-                                                <Link
-                                                    key={motor.id}
-                                                    href={route(
-                                                        "motors.show",
-                                                        motor.id,
-                                                    )}
-                                                    onClick={() => {
-                                                        setMobileMenuOpen(
-                                                            false,
-                                                        );
-                                                        setSearchQuery("");
-                                                    }}
-                                                    className="flex items-center gap-3 p-3 active:bg-gray-100 transition-colors"
-                                                >
-                                                    <div className="w-10 h-10 rounded-lg bg-white overflow-hidden flex-shrink-0 border border-gray-100">
-                                                        <img
-                                                            src={
-                                                                motor.image_path
-                                                                    ? `/storage/${motor.image_path}`
-                                                                    : "/images/placeholder-motor.jpg"
-                                                            }
-                                                            alt={motor.name}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-xs font-bold text-gray-900 truncate">
-                                                            {motor.name}
-                                                        </p>
-                                                        <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
-                                                            {motor.brand}
-                                                        </p>
-                                                    </div>
-                                                    <ChevronRight className="w-3 h-3 text-gray-300" />
-                                                </Link>
-                                            ))}
-                                        </motion.div>
-                                    )}
-                            </AnimatePresence>
 
                             {categories.map((cat) => (
                                 <Link
                                     key={cat.label}
                                     href={cat.href}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl font-black text-gray-700 hover:bg-primary/5 hover:text-primary transition-colors"
+                                    className="block py-4 border-b border-gray-800 text-[10px] font-bold text-[#bbbbbb] uppercase tracking-[0.2em] hover:text-white transition-colors"
                                 >
-                                    <span>{cat.label}</span>
-                                    <ChevronDown className="-rotate-90 w-4 h-4" />
+                                    {cat.label}
                                 </Link>
                             ))}
 
                             {!auth.user && (
-                                <div className="grid grid-cols-2 gap-3 pt-4">
+                                <div className="grid grid-cols-2 gap-4 pt-8">
                                     <button
                                         onClick={() => {
                                             setMobileMenuOpen(false);
                                             setAuthModalVisible(true);
                                         }}
+                                        className="py-4 border border-white text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-none"
                                     >
-                                        <Button
-                                            fullWidth
-                                            variant="secondary"
-                                            className="font-bold"
-                                        >
-                                            Masuk
-                                        </Button>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setMobileMenuOpen(false);
-                                            setAuthModalVisible(true);
-                                        }}
-                                    >
-                                        <Button fullWidth className="font-bold">
-                                            Daftar
-                                        </Button>
+                                        LOGIN
                                     </button>
                                 </div>
                             )}

@@ -18,9 +18,6 @@ import {
     Gauge,
 } from "lucide-react";
 import axios from "axios";
-import Button from "@/Components/UI/Button";
-import Card, { CardBody } from "@/Components/UI/Card";
-import Badge from "@/Components/UI/Badge";
 
 export default function Index({
     auth,
@@ -62,7 +59,6 @@ export default function Index({
                 return acc;
             }, {});
 
-            // Use Axios to fetch data
             const response = await axios.get(route("motors.index"), {
                 params: query,
                 headers: {
@@ -71,13 +67,11 @@ export default function Index({
                 },
             });
 
-            // Update local state with new motors and options
             setMotors(response.data.motors);
             if (response.data.brands) setBrands(response.data.brands);
             if (response.data.types) setTypes(response.data.types);
             if (response.data.years) setYears(response.data.years);
 
-            // Optional: Update URL without reloading to keep Inertia state clean
             const queryString = new URLSearchParams(query).toString();
             window.history.pushState(
                 {},
@@ -111,50 +105,35 @@ export default function Index({
     };
 
     return (
-        <PublicLayout auth={auth} title="Katalog Motor">
-            <div className="flex-grow pt-24 md:pt-32 bg-slate-50 dark:bg-slate-900">
-                {/* HEADER SECTION */}
-                <section className="bg-gradient-to-br from-blue-50 to-white dark:from-slate-800 dark:to-slate-900 border-b border-slate-200 dark:border-slate-800 pt-8 pb-16 relative overflow-hidden">
-                    {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-70 transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
-
+        <PublicLayout auth={auth} title="Katalog Motor - SRB Motor">
+            <div className="flex-grow pt-28 bg-white">
+                {/* HERO SECTION - BMW BLACK */}
+                <section className="bg-black text-white pt-12 pb-24 border-b border-gray-800 relative">
+                    <div className="absolute inset-0 bg-[#1c69d4] blur-[150px] opacity-10 rounded-full pointer-events-none transform -translate-y-12"></div>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1c69d4] mb-8">
+                            <Link href="/" className="hover:text-white transition-colors">HOME</Link>
+                            <ChevronRight className="w-3 h-3 text-gray-600" />
+                            <span className="text-gray-400">KATALOG KENDARAAN</span>
+                        </nav>
+                        
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-                                    <Link href="/" className="hover:text-blue-700 transition">
-                                        Home
-                                    </Link>
-                                    <ChevronRight className="w-4 h-4 text-slate-400" />
-                                    <span className="text-slate-500 dark:text-slate-400">
-                                        Katalog Motor
-                                    </span>
-                                </div>
-                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
-                                    Jelajahi{" "}
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">
-                                        Koleksi Kami
+                                <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                                    INVENTARIS <br />
+                                    <span className="text-[#1c69d4]">
+                                        KENDARAAN
                                     </span>
                                 </h1>
-                                <p className="text-lg text-slate-600 dark:text-slate-300 font-medium max-w-2xl leading-relaxed">
-                                    Temukan berbagai pilihan motor berkualitas
-                                    dengan harga terbaik dan kondisi terjamin untuk
-                                    menemani perjalanan Anda.
-                                </p>
                             </div>
-
-                            <div className="flex items-center gap-3">
-                                <div className="text-right hidden sm:block">
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white relative z-10">
-                                        {motors.total} Unit Tersedia
+                            <div className="flex items-center gap-4 bg-gray-900 border border-gray-800 p-6 rounded-none">
+                                <div className="text-right">
+                                    <p className="text-2xl font-black text-white uppercase tracking-tighter leading-none">
+                                        {motors.total} UNIT
                                     </p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium relative z-10">
-                                        Diperbarui hari ini
+                                    <p className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mt-1">
+                                        TERSEDIA HARI INI
                                     </p>
-                                </div>
-                                <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm border border-slate-100 dark:border-slate-700 relative z-10">
-                                    <LayoutGrid className="w-6 h-6" />
                                 </div>
                             </div>
                         </div>
@@ -162,477 +141,358 @@ export default function Index({
                 </section>
 
                 {/* MAIN CONTENT */}
-                <main className="flex-grow py-12 lg:py-16">
+                <main className="flex-grow py-16 bg-gray-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-4 gap-8">
-                        {/* SIDEBAR FILTERS (Desktop) */}
-                        <aside className="hidden lg:block space-y-8">
-                            <div className="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-slate-200 dark:border-slate-700 shadow-sm sticky top-24">
-                                <div className="flex items-center justify-between mb-8">
-                                    <h3 className="font-black text-slate-900 dark:text-white flex items-center gap-2 uppercase tracking-wider text-sm">
-                                        <Filter className="w-4 h-4 text-blue-600 dark:text-blue-400" /> Filter
-                                        Pencarian
-                                    </h3>
-                                    <button
-                                        onClick={resetFilters}
-                                        className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 transition-colors"
-                                    >
-                                        <RotateCcw className="w-3 h-3" /> Reset
-                                    </button>
-                                </div>
-
-                                <div className="space-y-6">
-                                    {/* Search */}
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                            Cari Model
-                                        </label>
-                                        <div className="relative group">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors" />
-                                            <input
-                                                type="text"
-                                                name="search"
-                                                value={values.search}
-                                                onChange={handleChange}
-                                                placeholder="Nama motor..."
-                                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl pl-12 pr-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Brand */}
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                            Merek
-                                        </label>
-                                        <select
-                                            name="brand"
-                                            value={values.brand}
-                                            onChange={handleChange}
-                                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white appearance-none"
-                                        >
-                                            <option value="">
-                                                Semua Merek
-                                            </option>
-                                            {brands.map((b) => (
-                                                <option key={b} value={b}>
-                                                    {b}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    {/* Type */}
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                            Tipe
-                                        </label>
-                                        <select
-                                            name="type"
-                                            value={values.type}
-                                            onChange={handleChange}
-                                            className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white appearance-none"
-                                        >
-                                            <option value="">Semua Tipe</option>
-                                            {types.map((t) => (
-                                                <option key={t} value={t}>
-                                                    {t}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    {/* Price Range */}
-                                    <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                            Rentang Harga
-                                        </label>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <input
-                                                type="number"
-                                                name="min_price"
-                                                value={values.min_price}
-                                                onChange={handleChange}
-                                                placeholder="Min"
-                                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
-                                            />
-                                            <input
-                                                type="number"
-                                                name="max_price"
-                                                value={values.max_price}
-                                                onChange={handleChange}
-                                                placeholder="Max"
-                                                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-blue-600/10 dark:focus:ring-blue-400/10 focus:border-blue-600 dark:focus:border-blue-400 outline-none transition-all text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </aside>
-
-                        {/* MOBILE FILTER TRIGGER */}
-                        <div className="lg:hidden flex gap-4 mb-6">
-                            <button
-                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                className="flex-grow flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white font-bold uppercase tracking-widest text-xs shadow-sm hover:shadow-md transition-shadow"
-                            >
-                                <span className="flex items-center gap-2">
-                                    <SlidersHorizontal size={18} className="text-blue-600 dark:text-blue-400" /> Filter Unit
-                                </span>
-                                {Object.values(values).filter(Boolean).length >
-                                    0 && (
-                                    <Badge variant="blue" size="sm" className="bg-blue-600 dark:bg-blue-500 text-white border-transparent">
-                                        {
-                                            Object.values(values).filter(
-                                                Boolean,
-                                            ).length
-                                        }
-                                    </Badge>
-                                )}
-                            </button>
-                        </div>
-
-                        {/* GRID PRODUCT */}
-                        <div className="lg:col-span-3 space-y-10">
-                            <AnimatePresence mode="wait">
-                                {isLoading ? (
-                                    <motion.div
-                                        key="loading"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[2rem] p-12 shadow-sm"
-                                    >
-                                        <Loader2 className="w-12 h-12 text-blue-600 dark:text-blue-400 animate-spin mb-4" />
-                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                                            Memuat Data...
+                        <div className="grid lg:grid-cols-4 gap-12">
+                            {/* SIDEBAR FILTERS (Desktop) */}
+                            <aside className="hidden lg:block space-y-8">
+                                <div className="bg-white p-8 rounded-none border border-gray-200 sticky top-28">
+                                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+                                        <h3 className="font-black text-black uppercase tracking-tighter text-2xl">
+                                            FILTER
                                         </h3>
-                                        <p className="text-slate-500 dark:text-slate-400">
-                                            Mencari motor terbaik untuk Anda
-                                        </p>
-                                    </motion.div>
-                                ) : motors.data.length > 0 ? (
-                                    <motion.div
-                                        key="content"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-                                    >
-                                        {motors.data.map((motor, i) => (
-                                            <motion.div
-                                                key={motor.id}
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{
-                                                    duration: 0.3,
-                                                    delay: i * 0.05,
-                                                }}
+                                        <button
+                                            onClick={resetFilters}
+                                            className="text-[10px] font-bold text-[#1c69d4] hover:text-black uppercase tracking-widest transition-colors"
+                                        >
+                                            RESET DATA
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        {/* Search */}
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                CARI MODEL
+                                            </label>
+                                            <div className="relative group">
+                                                <input
+                                                    type="text"
+                                                    name="search"
+                                                    value={values.search}
+                                                    onChange={handleChange}
+                                                    placeholder="NAMA UNIT..."
+                                                    className="w-full bg-transparent border border-gray-300 rounded-none pl-4 pr-10 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-black text-black uppercase placeholder-gray-400"
+                                                />
+                                                <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-[#1c69d4] transition-colors" />
+                                            </div>
+                                        </div>
+
+                                        {/* Brand */}
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                MEREK KENDARAAN
+                                            </label>
+                                            <select
+                                                name="brand"
+                                                value={values.brand}
+                                                onChange={handleChange}
+                                                className="w-full bg-transparent border border-gray-300 rounded-none px-4 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-bold uppercase text-black"
                                             >
-                                                <Link
-                                                    href={route(
-                                                        "motors.show",
-                                                        motor.id,
-                                                    )}
+                                                <option value="">SEMUA MEREK</option>
+                                                {brands.map((b) => (
+                                                    <option key={b} value={b}>
+                                                        {b}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Type */}
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                TIPE KENDARAAN
+                                            </label>
+                                            <select
+                                                name="type"
+                                                value={values.type}
+                                                onChange={handleChange}
+                                                className="w-full bg-transparent border border-gray-300 rounded-none px-4 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-bold uppercase text-black"
+                                            >
+                                                <option value="">SEMUA TIPE</option>
+                                                {types.map((t) => (
+                                                    <option key={t} value={t}>
+                                                        {t}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Price Range */}
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                RENTANG HARGA (IDR)
+                                            </label>
+                                            <div className="grid grid-cols-2 gap-px border border-gray-300 bg-gray-300">
+                                                <input
+                                                    type="number"
+                                                    name="min_price"
+                                                    value={values.min_price}
+                                                    onChange={handleChange}
+                                                    placeholder="MINIMAL"
+                                                    className="w-full bg-white border-none rounded-none px-4 py-3 focus:ring-inset focus:ring-2 focus:ring-[#1c69d4] outline-none transition-colors text-xs font-bold uppercase text-black"
+                                                />
+                                                <input
+                                                    type="number"
+                                                    name="max_price"
+                                                    value={values.max_price}
+                                                    onChange={handleChange}
+                                                    placeholder="MAKSIMAL"
+                                                    className="w-full bg-white border-none rounded-none px-4 py-3 focus:ring-inset focus:ring-2 focus:ring-[#1c69d4] outline-none transition-colors text-xs font-bold uppercase text-black"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aside>
+
+                            {/* MOBILE FILTER TRIGGER */}
+                            <div className="lg:hidden flex gap-4 mb-6">
+                                <button
+                                    onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                    className="flex-grow flex items-center justify-between px-6 py-4 bg-black border border-black rounded-none text-white font-bold uppercase tracking-widest text-[11px]"
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <SlidersHorizontal size={16} /> BUKA FILTER
+                                    </span>
+                                    {Object.values(values).filter(Boolean).length > 0 && (
+                                        <span className="bg-[#1c69d4] px-2 py-1 text-white">
+                                            {Object.values(values).filter(Boolean).length} AKTIF
+                                        </span>
+                                    )}
+                                </button>
+                            </div>
+
+                            {/* GRID PRODUCT */}
+                            <div className="lg:col-span-3">
+                                <AnimatePresence mode="wait">
+                                    {isLoading ? (
+                                        <motion.div
+                                            key="loading"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-none p-12"
+                                        >
+                                            <Loader2 className="w-12 h-12 text-[#1c69d4] animate-spin mb-6" />
+                                            <h3 className="text-xl font-black text-black uppercase tracking-tighter">
+                                                MENGAKSES DATABASE
+                                            </h3>
+                                        </motion.div>
+                                    ) : motors.data.length > 0 ? (
+                                        <motion.div
+                                            key="content"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200"
+                                        >
+                                            {motors.data.map((motor, i) => (
+                                                <motion.div
+                                                    key={motor.id}
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ delay: i * 0.05 }}
+                                                    className="bg-white group"
                                                 >
-                                                    <Card
-                                                        hoverable
-                                                        className="h-full overflow-hidden group border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-2xl hover:shadow-blue-900/5 transition-all duration-500 bg-white dark:bg-slate-800"
+                                                    <Link
+                                                        href={route("motors.show", motor.id)}
+                                                        className="block h-full flex flex-col"
                                                     >
                                                         {/* Image Container */}
-                                                        <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-700 overflow-hidden">
-                                                            <div className="absolute inset-0 bg-blue-900/0 group-hover:bg-blue-900/10 transition-colors duration-500 z-10" />
+                                                        <div className="relative aspect-[4/3] bg-white overflow-hidden p-6 border-b border-gray-100 flex items-center justify-center">
                                                             <img
-                                                                src={
-                                                                    motor.image_path
-                                                                        ? `/storage/${motor.image_path}`
-                                                                        : "/assets/img/no-image.png"
-                                                                }
+                                                                src={motor.image_path ? `/storage/${motor.image_path}` : "/assets/img/no-image.png"}
                                                                 alt={motor.name}
-                                                                className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${
-                                                                    !motor.tersedia
-                                                                        ? "grayscale brightness-75"
-                                                                        : ""
-                                                                }`}
+                                                                className={`max-h-full object-contain transition-transform duration-500 group-hover:scale-105 ${!motor.tersedia ? "grayscale opacity-50" : ""}`}
                                                             />
+                                                            
+                                                            {/* Brand Tag */}
+                                                            <div className="absolute top-4 left-4 bg-gray-100 px-3 py-1 border border-gray-200">
+                                                                <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">{motor.brand}</span>
+                                                            </div>
 
-                                                            {/* Status Overlay */}
+                                                            {/* Status Tag */}
                                                             {!motor.tersedia && (
-                                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-20">
-                                                                    <span className="px-6 py-2 bg-red-600/90 backdrop-blur-sm text-white font-black text-xl uppercase tracking-widest -rotate-12 border-2 border-white/50 shadow-2xl">
+                                                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center backdrop-blur-sm z-10">
+                                                                    <span className="border-2 border-white text-white px-4 py-1 font-black text-xl uppercase tracking-widest">
                                                                         TERJUAL
                                                                     </span>
                                                                 </div>
                                                             )}
-
-                                                            {/* Badges */}
-                                                            <div className="absolute top-4 left-4 flex flex-col items-start gap-2 z-20">
-                                                                <Badge
-                                                                    variant="blue"
-                                                                    size="sm"
-                                                                    className="shadow-sm backdrop-blur-md bg-white/90 dark:bg-slate-900/90 text-blue-700 dark:text-blue-400 font-bold border border-white/20 dark:border-slate-700/50"
-                                                                >
-                                                                    {
-                                                                        motor.brand
-                                                                    }
-                                                                </Badge>
-                                                                <Badge
-                                                                    variant={
-                                                                        motor.tersedia
-                                                                            ? "blue"
-                                                                            : "default"
-                                                                    }
-                                                                    size="sm"
-                                                                    className={`shadow-sm backdrop-blur-md font-bold border border-white/20 dark:border-slate-700/50 ${
-                                                                        motor.tersedia
-                                                                            ? "bg-blue-600/90 text-white"
-                                                                            : "bg-slate-800/90 text-white"
-                                                                    }`}
-                                                                >
-                                                                    {motor.tersedia
-                                                                        ? "Tersedia"
-                                                                        : "Stok Habis"}
-                                                                </Badge>
-                                                            </div>
                                                         </div>
 
                                                         {/* Card Body */}
-                                                        <CardBody className="p-6 lg:p-7 space-y-5">
-                                                            <div className="space-y-3">
-                                                                <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
-                                                                    <span className="flex items-center gap-1.5">
-                                                                        <Calendar className="w-3.5 h-3.5" />{" "}
-                                                                        {
-                                                                            motor.year
-                                                                        }
-                                                                    </span>
-                                                                    <span className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full" />
-                                                                    <span className="flex items-center gap-1.5 line-clamp-1">
-                                                                        <Gauge className="w-3.5 h-3.5" />{" "}
-                                                                        {
-                                                                            motor.type
-                                                                        }
-                                                                    </span>
-                                                                </div>
-                                                                <h3 className="text-xl lg:text-2xl font-black text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
-                                                                    {motor.name}
-                                                                </h3>
+                                                        <div className="p-6 flex flex-col flex-grow">
+                                                            <div className="flex items-center gap-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">
+                                                                <span>{motor.year}</span>
+                                                                <span className="w-1 h-1 bg-gray-300"></span>
+                                                                <span className="truncate">{motor.type}</span>
                                                             </div>
-
-                                                            <div className="pt-5 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                                                            <h3 className="text-xl font-black text-black uppercase tracking-tight leading-tight mb-6 group-hover:text-[#1c69d4] transition-colors line-clamp-2">
+                                                                {motor.name}
+                                                            </h3>
+                                                            
+                                                            <div className="mt-auto flex items-end justify-between pt-6 border-t border-gray-100">
                                                                 <div>
-                                                                    <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-[0.2em] mb-1">
-                                                                        Mulai
-                                                                        Harga
-                                                                    </p>
-                                                                    <p className="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">
-                                                                        Rp{" "}
-                                                                        {parseFloat(
-                                                                            motor.price,
-                                                                        ).toLocaleString(
-                                                                            "id-ID",
-                                                                        )}
+                                                                    <p className="text-lg font-light text-black">
+                                                                        Rp {parseFloat(motor.price).toLocaleString("id-ID")}
                                                                     </p>
                                                                 </div>
-                                                                <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 group-hover:shadow-md group-hover:shadow-blue-500/20">
-                                                                    <ArrowRight className="w-5 h-5" />
+                                                                <div className="w-10 h-10 bg-black flex items-center justify-center text-white group-hover:bg-[#1c69d4] transition-colors rounded-none">
+                                                                    <ArrowRight className="w-4 h-4" />
                                                                 </div>
                                                             </div>
-                                                        </CardBody>
-                                                    </Card>
-                                                </Link>
-                                            </motion.div>
-                                        ))}
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="empty"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[2rem] p-12 shadow-sm"
-                                    >
-                                        <div className="w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center text-slate-300 dark:text-slate-600 mb-6">
-                                            <Search size={48} />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
-                                            Motor Tidak Ditemukan
-                                        </h3>
-                                        <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-8 font-medium">
-                                            Maaf, kami tidak menemukan motor
-                                            yang sesuai dengan kriteria
-                                            pencarian Anda. Coba ubah filter
-                                            atau kata kunci lainnya.
-                                        </p>
-                                        <button
-                                            className="px-6 py-3 bg-blue-50 hover:bg-blue-100 dark:bg-slate-700 dark:hover:bg-slate-600 text-blue-700 dark:text-blue-300 font-bold rounded-xl transition-colors"
-                                            onClick={resetFilters}
+                                                        </div>
+                                                    </Link>
+                                                </motion.div>
+                                            ))}
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="empty"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-none p-12"
                                         >
-                                            Hapus Semua Filter
-                                        </button>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                            <div className="w-16 h-16 bg-gray-100 flex items-center justify-center text-gray-400 mb-6">
+                                                <Search size={32} />
+                                            </div>
+                                            <h3 className="text-2xl font-black text-black uppercase tracking-tighter mb-2">
+                                                TIDAK ADA HASIL
+                                            </h3>
+                                            <p className="text-gray-500 text-sm mb-8">
+                                                Modifikasi parameter pencarian Anda untuk melihat ketersediaan unit lainnya.
+                                            </p>
+                                            <button
+                                                className="px-6 py-3 bg-black text-white font-bold uppercase tracking-widest text-[11px] rounded-none hover:bg-gray-800 transition-colors"
+                                                onClick={resetFilters}
+                                            >
+                                                RESET FILTER
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
 
-                            {/* PAGINATION */}
-                            {!isLoading &&
-                                motors.links &&
-                                motors.links.length > 3 && (
-                                    <div className="flex justify-center gap-2 pt-10">
+                                {/* PAGINATION */}
+                                {!isLoading && motors.links && motors.links.length > 3 && (
+                                    <div className="flex justify-center gap-1 pt-12">
                                         {motors.links.map((link, k) => (
                                             <button
                                                 key={k}
                                                 disabled={!link.url}
                                                 onClick={() => {
                                                     if (link.url) {
-                                                        const urlParams =
-                                                            new URLSearchParams(
-                                                                new URL(
-                                                                    link.url,
-                                                                ).search,
-                                                            );
-                                                        const pageParams =
-                                                            Object.fromEntries(
-                                                                urlParams.entries(),
-                                                            );
-                                                        fetchMotors({
-                                                            ...values,
-                                                            ...pageParams,
-                                                        });
+                                                        const urlParams = new URLSearchParams(new URL(link.url).search);
+                                                        const pageParams = Object.fromEntries(urlParams.entries());
+                                                        fetchMotors({ ...values, ...pageParams });
                                                     }
                                                 }}
-                                                className={`min-w-[48px] h-12 flex items-center justify-center rounded-xl font-bold text-sm transition-all border ${
+                                                className={`min-w-[48px] h-12 flex items-center justify-center font-bold text-[11px] transition-colors uppercase border ${
                                                     link.active
-                                                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/30"
+                                                        ? "bg-black text-white border-black"
                                                         : link.url
-                                                          ? "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-600 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400"
-                                                          : "opacity-40 cursor-not-allowed border-transparent text-slate-400 dark:text-slate-500"
+                                                          ? "bg-white text-black border-gray-200 hover:border-black"
+                                                          : "opacity-30 cursor-not-allowed border-transparent text-gray-500 bg-gray-100"
                                                 }`}
                                                 dangerouslySetInnerHTML={{
-                                                    __html: link.label
-                                                        .replace(
-                                                            "Previous",
-                                                            "&laquo;",
-                                                        )
-                                                        .replace(
-                                                            "Next",
-                                                            "&raquo;",
-                                                        ),
+                                                    __html: link.label.replace("Previous", "&laquo;").replace("Next", "&raquo;"),
                                                 }}
                                             />
                                         ))}
                                     </div>
                                 )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </main>
+                </main>
 
-            {/* MOBILE FILTER OVERLAY (Drawer effect) */}
-            <AnimatePresence>
-                {isFiltersOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[60] lg:hidden"
-                    >
-                        <div
-                            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-                            onClick={() => setIsFiltersOpen(false)}
-                        />
+                {/* MOBILE FILTER OVERLAY */}
+                <AnimatePresence>
+                    {isFiltersOpen && (
                         <motion.div
-                            initial={{ x: "100%" }}
-                            animate={{ x: 0 }}
-                            exit={{ x: "100%" }}
-                            transition={{
-                                type: "spring",
-                                damping: 25,
-                                stiffness: 200,
-                            }}
-                            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white dark:bg-slate-900 p-8 shadow-2xl border-l border-slate-200 dark:border-slate-800"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[60] lg:hidden"
                         >
-                            <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                                    Filter Pencarian
-                                </h3>
-                                <button
-                                    onClick={() => setIsFiltersOpen(false)}
-                                    className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
+                            <div className="absolute inset-0 bg-black/80" onClick={() => setIsFiltersOpen(false)} />
+                            <motion.div
+                                initial={{ x: "100%" }}
+                                animate={{ x: 0 }}
+                                exit={{ x: "100%" }}
+                                transition={{ type: "tween", duration: 0.3 }}
+                                className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white p-8 flex flex-col"
+                            >
+                                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+                                    <h3 className="text-2xl font-black text-black uppercase tracking-tighter">
+                                        FILTER
+                                    </h3>
+                                    <button
+                                        onClick={() => setIsFiltersOpen(false)}
+                                        className="text-gray-400 hover:text-black transition-colors"
+                                    >
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
 
-                            <div className="space-y-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                        Cari Nama
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="search"
-                                        value={values.search}
-                                        onChange={handleChange}
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm"
-                                        placeholder="Cari..."
-                                    />
+                                <div className="space-y-8 flex-grow overflow-y-auto">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">CARI</label>
+                                        <input
+                                            type="text"
+                                            name="search"
+                                            value={values.search}
+                                            onChange={handleChange}
+                                            className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
+                                            placeholder="NAMA UNIT..."
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">MEREK</label>
+                                        <select
+                                            name="brand"
+                                            value={values.brand}
+                                            onChange={handleChange}
+                                            className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
+                                        >
+                                            <option value="">SEMUA</option>
+                                            {brands.map((b) => (<option key={b} value={b}>{b}</option>))}
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">TIPE</label>
+                                        <select
+                                            name="type"
+                                            value={values.type}
+                                            onChange={handleChange}
+                                            className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
+                                        >
+                                            <option value="">SEMUA</option>
+                                            {types.map((t) => (<option key={t} value={t}>{t}</option>))}
+                                        </select>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                        Merek
-                                    </label>
-                                    <select
-                                        name="brand"
-                                        value={values.brand}
-                                        onChange={handleChange}
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm"
-                                    >
-                                        <option value="">Semua Merek</option>
-                                        {brands.map((b) => (
-                                            <option key={b} value={b}>
-                                                {b}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">
-                                        Tipe
-                                    </label>
-                                    <select
-                                        name="type"
-                                        value={values.type}
-                                        onChange={handleChange}
-                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium text-sm"
-                                    >
-                                        <option value="">Semua Tipe</option>
-                                        {types.map((t) => (
-                                            <option key={t} value={t}>
-                                                {t}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="pt-6 grid grid-cols-2 gap-4">
+
+                                <div className="pt-6 grid grid-cols-2 gap-px bg-gray-300 border border-gray-300 mt-auto">
                                     <button
                                         onClick={resetFilters}
-                                        className="px-4 py-3 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm"
+                                        className="py-4 bg-white text-black font-bold text-[11px] uppercase tracking-widest hover:bg-gray-50"
                                     >
-                                        Reset
+                                        RESET
                                     </button>
                                     <button
                                         onClick={() => setIsFiltersOpen(false)}
-                                        className="px-4 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20 text-sm"
+                                        className="py-4 bg-black text-white font-bold text-[11px] uppercase tracking-widest hover:bg-gray-900"
                                     >
-                                        Terapkan
+                                        TERAPKAN
                                     </button>
                                 </div>
-                            </div>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    )}
+                </AnimatePresence>
             </div>
         </PublicLayout>
     );
