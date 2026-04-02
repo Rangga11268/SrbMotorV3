@@ -69,10 +69,15 @@ export default function About() {
                                 </p>
                             </div>
                             <div className="hidden lg:block relative h-[400px]">
-                                {/* Graphic element instead of rounded image */}
                                 <div className="absolute inset-0 bg-[#1c69d4] blur-3xl opacity-20 transform -rotate-12 translate-x-10 pointer-events-none"></div>
-                                <div className="absolute right-0 top-0 w-3/4 h-full border border-gray-800 flex items-center justify-center bg-black/50 z-10">
-                                    <span className="text-[10px] font-bold tracking-widest text-gray-600 uppercase">DEALER AUTHORIZATION // 001</span>
+                                <div className="absolute right-0 top-0 w-full h-full flex items-center justify-center z-10">
+                                    <div className="p-12 border border-gray-800 bg-black/40 backdrop-blur-sm grayscale hover:grayscale-0 transition-all duration-700">
+                                        <img 
+                                            src={usePage().props.settings?.site_logo || "/assets/icon/logo.png"} 
+                                            alt="SRB Motor Logo" 
+                                            className="h-32 w-auto object-contain opacity-80"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
