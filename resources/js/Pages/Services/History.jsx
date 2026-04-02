@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import { ChevronRight, Calendar, PenTool, CheckCircle, Clock, XCircle, AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -106,12 +106,34 @@ export default function History({ appointments }) {
                                                 )}
                                             </div>
 
-                                            {/* Status */}
-                                            <div className="col-span-1 text-left md:text-right flex flex-col justify-center">
+                                            {/* Status & Aksi */}
+                                            <div className="col-span-1 text-left md:text-right flex flex-col justify-center items-start md:items-end gap-2">
                                                 <div className={`inline-flex items-center gap-2 font-black uppercase text-[11px] tracking-widest ${st.text} bg-gray-50 border border-gray-100 px-4 py-2 w-max md:ms-auto`}>
                                                     {st.icon} {app.status.replace('_', ' ')}
                                                 </div>
+                                                
+                                                {/* Pembatalan Mandiri */}
+                                                {(app.status === 'pending' || app.status === 'confirmed') && new Date(app.service_date) >= new Date(new Date().setHours(0,0,0,0)) && (
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (confirm("Apakah Anda yakin ingin membatalkan jadwal reservasi servis ini?")) {
+                                                                router.post(route('services.cancel', app.id));
+                                                            }
+                                                        }}
+                                                        className="text-[10px] uppercase font-bold text-red-500 hover:text-red-700 tracking-widest transition-colors mt-2"
+                                                    >
+                                                        BATALKAN RESERVASI
+                                                    </button>
+                                                )}
                                             </div>
+
+                                            {/* Alasan Batal */}
+                                            {app.status === 'cancelled' && app.cancel_reason && (
+                                                <div className="col-span-1 md:col-span-4 mt-4 md:mt-0 p-4 bg-gray-50 border border-gray-200">
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-red-500 mb-1">ALASAN PEMBATALAN ({app.cancelled_by === 'user' ? 'PELANGGAN' : 'ADMIN'})</p>
+                                                    <p className="text-sm font-medium text-gray-700">{app.cancel_reason}</p>
+                                                </div>
+                                            )}
                                             
                                         </div>
                                     </div>

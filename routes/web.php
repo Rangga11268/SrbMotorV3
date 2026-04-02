@@ -63,8 +63,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/services', [ServiceAppointmentController::class, 'index'])->name('services.index');
     Route::get('/services/booking', [ServiceAppointmentController::class, 'create'])->name('services.create');
     Route::post('/services/booking', [ServiceAppointmentController::class, 'store'])->name('services.store');
+    Route::post('/services/{appointment}/cancel', [ServiceAppointmentController::class, 'cancelUser'])->name('services.cancel');
 });
-// API for disabled dates in Calendar (Can be accessed by guests too)
+// API for checking available slots (Can be accessed by guests too)
+Route::get('/api/services/available-slots', [ServiceAppointmentController::class, 'getAvailableTimeSlots'])->name('api.services.available-slots');
 Route::get('/api/services/unavailable-dates', [ServiceAppointmentController::class, 'getUnavailableDates'])->name('api.services.unavailable-dates');
 
 

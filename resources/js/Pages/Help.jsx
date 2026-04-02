@@ -68,7 +68,7 @@ export default function Help() {
             icon: <MessageSquare size={24} />,
             title: "CHAT WHATSAPP",
             desc: "Jalur komunikasi utama tim representatif kami.",
-            value: settings?.contact_whatsapp ? `+${settings.contact_whatsapp}` : "Klik untuk Memulai Percakapan",
+            value: settings?.contact_phone || "Klik untuk Memulai Percakapan",
             bg: "bg-black",
             text: "text-white",
             descClass: "text-gray-400",

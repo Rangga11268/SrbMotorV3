@@ -37,7 +37,23 @@ class ServiceAppointmentController extends Controller
     public function create()
     {
         return Inertia::render('Services/Booking', [
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'branches' => Setting::get('service_branches', [
+                "SSM JATIASIH (BEKASI)",
+                "SSM MEKAR SARI (BEKASI)",
+                "SSM DEPOK (DEPOK)",
+                "SSM BOGOR (BOGOR)",
+                "SSM TANGERANG (TANGERANG)"
+            ]),
+            'serviceHours' => Setting::get('service_business_hours', [
+                'monday' => '08:00 - 16:00',
+                'tuesday' => '08:00 - 16:00',
+                'wednesday' => '08:00 - 16:00',
+                'thursday' => '08:00 - 16:00',
+                'friday' => '08:00 - 16:00',
+                'saturday' => '08:00 - 14:00',
+                'sunday' => 'Tutup',
+            ])
         ]);
     }
 
@@ -60,15 +76,17 @@ class ServiceAppointmentController extends Controller
             'complaint_notes' => 'nullable|string|max:1000',
         ]);
 
-        // 1. Quota Check Logic
-        $quota = (int) (Setting::where('key', 'service_daily_quota')->first()->value ?? 10);
+        // 1. Quota Check Logic (Per Slot Per Cabang)
+        $quotaPerSlot = (int) (Setting::where('key', 'service_slot_quota')->first()->value ?? 5);
         $currentBookingsCount = ServiceAppointment::where('service_date', $request->service_date)
+            ->where('service_time', $request->service_time)
+            ->where('branch', $request->branch)
             ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
             ->count();
 
-        if ($currentBookingsCount >= $quota && !Auth::user()->isAdmin()) {
+        if ($currentBookingsCount >= $quotaPerSlot && !Auth::user()->isAdmin()) {
             return back()->withErrors([
-                'service_date' => "Mohon maaf, kuota servis untuk tanggal " . Carbon::parse($request->service_date)->format('d M Y') . " sudah penuh. Silakan pilih tanggal lain."
+                'service_time' => "Mohon maaf, slot jam {$request->service_time} pada tanggal " . Carbon::parse($request->service_date)->format('d M Y') . " di {$request->branch} sudah penuh. Silakan pilih jam lain."
             ]);
         }
 
@@ -116,6 +134,11 @@ class ServiceAppointmentController extends Controller
             'admin_notes' => 'nullable|string|max:500',
             'estimated_cost' => 'nullable|numeric|min:0',
         ]);
+
+        if ($validated['status'] === 'cancelled' && $service->status !== 'cancelled') {
+            $validated['cancelled_by'] = 'admin';
+            $validated['cancel_reason'] = $validated['admin_notes'] ?? 'Dibatalkan oleh admin';
+        }
 
         $service->update($validated);
 
@@ -180,5 +203,95 @@ class ServiceAppointmentController extends Controller
             ->pluck('service_date');
 
         return response()->json(['unavailable_dates' => $bookedDates]);
+    }
+
+    /**
+     * API: Get available time slots for a specific date and branch
+     */
+    public function getAvailableTimeSlots(Request $request)
+    {
+        $date = $request->query('date');
+        $branch = $request->query('branch');
+
+        if (!$date || !$branch) {
+            return response()->json(['error' => 'Missing date or branch'], 400);
+        }
+
+        // Get quota setting
+        $quotaPerSlot = (int) (Setting::where('key', 'service_slot_quota')->get()->first()->value ?? 5);
+        
+        // Parse business hours specifically for SERVICE
+        $businessHoursRaw = Setting::where('key', 'service_business_hours')->get()->first()?->value;
+        $standardSlots = ['08:00', '10:00', '12:00', '14:00']; // default fallback
+
+        if ($businessHoursRaw) {
+            $bh = is_string($businessHoursRaw) ? json_decode($businessHoursRaw, true) : $businessHoursRaw;
+            $dayName = strtolower(Carbon::parse($date)->englishDayOfWeek);
+            
+            if (isset($bh[$dayName]) && str_contains($bh[$dayName], '-')) {
+                list($start, $end) = array_map('trim', explode('-', $bh[$dayName]));
+                $startHour = (int) substr($start, 0, 2);
+                $endHour = (int) substr($end, 0, 2);
+                
+                $dynamicSlots = [];
+                // Generate a slot every 2 hours
+                for ($h = $startHour; $h <= $endHour - 1; $h += 2) {
+                    $dynamicSlots[] = sprintf('%02d:00', $h);
+                }
+                if (count($dynamicSlots) > 0) {
+                    $standardSlots = $dynamicSlots;
+                }
+            }
+        }
+        
+        $bookings = ServiceAppointment::selectRaw('LEFT(service_time, 5) as time_slot, COUNT(*) as count')
+            ->where('service_date', $date)
+            ->where('branch', $branch)
+            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
+            ->groupBy('time_slot')
+            ->pluck('count', 'time_slot');
+
+        $availableSlots = [];
+        foreach ($standardSlots as $slot) {
+            $bookedCount = $bookings[$slot] ?? 0;
+            $availableSlots[] = [
+                'time' => $slot,
+                'available' => $bookedCount < $quotaPerSlot,
+                'remaining' => max(0, $quotaPerSlot - $bookedCount)
+            ];
+        }
+
+        return response()->json(['slots' => $availableSlots]);
+    }
+
+    /**
+     * User: Cancel appointment
+     */
+    public function cancelUser(ServiceAppointment $appointment)
+    {
+        // Must belong to user
+        if ($appointment->user_id !== Auth::id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        // Must be in pending or confirmed state
+        if (!in_array($appointment->status, ['pending', 'confirmed'])) {
+            return back()->with('error', 'Tidak dapat membatalkan servis yang sudah diproses atau selesai.');
+        }
+
+        // Must be at least H-1 or earlier (e.g. not same day cancellation depending on requirement).
+        // Let's allow same day but before service_time, or simply allow if date >= today.
+        $serviceDateTime = Carbon::parse($appointment->service_date . ' ' . $appointment->service_time);
+        if ($serviceDateTime->isPast()) {
+            return back()->with('error', 'Waktu servis sudah terlewat, tidak dapat dibatalkan.');
+        }
+
+        $appointment->update([
+            'status' => 'cancelled',
+            'cancelled_by' => 'user',
+            'cancel_reason' => 'Dibatalkan langsung secara mandiri oleh pelanggan melalui sistem.',
+        ]);
+
+        return back()->with('success', 'Reservasi servis berhasil dibatalkan.');
     }
 }

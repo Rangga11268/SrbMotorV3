@@ -26,6 +26,9 @@ import {
     Globe,
     Upload,
     X,
+    Plus,
+    Trash2,
+    PenTool,
 } from "lucide-react";
 
 import {
@@ -174,6 +177,33 @@ export default function SettingsEdit({ category, settings }) {
     const categoryConfig = getCategoryConfig(category);
 
 
+    const handleJsonArrayChange = (index, arrayIndex, value, action = 'edit') => {
+        const updatedSettings = [...data.settings];
+        try {
+            let list = [];
+            try {
+                list = JSON.parse(updatedSettings[index].value || "[]");
+            } catch (e) {
+                list = [];
+            }
+            
+            if (!Array.isArray(list)) list = [];
+
+            if (action === 'edit') {
+                list[arrayIndex] = value;
+            } else if (action === 'delete') {
+                list.splice(arrayIndex, 1);
+            } else if (action === 'add') {
+                list.push("");
+            }
+            
+            updatedSettings[index].value = JSON.stringify(list);
+            setData("settings", updatedSettings);
+        } catch (e) {
+            console.error("Error updating JSON array:", e);
+        }
+    };
+
     const daysOfWeek = [
         { key: "monday", label: "Senin" },
         { key: "tuesday", label: "Selasa" },
@@ -188,8 +218,8 @@ export default function SettingsEdit({ category, settings }) {
         const fieldConfig = getSettingFieldConfig(category, setting.key);
 
 
-        // Special handling for business_hours
-        if (setting.key === "business_hours") {
+        // Special handling for business_hours and service_business_hours
+        if (setting.key === "business_hours" || setting.key === "service_business_hours") {
             let hours = {};
             try {
                 const parseValue =
@@ -243,6 +273,70 @@ export default function SettingsEdit({ category, settings }) {
                                 />
                             </div>
                         ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Special handling for service_branches (list of strings)
+        if (setting.key === "service_branches") {
+            let branches = [];
+            try {
+                branches = typeof setting.value === "string" 
+                    ? JSON.parse(setting.value || "[]") 
+                    : setting.value;
+                if (!Array.isArray(branches)) branches = [];
+            } catch (e) {
+                branches = [];
+            }
+
+            return (
+                <div key={index} className="card border-0 bg-light p-4 mb-4">
+                    <div className="mb-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 className="font-weight-bold text-dark mb-2">
+                                <PenTool size={20} className="me-2" />
+                                {fieldConfig?.label || setting.key}
+                            </h6>
+                            <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
+                        </div>
+                        <button 
+                            type="button" 
+                            className="btn btn-primary btn-sm rounded-pill px-3"
+                            onClick={() => handleJsonArrayChange(index, null, null, 'add')}
+                        >
+                            <Plus size={16} className="me-1" /> Tambah Cabang
+                        </button>
+                    </div>
+                    <div className="row g-3">
+                        {branches.map((branch, bIndex) => (
+                            <div key={bIndex} className="col-12">
+                                <div className="input-group">
+                                    <span className="input-group-text bg-white border-end-0">
+                                        <small className="fw-bold text-muted">{bIndex + 1}</small>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className="form-control border-start-0"
+                                        placeholder="Nama Cabang (Contoh: SSM BEKASI)"
+                                        value={branch}
+                                        onChange={(e) => handleJsonArrayChange(index, bIndex, e.target.value, 'edit')}
+                                    />
+                                    <button 
+                                        className="btn btn-outline-danger" 
+                                        type="button"
+                                        onClick={() => handleJsonArrayChange(index, bIndex, null, 'delete')}
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                        {branches.length === 0 && (
+                            <div className="col-12 text-center py-3 text-muted small border rounded bg-white">
+                                Belum ada cabang. Klik "Tambah Cabang" untuk memulai.
+                            </div>
+                        )}
                     </div>
                 </div>
             );

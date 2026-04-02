@@ -25,6 +25,8 @@ class ServiceAppointment extends Model
         'estimated_cost',
         'status',
         'admin_notes',
+        'cancelled_by',
+        'cancel_reason',
     ];
 
     /**

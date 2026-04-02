@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { ChevronRight, Calendar as CalendarIcon, Clock, PenTool, CheckCircle, AlertTriangle, ArrowLeft } from "lucide-react";
 
-export default function Booking({ user }) {
+export default function Booking({ user, branches = [], serviceHours = {} }) {
     const { auth } = usePage().props;
-    const [unavailableDates, setUnavailableDates] = useState([]);
-    const [isLoadingDates, setIsLoadingDates] = useState(true);
+    const [availableSlots, setAvailableSlots] = useState([]);
+    const [isLoadingSlots, setIsLoadingSlots] = useState(false);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         branch: "",
@@ -24,25 +24,34 @@ export default function Booking({ user }) {
         complaint_notes: "",
     });
 
-    const ssmBranches = [
-        "SSM JATIASIH (BEKASI)",
-        "SSM MEKAR SARI (BEKASI)",
-        "SSM DEPOK (DEPOK)",
-        "SSM BOGOR (BOGOR)",
-        "SSM TANGERANG (TANGERANG)",
-    ];
+    // Branches are now dynamic from props
+    const ssmBranches = branches;
 
     useEffect(() => {
-        axios.get(route('api.services.unavailable-dates'))
+        if (data.service_date && data.branch) {
+            setIsLoadingSlots(true);
+            axios.get(route('api.services.available-slots'), {
+                params: { date: data.service_date, branch: data.branch }
+            })
             .then(res => {
-                setUnavailableDates(res.data.unavailable_dates || []);
-                setIsLoadingDates(false);
+                setAvailableSlots(res.data.slots || []);
+                setIsLoadingSlots(false);
+                // Reset selected time if it's no longer available
+                if (data.service_time) {
+                    const slot = res.data.slots?.find(s => s.time + ':00' === data.service_time || s.time === data.service_time);
+                    if (!slot || !slot.available) {
+                        setData('service_time', '');
+                    }
+                }
             })
             .catch(err => {
-                console.error("Failed to fetch dates", err);
-                setIsLoadingDates(false);
+                console.error("Failed to fetch slots", err);
+                setIsLoadingSlots(false);
             });
-    }, []);
+        } else {
+            setAvailableSlots([]);
+        }
+    }, [data.service_date, data.branch]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -156,53 +165,64 @@ export default function Booking({ user }) {
                                         <div>
                                             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-4">PILIH TANGGAL SERVIS</label>
                                             
-                                            {isLoadingDates ? (
-                                                <div className="p-8 text-center text-sm uppercase tracking-widest text-[#1c69d4] font-bold animate-pulse">SINKRONISASI KUOTA...</div>
-                                            ) : (
-                                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                                                    {next14Days.map(date => {
-                                                        const isUnavailable = unavailableDates.includes(date);
-                                                        const isSelected = data.service_date === date;
-                                                        const d = new Date(date);
-                                                        const dayName = d.toLocaleDateString("id-ID", { weekday: 'short' });
-                                                        const dateNum = d.getDate();
+                                            {(!data.branch && !data.service_date) && (
+                                                <div className="p-4 text-center text-xs text-gray-500 mb-4 bg-yellow-50 border border-yellow-200">
+                                                    Silakan pilih CABANG terlebih dahulu sebelum memilih jadwal.
+                                                </div>
+                                            )}
+                                            
+                                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                                                {next14Days.map(date => {
+                                                    const isSelected = data.service_date === date;
+                                                    const d = new Date(date);
+                                                    const dayName = d.toLocaleDateString("id-ID", { weekday: 'short' });
+                                                    const dateNum = d.getDate();
 
-                                                        return (
+                                                    return (
                                                             <button
                                                                 type="button"
                                                                 key={date}
-                                                                disabled={isUnavailable}
+                                                                disabled={!data.branch}
                                                                 onClick={() => setData('service_date', date)}
                                                                 className={`
                                                                     flex flex-col items-center justify-center py-4 border transition-colors rounded-none outline-none
-                                                                    ${isUnavailable 
-                                                                        ? 'bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed opacity-50' 
+                                                                    ${!data.branch 
+                                                                        ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-50' 
                                                                         : isSelected 
                                                                             ? 'bg-black border-black text-white shadow-xl' 
                                                                             : 'bg-white border-gray-300 text-black hover:border-black'}
                                                                 `}
                                                             >
-                                                                <span className={`text-[10px] uppercase font-bold tracking-widest mb-1 ${isSelected ? 'text-gray-400' : isUnavailable ? 'text-gray-400' : 'text-[#1c69d4]'}`}>{dayName}</span>
+                                                                <span className={`text-[10px] uppercase font-bold tracking-widest mb-1 ${isSelected || !data.branch ? 'text-gray-400' : 'text-[#1c69d4]'}`}>{dayName}</span>
                                                                 <span className="text-xl font-black">{dateNum}</span>
                                                             </button>
                                                         );
-                                                    })}
-                                                </div>
-                                            )}
+                                                })}
+                                            </div>
                                             {errors.service_date && <span className="text-red-500 text-[10px] uppercase font-bold mt-2 block">{errors.service_date}</span>}
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <div>
                                                 <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">ESTIMASI KEDATANGAN</label>
-                                                <select value={data.service_time} onChange={e => setData('service_time', e.target.value)} required
-                                                    className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs">
-                                                    <option value="">PILIH JAM</option>
-                                                    <option value="08:00:00">08:00 PAGI</option>
-                                                    <option value="10:00:00">10:00 PAGI</option>
-                                                    <option value="13:00:00">13:00 SIANG</option>
-                                                    <option value="15:00:00">15:00 SORE</option>
-                                                </select>
+                                                {isLoadingSlots ? (
+                                                    <div className="w-full bg-gray-100 border border-gray-300 rounded-none px-4 py-3 text-xs font-bold text-gray-400 animate-pulse">MENGECEK SLOT...</div>
+                                                ) : (
+                                                    <select 
+                                                        value={data.service_time} 
+                                                        onChange={e => setData('service_time', e.target.value)} 
+                                                        required
+                                                        disabled={!data.service_date || availableSlots.length === 0}
+                                                        className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs disabled:bg-gray-100"
+                                                    >
+                                                        <option value="">PILIH JAM (SLOT)</option>
+                                                        {availableSlots.map(slot => (
+                                                            <option key={slot.time} value={slot.time + ':00'} disabled={!slot.available}>
+                                                                {slot.time} {slot.time >= '12:00' ? 'SIANG/SORE' : 'PAGI'} {slot.available ? `(Sisa ${slot.remaining} Slot)` : '(PENUH)'}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                )}
                                                 {errors.service_time && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.service_time}</span>}
                                             </div>
                                             <div>
@@ -256,18 +276,30 @@ export default function Booking({ user }) {
                                             <p className="text-sm font-light text-gray-400">Servis resmi memastikan garansi unit sekunder Anda tidak hangus.</p>
                                         </div>
                                     </li>
-                                    <li className="flex gap-4 items-start">
+                                    <li className="flex gap-4 items-start border-t border-gray-800 pt-6">
                                         <Clock className="w-5 h-5 text-gray-300 flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <span className="block font-bold text-[10px] uppercase tracking-widest text-[#1c69d4] mb-1">Ketepatan Waktu</span>
-                                            <p className="text-sm font-light text-gray-400">Hadir max 15 menit sebelum waktu reservasi. Keterlambatan dapat membatalkan slot.</p>
+                                            <span className="block font-bold text-[10px] uppercase tracking-widest text-[#1c69d4] mb-1">JAM OPERASIONAL SSM</span>
+                                            <p className="text-sm font-light text-gray-400 leading-relaxed uppercase">
+                                                {Object.keys(serviceHours).length > 0 ? (
+                                                    <>
+                                                        SENIN - SABTU : {serviceHours.monday || "08.00 - 16.00"} <br/>
+                                                        MINGGU / LIBUR : {serviceHours.sunday || "TUTUP"}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        SENIN - SABTU : 08.00 - 16.00 <br />
+                                                        MINGGU / LIBUR : TUTUP
+                                                    </>
+                                                )}
+                                            </p>
                                         </div>
                                     </li>
                                     <li className="flex gap-4 items-start border-t border-gray-800 pt-6">
-                                        <AlertTriangle className="w-10 h-10 text-yellow-500 flex-shrink-0" />
+                                        <AlertTriangle className="w-8 h-8 text-yellow-500 flex-shrink-0 mt-0.5" />
                                         <div>
-                                            <span className="block font-bold text-[10px] uppercase tracking-widest text-white mb-1">PENGINGAT KILOMETER</span>
-                                            <p className="text-sm font-light text-gray-400">Catat angka Odometer (KM) kendaraan secara presisi untuk membantu pelacakan riwayat servis oleh mekanik.</p>
+                                            <span className="block font-bold text-[10px] uppercase tracking-widest text-white mb-1">KETEPATAN WAKTU</span>
+                                            <p className="text-sm font-light text-gray-400">Hadir max 15 menit sebelum waktu reservasi. Keterlambatan dapat membatalkan slot antrean Anda secara otomatis.</p>
                                         </div>
                                     </li>
                                 </ul>

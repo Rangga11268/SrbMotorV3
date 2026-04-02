@@ -53,6 +53,11 @@ export default function SettingsIndex({ settings }) {
             icon: cilEnvelopeClosed,
             description: "Konfigurasi sistem email untuk notifikasi",
         },
+        service: {
+            label: "Layanan Servis (SSM)",
+            icon: cilSettings,
+            description: "Konfigurasi operasional bengkel (Sinarsurya Motor)",
+        },
     };
 
     const getSettingsByCategory = (category) => {
@@ -133,12 +138,10 @@ export default function SettingsIndex({ settings }) {
                                                             className="p-4 bg-white rounded-3 border border-light-subtle"
                                                         >
                                                             <div>
-                                                                <div className="fw-bold text-dark">
-                                                                    {getFieldLabel(
-                                                                        category,
-                                                                        setting.key,
-                                                                    )}
-                                                                </div>
+                                                                <h6 className="font-weight-bold text-dark mb-1">
+                                                                    {getFieldLabel(category, setting.key) ||
+                                                                        setting.key}
+                                                                </h6>
                                                                 <small className="text-muted d-block mt-1">
                                                                     {getFieldHelper(
                                                                         category,
@@ -146,34 +149,46 @@ export default function SettingsIndex({ settings }) {
                                                                     ) ||
                                                                         setting.description}
                                                                 </small>
-                                                                {setting.value &&
-                                                                setting.key !==
-                                                                    "business_hours" ? (
-                                                                    <div className="mt-2 p-2 bg-light rounded-2">
-                                                                        <small className="d-block text-truncate text-monospace">
-                                                                            <strong>
-                                                                                Nilai:
-                                                                            </strong>{" "}
-                                                                            {setting
-                                                                                .value
-                                                                                .length >
-                                                                            60
-                                                                                ? setting.value.substring(
-                                                                                      0,
-                                                                                      60,
-                                                                                  ) +
-                                                                                  "..."
-                                                                                : setting.value}
-                                                                        </small>
-                                                                    </div>
-                                                                ) : setting.key ===
-                                                                  "business_hours" ? (
-                                                                    <div className="mt-2 p-2 bg-light rounded-2">
-                                                                        <small className="text-muted">
-                                                                            Jam operasional terpengaturan
-                                                                        </small>
-                                                                    </div>
-                                                                ) : null}
+                                                                <div className="mt-2 p-2 bg-light rounded-2 overflow-hidden">
+                                                                    {(() => {
+                                                                        if (setting.key === "site_logo") {
+                                                                            return (
+                                                                                <div className="text-center p-2 bg-white rounded border">
+                                                                                    <img src={setting.value} alt="Logo" style={{ maxHeight: "40px" }} />
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                        
+                                                                        if (setting.key === "business_hours" || setting.key === "service_business_hours") {
+                                                                            try {
+                                                                                const hours = JSON.parse(setting.value);
+                                                                                return (
+                                                                                    <div className="small text-muted">
+                                                                                        <span className="fw-bold">Harian:</span> {hours.monday} | <span className="fw-bold">Minggu:</span> {hours.sunday}
+                                                                                    </div>
+                                                                                );
+                                                                            } catch(e) { return <span className="small">Format error</span>; }
+                                                                        }
+
+                                                                        if (setting.key === "service_branches") {
+                                                                            try {
+                                                                                const branches = JSON.parse(setting.value);
+                                                                                return (
+                                                                                    <div className="small text-muted">
+                                                                                        <span className="fw-bold">Cabang:</span> {branches.join(", ")}
+                                                                                    </div>
+                                                                                );
+                                                                            } catch(e) { return <span className="small">Format error</span>; }
+                                                                        }
+
+                                                                        // Default for simple strings
+                                                                        return (
+                                                                            <small className="d-block text-truncate text-monospace">
+                                                                                <strong className="text-dark">Nilai:</strong> {setting.value}
+                                                                            </small>
+                                                                        );
+                                                                    })()}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     ))}

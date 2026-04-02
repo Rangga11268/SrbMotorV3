@@ -64,15 +64,6 @@ class SettingSeeder extends Seeder
             ]
         );
 
-        Setting::updateOrCreate(
-            ['key' => 'contact_whatsapp'],
-            [
-                'value' => '6281234567890',
-                'type' => 'string',
-                'category' => 'contact',
-                'description' => 'Nomor WhatsApp (tanpa +)'
-            ]
-        );
 
         Setting::updateOrCreate(
             ['key' => 'contact_address'],
@@ -171,6 +162,51 @@ class SettingSeeder extends Seeder
                 'type' => 'string',
                 'category' => 'email',
                 'description' => 'Email pengirim'
+            ]
+        );
+
+        // Service Settings
+        Setting::updateOrCreate(
+            ['key' => 'service_business_hours'],
+            [
+                'value' => json_encode([
+                    'monday' => '08:00 - 16:00',
+                    'tuesday' => '08:00 - 16:00',
+                    'wednesday' => '08:00 - 16:00',
+                    'thursday' => '08:00 - 16:00',
+                    'friday' => '08:00 - 16:00',
+                    'saturday' => '08:00 - 14:00',
+                    'sunday' => 'Tutup',
+                ]),
+                'type' => 'json',
+                'category' => 'service',
+                'description' => 'Jam operasional bengkel (SSM)'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'service_slot_quota'],
+            [
+                'value' => '5',
+                'type' => 'number',
+                'category' => 'service',
+                'description' => 'Kuota motor per slot waktu'
+            ]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'service_branches'],
+            [
+                'value' => json_encode([
+                    "SSM JATIASIH (BEKASI)",
+                    "SSM MEKAR SARI (BEKASI)",
+                    "SSM DEPOK (DEPOK)",
+                    "SSM BOGOR (BOGOR)",
+                    "SSM TANGERANG (TANGERANG)"
+                ]),
+                'type' => 'json',
+                'category' => 'service',
+                'description' => 'Daftar cabang bengkel Sinarsurya Motor (SSM)'
             ]
         );
     }
