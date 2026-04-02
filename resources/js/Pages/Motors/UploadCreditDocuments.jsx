@@ -92,23 +92,21 @@ export default function UploadCreditDocuments({ transaction }) {
             <div className="flex-grow pt-[104px] pb-20">
                 <div className="bg-white min-h-screen">
                     {/* Header Section */}
-                    <div className="bg-gray-50 border-b border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="bg-black py-12 px-4 sm:px-6 lg:px-8 border-b border-gray-800">
                         <div className="max-w-4xl mx-auto">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="p-2 bg-blue-100 rounded-lg">
+                                <div className="p-2 bg-gray-900 border border-gray-800 rounded-none">
                                     <ShieldCheck
                                         size={24}
-                                        className="text-blue-600"
+                                        className="text-white"
                                     />
                                 </div>
-                                <h1 className="text-3xl font-bold text-gray-900">
-                                    Upload Dokumen Verifikasi
+                                <h1 className="text-3xl font-black uppercase tracking-tighter text-white">
+                                    UPLOAD DOKUMEN <span className="text-[#1c69d4]">VERIFIKASI</span>
                                 </h1>
                             </div>
-                            <p className="text-gray-600">
-                                Lengkapi dokumen yang diperlukan untuk
-                                verifikasi kredit Anda. Semua dokumen disimpan
-                                dengan aman.
+                            <p className="text-gray-400 font-bold text-[11px] uppercase tracking-widest">
+                                Lengkapi dokumen yang diperlukan untuk verifikasi kredit Anda. Semua dokumen disimpan dengan aman.
                             </p>
                         </div>
                     </div>
@@ -118,8 +116,8 @@ export default function UploadCreditDocuments({ transaction }) {
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Left: Motor Summary */}
                             <div className="lg:col-span-1">
-                                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-24">
-                                    <div className="aspect-video bg-gray-100 overflow-hidden flex items-center justify-center p-4">
+                                <div className="bg-white border border-gray-200 rounded-none overflow-hidden sticky top-24">
+                                    <div className="aspect-video bg-gray-50 border-b border-gray-200 flex items-center justify-center p-4">
                                         <img
                                             src={`/storage/${transaction.motor.image_path}`}
                                             alt={transaction.motor.name}
@@ -127,15 +125,18 @@ export default function UploadCreditDocuments({ transaction }) {
                                         />
                                     </div>
                                     <div className="p-5">
-                                        <h3 className="font-bold text-lg text-gray-900 mb-4">
+                                        <p className="text-[#1c69d4] text-[10px] font-bold uppercase tracking-widest mb-1">
+                                            {transaction.motor.brand}
+                                        </p>
+                                        <h3 className="font-black text-xl text-black uppercase tracking-tighter mb-4">
                                             {transaction.motor.name}
                                         </h3>
                                         <div className="space-y-3 mb-5 pb-5 border-b border-gray-200">
-                                            <div className="flex justify-between items-start">
-                                                <span className="text-sm text-gray-600">
-                                                    Uang Muka
+                                            <div className="flex justify-between items-center py-1">
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                    UANG MUKA
                                                 </span>
-                                                <span className="font-semibold text-gray-900">
+                                                <span className="font-black text-black">
                                                     {formatCurrency(
                                                         transaction
                                                             .credit_detail
@@ -143,11 +144,11 @@ export default function UploadCreditDocuments({ transaction }) {
                                                     )}
                                                 </span>
                                             </div>
-                                            <div className="flex justify-between items-start">
-                                                <span className="text-sm text-gray-600">
-                                                    Cicilan/Bulan
+                                            <div className="flex justify-between items-center py-1">
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                    CICILAN/BLN
                                                 </span>
-                                                <span className="font-semibold text-gray-900">
+                                                <span className="font-black text-black">
                                                     {formatCurrency(
                                                         transaction
                                                             .credit_detail
@@ -155,38 +156,38 @@ export default function UploadCreditDocuments({ transaction }) {
                                                     )}
                                                 </span>
                                             </div>
-                                            <div className="flex justify-between items-start">
-                                                <span className="text-sm text-gray-600">
-                                                    Tenor
+                                            <div className="flex justify-between items-center py-1">
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                    TENOR
                                                 </span>
-                                                <span className="font-semibold text-gray-900">
+                                                <span className="font-black text-black">
                                                     {
                                                         transaction
                                                             .credit_detail.tenor
                                                     }{" "}
-                                                    Bulan
+                                                    BULAN
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
-                                            <p className="text-xs font-semibold text-blue-900 mb-2">
-                                                Dokumen yang Diperlukan:
+                                        <div className="bg-gray-50 rounded-none p-4 border border-gray-200">
+                                            <p className="text-[10px] font-bold text-black uppercase tracking-widest mb-2">
+                                                DOKUMEN YANG DIPERLUKAN:
                                             </p>
-                                            <ul className="text-xs text-blue-800 space-y-1">
-                                                <li>• Kartu Identitas (KTP)</li>
-                                                <li>• Kartu Keluarga</li>
-                                                <li>• Slip Gaji 3 bulan</li>
+                                            <ul className="text-[10px] font-bold text-gray-600 uppercase tracking-widest space-y-1">
+                                                <li>• KARTU IDENTITAS (KTP)</li>
+                                                <li>• KARTU KELUARGA</li>
+                                                <li>• SLIP GAJI 3 BULAN</li>
                                             </ul>
                                         </div>
 
                                         {/* Show existing documents if any */}
                                         {hasUploadedDocuments && (
-                                            <div className="bg-green-50 rounded-lg p-4 border border-green-200 mt-4">
-                                                <p className="text-xs font-semibold text-green-900 mb-3 flex items-center gap-2">
+                                            <div className="bg-green-50 rounded-none p-4 border border-green-200 mt-4">
+                                                <p className="text-[10px] font-bold text-green-900 mb-3 flex items-center gap-2 uppercase tracking-widest">
                                                     <CheckCircle size={16} />{" "}
-                                                    Dokumen yang Sudah Dikirim
+                                                    DOKUMEN YANG SUDAH DIKIRIM
                                                 </p>
-                                                <ul className="text-xs text-green-800 space-y-2">
+                                                <ul className="text-[10px] font-bold uppercase tracking-widest text-green-800 space-y-2">
                                                     {existingDocs.map((doc) => (
                                                         <li
                                                             key={doc.id}
@@ -200,14 +201,8 @@ export default function UploadCreditDocuments({ transaction }) {
                                                         </li>
                                                     ))}
                                                 </ul>
-                                                <p className="text-xs text-green-700 mt-3 italic">
-                                                    Anda dapat mengganti dokumen
-                                                    dengan versi yang lebih baik
-                                                    di halaman{" "}
-                                                    <strong>
-                                                        Kelola Dokumen
-                                                    </strong>
-                                                    .
+                                                <p className="text-[10px] font-bold text-green-700 mt-3 uppercase tracking-widest mt-4 pt-3 border-t border-green-100">
+                                                    ANDA DAPAT MENGGANTI DOKUMEN DENGAN VERSI YANG LEBIH BAIK DI HALAMAN KELOLA DOKUMEN.
                                                 </p>
                                             </div>
                                         )}
@@ -247,18 +242,18 @@ export default function UploadCreditDocuments({ transaction }) {
 
                                     {/* Upload Progress */}
                                     {progress && (
-                                        <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                                        <div className="bg-gray-50 rounded-none p-4 border border-gray-200">
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="text-sm font-medium text-gray-700">
-                                                    Mengupload...
+                                                <span className="text-[10px] font-bold text-gray-700 uppercase tracking-widest">
+                                                    MENGUPLOAD...
                                                 </span>
-                                                <span className="text-sm font-medium text-gray-700">
+                                                <span className="text-[10px] font-bold text-gray-700 uppercase tracking-widest">
                                                     {progress.percentage}%
                                                 </span>
                                             </div>
-                                            <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
+                                            <div className="w-full bg-gray-200 rounded-none h-2 overflow-hidden">
                                                 <motion.div
-                                                    className="h-full bg-blue-600"
+                                                    className="h-full bg-black"
                                                     initial={{ width: 0 }}
                                                     animate={{
                                                         width: `${progress.percentage}%`,
@@ -278,16 +273,16 @@ export default function UploadCreditDocuments({ transaction }) {
                                                 "motors.order.confirmation",
                                                 transaction.id,
                                             )}
-                                            className="flex items-center justify-center gap-2 px-6 py-3 text-gray-700 font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                            className="flex items-center justify-center gap-2 px-6 py-4 text-black font-black border border-gray-300 rounded-none hover:bg-gray-50 transition-colors text-[11px] uppercase tracking-widest"
                                         >
-                                            <ArrowLeft size={18} /> Kembali
+                                            <ArrowLeft size={16} /> KEMBALI
                                         </Link>
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-black text-white font-black rounded-none border border-black hover:bg-gray-900 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-[11px] uppercase tracking-widest"
                                         >
-                                            <Upload size={18} /> Upload Dokumen
+                                            <Upload size={16} /> UPLOAD DOKUMEN
                                         </button>
                                     </div>
                                 </form>
@@ -314,19 +309,19 @@ function FileUploadField({
     const isImage = (file) => file.type.startsWith("image/");
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg p-5">
+        <div className="bg-white border border-gray-200 rounded-none p-6">
             <div className="flex items-start justify-between mb-4">
                 <div>
                     <label
                         htmlFor={id}
-                        className="block text-sm font-semibold text-gray-900 mb-1"
+                        className="block text-[11px] font-bold text-black mb-1 uppercase tracking-widest"
                     >
                         {label}
                         {required && (
                             <span className="text-red-500 ml-1">*</span>
                         )}
                     </label>
-                    <p className="text-sm text-gray-600">{description}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">{description}</p>
                 </div>
             </div>
 
@@ -343,21 +338,21 @@ function FileUploadField({
                         required={files.length === 0 && required}
                     />
                     <div
-                        className={`w-full p-6 rounded-lg border-2 border-dashed transition-all flex flex-col items-center justify-center text-center ${
+                        className={`w-full p-8 border border-dashed transition-all flex flex-col items-center justify-center text-center ${
                             error
                                 ? "border-red-300 bg-red-50"
-                                : "border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50"
+                                : "border-gray-300 bg-gray-50 hover:border-black hover:bg-gray-100"
                         }`}
                     >
                         <Upload
                             size={32}
-                            className={error ? "text-red-400" : "text-gray-400"}
+                            className={error ? "text-red-400" : "text-black"}
                         />
-                        <p className="mt-2 text-sm font-medium text-gray-900">
-                            Klik untuk unggah atau drag & drop
+                        <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-black">
+                            KLIK UNTUK UNGGAH ATAU DRAG & DROP
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">
-                            JPG, PNG, atau PDF. Maksimal 2MB per file.
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">
+                            JPG, PNG, ATAU PDF. MAKSIMAL 2MB PER FILE.
                         </p>
                     </div>
                 </div>
@@ -372,10 +367,10 @@ function FileUploadField({
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
-                                    className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg group hover:bg-blue-50 hover:border-blue-200 transition-colors"
+                                    className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-none group hover:border-black transition-colors"
                                 >
                                     {/* Preview */}
-                                    <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center shrink-0 border border-gray-200 overflow-hidden">
+                                    <div className="w-10 h-10 bg-gray-50 flex items-center justify-center shrink-0 border border-gray-200 overflow-hidden rounded-none">
                                         {isImage(file) ? (
                                             <img
                                                 src={URL.createObjectURL(file)}
@@ -392,10 +387,10 @@ function FileUploadField({
 
                                     {/* Info */}
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-gray-900 truncate">
+                                        <p className="text-[10px] font-bold text-black uppercase tracking-widest truncate">
                                             {file.name}
                                         </p>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">
                                             {(file.size / 1024).toFixed(2)} KB
                                         </p>
                                     </div>

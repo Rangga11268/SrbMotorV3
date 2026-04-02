@@ -114,7 +114,7 @@ export default function CashOrderForm({ motor, auth }) {
 
     return (
         <PublicLayout auth={auth} title={`Beli Cash - ${motor.name}`}>
-            <div className="flex-grow pt-[104px] pb-20">
+            <div className="flex-grow pt-[140px] pb-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-8 flex items-center justify-between">
@@ -130,18 +130,17 @@ export default function CashOrderForm({ motor, auth }) {
                     <div className="grid lg:grid-cols-3 gap-8">
                         {/* LEFT: FORM */}
                         <div className="lg:col-span-2 space-y-6">
-                            <Card className="border-none shadow-sm overflow-hidden">
-                                <div className="bg-blue-600 p-8 text-white relative overflow-hidden">
+                            <Card className="border border-gray-200 rounded-none overflow-hidden">
+                                <div className="bg-black p-8 text-white relative overflow-hidden">
                                     <div className="relative z-10">
-                                        <h1 className="text-3xl font-black mb-2">
-                                            Formulir Pembelian Tunai
+                                        <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">
+                                            FORMULIR <span className="text-[#1c69d4]">PEMBELIAN TUNAI</span>
                                         </h1>
-                                        <p className="text-blue-100 font-medium">
-                                            Lengkapi data diri Anda untuk proses
-                                            transaksi yang cepat dan aman.
+                                        <p className="text-gray-400 font-bold text-[11px] uppercase tracking-widest">
+                                            Lengkapi data diri Anda untuk proses transaksi yang cepat dan aman.
                                         </p>
                                     </div>
-                                    <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                                    <div className="absolute top-0 right-0 w-64 h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                                 </div>
 
                                 {(hasValidationErrors ||
@@ -205,7 +204,7 @@ export default function CashOrderForm({ motor, auth }) {
                                     >
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_name">
+                                                <Label htmlFor="customer_name" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Nama Lengkap
                                                 </Label>
                                                 <div className="relative">
@@ -213,8 +212,8 @@ export default function CashOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_name"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Sesuai KTP"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900"
+                                                        placeholder="SESUAI KTP"
                                                         required
                                                         value={data.name}
                                                         onChange={(e) =>
@@ -233,7 +232,7 @@ export default function CashOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_phone">
+                                                <Label htmlFor="customer_phone" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Nomor WhatsApp
                                                 </Label>
                                                 <div className="relative">
@@ -241,7 +240,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_phone"
                                                         type="tel"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900"
                                                         placeholder="0812..."
                                                         required
                                                         value={data.phone}
@@ -263,7 +262,7 @@ export default function CashOrderForm({ motor, auth }) {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_nik">
+                                                <Label htmlFor="customer_nik" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     NIK (Sesuai KTP)
                                                 </Label>
                                                 <div className="relative">
@@ -271,8 +270,8 @@ export default function CashOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_nik"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="16 Digit NIK"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 uppercase"
+                                                        placeholder="16 DIGIT NIK"
                                                         required
                                                         value={data.nik}
                                                         onChange={(e) =>
@@ -291,7 +290,7 @@ export default function CashOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_email">
+                                                <Label htmlFor="customer_email" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Email (Opsional)
                                                 </Label>
                                                 <div className="relative">
@@ -299,7 +298,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_email"
                                                         type="email"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 lowercase"
                                                         placeholder="contoh@email.com"
                                                         value={data.email}
                                                         onChange={(e) =>
@@ -320,14 +319,14 @@ export default function CashOrderForm({ motor, auth }) {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="motor_color">
+                                                <Label htmlFor="motor_color" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Pilihan Warna
                                                 </Label>
                                                 <div className="relative">
                                                     <Palette className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                     <select
                                                         id="motor_color"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 appearance-none"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
                                                         required
                                                         value={data.motor_color}
                                                         onChange={(e) =>
@@ -338,17 +337,17 @@ export default function CashOrderForm({ motor, auth }) {
                                                         }
                                                     >
                                                         <option value="">
-                                                            Pilih Warna
+                                                            PILIH WARNA
                                                         </option>
                                                         {motor.colors && motor.colors.length > 0 ? (
                                                             motor.colors.map((color, idx) => (
-                                                                <option key={idx} value={color}>
+                                                                <option key={idx} value={color} className="uppercase">
                                                                     {color}
                                                                 </option>
                                                             ))
                                                         ) : (
-                                                            <option value="Beragam">
-                                                                Beragam / Sesuai Stok
+                                                            <option value="Beragam" className="uppercase">
+                                                                BERAGAM / SESUAI STOK
                                                             </option>
                                                         )}
                                                     </select>
@@ -356,7 +355,7 @@ export default function CashOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="delivery_method">
+                                                <Label htmlFor="delivery_method" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Metode Penyerahan
                                                 </Label>
                                                 <div className="flex gap-4">
@@ -368,10 +367,10 @@ export default function CashOrderForm({ motor, auth }) {
                                                                 "Ambil di Dealer",
                                                             )
                                                         }
-                                                        className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                        className={`flex-1 flex items-center justify-center gap-2 p-3 border rounded-none uppercase text-xs font-bold transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 text-gray-500 hover:border-black hover:text-black"}`}
                                                     >
                                                         <Store className="w-5 h-5" />
-                                                        Ambil
+                                                        AMBIL DI TEMPAT
                                                     </button>
                                                     <button
                                                         type="button"
@@ -381,25 +380,25 @@ export default function CashOrderForm({ motor, auth }) {
                                                                 "Kirim ke Rumah",
                                                             )
                                                         }
-                                                        className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                        className={`flex-1 flex items-center justify-center gap-2 p-3 border rounded-none uppercase text-xs font-bold transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 text-gray-500 hover:border-black hover:text-black"}`}
                                                     >
                                                         <Truck className="w-5 h-5" />
-                                                        Kirim
+                                                        KIRIM KE RUMAH
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="customer_address">
+                                            <Label htmlFor="customer_address" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Alamat Lengkap
                                             </Label>
                                             <div className="relative">
                                                 <MapPin className="absolute left-3 top-4 w-5 h-5 text-gray-400" />
                                                 <textarea
                                                     id="customer_address"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]"
-                                                    placeholder="Alamat pengiriman unit..."
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 uppercase min-h-[100px]"
+                                                    placeholder="ALAMAT PENGIRIMAN UNIT..."
                                                     required
                                                     value={data.address}
                                                     onChange={(e) =>
@@ -418,7 +417,7 @@ export default function CashOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="booking_fee">
+                                            <Label htmlFor="booking_fee" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Booking Fee (Opsional)
                                             </Label>
                                             <div className="space-y-3">
@@ -427,17 +426,17 @@ export default function CashOrderForm({ motor, auth }) {
                                                     <input
                                                         id="booking_fee"
                                                         type="text"
-                                                        className={`w-full bg-white border-2 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-gray-900 ${
+                                                        className={`w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black transition-all font-black text-lg text-gray-900 ${
                                                             parseFloat(
                                                                 data.booking_fee,
                                                             ) > 0 &&
                                                             parseFloat(
                                                                 data.booking_fee,
                                                             ) < motor.price
-                                                                ? "border-green-500"
-                                                                : "border-gray-200 focus:border-blue-500"
+                                                                ? "border-black bg-white"
+                                                                : "border-gray-200 focus:border-black"
                                                         }`}
-                                                        placeholder="Masukkan booking fee (cicilan pertama atau jaminan)"
+                                                        placeholder="NOMINAL BOOKING FEE (OPSIONAL)"
                                                         value={formatNumberDisplay(
                                                             data.booking_fee,
                                                         )}
@@ -551,10 +550,10 @@ export default function CashOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="space-y-4">
-                                            <Label>Metode Pembayaran</Label>
+                                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Metode Pembayaran</Label>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <label
-                                                    className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Transfer Bank" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}
+                                                    className={`relative flex items-center p-4 border rounded-none cursor-pointer transition-all ${data.payment_method === "Transfer Bank" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 hover:border-black"}`}
                                                 >
                                                     <input
                                                         type="radio"
@@ -568,26 +567,21 @@ export default function CashOrderForm({ motor, auth }) {
                                                             )
                                                         }
                                                     />
-                                                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mr-4 text-blue-600 border border-gray-100">
-                                                        <CreditCard className="w-5 h-5" />
+                                                    <div className={`w-8 h-8 rounded-none flex items-center justify-center mr-4 border ${data.payment_method === "Transfer Bank" ? "bg-white text-black border-white" : "bg-white text-gray-400 border-gray-200"}`}>
+                                                        <CreditCard className="w-4 h-4" />
                                                     </div>
                                                     <div className="flex-grow">
-                                                        <p className="font-bold text-gray-900">
-                                                            Transfer Bank
+                                                        <p className={`font-black uppercase tracking-tight ${data.payment_method === "Transfer Bank" ? "text-white" : "text-gray-900"}`}>
+                                                            TRANSFER BANK
                                                         </p>
-                                                        <p className="text-xs text-gray-500">
-                                                            Virtual Account / TF
-                                                            Otomatis
+                                                        <p className={`text-[10px] uppercase font-bold ${data.payment_method === "Transfer Bank" ? "text-gray-400" : "text-gray-500"}`}>
+                                                            BCA / TF OTOMATIS
                                                         </p>
                                                     </div>
-                                                    {data.payment_method ===
-                                                        "Transfer Bank" && (
-                                                        <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />
-                                                    )}
                                                 </label>
 
                                                 <label
-                                                    className={`relative flex items-center p-4 border rounded-2xl cursor-pointer transition-all ${data.payment_method === "Tunai di Toko" ? "border-blue-600 bg-blue-50 ring-1 ring-blue-600" : "border-gray-200 hover:border-blue-200"}`}
+                                                    className={`relative flex items-center p-4 border rounded-none cursor-pointer transition-all ${data.payment_method === "Tunai di Toko" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 hover:border-black"}`}
                                                 >
                                                     <input
                                                         type="radio"
@@ -601,22 +595,17 @@ export default function CashOrderForm({ motor, auth }) {
                                                             )
                                                         }
                                                     />
-                                                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mr-4 text-blue-600 border border-gray-100">
-                                                        <Wallet className="w-5 h-5" />
+                                                    <div className={`w-8 h-8 rounded-none flex items-center justify-center mr-4 border ${data.payment_method === "Tunai di Toko" ? "bg-white text-black border-white" : "bg-white text-gray-400 border-gray-200"}`}>
+                                                        <Wallet className="w-4 h-4" />
                                                     </div>
                                                     <div className="flex-grow">
-                                                        <p className="font-bold text-gray-900">
-                                                            Bayar di Tempat
+                                                        <p className={`font-black uppercase tracking-tight ${data.payment_method === "Tunai di Toko" ? "text-white" : "text-gray-900"}`}>
+                                                            BAYAR DI TEMPAT
                                                         </p>
-                                                        <p className="text-xs text-gray-500">
-                                                            Cek unit lalu bayar
-                                                            langsung
+                                                        <p className={`text-[10px] uppercase font-bold ${data.payment_method === "Tunai di Toko" ? "text-gray-400" : "text-gray-500"}`}>
+                                                            CASH ON DELIVERY (COD)
                                                         </p>
                                                     </div>
-                                                    {data.payment_method ===
-                                                        "Tunai di Toko" && (
-                                                        <CheckCircle className="w-5 h-5 text-blue-600 ml-2" />
-                                                    )}
                                                 </label>
                                             </div>
                                             {errors.payment_method && (
@@ -627,14 +616,14 @@ export default function CashOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="notes">
+                                            <Label htmlFor="notes" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Catatan Tambahan (Opsional)
                                             </Label>
                                             <textarea
                                                 id="notes"
                                                 rows="4"
-                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 resize-none"
-                                                placeholder="Berikan info tambahan jika diperlukan..."
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-none px-4 py-3 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 resize-none uppercase"
+                                                placeholder="BILA ADA CATATAN.."
                                                 value={data.notes}
                                                 onChange={(e) =>
                                                     setData(
@@ -645,21 +634,19 @@ export default function CashOrderForm({ motor, auth }) {
                                             ></textarea>
                                         </div>
 
-                                        <div className="pt-6 border-t border-gray-100">
-                                            <Button
+                                        <div className="pt-6 border-t border-gray-200">
+                                            <button
                                                 type="submit"
-                                                fullWidth
-                                                size="lg"
                                                 disabled={processing}
-                                                className="h-14 text-lg shadow-lg shadow-blue-200"
+                                                className="w-full py-4 bg-black text-white hover:bg-gray-900 border border-black font-black uppercase tracking-widest text-[11px] transition-colors rounded-none disabled:opacity-50"
                                             >
                                                 {processing
-                                                    ? "Memproses..."
-                                                    : "Ajukan Order Sekarang"}
-                                            </Button>
-                                            <p className="mt-4 text-center text-xs text-gray-400 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
-                                                <ShieldCheck className="w-4 h-4 text-green-500" />{" "}
-                                                Transaksi Terenkripsi & Aman
+                                                    ? "MEMPROSES TRANSAKSI..."
+                                                    : "AJUKAN ORDER SEKARANG"}
+                                            </button>
+                                            <p className="mt-4 text-center text-[10px] text-gray-500 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
+                                                <ShieldCheck className="w-3 h-3 text-[#1c69d4]" />{" "}
+                                                TRANSAKSI TERENKRIPSI & AMAN PADA SISTEM KAMI
                                             </p>
                                         </div>
                                     </form>
@@ -669,9 +656,9 @@ export default function CashOrderForm({ motor, auth }) {
 
                         {/* RIGHT: UNIT RECAP */}
                         <div className="space-y-6">
-                            <Card className="border-none shadow-sm sticky top-28 overflow-hidden">
+                            <Card className="border border-gray-200 rounded-none sticky top-28 overflow-hidden bg-gray-50">
                                 <CardBody className="p-0">
-                                    <div className="h-48 bg-gray-200 relative">
+                                    <div className="h-56 bg-white relative border-b border-gray-200">
                                         <img
                                             src={
                                                 motor.image_path
@@ -679,58 +666,59 @@ export default function CashOrderForm({ motor, auth }) {
                                                     : "/assets/img/no-image.png"
                                             }
                                             alt={motor.name}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-contain p-4"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                        <div className="absolute bottom-4 left-4">
-                                            <p className="text-white/80 text-xs font-bold uppercase tracking-widest">
-                                                {motor.brand}
-                                            </p>
-                                            <h3 className="text-white text-xl font-black">
-                                                {motor.name}
-                                            </h3>
+                                        <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                                            UNIT TERPILIH
                                         </div>
                                     </div>
 
                                     <div className="p-6 space-y-4">
-                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">
+                                        <div>
+                                            <p className="text-[#1c69d4] text-[11px] font-bold uppercase tracking-widest mb-1">
+                                                {motor.brand}
+                                            </p>
+                                            <h3 className="text-black text-2xl font-black uppercase tracking-tighter leading-none mb-4">
+                                                {motor.name}
+                                            </h3>
+                                        </div>
+                                        
+                                        <div className="flex justify-between items-center py-3 border-t border-gray-200">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Harga Unit
                                             </span>
-                                            <span className="font-bold text-gray-900">
+                                            <span className="font-black text-lg text-black">
                                                 {formatCurrency(motor.price)}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">
+                                        <div className="flex justify-between items-center py-3 border-t border-gray-200">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Tipe
                                             </span>
-                                            <span className="font-bold text-gray-900">
+                                            <span className="font-bold uppercase text-black">
                                                 {motor.type}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">
+                                        <div className="flex justify-between items-center py-3 border-t border-b border-gray-200">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Tahun
                                             </span>
-                                            <span className="font-bold text-gray-900">
+                                            <span className="font-bold text-black">
                                                 {motor.year}
                                             </span>
                                         </div>
                                         <div className="pt-4 mt-2">
-                                            <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-start gap-3">
-                                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0 shadow-sm shadow-blue-100">
+                                            <div className="bg-white border border-gray-200 flex items-start gap-4 p-4">
+                                                <div className="w-8 h-8 rounded-none bg-black flex items-center justify-center text-white shrink-0">
                                                     <Info className="w-4 h-4" />
                                                 </div>
-                                                <p className="text-xs leading-relaxed text-blue-800 font-medium">
+                                                <p className="text-[11px] leading-relaxed text-gray-600 font-bold uppercase tracking-widest">
                                                     Order ini bersifat{" "}
-                                                    <span className="font-bold">
+                                                    <span className="text-black">
                                                         booking unit
                                                     </span>
-                                                    . Admin kami akan
-                                                    menghubungi Anda via
-                                                    WhatsApp setelah formulir
-                                                    dikirim.
+                                                    . Representatif SRB Motor akan
+                                                    menghubungi Anda.
                                                 </p>
                                             </div>
                                         </div>

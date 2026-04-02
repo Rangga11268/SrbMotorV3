@@ -147,7 +147,7 @@ export default function CreditOrderForm({ motor, auth }) {
 
     return (
         <PublicLayout auth={auth} title={`Pengajuan Kredit - ${motor.name}`}>
-            <div className="flex-grow pt-[104px] pb-20">
+            <div className="flex-grow pt-[140px] pb-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header */}
                     <div className="mb-8 flex items-center justify-between">
@@ -163,19 +163,17 @@ export default function CreditOrderForm({ motor, auth }) {
                     <div className="grid lg:grid-cols-3 gap-8">
                         {/* LEFT: FORM */}
                         <div className="lg:col-span-2 space-y-6">
-                            <Card className="border-none shadow-sm overflow-hidden">
-                                <div className="bg-blue-600 p-8 text-white relative overflow-hidden">
+                            <Card className="border border-gray-200 rounded-none overflow-hidden">
+                                <div className="bg-black p-8 text-white relative overflow-hidden">
                                     <div className="relative z-10">
-                                        <h1 className="text-3xl font-black mb-2">
-                                            Pengajuan Kredit
+                                        <h1 className="text-3xl font-black uppercase tracking-tighter mb-2">
+                                            PENGAJUAN <span className="text-[#1c69d4]">KREDIT</span>
                                         </h1>
-                                        <p className="text-blue-100 font-medium">
-                                            Lengkapi data di bawah untuk
-                                            mengajukan pembelian motor secara
-                                            kredit.
+                                        <p className="text-gray-400 font-bold text-[11px] uppercase tracking-widest">
+                                            Lengkapi data di bawah untuk mengajukan pembelian motor secara kredit.
                                         </p>
                                     </div>
-                                    <div className="absolute -right-12 -bottom-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                                    <div className="absolute top-0 right-0 w-64 h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                                 </div>
 
                                 {(hasValidationErrors ||
@@ -239,7 +237,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                     >
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_name">
+                                                <Label htmlFor="customer_name" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Nama Lengkap
                                                 </Label>
                                                 <div className="relative">
@@ -247,8 +245,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_name"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Sesuai KTP"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900"
+                                                        placeholder="SESUAI KTP"
                                                         required
                                                         value={data.name}
                                                         onChange={(e) =>
@@ -267,7 +265,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_phone">
+                                                <Label htmlFor="customer_phone" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Nomor WhatsApp
                                                 </Label>
                                                 <div className="relative">
@@ -275,7 +273,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_phone"
                                                         type="tel"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900"
                                                         placeholder="0812..."
                                                         required
                                                         value={data.phone}
@@ -297,7 +295,7 @@ export default function CreditOrderForm({ motor, auth }) {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_nik">
+                                                <Label htmlFor="customer_nik" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     NIK (16 Digit)
                                                 </Label>
                                                 <div className="relative">
@@ -305,8 +303,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_nik"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Contoh: 1234567890123456"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 uppercase"
+                                                        placeholder="16 DIGIT NIK"
                                                         maxLength="16"
                                                         required
                                                         value={data.nik}
@@ -329,7 +327,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_occupation">
+                                                <Label htmlFor="customer_occupation" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Pekerjaan
                                                 </Label>
                                                 <div className="relative">
@@ -337,8 +335,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_occupation"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Contoh: Karyawan Swasta, Wiraswasta"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900"
+                                                        placeholder="KARYAWAN SWASTA/WNS"
                                                         required
                                                         value={data.occupation}
                                                         onChange={(e) =>
@@ -361,7 +359,7 @@ export default function CreditOrderForm({ motor, auth }) {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_monthly_income">
+                                                <Label htmlFor="customer_monthly_income" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Penghasilan Bulanan
                                                 </Label>
                                                 <div className="relative">
@@ -369,8 +367,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_monthly_income"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Contoh: 5.000.000"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900"
+                                                        placeholder="NOMINAL PENGHASILAN"
                                                         required
                                                         value={formatNumberDisplay(
                                                             data.monthly_income,
@@ -392,7 +390,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="customer_employment_duration">
+                                                <Label htmlFor="customer_employment_duration" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Lama Bekerja
                                                 </Label>
                                                 <div className="relative">
@@ -400,8 +398,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     <input
                                                         id="customer_employment_duration"
                                                         type="text"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900"
-                                                        placeholder="Contoh: 3 tahun 6 bulan"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900"
+                                                        placeholder="DURASI KERJA"
                                                         required
                                                         value={
                                                             data.employment_duration
@@ -425,15 +423,15 @@ export default function CreditOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="customer_address">
+                                            <Label htmlFor="customer_address" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Alamat Lengkap
                                             </Label>
                                             <div className="relative">
                                                 <MapPin className="absolute left-3 top-4 w-5 h-5 text-gray-400" />
                                                 <textarea
                                                     id="customer_address"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 min-h-[100px]"
-                                                    placeholder="Alamat pengiriman unit..."
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 uppercase min-h-[100px]"
+                                                    placeholder="ALAMAT LENGKAP PENGIRIMAN..."
                                                     required
                                                     value={data.address}
                                                     onChange={(e) =>
@@ -453,7 +451,7 @@ export default function CreditOrderForm({ motor, auth }) {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <Label htmlFor="down_payment">
+                                                <Label htmlFor="down_payment" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Uang Muka (DP) - Minimum Rp{" "}
                                                     {parseInt(
                                                         motor.min_dp_amount ||
@@ -466,7 +464,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                         <input
                                                             id="down_payment"
                                                             type="text"
-                                                            className={`w-full bg-white border-2 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-gray-900 ${
+                                                            className={`w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black transition-all font-black text-lg text-gray-900 ${
                                                                 parseFloat(
                                                                     data.dp_amount,
                                                                 ) >=
@@ -476,10 +474,10 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                                 0.2,
                                                                     ) &&
                                                                 data.dp_amount
-                                                                    ? "border-green-500"
-                                                                    : "border-gray-200 focus:border-blue-500"
+                                                                    ? "border-black bg-white"
+                                                                    : "border-gray-200 focus:border-black"
                                                             }`}
-                                                            placeholder="Masukkan jumlah uang muka"
+                                                            placeholder="NOMINAL DP"
                                                             required
                                                             value={formatNumberDisplay(
                                                                 data.dp_amount,
@@ -495,11 +493,11 @@ export default function CreditOrderForm({ motor, auth }) {
 
                                                     {/* DP Minimum Info */}
                                                     <div className="grid grid-cols-2 gap-3">
-                                                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                                                            <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">
-                                                                Min. DP
+                                                        <div className="p-3 bg-gray-50 border border-gray-200 rounded-none">
+                                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">
+                                                                MIN. DP
                                                             </p>
-                                                            <p className="text-sm font-black text-blue-900">
+                                                            <p className="text-sm font-black text-black">
                                                                 {new Intl.NumberFormat(
                                                                     "id-ID",
                                                                     {
@@ -528,10 +526,10 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                     ),
                                                                 )
                                                             }
-                                                            className="p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 hover:text-white transition-colors font-bold text-sm flex items-center justify-center gap-2 h-auto"
+                                                            className="p-3 bg-black text-white hover:bg-gray-900 transition-colors font-bold uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 h-auto rounded-none border border-black"
                                                         >
                                                             <Wallet className="w-4 h-4" />
-                                                            Gunakan Min
+                                                            GUNAKAN MIN DP
                                                         </button>
                                                     </div>
 
@@ -549,7 +547,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                     opacity: 1,
                                                                     y: 0,
                                                                 }}
-                                                                className={`p-3 rounded-lg border ${
+                                                                className={`p-4 rounded-none border ${
                                                                     parseFloat(
                                                                         data.dp_amount,
                                                                     ) >=
@@ -558,14 +556,14 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                             motor.price *
                                                                                 0.2,
                                                                     )
-                                                                        ? "bg-green-50 border-green-200"
-                                                                        : "bg-yellow-50 border-yellow-200"
+                                                                        ? "bg-white border-black"
+                                                                        : "bg-red-50 border-red-200"
                                                                 }`}
                                                             >
                                                                 <div className="space-y-2">
                                                                     <div className="flex justify-between items-center">
                                                                         <span
-                                                                            className={`text-xs font-bold uppercase tracking-wider ${
+                                                                            className={`text-[10px] font-bold uppercase tracking-widest ${
                                                                                 parseFloat(
                                                                                     data.dp_amount,
                                                                                 ) >=
@@ -574,14 +572,13 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                                         motor.price *
                                                                                             0.2,
                                                                                 )
-                                                                                    ? "text-green-700"
-                                                                                    : "text-yellow-700"
+                                                                                    ? "text-gray-500"
+                                                                                    : "text-red-700"
                                                                             }`}
                                                                         >
-                                                                            Sisa
-                                                                            Angsuran
+                                                                            SISA ANGSURAN POKOK
                                                                         </span>
-                                                                        <span className="text-sm font-black text-gray-900">
+                                                                        <span className="text-sm font-black text-black">
                                                                             {new Intl.NumberFormat(
                                                                                 "id-ID",
                                                                                 {
@@ -609,9 +606,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                                 motor.price *
                                                                                     0.2,
                                                                         ) && (
-                                                                        <p className="text-xs text-yellow-700 font-medium">
-                                                                            Masih
-                                                                            perlu{" "}
+                                                                        <p className="text-[10px] uppercase font-bold text-red-700 tracking-widest">
+                                                                            DP KURANG{" "}
                                                                             {new Intl.NumberFormat(
                                                                                 "id-ID",
                                                                                 {
@@ -627,8 +623,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                                     parseFloat(
                                                                                         data.dp_amount,
                                                                                     ),
-                                                                            )}{" "}
-                                                                            lagi
+                                                                            )}
                                                                         </p>
                                                                     )}
                                                                     {parseFloat(
@@ -639,10 +634,8 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                                 motor.price *
                                                                                     0.2,
                                                                         ) && (
-                                                                        <p className="text-xs text-green-700 font-medium flex items-center gap-1.5">
-                                                                            DP
-                                                                            sudah
-                                                                            mencukupi
+                                                                        <p className="text-[10px] text-black font-bold uppercase tracking-widest flex items-center gap-1.5 pt-2 border-t border-gray-100">
+                                                                            DP MEMENUHI SYARAT
                                                                         </p>
                                                                     )}
                                                                 </div>
@@ -660,14 +653,14 @@ export default function CreditOrderForm({ motor, auth }) {
                                             </div>
 
                                             <div className="space-y-2">
-                                                <Label htmlFor="tenor">
+                                                <Label htmlFor="tenor" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Tenor (Bulan)
                                                 </Label>
                                                 <div className="relative">
                                                     <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                     <select
                                                         id="tenor"
-                                                        className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
                                                         required
                                                         value={data.tenor}
                                                         onChange={(e) =>
@@ -678,19 +671,19 @@ export default function CreditOrderForm({ motor, auth }) {
                                                         }
                                                     >
                                                         <option value="12">
-                                                            12 Bulan (1 Tahun)
+                                                            12 BULAN (1 TAHUN)
                                                         </option>
                                                         <option value="24">
-                                                            24 Bulan (2 Tahun)
+                                                            24 BULAN (2 TAHUN)
                                                         </option>
                                                         <option value="36">
-                                                            36 Bulan (3 Tahun)
+                                                            36 BULAN (3 TAHUN)
                                                         </option>
                                                         <option value="48">
-                                                            48 Bulan (4 Tahun)
+                                                            48 BULAN (4 TAHUN)
                                                         </option>
                                                         <option value="60">
-                                                            60 Bulan (5 Tahun)
+                                                            60 BULAN (5 TAHUN)
                                                         </option>
                                                     </select>
                                                 </div>
@@ -706,34 +699,34 @@ export default function CreditOrderForm({ motor, auth }) {
                                             <motion.div
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
-                                                className="p-6 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between"
+                                                className="p-6 bg-white border border-gray-200 rounded-none flex items-center justify-between"
                                             >
                                                 <div>
-                                                    <p className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-1">
-                                                        Estimasi Cicilan
+                                                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
+                                                        ESTIMASI CICILAN
                                                     </p>
-                                                    <h4 className="text-2xl font-black text-blue-900">
+                                                    <h4 className="text-2xl font-black text-black">
                                                         {formatCurrency(
                                                             calculatedInstallment,
                                                         )}{" "}
-                                                        <span className="text-sm font-bold text-blue-400">
-                                                            / Bulan
+                                                        <span className="text-sm font-bold text-gray-400">
+                                                            / BLN
                                                         </span>
                                                     </h4>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-xs font-bold text-blue-400">
-                                                        Tenor
+                                                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                        TENOR
                                                     </p>
-                                                    <p className="text-lg font-black text-blue-900">
-                                                        {data.tenor}x
+                                                    <p className="text-lg font-black text-black">
+                                                        {data.tenor}X
                                                     </p>
                                                 </div>
                                             </motion.div>
                                         )}
 
                                         <div className="space-y-4">
-                                            <Label>Metode Penyerahan Unit</Label>
+                                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Metode Penyerahan Unit</Label>
                                             <div className="flex gap-4">
                                                 <button
                                                     type="button"
@@ -743,10 +736,10 @@ export default function CreditOrderForm({ motor, auth }) {
                                                             "Ambil di Dealer",
                                                         )
                                                     }
-                                                    className={`flex-1 flex items-center justify-center gap-2 p-3.5 rounded-xl border-2 transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-sm" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                    className={`flex-1 flex items-center justify-center gap-2 p-3.5 border rounded-none uppercase text-[10px] font-bold tracking-widest transition-all ${data.delivery_method === "Ambil di Dealer" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 text-gray-500 hover:border-black hover:text-black"}`}
                                                 >
                                                     <Store className="w-5 h-5" />
-                                                    Ambil di Dealer
+                                                    AMBIL DI DEALER
                                                 </button>
                                                 <button
                                                     type="button"
@@ -756,23 +749,23 @@ export default function CreditOrderForm({ motor, auth }) {
                                                             "Kirim ke Rumah",
                                                         )
                                                     }
-                                                    className={`flex-1 flex items-center justify-center gap-2 p-3.5 rounded-xl border-2 transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-sm" : "border-gray-100 text-gray-500 hover:border-blue-200"}`}
+                                                    className={`flex-1 flex items-center justify-center gap-2 p-3.5 border rounded-none uppercase text-[10px] font-bold tracking-widest transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 text-gray-500 hover:border-black hover:text-black"}`}
                                                 >
                                                     <Truck className="w-5 h-5" />
-                                                    Kirim ke Rumah
+                                                    KIRIM KE RUMAH
                                                 </button>
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="motor_color">
+                                            <Label htmlFor="motor_color" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Pilihan Warna
                                             </Label>
                                             <div className="relative">
                                                 <Palette className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                 <select
                                                     id="motor_color"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
                                                     required
                                                     value={data.motor_color}
                                                     onChange={(e) =>
@@ -783,17 +776,17 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     }
                                                 >
                                                     <option value="">
-                                                        Pilih Warna
+                                                        PILIH WARNA
                                                     </option>
                                                     {motor.colors && motor.colors.length > 0 ? (
                                                         motor.colors.map((color, idx) => (
-                                                            <option key={idx} value={color}>
+                                                            <option key={idx} value={color} className="uppercase">
                                                                 {color}
                                                             </option>
                                                         ))
                                                     ) : (
-                                                        <option value="Beragam">
-                                                            Beragam / Sesuai Stok
+                                                        <option value="Beragam" className="uppercase">
+                                                            BERAGAM / SESUAI STOK
                                                         </option>
                                                     )}
                                                 </select>
@@ -801,14 +794,14 @@ export default function CreditOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="payment_method">
-                                                Metode Pembayaran
+                                            <Label htmlFor="payment_method" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                Metode Pembayaran DP
                                             </Label>
                                             <div className="relative">
                                                 <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                                 <select
                                                     id="payment_method"
-                                                    className="w-full bg-white border border-gray-200 rounded-xl px-10 py-3.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-bold text-gray-900 appearance-none"
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
                                                     required
                                                     value={data.payment_method}
                                                     onChange={(e) =>
@@ -819,15 +812,13 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     }
                                                 >
                                                     <option value="Transfer Bank">
-                                                        Transfer Bank (BCA,
-                                                        Mandiri, BNI)
+                                                        TRANSFER BANK (BCA, MANDIRI, BNI)
                                                     </option>
                                                     <option value="E-Wallet">
-                                                        E-Wallet (OVO, GoPay,
-                                                        Dana)
+                                                        E-WALLET (OVO, GOPAY, DANA)
                                                     </option>
                                                     <option value="Virtual Account">
-                                                        Virtual Account
+                                                        VIRTUAL ACCOUNT
                                                     </option>
                                                 </select>
                                             </div>
@@ -843,14 +834,14 @@ export default function CreditOrderForm({ motor, auth }) {
 
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="notes">
+                                            <Label htmlFor="notes" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Catatan Tambahan (Opsional)
                                             </Label>
                                             <textarea
                                                 id="notes"
                                                 rows="4"
-                                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium text-gray-900 resize-none"
-                                                placeholder="Contoh: keterangan tambahan atau pertanyaan untuk admin..."
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-none px-4 py-3 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 resize-none"
+                                                placeholder="TAMBAHKAN CATATAN BILA PERLU..."
                                                 value={data.notes}
                                                 onChange={(e) =>
                                                     setData(
@@ -861,21 +852,19 @@ export default function CreditOrderForm({ motor, auth }) {
                                             ></textarea>
                                         </div>
 
-                                        <div className="pt-6 border-t border-gray-100">
-                                            <Button
+                                        <div className="pt-6 border-t border-gray-200">
+                                            <button
                                                 type="submit"
-                                                fullWidth
-                                                size="lg"
                                                 disabled={processing}
-                                                className="h-14 text-lg shadow-lg shadow-blue-200"
+                                                className="w-full py-4 bg-black text-white hover:bg-gray-900 border border-black font-black uppercase tracking-widest text-[11px] transition-colors rounded-none disabled:opacity-50"
                                             >
                                                 {processing
-                                                    ? "Memproses..."
-                                                    : "Ajukan Kredit"}
-                                            </Button>
-                                            <p className="mt-4 text-center text-xs text-gray-400 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
-                                                <ShieldCheck className="w-4 h-4 text-blue-500" />{" "}
-                                                Pengajuan Cepat & Syarat Mudah
+                                                    ? "MEMPROSES..."
+                                                    : "AJUKAN KREDIT SEKARANG"}
+                                            </button>
+                                            <p className="mt-4 text-center text-[10px] text-gray-500 flex items-center justify-center gap-1.5 font-bold uppercase tracking-widest">
+                                                <ShieldCheck className="w-3 h-3 text-[#1c69d4]" />{" "}
+                                                SISTEM AMAN & TERENKRIPSI
                                             </p>
                                         </div>
                                     </form>
@@ -885,9 +874,9 @@ export default function CreditOrderForm({ motor, auth }) {
 
                         {/* RIGHT: UNIT RECAP */}
                         <div className="space-y-6">
-                            <Card className="border-none shadow-sm sticky top-28 overflow-hidden">
+                            <Card className="border border-gray-200 rounded-none sticky top-28 overflow-hidden bg-gray-50">
                                 <CardBody className="p-0">
-                                    <div className="h-48 bg-gray-200 relative">
+                                    <div className="h-56 bg-white relative border-b border-gray-200">
                                         <img
                                             src={
                                                 motor.image_path
@@ -895,52 +884,47 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     : "/assets/img/no-image.png"
                                             }
                                             alt={motor.name}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-contain p-4"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                        <div className="absolute bottom-4 left-4">
-                                            <p className="text-white/80 text-xs font-bold uppercase tracking-widest">
-                                                {motor.brand}
-                                            </p>
-                                            <h3 className="text-white text-xl font-black">
-                                                {motor.name}
-                                            </h3>
+                                        <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                                            UNIT TERPILIH
                                         </div>
                                     </div>
 
                                     <div className="p-6 space-y-4">
-                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">
+                                        <div>
+                                            <p className="text-[#1c69d4] text-[11px] font-bold uppercase tracking-widest mb-1">
+                                                {motor.brand}
+                                            </p>
+                                            <h3 className="text-black text-2xl font-black uppercase tracking-tighter leading-none mb-4">
+                                                {motor.name}
+                                            </h3>
+                                        </div>
+
+                                        <div className="flex justify-between items-center py-3 border-t border-gray-200">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Harga OTR
                                             </span>
-                                            <span className="font-bold text-gray-900">
+                                            <span className="font-black text-lg text-black">
                                                 {formatCurrency(motor.price)}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                            <span className="text-gray-500 font-medium">
+                                        <div className="flex justify-between items-center py-3 border-t border-b border-gray-200">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Tahun
                                             </span>
-                                            <span className="font-bold text-gray-900">
+                                            <span className="font-bold text-black">
                                                 {motor.year}
                                             </span>
                                         </div>
 
                                         <div className="pt-4 mt-2">
-                                            <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-start gap-3">
-                                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shrink-0">
+                                            <div className="bg-white border border-gray-200 flex items-start gap-4 p-4">
+                                                <div className="w-8 h-8 rounded-none bg-black flex items-center justify-center text-white shrink-0">
                                                     <Info className="w-4 h-4" />
                                                 </div>
-                                                <p className="text-xs leading-relaxed text-blue-800 font-medium">
-                                                    Estimasi cicilan bersifat
-                                                    indikatif (bunga 1.5%/bulan
-                                                    flat). Leasing resmi yang
-                                                    bekerja sama dengan{" "}
-                                                    <span className="font-bold text-blue-900">
-                                                        SRB Motors
-                                                    </span>{" "}
-                                                    akan memberikan hitungan
-                                                    final sesuai profil Anda.
+                                                <p className="text-[11px] leading-relaxed text-gray-600 font-bold uppercase tracking-widest">
+                                                    Estimasi cicilan di atas bersifat indikatif. Hitungan final yang mengikat akan diberikan oleh Leasing Resmi pada proses survei.
                                                 </p>
                                             </div>
                                         </div>

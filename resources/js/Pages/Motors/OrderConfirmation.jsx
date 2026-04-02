@@ -144,7 +144,7 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
             <div className="flex-grow pt-[104px] pb-24">
                 <div className="min-h-screen bg-white">
                     {/* Header Section */}
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="bg-black py-12 px-4 sm:px-6 lg:px-8">
                         <div className="max-w-5xl mx-auto">
                             <div className="text-center">
                                 <motion.div
@@ -153,20 +153,18 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                     transition={{ delay: 0.2 }}
                                     className="inline-block mb-6"
                                 >
-                                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                                    <div className="w-20 h-20 bg-gray-900 border border-gray-800 rounded-none flex items-center justify-center">
                                         <CheckCircle
                                             size={48}
-                                            className="text-green-600"
+                                            className="text-white"
                                         />
                                     </div>
                                 </motion.div>
-                                <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                                    Pesanan Dikonfirmasi
+                                <h1 className="text-4xl font-black uppercase tracking-tighter text-white mb-2">
+                                    PESANAN <span className="text-green-500">DIKONFIRMASI</span>
                                 </h1>
-                                <p className="text-gray-600 text-lg">
-                                    Terima kasih telah melakukan pemesanan.
-                                    Simpan bukti transaksi ini untuk keperluan
-                                    administrasi.
+                                <p className="text-gray-400 font-bold uppercase tracking-widest text-[11px] max-w-2xl mx-auto">
+                                    TERIMA KASIH TELAH MELAKUKAN PEMESANAN. SIMPAN BUKTI TRANSAKSI INI UNTUK KEPERLUAN ADMINISTRASI.
                                 </p>
                             </div>
                         </div>
@@ -177,8 +175,8 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Left: Motor Summary */}
                             <div className="lg:col-span-1">
-                                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden sticky top-24 shadow-sm">
-                                    <div className="aspect-video bg-gray-100 overflow-hidden flex items-center justify-center p-4">
+                                <div className="bg-gray-50 border border-gray-200 rounded-none overflow-hidden sticky top-24">
+                                    <div className="aspect-video bg-white border-b border-gray-200 flex items-center justify-center p-4">
                                         <img
                                             src={`/storage/${transaction.motor.image_path}`}
                                             alt={transaction.motor.name}
@@ -186,42 +184,45 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                         />
                                     </div>
                                     <div className="p-5">
-                                        <h3 className="font-bold text-lg text-gray-900 mb-4">
+                                        <p className="text-[#1c69d4] text-[10px] font-bold uppercase tracking-widest mb-1">
+                                            {transaction.motor.brand}
+                                        </p>
+                                        <h3 className="font-black text-xl text-black uppercase tracking-tighter mb-4">
                                             {transaction.motor.name}
                                         </h3>
                                         <div className="space-y-3 mb-5 pb-5 border-b border-gray-200">
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">
-                                                    Tipe
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                    TIPE
                                                 </span>
-                                                <span className="font-semibold text-gray-900">
+                                                <span className="font-bold text-black uppercase">
                                                     {transaction.motor.type}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">
-                                                    Tahun
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                    TAHUN
                                                 </span>
-                                                <span className="font-semibold text-gray-900">
+                                                <span className="font-bold text-black">
                                                     {transaction.motor.year}
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm text-gray-600">
-                                                    Harga
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                    HARGA
                                                 </span>
-                                                <span className="font-semibold text-gray-900">
+                                                <span className="font-black text-black">
                                                     {formatCurrency(
                                                         transaction.motor.price,
                                                     )}
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
-                                            <p className="text-xs font-semibold text-blue-900">
-                                                ID Transaksi
+                                        <div className="bg-white rounded-none p-4 border border-gray-200">
+                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                                ID TRANSAKSI
                                             </p>
-                                            <p className="font-mono text-sm font-bold text-blue-600 mt-1">
+                                            <p className="font-mono text-sm font-black text-black mt-1">
                                                 {transaction.id}
                                             </p>
                                         </div>
@@ -232,58 +233,58 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                             {/* Right: Order Details */}
                             <div className="lg:col-span-2 space-y-6">
                                 {/* Customer Information */}
-                                <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <div className="p-2 bg-blue-100 rounded-lg">
+                                <div className="bg-white border border-gray-200 rounded-none p-6 md:p-8">
+                                    <div className="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+                                        <div className="w-8 h-8 bg-black flex items-center justify-center">
                                             <User
-                                                size={20}
-                                                className="text-blue-600"
+                                                size={16}
+                                                className="text-white"
                                             />
                                         </div>
-                                        <h2 className="text-lg font-bold text-gray-900">
-                                            Informasi Pelanggan
+                                        <h2 className="text-lg font-black text-black uppercase tracking-widest">
+                                            INFORMASI PELANGGAN
                                         </h2>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-6">
                                         <div>
-                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                Nama Lengkap
+                                            <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                NAMA LENGKAP
                                             </h4>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-bold text-black uppercase">
                                                 {transaction.name || (transaction.user && transaction.user.name) || "-"}
                                             </p>
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                Nomor Telepon
+                                            <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                NOMOR WHASTAPP
                                             </h4>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-bold text-black">
                                                 {transaction.phone || (transaction.user && transaction.user.phone) || "-"}
                                             </p>
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                Email
+                                            <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                EMAIL
                                             </h4>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-bold text-black uppercase">
                                                 {transaction.email || (transaction.user && transaction.user.email) || "-"}
                                             </p>
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                NIK (No. KTP)
+                                            <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                NIK (NO. KTP)
                                             </h4>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-bold text-black">
                                                 {transaction.nik || (transaction.user && transaction.user.nik) || "-"}
                                             </p>
                                         </div>
                                         
                                         {isCredit && (
                                             <div>
-                                                <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                    Pekerjaan
+                                                <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    PEKERJAAN
                                                 </h4>
-                                                <p className="font-semibold text-gray-900">
+                                                <p className="font-bold text-black uppercase">
                                                     {transaction.occupation || (transaction.user && transaction.user.pekerjaan) || "-"}
                                                 </p>
                                             </div>
@@ -292,18 +293,18 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                         {!isCredit && (
                                             <>
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                        Warna Motor
+                                                    <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                        WARNA MOTOR
                                                     </h4>
-                                                    <p className="font-semibold text-gray-900">
+                                                    <p className="font-bold text-black uppercase">
                                                         {transaction.motor_color || "-"}
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                        Metode Penyerahan
+                                                    <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                        METODE PENYERAHAN
                                                     </h4>
-                                                    <p className="font-semibold text-gray-900">
+                                                    <p className="font-bold text-black uppercase">
                                                         {transaction.delivery_method || "-"}
                                                     </p>
                                                 </div>
@@ -311,60 +312,60 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                         )}
 
                                         <div className="sm:col-span-2">
-                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                Alamat Lengkap
+                                            <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                ALAMAT LENGKAP
                                             </h4>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-bold text-black uppercase leading-relaxed">
                                                 {transaction.address || (transaction.user && transaction.user.alamat) || "-"}
                                             </p>
                                         </div>
-                                        <div className="sm:col-span-2 pt-4 border-t border-gray-100">
-                                            <h4 className="text-sm font-medium text-gray-500 mb-1">
-                                                Jenis Transaksi
+                                        <div className="sm:col-span-2 pt-6 border-t border-gray-100">
+                                            <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                JENIS TRANSAKSI
                                             </h4>
-                                            <p className="font-semibold text-gray-900 capitalize">
-                                                {transaction.transaction_type.toLowerCase()}
-                                            </p>
+                                            <div className="inline-block px-3 py-1 bg-black text-white text-[10px] font-bold uppercase tracking-widest mt-1">
+                                                {transaction.transaction_type}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Credit Details (if applicable) */}
                                 {isCredit && transaction.credit_detail && (
-                                    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <div className="p-2 bg-blue-100 rounded-lg">
+                                    <div className="bg-white border border-gray-200 rounded-none p-6 md:p-8">
+                                        <div className="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+                                            <div className="w-8 h-8 bg-black flex items-center justify-center">
                                                 <CreditCard
-                                                    size={20}
-                                                    className="text-blue-600"
+                                                    size={16}
+                                                    className="text-white"
                                                 />
                                             </div>
-                                            <h2 className="text-lg font-bold text-gray-900">
-                                                Simulasi Kredit
+                                            <h2 className="text-lg font-black text-black uppercase tracking-widest">
+                                                SIMULASI KREDIT
                                             </h2>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-6">
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
-                                                    Penyedia Leasing
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    PENYEDIA LEASING
                                                 </label>
-                                                <p className="font-semibold text-gray-900">
-                                                    {transaction.creditDetail?.leasing_provider?.name || transaction.credit_detail?.leasing_provider?.name || "Belum ditentukan"}
+                                                <p className="font-bold text-black uppercase">
+                                                    {transaction.creditDetail?.leasing_provider?.name || transaction.credit_detail?.leasing_provider?.name || "BELUM DITENTUKAN"}
                                                 </p>
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
-                                                    No. Referensi
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    NO. REFERENSI
                                                 </label>
-                                                <p className="font-semibold text-gray-900">
+                                                <p className="font-bold text-black uppercase">
                                                     {transaction.creditDetail?.reference_number || transaction.credit_detail?.reference_number || "-"}
                                                 </p>
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
-                                                    Uang Muka
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    UANG MUKA (DP)
                                                 </label>
-                                                <p className="font-semibold text-gray-900">
+                                                <p className="font-black text-black">
                                                     {formatCurrency(
                                                         transaction
                                                             .credit_detail?.dp_amount || transaction.creditDetail?.dp_amount || 0,
@@ -372,30 +373,30 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 </p>
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
-                                                    Tenor
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    TENOR
                                                 </label>
-                                                <p className="font-semibold text-gray-900">
+                                                <p className="font-black text-black">
                                                     {
                                                         transaction
                                                             .credit_detail?.tenor || transaction.creditDetail?.tenor || 0
                                                     }{" "}
-                                                    Bulan
+                                                    BULAN
                                                 </p>
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
-                                                    Bunga/Bulan
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    BUNGA/BULAN
                                                 </label>
-                                                <p className="font-semibold text-gray-900">
+                                                <p className="font-black text-black">
                                                     {transaction.credit_detail?.interest_rate || transaction.creditDetail?.interest_rate || 0}%
                                                 </p>
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-600 mb-1">
-                                                    Cicilan/Bulan
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    CICILAN/BULAN
                                                 </label>
-                                                <p className="font-semibold text-gray-900">
+                                                <p className="font-black text-[#1c69d4]">
                                                     {formatCurrency(
                                                         transaction
                                                             .credit_detail?.monthly_installment || transaction.creditDetail?.monthly_installment || 0,
@@ -409,16 +410,16 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                 {/* Payment Information */}
                                 {transaction.installments &&
                                     transaction.installments.length > 0 && (
-                                        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                                            <div className="flex items-center gap-3 mb-6">
-                                                <div className="p-2 bg-blue-100 rounded-lg">
+                                        <div className="bg-white border border-gray-200 rounded-none p-6 md:p-8">
+                                            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+                                                <div className="w-8 h-8 bg-black flex items-center justify-center">
                                                     <Wallet
-                                                        size={20}
-                                                        className="text-blue-600"
+                                                        size={16}
+                                                        className="text-white"
                                                     />
                                                 </div>
-                                                <h2 className="text-lg font-bold text-gray-900">
-                                                    Pembayaran
+                                                <h2 className="text-lg font-black text-black uppercase tracking-widest">
+                                                    PEMBAYARAN
                                                 </h2>
                                             </div>
 
@@ -435,8 +436,8 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                     )}
                                                     type={
                                                         isCredit
-                                                            ? "Uang Muka (DP)"
-                                                            : "Booking Fee"
+                                                            ? "UANG MUKA (DP)"
+                                                            : "BOOKING FEE"
                                                     }
                                                     isLoading={isLoadingPay}
                                                     onPay={handleOnlinePayment}
@@ -463,14 +464,14 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                         i.installment_number ===
                                                         1,
                                                 ) && (
-                                                    <div className="mt-5 pt-5 border-t border-gray-200">
+                                                    <div className="mt-6 pt-6 border-t border-gray-100">
                                                         <CashPaymentModule
                                                             installment={transaction.installments.find(
                                                                 (i) =>
                                                                     i.installment_number ===
                                                                     1,
                                                             )}
-                                                            type="Pelunasan Unit"
+                                                            type="PELUNASAN UNIT"
                                                             isLoading={
                                                                 isLoadingPay
                                                             }
@@ -489,63 +490,61 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                 {/* Document Upload CTA (Credit) */}
                                 {isCredit && (
                                     <div
-                                        className={`${transaction.documents_complete ? "bg-green-50 border-green-200" : "bg-blue-50 border-blue-200"} border rounded-lg p-6`}
+                                        className={`${transaction.documents_complete ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"} border rounded-none p-6 md:p-8`}
                                     >
-                                        <div className="flex items-start gap-4">
+                                        <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                                             <div
-                                                className={`p-3 ${transaction.documents_complete ? "bg-green-100" : "bg-blue-100"} rounded-lg shrink-0`}
+                                                className={`w-12 h-12 flex items-center justify-center shrink-0 ${transaction.documents_complete ? "bg-green-100 text-green-600" : "bg-black text-white"}`}
                                             >
                                                 {transaction.documents_complete ? (
                                                     <CheckCircle
-                                                        size={20}
-                                                        className="text-green-600"
+                                                        size={24}
                                                     />
                                                 ) : (
                                                     <AlertCircle
-                                                        size={20}
-                                                        className="text-blue-600"
+                                                        size={24}
                                                     />
                                                 )}
                                             </div>
                                             <div className="flex-1">
                                                 <h3
-                                                    className={`font-bold ${transaction.documents_complete ? "text-green-900" : "text-blue-900"} mb-2`}
+                                                    className={`font-black uppercase tracking-widest text-lg ${transaction.documents_complete ? "text-green-900" : "text-black"} mb-1`}
                                                 >
                                                     {transaction.documents_complete
-                                                        ? "Dokumen Berhasil Diunggah"
-                                                        : "Lengkapi Dokumen Anda"}
+                                                        ? "DOKUMEN LENGKAP"
+                                                        : "LENGKAPI DOKUMEN ANDA"}
                                                 </h3>
                                                 <p
-                                                    className={`text-sm ${transaction.documents_complete ? "text-green-800" : "text-blue-800"} mb-4`}
+                                                    className={`text-[11px] font-bold uppercase tracking-widest ${transaction.documents_complete ? "text-green-800" : "text-gray-500"} mb-4 md:mb-0`}
                                                 >
                                                     {transaction.documents_complete
-                                                        ? "Dokumen Anda telah lengkap dan sedang dalam proses verifikasi oleh tim kami."
-                                                        : "Upload KTP, Kartu Keluarga, dan Slip Gaji untuk melanjutkan proses verifikasi kredit Anda."}
+                                                        ? "DOKUMEN ANDA TELAH LENGKAP DAN SEDANG DALAM PROSES VERIFIKASI."
+                                                        : "UPLOAD KTP, KK, DAN SLIP GAJI UNTUK MELANJUTKAN VERIFIKASI KREDIT."}
                                                 </p>
-                                                <Link
-                                                    href={route(
-                                                        transaction.documents_complete
-                                                            ? "motors.manage-documents"
-                                                            : "motors.upload-credit-documents",
-                                                        transaction.id,
-                                                    )}
-                                                    className={`inline-flex items-center gap-2 px-6 py-2 ${transaction.documents_complete ? "bg-green-600 hover:bg-green-500" : "bg-blue-600 hover:bg-blue-500"} text-white font-semibold rounded-lg transition-colors`}
-                                                >
-                                                    {transaction.documents_complete ? (
-                                                        <>
-                                                            <FileText
-                                                                size={18}
-                                                            />{" "}
-                                                            Manage Dokumen
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <Upload size={18} />{" "}
-                                                            Upload Dokumen
-                                                        </>
-                                                    )}
-                                                </Link>
                                             </div>
+                                            <Link
+                                                href={route(
+                                                    transaction.documents_complete
+                                                        ? "motors.manage-documents"
+                                                        : "motors.upload-credit-documents",
+                                                    transaction.id,
+                                                )}
+                                                className={`shrink-0 inline-flex items-center gap-2 px-6 py-4 border font-black uppercase tracking-widest text-[11px] transition-colors rounded-none ${transaction.documents_complete ? "border-green-600 bg-green-600 hover:bg-green-700 text-white" : "border-black bg-black hover:bg-gray-900 text-white"}`}
+                                            >
+                                                {transaction.documents_complete ? (
+                                                    <>
+                                                        <FileText
+                                                            size={16}
+                                                        />{" "}
+                                                        KELOLA
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload size={16} />{" "}
+                                                        UPLOAD
+                                                    </>
+                                                )}
+                                            </Link>
                                         </div>
                                     </div>
                                 )}
@@ -554,21 +553,21 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <Link
                                         href={route("home")}
-                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 text-gray-700 font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 text-black font-black uppercase tracking-widest text-[11px] border border-gray-300 rounded-none hover:bg-gray-50 transition-colors"
                                     >
-                                        <Home size={18} /> Beranda
+                                        <Home size={16} /> BERANDA
                                     </Link>
                                     <Link
                                         href={route("motors.index")}
-                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-black text-white border border-black font-black uppercase tracking-widest text-[11px] rounded-none hover:bg-gray-900 transition-colors"
                                     >
-                                        <ArrowRight size={18} /> Cari Motor Lain
+                                        <ArrowRight size={16} /> CARI MOTOR
                                     </Link>
                                     <button
                                         onClick={() => window.print()}
-                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 text-gray-700 font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 text-black font-black uppercase tracking-widest text-[11px] border border-gray-300 rounded-none hover:bg-gray-50 transition-colors"
                                     >
-                                        <Download size={18} /> Print
+                                        <Download size={16} /> CETAK
                                     </button>
                                 </div>
 
@@ -610,23 +609,23 @@ function CashPaymentModule({
             <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                     {isPaid ? (
-                        <CheckCircle className="text-green-500" size={18} />
+                        <CheckCircle className="text-green-500" size={16} />
                     ) : (
-                        <AlertCircle className="text-yellow-500" size={18} />
+                        <AlertCircle className="text-red-500" size={16} />
                     )}
-                    <h5 className="font-bold text-gray-900">{type}</h5>
+                    <h5 className="font-bold text-[10px] uppercase tracking-widest text-black">{type}</h5>
                 </div>
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-black text-black">
                     {formatCurrency(installment.amount)}
                 </div>
                 <p
-                    className={`text-xs mt-1 ${
-                        isPaid ? "text-green-600" : "text-yellow-600"
+                    className={`text-[10px] font-bold uppercase tracking-widest mt-2 ${
+                        isPaid ? "text-green-600" : "text-gray-500"
                     }`}
                 >
                     {isPaid
-                        ? "Pembayaran telah diverifikasi"
-                        : "⚠ Segera selesaikan pembayaran"}
+                        ? "PEMBAYARAN TELAH DIVERIFIKASI"
+                        : "SEGERA SELESAIKAN PEMBAYARAN"}
                 </p>
             </div>
 
@@ -634,9 +633,9 @@ function CashPaymentModule({
                 <button
                     onClick={() => onPay(installment)}
                     disabled={isLoading}
-                    className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                    className="px-8 py-4 bg-black text-white border border-black font-black text-[11px] uppercase tracking-widest rounded-none hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap w-full sm:w-auto mt-4 sm:mt-0"
                 >
-                    {isLoading ? "Memproses..." : "Bayar Sekarang"}
+                    {isLoading ? "MEMPROSES..." : "BAYAR SEKARANG"}
                 </button>
             )}
         </div>
