@@ -293,6 +293,79 @@ export default function Home({
                     )}
                 </div>
             </section>
+            
+            {/* SERVICE & MAINTENANCE SECTION (Cinematic Industrial) */}
+            <section className="relative py-32 bg-black overflow-hidden group">
+                {/* Background Image with Parallax-like effect */}
+                <div className="absolute inset-0 z-0">
+                    <img 
+                        src="/assets/img/servis-center.png" 
+                        alt="Service Center" 
+                        className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center lg:text-left">
+                    <div className="flex flex-col lg:flex-row justify-between items-end gap-12 mb-20 border-b border-white/10 pb-16">
+                        <div className="max-w-3xl space-y-6">
+                            <div className="flex items-center gap-4 justify-center lg:justify-start">
+                                <div className="w-8 h-px bg-[#1c69d4]"></div>
+                                <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">PERAWATAN & SUKU CADANG</span>
+                            </div>
+                            <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
+                                LAYANAN <br/>
+                                <span className="text-white">PURNA JUAL</span>
+                            </h2>
+                            <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-70">
+                                Melalui Sinar Surya Motor (SSM), nikmati performa terbaik bagi kendaraan Yamaha & Honda Anda dengan suku cadang asli dan teknisi bersertifikasi.
+                            </p>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                            <a 
+                                href={`https://wa.me/${(settings.contact_phone || "628978638849").replace(/\D/g, "")}?text=Halo%20Admin,%20saya%20ingin%20booking%20service`} 
+                                target="_blank"
+                                className="px-10 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3"
+                            >
+                                <Clock className="w-4 h-4" /> BOOKING SERVIS
+                            </a>
+                            <Link 
+                                href="/motors"
+                                className="px-10 py-5 bg-transparent border border-white hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3"
+                            >
+                                <Search className="w-4 h-4" /> SUKU CADANG
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/10 border border-white/10">
+                        {[
+                            {
+                                icon: <Gauge className="w-8 h-8 text-[#1c69d4]" />,
+                                title: "CEK MENYELURUH",
+                                desc: "Pemeriksaan 21 titik gratis untuk setiap kunjungan servis rutin pertama Anda."
+                            },
+                            {
+                                icon: <ShieldCheck className="w-8 h-8 text-[#1c69d4]" />,
+                                title: "SUKU CADANG ASLI",
+                                desc: "Jaminan ketersediaan suku cadang orisinal untuk menjaga garansi kendaraan tetap aktif."
+                            },
+                            {
+                                icon: <MapPin className="w-8 h-8 text-[#1c69d4]" />,
+                                title: "ANTAR JEMPUT",
+                                desc: "Layanan penjemputan unit di lokasi Anda untuk area cakupan tertentu."
+                            }
+                        ].map((item, idx) => (
+                            <div key={idx} className="p-12 hover:bg-white/5 transition-colors group/card">
+                                {item.icon}
+                                <h4 className="text-lg font-black text-white uppercase tracking-widest mt-8 mb-4">{item.title}</h4>
+                                <p className="text-gray-500 font-medium text-xs uppercase tracking-widest leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* TRUST INDICATORS SECTION (Strict black on white) */}
             <section className="py-24 bg-[#111111] text-white">
