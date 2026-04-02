@@ -179,90 +179,110 @@ export default function UserTransactions({ transactions: initialTransactions, fi
     };
 
     return (
-        <PublicLayout auth={auth} title="Riwayat Pesanan - SRB Motors">
-            <div className="flex-grow pt-[110px] sm:pt-32 pb-20">
-                {/* BACK BUTTON */}
-                <div className="bg-gray-50/50 border-b border-gray-100">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-                        <Link
-                            href={route("profile.show")}
-                            className="inline-flex items-center gap-2 text-xs font-black text-gray-500 hover:text-blue-600 transition-colors group uppercase tracking-widest"
-                        >
-                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                            Kembali ke Profil
-                        </Link>
-                    </div>
-                </div>
+        <PublicLayout auth={auth} title="RIWAYAT PESANAN - SRB MOTOR">
+            <div className="flex-grow pt-[140px] bg-white min-h-screen">
+                {/* HERO SECTION */}
+                <section className="bg-black text-white pt-16 pb-24 border-b border-gray-800 relative overflow-hidden">
+                    <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
+                    
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
-                {/* HERO HEADER - SIMPLE */}
-                <div className="bg-white border-b border-gray-100 section-py-sm">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                            <div>
-                                <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">
-                                    Riwayat Transaksi
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div className="mb-12">
+                            <Link
+                                href={route("profile.show")}
+                                className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.2em] text-gray-400 hover:text-[#1c69d4] transition-all group uppercase"
+                            >
+                                <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                                KEMBALI KE PROFIL
+                            </Link>
+                        </div>
+
+                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+                            <div className="max-w-3xl">
+                                <h1 className="text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+                                    RIWAYAT <br/>
+                                    <span className="text-[#1c69d4]">PEMESANAN</span>
                                 </h1>
-                                <p className="text-gray-500 font-medium text-base md:text-lg max-w-xl leading-relaxed">
-                                    Lacak status pemesanan motor Anda, kelola dokumen
-                                    persyaratan, dan lihat rincian transaksi secara
-                                    transparan
+                                <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-80">
+                                    Pantau status pesanan, kelola dokumen persyaratan, dan akses rincian transaksi kendaraan Anda secara transparan.
                                 </p>
                             </div>
 
-                            {/* SEARCH & FILTER UI */}
-                            <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                                <div className="relative w-full sm:w-80 group">
-                                    <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                                        <Search className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
-                                    </div>
+                            {/* ANALYTICS MINI BAR */}
+                            <div className="flex items-center gap-8 border-l border-gray-800 pl-8 h-fit self-start lg:self-end">
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase">TOTAL PESANAN</p>
+                                    <p className="text-3xl font-black text-white">{localTransactions.total || 0}</p>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase">AKTIF</p>
+                                    <p className="text-3xl font-black text-[#1c69d4]">
+                                        {localTransactions.data?.filter(t => !["completed", "cancelled"].includes(t.status)).length || 0}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FILTER SECTION */}
+                <div className="sticky top-[110px] sm:top-28 z-[30] bg-white border-b border-gray-200">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex flex-col md:flex-row items-stretch gap-0">
+                            {/* Search */}
+                            <div className="flex-grow flex items-center border-r border-gray-200 py-6 md:pr-8">
+                                <div className="relative w-full group">
+                                    <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                                     <input
                                         type="text"
-                                        placeholder="Cari ID atau Nama Motor..."
+                                        placeholder="CARI ID ATAU MODEL KENDARAAN..."
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
-                                        className="w-full h-14 pl-12 pr-12 rounded-none bg-gray-50 border border-gray-200 hover:border-black focus:bg-white focus:border-black focus:ring-0 transition-all text-[11px] uppercase tracking-widest font-bold placeholder:text-gray-400"
+                                        className="w-full pl-8 pr-4 py-2 bg-transparent border-none focus:ring-0 text-[11px] font-black uppercase tracking-[0.15em] placeholder:text-gray-300"
                                     />
                                     {search && (
-                                        <button 
-                                            onClick={() => setSearch("")}
-                                            className="absolute inset-y-0 right-5 flex items-center text-gray-400 hover:text-gray-600"
-                                        >
+                                        <button onClick={() => setSearch("")} className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
                                             <X className="w-4 h-4" />
                                         </button>
                                     )}
                                 </div>
+                            </div>
 
-                                <div className="relative w-full sm:w-56">
-                                    <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                                        <Filter className="w-4 h-4 text-gray-400" />
-                                    </div>
+                            {/* Status Filter */}
+                            <div className="md:w-72 flex items-center border-r border-gray-200 py-6 md:px-8">
+                                <div className="relative w-full flex items-center">
+                                    <Filter className="absolute left-0 w-4 h-4 text-gray-400" />
                                     <select
                                         value={status}
                                         onChange={(e) => setStatus(e.target.value)}
-                                        className="w-full h-14 pl-12 pr-10 rounded-none bg-gray-50 border border-gray-200 hover:border-black focus:bg-white focus:border-black focus:ring-0 transition-all text-[11px] uppercase tracking-widest font-bold text-gray-700 appearance-none"
+                                        className="w-full pl-8 pr-8 py-2 bg-transparent border-none focus:ring-0 text-[11px] font-black uppercase tracking-[0.15em] appearance-none cursor-pointer"
                                     >
-                                        <option value="">SEMUA STATUS</option>
-                                        <option value="new_order">Pesanan Masuk</option>
-                                        <option value="waiting_payment">Menunggu Pembayaran</option>
-                                        <option value="payment_confirmed">Pembayaran Lunas</option>
-                                        <option value="unit_preparation">Motor Disiapkan</option>
-                                        <option value="ready_for_delivery">Siap Dikirim/Ambil</option>
-                                        <option value="completed">Selesai</option>
-                                        <option value="cancelled">Dibatalkan</option>
+                                        <option value="">KESELURUHAN STATUS</option>
+                                        <option value="NEW_ORDER">PESANAN BARU</option>
+                                        <option value="WAITING_PAYMENT">MENUNGGU PEMBAYARAN</option>
+                                        <option value="UNIT_PREPARATION">PERSIAPAN UNIT</option>
+                                        <option value="READY_FOR_DELIVERY">SIAP KIRIM</option>
+                                        <option value="COMPLETED">SELESAI</option>
+                                        <option value="CANCELLED">DIBATALKAN</option>
                                     </select>
-                                    <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-gray-400">
-                                        <ChevronRight className="w-4 h-4 rotate-90" />
-                                    </div>
+                                    <ChevronRight className="absolute right-0 w-4 h-4 text-gray-400 rotate-90" />
                                 </div>
+                            </div>
+
+                            {/* Total Info (Desktop Only) */}
+                            <div className="hidden lg:flex items-center px-8 py-6 text-[10px] font-black text-gray-400 tracking-widest uppercase">
+                                MENAMPILKAN {localTransactions.data?.length || 0} DARI {localTransactions.total || 0} HASIL
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-20">
-                    <div className={`${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'} transition-opacity duration-300`}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10 transition-all duration-500">
+                    <div className={`${loading ? 'opacity-30 blur-sm pointer-events-none' : 'opacity-100'} transition-all duration-300`}>
                     {localTransactions.data.length > 0 ? (
-                        <div className="space-y-8">
+                        <div className="grid gap-px bg-gray-200 border border-gray-200 shadow-2xl">
                             {localTransactions.data.map((transaction, index) => {
                                 const statusInfo = getStatusInfo(transaction);
                                 const StatusIcon = statusInfo.icon;
@@ -270,124 +290,107 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                 return (
                                     <motion.div
                                         key={transaction.id}
-                                        initial={{ opacity: 0, y: 15 }}
-                                        animate={{ opacity: 1, y: 0 }}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className="bg-white border border-gray-300 hover:border-black rounded-none transition-all flex flex-col"
+                                        className="group bg-white p-6 sm:p-10 flex flex-col md:flex-row gap-8 lg:gap-16 hover:bg-gray-50 transition-colors"
                                     >
-                                        {/* Card Header */}
-                                        <div className="bg-gray-50/80 px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-4">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-sm font-bold text-gray-900">
-                                                    ID: #{String(transaction.id).padStart(6, "0")}
-                                                </span>
-                                                <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                                <span className="text-sm font-medium text-gray-500">
-                                                    <Calendar className="inline-block w-4 h-4 mr-1.5 -mt-0.5 text-gray-400" />
-                                                    {formatDate(transaction.created_at)}
-                                                </span>
+                                        {/* Status Sidebar (Desktop) */}
+                                        <div className="hidden md:flex flex-col items-center justify-start gap-4 w-12 pt-2">
+                                            <div className={`p-3 border-2 ${statusInfo.color.split(' ')[1]} ${statusInfo.color.split(' ')[0]} rounded-none`}>
+                                                <StatusIcon size={20} strokeWidth={2.5} />
                                             </div>
-                                            <span className={`px-3 py-1.5 rounded-none text-[10px] uppercase tracking-widest font-bold border flex items-center gap-1.5 ${statusInfo.color}`}>
-                                                <StatusIcon size={14} strokeWidth={2.5} />
-                                                {statusInfo.label}
-                                            </span>
+                                            <div className="flex-grow w-px bg-gray-100"></div>
                                         </div>
 
-                                        {/* Card Body */}
-                                        <div className="p-6 flex flex-col sm:flex-row gap-6">
-                                            {/* Image */}
-                                            <div className="w-full sm:w-48 h-32 bg-gray-100 rounded-none border border-gray-300 flex items-center justify-center p-2 flex-shrink-0">
-                                                <img
-                                                    src={`/storage/${transaction.motor.image_path}`}
-                                                    alt={transaction.motor.name}
-                                                    className="w-full h-full object-contain"
-                                                />
+                                        {/* Content Area */}
+                                        <div className="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                                            {/* Preview Image */}
+                                            <div className="lg:col-span-3">
+                                                <div className="aspect-[4/3] bg-gray-100 border border-gray-200 p-4 relative group-hover:scale-[1.02] transition-transform duration-500">
+                                                    <img
+                                                        src={`/storage/${transaction.motor.image_path}`}
+                                                        alt={transaction.motor.name}
+                                                        className="w-full h-full object-contain filter drop-shadow-2xl"
+                                                    />
+                                                    <div className="absolute top-0 right-0 bg-white border-l border-b border-gray-200 px-3 py-1 text-[9px] font-black tracking-widest text-[#1c69d4]">
+                                                        {transaction.transaction_type}
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            {/* Info */}
-                                            <div className="flex-1 flex flex-col justify-center">
-                                                <h3 className="text-xl font-black text-gray-900 mb-2">
-                                                    {transaction.motor.name}
-                                                </h3>
-                                                <div className="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-500 mb-4">
-                                                    <span className="flex items-center gap-1.5">
-                                                        <Gauge className="w-4 h-4 text-gray-400" />
-                                                        {transaction.motor.year}
-                                                    </span>
-                                                    <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                                    {transaction.transaction_type === "CASH" ? (
-                                                        <span className="flex items-center gap-1.5 text-emerald-600 font-bold bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-none text-[10px] uppercase tracking-widest">
-                                                            <Wallet className="w-4 h-4" />
-                                                            TUNAI
-                                                        </span>
-                                                    ) : (
-                                                        <span className="flex items-center gap-1.5 text-blue-600 font-bold bg-blue-50 border border-blue-200 px-3 py-1 rounded-none text-[10px] uppercase tracking-widest">
-                                                            <CreditCard className="w-4 h-4" />
-                                                            KREDIT
-                                                        </span>
-                                                    )}
+                                            {/* Primary Info */}
+                                            <div className="lg:col-span-5 space-y-6">
+                                                <div>
+                                                    <div className="flex items-center gap-3 text-[10px] font-black text-gray-400 tracking-widest uppercase mb-2">
+                                                        <span>ID #{String(transaction.id).padStart(6, "0")}</span>
+                                                        <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                                        <span>{formatDate(transaction.created_at)}</span>
+                                                    </div>
+                                                    <h3 className="text-3xl font-black text-black uppercase tracking-tighter leading-tight group-hover:text-[#1c69d4] transition-colors">
+                                                        {transaction.motor.name}
+                                                    </h3>
                                                 </div>
 
-                                                {(transaction.nik || transaction.occupation) && (
-                                                    <p className="text-xs text-gray-400 font-medium flex items-center gap-2">
-                                                        <User className="w-3.5 h-3.5" />
-                                                        {transaction.occupation || "Pekerjaan -"} 
-                                                        {transaction.nik && ` • NIK: ${transaction.nik.substring(0, 6)}...`}
+                                                <div className="grid grid-cols-2 gap-8 pt-4 border-t border-gray-100">
+                                                    <div>
+                                                        <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-1">DATA PELANGGAN</p>
+                                                        <p className="text-[11px] font-bold text-black uppercase truncate">{transaction.name || transaction.user?.name}</p>
+                                                        <p className="text-[10px] font-medium text-gray-500 mt-0.5">{transaction.phone}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-1">METODE PEMBAYARAN</p>
+                                                        <p className="text-[11px] font-bold text-black uppercase">{transaction.transaction_type === "CASH" ? "TUNAI / TRANSFER" : "PEMBIAYAAN KREDIT"}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Financials & Status */}
+                                            <div className="lg:col-span-4 flex flex-col md:items-end justify-between h-full gap-8">
+                                                <div className="md:text-right w-full">
+                                                    <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase mb-1">TOTAL TRANSAKSI</p>
+                                                    <p className="text-4xl font-black text-black tracking-tighter">
+                                                        {formatCurrency(transaction.final_price || transaction.total_price || 0)}
                                                     </p>
-                                                )}
-                                            </div>
+                                                </div>
 
-                                            {/* Price / Subtotal Mobile */}
-                                            <div className="sm:text-right flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-gray-100 pt-4 sm:pt-0 sm:pl-6 mt-2 sm:mt-0">
-                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
-                                                    Nilai Transaksi
-                                                </p>
-                                                <p className="text-2xl font-black text-gray-900">
-                                                    {formatCurrency(transaction.final_price || transaction.total_price || 0)}
-                                                </p>
+                                                <div className="flex flex-wrap md:justify-end gap-3 w-full">
+                                                    {transaction.transaction_type === "CREDIT" && (
+                                                        <Link
+                                                            href={route("motors.manage-documents", transaction.id)}
+                                                            className="flex-1 md:flex-none px-6 py-4 bg-white border border-black hover:bg-gray-100 text-black font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-2"
+                                                        >
+                                                            <FileText size={16} />
+                                                            DOKUMEN
+                                                        </Link>
+                                                    )}
+                                                    <Link
+                                                        href={route("motors.transaction.show", transaction.id)}
+                                                        className="flex-[2] md:flex-none px-10 py-4 bg-black border border-black hover:bg-[#1c69d4] hover:border-[#1c69d4] text-white font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-3"
+                                                    >
+                                                        RINCIAN <ArrowRight size={16} />
+                                                    </Link>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        {/* Card Footer (Actions) */}
-                                        <div className="px-6 py-4 bg-white border-t border-gray-100 flex flex-col sm:flex-row items-center justify-end gap-3 mt-auto">
-                                            {transaction.transaction_type === "CREDIT" && (
-                                                <Link
-                                                    href={route("motors.manage-documents", transaction.id)}
-                                                    className="w-full sm:w-auto px-6 py-3 rounded-none border border-[#1c69d4] bg-white hover:bg-[#1c69d4] hover:text-white text-[#1c69d4] font-bold text-[10px] uppercase tracking-widest transition-colors flex items-center justify-center gap-2"
-                                                >
-                                                    <FileText size={16} strokeWidth={2.5} />
-                                                    KELOLA DOKUMEN
-                                                </Link>
-                                            )}
-                                            <Link
-                                                href={route("motors.transaction.show", transaction.id)}
-                                                className="w-full sm:w-auto px-6 py-3 rounded-none border border-black bg-black hover:bg-transparent text-white hover:text-black font-bold text-[10px] uppercase tracking-widest transition-colors flex items-center justify-center gap-2"
-                                            >
-                                                DETAIL TRANSAKSI
-                                                <ArrowRight size={16} strokeWidth={2.5} />
-                                            </Link>
                                         </div>
                                     </motion.div>
                                 );
                             })}
                         </div>
                     ) : (
-                        <div className="max-w-2xl mx-auto py-24 text-center">
-                            <div className="w-32 h-32 bg-gray-100 border-2 border-gray-300 rounded-none flex items-center justify-center mx-auto mb-8">
-                                <Package className="w-16 h-16 text-gray-300" />
+                        <div className="max-w-4xl mx-auto py-32 text-center border-2 border-dashed border-gray-200">
+                            <div className="w-24 h-24 bg-gray-50 border border-gray-100 flex items-center justify-center mx-auto mb-10">
+                                <ShoppingBag className="w-10 h-10 text-gray-300" />
                             </div>
-                            <h3 className="text-3xl font-black text-black uppercase tracking-tight mb-4">
-                                Belum Ada Transaksi
+                            <h3 className="text-4xl font-black text-black uppercase tracking-tighter mb-4">
+                                TIDAK ADA DATA
                             </h3>
-                            <p className="text-gray-500 font-light mb-10 text-lg leading-relaxed">
-                                Anda belum memiliki riwayat pemesanan motor di
-                                SRB Motors. Jelajahi katalog kami untuk
-                                menemukan motor impian Anda.
+                            <p className="text-gray-500 font-medium mb-12 text-sm uppercase tracking-[0.2em] leading-relaxed max-w-lg mx-auto opacity-70">
+                                Belum ditemukan riwayat pemesanan yang tercatat dalam sistem untuk filter saat ini.
                             </p>
-                            <Link href="/motors">
-                                <button className="h-14 px-10 border border-black bg-black text-white font-bold uppercase tracking-widest text-[11px] rounded-none hover:bg-white hover:text-black transition-all flex items-center justify-center gap-3 mx-auto">
-                                    MULAI MENJELAJAH{" "}
-                                    <ArrowRight className="w-4 h-4" />
+                            <Link href={route('motors.index')}>
+                                <button className="h-16 px-12 bg-black hover:bg-[#1c69d4] text-white font-black uppercase tracking-[0.3em] text-[10px] transition-all flex items-center justify-center gap-4 mx-auto">
+                                    LIHAT KATALOG <ArrowRight className="w-4 h-4" />
                                 </button>
                             </Link>
                         </div>
@@ -396,28 +399,50 @@ export default function UserTransactions({ transactions: initialTransactions, fi
 
                     {/* PAGINATION */}
                     {localTransactions.links && localTransactions.links.length > 3 && (
-                        <div className="mt-20 flex justify-center gap-3">
-                            {localTransactions.links.map((link, k) => (
-                                <button
-                                    key={k}
-                                    onClick={() => handlePageChange(link.url)}
-                                    disabled={!link.url || link.active}
-                                    className={`w-12 h-12 flex items-center justify-center rounded-none text-[10px] font-bold uppercase tracking-widest transition-all border ${
-                                        link.active
-                                            ? "bg-black text-white border-black"
-                                            : link.url
-                                              ? "bg-white text-gray-400 border-gray-300 hover:border-black hover:text-black"
-                                              : "bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed"
-                                    }`}
-                                    dangerouslySetInnerHTML={{
-                                        __html: link.label,
-                                    }}
-                                />
-                            ))}
+                        <div className="mt-24 flex justify-center items-center gap-4">
+                            {localTransactions.links.map((link, k) => {
+                                if (link.label === "&laquo; Previous" || link.label === "Next &raquo;") {
+                                    return (
+                                        <button
+                                            key={k}
+                                            onClick={() => handlePageChange(link.url)}
+                                            disabled={!link.url}
+                                            className={`w-14 h-14 flex items-center justify-center border transition-all ${
+                                                !link.url ? "opacity-20 cursor-not-allowed border-gray-200" : "hover:bg-black hover:text-white border-black"
+                                            }`}
+                                        >
+                                            {link.label.includes("Previous") ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
+                                        </button>
+                                    );
+                                }
+                                return (
+                                    <button
+                                        key={k}
+                                        onClick={() => handlePageChange(link.url)}
+                                        disabled={!link.url || link.active}
+                                        className={`w-14 h-14 flex items-center justify-center text-[11px] font-black tracking-widest transition-all border ${
+                                            link.active
+                                                ? "bg-black text-white border-black shadow-xl"
+                                                : link.url
+                                                  ? "bg-white text-gray-400 border-gray-200 hover:border-black hover:text-black"
+                                                  : "bg-gray-50 text-gray-200 border-gray-100 cursor-not-allowed"
+                                        }`}
+                                    >
+                                        {link.label}
+                                    </button>
+                                );
+                            })}
                         </div>
                     )}
                 </div>
             </div>
+
+            <style dangerouslySetInnerHTML={{ __html: `
+                .section-py-sm { padding-top: 5rem; padding-bottom: 5rem; }
+                @media (max-width: 640px) {
+                    .section-py-sm { padding-top: 3rem; padding-bottom: 3rem; }
+                }
+            ` }} />
         </PublicLayout>
     );
 }

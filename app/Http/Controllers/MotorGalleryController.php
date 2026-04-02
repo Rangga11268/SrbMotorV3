@@ -607,9 +607,14 @@ class MotorGalleryController extends Controller
         $search = $request->query('search');
         $status = $request->query('status');
 
-        $query = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments'])
-            ->where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc');
+        $query = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments']);
+
+        // Only filter by user_id if NOT an admin
+        if (!Auth::user()->isAdmin()) {
+            $query->where('user_id', Auth::id());
+        }
+
+        $query->orderBy('created_at', 'desc');
 
         if ($search) {
             $query->where(function ($q) use ($search) {
