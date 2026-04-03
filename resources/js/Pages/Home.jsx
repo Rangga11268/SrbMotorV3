@@ -18,6 +18,10 @@ import {
     AlertCircle,
     Mail,
     X,
+    Users,
+    Award,
+    CheckCircle,
+    CreditCard,
 } from "lucide-react";
 
 export default function Home({
@@ -153,6 +157,28 @@ export default function Home({
                                 Cari Unit
                             </button>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* STATS COUNTER BAR (High Contrast) */}
+            <section className="bg-[#111111] border-b border-gray-800">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+                        {[
+                            { label: "Unit Terjual", value: "10.000+", icon: <Bike className="w-5 h-5 text-[#1c69d4]" /> },
+                            { label: "Teknisi Ahli", value: "25+", icon: <Award className="w-5 h-5 text-[#1c69d4]" /> },
+                            { label: "Pelanggan Puas", value: "8.500+", icon: <Users className="w-5 h-5 text-[#1c69d4]" /> },
+                            { label: "Tahun Pengalaman", value: "12 Tahun", icon: <Clock className="w-5 h-5 text-[#1c69d4]" /> },
+                        ].map((stat, i) => (
+                            <div key={i} className="flex flex-col items-center md:items-start gap-3">
+                                <div className="flex items-center gap-3">
+                                    {stat.icon}
+                                    <span className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase">{stat.value}</span>
+                                </div>
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">{stat.label}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -294,6 +320,36 @@ export default function Home({
                     )}
                 </div>
             </section>
+
+            {/* PURCHASE GUIDE / WORKFLOW (Sharp Geometry) */}
+            <section className="py-24 bg-[#f9f9f9]">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center lg:text-left">
+                    <div className="mb-16 space-y-4">
+                        <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">PROSES PEMESANAN</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-[#262626] uppercase tracking-tighter leading-none">
+                            LANGKAH <span className="text-gray-400">MUDAH.</span>
+                        </h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {[
+                            { step: "01", title: "Pilih Unit", desc: "Eksplorasi katalog motor Honda & Yamaha terbaru sesuai kebutuhan Anda.", icon: <Search className="w-6 h-6"/> },
+                            { step: "02", title: "Konsultasi", desc: "Hubungi konsultan kami untuk simulasi kredit atau negosiasi harga cash.", icon: <MessageCircle className="w-6 h-6"/> },
+                            { step: "03", title: "Verifikasi", desc: "Lengkapi dokumen pendukung untuk proses administrasi yang cepat.", icon: <ShieldCheck className="w-6 h-6"/> },
+                            { step: "04", title: "Unit Dikirim", desc: "Motor Anda diantarkan langsung ke depan pintu rumah oleh tim kami.", icon: <Truck className="w-6 h-6"/> },
+                        ].map((item, idx) => (
+                            <div key={idx} className="bg-white border border-gray-200 p-10 hover:border-[#1c69d4] transition-colors relative group">
+                                <div className="absolute top-10 right-10 text-4xl font-black text-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{item.step}</div>
+                                <div className="w-12 h-12 bg-[#1c69d4] flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform">
+                                    {item.icon}
+                                </div>
+                                <h4 className="text-lg font-black text-[#262626] uppercase tracking-widest mb-4">{item.title}</h4>
+                                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
             
             {/* SERVICE & MAINTENANCE SECTION (Cinematic Industrial) */}
             <section className="relative py-32 bg-black overflow-hidden group">
@@ -361,6 +417,66 @@ export default function Home({
                                 {item.icon}
                                 <h4 className="text-lg font-black text-white uppercase tracking-widest mt-8 mb-4">{item.title}</h4>
                                 <p className="text-gray-500 font-medium text-xs uppercase tracking-widest leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* FINANCING PARTNERS (Credibility) */}
+            <section className="py-16 bg-white border-y border-gray-100 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12">
+                    <div className="flex-shrink-0">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">MITRA<br/>PEMBIAYAAN</p>
+                    </div>
+                    <div className="flex-grow">
+                        <div className="flex flex-wrap items-center justify-center md:justify-between gap-8 md:gap-12 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
+                            {/* Financing Partner Placeholders */}
+                            <span className="text-2xl font-black text-black tracking-tighter">ADIRA FINANCE</span>
+                            <span className="text-2xl font-black text-black tracking-tighter">OTO FINANCE</span>
+                            <span className="text-2xl font-black text-black tracking-tighter">FIF GROUP</span>
+                            <span className="text-2xl font-black text-black tracking-tighter">MUF MANDIRI</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CUSTOMER REVIEWS (Social Proof) */}
+            <section className="py-32 bg-[#fafafa]">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                        <div className="space-y-4">
+                            <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">EVIDENCE OF EXCELLENCE</span>
+                            <h2 className="text-5xl font-black text-[#262626] uppercase tracking-tighter leading-none">
+                                APA KATA <span className="text-gray-400">MEREKA?</span>
+                            </h2>
+                        </div>
+                        <div className="flex items-center gap-4 border border-gray-200 bg-white p-6">
+                            <div className="flex text-yellow-400">
+                                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                            </div>
+                            <span className="text-[11px] font-black text-[#262626] uppercase tracking-[0.2em]">Rating Rata-rata 4.9/5</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[
+                            { name: "Andi Saputra", date: "2 minggu lalu", text: "Pelayanan sangat cepat. Kredit disetujui dalam hitungan jam dan unit langsung dikirim besoknya. Rekomendasi sekali!" },
+                            { name: "Siti Rahma", date: "1 bulan lalu", text: "Motor Honda PCX saya sampai dengan mulus. Teknisi servis di SRB juga sangat detail saat menjelaskan perawatan pertama." },
+                            { name: "Budi Hermawan", date: "3 bulan lalu", text: "Harga paling jujur dibanding dealer lain yang sudah saya kunjungi. Bonusnya juga banyak. Terima kasih SRB Motor!" }
+                        ].map((review, i) => (
+                            <div key={i} className="bg-white border border-gray-200 p-10 hover:shadow-xl transition-all h-full flex flex-col group">
+                                <div className="flex text-[#1c69d4] mb-8 group-hover:scale-110 transition-transform">
+                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                                </div>
+                                <p className="text-gray-600 font-medium italic text-base leading-relaxed mb-8 flex-grow">"{review.text}"</p>
+                                <div className="pt-8 border-t border-gray-100 flex items-center justify-between">
+                                    <div>
+                                        <h5 className="font-black text-[#262626] uppercase text-[12px] tracking-widest">{review.name}</h5>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{review.date}</p>
+                                    </div>
+                                    <div className="w-10 h-10 bg-gray-100 flex items-center justify-center text-gray-400 font-black text-xs uppercase">SRB</div>
+                                </div>
                             </div>
                         ))}
                     </div>
