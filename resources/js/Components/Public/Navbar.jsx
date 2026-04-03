@@ -76,13 +76,25 @@ export default function Navbar({ auth }) {
         {
             label: "Motor Baru",
             href: "/motors",
-            active: url.startsWith("/motors"),
+            active: url === "/motors",
         },
         {
             label: "Servis",
-            href: "/services",
-            active: url.startsWith("/services"),
+            href: "/services/booking",
+            active: url === "/services/booking",
         },
+        ...(auth?.user ? [
+            {
+                label: "Riwayat",
+                href: route("motors.user-transactions"),
+                active: url.startsWith("/user/transactions") || url === "/services",
+            },
+            {
+                label: "Cicilan",
+                href: route("installments.index"),
+                active: url.startsWith("/installments"),
+            }
+        ] : []),
         { label: "Tentang Kami", href: "/about", active: url === "/about" },
     ];
 

@@ -14,7 +14,34 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        return \Inertia\Inertia::render('Profile/Show', compact('user'));
+        
+        // Fetch dashboard summary data
+        $latestTransaction = \App\Models\Transaction::where('user_id', $user->id)
+            ->latest()
+            ->first();
+
+        $nextInstallment = \App\Models\Installment::whereHas('transaction', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->where('status', 'pending')
+            ->orderBy('due_date', 'asc')
+            ->first();
+
+        $upcomingService = \App\Models\ServiceAppointment::where('user_id', $user->id)
+            ->where('status', '!=', 'cancelled')
+            ->where('service_date', '>=', now()->toDateString())
+            ->orderBy('service_date', 'asc')
+            ->orderBy('service_time', 'asc')
+            ->first();
+
+        return \Inertia\Inertia::render('Profile/Show', [
+            'user' => $user,
+            'dashboard' => [
+                'latest_transaction' => $latestTransaction,
+                'next_installment' => $nextInstallment,
+                'upcoming_service' => $upcomingService,
+            ]
+        ]);
     }
 
 

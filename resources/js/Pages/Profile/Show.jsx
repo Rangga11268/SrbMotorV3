@@ -21,11 +21,12 @@ import {
     Shield,
     Settings,
     ArrowLeft,
+    ArrowRight,
     MapPin,
     Briefcase,
 } from "lucide-react";
 
-export default function Show({ user }) {
+export default function Show({ user, dashboard }) {
     const { auth } = usePage().props;
     const isCurrentUser = auth.user && auth.user.id === user.id;
 
@@ -139,8 +140,77 @@ export default function Show({ user }) {
                             </div>
                         </div>
 
-                        {/* RIGHT COLUMN - MAIN DATA */}
+                        {/* RIGHT COLUMN - MAIN DATA & DASHBOARD */}
                         <div className="lg:col-span-2 space-y-8">
+                            {/* DASHBOARD SUMMARY CARDS */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {/* ORDER STATUS CARD */}
+                                <Link 
+                                    href={route("motors.user-transactions")}
+                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group"
+                                >
+                                    <div className="flex items-center justify-between mb-4">
+                                        <ShoppingBag className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
+                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-1 bg-gray-100 text-gray-600">Terakhir</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Status Pesanan</p>
+                                        <p className="text-sm font-black text-black uppercase tracking-tight truncate">
+                                            {dashboard.latest_transaction ? dashboard.latest_transaction.status.replace(/_/g, " ") : "Belum Ada"}
+                                        </p>
+                                    </div>
+                                    <div className="mt-4 flex items-center gap-2 text-[9px] font-bold text-[#1c69d4] uppercase tracking-widest">
+                                        LIHAT RIWAYAT <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                </Link>
+
+                                {/* INSTALLMENT CARD */}
+                                <Link 
+                                    href={route("installments.index")}
+                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group"
+                                >
+                                    <div className="flex items-center justify-between mb-4">
+                                        <CreditCard className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
+                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-1 bg-amber-50 text-amber-600">Cicilan</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Jatuh Tempo</p>
+                                        <p className="text-sm font-black text-black uppercase tracking-tight">
+                                            {dashboard.next_installment 
+                                                ? new Date(dashboard.next_installment.due_date).toLocaleDateString("id-ID", { day: '2-digit', month: 'short' })
+                                                : "Lunas / -"
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="mt-4 flex items-center gap-2 text-[9px] font-bold text-[#1c69d4] uppercase tracking-widest">
+                                        BAYAR CICILAN <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                </Link>
+
+                                {/* SERVICE CARD */}
+                                <Link 
+                                    href={route("services.index")}
+                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group"
+                                >
+                                    <div className="flex items-center justify-between mb-4">
+                                        <Calendar className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
+                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-1 bg-blue-50 text-[#1c69d4]">Servis</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Jadwal Booking</p>
+                                        <p className="text-sm font-black text-black uppercase tracking-tight">
+                                            {dashboard.upcoming_service 
+                                                ? new Date(dashboard.upcoming_service.service_date).toLocaleDateString("id-ID", { day: '2-digit', month: 'short' })
+                                                : "Belum Booking"
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="mt-4 flex items-center gap-2 text-[9px] font-bold text-[#1c69d4] uppercase tracking-widest">
+                                        CEK JADWAL <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                    </div>
+                                </Link>
+                            </div>
+
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
