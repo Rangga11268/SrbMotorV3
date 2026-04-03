@@ -72,7 +72,10 @@ Route::get('/api/services/unavailable-dates', [ServiceAppointmentController::cla
 
 
 Route::middleware(['guest', 'throttle:5,1'])->group(function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/login', function () {
+        return redirect()->route('home', ['login_required' => 1]);
+    })->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
 

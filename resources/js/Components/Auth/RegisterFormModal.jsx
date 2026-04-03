@@ -29,171 +29,190 @@ export default function RegisterFormModal({ onSwitch }) {
 
     return (
         <div className="space-y-6">
-            <form className="space-y-4" onSubmit={submit}>
+            <form className="space-y-5" onSubmit={submit}>
                 {/* Name */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                    <label className="block text-[9px] font-black text-[#262626] uppercase tracking-[0.2em] mb-2.5">
                         Nama Lengkap
                     </label>
-                    <div className="relative">
-                        <User className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <User className="h-4 w-4 text-[#bbbbbb] group-focus-within:text-[#1c69d4] transition-colors" />
+                        </div>
                         <input
                             type="text"
+                            required
                             value={data.name}
                             onChange={(e) => setData("name", e.target.value)}
-                            placeholder="Nama Anda"
-                            className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-600 transition-all"
+                            placeholder="NAMA LENGKAP ANDA"
+                            className="block w-full bg-white border border-gray-200 py-3.5 pl-12 pr-4 text-xs font-bold text-[#262626] placeholder:text-[#bbbbbb] focus:ring-1 focus:ring-[#1c69d4] focus:border-[#1c69d4] transition-all rounded-none uppercase tracking-widest"
                         />
                     </div>
                     {errors.name && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="h-4 w-4" /> {errors.name}
+                        <p className="mt-2 text-[9px] font-bold text-red-600 uppercase tracking-widest flex items-center gap-2">
+                            <AlertCircle className="h-3 w-3" /> {errors.name}
                         </p>
                     )}
                 </div>
 
                 {/* Email */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
+                    <label className="block text-[9px] font-black text-[#262626] uppercase tracking-[0.2em] mb-2.5">
                         Alamat Email
                     </label>
-                    <div className="relative">
-                        <Mail className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <Mail className="h-4 w-4 text-[#bbbbbb] group-focus-within:text-[#1c69d4] transition-colors" />
+                        </div>
                         <input
                             type="email"
+                            required
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
-                            placeholder="nama@email.com"
-                            className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-600 transition-all"
+                            placeholder="NAMA@EMAIL.COM"
+                            className="block w-full bg-white border border-gray-200 py-3.5 pl-12 pr-4 text-xs font-bold text-[#262626] placeholder:text-[#bbbbbb] focus:ring-1 focus:ring-[#1c69d4] focus:border-[#1c69d4] transition-all rounded-none uppercase tracking-widest"
                         />
                     </div>
                     {errors.email && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="h-4 w-4" /> {errors.email}
+                        <p className="mt-2 text-[9px] font-bold text-red-600 uppercase tracking-widest flex items-center gap-2">
+                            <AlertCircle className="h-3 w-3" /> {errors.email}
                         </p>
                     )}
                 </div>
 
-                {/* Password */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Kata Sandi
-                    </label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                            placeholder="••••••••"
-                            className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-12 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-600 transition-all"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                        >
-                            {showPassword ? (
-                                <EyeOff size={18} />
-                            ) : (
-                                <Eye size={18} />
-                            )}
-                        </button>
+                {/* Password Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Password */}
+                    <div>
+                        <label className="block text-[9px] font-black text-[#262626] uppercase tracking-[0.2em] mb-2.5">
+                            Kata Sandi
+                        </label>
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <Lock className="h-3.5 w-3.5 text-[#bbbbbb] group-focus-within:text-[#1c69d4] transition-colors" />
+                            </div>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                required
+                                value={data.password}
+                                onChange={(e) =>
+                                    setData("password", e.target.value)
+                                }
+                                placeholder="••••••••"
+                                className="block w-full bg-white border border-gray-200 py-3.5 pl-10 pr-10 text-xs font-bold text-[#262626] placeholder:text-[#bbbbbb] focus:ring-1 focus:ring-[#1c69d4] focus:border-[#1c69d4] transition-all rounded-none tracking-widest"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#bbbbbb] hover:text-[#262626] transition-colors"
+                            >
+                                {showPassword ? (
+                                    <EyeOff size={14} />
+                                ) : (
+                                    <Eye size={14} />
+                                )}
+                            </button>
+                        </div>
                     </div>
-                    {errors.password && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="h-4 w-4" />{" "}
-                            {errors.password}
-                        </p>
-                    )}
-                </div>
 
-                {/* Confirm Password */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-900 mb-2">
-                        Konfirmasi Kata Sandi
-                    </label>
-                    <div className="relative">
-                        <Lock className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
-                        <input
-                            type={showConfirm ? "text" : "password"}
-                            value={data.password_confirmation}
-                            onChange={(e) =>
-                                setData("password_confirmation", e.target.value)
-                            }
-                            placeholder="••••••••"
-                            className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-12 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-600 transition-all"
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowConfirm(!showConfirm)}
-                            className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
-                        >
-                            {showConfirm ? (
-                                <EyeOff size={18} />
-                            ) : (
-                                <Eye size={18} />
-                            )}
-                        </button>
+                    {/* Confirm Password */}
+                    <div>
+                        <label className="block text-[9px] font-black text-[#262626] uppercase tracking-[0.2em] mb-2.5">
+                            Konfirmasi
+                        </label>
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <Lock className="h-3.5 w-3.5 text-[#bbbbbb] group-focus-within:text-[#1c69d4] transition-colors" />
+                            </div>
+                            <input
+                                type={showConfirm ? "text" : "password"}
+                                required
+                                value={data.password_confirmation}
+                                onChange={(e) =>
+                                    setData("password_confirmation", e.target.value)
+                                }
+                                placeholder="••••••••"
+                                className="block w-full bg-white border border-gray-200 py-3.5 pl-10 pr-10 text-xs font-bold text-[#262626] placeholder:text-[#bbbbbb] focus:ring-1 focus:ring-[#1c69d4] focus:border-[#1c69d4] transition-all rounded-none tracking-widest"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowConfirm(!showConfirm)}
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#bbbbbb] hover:text-[#262626] transition-colors"
+                            >
+                                {showConfirm ? (
+                                    <EyeOff size={14} />
+                                ) : (
+                                    <Eye size={14} />
+                                )}
+                            </button>
+                        </div>
                     </div>
-                    {errors.password_confirmation && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                            <AlertCircle className="h-4 w-4" />{" "}
-                            {errors.password_confirmation}
-                        </p>
-                    )}
                 </div>
+                {(errors.password || errors.password_confirmation) && (
+                    <p className="mt-2 text-[9px] font-bold text-red-600 uppercase tracking-widest flex items-center gap-2">
+                        <AlertCircle className="h-3 w-3" />{" "}
+                        {errors.password || errors.password_confirmation}
+                    </p>
+                )}
 
                 {/* Submit Button */}
                 <button
                     type="submit"
                     disabled={processing}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full relative group overflow-hidden bg-[#1c69d4] py-4 transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed rounded-none"
                 >
-                    {processing ? (
-                        "Loading..."
-                    ) : (
-                        <>
-                            <UserPlus size={18} />
-                            Buat Akun
-                        </>
-                    )}
+                    <div className="absolute inset-0 bg-[#262626] -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                    <span className="relative z-10 flex items-center justify-center gap-3 text-[10px] font-black text-white uppercase tracking-[0.3em]">
+                        {processing ? (
+                            "MEMPROSES..."
+                        ) : (
+                            <>
+                                <UserPlus size={14} strokeWidth={3} />
+                                DAFTAR SEKARANG
+                            </>
+                        )}
+                    </span>
                 </button>
             </form>
 
             {/* Divider */}
-            <div className="flex items-center gap-3 my-4">
-                <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-xs text-gray-400 font-bold">ATAU</span>
-                <div className="flex-1 h-px bg-gray-200" />
+            <div className="relative flex items-center justify-center py-2">
+                <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-100"></div>
+                </div>
+                <span className="relative z-10 px-4 bg-white text-[8px] font-black text-[#dddddd] uppercase tracking-[0.4em]">
+                    OPSI LAIN
+                </span>
             </div>
 
             {/* Google OAuth */}
-            <a href={route("auth.google")} className="w-full">
+            <a href={route("auth.google")} className="block">
                 <button
                     type="button"
-                    className="w-full px-4 py-2.5 bg-white border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-semibold rounded-lg transition-all flex items-center justify-center gap-3"
+                    className="w-full flex items-center justify-center gap-4 py-3.5 border border-gray-200 hover:border-[#1c69d4] transition-all group rounded-none"
                 >
                     <img
                         src="/assets/icon/google-icon-logo.webp"
                         alt="Google"
-                        className="w-5 h-5"
+                        className="w-4 h-4 grayscale group-hover:grayscale-0 transition-all opacity-70 group-hover:opacity-100"
                     />
-                    Daftar dengan Google
+                    <span className="text-[9px] font-bold text-[#262626] uppercase tracking-widest">
+                        DAFTAR DENGAN GOOGLE
+                    </span>
                 </button>
             </a>
 
             {/* Switch to Login */}
-            <div className="text-center text-sm text-gray-600 mt-4">
-                Sudah punya akun?{" "}
-                <button
-                    onClick={() => onSwitch("login")}
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                    Masuk di sini
-                </button>
+            <div className="pt-2 text-center">
+                <p className="text-[9px] font-bold text-[#bbbbbb] uppercase tracking-widest">
+                    Sudah punya akun?{" "}
+                    <button
+                        onClick={() => onSwitch("login")}
+                        className="ml-1.5 text-[#1c69d4] hover:text-[#262626] border-b border-[#1c69d4] border-opacity-30 hover:border-opacity-100 transition-all pb-0.5"
+                    >
+                        MASUK DI SINI
+                    </button>
+                </p>
             </div>
         </div>
     );

@@ -34,6 +34,7 @@ export default function Navbar({ auth }) {
     const [isSearching, setIsSearching] = useState(false);
     const [showResults, setShowResults] = useState(false);
     const [authModalVisible, setAuthModalVisible] = useState(false);
+    const [authModalMessage, setAuthModalMessage] = useState(null);
     const { url } = usePage();
 
     useEffect(() => {
@@ -41,6 +42,16 @@ export default function Navbar({ auth }) {
             setScrolled(window.scrollY > 10);
         };
         window.addEventListener("scroll", handleScroll);
+        
+        // Handle login redirect from middleware
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has("login_required")) {
+            setAuthModalMessage("Sesi Diperlukan: Silakan masuk untuk mengakses fitur perbaikan dan servis.");
+            setAuthModalVisible(true);
+            // Clean up the URL (optional but cleaner)
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
@@ -352,7 +363,10 @@ export default function Navbar({ auth }) {
                             </div>
                         ) : (
                             <button
-                                onClick={() => setAuthModalVisible(true)}
+                                onClick={() => {
+                                    setAuthModalMessage(null);
+                                    setAuthModalVisible(true);
+                                }}
                                 className="text-[10px] font-bold text-[#262626] uppercase tracking-[0.2em] hover:text-[#1c69d4] transition-colors py-2 px-4"
                             >
                                 Masuk / Daftar
@@ -436,6 +450,7 @@ export default function Navbar({ auth }) {
                                     <button
                                         onClick={() => {
                                             setMobileMenuOpen(false);
+                                            setAuthModalMessage(null);
                                             setAuthModalVisible(true);
                                         }}
                                         className="py-4 border border-white text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-none"
@@ -452,7 +467,11 @@ export default function Navbar({ auth }) {
             {/* Auth Modal */}
             <AuthModal
                 visible={authModalVisible}
-                onClose={() => setAuthModalVisible(false)}
+                message={authModalMessage}
+                onClose={() => {
+                    setAuthModalVisible(false);
+                    setAuthModalMessage(null);
+                }}
             />
         </nav>
     );
