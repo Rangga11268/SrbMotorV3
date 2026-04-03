@@ -91,8 +91,8 @@ export default function Navbar({ auth }) {
         },
         {
             label: "Servis",
-            href: "/services/booking",
-            active: url === "/services/booking",
+            href: "/services",
+            active: url.startsWith("/services"),
         },
         ...(auth?.user ? [
             {
