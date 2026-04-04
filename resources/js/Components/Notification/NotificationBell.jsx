@@ -21,9 +21,14 @@ export default function NotificationBell() {
     useEffect(() => {
         fetchUnreadCount();
         
+        window.addEventListener('notifications-updated', fetchUnreadCount);
+
         // Polling unread count every 30 seconds (basic real-time)
         const interval = setInterval(fetchUnreadCount, 30000);
-        return () => clearInterval(interval);
+        return () => {
+            window.removeEventListener('notifications-updated', fetchUnreadCount);
+            clearInterval(interval);
+        };
     }, []);
 
     // Handle clicks outside to close dropdown

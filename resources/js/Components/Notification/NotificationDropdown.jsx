@@ -28,7 +28,7 @@ export default function NotificationDropdown({ onClose }) {
         try {
             await axios.post(route('notifications.mark-all-read'));
             setNotifications(prev => prev.map(n => ({ ...n, read_at: new Date().toISOString() })));
-            // Optionally update layout count globally via bus or reload
+            window.dispatchEvent(new CustomEvent('notifications-updated'));
         } catch (error) {
             console.error('Error marking all as read:', error);
         }
@@ -41,6 +41,7 @@ export default function NotificationDropdown({ onClose }) {
                 setNotifications(prev => 
                     prev.map(n => n.id === notification.id ? { ...n, read_at: new Date().toISOString() } : n)
                 );
+                window.dispatchEvent(new CustomEvent('notifications-updated'));
             } catch (error) {
                 console.error('Error marking notification as read:', error);
             }

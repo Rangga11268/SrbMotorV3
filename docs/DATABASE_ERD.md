@@ -1,20 +1,20 @@
-# SRB Motor Database ERD (Complete & Consolidated)
+# SRB Motor Database ERD (Complete & Verified)
 
-Dokumen ini menyediakan diagram *Entity Relationship Diagram* (ERD) lengkap untuk aplikasi SRB Motor, mencakup logika bisnis inti, manajemen data, dan pengaturan sistem. Relasi antar entitas disajikan dengan penjelasan kardinalitas (seperti *One-to-Many* / *One-to-One*) beserta label dalam bahasa Indonesia.
+Dokumen ini menyediakan diagram *Entity Relationship Diagram* (ERD) yang telah diverifikasi langsung melalui audit database live `srbmotor`. Diagram ini mencakup logika bisnis inti, manajemen data kredit, dan fitur purna jual.
 
 ## Entity Relationship Diagram
 
 ```mermaid
 erDiagram
-    USERS ||--o{ TRANSACTIONS : "One-to-Many (Melakukan/Membuat)"
+    USERS ||--o{ TRANSACTIONS : "One-to-Many (Melakukan)"
     MOTORS ||--o{ TRANSACTIONS : "One-to-Many (Terjual dalam)"
     TRANSACTIONS ||--o{ TRANSACTION_LOGS : "One-to-Many (Tercatat dalam)"
-    TRANSACTIONS ||--o{ DOCUMENTS : "One-to-Many (Membutuhkan)"
-    TRANSACTIONS ||--o| CREDIT_DETAILS : "One-to-One (Memiliki riwayat kredit)"
-    CREDIT_DETAILS ||--o{ INSTALLMENTS : "One-to-Many (Memiliki angsuran)"
+    TRANSACTIONS ||--o{ INSTALLMENTS : "One-to-Many (Memiliki cicilan)"
+    TRANSACTIONS ||--o| CREDIT_DETAILS : "One-to-One (Memiliki detail kredit)"
+    CREDIT_DETAILS ||--o{ DOCUMENTS : "One-to-Many (Menyimpan berkas)"
     CREDIT_DETAILS ||--o{ SURVEY_SCHEDULES : "One-to-Many (Memiliki jadwal survei)"
     USERS ||--o{ NOTIFICATIONS : "One-to-Many (Menerima)"
-    USERS ||--o{ SERVICE_APPOINTMENTS : "One-to-Many (Memesan)"
+    USERS ||--o{ SERVICE_APPOINTMENTS : "One-to-Many (Memesan servis)"
 
     USERS {
         bigint id PK
@@ -22,12 +22,15 @@ erDiagram
         string email
         string password
         string role
-        string phone
         string google_id
+        string profile_photo_path
+        string phone
         text alamat
         string nik
         string occupation
         decimal monthly_income
+        timestamp email_verified_at
+        string remember_token
         timestamp created_at
         timestamp updated_at
     }
@@ -37,13 +40,14 @@ erDiagram
         string name
         string brand
         string model
-        string slug
         decimal price
+        decimal min_dp_amount
+        json colors
+        integer year
+        string type
         string image_path
         text details
         boolean tersedia
-        decimal min_dp_amount
-        json colors
         timestamp created_at
         timestamp updated_at
     }
@@ -53,23 +57,23 @@ erDiagram
         bigint user_id FK
         bigint motor_id FK
         string name "Customer Name"
-        string email "Customer Email"
-        string phone "Customer Phone"
         string nik "Customer NIK"
-        text address "Customer Address"
         string reference_number
         string transaction_type
         string status
         string motor_color
         decimal motor_price
         decimal booking_fee
-        decimal total_price
-        decimal final_price
+        string phone
+        string email
+        text address
         string delivery_method
         date delivery_date
         string occupation
         decimal monthly_income
         string employment_duration
+        decimal total_price
+        decimal final_price
         string payment_method
         timestamp cancelled_at
         text cancellation_reason
@@ -105,10 +109,10 @@ erDiagram
         bigint id PK
         bigint transaction_id FK
         int installment_number
-        decimal amount
         date due_date
-        timestamp paid_at
+        decimal amount
         string status
+        timestamp paid_at
         string payment_method
         text payment_proof
         string snap_token
@@ -122,16 +126,17 @@ erDiagram
         text notes
         timestamp created_at
         timestamp updated_at
+        timestamp deleted_at
     }
 
     DOCUMENTS {
         bigint id PK
         bigint credit_detail_id FK
         string document_type
-        text description
+        string description
         string file_path
         string original_name
-        bigint file_size
+        string file_size
         string status
         string approval_status
         text rejection_reason
@@ -139,27 +144,13 @@ erDiagram
         timestamp submitted_at
         timestamp created_at
         timestamp updated_at
-    }
-
-    TRANSACTION_LOGS {
-        bigint id PK
-        bigint transaction_id FK
-        string status_from
-        string status_to
-        string status "Legacy"
-        bigint actor_id
-        string actor_type
-        text description
-        text notes
-        json payload
-        timestamp created_at
-        timestamp updated_at
+        timestamp deleted_at
     }
 
     SURVEY_SCHEDULES {
         bigint id PK
         bigint credit_detail_id FK
-        date scheduled_date
+        datetime scheduled_date
         time scheduled_time
         string surveyor_name
         string surveyor_phone
@@ -176,6 +167,44 @@ erDiagram
         timestamp created_at
         timestamp updated_at
         timestamp deleted_at
+    }
+
+    TRANSACTION_LOGS {
+        bigint id PK
+        bigint transaction_id FK
+        string status_from
+        string status_to
+        bigint actor_id
+        string actor_type
+        text description
+        text notes
+        json payload
+        timestamp created_at
+        timestamp updated_at
+        string status
+    }
+
+    SERVICE_APPOINTMENTS {
+        bigint id PK
+        bigint user_id FK
+        string branch
+        string customer_name
+        string customer_phone
+        string motor_brand
+        string motor_type
+        string license_plate
+        int current_km
+        date service_date
+        time service_time
+        string service_type
+        text complaint_notes
+        decimal estimated_cost
+        string status
+        string cancelled_by
+        text cancel_reason
+        text admin_notes
+        timestamp created_at
+        timestamp updated_at
     }
 
     SETTINGS {
@@ -199,60 +228,36 @@ erDiagram
         timestamp created_at
         timestamp updated_at
     }
-    
-    SERVICE_APPOINTMENTS {
-        bigint id PK
-        bigint user_id FK
-        string customer_name
-        string customer_phone
-        string motor_brand
-        string motor_type
-        string license_plate
-        int current_km
-        date service_date
-        time service_time
-        string service_type
-        text complaint_notes
-        decimal estimated_cost
-        string status
-        string branch
-        string cancelled_by
-        text cancel_reason
-        text admin_notes
-        timestamp created_at
-        timestamp updated_at
-    }
 ```
 
 ## Detail Relasi & Penjelasan
 
 | Entitas Utama | Entitas Terkait | Jenis Relasi | Keterangan / Sebutan Relasi |
 |:---|:---|:---|:---|
-| **Users** | `Transactions` | 1:N *(One to Many)* | Satu *User* dapat **Membeli/Memiliki** banyak *Transactions*. Sebaliknya, sebuah *Transaction* hanya dimiliki oleh satu *User*. |
-| **Users** | `Service_Appointments`| 1:N *(One to Many)* | Satu *User* dapat **Memesan** banyak riwayat *Service/Booking*. |
-| **Users** | `Notifications`| 1:N *(One to Many)* | Satu *User* **Menerima** banyak pemberitahuan (*Notifications*). |
-| **Motors** | `Transactions` | 1:N *(One to Many)* | Tipe/model *Motor* tertentu dapat **Terjual Dalam** banyak transaksi oleh *User* yang berbeda. |
-| **Transactions** | `Credit_Details`| 1:1 *(One to One)* | Sebuah transaksi kredit **Hanya Memiliki** maksimal 1 entitas *Credit Detail*. Transaksi tunai (*cash*) memiliki nol (*zero*). |
-| **Transactions** | `Documents`| 1:N *(One to Many)* | Sebuah transaksi (terutama kredit) **Membutuhkan** banyak verifikasi *Documents* (KTP, KK, Bukti Penghasilan). |
-| **Transactions** | `Transaction_Logs`| 1:N *(One to Many)* | Tiap transaksi akan **Tertulis Dalam** berbagai log pelacakan perubahan status administrasi per harinya. |
-| **Credit_Details** | `Installments` | 1:N *(One to Many)* | Informasi kredit akan **Memiliki** sekian daftar cicilan per bulan. (Satu *Credit Detail* menelurkan 12-36 *Installments*). |
-| **Credit_Details** | `Survey_Schedules`| 1:N *(One to Many)* | *Credit Detail* dapat **Mengagendakan** banyak jadwal pengajuan survei jika misal survei gagal/direschedule ulang. |
+| **Users** | `Transactions` | 1:N *(One to Many)* | Satu *User* dapat melakukan banyak transaksi pembelian. |
+| **Users** | `Service_Appointments`| 1:N *(One to Many)* | Satu *User* dapat melakukan banyak pemesanan layanan bengkel. |
+| **Motors** | `Transactions` | 1:N *(One to Many)* | Satu model *Motor* dapat terjual dalam berbagai transaksi. |
+| **Transactions** | `Credit_Details`| 1:1 *(One to One)* | Transaksi kredit memiliki satu entitas detil pembiayaan. |
+| **Transactions** | `Installments`| 1:N *(One to Many)* | Satu transaksi (Kredit/Cash Bertahap) memiliki riwayat cicilan. |
+| **Credit_Details** | `Documents`| 1:N *(One to Many)* | Detil kredit menyimpan berbagai berkas KYC (KTP, KK, dsb). |
+| **Credit_Details** | `Survey_Schedules`| 1:N *(One to Many)* | Detil kredit dapat memiliki beberapa agenda survei fisik. |
 
 ## Rangkuman Tabel Aktif Aplikasi
 
 | Tabel MySQL | Total Kolom | Fungsi Utama |
 |:---|:---:|:---|
-| `users` | 13 | Data terpadu hak akses, akun, & detil pribadi pelanggan |
-| `motors` | 13 | Katalog unit sepeda motor dari DB (*Brand*, JSON *Colors*, Minimum DP, dll) |
-| `transactions` | 28 | Tabel induk catatan pembelian inti (Mendukung Pembayaran *Cash* / *Kredit*) |
-| `credit_details` | 19 | Lanjutan *Transactions*, melacak pencairan *Leasing* & alur survei khusus cicilan |
-| `installments` | 20 | Catatan individual tenggat waktu pembayaran dan histori penalti denda |
-| `documents` | 14 | Lemari arsip file KYC pendukung proses verifikasi pembelian motor |
-| `transaction_logs` | 12 | Sistem pencatatan jejak perubahan (*Audit Trail*) pergantian rute status pemesanan |
-| `survey_schedules` | 19 | Koordinasi tatap muka jadwal pengecekan kelayakan antara *Surveyor* dan akun *User* |
-| `settings` | 8 | Parameter sistem global dinamis seperti (*Site Name*, Alamat, Jam Operasional) |
-| `notifications` | 8 | Fitur penyiaran sistem berbasis riwayat acara (Disematkan ke ID Pengguna terkait) |
-| `service_appointments` | 20 | Sistem reservasi modul purna jual *Booking* rawat motor, *budgeting* keluhan, & kuota |
+| `users` | 16 | Data identitas utama dan akun pengguna (verified) |
+| `motors` | 14 | Katalog unit motor dengan detil tipe, warna, dan harga (verified) |
+| `transactions` | 28 | Pencatatan transaksi utama (Cash & Kredit) (verified) |
+| `credit_details` | 19 | Detil pembiayaan leasing dan persetujuan survei (verified) |
+| `installments` | 21 | Pengelolaan cicilan, penalti, dan status Midtrans (verified) |
+| `documents` | 15 | Manajemen berkas dokumen persyaratan kredit (verified) |
+| `survey_schedules` | 19 | Penjadwalan dan hasil laporan survei lapangan (verified) |
+| `transaction_logs` | 12 | Audit trail untuk setiap perubahan status transaksi (verified) |
+| `service_appointments` | 20 | Reservasi layanan servis bengkel (Purna Jual) (verified) |
+| `settings` | 8 | Konfigurasi global sistem (verified) |
+| `notifications` | 8 | Notifikasi sistem berbasis akun (verified) |
 
+---
 
-*Catatan: Tabel infrastruktur dasar Laravel (seperti basis migrasi, singgahan cache, antrian job, sesi riwayat, dan basis token sandi/akses personal) ditiadakan dari ERD (*Entity Relationship Diagram*) ini demi fokus penyederhanaan dokumentasi ke logika bisnis produk.*
+*Catatan: Dokumentasi ini dihasilkan dari audit langsung pada database `srbmotor` port 3306. Kolom-kolom yang ada di file migrasi namun tidak ditemukan di live DB (seperti `no_ktp` di tabel users) telah dihilangkan demi akurasi.*
