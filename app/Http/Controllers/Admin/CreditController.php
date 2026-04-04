@@ -175,7 +175,7 @@ class CreditController extends Controller
     public function scheduleSurvey(Request $request, CreditDetail $credit)
     {
         $validated = $request->validate([
-            'survey_scheduled_date' => 'required|date|after:today',
+            'survey_scheduled_date' => 'required|date|after_or_equal:today',
             'survey_scheduled_time' => 'required|date_format:H:i',
             'surveyor_name' => 'required|string|max:255',
             'surveyor_phone' => 'required|string|max:20',

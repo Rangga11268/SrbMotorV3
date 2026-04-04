@@ -115,7 +115,7 @@ class CreditService
             'status' => 'pending',
         ]);
 
-        return $credit->update([
+        $res = $credit->update([
             'status' => 'survey_dijadwalkan',
         ]);
 
@@ -128,6 +128,8 @@ class CreditService
             'notes' => 'Dijadwalkan: ' . $surveyData['survey_scheduled_date'],
             'description' => 'Survey dijadwalkan pada ' . $surveyData['survey_scheduled_date'],
         ]);
+
+        return $res;
     }
 
     /**
