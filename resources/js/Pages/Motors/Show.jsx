@@ -226,55 +226,53 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                             </div>
 
                             {/* FINANCING SIMULATION */}
-                            {motor.tersedia && (
-                                <div className="border border-gray-200 p-8 rounded-none bg-white">
-                                    <div className="flex items-center justify-between mb-8">
-                                        <h3 className="text-sm font-black text-black uppercase tracking-widest">SIMULASI KREDIT</h3>
-                                        <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 uppercase">ESTIMASI</span>
+                            <div className="border border-gray-200 p-8 rounded-none bg-white">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="text-sm font-black text-black uppercase tracking-widest">SIMULASI KREDIT</h3>
+                                    <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 uppercase">ESTIMASI</span>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                                            <span>UANG MUKA (DP)</span>
+                                            {dpAmount < parseFloat(motor.min_dp_amount) && <span className="text-red-500">MIN. DP REQUIRED</span>}
+                                        </div>
+                                        <div className="relative">
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400">Rp</span>
+                                            <input 
+                                                type="text"
+                                                value={formatNumberDisplay(dpAmount)}
+                                                onChange={handleDpChange}
+                                                className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-12 pr-4 font-black text-black focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors"
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className="space-y-6">
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                                                <span>UANG MUKA (DP)</span>
-                                                {dpAmount < parseFloat(motor.min_dp_amount) && <span className="text-red-500">MIN. DP REQUIRED</span>}
-                                            </div>
-                                            <div className="relative">
-                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-gray-400">Rp</span>
-                                                <input 
-                                                    type="text"
-                                                    value={formatNumberDisplay(dpAmount)}
-                                                    onChange={handleDpChange}
-                                                    className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-12 pr-4 font-black text-black focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors"
-                                                />
-                                            </div>
+                                    <div className="space-y-2">
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">TENOR</span>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {[12, 24, 36].map((t) => (
+                                                <button 
+                                                    key={t}
+                                                    onClick={() => setSelectedTenor(t)}
+                                                    className={`py-3 rounded-none text-[11px] font-bold tracking-widest transition-colors ${selectedTenor === t ? 'bg-[#1c69d4] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                                >
+                                                    {t} BLN
+                                                </button>
+                                            ))}
                                         </div>
+                                    </div>
 
-                                        <div className="space-y-2">
-                                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">TENOR</span>
-                                            <div className="grid grid-cols-3 gap-2">
-                                                {[12, 24, 36].map((t) => (
-                                                    <button 
-                                                        key={t}
-                                                        onClick={() => setSelectedTenor(t)}
-                                                        className={`py-3 rounded-none text-[11px] font-bold tracking-widest transition-colors ${selectedTenor === t ? 'bg-[#1c69d4] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                                                    >
-                                                        {t} BLN
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div className="pt-6 border-t border-gray-200">
-                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">ANGSURAN PER BULAN</p>
-                                            <p className="text-3xl font-black text-black tracking-tighter">
-                                                Rp {monthlyInstallment.toLocaleString("id-ID")}
-                                            </p>
-                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2">*BUNGA FLAT 1.5% - OTR BEKASI</p>
-                                        </div>
+                                    <div className="pt-6 border-t border-gray-200">
+                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">ANGSURAN PER BULAN</p>
+                                        <p className="text-3xl font-black text-black tracking-tighter">
+                                            Rp {monthlyInstallment.toLocaleString("id-ID")}
+                                        </p>
+                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2">*BUNGA FLAT 1.5% - OTR BEKASI</p>
                                     </div>
                                 </div>
-                            )}
+                            </div>
 
                         </aside>
                     </div>
