@@ -380,13 +380,18 @@ export default function Index({ users: initialUsers, filters }) {
                                         <CTableDataCell>
                                             <div className="d-flex align-items-center gap-3">
                                                 <CAvatar
-                                                    color={getAvatarColor(
-                                                        user.name,
-                                                    )}
+                                                    src={
+                                                        user.profile_photo_path
+                                                            ? (user.profile_photo_path.startsWith('http') 
+                                                                ? user.profile_photo_path 
+                                                                : `/storage/${user.profile_photo_path}`) 
+                                                            : null
+                                                    }
+                                                    color={user.profile_photo_path ? undefined : getAvatarColor(user.name)}
                                                     textColor="white"
                                                     size="md"
                                                 >
-                                                    {getInitials(user.name)}
+                                                    {!user.profile_photo_path && getInitials(user.name)}
                                                 </CAvatar>
                                                 <div>
                                                     <div className="fw-semibold">

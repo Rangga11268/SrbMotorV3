@@ -11,6 +11,8 @@ import {
     CheckCircle,
     Settings,
     Key,
+    Camera,
+    Trash2,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -209,22 +211,75 @@ function TabButton({ active, onClick, icon: Icon, label, desc }) {
 }
 
 function UpdateProfileForm({ user }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
+        _method: "PUT",
         name: user.name,
         email: user.email,
         phone: user.phone || "",
         nik: user.nik || "",
         alamat: user.alamat || "",
         pekerjaan: user.occupation || "",
+        profile_photo: null,
     });
+    
+    const [preview, setPreview] = useState(
+        user.profile_photo_path 
+            ? (user.profile_photo_path.startsWith('http') ? user.profile_photo_path : `/storage/${user.profile_photo_path}`) 
+            : null
+    );
+
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setData("profile_photo", file);
+            setPreview(URL.createObjectURL(file));
+        }
+    };
 
     const submit = (e) => {
         e.preventDefault();
-        put(route("profile.update"));
+        post(route("profile.update"), {
+            forceFormData: true,
+        });
     };
 
     return (
         <form onSubmit={submit} className="space-y-6">
+            <div className="flex flex-col md:flex-row items-center gap-8 pb-10 border-b border-gray-100">
+                <div className="relative">
+                    <div className="w-32 h-32 bg-gray-50 border-4 border-black p-1 flex items-center justify-center overflow-hidden">
+                        {preview ? (
+                            <img src={preview} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        ) : (
+                            <User size={64} className="text-gray-200" />
+                        )}
+                    </div>
+                    <label className="absolute -bottom-4 -right-4 w-12 h-12 bg-[#1c69d4] hover:bg-black text-white flex items-center justify-center cursor-pointer transition-colors shadow-xl border-4 border-white">
+                        <Camera size={20} />
+                        <input type="file" className="hidden" accept="image/*" onChange={handlePhotoChange} />
+                    </label>
+                </div>
+                
+                <div className="flex-grow space-y-4 text-center md:text-left">
+                    <div>
+                        <h3 className="text-[12px] font-black text-black uppercase tracking-[0.2em]">FOTO PROFIL</h3>
+                        <p className="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Rasio 1:1, Format JPG/PNG/WEBP (Maks 2MB)</p>
+                    </div>
+                    {errors.profile_photo && (
+                        <div className="text-red-600 text-[10px] font-black uppercase tracking-widest">
+                            {errors.profile_photo}
+                        </div>
+                    )}
+                    {preview && !preview.startsWith('blob:') && (
+                         <div className="pt-2">
+                            <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 uppercase tracking-widest border border-emerald-100">
+                                Sudah Terhubung
+                            </span>
+                         </div>
+                    )}
+                </div>
+            </div>
+
             <div className="space-y-2">
                 <label className="block text-[10px] uppercase tracking-widest font-bold text-black">
                     Nama Lengkap
