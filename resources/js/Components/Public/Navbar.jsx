@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import NotificationBell from "../Notification/NotificationBell";
 
 export default function Navbar({ auth }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -271,6 +272,11 @@ export default function Navbar({ auth }) {
 
                     {/* Right Actions: Auth & CTA */}
                     <div className="flex items-center gap-4">
+                        {auth?.user && (
+                            <div className="hidden sm:block">
+                                <NotificationBell />
+                            </div>
+                        )}
                         {auth?.user ? (
                             <div className="relative">
                                 <button

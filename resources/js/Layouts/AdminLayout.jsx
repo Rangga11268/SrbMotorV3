@@ -50,6 +50,7 @@ import {
     cilHistory,
 } from "@coreui/icons";
 import { AnimatePresence, motion } from "framer-motion";
+import NotificationBell from "../Components/Notification/NotificationBell";
 
 function AdminLayoutContent({ children, title }) {
     const { auth, flash } = usePage().props;
@@ -400,6 +401,11 @@ function AdminLayoutContent({ children, title }) {
                         </div>
 
                         <CHeaderNav className="ms-auto d-flex align-items-center gap-2">
+                            {/* Notification Bell */}
+                            <div className="me-3">
+                                <NotificationBell />
+                            </div>
+
                             {/* User Menu */}
                             <CDropdown variant="nav-item" alignment="end">
                                 <CDropdownToggle
