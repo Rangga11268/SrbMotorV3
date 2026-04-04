@@ -35,8 +35,8 @@ export default function Home({
     const { data, setData, post, processing, reset } = useForm({});
 
     const brandLogos = {
-        Honda: "/assets/img/honda/Honda-Beat-Sporty-Deluxe-SmartKey-Matte-Black.png",
-        Yamaha: "/assets/img/yamaha/aerox_155.png",
+        Honda: "/assets/img/honda/Honda-Beat-Sporty-Deluxe-SmartKey-Matte-Black.webp",
+        Yamaha: "/assets/img/yamaha/aerox_155.webp",
     };
 
     const brands = [
@@ -61,7 +61,7 @@ export default function Home({
                 {/* Full Bleed Image (Cinematic lighting) */}
                 <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
                     <img
-                        src="/assets/img/banner.png"
+                        src="/assets/img/banner.webp"
                         alt="SRB Motor Showcase"
                         className="w-full h-full object-cover opacity-60 scale-105"
                     />
@@ -285,7 +285,7 @@ export default function Home({
                                                 src={
                                                     motor.image_path
                                                         ? `/storage/${motor.image_path}`
-                                                        : "/assets/img/no-image.png"
+                                                        : "/assets/img/no-image.webp"
                                                 }
                                                 className={`w-full h-full object-contain filter transition-transform duration-700 ease-out group-hover:scale-105 ${
                                                     !motor.tersedia
@@ -356,7 +356,7 @@ export default function Home({
                 {/* Background Image with Parallax-like effect */}
                 <div className="absolute inset-0 z-0">
                     <img 
-                        src="/assets/img/servis-center.png" 
+                        src="/assets/img/servis-center.webp" 
                         alt="Service Center" 
                         className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000"
                     />

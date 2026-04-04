@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (modalTitle) modalTitle.textContent = motorName || "Detail Motor";
       if (modalMotorImageEl)
-        modalMotorImageEl.src = motorImage || "assets/icon/logo trans.png";
+        modalMotorImageEl.src = motorImage || "assets/icon/logo-trans.webp";
       if (modalMotorNameEl)
         modalMotorNameEl.textContent = motorName || "Nama Tidak Tersedia";
       if (modalMotorPriceSpan)

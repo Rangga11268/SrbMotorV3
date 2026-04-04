@@ -9,7 +9,7 @@ export default function Logo({
         <div className={`flex items-center gap-2.5 ${className}`}>
             <div className="relative flex items-center justify-center">
                 <img
-                    src="/assets/icon/logo trans.png"
+                    src="/assets/icon/logo-trans.webp"
                     alt="SRB Motor Logo"
                     className="w-10 h-10 object-contain drop-shadow-md"
                 />

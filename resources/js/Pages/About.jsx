@@ -73,7 +73,7 @@ export default function About() {
                                 <div className="absolute right-0 top-0 w-full h-full flex items-center justify-center z-10">
                                     <div className="p-12 border border-gray-800 bg-black/40 backdrop-blur-sm grayscale hover:grayscale-0 transition-all duration-700">
                                         <img 
-                                            src={usePage().props.settings?.site_logo || "/assets/icon/logo.png"} 
+                                            src={usePage().props.settings?.site_logo || "/assets/icon/logo.webp"} 
                                             alt="SRB Motor Logo" 
                                             className="h-32 w-auto object-contain opacity-80"
                                         />
@@ -120,7 +120,7 @@ export default function About() {
                             className="lg:col-span-5 h-[600px] bg-black relative"
                         >
                             <img
-                                src="/assets/img/about us.jpeg"
+                                src="/assets/img/about-us.webp"
                                 alt="SRB Motors Team"
                                 className="w-full h-full object-cover grayscale opacity-80"
                             />

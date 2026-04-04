@@ -120,7 +120,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                     <div className="w-full md:w-1/2 flex justify-center relative">
                         <div className="absolute inset-0 bg-[#1c69d4] opacity-20 blur-[100px] rounded-full pointer-events-none"></div>
                         <img
-                            src={motor.image_path ? `/storage/${motor.image_path}` : "/assets/img/no-image.png"}
+                            src={motor.image_path ? `/storage/${motor.image_path}` : "/assets/img/no-image.webp"}
                             alt={motor.name}
                             className={`w-full max-w-[500px] object-contain relative z-10 ${!motor.tersedia ? 'grayscale opacity-70' : ''}`}
                         />
@@ -294,7 +294,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                     <Link key={m.id} href={route("motors.show", m.id)} className="bg-white group overflow-hidden flex flex-col">
                                         <div className="p-8 pb-0 h-48 flex items-center justify-center bg-white relative">
                                             <img
-                                                src={m.image_path ? `/storage/${m.image_path}` : "/assets/img/no-image.png"}
+                                                src={m.image_path ? `/storage/${m.image_path}` : "/assets/img/no-image.webp"}
                                                 className="max-h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
                                             />
                                         </div>

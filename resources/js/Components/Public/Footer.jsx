@@ -142,10 +142,10 @@ export default function Footer() {
                         </h4>
                         <div className="grid grid-cols-2 gap-2">
                             {[
-                                { name: "BAF", logo: "/assets/img/baf.png" },
+                                { name: "BAF", logo: "/assets/img/baf.webp" },
                                 {
                                     name: "ADIRA",
-                                    logo: "/assets/img/adira.png",
+                                    logo: "/assets/img/adira.webp",
                                 },
                             ].map((provider, i) => (
                                 <div
