@@ -375,7 +375,7 @@ export default function Home({
                                 <span className="text-white">PURNA JUAL</span>
                             </h2>
                             <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-70">
-                                Melalui Sinar Surya Motor (SSM), nikmati performa terbaik bagi kendaraan Yamaha & Honda Anda dengan suku cadang asli dan teknisi bersertifikasi.
+                                Melalui Sinar Surya Motor (SRB MOTOR - SSM), nikmati performa terbaik bagi kendaraan Yamaha & Honda Anda dengan suku cadang asli dan teknisi bersertifikasi.
                             </p>
                         </div>
                         
@@ -481,6 +481,65 @@ export default function Home({
                         ))}
                     </div>
                 </div>
+            </section>
+            {/* DIGITAL SHOWROOM CTA (Cinematic High-Impact) */}
+            <section className="relative py-40 bg-black overflow-hidden group">
+                <div className="absolute inset-0 z-0">
+                    <motion.img 
+                        src="/assets/img/digital-showroom.png" 
+                        alt="Digital Showroom" 
+                        className="w-full h-full object-cover opacity-40 scale-110 group-hover:scale-100 transition-transform duration-[2000ms] ease-out select-none pointer-events-none"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_90%)]"></div>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+                    <div className="flex flex-col items-center text-center space-y-12">
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="space-y-4"
+                        >
+                            <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.5em] uppercase block">SRB MOTOR - SINAR SURYA MOTOR DIGITAL</span>
+                            <h2 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+                                SHOWROOM <br/>
+                                <span className="text-outline text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}>DIGITAL</span>
+                            </h2>
+                            <p className="text-gray-400 font-medium text-sm md:text-lg max-w-2xl mx-auto uppercase tracking-widest leading-relaxed opacity-80">
+                                Temukan unit impian Anda dari katalog lengkap Yamaha & Honda. <br className="hidden md:block"/>
+                                Transaksi aman, proses cepat, dan unit siap diantarkan.
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            whileInView={{ scale: 1, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <Link 
+                                href="/motors"
+                                className="inline-flex items-center gap-6 px-16 py-6 bg-white text-black hover:bg-[#1c69d4] hover:text-white transition-all duration-500 font-black text-[12px] tracking-[0.3em] uppercase group/btn relative overflow-hidden shadow-[0_0_50px_rgba(28,105,212,0.3)] hover:shadow-[0_0_80px_rgba(28,105,212,0.6)]"
+                            >
+                                <span className="relative z-10">EKSPLORASI SELURUH MODEL</span>
+                                <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:translate-x-3 transition-transform duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+                            </Link>
+                        </motion.div>
+
+                        {/* Fine Industrial Detail */}
+                        <div className="flex items-center gap-4 pt-12 opacity-30">
+                            <div className="w-12 h-px bg-white/30 text-xs"></div>
+                            <span className="text-[9px] font-black tracking-widest uppercase">SRB MOTOR - EST. 2012</span>
+                            <div className="w-12 h-px bg-white/30"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Visual Accent */}
+                <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
             </section>
 
             {/* TRUST INDICATORS SECTION (Strict black on white) */}
