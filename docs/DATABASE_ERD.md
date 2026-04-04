@@ -169,9 +169,13 @@ erDiagram
         text customer_notes
         boolean customer_confirms
         timestamp customer_confirmed_at
+        text customer_confirmation_notes
         timestamp completed_at
+        text survey_result
+        text findings
         timestamp created_at
         timestamp updated_at
+        timestamp deleted_at
     }
 
     SETTINGS {
@@ -245,7 +249,7 @@ erDiagram
 | `installments` | 20 | Catatan individual tenggat waktu pembayaran dan histori penalti denda |
 | `documents` | 14 | Lemari arsip file KYC pendukung proses verifikasi pembelian motor |
 | `transaction_logs` | 12 | Sistem pencatatan jejak perubahan (*Audit Trail*) pergantian rute status pemesanan |
-| `survey_schedules` | 15 | Koordinasi tatap muka jadwal pengecekan kelayakan antara *Surveyor* dan akun *User* |
+| `survey_schedules` | 19 | Koordinasi tatap muka jadwal pengecekan kelayakan antara *Surveyor* dan akun *User* |
 | `settings` | 8 | Parameter sistem global dinamis seperti (*Site Name*, Alamat, Jam Operasional) |
 | `notifications` | 8 | Fitur penyiaran sistem berbasis riwayat acara (Disematkan ke ID Pengguna terkait) |
 | `service_appointments` | 20 | Sistem reservasi modul purna jual *Booking* rawat motor, *budgeting* keluhan, & kuota |
