@@ -212,70 +212,40 @@ export default function Show({ user, dashboard }) {
                                 </Link>
                             </div>
 
-                            {/* BMW M-PERFORMANCE REDESIGN */}
+                            {/* SIMPLIFIED SPECIAL BENEFITS */}
                             {(user.benefit_notes || auth.user.benefit_notes) && (
                                 <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="relative mb-12 group"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="bg-white border-2 border-blue-600 p-8 mb-8 relative overflow-hidden group transition-all hover:bg-blue-50/30"
                                 >
-                                    {/* Card Body */}
-                                    <div className="relative z-10 bg-gradient-to-br from-slate-900 via-[#0a0f18] to-black border-l-[6px] border-blue-600 p-8 md:p-14 shadow-2xl shadow-blue-900/40 overflow-hidden">
-                                        
-                                        {/* Carbon Fiber Pattern Overlay */}
-                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
-                                        
-                                        {/* Electric Blue Glow */}
-                                        <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/20 rounded-full blur-[100px] pointer-events-none" />
-                                        
-                                        <div className="relative z-20 space-y-10">
-                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                                                <div className="flex items-center gap-6">
-                                                    <div className="w-16 h-16 bg-blue-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(28,105,212,0.5)]">
-                                                        <ShieldCheck className="w-9 h-9" />
-                                                    </div>
-                                                    <div>
-                                                        <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter italic">
-                                                            SPECIAL <span className="text-blue-500">BENEFITS</span>
-                                                        </h2>
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] mt-1">
-                                                            SRB MOTOR PERFORMANCE PRIVILEGE
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-blue-600 text-white font-black text-[10px] uppercase tracking-widest italic skew-x-[-12deg]">
-                                                    M-SERIES STATUS: ACTIVE
-                                                </div>
-                                            </div>
-
-                                            <div className="relative pl-6 border-l-2 border-slate-700">
-                                                <p className="text-2xl md:text-4xl font-bold text-slate-100 leading-tight tracking-tight uppercase italic font-serif">
-                                                    "{user.benefit_notes || auth.user.benefit_notes}"
-                                                </p>
-                                            </div>
-
-                                            <div className="pt-8 border-t border-slate-800 flex flex-wrap items-center gap-8">
-                                                <div className="flex items-center gap-3 text-[11px] font-black text-blue-400 uppercase tracking-widest italic group-hover:text-blue-300 transition-colors">
-                                                    <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-                                                    OFFICIAL RECOGNITION
-                                                </div>
-                                                <div className="text-[11px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                                                    <Hash className="w-4 h-4" /> AUTH_ID: {String(user.id).padStart(6, '0')}
-                                                </div>
-                                            </div>
+                                    <div className="flex flex-col md:flex-row md:items-center gap-6 relative z-10">
+                                        <div className="w-14 h-14 bg-blue-600 flex items-center justify-center text-white shrink-0">
+                                            <Star className="w-8 h-8 fill-white" />
                                         </div>
-
-                                        {/* BMW M-SPORTS STRIPES */}
-                                        <div className="absolute top-0 right-0 flex h-full w-2 opacity-80">
-                                            <div className="h-full w-1/3 bg-[#0066b1]" />
-                                            <div className="h-full w-1/3 bg-[#003366]" />
-                                            <div className="h-full w-1/3 bg-[#ff0000]" />
+                                        <div className="flex-grow space-y-1">
+                                            <div className="flex items-center gap-3">
+                                                <h2 className="text-sm font-black text-blue-600 uppercase tracking-widest">
+                                                    KEUNTUNGAN KHUSUS
+                                                </h2>
+                                                <span className="px-2 py-0.5 bg-blue-100 text-blue-600 text-[8px] font-black uppercase tracking-tighter">
+                                                    AKTIF
+                                                </span>
+                                            </div>
+                                            <p className="text-xl font-bold text-slate-800 leading-snug">
+                                                "{user.benefit_notes || auth.user.benefit_notes}"
+                                            </p>
+                                        </div>
+                                        <div className="hidden md:block">
+                                            <div className="text-right">
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Verifikasi</p>
+                                                <p className="text-[10px] font-black text-slate-900 uppercase">OFFICIAL ADMIN</p>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    {/* Decorative Cyber-lines */}
-                                    <div className="absolute -bottom-1 left-10 right-10 h-[1px] bg-gradient-to-r from-transparent via-blue-600 to-transparent blur-[1px]" />
+                                    
+                                    {/* Subtle decorative background icon */}
+                                    <Star className="absolute -right-6 -bottom-6 w-32 h-32 text-blue-50 opacity-[0.03] pointer-events-none" />
                                 </motion.div>
                             )}
 
