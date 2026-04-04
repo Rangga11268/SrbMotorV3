@@ -57,6 +57,15 @@ class CreditService
         ]);
 
         if ($res) {
+            // Restore motor stock if documents are rejected (Terminal state usually)
+            if ($credit->transaction && $credit->transaction->motor) {
+                $credit->transaction->motor->update(['tersedia' => true]);
+                \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$credit->transaction->motor_id} (Credit Document Rejected)");
+            }
+
+            // Mark transaction as cancelled
+            $credit->transaction->update(['status' => 'cancelled']);
+
             $credit->transaction->logs()->create([
                 'status_from' => $oldStatus,
                 'status_to' => 'ditolak',
@@ -218,6 +227,12 @@ class CreditService
         ]);
 
         if ($res) {
+            // Restore motor stock if credit decision is rejected
+            if ($credit->transaction && $credit->transaction->motor) {
+                $credit->transaction->motor->update(['tersedia' => true]);
+                \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$credit->transaction->motor_id} (Credit Leasing Rejected)");
+            }
+
             $credit->transaction->update(['status' => 'cancelled']);
             $credit->transaction->logs()->create([
                 'status_from' => $oldStatus,
@@ -316,6 +331,12 @@ class CreditService
             $oldStatus = $credit->status;
             $credit->update(['status' => 'dibatalkan']);
             $credit->transaction->update(['status' => 'cancelled']);
+
+            // Restore motor stock if credit is cancelled
+            if ($credit->transaction && $credit->transaction->motor) {
+                $credit->transaction->motor->update(['tersedia' => true]);
+                \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$credit->transaction->motor_id} (Credit Application Cancelled)");
+            }
 
             $credit->transaction->logs()->create([
                 'status_from' => $oldStatus,

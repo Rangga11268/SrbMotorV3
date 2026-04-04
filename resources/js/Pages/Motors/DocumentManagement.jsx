@@ -84,13 +84,18 @@ export default function DocumentManagement({ transaction }) {
         },
     ];
 
-    // Check if all required documents are complete
-    const isComplete =
-        data.documents.KTP.length > 0 &&
-        data.documents.KK.length > 0 &&
-        data.documents.SLIP_GAJI.length > 0;
-
     const existingDocs = transaction.credit_detail?.documents || [];
+    const hasExisting = (type) => existingDocs.some(doc => doc.document_type === type);
+
+    // Check if all required documents are complete (either existing or newly selected)
+    const isComplete =
+        (hasExisting("KTP") || data.documents.KTP.length > 0) &&
+        (hasExisting("KK") || data.documents.KK.length > 0) &&
+        (hasExisting("SLIP_GAJI") || data.documents.SLIP_GAJI.length > 0);
+
+    // Locked if status is already processed (ACC) or if transaction is cancelled/rejected
+    const currentStatus = transaction.credit_detail?.status || "pengajuan_masuk";
+    const isLocked = transaction.status === "cancelled" || !["pengajuan_masuk"].includes(currentStatus);
 
     return (
         <PublicLayout auth={auth} title="Kelola Dokumen">
@@ -196,7 +201,14 @@ export default function DocumentManagement({ transaction }) {
                                     </div>
 
                                     {/* Status Badge */}
-                                    {isComplete ? (
+                                    {isLocked ? (
+                                        <div className="inline-flex items-center gap-3 px-6 py-4 bg-gray-900 border border-black rounded-none w-full justify-center">
+                                            <ShieldCheck size={16} className="text-[#1c69d4]" />
+                                            <span className="text-[10px] font-black text-white uppercase tracking-widest">
+                                                BERKAS TERKUNCI
+                                            </span>
+                                        </div>
+                                    ) : isComplete ? (
                                         <div className="inline-flex items-center gap-3 px-6 py-4 bg-[#1c69d4]/5 border border-[#1c69d4] rounded-none w-full justify-center">
                                             <CheckCircle size={16} className="text-[#1c69d4]" />
                                             <span className="text-[10px] font-black text-[#1c69d4] uppercase tracking-widest">
@@ -228,9 +240,13 @@ export default function DocumentManagement({ transaction }) {
                             <div className="bg-[#1c69d4]/5 border border-[#1c69d4]/20 p-6 mb-12 flex items-start gap-4">
                                 <AlertCircle className="w-6 h-6 text-[#1c69d4] shrink-0" />
                                 <div>
-                                    <p className="text-[10px] font-black text-[#1c69d4] uppercase tracking-widest mb-1">INSTRUKSI PENGUNGGAHAN</p>
+                                    <p className="text-[10px] font-black text-[#1c69d4] uppercase tracking-widest mb-1">
+                                        {isLocked ? "VERIFIKASI BERLANGSUNG" : "INSTRUKSI PENGUNGGAHAN"}
+                                    </p>
                                     <p className="text-sm text-gray-700 font-medium">
-                                        Anda dapat mengganti dokumen lama dengan versi yang lebih jelas. Pastikan foto tidak terpotong dan tulisan terbaca dengan baik untuk mempercepat proses verifikasi.
+                                        {isLocked 
+                                            ? "Dokumen Anda sedang dalam proses verifikasi atau telah disetujui. Perubahan dokumen tidak diperbolehkan kecuali diminta oleh admin."
+                                            : "Anda dapat mengganti dokumen lama dengan versi yang lebih jelas. Pastikan foto tidak terpotong dan tulisan terbaca dengan baik untuk mempercepat proses verifikasi."}
                                     </p>
                                 </div>
                             </div>
@@ -308,6 +324,8 @@ export default function DocumentManagement({ transaction }) {
                                         error={errors[`documents.${docType.key}`]}
                                         files={data.documents[docType.key]}
                                         required={docType.required}
+                                        isLocked={isLocked}
+                                        hasExisting={hasExisting(docType.key)}
                                     />
                                 ))}
 
@@ -336,11 +354,11 @@ export default function DocumentManagement({ transaction }) {
                                     </Link>
                                     <button
                                         type="submit"
-                                        disabled={processing}
+                                        disabled={processing || isLocked}
                                         className="flex-1 flex items-center justify-center gap-4 px-10 py-5 bg-black text-white text-[10px] font-black tracking-[0.2em] uppercase hover:bg-[#1c69d4] transition-all disabled:opacity-50 disabled:cursor-not-allowed group shadow-xl"
                                     >
                                         <Upload size={16} className="group-hover:-translate-y-1 transition-transform" /> 
-                                        KONFIRMASI DAN PERBARUI BERKAS
+                                        {isLocked ? "BERKAS TELAH TERKUNCI" : "KONFIRMASI DAN PERBARUI BERKAS"}
                                     </button>
                                 </div>
                             </form>
@@ -362,6 +380,8 @@ function FileUploadField({
     error,
     files,
     required,
+    isLocked,
+    hasExisting,
 }) {
     const isImage = (file) => file.type.startsWith("image/");
 
@@ -391,11 +411,12 @@ function FileUploadField({
                     <input
                         type="file"
                         id={id}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20 disabled:cursor-not-allowed"
                         accept={accept}
                         multiple
                         onChange={onChange}
-                        required={files.length === 0 && required}
+                        required={files.length === 0 && required && !hasExisting}
+                        disabled={isLocked}
                     />
                     <div
                         className={`w-full p-12 border-2 border-dashed transition-all flex flex-col items-center justify-center text-center ${

@@ -312,12 +312,6 @@ class CreditController extends Controller
     {
         $this->creditService->cancelCredit($credit);
 
-        // Stock Unlocking: If credit is cancelled
-        if ($credit->transaction && $credit->transaction->motor) {
-            $credit->transaction->motor->update(['tersedia' => true]);
-            \Illuminate\Support\Facades\Log::info("Stock Unlocked: Motor ID {$credit->transaction->motor_id} (Manual Credit Cancellation)");
-        }
-
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Kredit berhasil dibatalkan');
     }
