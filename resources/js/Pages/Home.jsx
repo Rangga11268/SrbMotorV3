@@ -352,7 +352,7 @@ export default function Home({
             </section>
             
             {/* SERVICE & MAINTENANCE SECTION (Cinematic Industrial) */}
-            <section className="relative py-32 bg-black overflow-hidden group">
+            <section className="relative py-20 md:py-32 bg-black overflow-hidden group">
                 {/* Background Image with Parallax-like effect */}
                 <div className="absolute inset-0 z-0">
                     <img 
@@ -364,31 +364,31 @@ export default function Home({
                 </div>
 
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center lg:text-left">
-                    <div className="flex flex-col lg:flex-row justify-between items-end gap-12 mb-20 border-b border-white/10 pb-16">
-                        <div className="max-w-3xl space-y-6">
+                    <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end gap-12 mb-20 border-b border-white/10 pb-16">
+                        <div className="max-w-4xl space-y-4 md:space-y-6 w-full">
                             <div className="flex items-center gap-4 justify-center lg:justify-start">
                                 <div className="w-8 h-px bg-[#1c69d4]"></div>
-                                <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">PERAWATAN & SUKU CADANG</span>
+                                <span className="text-[#1c69d4] font-black text-[9px] md:text-[10px] tracking-[0.4em] uppercase">PERAWATAN & SUKU CADANG</span>
                             </div>
-                            <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
+                            <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-[0.95] lg:leading-[0.9]">
                                 LAYANAN <br/>
                                 <span className="text-white">PURNA JUAL</span>
                             </h2>
-                            <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-70">
+                            <p className="text-gray-400 font-medium text-[10px] md:text-xs lg:text-base max-w-xl lg:max-w-none mx-auto lg:mx-0 uppercase tracking-widest leading-relaxed opacity-70 mt-4 lg:mt-0">
                                 Melalui Sinar Surya Motor (SRB MOTOR - SSM), nikmati performa terbaik bagi kendaraan Yamaha & Honda Anda dengan suku cadang asli dan teknisi bersertifikasi.
                             </p>
                         </div>
                         
-                        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                        <div className="flex flex-col sm:flex-row lg:flex-row gap-4 w-full lg:w-auto">
                             <Link 
                                 href="/services/booking"
-                                className="px-10 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
+                                className="px-10 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3 w-full"
                             >
                                 <Clock className="w-4 h-4" /> BOOKING SERVIS
                             </Link>
                             <Link 
                                 href="/motors"
-                                className="px-10 py-5 bg-transparent border border-white hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3"
+                                className="px-10 py-5 bg-transparent border border-white hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
                             >
                                 <Search className="w-4 h-4" /> SUKU CADANG
                             </Link>
@@ -413,10 +413,10 @@ export default function Home({
                                 desc: "Layanan penjemputan unit di lokasi Anda untuk area cakupan tertentu."
                             }
                         ].map((item, idx) => (
-                            <div key={idx} className="p-12 hover:bg-white/5 transition-colors group/card">
+                            <div key={idx} className="p-8 md:p-12 hover:bg-white/5 transition-colors group/card">
                                 {item.icon}
-                                <h4 className="text-lg font-black text-white uppercase tracking-widest mt-8 mb-4">{item.title}</h4>
-                                <p className="text-gray-500 font-medium text-xs uppercase tracking-widest leading-relaxed">{item.desc}</p>
+                                <h4 className="text-base md:text-lg font-black text-white uppercase tracking-widest mt-6 md:mt-8 mb-3 md:mb-4">{item.title}</h4>
+                                <p className="text-gray-500 font-medium text-[10px] md:text-xs uppercase tracking-widest leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>

@@ -113,7 +113,7 @@ export default function Navbar({ auth }) {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
             {/* Top Row: Logo, Search, Auth */}
-            <div className="max-w-full mx-auto px-6 lg:px-12 py-4">
+            <div className="max-w-full mx-auto px-4 md:px-6 lg:px-12 py-4">
                 <div className="flex items-center justify-between gap-4 md:gap-12">
                     {/* Logo */}
                     <Link
@@ -121,13 +121,17 @@ export default function Navbar({ auth }) {
                         className="flex flex-row items-center gap-4 flex-shrink-0 group"
                     >
                         <Logo />
-                        <div className="hidden sm:block h-6 w-px bg-gray-300"></div>
-                        <div className="hidden sm:flex flex-col items-start leading-tight">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-[#262626]">
-                                AUTHORIZED DEALER
+                    </Link>
+                    
+                    {/* Authorized Dealer Badge (Hidden on mobile/tablet) */}
+                    <div className="hidden xl:flex items-center gap-6">
+                        <div className="w-px h-8 bg-gray-200"></div>
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-extrabold uppercase tracking-[0.3em] text-[#262626]">
+                                Authorized Dealer
                             </span>
                         </div>
-                    </Link>
+                    </div>
 
                     {/* Desktop Search & Location (BMW Style - Sharp Block) */}
                     <div className="hidden md:flex flex-1 items-center max-w-3xl relative gap-0 border border-gray-300">
@@ -162,7 +166,7 @@ export default function Navbar({ auth }) {
                                             initial={{ opacity: 0, y: -5 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -5 }}
-                                            className="absolute top-full left-0 right-0 mt-0 bg-white border border-gray-300 border-t-0 shadow-lg z-50 rounded-none overflow-y-auto max-h-[400px]"
+                                            className="absolute top-full left-0 md:w-[480px] mt-0 bg-white border border-gray-300 border-t-0 shadow-lg z-50 rounded-none overflow-y-auto max-h-[400px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
                                         >
                                             <div
                                                 className="fixed inset-0 z-[-1]"
@@ -198,9 +202,9 @@ export default function Navbar({ auth }) {
                                                                             "",
                                                                         );
                                                                     }}
-                                                                    className="flex items-center gap-6 p-4 border-b border-gray-100 hover:bg-[#f9f9f9] transition-colors group"
+                                                                    className="flex items-center gap-6 p-5 border-b border-gray-100 hover:bg-[#f9f9f9] transition-colors group"
                                                                 >
-                                                                    <div className="w-16 h-12 flex items-center justify-center shrink-0">
+                                                                    <div className="w-20 h-16 flex items-center justify-center shrink-0 bg-gray-50">
                                                                         <img
                                                                             src={`/storage/${motor.image_path}`}
                                                                             alt={
@@ -213,20 +217,20 @@ export default function Navbar({ auth }) {
                                                                             }`}
                                                                         />
                                                                     </div>
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className="flex items-start justify-between gap-2">
-                                                                            <h4 className="text-sm font-bold text-[#262626] uppercase tracking-widest">
+                                                                    <div className="flex-1 min-w-0 pr-4">
+                                                                        <div className="flex flex-col gap-1">
+                                                                            <h4 className="text-[11px] font-bold text-[#262626] uppercase tracking-[0.15em] leading-tight group-hover:text-[#1c69d4] transition-colors">
                                                                                 {
                                                                                     motor.name
                                                                                 }
                                                                             </h4>
                                                                             {!motor.tersedia && (
-                                                                                <span className="text-[9px] font-bold bg-[#111111] text-white px-2 py-0.5 uppercase tracking-widest rounded-none">
+                                                                                <span className="inline-block w-fit text-[8px] font-bold bg-[#111111] text-white px-2 py-0.5 uppercase tracking-widest rounded-none">
                                                                                     TERJUAL
                                                                                 </span>
                                                                             )}
                                                                         </div>
-                                                                        <p className="text-xs font-light text-[#1c69d4] mt-1">
+                                                                        <p className="text-[10px] font-bold text-[#1c69d4] mt-2 tracking-widest">
                                                                             IDR{" "}
                                                                             {parseInt(
                                                                                 motor.price,
@@ -427,7 +431,7 @@ export default function Navbar({ auth }) {
                     >
                         <div className="p-6 space-y-2">
                             {/* Mobile Search */}
-                            <div className="relative mb-8">
+                            <div className="relative mb-2">
                                 <input
                                     type="text"
                                     value={searchQuery}
@@ -439,6 +443,69 @@ export default function Navbar({ auth }) {
                                 />
                                 <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                             </div>
+
+                            {/* Mobile Search Results */}
+                            <AnimatePresence>
+                                {(searchQuery || isSearching) && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -5 }}
+                                        className="bg-[#262626] border border-gray-800 mb-8 max-h-[300px] overflow-y-auto"
+                                    >
+                                        {isSearching ? (
+                                            <div className="p-6 text-center text-gray-400">
+                                                <div className="w-5 h-5 border-2 border-[#1c69d4] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                                                <p className="text-[9px] font-bold uppercase tracking-widest">Memuat...</p>
+                                            </div>
+                                        ) : results.length > 0 ? (
+                                            <div className="flex flex-col">
+                                                {results.map((motor) => (
+                                                    <Link
+                                                        key={motor.id}
+                                                        href={route("motors.show", motor.id)}
+                                                        onClick={() => {
+                                                            setMobileMenuOpen(false);
+                                                            setSearchQuery("");
+                                                        }}
+                                                        className="flex items-center gap-4 p-4 border-b border-gray-800 hover:bg-[#1c69d4] transition-colors group"
+                                                    >
+                                                        <div className="w-14 h-10 flex items-center justify-center shrink-0 bg-[#333333]">
+                                                            <img
+                                                                src={`/storage/${motor.image_path}`}
+                                                                alt={motor.name}
+                                                                className="h-full object-contain"
+                                                            />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0 pr-2">
+                                                            <h4 className="text-[10px] font-bold text-white uppercase tracking-widest leading-tight truncate">
+                                                                {motor.name}
+                                                            </h4>
+                                                            <p className="text-[9px] font-bold text-[#1c69d4] mt-1 group-hover:text-white transition-colors">
+                                                                IDR {parseInt(motor.price).toLocaleString("id-ID")}
+                                                            </p>
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                                <Link
+                                                    href={route("motors.index", { search: searchQuery })}
+                                                    onClick={() => {
+                                                        setMobileMenuOpen(false);
+                                                        setSearchQuery("");
+                                                    }}
+                                                    className="block w-full text-center py-3 bg-[#111111] text-[9px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors"
+                                                >
+                                                    Lihat Semua
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            <div className="p-6 text-center text-gray-500">
+                                                <p className="text-[9px] font-bold uppercase tracking-widest">Tidak Ditemukan</p>
+                                            </div>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             {categories.map((cat) => (
                                 <Link
