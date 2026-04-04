@@ -64,9 +64,26 @@ export default function Show({ user, dashboard }) {
                                 animate={{ opacity: 1, scale: 1 }}
                                 className="relative"
                             >
-                                <div className="w-40 h-40 rounded-none bg-white p-2 border-4 border-black overflow-hidden">
-                                    <div className="w-full h-full rounded-none bg-gray-100 border border-gray-300 flex items-center justify-center text-5xl font-black text-black uppercase">
-                                        {user.name.charAt(0)}
+                                <div className="w-40 h-40 rounded-none bg-white p-2 border-4 border-black overflow-hidden relative">
+                                    <div className="w-full h-full rounded-none bg-gray-100 border border-gray-300 flex items-center justify-center text-5xl font-black text-black uppercase overflow-hidden">
+                                        {user.profile_photo_path ? (
+                                            <img
+                                                src={
+                                                    user.profile_photo_path.startsWith("http")
+                                                        ? user.profile_photo_path
+                                                        : `/storage/${user.profile_photo_path}`
+                                                }
+                                                alt={user.name}
+                                                referrerPolicy="no-referrer"
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.parentElement.innerHTML = user.name.charAt(0);
+                                                }}
+                                            />
+                                        ) : (
+                                            user.name.charAt(0)
+                                        )}
                                     </div>
                                 </div>
                                 <div className="absolute -bottom-4 -right-4 bg-[#1c69d4] text-white font-bold text-[10px] px-6 py-2 rounded-none border-2 border-black uppercase tracking-widest">

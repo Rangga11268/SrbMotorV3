@@ -289,8 +289,25 @@ export default function Navbar({ auth }) {
                                     }
                                     className="flex items-center gap-3 py-2 px-4 hover:bg-[#f9f9f9] transition-colors border border-transparent rounded-none"
                                 >
-                                    <div className="w-8 h-8 rounded-none bg-[#262626] flex items-center justify-center text-white font-bold text-xs uppercase">
-                                        {auth.user.name.charAt(0)}
+                                    <div className="w-8 h-8 rounded-none bg-[#262626] flex items-center justify-center text-white font-bold text-xs uppercase overflow-hidden">
+                                        {auth.user.profile_photo_path ? (
+                                            <img
+                                                src={
+                                                    auth.user.profile_photo_path.startsWith("http")
+                                                        ? auth.user.profile_photo_path
+                                                        : `/storage/${auth.user.profile_photo_path}`
+                                                }
+                                                alt={auth.user.name}
+                                                referrerPolicy="no-referrer"
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.parentElement.innerHTML = auth.user.name.charAt(0);
+                                                }}
+                                            />
+                                        ) : (
+                                            auth.user.name.charAt(0)
+                                        )}
                                     </div>
                                     <span className="hidden sm:block text-[10px] uppercase tracking-[0.2em] font-bold text-[#262626]">
                                         AKUN SAYA
