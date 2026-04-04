@@ -40,6 +40,8 @@ import {
     cilReload,
     cilPeople,
     cilStar,
+    cilCheckCircle,
+    cilXCircle,
 } from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
@@ -162,6 +164,25 @@ export default function Index({ users: initialUsers, filters }) {
                     toast.error("Gagal mengubah role");
                 },
             },
+        );
+    };
+
+    const handleToggleVerify = (user) => {
+        setProcessing(true);
+        router.post(
+            route("admin.users.toggle-verify", user.id),
+            {},
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setProcessing(false);
+                    toast.success(`Status verifikasi ${user.name} berhasil diubah`);
+                },
+                onError: () => {
+                    setProcessing(false);
+                    toast.error("Gagal mengubah status verifikasi");
+                },
+            }
         );
     };
 
@@ -293,6 +314,7 @@ export default function Index({ users: initialUsers, filters }) {
                                 <CTableHeaderCell>Pengguna</CTableHeaderCell>
                                 <CTableHeaderCell>Email</CTableHeaderCell>
                                 <CTableHeaderCell>Role</CTableHeaderCell>
+                                <CTableHeaderCell>Status</CTableHeaderCell>
                                 <CTableHeaderCell>Terdaftar</CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
@@ -426,6 +448,13 @@ export default function Index({ users: initialUsers, filters }) {
                                                 </CBadge>
                                             )}
                                         </CTableDataCell>
+                                        <CTableDataCell>
+                                            {user.email_verified_at ? (
+                                                <CBadge color="success" shape="rounded-pill">Terverifikasi</CBadge>
+                                            ) : (
+                                                <CBadge color="danger" shape="rounded-pill">Belum Verifikasi</CBadge>
+                                            )}
+                                        </CTableDataCell>
                                         <CTableDataCell className="small text-body-secondary">
                                             {new Date(
                                                 user.created_at,
@@ -474,6 +503,18 @@ export default function Index({ users: initialUsers, filters }) {
                                                         />
                                                     </CButton>
                                                 )}
+                                                <CButton
+                                                    color={user.email_verified_at ? "danger" : "success"}
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleToggleVerify(user)}
+                                                    title={user.email_verified_at ? "Batalkan Verifikasi" : "Verifikasi Manual"}
+                                                >
+                                                    <CIcon
+                                                        icon={user.email_verified_at ? cilXCircle : cilCheckCircle}
+                                                        size="sm"
+                                                    />
+                                                </CButton>
                                                 <CButton
                                                     color="info"
                                                     variant="outline"

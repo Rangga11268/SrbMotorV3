@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use App\Services\ImageService;
 
 class MotorController extends Controller
 {
@@ -91,7 +92,7 @@ class MotorController extends Controller
             'colors.*' => 'string|max:100',
         ]);
 
-        $imagePath = $request->file('image')->store('motors', 'public');
+        $imagePath = ImageService::uploadAndConvert($request->file('image'), 'motors');
 
         $motor = Motor::create([
             'name' => $request->name,
@@ -164,7 +165,7 @@ class MotorController extends Controller
             if ($motor->image_path) {
                 Storage::disk('public')->delete($motor->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('motors', 'public');
+            $data['image_path'] = ImageService::uploadAndConvert($request->file('image'), 'motors');
         }
 
         $motor->update($data);

@@ -64,6 +64,19 @@ class UserController extends Controller
     }
 
 
+    public function toggleVerify(User $user)
+    {
+        if ($user->email_verified_at) {
+            $user->email_verified_at = null;
+        } else {
+            $user->email_verified_at = now();
+        }
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'Status verifikasi berhasil diubah.');
+    }
+
+
     public function destroy(User $user)
     {
 

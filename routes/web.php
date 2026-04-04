@@ -164,6 +164,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
 
     Route::resource('motors', MotorController::class);
+    Route::post('/users/{user}/toggle-verify', [UserController::class, 'toggleVerify'])->name('users.toggle-verify');
     Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
 
     // Cash Transaction Management Routes (CASH ONLY - tunai)

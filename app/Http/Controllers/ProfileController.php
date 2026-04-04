@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ImageService;
 use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
@@ -93,7 +94,7 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete($user->profile_photo_path);
             }
             
-            $path = $request->file('profile_photo')->store('profile-photos', 'public');
+            $path = ImageService::uploadAndConvert($request->file('profile_photo'), 'profile-photos');
             $data['profile_photo_path'] = $path;
         }
 
