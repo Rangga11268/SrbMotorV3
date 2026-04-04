@@ -251,6 +251,25 @@ export default function TransactionDetail({ transaction }) {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Main Content */}
                     <div className="lg:col-span-8 space-y-12">
+                        {/* Rejection Notice */}
+                        {(transaction.creditDetail?.status === 'ditolak' || transaction.creditDetail?.status === 'data_tidak_valid') && (transaction.creditDetail?.verification_notes || transaction.creditDetail?.rejection_reason) && (
+                            <div className="bg-red-500 p-8 rounded-none border border-red-600 space-y-4">
+                                <div className="flex items-center gap-4">
+                                    <AlertCircle className="w-8 h-8 text-white" />
+                                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">PERHATIAN: PENGAJUAN DITOLAK</h3>
+                                </div>
+                                <div className="bg-black/10 p-6 border-l-4 border-white/30">
+                                    <p className="text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">ALASAN PENOLAKAN:</p>
+                                    <p className="text-white font-bold text-lg leading-tight">
+                                        {transaction.creditDetail.verification_notes || transaction.creditDetail.rejection_reason}
+                                    </p>
+                                </div>
+                                <p className="text-white/80 text-sm italic font-medium">
+                                    Silakan hubungi customer service kami atau perbaiki data pengajuan Anda jika tersedia.
+                                </p>
+                            </div>
+                        )}
+
                         {/* Header Card */}
                         <div className="bg-black rounded-none border border-black overflow-hidden relative">
                             {/* Decorative Blur */}

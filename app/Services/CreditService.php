@@ -138,6 +138,18 @@ class CreditService
      */
     public function completeSurvey(CreditDetail $credit, string $surveyNotes = ''): bool
     {
+        // Validation: Verify if survey schedule exists and if today is the scheduled day or after
+        $latestSchedule = $credit->surveySchedules()->latest()->first();
+        if ($latestSchedule && $latestSchedule->status === 'pending') {
+            $scheduledDateTime = \Carbon\Carbon::parse($latestSchedule->scheduled_date . ' ' . $latestSchedule->scheduled_time);
+            if (now()->lt($scheduledDateTime)) {
+                throw new \Exception("Survey tidak dapat diselesaikan sebelum waktu yang dijadwalkan (" . $scheduledDateTime->format('d M Y H:i') . ").");
+            }
+            
+            // Mark schedule as completed if it was pending
+            $latestSchedule->update(['status' => 'completed', 'notes' => $surveyNotes, 'completed_at' => now()]);
+        }
+
         $oldStatus = $credit->status;
         $res = $credit->update([
             'status' => 'menunggu_keputusan_leasing',

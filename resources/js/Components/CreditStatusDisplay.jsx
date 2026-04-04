@@ -116,7 +116,23 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
         return colorMap[color] || colorMap.gray;
     };
 
-    const statusInfo = getStatusInfo(credit.credit_status);
+    const currentStatus = credit.status || credit.credit_status;
+    const statusInfo = getStatusInfo(currentStatus);
+
+    // Dynamic data extraction from surveySchedules if available
+    const latestSurvey = credit.surveySchedules && credit.surveySchedules.length > 0 
+        ? [...credit.surveySchedules].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0]
+        : null;
+
+    const surveyDate = latestSurvey?.scheduled_date || credit.survey_scheduled_date;
+    const surveyTime = latestSurvey?.scheduled_time || credit.survey_scheduled_time;
+    const surveyorName = latestSurvey?.surveyor_name || credit.surveyor_name;
+    const surveyorPhone = latestSurvey?.surveyor_phone || credit.surveyor_phone;
+    const surveyNotes = latestSurvey?.notes || credit.survey_notes;
+
+    const dpAmount = credit.dp_amount || credit.down_payment || 0;
+    const motorPrice = credit.transaction?.motor_price || credit.transaction?.total_price || 0;
+    const creditAmount = motorPrice - dpAmount;
 
     return (
         <div className="space-y-6">
@@ -149,7 +165,7 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                             style: "currency",
                             currency: "IDR",
                             minimumFractionDigits: 0,
-                        }).format(credit.transaction?.credit_amount || 0)}
+                        }).format(creditAmount > 0 ? creditAmount : 0)}
                     </p>
                 </div>
 
@@ -161,7 +177,7 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                             style: "currency",
                             currency: "IDR",
                             minimumFractionDigits: 0,
-                        }).format(credit.down_payment || 0)}
+                        }).format(dpAmount)}
                     </p>
                 </div>
 
@@ -211,7 +227,7 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                     </div>
                 )}
             </div>
-            {showSurvey && credit.survey_scheduled_date && (
+            {showSurvey && surveyDate && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                         <Calendar className="w-5 h-5" /> Jadwal Survey
@@ -220,7 +236,7 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                         <p>
                             <strong>Tanggal:</strong>{" "}
                             {new Date(
-                                credit.survey_scheduled_date,
+                                surveyDate,
                             ).toLocaleDateString("id-ID", {
                                 month: "long",
                                 day: "numeric",
@@ -229,17 +245,17 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                         </p>
                         <p>
                             <strong>Waktu:</strong>{" "}
-                            {credit.survey_scheduled_time}
+                            {surveyTime}
                         </p>
-                        {showSurvey && credit.surveyor_name && (
+                        {showSurvey && surveyorName && (
                             <>
                                 <p>
                                     <strong>Nama Surveyor:</strong>{" "}
-                                    {credit.surveyor_name}
+                                    {surveyorName}
                                 </p>
                                 <p>
                                     <strong>No. Telepon:</strong>{" "}
-                                    {credit.surveyor_phone}
+                                    {surveyorPhone}
                                 </p>
                             </>
                         )}
@@ -247,21 +263,21 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                 </div>
             )}
 
-            {showSurvey && credit.survey_notes && (
+            {showSurvey && surveyNotes && (
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                     <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
                         <FileText className="w-5 h-5" /> Catatan Survey
                     </h4>
-                    <p className="text-gray-700">{credit.survey_notes}</p>
+                    <p className="text-gray-700">{surveyNotes}</p>
                 </div>
             )}
 
-            {credit.rejection_reason && (
+            {(credit.rejection_reason || credit.verification_notes) && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                     <h4 className="font-bold text-red-900 mb-3 flex items-center gap-2">
                         <AlertCircle className="w-5 h-5" /> Alasan Penolakan
                     </h4>
-                    <p className="text-red-700">{credit.rejection_reason}</p>
+                    <p className="text-red-700">{credit.rejection_reason || credit.verification_notes}</p>
                 </div>
             )}
 

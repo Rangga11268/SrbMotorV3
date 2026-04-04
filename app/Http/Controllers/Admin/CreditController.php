@@ -210,7 +210,11 @@ class CreditController extends Controller
             'survey_notes' => 'nullable|string|max:2000',
         ]);
 
-        $this->creditService->completeSurvey($credit, $validated['survey_notes'] ?? '');
+        try {
+            $this->creditService->completeSurvey($credit, $validated['survey_notes'] ?? '');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.credits.show', $credit)
             ->with('success', 'Survey completed, awaiting leasing decision');

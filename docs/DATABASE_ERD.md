@@ -254,4 +254,5 @@ erDiagram
 | `notifications` | 8 | Fitur penyiaran sistem berbasis riwayat acara (Disematkan ke ID Pengguna terkait) |
 | `service_appointments` | 20 | Sistem reservasi modul purna jual *Booking* rawat motor, *budgeting* keluhan, & kuota |
 
+
 *Catatan: Tabel infrastruktur dasar Laravel (seperti basis migrasi, singgahan cache, antrian job, sesi riwayat, dan basis token sandi/akses personal) ditiadakan dari ERD (*Entity Relationship Diagram*) ini demi fokus penyederhanaan dokumentasi ke logika bisnis produk.*
