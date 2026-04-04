@@ -24,6 +24,7 @@ import {
     ArrowRight,
     MapPin,
     Briefcase,
+    Star,
 } from "lucide-react";
 
 export default function Show({ user, dashboard }) {
@@ -211,34 +212,70 @@ export default function Show({ user, dashboard }) {
                                 </Link>
                             </div>
 
-                            {/* BENEFITS SECTION */}
-                            {user.benefit_notes && (
+                            {/* BMW M-PERFORMANCE REDESIGN */}
+                            {(user.benefit_notes || auth.user.benefit_notes) && (
                                 <motion.div
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    className="bg-amber-50 border-2 border-amber-200 p-8 md:p-12 relative overflow-hidden group mb-8 shadow-sm"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="relative mb-12 group"
                                 >
-                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                                        <Star className="w-24 h-24 text-amber-500" />
-                                    </div>
-                                    <div className="relative z-10 space-y-6">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-amber-500 flex items-center justify-center text-white">
-                                                <Star className="w-5 h-5 fill-white" />
+                                    {/* Card Body */}
+                                    <div className="relative z-10 bg-gradient-to-br from-slate-900 via-[#0a0f18] to-black border-l-[6px] border-blue-600 p-8 md:p-14 shadow-2xl shadow-blue-900/40 overflow-hidden">
+                                        
+                                        {/* Carbon Fiber Pattern Overlay */}
+                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                                        
+                                        {/* Electric Blue Glow */}
+                                        <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/20 rounded-full blur-[100px] pointer-events-none" />
+                                        
+                                        <div className="relative z-20 space-y-10">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                                                <div className="flex items-center gap-6">
+                                                    <div className="w-16 h-16 bg-blue-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(28,105,212,0.5)]">
+                                                        <ShieldCheck className="w-9 h-9" />
+                                                    </div>
+                                                    <div>
+                                                        <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter italic">
+                                                            SPECIAL <span className="text-blue-500">BENEFITS</span>
+                                                        </h2>
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em] mt-1">
+                                                            SRB MOTOR PERFORMANCE PRIVILEGE
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-blue-600 text-white font-black text-[10px] uppercase tracking-widest italic skew-x-[-12deg]">
+                                                    M-SERIES STATUS: ACTIVE
+                                                </div>
                                             </div>
-                                            <h2 className="text-2xl font-black text-amber-900 uppercase tracking-widest">
-                                                KEUNTUNGAN & MANFAAT
-                                            </h2>
+
+                                            <div className="relative pl-6 border-l-2 border-slate-700">
+                                                <p className="text-2xl md:text-4xl font-bold text-slate-100 leading-tight tracking-tight uppercase italic font-serif">
+                                                    "{user.benefit_notes || auth.user.benefit_notes}"
+                                                </p>
+                                            </div>
+
+                                            <div className="pt-8 border-t border-slate-800 flex flex-wrap items-center gap-8">
+                                                <div className="flex items-center gap-3 text-[11px] font-black text-blue-400 uppercase tracking-widest italic group-hover:text-blue-300 transition-colors">
+                                                    <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                                                    OFFICIAL RECOGNITION
+                                                </div>
+                                                <div className="text-[11px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                                                    <Hash className="w-4 h-4" /> AUTH_ID: {String(user.id).padStart(6, '0')}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="prose prose-amber max-w-none">
-                                            <p className="text-xl font-bold text-amber-800 leading-relaxed italic">
-                                                "{user.benefit_notes}"
-                                            </p>
-                                        </div>
-                                        <div className="pt-4 flex items-center gap-2 text-[10px] font-black text-amber-600 uppercase tracking-[0.2em]">
-                                            <CheckCircle className="w-4 h-4" /> EKSKLUSIF UNTUK ANDA
+
+                                        {/* BMW M-SPORTS STRIPES */}
+                                        <div className="absolute top-0 right-0 flex h-full w-2 opacity-80">
+                                            <div className="h-full w-1/3 bg-[#0066b1]" />
+                                            <div className="h-full w-1/3 bg-[#003366]" />
+                                            <div className="h-full w-1/3 bg-[#ff0000]" />
                                         </div>
                                     </div>
+
+                                    {/* Decorative Cyber-lines */}
+                                    <div className="absolute -bottom-1 left-10 right-10 h-[1px] bg-gradient-to-r from-transparent via-blue-600 to-transparent blur-[1px]" />
                                 </motion.div>
                             )}
 

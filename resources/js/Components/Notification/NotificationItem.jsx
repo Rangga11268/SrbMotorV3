@@ -1,7 +1,7 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { Bell, CreditCard, CheckCircle, AlertCircle, Info, Bike, Calendar } from 'lucide-react';
+import { Bell, CreditCard, CheckCircle, AlertCircle, Info, Bike, Calendar, Star } from 'lucide-react';
 
 export default function NotificationItem({ notification, onClick }) {
     const isUnread = !notification.read_at;
@@ -22,6 +22,13 @@ export default function NotificationItem({ notification, onClick }) {
         if (type.includes('SurveyScheduled')) {
             return <Calendar className="w-5 h-5 text-purple-500" />;
         }
+        if (type.includes('BenefitNotesUpdated')) {
+            return (
+                <div className="p-2 bg-amber-50 rounded-lg border border-amber-200">
+                    <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                </div>
+            );
+        }
         return <Bell className="w-5 h-5 text-gray-400" />;
     };
 
@@ -35,9 +42,16 @@ export default function NotificationItem({ notification, onClick }) {
             </div>
             <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-start gap-2">
-                    <p className={`text-xs leading-relaxed ${isUnread ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
-                        {data.message || 'Pemberitahuan Baru'}
-                    </p>
+                    <div className="flex-1">
+                        {data.title && (
+                            <p className={`text-[10px] font-black uppercase tracking-widest mb-0.5 ${isUnread ? 'text-[#1c69d4]' : 'text-gray-400'}`}>
+                                {data.title}
+                            </p>
+                        )}
+                        <p className={`text-xs leading-relaxed ${isUnread ? 'font-bold text-gray-900' : 'text-gray-600'}`}>
+                            {data.message || 'Pemberitahuan Baru'}
+                        </p>
+                    </div>
                     {isUnread && (
                         <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0 mt-1"></span>
                     )}
