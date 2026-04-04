@@ -115,13 +115,16 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
             });
         } catch (error) {
             console.error(error);
+            const errMsg =
+                error?.response?.data?.error ||
+                "Gagal memproses pembayaran online.";
             Swal.fire({
-                title: "Error Sistem",
-                text: "Gagal memproses pembayaran online.",
-                icon: "error",
+                title: "Tidak Dapat Memproses",
+                text: errMsg,
+                icon: "warning",
                 background: "#ffffff",
                 color: "#000000",
-                confirmButtonColor: "#dc2626",
+                confirmButtonColor: "#d97706",
             });
         } finally {
             setIsLoadingPay(false);
@@ -427,26 +430,45 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
 
                                             {/* Booking Fee / Down Payment */}
                                             {transaction.installments?.find(
-                                                (i) =>
-                                                    i.installment_number === 0,
+                                                (i) => i.installment_number === 0,
                                             ) && (
-                                                <CashPaymentModule
-                                                    installment={transaction.installments.find(
-                                                        (i) =>
-                                                            i.installment_number ===
-                                                            0,
-                                                    )}
-                                                    type={
-                                                        isCredit
-                                                            ? "UANG MUKA (DP)"
-                                                            : "BOOKING FEE"
-                                                    }
-                                                    isLoading={isLoadingPay}
-                                                    onPay={handleOnlinePayment}
-                                                    formatCurrency={
-                                                        formatCurrency
-                                                    }
-                                                />
+                                                isCredit ? (
+                                                    // Kredit: DP hanya bisa dibayar setelah disetujui
+                                                    (transaction.credit_detail?.status === "disetujui" || transaction.creditDetail?.status === "disetujui") ? (
+                                                        <CashPaymentModule
+                                                            installment={transaction.installments.find(
+                                                                (i) => i.installment_number === 0,
+                                                            )}
+                                                            type="UANG MUKA (DP)"
+                                                            isLoading={isLoadingPay}
+                                                            onPay={handleOnlinePayment}
+                                                            formatCurrency={formatCurrency}
+                                                        />
+                                                    ) : (
+                                                        <div className="flex items-start gap-4 bg-amber-50 border border-amber-200 p-5">
+                                                            <AlertCircle size={20} className="text-amber-500 shrink-0 mt-0.5" />
+                                                            <div>
+                                                                <p className="font-black text-amber-800 uppercase tracking-widest text-sm mb-1">
+                                                                    MENUNGGU PERSETUJUAN LEASING
+                                                                </p>
+                                                                <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest">
+                                                                    Pembayaran Uang Muka (DP) akan tersedia setelah pengajuan kredit Anda disetujui oleh pihak leasing. Harap tunggu notifikasi dari kami.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                ) : (
+                                                    // CASH: Booking fee langsung bisa dibayar
+                                                    <CashPaymentModule
+                                                        installment={transaction.installments.find(
+                                                            (i) => i.installment_number === 0,
+                                                        )}
+                                                        type="BOOKING FEE"
+                                                        isLoading={isLoadingPay}
+                                                        onPay={handleOnlinePayment}
+                                                        formatCurrency={formatCurrency}
+                                                    />
+                                                )
                                             )}
 
                                             {/* Pelunasan (if booking fee paid OR no booking fee exists) */}

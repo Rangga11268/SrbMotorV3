@@ -164,6 +164,20 @@ class InstallmentController extends Controller
             abort(403);
         }
 
+        // Validasi: DP kredit hanya bisa dibayar setelah kredit disetujui
+        if (
+            $installment->installment_number === 0 &&
+            $installment->transaction->transaction_type === 'CREDIT'
+        ) {
+            $creditDetail = $installment->transaction->creditDetail;
+            if (!$creditDetail || $creditDetail->status !== 'disetujui') {
+                return response()->json([
+                    'error' => 'Pembayaran DP hanya dapat dilakukan setelah pengajuan kredit Anda disetujui oleh pihak leasing.',
+                    'credit_status' => $creditDetail?->status ?? 'unknown',
+                ], 403);
+            }
+        }
+
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = config('midtrans.is_sanitized');
