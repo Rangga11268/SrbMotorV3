@@ -14,7 +14,7 @@ class TransactionLog extends Model
         'transaction_id',
         'status_from',
         'status_to',
-        'status', // legacy
+        'status',
         'actor_id',
         'actor_type',
         'description',

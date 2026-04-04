@@ -428,13 +428,14 @@ export default function TransactionDetail({ transaction }) {
                                                 <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">{transaction.creditDetail.tenor} BULAN</p>
                                             </div>
                                             <div className="bg-white px-8 py-8">
+                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">PENYEDIA LEASING</p>
+                                                <p className="text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.leasing_provider || "PENDING"}</p>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">PARTNER RESMI</p>
+                                            </div>
+                                            <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">TENOR</p>
                                                 <p className="text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.tenor}</p>
                                                 <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">BULAN</p>
-                                            </div>
-                                            <div className="bg-white px-8 py-8">
-                                                <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">LEASING</p>
-                                                <p className="text-sm font-black text-black uppercase tracking-tight leading-tight">{transaction.creditDetail.leasing_provider?.name || "DALAM PROSES"}</p>
                                             </div>
                                         </div>
 

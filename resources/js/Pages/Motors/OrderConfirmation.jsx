@@ -347,14 +347,6 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-6">
                                             <div>
                                                 <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
-                                                    PENYEDIA LEASING
-                                                </label>
-                                                <p className="font-bold text-black uppercase">
-                                                    {transaction.creditDetail?.leasing_provider?.name || transaction.credit_detail?.leasing_provider?.name || "BELUM DITENTUKAN"}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
                                                     NO. REFERENSI
                                                 </label>
                                                 <p className="font-bold text-black uppercase">
@@ -402,6 +394,16 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                             .credit_detail?.monthly_installment || transaction.creditDetail?.monthly_installment || 0,
                                                     )}
                                                 </p>
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
+                                                    PENYEDIA LEASING
+                                                </label>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-bold text-black uppercase">
+                                                        {transaction.credit_detail?.leasing_provider || transaction.creditDetail?.leasing_provider || "-"}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

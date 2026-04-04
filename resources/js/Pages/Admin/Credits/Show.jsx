@@ -234,18 +234,9 @@ export default function Show({
 
     function SendToLeasingModal() {
         const { data, setData, post, processing } = useForm({
-            leasing_provider_id: "",
-            leasing_application_ref: "",
+            leasing_provider: credit.leasing_provider || "",
+            leasing_application_ref: credit.reference_number || "",
         });
-
-        // Auto-fill if user already selected leasing during order
-        useEffect(() => {
-            if (activeModal === "sendLeasing") {
-                if (credit.leasing_provider_id) {
-                    setData("leasing_provider_id", credit.leasing_provider_id);
-                }
-            }
-        }, [activeModal]);
 
         const handleSubmit = (e) => {
             e.preventDefault();
@@ -268,25 +259,16 @@ export default function Show({
                 </CModalHeader>
                 <CForm onSubmit={handleSubmit}>
                     <CModalBody>
-                        {/* Info if user already selected leasing */}
-                        {credit.leasing_provider_id && (
-                            <CAlert color="info" className="mb-4">
-                                <strong>
-                                    Penyedia Leasing Dipilih Pengguna:
-                                </strong>{" "}
-                                {credit.leasing_provider || '-'}
-                                <div className="small mt-2">
-                                    Anda dapat mengubah pilihan jika diperlukan
-                                </div>
-                            </CAlert>
-                        )}
+                        <CAlert color="info" className="mb-4">
+                            Langkah ini menandai bahwa pengajuan telah dikirimkan ke pihak eksternal untuk proses verifikasi/survey lebih lanjut.
+                        </CAlert>
                         <div className="mb-3">
                             <CFormLabel>Pilih Penyedia Leasing</CFormLabel>
                             <CFormSelect
-                                value={data.leasing_provider_id}
+                                value={data.leasing_provider}
                                 onChange={(e) =>
                                     setData(
-                                        "leasing_provider_id",
+                                        "leasing_provider",
                                         e.target.value,
                                     )
                                 }
@@ -978,6 +960,20 @@ export default function Show({
                                                 letterSpacing: "0.5px",
                                             }}
                                         >
+                                            Nomor Referensi (External)
+                                        </small>
+                                        <strong>
+                                            {credit.reference_number || "-"}
+                                        </strong>
+                                    </p>
+                                    <p className="mb-3">
+                                        <small
+                                            className="text-body-secondary d-block fw-500 text-uppercase"
+                                            style={{
+                                                fontSize: "0.7rem",
+                                                letterSpacing: "0.5px",
+                                            }}
+                                        >
                                             Pekerjaan
                                         </small>
                                         <strong>
@@ -1010,7 +1006,7 @@ export default function Show({
                                                           .monthly_income,
                                                   )
                                                 : credit.transaction?.user
-                                                        ?.pendapatan_bulanan
+                                                        ?.monthly_income
                                                   ? new Intl.NumberFormat(
                                                         "id-ID",
                                                         {
@@ -1019,7 +1015,7 @@ export default function Show({
                                                         },
                                                     ).format(
                                                         credit.transaction.user
-                                                            .pendapatan_bulanan,
+                                                            .monthly_income,
                                                     )
                                                   : "-"}
                                         </strong>
@@ -1214,7 +1210,7 @@ export default function Show({
                                             Penyedia
                                         </small>
                                         <strong>
-                                            {credit.leasing_provider?.name ||
+                                            {credit.leasing_provider ||
                                                 "Belum ditentukan"}
                                         </strong>
                                     </p>

@@ -100,6 +100,14 @@ class CreditController extends Controller
             'credit' => $credit,
             'availableTransitions' => $availableTransitions,
             'timeline' => $timeline,
+            'leasingProviders' => [
+                ['id' => 'BAF', 'name' => 'Bussan Auto Finance'],
+                ['id' => 'Adira Finance', 'name' => 'Adira Finance'],
+                ['id' => 'Mandiri Utama Finance', 'name' => 'Mandiri Utama Finance'],
+                ['id' => 'OTO Kredit Motor', 'name' => 'OTO Kredit Motor'],
+                ['id' => 'Indomobil Finance', 'name' => 'Indomobil Finance'],
+                ['id' => 'CIMB Niaga', 'name' => 'CIMB Niaga'],
+            ],
         ]);
     }
 
@@ -147,13 +155,13 @@ class CreditController extends Controller
     public function sendToLeasing(Request $request, CreditDetail $credit)
     {
         $validated = $request->validate([
-            'leasing_provider_id' => 'required|exists:leasing_providers,id',
+            'leasing_provider' => 'required|string|max:255',
             'leasing_application_ref' => 'nullable|string|max:100',
         ]);
 
         $this->creditService->sendToLeasing(
             $credit,
-            $validated['leasing_provider_id'],
+            $validated['leasing_provider'],
             $validated['leasing_application_ref'] ?? ''
         );
 

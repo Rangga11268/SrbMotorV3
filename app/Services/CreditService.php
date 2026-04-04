@@ -73,15 +73,15 @@ class CreditService
     /**
      * Stage 3: Send to leasing company
      * @param string $leasingProvider The leasing provider name
-     * @param string $appRef Reference number from leasing company
+     * @param string $applicationRef Reference number from leasing company
      */
-    public function sendToLeasing(CreditDetail $credit, string $leasingProvider, string $appRef = ''): bool
+    public function sendToLeasing(CreditDetail $credit, string $leasingProvider, string $applicationRef = ''): bool
     {
         $oldStatus = $credit->status;
         $res = $credit->update([
             'status' => 'dikirim_ke_leasing',
             'leasing_provider' => $leasingProvider,
-            'reference_number' => $appRef ?: $credit->reference_number,
+            'reference_number' => $applicationRef ?: $credit->reference_number,
         ]);
 
         if ($res) {
@@ -91,8 +91,8 @@ class CreditService
                 'status' => 'dikirim_ke_leasing',
                 'actor_id' => auth()->id(),
                 'actor_type' => 'App\Models\User',
-                'notes' => 'Ref: ' . $appRef,
-                'description' => 'Data dikirim ke leasing. Ref: ' . $appRef,
+                'notes' => 'Ref: ' . ($applicationRef ?: $credit->reference_number),
+                'description' => "Pengajuan dikirim ke Leasing: {$leasingProvider}",
             ]);
         }
         return $res;

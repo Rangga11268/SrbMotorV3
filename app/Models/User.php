@@ -25,7 +25,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'google_id',
         'profile_photo_path',
-        'email_verified_at',
         'phone',
         'alamat',
         'nik',
@@ -63,6 +62,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role === 'admin';
     }
-
-
 }
