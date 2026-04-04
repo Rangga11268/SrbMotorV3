@@ -211,6 +211,37 @@ export default function Show({ user, dashboard }) {
                                 </Link>
                             </div>
 
+                            {/* BENEFITS SECTION */}
+                            {user.benefit_notes && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="bg-amber-50 border-2 border-amber-200 p-8 md:p-12 relative overflow-hidden group mb-8 shadow-sm"
+                                >
+                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                                        <Star className="w-24 h-24 text-amber-500" />
+                                    </div>
+                                    <div className="relative z-10 space-y-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-amber-500 flex items-center justify-center text-white">
+                                                <Star className="w-5 h-5 fill-white" />
+                                            </div>
+                                            <h2 className="text-2xl font-black text-amber-900 uppercase tracking-widest">
+                                                KEUNTUNGAN & MANFAAT
+                                            </h2>
+                                        </div>
+                                        <div className="prose prose-amber max-w-none">
+                                            <p className="text-xl font-bold text-amber-800 leading-relaxed italic">
+                                                "{user.benefit_notes}"
+                                            </p>
+                                        </div>
+                                        <div className="pt-4 flex items-center gap-2 text-[10px] font-black text-amber-600 uppercase tracking-[0.2em]">
+                                            <CheckCircle className="w-4 h-4" /> EKSKLUSIF UNTUK ANDA
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}

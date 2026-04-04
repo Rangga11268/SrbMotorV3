@@ -23,6 +23,13 @@ import {
     CPaginationItem,
     CAvatar,
     CSpinner,
+    CModal,
+    CModalHeader,
+    CModalTitle,
+    CModalBody,
+    CModalFooter,
+    CFormTextarea,
+    CFormLabel,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -32,6 +39,7 @@ import {
     cilUser,
     cilReload,
     cilPeople,
+    cilStar,
 } from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
@@ -67,6 +75,12 @@ export default function Index({ users: initialUsers, filters }) {
         onConfirm: () => {},
     });
     const [processing, setProcessing] = useState(false);
+    
+    const [benefitsModal, setBenefitsModal] = useState({
+        isOpen: false,
+        user: null,
+        notes: "",
+    });
 
     useEffect(() => {
         if (isFirstRender) {
@@ -146,6 +160,28 @@ export default function Index({ users: initialUsers, filters }) {
                 onError: () => {
                     setProcessing(false);
                     toast.error("Gagal mengubah role");
+                },
+            },
+        );
+    };
+
+    const handleUpdateBenefits = () => {
+        setProcessing(true);
+        router.put(
+            route("admin.users.update", benefitsModal.user.id),
+            { 
+                role: benefitsModal.user.role,
+                benefit_notes: benefitsModal.notes 
+            },
+            {
+                onSuccess: () => {
+                    setBenefitsModal((prev) => ({ ...prev, isOpen: false }));
+                    setProcessing(false);
+                    toast.success("Catatan keuntungan berhasil diperbarui");
+                },
+                onError: () => {
+                    setProcessing(false);
+                    toast.error("Gagal memperbarui catatan");
                 },
             },
         );
@@ -434,6 +470,24 @@ export default function Index({ users: initialUsers, filters }) {
                                                     </CButton>
                                                 )}
                                                 <CButton
+                                                    color="info"
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setBenefitsModal({
+                                                            isOpen: true,
+                                                            user: user,
+                                                            notes: user.benefit_notes || "",
+                                                        })
+                                                    }
+                                                    title="Edit Keuntungan/Notes"
+                                                >
+                                                    <CIcon
+                                                        icon={cilStar}
+                                                        size="sm"
+                                                    />
+                                                </CButton>
+                                                <CButton
                                                     color="danger"
                                                     variant="outline"
                                                     size="sm"
@@ -490,6 +544,63 @@ export default function Index({ users: initialUsers, filters }) {
                     </div>
                 )}
             </CCard>
+                {/* Benefits Modal */}
+            <CModal
+                visible={benefitsModal.isOpen}
+                onClose={() => setBenefitsModal((prev) => ({ ...prev, isOpen: false }))}
+                alignment="center"
+            >
+                <CModalHeader>
+                    <CModalTitle className="fw-bold">
+                        Edit Catatan Keuntungan
+                    </CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <div className="mb-3">
+                        <div className="d-flex align-items-center gap-2 mb-3">
+                            <CAvatar
+                                color={benefitsModal.user ? getAvatarColor(benefitsModal.user.name) : "primary"}
+                                textColor="white"
+                                size="md"
+                            >
+                                {benefitsModal.user ? getInitials(benefitsModal.user.name) : "??"}
+                            </CAvatar>
+                            <div>
+                                <div className="fw-bold">{benefitsModal.user?.name}</div>
+                                <div className="text-body-secondary small">{benefitsModal.user?.email}</div>
+                            </div>
+                        </div>
+                        <CFormLabel className="small fw-bold text-body-secondary uppercase tracking-wider">
+                            CATATAN KHUSUS (Misal: 1x Ganti Oli Gratis)
+                        </CFormLabel>
+                        <CFormTextarea
+                            rows={4}
+                            placeholder="Tuliskan keuntungan atau catatan khusus untuk user ini..."
+                            value={benefitsModal.notes}
+                            onChange={(e) => setBenefitsModal((prev) => ({ ...prev, notes: e.target.value }))}
+                        />
+                        <p className="text-body-tertiary x-small mt-2">
+                            *Catatan ini akan terlihat oleh pengguna di halaman profil mereka.
+                        </p>
+                    </div>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton
+                        color="secondary"
+                        variant="ghost"
+                        onClick={() => setBenefitsModal((prev) => ({ ...prev, isOpen: false }))}
+                    >
+                        Batal
+                    </CButton>
+                    <CButton
+                        color="primary"
+                        onClick={handleUpdateBenefits}
+                        disabled={processing}
+                    >
+                        {processing ? "Menyimpan..." : "Simpan Catatan"}
+                    </CButton>
+                </CModalFooter>
+            </CModal>
         </AdminLayout>
     );
 }

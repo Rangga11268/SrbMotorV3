@@ -43,13 +43,15 @@ class UserController extends Controller
     {
         $request->validate([
             'role' => 'required|in:admin,user',
+            'benefit_notes' => 'nullable|string|max:1000',
         ]);
 
         $user->update([
             'role' => $request->role,
+            'benefit_notes' => $request->benefit_notes,
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Peran pengguna berhasil diperbarui.');
+        return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
 
