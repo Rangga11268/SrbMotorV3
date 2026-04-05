@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Save, User, Lock, Key, Shield, ShieldCheck } from "lucide-react";
+import { Save, User, Lock, Key, Shield, ShieldCheck, ChevronRight } from "lucide-react";
 
 export default function Edit({ user }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -263,6 +263,65 @@ export default function Edit({ user }) {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                {/* Additional Info Section */}
+                <div className="bg-[#111111] rounded-[2rem] p-10 text-white shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -z-10 group-hover:bg-primary/20 transition-colors duration-1000"></div>
+                    
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
+                        <div className="space-y-4">
+                            <div>
+                                <h2 className="text-2xl font-black font-display tracking-tight uppercase">
+                                    INFORMASI AKUN & AKSES
+                                </h2>
+                                <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">
+                                    METADATA ADMINISTRATOR SISTEM
+                                </p>
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-4">
+                                <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl backdrop-blur-md">
+                                    <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">TINGKAT AKSES</p>
+                                    <p className="text-sm font-black text-primary uppercase">FULL ADMINISTRATOR</p>
+                                </div>
+                                <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl backdrop-blur-md">
+                                    <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">STATUS AKUN</p>
+                                    <p className="text-sm font-black text-green-400 uppercase flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                        AKTIF & TERVERIFIKASI
+                                    </p>
+                                </div>
+                                <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl backdrop-blur-md">
+                                    <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">BERGABUNG SEJAK</p>
+                                    <p className="text-sm font-black uppercase italic">
+                                        {new Date(user.created_at).toLocaleDateString("id-ID", {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2 items-end">
+                            <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">VERSI SISTEM</p>
+                            <div className="px-4 py-2 bg-primary/20 border border-primary/30 rounded-full text-primary font-black text-xs tracking-widest">
+                                SRB MOTOR V2.4.0
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-10 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between gap-6 opacity-60">
+                        <p className="text-[10px] text-slate-500 font-medium max-w-lg">
+                            * Halaman ini hanya dapat diakses oleh akun dengan otorisasi Administrator. Pastikan Anda melakukan logout setelah selesai menggunakan panel admin pada perangkat publik.
+                        </p>
+                        <Link href="/" className="text-xs font-black uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2 group/link">
+                            LIHAT FRONT-END
+                            < ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+                        </Link>
                     </div>
                 </div>
             </div>

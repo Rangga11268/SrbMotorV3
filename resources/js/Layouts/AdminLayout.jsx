@@ -24,31 +24,26 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
-    cilSpeedometer,
-    cilBike,
-    cilCart,
-    cilPeople,
-    cilChartLine,
-    cilEnvelopeClosed,
-    cilAccountLogout,
-    cilUser,
-    cilSettings,
-    cilMenu,
-    cilGlobeAlt,
-    cilCheckCircle,
-    cilXCircle,
-    cilX,
-    cilBell,
-    cilStar,
-    cilBuilding,
-    cilCalculator,
-    cilTag,
-    cilNewspaper,
-    cilImage,
-    cilCreditCard,
-    cilStorage,
-    cilHistory,
-} from "@coreui/icons";
+    LayoutDashboard,
+    Bike,
+    CreditCard,
+    ShoppingCart,
+    Users,
+    BarChart3,
+    Wrench,
+    Settings,
+    UserCircle,
+    Globe,
+    LogOut,
+    Bell,
+    Menu,
+    ChevronRight,
+    Search,
+    ShieldCheck,
+    CheckCircle2,
+    XCircle,
+    X,
+} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import NotificationBell from "../Components/Notification/NotificationBell";
 
@@ -116,44 +111,43 @@ function AdminLayoutContent({ children, title }) {
         {
             name: "Dashboard",
             href: route("admin.dashboard"),
-            icon: cilSpeedometer,
+            icon: LayoutDashboard,
             active: route().current("admin.dashboard"),
         },
         {
             name: "Motor",
             href: route("admin.motors.index"),
-            icon: cilBike,
+            icon: Bike,
             active: route().current("admin.motors.*"),
         },
-
         {
             name: "Pengajuan Kredit",
             href: route("admin.credits.index"),
-            icon: cilCreditCard,
+            icon: CreditCard,
             active: route().current("admin.credits.*"),
         },
         {
             name: "Transaksi Tunai",
             href: route("admin.transactions.index"),
-            icon: cilCart,
+            icon: ShoppingCart,
             active: route().current("admin.transactions.*"),
         },
         {
             name: "Pengguna",
             href: route("admin.users.index"),
-            icon: cilPeople,
+            icon: Users,
             active: route().current("admin.users.*"),
         },
         {
             name: "Laporan",
             href: route("admin.reports.index"),
-            icon: cilChartLine,
+            icon: BarChart3,
             active: route().current("admin.reports.*"),
         },
         {
             name: "Manajemen Servis",
-            href: "/admin/services", // We will define this route
-            icon: cilSpeedometer, // Using Speedometer for now
+            href: "/admin/services",
+            icon: Wrench,
             active: route().current("admin.services.*"),
         },
     ];
@@ -202,8 +196,8 @@ function AdminLayoutContent({ children, title }) {
                                 <CIcon
                                     icon={
                                         flash.success
-                                            ? cilCheckCircle
-                                            : cilXCircle
+                                            ? CheckCircle2
+                                            : XCircle
                                     }
                                     style={{
                                         color: flash.success
@@ -239,7 +233,7 @@ function AdminLayoutContent({ children, title }) {
                                 className="btn btn-sm p-0 border-0 lh-1"
                                 style={{ color: "#94a3b8" }}
                             >
-                                <CIcon icon={cilX} size="sm" />
+                                <CIcon icon={X} size="sm" />
                             </button>
                         </motion.div>
                     )}
@@ -301,9 +295,9 @@ function AdminLayoutContent({ children, title }) {
                                     href={item.href}
                                     className={`nav-link ${item.active ? "active" : ""}`}
                                 >
-                                    <CIcon
-                                        icon={item.icon}
-                                        customClassName="nav-icon"
+                                    <item.icon
+                                        size={18}
+                                        className="nav-icon"
                                     />
                                     {item.name}
                                 </Link>
@@ -317,9 +311,9 @@ function AdminLayoutContent({ children, title }) {
                                 href={route("admin.settings.index")}
                                 className={`nav-link ${route().current("admin.settings.*") ? "active" : ""}`}
                             >
-                                <CIcon
-                                    icon={cilSettings}
-                                    customClassName="nav-icon"
+                                <Settings
+                                    size={18}
+                                    className="nav-icon"
                                 />
                                 Pengaturan Website
                             </Link>
@@ -329,18 +323,18 @@ function AdminLayoutContent({ children, title }) {
                                 href={route("admin.profile.show")}
                                 className={`nav-link ${route().current("admin.profile.*") ? "active" : ""}`}
                             >
-                                <CIcon
-                                    icon={cilUser}
-                                    customClassName="nav-icon"
+                                <UserCircle
+                                    size={18}
+                                    className="nav-icon"
                                 />
                                 Profil Saya
                             </Link>
                         </li>
                         <li className="nav-item">
                             <a href="/" className="nav-link">
-                                <CIcon
-                                    icon={cilGlobeAlt}
-                                    customClassName="nav-icon"
+                                <Globe
+                                    size={18}
+                                    className="nav-icon"
                                 />
                                 Lihat Website
                             </a>
@@ -380,7 +374,7 @@ function AdminLayoutContent({ children, title }) {
                                 style={{ color: "#64748b" }}
                                 title="Keluar"
                             >
-                                <CIcon icon={cilAccountLogout} size="lg" />
+                                <LogOut size={20} />
                             </Link>
                         </div>
                     </CSidebarFooter>
@@ -394,7 +388,7 @@ function AdminLayoutContent({ children, title }) {
                             className="header-toggler"
                             onClick={() => setSidebarShow(!sidebarShow)}
                         >
-                            <CIcon icon={cilMenu} size="lg" />
+                            <Menu size={24} />
                         </CHeaderToggler>
 
                         <div className="ms-3 d-flex align-items-center">
@@ -462,15 +456,15 @@ function AdminLayoutContent({ children, title }) {
                                         as={Link}
                                         href={route("admin.profile.show")}
                                     >
-                                        <CIcon
-                                            icon={cilUser}
+                                        <UserCircle
+                                            size={18}
                                             className="me-2"
                                         />
                                         Profil Saya
                                     </CDropdownItem>
                                     <CDropdownItem as={Link} href="/">
-                                        <CIcon
-                                            icon={cilGlobeAlt}
+                                        <Globe
+                                            size={18}
                                             className="me-2"
                                         />
                                         Lihat Website
@@ -482,8 +476,8 @@ function AdminLayoutContent({ children, title }) {
                                         method="post"
                                         className="text-danger"
                                     >
-                                        <CIcon
-                                            icon={cilAccountLogout}
+                                        <LogOut
+                                            size={18}
                                             className="me-2"
                                         />
                                         Keluar

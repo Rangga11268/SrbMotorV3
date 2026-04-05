@@ -167,17 +167,48 @@ export default function Home({
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
                         {[
-                            { label: "Unit Terjual", value: "10.000+", icon: <Bike className="w-5 h-5 text-[#1c69d4]" /> },
-                            { label: "Teknisi Ahli", value: "25+", icon: <Award className="w-5 h-5 text-[#1c69d4]" /> },
-                            { label: "Pelanggan Puas", value: "8.500+", icon: <Users className="w-5 h-5 text-[#1c69d4]" /> },
-                            { label: "Tahun Pengalaman", value: "12 Tahun", icon: <Clock className="w-5 h-5 text-[#1c69d4]" /> },
+                            {
+                                label: "Unit Terjual",
+                                value: "10.000+",
+                                icon: (
+                                    <Bike className="w-5 h-5 text-[#1c69d4]" />
+                                ),
+                            },
+                            {
+                                label: "Teknisi Ahli",
+                                value: "25+",
+                                icon: (
+                                    <Award className="w-5 h-5 text-[#1c69d4]" />
+                                ),
+                            },
+                            {
+                                label: "Pelanggan Puas",
+                                value: "8.500+",
+                                icon: (
+                                    <Users className="w-5 h-5 text-[#1c69d4]" />
+                                ),
+                            },
+                            {
+                                label: "Tahun Pengalaman",
+                                value: "12 Tahun",
+                                icon: (
+                                    <Clock className="w-5 h-5 text-[#1c69d4]" />
+                                ),
+                            },
                         ].map((stat, i) => (
-                            <div key={i} className="flex flex-col items-center md:items-start gap-3">
+                            <div
+                                key={i}
+                                className="flex flex-col items-center md:items-start gap-3"
+                            >
                                 <div className="flex items-center gap-3">
                                     {stat.icon}
-                                    <span className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase">{stat.value}</span>
+                                    <span className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase">
+                                        {stat.value}
+                                    </span>
                                 </div>
-                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">{stat.label}</span>
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em]">
+                                    {stat.label}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -326,39 +357,71 @@ export default function Home({
             <section className="py-24 bg-[#f9f9f9]">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center lg:text-left">
                     <div className="mb-16 space-y-4">
-                        <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">PROSES PEMESANAN</span>
+                        <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">
+                            PROSES PEMESANAN
+                        </span>
                         <h2 className="text-4xl md:text-5xl font-black text-[#262626] uppercase tracking-tighter leading-none">
-                            LANGKAH <span className="text-gray-400">MUDAH.</span>
+                            LANGKAH{" "}
+                            <span className="text-gray-400">MUDAH.</span>
                         </h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {[
-                            { step: "01", title: "Pilih Unit", desc: "Eksplorasi katalog motor Honda & Yamaha terbaru sesuai kebutuhan Anda.", icon: <Search className="w-6 h-6"/> },
-                            { step: "02", title: "Konsultasi", desc: "Hubungi konsultan kami untuk simulasi kredit atau negosiasi harga cash.", icon: <MessageCircle className="w-6 h-6"/> },
-                            { step: "03", title: "Verifikasi", desc: "Lengkapi dokumen pendukung untuk proses administrasi yang cepat.", icon: <ShieldCheck className="w-6 h-6"/> },
-                            { step: "04", title: "Unit Dikirim", desc: "Motor Anda diantarkan langsung ke depan pintu rumah oleh tim kami.", icon: <Truck className="w-6 h-6"/> },
+                            {
+                                step: "01",
+                                title: "Pilih Unit",
+                                desc: "Eksplorasi katalog motor Honda & Yamaha terbaru sesuai kebutuhan Anda.",
+                                icon: <Search className="w-6 h-6" />,
+                            },
+                            {
+                                step: "02",
+                                title: "Konsultasi",
+                                desc: "Hubungi konsultan kami untuk simulasi kredit atau negosiasi harga cash.",
+                                icon: <MessageCircle className="w-6 h-6" />,
+                            },
+                            {
+                                step: "03",
+                                title: "Verifikasi",
+                                desc: "Lengkapi dokumen pendukung untuk proses administrasi yang cepat.",
+                                icon: <ShieldCheck className="w-6 h-6" />,
+                            },
+                            {
+                                step: "04",
+                                title: "Unit Dikirim",
+                                desc: "Motor Anda diantarkan langsung ke depan pintu rumah oleh tim kami.",
+                                icon: <Truck className="w-6 h-6" />,
+                            },
                         ].map((item, idx) => (
-                            <div key={idx} className="bg-white border border-gray-200 p-10 hover:border-[#1c69d4] transition-colors relative group">
-                                <div className="absolute top-10 right-10 text-4xl font-black text-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">{item.step}</div>
+                            <div
+                                key={idx}
+                                className="bg-white border border-gray-200 p-10 hover:border-[#1c69d4] transition-colors relative group"
+                            >
+                                <div className="absolute top-10 right-10 text-4xl font-black text-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    {item.step}
+                                </div>
                                 <div className="w-12 h-12 bg-[#1c69d4] flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform">
                                     {item.icon}
                                 </div>
-                                <h4 className="text-lg font-black text-[#262626] uppercase tracking-widest mb-4">{item.title}</h4>
-                                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest leading-relaxed">{item.desc}</p>
+                                <h4 className="text-lg font-black text-[#262626] uppercase tracking-widest mb-4">
+                                    {item.title}
+                                </h4>
+                                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest leading-relaxed">
+                                    {item.desc}
+                                </p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
-            
+
             {/* SERVICE & MAINTENANCE SECTION (Cinematic Industrial) */}
             <section className="relative py-20 md:py-32 bg-black overflow-hidden group">
                 {/* Background Image with Parallax-like effect */}
                 <div className="absolute inset-0 z-0">
-                    <img 
-                        src="/assets/img/servis-center.webp" 
-                        alt="Service Center" 
+                    <img
+                        src="/assets/img/servis-center.webp"
+                        alt="Service Center"
                         className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
@@ -369,25 +432,30 @@ export default function Home({
                         <div className="max-w-4xl space-y-4 md:space-y-6 w-full">
                             <div className="flex items-center gap-4 justify-center lg:justify-start">
                                 <div className="w-8 h-px bg-[#1c69d4]"></div>
-                                <span className="text-[#1c69d4] font-black text-[9px] md:text-[10px] tracking-[0.4em] uppercase">PERAWATAN & SUKU CADANG</span>
+                                <span className="text-[#1c69d4] font-black text-[9px] md:text-[10px] tracking-[0.4em] uppercase">
+                                    PERAWATAN & SUKU CADANG
+                                </span>
                             </div>
                             <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter leading-[0.95] lg:leading-[0.9]">
-                                LAYANAN <br/>
+                                LAYANAN <br />
                                 <span className="text-white">PURNA JUAL</span>
                             </h2>
                             <p className="text-gray-400 font-medium text-[10px] md:text-xs lg:text-base max-w-xl lg:max-w-none mx-auto lg:mx-0 uppercase tracking-widest leading-relaxed opacity-70 mt-4 lg:mt-0">
-                                Melalui Sinar Surya Motor (SRB MOTOR - SSM), nikmati performa terbaik bagi kendaraan Yamaha & Honda Anda dengan suku cadang asli dan teknisi bersertifikasi.
+                                Melalui Sinar Surya Motor (SRB MOTOR - SSM),
+                                nikmati performa terbaik bagi kendaraan Yamaha &
+                                Honda Anda dengan suku cadang asli dan teknisi
+                                bersertifikasi.
                             </p>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row lg:flex-row gap-4 w-full lg:w-auto">
-                            <Link 
+                            <Link
                                 href="/services/booking"
                                 className="px-10 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3 w-full"
                             >
                                 <Clock className="w-4 h-4" /> BOOKING SERVIS
                             </Link>
-                            <Link 
+                            <Link
                                 href="/motors"
                                 className="px-10 py-5 bg-transparent border border-white hover:bg-white hover:text-black text-white font-black text-[11px] tracking-[0.3em] uppercase transition-all flex items-center justify-center gap-3 w-full sm:w-auto"
                             >
@@ -399,25 +467,38 @@ export default function Home({
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/10 border border-white/10">
                         {[
                             {
-                                icon: <Gauge className="w-8 h-8 text-[#1c69d4]" />,
+                                icon: (
+                                    <Gauge className="w-8 h-8 text-[#1c69d4]" />
+                                ),
                                 title: "CEK MENYELURUH",
-                                desc: "Pemeriksaan 21 titik gratis untuk setiap kunjungan servis rutin pertama Anda."
+                                desc: "Pemeriksaan 21 titik gratis untuk setiap kunjungan servis rutin pertama Anda.",
                             },
                             {
-                                icon: <ShieldCheck className="w-8 h-8 text-[#1c69d4]" />,
+                                icon: (
+                                    <ShieldCheck className="w-8 h-8 text-[#1c69d4]" />
+                                ),
                                 title: "SUKU CADANG ASLI",
-                                desc: "Jaminan ketersediaan suku cadang orisinal untuk menjaga garansi kendaraan tetap aktif."
+                                desc: "Jaminan ketersediaan suku cadang orisinal untuk menjaga garansi kendaraan tetap aktif.",
                             },
                             {
-                                icon: <MapPin className="w-8 h-8 text-[#1c69d4]" />,
+                                icon: (
+                                    <MapPin className="w-8 h-8 text-[#1c69d4]" />
+                                ),
                                 title: "ANTAR JEMPUT",
-                                desc: "Layanan penjemputan unit di lokasi Anda untuk area cakupan tertentu."
-                            }
+                                desc: "Layanan penjemputan unit di lokasi Anda untuk area cakupan tertentu.",
+                            },
                         ].map((item, idx) => (
-                            <div key={idx} className="p-8 md:p-12 hover:bg-white/5 transition-colors group/card">
+                            <div
+                                key={idx}
+                                className="p-8 md:p-12 hover:bg-white/5 transition-colors group/card"
+                            >
                                 {item.icon}
-                                <h4 className="text-base md:text-lg font-black text-white uppercase tracking-widest mt-6 md:mt-8 mb-3 md:mb-4">{item.title}</h4>
-                                <p className="text-gray-500 font-medium text-[10px] md:text-xs uppercase tracking-widest leading-relaxed">{item.desc}</p>
+                                <h4 className="text-base md:text-lg font-black text-white uppercase tracking-widest mt-6 md:mt-8 mb-3 md:mb-4">
+                                    {item.title}
+                                </h4>
+                                <p className="text-gray-500 font-medium text-[10px] md:text-xs uppercase tracking-widest leading-relaxed">
+                                    {item.desc}
+                                </p>
                             </div>
                         ))}
                     </div>
@@ -429,21 +510,30 @@ export default function Home({
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12">
                     <div className="flex-shrink-0 border-r border-gray-100 pr-12 hidden md:block">
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] leading-relaxed">
-                            MITRA<br />PEMBIAYAAN
+                            MITRA
+                            <br />
+                            PEMBIAYAAN
                         </p>
                     </div>
                     <div className="flex-grow w-full">
                         <div className="grid grid-cols-2 md:grid-cols-4 items-center justify-items-center gap-8 md:gap-16 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700 ease-in-out">
                             {[
-                                { name: 'ADIRA', src: '/assets/img/adira.webp' },
-                                { name: 'FIF', src: '/assets/img/fif.webp' },
-                                { name: 'OTO', src: '/assets/img/oto.webp' },
-                                { name: 'MUF', src: '/assets/img/muf.webp' },
+                                {
+                                    name: "ADIRA",
+                                    src: "/assets/img/adira.webp",
+                                },
+                                { name: "FIF", src: "/assets/img/fif.webp" },
+                                { name: "OTO", src: "/assets/img/oto.webp" },
+                                { name: "MUF", src: "/assets/img/muf.webp" },
+                                { name: "BAF", src: "/assets/img/baf.webp" },
                             ].map((partner) => (
-                                <div key={partner.name} className="h-10 md:h-14 w-full flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500">
-                                    <img 
-                                        src={partner.src} 
-                                        alt={partner.name} 
+                                <div
+                                    key={partner.name}
+                                    className="h-10 md:h-14 w-full flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500"
+                                >
+                                    <img
+                                        src={partner.src}
+                                        alt={partner.name}
                                         className="max-h-full max-w-full object-contain filter drop-shadow-sm"
                                     />
                                 </div>
@@ -458,36 +548,74 @@ export default function Home({
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                     <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
                         <div className="space-y-4">
-                            <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">EVIDENCE OF EXCELLENCE</span>
+                            <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">
+                                EVIDENCE OF EXCELLENCE
+                            </span>
                             <h2 className="text-5xl font-black text-[#262626] uppercase tracking-tighter leading-none">
-                                APA KATA <span className="text-gray-400">MEREKA?</span>
+                                APA KATA{" "}
+                                <span className="text-gray-400">MEREKA?</span>
                             </h2>
                         </div>
                         <div className="flex items-center gap-4 border border-gray-200 bg-white p-6">
                             <div className="flex text-yellow-400">
-                                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                                {[...Array(5)].map((_, i) => (
+                                    <Star
+                                        key={i}
+                                        className="w-4 h-4 fill-current"
+                                    />
+                                ))}
                             </div>
-                            <span className="text-[11px] font-black text-[#262626] uppercase tracking-[0.2em]">Rating Rata-rata 4.9/5</span>
+                            <span className="text-[11px] font-black text-[#262626] uppercase tracking-[0.2em]">
+                                Rating Rata-rata 4.9/5
+                            </span>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
-                            { name: "Andi Saputra", date: "2 minggu lalu", text: "Pelayanan sangat cepat. Kredit disetujui dalam hitungan jam dan unit langsung dikirim besoknya. Rekomendasi sekali!" },
-                            { name: "Siti Rahma", date: "1 bulan lalu", text: "Motor Honda PCX saya sampai dengan mulus. Teknisi servis di SRB juga sangat detail saat menjelaskan perawatan pertama." },
-                            { name: "Budi Hermawan", date: "3 bulan lalu", text: "Harga paling jujur dibanding dealer lain yang sudah saya kunjungi. Bonusnya juga banyak. Terima kasih SRB Motor!" }
+                            {
+                                name: "Andi Saputra",
+                                date: "2 minggu lalu",
+                                text: "Pelayanan sangat cepat. Kredit disetujui dalam hitungan jam dan unit langsung dikirim besoknya. Rekomendasi sekali!",
+                            },
+                            {
+                                name: "Siti Rahma",
+                                date: "1 bulan lalu",
+                                text: "Motor Honda PCX saya sampai dengan mulus. Teknisi servis di SRB juga sangat detail saat menjelaskan perawatan pertama.",
+                            },
+                            {
+                                name: "Budi Hermawan",
+                                date: "3 bulan lalu",
+                                text: "Harga paling jujur dibanding dealer lain yang sudah saya kunjungi. Bonusnya juga banyak. Terima kasih SRB Motor!",
+                            },
                         ].map((review, i) => (
-                            <div key={i} className="bg-white border border-gray-200 p-10 hover:shadow-xl transition-all h-full flex flex-col group">
+                            <div
+                                key={i}
+                                className="bg-white border border-gray-200 p-10 hover:shadow-xl transition-all h-full flex flex-col group"
+                            >
                                 <div className="flex text-[#1c69d4] mb-8 group-hover:scale-110 transition-transform">
-                                    {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className="w-4 h-4 fill-current"
+                                        />
+                                    ))}
                                 </div>
-                                <p className="text-gray-600 font-medium italic text-base leading-relaxed mb-8 flex-grow">"{review.text}"</p>
+                                <p className="text-gray-600 font-medium italic text-base leading-relaxed mb-8 flex-grow">
+                                    "{review.text}"
+                                </p>
                                 <div className="pt-8 border-t border-gray-100 flex items-center justify-between">
                                     <div>
-                                        <h5 className="font-black text-[#262626] uppercase text-[12px] tracking-widest">{review.name}</h5>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{review.date}</p>
+                                        <h5 className="font-black text-[#262626] uppercase text-[12px] tracking-widest">
+                                            {review.name}
+                                        </h5>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                            {review.date}
+                                        </p>
                                     </div>
-                                    <div className="w-10 h-10 bg-gray-100 flex items-center justify-center text-gray-400 font-black text-xs uppercase">SRB</div>
+                                    <div className="w-10 h-10 bg-gray-100 flex items-center justify-center text-gray-400 font-black text-xs uppercase">
+                                        SRB
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -499,7 +627,10 @@ export default function Home({
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1c69d422_0%,_transparent_70%)] opacity-50"></div>
                     <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                        <Logo className="w-[800px] h-auto grayscale brightness-200 contrast-200" dark={true} />
+                        <Logo
+                            className="w-[800px] h-auto grayscale brightness-200 contrast-200"
+                            dark={true}
+                        />
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_90%)]"></div>
@@ -507,20 +638,33 @@ export default function Home({
 
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
                     <div className="flex flex-col items-center text-center space-y-12">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             className="space-y-4"
                         >
-                            <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.5em] uppercase block">SRB MOTOR - SINAR SURYA MOTOR DIGITAL</span>
+                            <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.5em] uppercase block">
+                                SRB MOTOR - SINAR SURYA MOTOR DIGITAL
+                            </span>
                             <h2 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4">
-                                SHOWROOM <br/>
-                                <span className="text-outline text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}>DIGITAL</span>
+                                SHOWROOM <br />
+                                <span
+                                    className="text-outline text-transparent"
+                                    style={{
+                                        WebkitTextStroke:
+                                            "1px rgba(255,255,255,0.3)",
+                                    }}
+                                >
+                                    DIGITAL
+                                </span>
                             </h2>
                             <p className="text-gray-400 font-medium text-sm md:text-lg max-w-2xl mx-auto uppercase tracking-widest leading-relaxed opacity-80">
-                                Temukan unit impian Anda dari katalog lengkap Yamaha & Honda. <br className="hidden md:block"/>
-                                Transaksi aman, proses cepat, dan unit siap diantarkan.
+                                Temukan unit impian Anda dari katalog lengkap
+                                Yamaha & Honda.{" "}
+                                <br className="hidden md:block" />
+                                Transaksi aman, proses cepat, dan unit siap
+                                diantarkan.
                             </p>
                         </motion.div>
 
@@ -530,11 +674,13 @@ export default function Home({
                             viewport={{ once: true }}
                             transition={{ delay: 0.2 }}
                         >
-                            <Link 
+                            <Link
                                 href="/motors"
                                 className="inline-flex items-center gap-6 px-16 py-6 bg-white text-black hover:bg-[#1c69d4] hover:text-white transition-all duration-500 font-black text-[12px] tracking-[0.3em] uppercase group/btn relative overflow-hidden shadow-[0_0_50px_rgba(28,105,212,0.3)] hover:shadow-[0_0_80px_rgba(28,105,212,0.6)]"
                             >
-                                <span className="relative z-10">EKSPLORASI SELURUH MODEL</span>
+                                <span className="relative z-10">
+                                    EKSPLORASI SELURUH MODEL
+                                </span>
                                 <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:translate-x-3 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></div>
                             </Link>
@@ -543,12 +689,14 @@ export default function Home({
                         {/* Fine Industrial Detail */}
                         <div className="flex items-center gap-4 pt-12 opacity-30">
                             <div className="w-12 h-px bg-white/30 text-xs"></div>
-                            <span className="text-[9px] font-black tracking-widest uppercase">SRB MOTOR - EST. 2012</span>
+                            <span className="text-[9px] font-black tracking-widest uppercase">
+                                SRB MOTOR - EST. 2012
+                            </span>
                             <div className="w-12 h-px bg-white/30"></div>
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Visual Accent */}
                 <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
             </section>
@@ -596,7 +744,6 @@ export default function Home({
                     </div>
                 </div>
             </section>
-
 
             {/* CONTACT / FOOTER BANNER */}
             <section className="bg-white border-t border-gray-200">
