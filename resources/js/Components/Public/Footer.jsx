@@ -24,9 +24,9 @@ export default function Footer() {
             { label: "Pesanan Saya", href: route("motors.user-transactions") },
         ],
         bantuan: [
-            { label: "Panduan Pemesanan", href: "#" },
-            { label: "Syarat & Ketentuan", href: "#" },
-            { label: "Kebijakan Privasi", href: "#" },
+            { label: "Panduan Pemesanan", href: route("guide") },
+            { label: "Syarat & Ketentuan", href: route("terms") },
+            { label: "Kebijakan Privasi", href: route("privacy") },
         ],
     };
 
@@ -122,13 +122,13 @@ export default function Footer() {
                             <ul className="space-y-4">
                                 {links.bantuan.map((link, i) => (
                                     <li key={i}>
-                                        <a
+                                        <Link
                                             href={link.href}
                                             className="text-xs font-bold uppercase tracking-widest text-[#bbbbbb] hover:text-white flex items-center gap-2 transition-colors group"
                                         >
                                             <ChevronRight className="w-3 h-3 text-[#1c69d4]" />
                                             {link.label}
-                                        </a>
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>

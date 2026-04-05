@@ -881,7 +881,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                             src={
                                                 motor.image_path
                                                     ? `/storage/${motor.image_path}`
-                                                    : "/assets/img/no-image.png"
+                                                    : "/assets/img/no-image.webp"
                                             }
                                             alt={motor.name}
                                             className="w-full h-full object-contain p-4"

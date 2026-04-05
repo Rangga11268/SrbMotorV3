@@ -485,11 +485,10 @@ export default function Home({
             {/* DIGITAL SHOWROOM CTA (Cinematic High-Impact) */}
             <section className="relative py-40 bg-black overflow-hidden group">
                 <div className="absolute inset-0 z-0">
-                    <motion.img 
-                        src="/assets/img/digital-showroom.png" 
-                        alt="Digital Showroom" 
-                        className="w-full h-full object-cover opacity-40 scale-110 group-hover:scale-100 transition-transform duration-[2000ms] ease-out select-none pointer-events-none"
-                    />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1c69d422_0%,_transparent_70%)] opacity-50"></div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                        <Logo className="w-[800px] h-auto grayscale brightness-200 contrast-200" dark={true} />
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black"></div>
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_black_90%)]"></div>
                 </div>

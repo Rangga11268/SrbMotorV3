@@ -302,7 +302,7 @@ export default function Index({
                                                         {/* Image Container */}
                                                         <div className="relative aspect-[4/3] bg-white overflow-hidden p-6 border-b border-gray-100 flex items-center justify-center">
                                                             <img
-                                                                src={motor.image_path ? `/storage/${motor.image_path}` : "/assets/img/no-image.png"}
+                                                                src={motor.image_path ? `/storage/${motor.image_path}` : "/assets/img/no-image.webp"}
                                                                 alt={motor.name}
                                                                 className={`max-h-full object-contain transition-transform duration-500 group-hover:scale-105 ${!motor.tersedia ? "grayscale opacity-50" : ""}`}
                                                             />

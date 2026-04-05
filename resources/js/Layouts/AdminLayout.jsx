@@ -273,8 +273,9 @@ function AdminLayoutContent({ children, title }) {
                             className="d-flex align-items-center gap-3 text-decoration-none"
                         >
                             <img
-                                src="/assets/icon/logo trans.png"
+                                src="/assets/icon/logo-trans.webp"
                                 alt="Logo"
+                                className="h-8 w-auto hover:scale-105 transition-transform"
                                 style={{
                                     width: 32,
                                     height: 32,

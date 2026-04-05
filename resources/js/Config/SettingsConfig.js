@@ -33,7 +33,7 @@ export const settingsConfig = {
             site_logo: {
                 label: "Logo Website",
                 type: "text",
-                placeholder: "/assets/icon/logo.png",
+                placeholder: "/assets/icon/logo.webp",
                 helper: "Path ke file logo website",
                 category: "Branding",
             },
