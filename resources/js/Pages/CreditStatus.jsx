@@ -59,6 +59,16 @@ export default function CreditStatus({ auth, credit, transaction }) {
             icon: <AlertCircle className="w-5 h-5" />,
             description: "Terdapat dokumen yang kurang jelas atau tidak valid. Silakan periksa catatan perbaikan.",
         },
+        dokumen_ditolak: {
+            label: "Dokumen Ditolak",
+            color: "bg-red-600",
+            textColor: "text-red-700",
+            bgColor: "bg-red-50",
+            borderColor: "border-red-100",
+            icon: <AlertCircle className="w-5 h-5" />,
+            description: "Dokumen yang Anda unggah ditolak. Silakan cek catatan admin dan perbaiki dokumen tersebut.",
+        },
+
         dikirim_ke_surveyor: {
             label: "Persiapan Survey",
             color: "bg-indigo-600",
@@ -245,7 +255,7 @@ export default function CreditStatus({ auth, credit, transaction }) {
                                                 </p>
                                                 
                                                 <div className="mt-8 flex flex-wrap gap-4">
-                                                    {credit.status === 'data_tidak_valid' && (
+                                                    {["pengajuan_masuk", "data_tidak_valid", "dokumen_ditolak"].includes(credit.status) && (
                                                         <Link 
                                                             href={route("motors.manage-documents", transaction.id)}
                                                             className="px-8 py-3 bg-black text-white text-[11px] font-black uppercase tracking-widest hover:bg-gray-800 transition-colors"
@@ -253,6 +263,7 @@ export default function CreditStatus({ auth, credit, transaction }) {
                                                             PERBAIKI DOKUMEN SEKARANG
                                                         </Link>
                                                     )}
+
                                                     {credit.status === 'disetujui' && (
                                                         <Link 
                                                             href={route("motors.transaction.show", transaction.id)}

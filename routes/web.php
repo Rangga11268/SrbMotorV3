@@ -152,7 +152,7 @@ Route::get('/payments/success', [\App\Http\Controllers\InstallmentController::cl
 Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-    // Credit Management Routes (Refactored Credit Flow)
+    // Credit Management Routes (Consolidated)
     Route::get('/credits', [App\Http\Controllers\Admin\CreditController::class, 'index'])->name('credits.index');
     Route::get('/credits/{credit}', [App\Http\Controllers\Admin\CreditController::class, 'show'])->name('credits.show');
     Route::post('/credits/{credit}/verify-documents', [App\Http\Controllers\Admin\CreditController::class, 'verifyDocuments'])->name('credits.verify-documents');
@@ -164,7 +164,12 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/credits/{credit}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveCredit'])->name('credits.approve');
     Route::post('/credits/{credit}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectCredit'])->name('credits.reject');
     Route::post('/credits/{credit}/record-dp-payment', [App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
+    Route::post('/credits/{credit}/complete', [App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
+    Route::post('/credits/{credit}/cancel', [App\Http\Controllers\Admin\CreditController::class, 'cancel'])->name('credits.cancel');
+    Route::delete('/credits/{credit}', [App\Http\Controllers\Admin\CreditController::class, 'destroy'])->name('credits.destroy');
     Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
+    Route::post('/documents/{document}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveDocument'])->name('documents.approve');
+    Route::post('/documents/{document}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectDocumentUpload'])->name('documents.reject');
 
     Route::resource('motors', MotorController::class);
     Route::post('/users/{user}/toggle-verify', [UserController::class, 'toggleVerify'])->name('users.toggle-verify');
@@ -178,17 +183,11 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/services', [ServiceAppointmentController::class, 'adminIndex'])->name('services.index');
     Route::put('/services/{service}/status', [ServiceAppointmentController::class, 'updateStatus'])->name('services.update-status');
 
-
-
-
-
     Route::post('/installments/{installment}/approve', [\App\Http\Controllers\InstallmentController::class, 'approve'])->name('installments.approve');
     Route::post('/installments/{installment}/reject', [\App\Http\Controllers\InstallmentController::class, 'reject'])->name('installments.reject');
 
-
     Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');
     Route::get('/transactions/{transaction}/invoice/download', [InvoiceController::class, 'generate'])->name('transactions.invoice.download');
-
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
@@ -204,24 +203,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::delete('/settings/{setting}', [\App\Http\Controllers\Admin\SettingController::class, 'destroy'])->name('settings.destroy');
     Route::post('/settings/upload', [\App\Http\Controllers\Admin\SettingController::class, 'upload'])->name('settings.upload');
 
-    // News & Categories Management (REMOVED)
-
-    // Credit Management
-    Route::get('/credits', [\App\Http\Controllers\Admin\CreditController::class, 'index'])->name('credits.index');
-    Route::get('/credits/{credit}', [\App\Http\Controllers\Admin\CreditController::class, 'show'])->name('credits.show');
-    Route::post('/credits/{credit}/verify-documents', [\App\Http\Controllers\Admin\CreditController::class, 'verifyDocuments'])->name('credits.verify-documents');
-    Route::post('/credits/{credit}/reject-document', [\App\Http\Controllers\Admin\CreditController::class, 'rejectDocument'])->name('credits.reject-document');
-    Route::post('/credits/{credit}/send-to-leasing', [\App\Http\Controllers\Admin\CreditController::class, 'sendToLeasing'])->name('credits.send-to-leasing');
-    Route::post('/credits/{credit}/schedule-survey', [\App\Http\Controllers\Admin\CreditController::class, 'scheduleSurvey'])->name('credits.schedule-survey');
-    Route::post('/credits/{credit}/start-survey', [\App\Http\Controllers\Admin\CreditController::class, 'startSurvey'])->name('credits.start-survey');
-    Route::post('/credits/{credit}/complete-survey', [\App\Http\Controllers\Admin\CreditController::class, 'completeSurvey'])->name('credits.complete-survey');
-    Route::post('/credits/{credit}/approve', [\App\Http\Controllers\Admin\CreditController::class, 'approveCredit'])->name('credits.approve');
-    Route::post('/credits/{credit}/reject', [\App\Http\Controllers\Admin\CreditController::class, 'rejectCredit'])->name('credits.reject');
-    Route::post('/credits/{credit}/record-dp-payment', [\App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
-    Route::post('/credits/{credit}/complete', [\App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
-    Route::get('/credits/export', [\App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
-    Route::post('/documents/{document}/approve', [\App\Http\Controllers\Admin\CreditController::class, 'approveDocument'])->name('documents.approve');
-    Route::post('/documents/{document}/reject', [\App\Http\Controllers\Admin\CreditController::class, 'rejectDocumentUpload'])->name('documents.reject');
 
     Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');

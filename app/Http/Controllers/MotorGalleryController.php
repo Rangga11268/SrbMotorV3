@@ -530,6 +530,13 @@ class MotorGalleryController extends Controller
             return redirect()->back()->withErrors(['error' => 'Transaksi tidak memiliki detail kredit yang valid.']);
         }
 
+        // Lock documents if status is 'menunggu_persetujuan' or already higher
+        $lockedStatuses = ['menunggu_persetujuan', 'verifikasi_dokumen', 'dikirim_ke_leasing', 'survey_dijadwalkan', 'menunggu_keputusan_leasing', 'disetujui', 'dp_dibayar', 'selesai'];
+        if (in_array($transaction->creditDetail->status, $lockedStatuses)) {
+            return redirect()->back()->withErrors(['error' => 'Pengajuan Anda sedang diproses. Dokumen tidak dapat diubah saat ini.']);
+        }
+
+
         $request->validate([
             'documents.KTP' => 'nullable|array',
             'documents.KTP.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048',

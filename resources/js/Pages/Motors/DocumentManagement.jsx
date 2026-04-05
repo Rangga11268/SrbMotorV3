@@ -93,9 +93,13 @@ export default function DocumentManagement({ transaction }) {
         (hasExisting("KK") || data.documents.KK.length > 0) &&
         (hasExisting("SLIP_GAJI") || data.documents.SLIP_GAJI.length > 0);
 
-    // Locked if status is already processed (ACC) or if transaction is cancelled/rejected
+    // Locked if status is under review (menunggu_persetujuan) or already processed
     const currentStatus = transaction.credit_detail?.status || "pengajuan_masuk";
-    const isLocked = transaction.status === "cancelled" || !["pengajuan_masuk"].includes(currentStatus);
+    
+    // Allow editing ONLY if status is 'pengajuan_masuk' (initial) or 'dokumen_ditolak' (needs fix)
+    const editableStatuses = ["pengajuan_masuk", "dokumen_ditolak", "data_tidak_valid"];
+    const isLocked = transaction.status === "cancelled" || !editableStatuses.includes(currentStatus);
+
 
     return (
         <PublicLayout auth={auth} title="Kelola Dokumen">

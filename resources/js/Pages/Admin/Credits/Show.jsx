@@ -1758,11 +1758,16 @@ export default function Show({
                             </CCardBody>
                         </CCard>
                     ) : (
-                        <CAlert color="info" className="sticky-top">
-                            <strong>Status:</strong> {credit.status} | Tidak ada
-                            aksi tersedia
-                        </CAlert>
+                        <div className="text-center p-4 border border-dashed rounded-3 bg-light">
+                            <p className="text-muted small mb-1 uppercase tracking-widest font-black">
+                                Status: {credit.status}
+                            </p>
+                            <p className="text-body-secondary small mb-0">
+                                Tidak ada aksi alur tersedia untuk tahap ini.
+                            </p>
+                        </div>
                     )}
+
                 </CCol>
             </CRow>
 

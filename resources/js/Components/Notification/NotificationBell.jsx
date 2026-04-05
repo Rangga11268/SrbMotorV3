@@ -71,8 +71,9 @@ export default function NotificationBell() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute right-0 z-50 origin-top-right"
+                        className="absolute right-0 z-[9999] origin-top-right text-left"
                     >
+
                         <NotificationDropdown onClose={() => setIsOpen(false)} />
                     </motion.div>
                 )}
