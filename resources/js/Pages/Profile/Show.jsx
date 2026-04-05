@@ -229,42 +229,6 @@ export default function Show({ user, dashboard }) {
                                 </Link>
                             </div>
 
-                            {/* SIMPLIFIED SPECIAL BENEFITS */}
-                            {(user.benefit_notes || auth.user.benefit_notes) && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="bg-white border-2 border-blue-600 p-8 mb-8 relative overflow-hidden group transition-all hover:bg-blue-50/30"
-                                >
-                                    <div className="flex flex-col md:flex-row md:items-center gap-6 relative z-10">
-                                        <div className="w-14 h-14 bg-blue-600 flex items-center justify-center text-white shrink-0">
-                                            <Star className="w-8 h-8 fill-white" />
-                                        </div>
-                                        <div className="flex-grow space-y-1">
-                                            <div className="flex items-center gap-3">
-                                                <h2 className="text-sm font-black text-blue-600 uppercase tracking-widest">
-                                                    KEUNTUNGAN KHUSUS
-                                                </h2>
-                                                <span className="px-2 py-0.5 bg-blue-100 text-blue-600 text-[8px] font-black uppercase tracking-tighter">
-                                                    AKTIF
-                                                </span>
-                                            </div>
-                                            <p className="text-xl font-bold text-slate-800 leading-snug">
-                                                "{user.benefit_notes || auth.user.benefit_notes}"
-                                            </p>
-                                        </div>
-                                        <div className="hidden md:block">
-                                            <div className="text-right">
-                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Verifikasi</p>
-                                                <p className="text-[10px] font-black text-slate-900 uppercase">OFFICIAL ADMIN</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Subtle decorative background icon */}
-                                    <Star className="absolute -right-6 -bottom-6 w-32 h-32 text-blue-50 opacity-[0.03] pointer-events-none" />
-                                </motion.div>
-                            )}
 
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 
-use App\Notifications\BenefitNotesUpdated;
-
 class UserController extends Controller
 {
 
@@ -45,20 +43,11 @@ class UserController extends Controller
     {
         $request->validate([
             'role' => 'required|in:admin,user',
-            'benefit_notes' => 'nullable|string|max:1000',
         ]);
-
-        $oldNotes = $user->benefit_notes;
 
         $user->update([
             'role' => $request->role,
-            'benefit_notes' => $request->benefit_notes,
         ]);
-
-        // Send notification if notes are new or changed
-        if ($request->benefit_notes && $request->benefit_notes !== $oldNotes) {
-            $user->notify(new BenefitNotesUpdated($request->benefit_notes));
-        }
 
         return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
