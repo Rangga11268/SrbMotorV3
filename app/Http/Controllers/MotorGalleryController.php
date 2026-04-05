@@ -589,10 +589,10 @@ class MotorGalleryController extends Controller
                 $transaction->creditDetail->update(['status' => 'menunggu_persetujuan']);
             }
 
-            return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
+            return redirect()->route('credit-status.show', ['transaction' => $transaction->id])
                 ->with('success', 'Dokumen berhasil diperbarui. Pengajuan kredit Anda sedang dalam proses review.');
         } else {
-            return redirect()->route('motors.order.confirmation', ['transaction' => $transaction->id])
+            return redirect()->route('credit-status.show', ['transaction' => $transaction->id])
                 ->with('info', 'Tidak ada dokumen baru yang diunggah.');
         }
     }
