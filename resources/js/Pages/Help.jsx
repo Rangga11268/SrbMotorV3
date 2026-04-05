@@ -82,7 +82,8 @@ export default function Help({ initialTab = "faq" }) {
             text: "text-black",
             descClass: "text-gray-500",
             border: "border-gray-200",
-            hoverText: "group-hover:text-[#1c69d4]"
+            hoverText: "group-hover:text-[#1c69d4]",
+            hoverBg: "hover:bg-gray-50"
         },
         {
             icon: <MessageSquare size={24} />,
@@ -93,7 +94,8 @@ export default function Help({ initialTab = "faq" }) {
             text: "text-white",
             descClass: "text-gray-400",
             border: "border-black",
-            hoverText: "group-hover:text-blue-400"
+            hoverText: "group-hover:text-blue-400",
+            hoverBg: "hover:bg-[#1c69d4]" // Turn blue on hover for consistent premium feel
         },
         {
             icon: <Mail size={24} />,
@@ -104,7 +106,8 @@ export default function Help({ initialTab = "faq" }) {
             text: "text-white",
             descClass: "text-blue-100",
             border: "border-[#1c69d4]",
-            hoverText: "group-hover:text-blue-200"
+            hoverText: "group-hover:text-blue-200",
+            hoverBg: "hover:bg-black" // Turn black on hover
         }
     ];
 
@@ -114,7 +117,7 @@ export default function Help({ initialTab = "faq" }) {
                 {supportChannels.map((channel, idx) => (
                     <div
                         key={idx}
-                        className={`${channel.bg} ${channel.text} p-10 flex flex-col group cursor-pointer transition-colors hover:bg-gray-50`}
+                        className={`${channel.bg} ${channel.text} p-10 flex flex-col group cursor-pointer transition-all duration-500 ${channel.hoverBg}`}
                     >
                         <div className="mb-6">{channel.icon}</div>
                         <h4 className="text-lg font-black uppercase tracking-tight mb-2">{channel.title}</h4>
@@ -166,24 +169,147 @@ export default function Help({ initialTab = "faq" }) {
     );
 
     const renderGuideTab = () => (
-        <div className="space-y-12">
-            <h2 className="text-2xl font-black uppercase tracking-tight">LANGKAH MUDAH MEMILIKI KENDARAAN IMPIAN</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="space-y-24 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+            {/* Header Introduction */}
+            <div className="max-w-2xl space-y-4">
+                <h2 className="text-3xl font-black uppercase tracking-tighter text-black leading-tight">
+                    LANGKAH MUDAH MEMILIKI KENDARAAN <span className="text-[#1c69d4]">IMPIAN</span>
+                </h2>
+                <p className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em] leading-loose max-w-lg">
+                    Prosedur kepemilikan unit di SRB Motor dirancang untuk efisiensi maksimal, transparansi, dan keamanan data sepenuhnya.
+                </p>
+            </div>
+
+            {/* Vertical Timeline Container */}
+            <div className="relative space-y-32">
+                {/* Connecting Line (Vertical) */}
+                <div className="absolute left-[39px] top-10 bottom-10 w-px bg-gray-100 lg:block hidden"></div>
+
                 {[
-                    { step: "01", title: "PILIH UNIT", desc: "Temukan motor idaman Anda di katalog kami.", icon: <Bike className="w-6 h-6" /> },
-                    { step: "02", title: "VERIFIKASI", desc: "Lengkapi data diri (KTP/KK) secara digital.", icon: <FileCheck className="w-6 h-6" /> },
-                    { step: "03", title: "SURVEI/APPROVAL", desc: "Pengecekan cepat dalam waktu 1x24 jam.", icon: <Calendar className="w-6 h-6" /> },
-                    { step: "04", title: "PENGIRIMAN", desc: "Unit diantar langsung ke depan rumah Anda.", icon: <Truck className="w-6 h-6" /> },
+                    {
+                        step: "01",
+                        title: "EKSPLORASI & PEMILIHAN",
+                        icon: <Bike className="w-8 h-8" />,
+                        desc: "Telusuri katalog premium kami yang selalu diperbarui setiap hari.",
+                        customer: [
+                            "Cek detail spesifikasi & galeri foto unit",
+                            "Lakukan simulasi kredit di halaman produk",
+                            "Pilih opsi pembayaran (Cash/Kredit)"
+                        ],
+                        srb: "Tim kami melakukan pengecekan kualitas fisik menyeluruh sebelum unit masuk ke katalog."
+                    },
+                    {
+                        step: "02",
+                        title: "VERIFIKASI & ADMINISTRASI",
+                        icon: <FileCheck className="w-8 h-8" />,
+                        desc: "Lengkapi data identitas Anda melalui sistem enkripsi kami.",
+                        customer: [
+                            "Siapkan E-KTP & Kartu Keluarga (KK)",
+                            "Isi formulir pemesanan secara digital",
+                            "Tunggu konfirmasi tim via WhatsApp/Email"
+                        ],
+                        srb: "Data Anda dienkripsi secara aman dan hanya dapat diakses oleh tim verifikator resmi.",
+                        require: ["E-KTP", "Kartu Keluarga", "Bukti Penghasilan"]
+                    },
+                    {
+                        step: "03",
+                        title: "SURVEI & APPROVAL",
+                        icon: <Calendar className="w-8 h-8" />,
+                        desc: "Proses verifikasi akhir oleh mitra pembiayaan kami (Leasing).",
+                        customer: [
+                            "Terima kunjungan survei (jika diperlukan)",
+                            "Pahami rincian kontrak dan asuransi",
+                            "Terima notifikasi approval dalam 1x24 jam"
+                        ],
+                        srb: "Kami menjalin komunikasi intensif dengan mitra leasing untuk memastikan approval cepat."
+                    },
+                    {
+                        step: "04",
+                        title: "PENGIRIMAN & SERAH TERIMA",
+                        icon: <Truck className="w-8 h-8" />,
+                        desc: "Unit siap dikirimkan langsung ke domisili Anda.",
+                        customer: [
+                            "Konfirmasi jadwal pengiriman unit",
+                            "Lakukan serah terima & cek fisik unit",
+                            "Penandatanganan tanda terima pengiriman"
+                        ],
+                        srb: "PDI Akhir (Pre-Delivery Inspection) dilakukan sekali lagi sebelum unit diberangkatkan.",
+                        cta: true
+                    }
                 ].map((item, i) => (
-                    <div key={i} className="bg-gray-50 p-8 border border-gray-100 flex gap-6 group hover:border-[#1c69d4] transition-all">
-                        <span className="text-4xl font-black text-gray-200 group-hover:text-blue-100 transition-colors shrink-0">{item.step}</span>
-                        <div>
-                            <div className="mb-4 text-[#1c69d4]">{item.icon}</div>
-                            <h4 className="font-black uppercase tracking-tight mb-2">{item.title}</h4>
-                            <p className="text-xs text-gray-500 leading-relaxed uppercase tracking-wide font-medium">{item.desc}</p>
+                    <div key={i} className="relative grid grid-cols-1 lg:grid-cols-12 gap-12 group last:pb-0">
+                        {/* Step Marker */}
+                        <div className="lg:col-span-1 flex flex-col items-center">
+                            <div className="w-20 h-20 bg-white border-2 border-gray-100 flex items-center justify-center text-black font-black text-2xl group-hover:border-[#1c69d4] group-hover:bg-[#1c69d4] group-hover:text-white transition-all duration-500 z-10">
+                                {item.step}
+                            </div>
+                        </div>
+
+                        {/* Content Card */}
+                        <div className="lg:col-span-11 space-y-10">
+                            <div className="flex flex-col md:flex-row md:items-center gap-6">
+                                <div className="p-5 bg-gray-50 text-[#1c69d4] group-hover:bg-blue-50 transition-colors">
+                                    {item.icon}
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-black uppercase tracking-tight text-black">{item.title}</h3>
+                                    <p className="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">{item.desc}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 bg-gray-50/50 p-8 md:p-12 border border-gray-100 group-hover:border-blue-100 transition-colors">
+                                {/* Checklist Customer */}
+                                <div className="space-y-6">
+                                    <p className="text-[10px] font-black text-[#1c69d4] uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-[#1c69d4] rounded-full"></div> TINDAKAN PELANGGAN
+                                    </p>
+                                    <ul className="space-y-4">
+                                        {item.customer.map((li, liIdx) => (
+                                            <li key={liIdx} className="flex gap-4 text-xs font-bold text-gray-600 uppercase tracking-widest leading-relaxed">
+                                                <div className="w-1 h-4 bg-gray-200 mt-0.5"></div>
+                                                {li}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* Checklist SRB */}
+                                <div className="space-y-6">
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 bg-gray-300 rounded-full"></div> PROSES INTERNAL SRB
+                                    </p>
+                                    <p className="text-[11px] font-medium text-gray-500 italic leading-loose uppercase tracking-wider">
+                                        "{item.srb}"
+                                    </p>
+                                    {item.require && (
+                                        <div className="pt-6 flex flex-wrap gap-2">
+                                            {item.require.map((req, rIdx) => (
+                                                <span key={rIdx} className="px-3 py-1.5 bg-white border border-gray-200 text-[9px] font-black uppercase tracking-widest text-[#1c69d4]">
+                                                    {req}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Final Call to Action */}
+            <div className="bg-black p-12 text-center space-y-10 group overflow-hidden relative">
+                <div className="absolute inset-0 bg-[#1c69d4] opacity-0 group-hover:opacity-10 transition-opacity blur-3xl pointer-events-none"></div>
+                <div className="space-y-3 relative z-10">
+                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter">SIAP UNTUK MEMULAI?</h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">UNIT TERBAIK KAMI SEDANG MENUNGGU ANDA</p>
+                </div>
+                <Link 
+                    href="/motors" 
+                    className="inline-flex items-center gap-6 bg-[#1c69d4] text-white px-12 py-5 font-black uppercase tracking-[0.2em] text-xs hover:bg-white hover:text-black transition-all relative z-10"
+                >
+                    LIHAT KATALOG TERBARU <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
             </div>
         </div>
     );
