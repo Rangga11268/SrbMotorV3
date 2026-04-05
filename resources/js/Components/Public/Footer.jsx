@@ -140,7 +140,7 @@ export default function Footer() {
                         <h4 className="text-[#757575] text-[10px] font-bold uppercase tracking-[0.2em]">
                             Mitra Pembiayaan
                         </h4>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
                             {[
                                 { name: "ADIRA", logo: "/assets/img/adira.webp" },
                                 { name: "FIF", logo: "/assets/img/fif.webp" },
@@ -156,7 +156,7 @@ export default function Footer() {
                                     <img
                                         src={provider.logo}
                                         alt={provider.name}
-                                        className="max-h-8 max-w-full object-contain grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                                        className="max-h-8 max-w-full object-contain transition-all duration-300"
                                         onError={(e) => {
                                             e.target.style.display = "none";
                                             e.target.nextSibling.style.display =

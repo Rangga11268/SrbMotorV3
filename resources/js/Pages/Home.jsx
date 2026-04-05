@@ -250,7 +250,7 @@ export default function Home({
                                     <img
                                         src={brand.logo}
                                         alt={brand.name}
-                                        className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        className="max-h-8 max-w-full object-contain transition-all duration-300"
                                     />
                                 </div>
                                 <h3 className="relative z-10 text-2xl font-light text-[#262626] uppercase tracking-widest">
@@ -516,7 +516,7 @@ export default function Home({
                         </p>
                     </div>
                     <div className="flex-grow w-full">
-                        <div className="grid grid-cols-2 md:grid-cols-4 items-center justify-items-center gap-8 md:gap-16 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700 ease-in-out">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-12 items-center justify-items-center transition-all duration-700 ease-in-out">
                             {[
                                 {
                                     name: "ADIRA",
@@ -529,12 +529,12 @@ export default function Home({
                             ].map((partner) => (
                                 <div
                                     key={partner.name}
-                                    className="h-10 md:h-14 w-full flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500"
+                                    className="w-full h-12 md:h-16 flex items-center justify-center p-2 rounded-xl hover:bg-gray-50 transition-all duration-300 group"
                                 >
                                     <img
                                         src={partner.src}
                                         alt={partner.name}
-                                        className="max-h-full max-w-full object-contain filter drop-shadow-sm"
+                                        className="max-h-full max-w-[80%] md:max-w-full object-contain filter drop-shadow-sm group-hover:scale-105 transition-transform duration-300"
                                     />
                                 </div>
                             ))}
