@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useForm, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import Logo from "@/Components/Public/Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     ChevronRight,
