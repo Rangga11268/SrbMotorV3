@@ -87,10 +87,15 @@ export default function Index({
     const getStatusBadge = (status) => {
         const map = {
             pengajuan_masuk: { color: "info", label: "Pengajuan Masuk" },
+            menunggu_persetujuan: {
+                color: "warning",
+                label: "Menunggu Persetujuan",
+            },
             verifikasi_dokumen: {
                 color: "warning",
                 label: "Verifikasi Dokumen",
             },
+
             dikirim_ke_leasing: { color: "info", label: "Dikirim ke Leasing" },
             survey_dijadwalkan: {
                 color: "warning",
@@ -199,6 +204,10 @@ export default function Index({
                                 <option value="pengajuan_masuk">
                                     Pengajuan Masuk
                                 </option>
+                                <option value="menunggu_persetujuan">
+                                    Menunggu Persetujuan
+                                </option>
+
                                 <option value="verifikasi_dokumen">
                                     Verifikasi Dokumen
                                 </option>

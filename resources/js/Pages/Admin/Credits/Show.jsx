@@ -1760,8 +1760,9 @@ export default function Show({
                     ) : (
                         <div className="text-center p-4 border border-dashed rounded-3 bg-light">
                             <p className="text-muted small mb-1 uppercase tracking-widest font-black">
-                                Status: {credit.status}
+                                Status: {statuses[credit.status]?.label || credit.status}
                             </p>
+
                             <p className="text-body-secondary small mb-0">
                                 Tidak ada aksi alur tersedia untuk tahap ini.
                             </p>
