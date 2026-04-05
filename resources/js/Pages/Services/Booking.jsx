@@ -15,10 +15,7 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
         branch: "",
         customer_name: user?.name || "",
         customer_phone: user?.phone_number || "",
-        motor_brand: "",
-        motor_type: "",
-        license_plate: "",
-        current_km: "",
+        motor_model: "",
         service_date: "",
         service_time: "",
         service_type: "Servis Berkala",
@@ -138,29 +135,11 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                 className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs" placeholder="08XX-XXXX-XXXX" />
                                             {errors.customer_phone && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.customer_phone}</span>}
                                         </div>
-                                        <div className="bg-white p-6">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Merek</label>
-                                            <input type="text" value={data.motor_brand} onChange={e => setData('motor_brand', e.target.value)} required
-                                                className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs" placeholder="HONDA / YAMAHA" />
-                                            {errors.motor_brand && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.motor_brand}</span>}
-                                        </div>
-                                        <div className="bg-white p-6">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">Model Kendaraan</label>
-                                            <input type="text" value={data.motor_type} onChange={e => setData('motor_type', e.target.value)} required
-                                                className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs" placeholder="NMAX 155 ABS" />
-                                            {errors.motor_type && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.motor_type}</span>}
-                                        </div>
-                                        <div className="bg-white p-6">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-2">No. Polisi / Plat</label>
-                                            <input type="text" value={data.license_plate} onChange={e => setData('license_plate', e.target.value)} required
-                                                className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-xs" placeholder="B 1234 ABC" />
-                                            {errors.license_plate && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.license_plate}</span>}
-                                        </div>
-                                        <div className="bg-white p-6">
-                                            <label className="text-[10px] font-bold text-[#1c69d4] uppercase tracking-widest block mb-2">Status Kilometer</label>
-                                            <input type="number" value={data.current_km} onChange={e => setData('current_km', e.target.value)} required
-                                                className="w-full bg-white border border-[#1c69d4] rounded-none px-4 py-3 outline-none text-black focus:ring-1 focus:ring-[#1c69d4] font-bold uppercase text-xs" placeholder="MISAL: 5400" />
-                                            {errors.current_km && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.current_km}</span>}
+                                        <div className="bg-white p-6 md:col-span-2">
+                                            <label className="text-[10px] font-bold text-[#1c69d4] uppercase tracking-widest block mb-2">Model Kendaraan (Nama Motor)</label>
+                                            <input type="text" value={data.motor_model} onChange={e => setData('motor_model', e.target.value)} required
+                                                className="w-full bg-white border border-[#1c69d4] rounded-none px-4 py-3 outline-none text-black focus:ring-1 focus:ring-[#1c69d4] font-bold uppercase text-xs" placeholder="MISAL: HONDA PCX 160 / YAMAHA NMAX" />
+                                            {errors.motor_model && <span className="text-red-500 text-[10px] uppercase font-bold mt-1">{errors.motor_model}</span>}
                                         </div>
                                     </div>
                                 </div>

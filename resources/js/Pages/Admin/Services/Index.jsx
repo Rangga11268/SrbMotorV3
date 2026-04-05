@@ -32,16 +32,16 @@ export default function ServicesIndex({ appointments }) {
     
     const { data, setData, put, processing, reset } = useForm({
         status: "",
-        estimated_cost: "",
-        admin_notes: ""
+        admin_notes: "",
+        service_notes: ""
     });
 
     const openModal = (app) => {
         setSelectedService(app);
         setData({
             status: app.status,
-            estimated_cost: app.estimated_cost || "",
-            admin_notes: app.admin_notes || ""
+            admin_notes: app.admin_notes || "",
+            service_notes: app.service_notes || ""
         });
         setVisible(true);
     };
@@ -100,8 +100,7 @@ export default function ServicesIndex({ appointments }) {
                                 <CTableRow>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 px-4">Tgl & Jam</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Pelanggan</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Kendaraan</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Catatan KM</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Unit Motor</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center">Status</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-end px-4">Aksi</CTableHeaderCell>
                                 </CTableRow>
@@ -120,17 +119,13 @@ export default function ServicesIndex({ appointments }) {
                                             <div className="small text-secondary">{app.service_time}</div>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            <div className="fw-bold">{app.customer_name}</div>
+                                            <div className="fw-bold text-dark">{app.customer_name}</div>
                                             <div className="small text-secondary">{app.customer_phone}</div>
-                                            <div className="small text-primary fw-bold mt-1">{app.branch}</div>
+                                            <div className="small text-primary fw-bold mt-1 uppercase tracking-tight" style={{ fontSize: '0.75rem' }}>{app.branch}</div>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            <div className="fw-semibold text-primary">{app.license_plate}</div>
-                                            <div className="small text-secondary">{app.motor_brand} {app.motor_type}</div>
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            <div className="fw-bold">{app.current_km.toLocaleString()} KM</div>
-                                            <div className="small text-secondary">{app.service_type}</div>
+                                            <div className="fw-bold text-dark uppercase tracking-tighter" style={{ letterSpacing: '-0.2px' }}>{app.motor_model}</div>
+                                            <div className="small text-secondary uppercase font-bold" style={{ fontSize: '10px' }}>{app.service_type}</div>
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
                                             <CBadge color={getBadge(app.status)} shape="rounded-pill" className="px-3 py-2 text-uppercase" style={{ fontSize: "0.7rem", letterSpacing: "1px" }}>
@@ -138,8 +133,8 @@ export default function ServicesIndex({ appointments }) {
                                             </CBadge>
                                         </CTableDataCell>
                                         <CTableDataCell className="text-end px-4">
-                                            <CButton color="dark" variant="outline" size="sm" onClick={() => openModal(app)}>
-                                                <CIcon icon={cilSettings} className="me-1" /> Kelola
+                                            <CButton color="dark" variant="outline" size="sm" className="rounded-pill px-3" onClick={() => openModal(app)}>
+                                                <CIcon icon={cilSettings} className="me-1" /> KELOLA
                                             </CButton>
                                         </CTableDataCell>
                                     </CTableRow>
@@ -180,19 +175,19 @@ export default function ServicesIndex({ appointments }) {
                         </CFormSelect>
                     </div>
 
+
                     <div className="mb-3">
-                        <label className="form-label fw-bold small text-secondary text-uppercase">Estimasi Biaya Final (Opsional)</label>
-                        <CFormInput 
-                            type="number" 
-                            placeholder="Misal: 150000" 
-                            value={data.estimated_cost} 
-                            onChange={e => setData('estimated_cost', e.target.value)}
+                        <label className="form-label fw-bold small text-secondary text-uppercase tracking-wider">Catatan Layanan / Benefit (Tampil ke User)</label>
+                        <CFormTextarea 
+                            rows={2} 
+                            placeholder="Contoh: Gratis Ganti Oli / Diskon Jasa 20% / Silakan bawa STNK" 
+                            value={data.service_notes} 
+                            onChange={e => setData('service_notes', e.target.value)}
                         />
-                        <div className="form-text small">Diisi terutama saat status "Completed" untuk notifikasi kasir/pelanggan.</div>
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label fw-bold small text-secondary text-uppercase">Catatan Admin / Resolusi Masalah (Opsional)</label>
+                        <label className="form-label fw-bold small text-secondary text-uppercase tracking-wider">Pesan Admin / Resolusi Masalah (Internal/Log)</label>
                         <CFormTextarea 
                             rows={3} 
                             placeholder="Alasan penolakan / Catatan untuk mekanik / Kerusakan yang ditemukan" 

@@ -190,19 +190,16 @@ erDiagram
         string branch
         string customer_name
         string customer_phone
-        string motor_brand
-        string motor_type
-        string license_plate
-        int current_km
+        string motor_model
         date service_date
         time service_time
         string service_type
         text complaint_notes
-        decimal estimated_cost
         string status
         string cancelled_by
         text cancel_reason
         text admin_notes
+        text service_notes
         timestamp created_at
         timestamp updated_at
     }
@@ -254,7 +251,7 @@ erDiagram
 | `documents` | 15 | Manajemen berkas dokumen persyaratan kredit (verified) |
 | `survey_schedules` | 19 | Penjadwalan dan hasil laporan survei lapangan (verified) |
 | `transaction_logs` | 12 | Audit trail untuk setiap perubahan status transaksi (verified) |
-| `service_appointments` | 20 | Reservasi layanan servis bengkel (Purna Jual) (verified) |
+| `service_appointments` | 17 | Reservasi layanan servis bengkel (Booking-Only) (verified) |
 | `settings` | 8 | Konfigurasi global sistem (verified) |
 | `notifications` | 8 | Notifikasi sistem berbasis akun (verified) |
 

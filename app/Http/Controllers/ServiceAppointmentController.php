@@ -66,10 +66,7 @@ class ServiceAppointmentController extends Controller
             'branch' => 'required|string|max:100',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
-            'motor_brand' => 'required|string|max:100',
-            'motor_type' => 'required|string|max:100',
-            'license_plate' => 'required|string|max:20',
-            'current_km' => 'required|integer|min:0',
+            'motor_model' => 'required|string|max:255',
             'service_date' => 'required|date|after_or_equal:today',
             'service_time' => 'required',
             'service_type' => 'required|in:Servis Berkala,Ganti Oli,Perbaikan Berat,Lainnya',
@@ -101,10 +98,9 @@ class ServiceAppointmentController extends Controller
             $message = "*[ADMIN] Booking Servis Baru*\n\n" .
                 "Cabang: {$appointment->branch}\n" .
                 "Pelanggan: {$appointment->customer_name}\n" .
-                "Unit: {$appointment->motor_brand} {$appointment->motor_type}\n" .
-                "Plat: {$appointment->license_plate}\n" .
-                "KM: {$appointment->current_km} km\n" .
+                "Unit: {$appointment->motor_model}\n" .
                 "Jadwal: " . Carbon::parse($appointment->service_date)->format('d M Y') . " {$appointment->service_time}\n" .
+                "Kategori: {$appointment->service_type}\n" .
                 "Keluhan: " . ($appointment->complaint_notes ?? '-') . "\n\n" .
                 "Cek detail di dashboard.";
             WhatsAppService::sendMessage($adminPhone, $message);
@@ -112,7 +108,7 @@ class ServiceAppointmentController extends Controller
 
         // 3. Notify User via WhatsApp
         $userMsg = "Halo {$appointment->customer_name},\n\n" .
-            "Terima kasih! Booking servis Anda (#{$appointment->id}) di cabang *{$appointment->branch}* untuk motor *{$appointment->motor_brand} {$appointment->motor_type}* telah kami terima.\n\n" .
+            "Terima kasih! Booking servis Anda (#{$appointment->id}) di cabang *{$appointment->branch}* untuk motor *{$appointment->motor_model}* telah kami terima.\n\n" .
             "Jadwal: " . Carbon::parse($appointment->service_date)->format('d M Y') . " jam {$appointment->service_time}.\n\n" .
             "Silakan datang tepat waktu sesuai jadwal. Antrean Anda akan diverifikasi oleh tim kami. — SRB Motor (Powered by SSM)";
         WhatsAppService::sendMessage($appointment->customer_phone, $userMsg);
@@ -131,8 +127,8 @@ class ServiceAppointmentController extends Controller
 
         $validated = $request->validate([
             'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled',
-            'admin_notes' => 'nullable|string|max:500',
-            'estimated_cost' => 'nullable|numeric|min:0',
+            'admin_notes' => 'nullable|string|max:2000',
+            'service_notes' => 'nullable|string|max:2000',
         ]);
 
         if ($validated['status'] === 'cancelled' && $service->status !== 'cancelled') {
@@ -153,12 +149,16 @@ class ServiceAppointmentController extends Controller
         if (isset($statusLabels[$service->status])) {
             $msg = "Halo {$service->customer_name},\n\nStatus booking servis Anda (#{$service->id}) saat ini adalah: *" . $statusLabels[$service->status] . "*.\n\n";
             
-            if ($service->status === 'completed' && $service->estimated_cost > 0) {
-                $msg .= "Total Biaya Perbaikan: *Rp " . number_format($service->estimated_cost, 0, ',', '.') . "*\n";
+            if ($service->status === 'completed') {
+                $msg .= "Status: *Selesai & Siap Diambil*\n";
             }
             
+            if ($service->service_notes) {
+                $msg .= "Catatan Layanan: *{$service->service_notes}*\n";
+            }
+
             if ($service->admin_notes) {
-                $msg .= "Catatan: {$service->admin_notes}\n";
+                $msg .= "Pesan Admin: {$service->admin_notes}\n";
             }
             $msg .= "\nSilakan hubungi kami untuk informasi lebih lanjut. — Dealer SRB Motor SSM";
             WhatsAppService::sendMessage($service->customer_phone, $msg);

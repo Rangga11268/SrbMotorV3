@@ -99,7 +99,7 @@ export default function Navbar({ auth }) {
             {
                 label: "Riwayat",
                 href: route("motors.user-transactions"),
-                active: url.startsWith("/user/transactions") || url === "/services",
+                active: url.startsWith("/user/transactions"),
             },
             {
                 label: "Cicilan",
