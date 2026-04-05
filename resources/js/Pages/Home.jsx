@@ -425,18 +425,29 @@ export default function Home({
             </section>
 
             {/* FINANCING PARTNERS (Credibility) */}
-            <section className="py-16 bg-white border-y border-gray-100 overflow-hidden">
+            <section className="py-12 bg-white border-y border-gray-100 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12">
-                    <div className="flex-shrink-0">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]">MITRA<br/>PEMBIAYAAN</p>
+                    <div className="flex-shrink-0 border-r border-gray-100 pr-12 hidden md:block">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] leading-relaxed">
+                            MITRA<br />PEMBIAYAAN
+                        </p>
                     </div>
-                    <div className="flex-grow">
-                        <div className="flex flex-wrap items-center justify-center md:justify-between gap-8 md:gap-12 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-                            {/* Financing Partner Placeholders */}
-                            <span className="text-2xl font-black text-black tracking-tighter">ADIRA FINANCE</span>
-                            <span className="text-2xl font-black text-black tracking-tighter">OTO FINANCE</span>
-                            <span className="text-2xl font-black text-black tracking-tighter">FIF GROUP</span>
-                            <span className="text-2xl font-black text-black tracking-tighter">MUF MANDIRI</span>
+                    <div className="flex-grow w-full">
+                        <div className="grid grid-cols-2 md:grid-cols-4 items-center justify-items-center gap-8 md:gap-16 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700 ease-in-out">
+                            {[
+                                { name: 'ADIRA', src: '/assets/img/adira.webp' },
+                                { name: 'FIF', src: '/assets/img/fif.webp' },
+                                { name: 'OTO', src: '/assets/img/oto.webp' },
+                                { name: 'MUF', src: '/assets/img/muf.webp' },
+                            ].map((partner) => (
+                                <div key={partner.name} className="h-10 md:h-14 w-full flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500">
+                                    <img 
+                                        src={partner.src} 
+                                        alt={partner.name} 
+                                        className="max-h-full max-w-full object-contain filter drop-shadow-sm"
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
