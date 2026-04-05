@@ -246,11 +246,11 @@ export default function Home({
                                 }`}
                             >
                                 <div className="absolute inset-0 bg-[#f9f9f9] transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-in-out z-0"></div>
-                                <div className="relative z-10 lg:w-48 lg:h-48 w-32 h-32 mb-8 flex items-center justify-center">
+                                <div className="relative z-10 lg:w-64 lg:h-48 w-40 h-32 mb-8 flex items-center justify-center">
                                     <img
                                         src={brand.logo}
                                         alt={brand.name}
-                                        className="max-h-8 max-w-full object-contain transition-all duration-300"
+                                        className="h-full w-full object-contain transition-all duration-300 drop-shadow-2xl"
                                     />
                                 </div>
                                 <h3 className="relative z-10 text-2xl font-light text-[#262626] uppercase tracking-widest">
