@@ -36,6 +36,7 @@ export default function Navbar({ auth }) {
     const [showResults, setShowResults] = useState(false);
     const [authModalVisible, setAuthModalVisible] = useState(false);
     const [authModalMessage, setAuthModalMessage] = useState(null);
+    const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
     const { url } = usePage();
 
     useEffect(() => {
@@ -135,13 +136,69 @@ export default function Navbar({ auth }) {
 
                     {/* Desktop Search & Location (BMW Style - Sharp Block) */}
                     <div className="hidden md:flex flex-1 items-center max-w-3xl relative gap-0 border border-gray-300">
-                        {/* Location Picker */}
-                        <div className="relative flex-shrink-0 border-r border-gray-300 bg-gray-50">
-                            <button className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold text-[#262626] hover:bg-[#f9f9f9] transition-colors uppercase tracking-[0.2em] rounded-none">
+                        {/* Location Picker / Branches */}
+                        <div className="relative flex-shrink-0 border-r border-gray-300 bg-gray-50 group/branch">
+                            <button 
+                                onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
+                                className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold text-[#262626] hover:bg-[#f9f9f9] transition-colors uppercase tracking-[0.2em] rounded-none"
+                            >
                                 <MapPin className="w-4 h-4 text-[#1c69d4]" />
-                                <span>Bekasi</span>
-                                <ChevronDown className="w-3 h-3 text-[#262626]" />
+                                <span>BEKASI (PUSAT)</span>
+                                <ChevronDown className={`w-3 h-3 text-[#262626] transition-transform duration-300 ${branchDropdownOpen ? 'rotate-180' : ''}`} />
                             </button>
+
+                            <AnimatePresence>
+                                {branchDropdownOpen && (
+                                    <>
+                                        <div 
+                                            className="fixed inset-0 z-[-1]" 
+                                            onClick={() => setBranchDropdownOpen(false)} 
+                                        />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 0 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 0 }}
+                                            className="absolute top-full left-[-1px] w-[300px] bg-white border border-gray-300 border-t-0 shadow-2xl z-50 rounded-none overflow-hidden"
+                                        >
+                                            <div className="p-5 border-b border-gray-100 bg-gray-50/50">
+                                                <p className="text-[9px] font-black text-[#757575] uppercase tracking-[0.3em] mb-1">JARINGAN DEALER</p>
+                                                <p className="text-xs font-black text-[#262626] uppercase">SINAR SURYA MOTOR (SSM)</p>
+                                            </div>
+                                            <div className="py-2">
+                                                {[
+                                                    { name: "SSM JATIASIH", loc: "BEKASI", isPusat: true },
+                                                    { name: "SSM MEKAR SARI", loc: "BEKASI" },
+                                                    { name: "SSM DEPOK", loc: "DEPOK" },
+                                                    { name: "SSM BOGOR", loc: "BOGOR" },
+                                                    { name: "SSM TANGERANG", loc: "TANGERANG" }
+                                                ].map((branch, i) => (
+                                                    <div 
+                                                        key={i}
+                                                        className="px-6 py-3 hover:bg-[#f9f9f9] group/item cursor-pointer transition-colors border-l-2 border-transparent hover:border-[#1c69d4]"
+                                                    >
+                                                        <div className="flex justify-between items-center">
+                                                            <div>
+                                                                <p className="text-[10px] font-bold text-[#262626] uppercase tracking-wider group-hover/item:text-[#1c69d4]">
+                                                                    {branch.name}
+                                                                </p>
+                                                                <p className="text-[8px] font-medium text-[#757575] uppercase tracking-widest mt-0.5">
+                                                                    {branch.loc} {branch.isPusat && "(PUSAT)" || ""}
+                                                                </p>
+                                                            </div>
+                                                            <ChevronRight className="w-3 h-3 text-gray-300 group-hover/item:text-[#1c69d4] group-hover/item:translate-x-1 transition-all" />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="p-4 bg-gray-50 border-t border-gray-100">
+                                                <p className="text-[8px] text-[#757575] font-bold uppercase leading-relaxed tracking-widest">
+                                                    * Seluruh unit SRB Motor dapat dilayani di seluruh jaringan SSM.
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    </>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         {/* Search Bar */}
