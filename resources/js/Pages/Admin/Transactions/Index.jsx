@@ -34,6 +34,7 @@ import {
     cilReload,
     cilBike,
     cilTrash,
+    cilOptions,
 } from "@coreui/icons";
 
 export default function Index({
@@ -218,8 +219,8 @@ export default function Index({
             <CCard className="mb-4 border-0 shadow-sm">
                 <CCardBody>
                     <CRow className="g-3 align-items-end">
-                        <CCol md={6}>
-                            <label className="small text-body-secondary">
+                        <CCol xs={12} md={6}>
+                            <label className="small text-body-secondary mb-1">
                                 Cari Transaksi
                             </label>
                             <CInputGroup>
@@ -228,7 +229,7 @@ export default function Index({
                                 </CInputGroupText>
                                 <CFormInput
                                     className="border-start-0"
-                                    placeholder="ID, nama pelanggan, motor..."
+                                    placeholder="ID, nama, motor..."
                                     value={search}
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
@@ -236,8 +237,8 @@ export default function Index({
                                 />
                             </CInputGroup>
                         </CCol>
-                        <CCol md={4}>
-                            <label className="small text-body-secondary">
+                        <CCol xs={12} sm={8} md={4}>
+                            <label className="small text-body-secondary mb-1">
                                 Status
                             </label>
                             <CFormSelect
@@ -281,11 +282,11 @@ export default function Index({
                                 ))}
                             </CFormSelect>
                         </CCol>
-                        <CCol md={2}>
+                        <CCol xs={12} sm={4} md={2}>
                             {(search || status) && (
                                 <CButton
                                     color="light"
-                                    className="w-100"
+                                    className="w-100 mt-md-0"
                                     onClick={handleReset}
                                 >
                                     <CIcon icon={cilReload} size="sm" /> Reset
@@ -325,7 +326,7 @@ export default function Index({
                                 <CTableHeaderCell className="ps-4">
                                     No. Transaksi
                                 </CTableHeaderCell>
-                                <CTableHeaderCell>Pelanggan</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Pelanggan</CTableHeaderCell>
                                 <CTableHeaderCell>Motor</CTableHeaderCell>
                                 <CTableHeaderCell>Total Bayar</CTableHeaderCell>
                                 <CTableHeaderCell>Status</CTableHeaderCell>
@@ -351,6 +352,12 @@ export default function Index({
                                                         .padStart(6, "0")}
                                                 </span>
                                                 <span
+                                                    className="d-md-none text-body-tertiary fw-normal"
+                                                    style={{ fontSize: 11 }}
+                                                >
+                                                    - {trx.name || trx.user?.name || "N/A"}
+                                                </span>
+                                                <span
                                                     className="text-body-tertiary"
                                                     style={{ fontSize: 11 }}
                                                 >
@@ -362,7 +369,7 @@ export default function Index({
                                                 </span>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             <div className="d-flex align-items-center gap-2">
                                                 <CAvatar
                                                     color="success"
@@ -439,59 +446,60 @@ export default function Index({
                                             {getStatusBadge(trx.status)}
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
-                                            <div className="d-flex gap-2 justify-content-center">
-                                                <Link
-                                                    href={route(
-                                                        "admin.transactions.show",
-                                                        trx.id,
-                                                    )}
-                                                    className="btn btn-sm btn-light border d-flex align-items-center justify-content-center"
-                                                    style={{
-                                                        width: 32,
-                                                        height: 32,
-                                                    }}
-                                                    title="Detail"
-                                                >
-                                                    <CIcon
-                                                        icon={cilZoom}
-                                                        size="sm"
-                                                    />
-                                                </Link>
-                                                <Link
-                                                    href={route(
-                                                        "admin.transactions.edit",
-                                                        trx.id,
-                                                    )}
-                                                    className="btn btn-sm btn-warning d-flex align-items-center justify-content-center shadow-sm"
-                                                    style={{
-                                                        width: 32,
-                                                        height: 32,
-                                                    }}
-                                                    title="Edit"
-                                                >
-                                                    <CIcon
-                                                        icon={cilPencil}
-                                                        size="sm"
-                                                        className="text-white"
-                                                    />
-                                                </Link>
-                                                <button
-                                                    onClick={() =>
-                                                        handleDelete(trx.id)
-                                                    }
-                                                    className="btn btn-sm btn-danger d-flex align-items-center justify-content-center shadow-sm"
-                                                    style={{
-                                                        width: 32,
-                                                        height: 32,
-                                                    }}
-                                                    title="Hapus"
-                                                >
-                                                    <CIcon
-                                                        icon={cilTrash}
-                                                        size="sm"
-                                                        className="text-white"
-                                                    />
-                                                </button>
+                                            <div className="d-flex gap-1 justify-content-center">
+                                                {/* Desktop Actions */}
+                                                <div className="d-none d-md-flex gap-1">
+                                                    <Link
+                                                        href={route("admin.transactions.show", trx.id)}
+                                                        className="btn btn-sm btn-outline-primary"
+                                                        title="Detail"
+                                                    >
+                                                        <CIcon icon={cilZoom} size="sm" />
+                                                    </Link>
+                                                    <Link
+                                                        href={route("admin.transactions.edit", trx.id)}
+                                                        className="btn btn-sm btn-outline-warning"
+                                                        title="Edit"
+                                                    >
+                                                        <CIcon icon={cilPencil} size="sm" />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => handleDelete(trx.id)}
+                                                        className="btn btn-sm btn-outline-danger"
+                                                        title="Hapus"
+                                                    >
+                                                        <CIcon icon={cilTrash} size="sm" />
+                                                    </button>
+                                                </div>
+
+                                                {/* Mobile Actions Dropdown */}
+                                                <div className="d-md-none">
+                                                    <CDropdown alignment="end">
+                                                        <CDropdownToggle
+                                                            color="light"
+                                                            size="sm"
+                                                            caret={false}
+                                                            className="p-1 border shadow-sm d-flex align-items-center justify-content-center"
+                                                            style={{ width: 32, height: 32, borderRadius: 8 }}
+                                                        >
+                                                            <CIcon icon={cilOptions} size="sm" />
+                                                        </CDropdownToggle>
+                                                        <CDropdownMenu>
+                                                            <CDropdownItem as={Link} href={route("admin.transactions.show", trx.id)}>
+                                                                <CIcon icon={cilZoom} className="me-2" /> Detail
+                                                            </CDropdownItem>
+                                                            <CDropdownItem as={Link} href={route("admin.transactions.edit", trx.id)}>
+                                                                <CIcon icon={cilPencil} className="me-2" /> Edit
+                                                            </CDropdownItem>
+                                                            <CDropdownItem 
+                                                                onClick={() => handleDelete(trx.id)}
+                                                                className="text-danger"
+                                                            >
+                                                                <CIcon icon={cilTrash} className="me-2" /> Hapus
+                                                            </CDropdownItem>
+                                                        </CDropdownMenu>
+                                                    </CDropdown>
+                                                </div>
                                             </div>
                                         </CTableDataCell>
                                     </CTableRow>

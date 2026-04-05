@@ -30,6 +30,10 @@ import {
     CModalFooter,
     CFormTextarea,
     CFormLabel,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -42,6 +46,7 @@ import {
     cilShieldAlt,
     cilCheckCircle,
     cilXCircle,
+    cilOptions,
 } from "@coreui/icons";
 import { toast } from "react-hot-toast";
 
@@ -284,10 +289,10 @@ export default function Index({ users: initialUsers, filters }) {
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
                                 <CTableHeaderCell>Pengguna</CTableHeaderCell>
-                                <CTableHeaderCell>Email</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Email</CTableHeaderCell>
                                 <CTableHeaderCell>Role</CTableHeaderCell>
-                                <CTableHeaderCell>Status</CTableHeaderCell>
-                                <CTableHeaderCell>Terdaftar</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Status</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Terdaftar</CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
                                 </CTableHeaderCell>
@@ -391,6 +396,9 @@ export default function Index({ users: initialUsers, filters }) {
                                                     <div className="fw-semibold">
                                                         {user.name}
                                                     </div>
+                                                    <div className="d-md-none text-body-tertiary small">
+                                                        {user.email}
+                                                    </div>
                                                     <div className="text-body-tertiary small">
                                                         ID: #
                                                         {user.id
@@ -400,7 +408,7 @@ export default function Index({ users: initialUsers, filters }) {
                                                 </div>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell className="text-body-secondary small">
+                                        <CTableDataCell className="d-none d-md-table-cell text-body-secondary small">
                                             {user.email}
                                         </CTableDataCell>
                                         <CTableDataCell>
@@ -420,14 +428,14 @@ export default function Index({ users: initialUsers, filters }) {
                                                 </CBadge>
                                             )}
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             {user.email_verified_at ? (
                                                 <CBadge color="success" shape="rounded-pill">Terverifikasi</CBadge>
                                             ) : (
                                                 <CBadge color="danger" shape="rounded-pill">Belum Verifikasi</CBadge>
                                             )}
                                         </CTableDataCell>
-                                        <CTableDataCell className="small text-body-secondary">
+                                        <CTableDataCell className="d-none d-md-table-cell small text-body-secondary">
                                             {new Date(
                                                 user.created_at,
                                             ).toLocaleDateString("id-ID", {
@@ -438,69 +446,52 @@ export default function Index({ users: initialUsers, filters }) {
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <div className="d-flex gap-1 justify-content-center">
-                                                {user.role === "admin" ? (
-                                                    <CButton
-                                                        color="warning"
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() =>
-                                                            confirmRoleChange(
-                                                                user,
-                                                                "user",
-                                                            )
-                                                        }
-                                                        title="Turunkan ke User"
-                                                    >
-                                                        <CIcon
-                                                            icon={cilUser}
-                                                            size="sm"
-                                                        />
+                                                {/* Desktop Buttons */}
+                                                <div className="d-none d-md-flex gap-1">
+                                                    {user.role === "admin" ? (
+                                                        <CButton color="warning" variant="outline" size="sm" onClick={() => confirmRoleChange(user, "user")} title="Turunkan ke User">
+                                                            <CIcon icon={cilUser} size="sm" />
+                                                        </CButton>
+                                                    ) : (
+                                                        <CButton color="primary" variant="outline" size="sm" onClick={() => confirmRoleChange(user, "admin")} title="Promosikan ke Admin">
+                                                            <CIcon icon={cilShieldAlt} size="sm" />
+                                                        </CButton>
+                                                    )}
+                                                    <CButton color={user.email_verified_at ? "danger" : "success"} variant="outline" size="sm" onClick={() => handleToggleVerify(user)} title={user.email_verified_at ? "Batalkan Verifikasi" : "Verifikasi Manual"}>
+                                                        <CIcon icon={user.email_verified_at ? cilXCircle : cilCheckCircle} size="sm" />
                                                     </CButton>
-                                                ) : (
-                                                    <CButton
-                                                        color="primary"
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() =>
-                                                            confirmRoleChange(
-                                                                user,
-                                                                "admin",
-                                                            )
-                                                        }
-                                                        title="Promosikan ke Admin"
-                                                    >
-                                                        <CIcon
-                                                            icon={cilShieldAlt}
-                                                            size="sm"
-                                                        />
+                                                    <CButton color="danger" variant="outline" size="sm" onClick={() => confirmDelete(user)} title="Hapus">
+                                                        <CIcon icon={cilTrash} size="sm" />
                                                     </CButton>
-                                                )}
-                                                <CButton
-                                                    color={user.email_verified_at ? "danger" : "success"}
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => handleToggleVerify(user)}
-                                                    title={user.email_verified_at ? "Batalkan Verifikasi" : "Verifikasi Manual"}
-                                                >
-                                                    <CIcon
-                                                        icon={user.email_verified_at ? cilXCircle : cilCheckCircle}
-                                                        size="sm"
-                                                    />
-                                                </CButton>
-                                                <CButton
-                                                    color="danger"
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        confirmDelete(user)
-                                                    }
-                                                    title="Hapus"
-                                                >
-                                                    <CIcon
-                                                        icon={cilTrash}
-                                                        size="sm"
-                                                    />
-                                                </CButton>
+                                                </div>
+
+                                                {/* Mobile Dropdown */}
+                                                <div className="d-md-none">
+                                                    <CDropdown alignment="end">
+                                                        <CDropdownToggle
+                                                            color="light"
+                                                            size="sm"
+                                                            caret={false}
+                                                            className="p-1 border shadow-sm d-flex align-items-center justify-content-center"
+                                                            style={{ width: 32, height: 32, borderRadius: 8 }}
+                                                        >
+                                                            <CIcon icon={cilOptions} size="sm" />
+                                                        </CDropdownToggle>
+                                                        <CDropdownMenu>
+                                                            <CDropdownItem onClick={() => user.role === 'admin' ? confirmRoleChange(user, 'user') : confirmRoleChange(user, 'admin')}>
+                                                                <CIcon icon={user.role === 'admin' ? cilUser : cilShieldAlt} className="me-2" />
+                                                                {user.role === 'admin' ? 'Turunkan ke User' : 'Promosikan ke Admin'}
+                                                            </CDropdownItem>
+                                                            <CDropdownItem onClick={() => handleToggleVerify(user)}>
+                                                                <CIcon icon={user.email_verified_at ? cilXCircle : cilCheckCircle} className="me-2" />
+                                                                {user.email_verified_at ? 'Batalkan Verifikasi' : 'Verifikasi Manual'}
+                                                            </CDropdownItem>
+                                                            <CDropdownItem onClick={() => confirmDelete(user)} className="text-danger">
+                                                                <CIcon icon={cilTrash} className="me-2" /> Hapus
+                                                            </CDropdownItem>
+                                                        </CDropdownMenu>
+                                                    </CDropdown>
+                                                </div>
                                             </div>
                                         </CTableDataCell>
                                     </CTableRow>

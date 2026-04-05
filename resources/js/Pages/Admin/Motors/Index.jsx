@@ -25,6 +25,10 @@ import {
     CPagination,
     CPaginationItem,
     CSpinner,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -36,6 +40,7 @@ import {
     cilReload,
     cilBike,
     cilStorage,
+    cilOptions,
 } from "@coreui/icons";
 
 export default function Index({ motors: initialMotors, filters }) {
@@ -144,20 +149,20 @@ export default function Index({ motors: initialMotors, filters }) {
             <CCard className="mb-4">
                 <CCardBody>
                     <CRow className="g-3 align-items-end">
-                        <CCol md={4}>
+                        <CCol xs={12} md={4}>
                             <CInputGroup>
                                 <CInputGroupText>
                                     <CIcon icon={cilSearch} size="sm" />
                                 </CInputGroupText>
                                 <CFormInput
                                     type="text"
-                                    placeholder="Cari nama motor..."
+                                    placeholder="Cari..."
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </CInputGroup>
                         </CCol>
-                        <CCol md={3}>
+                        <CCol xs={12} sm={6} md={3}>
                             <CFormSelect
                                 value={brand}
                                 onChange={(e) => setBrand(e.target.value)}
@@ -169,7 +174,7 @@ export default function Index({ motors: initialMotors, filters }) {
                                 <option value="Suzuki">Suzuki</option>
                             </CFormSelect>
                         </CCol>
-                        <CCol md={3}>
+                        <CCol xs={12} sm={6} md={3}>
                             <CFormSelect
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
@@ -179,11 +184,11 @@ export default function Index({ motors: initialMotors, filters }) {
                                 <option value="0">Kosong</option>
                             </CFormSelect>
                         </CCol>
-                        <CCol md={2}>
+                        <CCol xs={12} md={2}>
                             {(search || brand || status) && (
                                 <CButton
                                     color="light"
-                                    className="w-100 d-flex align-items-center justify-content-center gap-1"
+                                    className="w-100 d-flex align-items-center justify-content-center gap-1 mt-md-0"
                                     onClick={resetFilters}
                                 >
                                     <CIcon icon={cilReload} size="sm" />
@@ -222,7 +227,9 @@ export default function Index({ motors: initialMotors, filters }) {
                         <CTableHead className="text-body-secondary bg-body-tertiary">
                             <CTableRow>
                                 <CTableHeaderCell>Motor</CTableHeaderCell>
-                                <CTableHeaderCell>Merk / Tipe</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">
+                                    Merk / Tipe
+                                </CTableHeaderCell>
                                 <CTableHeaderCell>Harga</CTableHeaderCell>
                                 <CTableHeaderCell>Stok & Status</CTableHeaderCell>
                                 <CTableHeaderCell className="text-end">
@@ -240,70 +247,10 @@ export default function Index({ motors: initialMotors, filters }) {
                                             key={`skeleton-${index}`}
                                             className="align-middle"
                                         >
-                                            <CTableDataCell>
+                                            <CTableDataCell colSpan={5}>
                                                 <div
                                                     style={{
-                                                        height: "20px",
-                                                        backgroundColor:
-                                                            "#e9ecef",
-                                                        borderRadius: "4px",
-                                                        animation:
-                                                            "pulse 1.5s ease-in-out infinite",
-                                                    }}
-                                                />
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                                <div
-                                                    style={{
-                                                        height: "20px",
-                                                        backgroundColor:
-                                                            "#e9ecef",
-                                                        borderRadius: "4px",
-                                                        animation:
-                                                            "pulse 1.5s ease-in-out infinite",
-                                                    }}
-                                                />
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                                <div
-                                                    style={{
-                                                        height: "20px",
-                                                        backgroundColor:
-                                                            "#e9ecef",
-                                                        borderRadius: "4px",
-                                                        animation:
-                                                            "pulse 1.5s ease-in-out infinite",
-                                                    }}
-                                                />
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                                <div
-                                                    style={{
-                                                        height: "20px",
-                                                        backgroundColor:
-                                                            "#e9ecef",
-                                                        borderRadius: "4px",
-                                                        animation:
-                                                            "pulse 1.5s ease-in-out infinite",
-                                                    }}
-                                                />
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                                <div
-                                                    style={{
-                                                        height: "20px",
-                                                        backgroundColor:
-                                                            "#e9ecef",
-                                                        borderRadius: "4px",
-                                                        animation:
-                                                            "pulse 1.5s ease-in-out infinite",
-                                                    }}
-                                                />
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                                <div
-                                                    style={{
-                                                        height: "20px",
+                                                        height: "40px",
                                                         backgroundColor:
                                                             "#e9ecef",
                                                         borderRadius: "4px",
@@ -349,32 +296,25 @@ export default function Index({ motors: initialMotors, filters }) {
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <div className="fw-semibold">
+                                                    <div className="fw-semibold text-nowrap">
                                                         {motor.name}
                                                     </div>
-
+                                                    <div className="d-md-none text-body-tertiary small text-nowrap">
+                                                        {motor.brand} • {motor.type} • {motor.year}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
-                                            <div className="fw-medium">
+                                        <CTableDataCell className="d-none d-md-table-cell">
+                                            <div className="fw-medium text-nowrap">
                                                 {motor.brand}
                                             </div>
-                                            <div className="text-body-tertiary small">
+                                            <div className="text-body-tertiary small text-nowrap">
                                                 {motor.type} • {motor.year}
                                             </div>
-                                            {motor.colors && motor.colors.length > 0 && (
-                                                <div className="mt-1 d-flex flex-wrap gap-1">
-                                                    {motor.colors.map((c, i) => (
-                                                        <CBadge key={i} color="light" textColor="dark" shape="rounded-pill" style={{fontSize: '9px'}}>
-                                                            {c}
-                                                        </CBadge>
-                                                    ))}
-                                                </div>
-                                            )}
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            <span className="fw-bold text-primary">
+                                            <span className="fw-bold text-primary text-nowrap">
                                                 Rp{" "}
                                                 {new Intl.NumberFormat(
                                                     "id-ID",
@@ -382,55 +322,67 @@ export default function Index({ motors: initialMotors, filters }) {
                                             </span>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            <div className="d-flex align-items-center gap-2">
-                                                {motor.tersedia || motor.tersedia === 1 ? (
-                                                    <CBadge color="success" shape="rounded-pill">Tersedia</CBadge>
-                                                ) : (
-                                                    <CBadge color="danger" shape="rounded-pill">Kosong</CBadge>
-                                                )}
-                                            </div>
+                                            {motor.tersedia || motor.tersedia === 1 ? (
+                                                <CBadge color="success" shape="rounded-pill">Tersedia</CBadge>
+                                            ) : (
+                                                <CBadge color="danger" shape="rounded-pill">Kosong</CBadge>
+                                            )}
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <div className="d-flex gap-1 justify-content-end">
-                                                <Link
-                                                    href={route(
-                                                        "admin.motors.show",
-                                                        motor.id,
-                                                    )}
-                                                    className="btn btn-sm btn-outline-primary"
-                                                    title="Detail"
-                                                >
-                                                    <CIcon
-                                                        icon={cilZoom}
-                                                        size="sm"
-                                                    />
-                                                </Link>
+                                                {/* Desktop Actions */}
+                                                <div className="d-none d-md-flex gap-1">
+                                                    <Link
+                                                        href={route("admin.motors.show", motor.id)}
+                                                        className="btn btn-sm btn-outline-primary"
+                                                        title="Detail"
+                                                    >
+                                                        <CIcon icon={cilZoom} size="sm" />
+                                                    </Link>
+                                                    <Link
+                                                        href={route("admin.motors.edit", motor.id)}
+                                                        className="btn btn-sm btn-outline-warning"
+                                                        title="Edit"
+                                                    >
+                                                        <CIcon icon={cilPencil} size="sm" />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => confirmDelete(motor)}
+                                                        className="btn btn-sm btn-outline-danger"
+                                                        title="Hapus"
+                                                    >
+                                                        <CIcon icon={cilTrash} size="sm" />
+                                                    </button>
+                                                </div>
 
-                                                <Link
-                                                    href={route(
-                                                        "admin.motors.edit",
-                                                        motor.id,
-                                                    )}
-                                                    className="btn btn-sm btn-outline-warning"
-                                                    title="Edit"
-                                                >
-                                                    <CIcon
-                                                        icon={cilPencil}
-                                                        size="sm"
-                                                    />
-                                                </Link>
-                                                <button
-                                                    onClick={() =>
-                                                        confirmDelete(motor)
-                                                    }
-                                                    className="btn btn-sm btn-outline-danger"
-                                                    title="Hapus"
-                                                >
-                                                    <CIcon
-                                                        icon={cilTrash}
-                                                        size="sm"
-                                                    />
-                                                </button>
+                                                {/* Mobile Actions Dropdown */}
+                                                <div className="d-md-none">
+                                                    <CDropdown alignment="end">
+                                                        <CDropdownToggle
+                                                            color="light"
+                                                            size="sm"
+                                                            caret={false}
+                                                            className="p-1 border shadow-sm d-flex align-items-center justify-content-center"
+                                                            style={{ width: 32, height: 32, borderRadius: 8 }}
+                                                        >
+                                                            <CIcon icon={cilOptions} size="sm" />
+                                                        </CDropdownToggle>
+                                                        <CDropdownMenu>
+                                                            <CDropdownItem as={Link} href={route("admin.motors.show", motor.id)}>
+                                                                <CIcon icon={cilZoom} className="me-2" /> Detail
+                                                            </CDropdownItem>
+                                                            <CDropdownItem as={Link} href={route("admin.motors.edit", motor.id)}>
+                                                                <CIcon icon={cilPencil} className="me-2" /> Edit
+                                                            </CDropdownItem>
+                                                            <CDropdownItem 
+                                                                onClick={() => confirmDelete(motor)}
+                                                                className="text-danger"
+                                                            >
+                                                                <CIcon icon={cilTrash} className="me-2" /> Hapus
+                                                            </CDropdownItem>
+                                                        </CDropdownMenu>
+                                                    </CDropdown>
+                                                </div>
                                             </div>
                                         </CTableDataCell>
                                     </CTableRow>
@@ -452,7 +404,7 @@ export default function Index({ motors: initialMotors, filters }) {
                 {/* Pagination */}
                 {localMotors.links.length > 3 && (
                     <div className="card-footer d-flex justify-content-center py-3">
-                        <CPagination>
+                        <CPagination className="mb-0">
                             {localMotors.links.map((link, index) => {
                                 if (!link.url && !link.label) return null;
                                 return (

@@ -164,8 +164,8 @@ export default function Index({
             <CCard className="mb-4 border-0 shadow-sm">
                 <CCardBody>
                     <CRow className="g-3 align-items-end">
-                        <CCol md={6}>
-                            <label className="small text-body-secondary">
+                        <CCol xs={12} md={6}>
+                            <label className="small text-body-secondary mb-1">
                                 Cari Kredit
                             </label>
                             <CInputGroup>
@@ -174,7 +174,7 @@ export default function Index({
                                 </CInputGroupText>
                                 <CFormInput
                                     className="border-start-0"
-                                    placeholder="No. kredit, nama pelanggan, motor..."
+                                    placeholder="No. kredit, nama, motor..."
                                     value={search}
                                     onChange={(e) =>
                                         handleSearch(e.target.value)
@@ -182,8 +182,8 @@ export default function Index({
                                 />
                             </CInputGroup>
                         </CCol>
-                        <CCol md={4}>
-                            <label className="small text-body-secondary">
+                        <CCol xs={12} sm={8} md={4}>
+                            <label className="small text-body-secondary mb-1">
                                 Status
                             </label>
                             <CFormSelect
@@ -217,11 +217,11 @@ export default function Index({
                                 <option value="selesai">Selesai</option>
                             </CFormSelect>
                         </CCol>
-                        <CCol md={2}>
+                        <CCol xs={12} sm={4} md={2}>
                             {(search || status) && (
                                 <CButton
                                     color="light"
-                                    className="w-100"
+                                    className="w-100 mt-md-0"
                                     onClick={handleReset}
                                 >
                                     <CIcon icon={cilReload} size="sm" /> Reset
@@ -354,19 +354,15 @@ export default function Index({
                                             {getStatusBadge(credit.status)}
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
-                                            <Link
-                                                href={route(
-                                                    "admin.credits.show",
-                                                    credit.id,
-                                                )}
-                                                className="btn btn-sm btn-info"
-                                            >
-                                                <CIcon
-                                                    icon={cilZoom}
-                                                    size="sm"
-                                                />{" "}
-                                                Proses
-                                            </Link>
+                                            <div className="d-flex justify-content-center">
+                                                <Link
+                                                    href={route("admin.credits.show", credit.id)}
+                                                    className="btn btn-sm btn-primary px-3 d-flex align-items-center gap-1"
+                                                >
+                                                    <CIcon icon={cilZoom} size="sm" />
+                                                    <span className="d-none d-md-inline">Proses</span>
+                                                </Link>
+                                            </div>
                                         </CTableDataCell>
                                     </CTableRow>
                                 ))

@@ -38,15 +38,24 @@ export default function Edit({ user }) {
         <AdminLayout title="KONFIGURASI PROFIL">
             <div className="max-w-5xl mx-auto space-y-8">
                 {/* Header Control Panel */}
-                <div className="flex flex-col xl:flex-row justify-between items-end gap-6 mb-8">
-                    <div>
-                        <h2 className="text-slate-400 font-mono uppercase tracking-widest text-[10px] mb-2 font-bold">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+                    <div className="space-y-1">
+                        <h2 className="text-primary font-mono uppercase tracking-[0.3em] text-[10px] font-black">
                             MODUL KEAMANAN & PERSONALISASI
                         </h2>
-                        <h1 className="text-3xl font-display font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
-                            <span className="w-1.5 h-10 bg-primary rounded-full"></span>
+                        <h1 className="text-3xl md:text-4xl font-display font-black text-slate-900 uppercase tracking-tighter flex items-center gap-3">
+                            <span className="w-2 h-10 bg-primary rounded-full hidden md:block"></span>
                             PROFIL ADMIN
                         </h1>
+                    </div>
+                    <div className="flex items-center gap-3 bg-slate-100/50 p-2 rounded-2xl border border-slate-200/50 backdrop-blur-sm">
+                        <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary">
+                            <ShieldCheck size={20} />
+                        </div>
+                        <div className="pr-4">
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">OTORISASI</p>
+                            <p className="text-xs font-black text-slate-900 uppercase leading-none">VERIFIED ADMIN</p>
+                        </div>
                     </div>
                 </div>
 
@@ -266,6 +275,37 @@ export default function Edit({ user }) {
                     </div>
                 </div>
 
+                {/* System Activity & Analytics Mockup (Making it more like FE) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center">
+                            <Save size={24} />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">TOTAL LOGIN</p>
+                            <p className="text-xl font-black text-slate-900">128 <span className="text-xs text-slate-400 font-medium">SESI</span></p>
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center">
+                            <ShieldCheck size={24} />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">KEAMANAN</p>
+                            <p className="text-xl font-black text-emerald-500">OPTIMAL</p>
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center">
+                            <Lock size={24} />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">LAST PASS CHANGE</p>
+                            <p className="text-xl font-black text-slate-900">3 <span className="text-xs text-slate-400 font-medium">BLN LALU</span></p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Additional Info Section */}
                 <div className="bg-[#111111] rounded-[2rem] p-10 text-white shadow-2xl relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -z-10 group-hover:bg-primary/20 transition-colors duration-1000"></div>
@@ -281,7 +321,7 @@ export default function Edit({ user }) {
                                 </p>
                             </div>
                             
-                            <div className="flex flex-wrap gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div className="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl backdrop-blur-md">
                                     <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">TINGKAT AKSES</p>
                                     <p className="text-sm font-black text-primary uppercase">FULL ADMINISTRATOR</p>

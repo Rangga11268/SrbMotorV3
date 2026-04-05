@@ -132,13 +132,13 @@ export default function Dashboard({
                         <CCol md={8}>
                             <h4
                                 className="mb-2 fw-bold welcome-title"
-                                style={{ fontSize: 22 }}
+                                style={{ fontSize: "calc(1.1rem + 0.6vw)" }}
                             >
                                 Selamat Datang Kembali!
                             </h4>
                             <p
                                 className="mb-0 text-white"
-                                style={{ fontSize: 14, fontWeight: 500 }}
+                                style={{ fontSize: "clamp(12px, 1.5vw, 14px)", fontWeight: 500 }}
                             >
                                 Pantau dan kelola seluruh operasional SRB Motors
                                 dari sini.
@@ -167,7 +167,7 @@ export default function Dashboard({
             {/* KPI Stat Cards */}
             <CRow className="mb-4 g-3">
                 {stats.map((stat, index) => (
-                    <CCol sm={6} xl={3} key={index}>
+                    <CCol xs={12} sm={6} xl={3} key={index}>
                         <CCard className={`stat-card ${stat.colorClass} h-100`}>
                             <CCardBody className="d-flex align-items-center gap-3 p-3">
                                 <div
@@ -176,7 +176,8 @@ export default function Dashboard({
                                 >
                                     <CIcon
                                         icon={stat.icon}
-                                        size="xl"
+                                        size="lg"
+                                        className="stat-icon-ci"
                                         style={{ color: stat.iconColor }}
                                     />
                                 </div>
@@ -265,7 +266,7 @@ export default function Dashboard({
                                 </strong>
                             </div>
                         </CCardHeader>
-                        <CCardBody>
+                        <CCardBody style={{ minHeight: "300px" }}>
                             <RevenueChart data={monthlyStats} />
                         </CCardBody>
                     </CCard>
@@ -277,7 +278,7 @@ export default function Dashboard({
                                 Sebaran Unit per Brand
                             </strong>
                         </CCardHeader>
-                        <CCardBody>
+                        <CCardBody style={{ minHeight: "300px" }}>
                             <StatusPieChart 
                                 data={brandStats?.map(b => ({
                                     label: b.name,

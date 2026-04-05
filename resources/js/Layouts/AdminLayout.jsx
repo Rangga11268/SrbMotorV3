@@ -56,27 +56,48 @@ function AdminLayoutContent({ children, title }) {
             const saved = localStorage.getItem("adminSidebarShow");
             if (saved !== null) {
                 try {
-                    return JSON.parse(saved);
+                    const parsed = JSON.parse(saved);
+                    // On mobile, default to hidden even if saved as visible
+                    if (window.innerWidth < 992) return false;
+                    return parsed;
                 } catch (e) {
                     return true;
                 }
             }
+            // Default based on screen width
+            return window.innerWidth >= 992;
         }
-        return true; // Default ke open
+        return true;
     });
 
     const [isMounted, setIsMounted] = useState(false);
     const [ignoreNextChange, setIgnoreNextChange] = useState(true); // Skip first CoreUI trigger
     const changeTimeoutRef = React.useRef(null);
 
-    // Set mounted flag
+    // Set mounted flag and handle initial resize
     useEffect(() => {
         setIsMounted(true);
+        
+        const handleResize = () => {
+            if (window.innerWidth < 992) {
+                setSidebarShow(false);
+            }
+        };
+
+        // Run once on mount
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+
         // Skip first onVisibleChange yang dari CoreUI initialization
         const timer = setTimeout(() => {
             setIgnoreNextChange(false);
         }, 100);
-        return () => clearTimeout(timer);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            clearTimeout(timer);
+        };
     }, []);
 
     // Save sidebar state to localStorage whenever it changes
@@ -380,10 +401,23 @@ function AdminLayoutContent({ children, title }) {
                     </CSidebarFooter>
                 </CSidebar>
 
+                {/* Sidebar Overlay for Mobile */}
+                <AnimatePresence>
+                    {sidebarShow && window.innerWidth < 992 && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="sidebar-overlay"
+                            onClick={() => setSidebarShow(false)}
+                        />
+                    )}
+                </AnimatePresence>
+
                 {/* ======== MAIN CONTENT ======== */}
-                <div className="wrapper d-flex flex-column flex-grow-1">
+                <div className="wrapper d-flex flex-column flex-grow-1 mw-100 overflow-hidden">
                     {/* Header */}
-                    <CHeader className="header-admin border-bottom px-4">
+                    <CHeader className="header-admin border-bottom px-2 px-md-4">
                         <CHeaderToggler
                             className="header-toggler"
                             onClick={() => setSidebarShow(!sidebarShow)}
@@ -391,13 +425,13 @@ function AdminLayoutContent({ children, title }) {
                             <Menu size={24} />
                         </CHeaderToggler>
 
-                        <div className="ms-3 d-flex align-items-center">
-                            <h1 className="header-title mb-0">{title}</h1>
+                        <div className="ms-2 ms-md-3 d-flex align-items-center overflow-hidden">
+                            <h1 className="header-title mb-0 text-truncate">{title}</h1>
                         </div>
 
-                        <CHeaderNav className="ms-auto d-flex align-items-center gap-2">
+                        <CHeaderNav className="ms-auto d-flex align-items-center gap-1 gap-md-2">
                             {/* Notification Bell */}
-                            <div className="me-3">
+                            <div className="me-2 me-md-3">
                                 <NotificationBell />
                             </div>
 
@@ -405,7 +439,7 @@ function AdminLayoutContent({ children, title }) {
                             <CDropdown variant="nav-item" alignment="end">
                                 <CDropdownToggle
                                     caret={false}
-                                    className="d-flex align-items-center gap-2 py-0"
+                                    className="d-flex align-items-center gap-2 py-0 border-0 bg-transparent"
                                 >
                                     <div className="d-none d-md-block text-end me-2">
                                         <div
@@ -426,11 +460,11 @@ function AdminLayoutContent({ children, title }) {
                                     <div
                                         className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold"
                                         style={{
-                                            width: 36,
-                                            height: 36,
+                                            width: 32,
+                                            height: 32,
                                             background:
                                                 "linear-gradient(135deg, #4361ee, #6366f1)",
-                                            fontSize: 14,
+                                            fontSize: 12,
                                         }}
                                     >
                                         {auth.user.name.charAt(0)}
@@ -488,8 +522,8 @@ function AdminLayoutContent({ children, title }) {
                     </CHeader>
 
                     {/* Page Content */}
-                    <div className="body flex-grow-1 admin-body">
-                        <CContainer fluid className="px-4 py-4">
+                    <div className="body flex-grow-1 admin-body overflow-hidden">
+                        <CContainer fluid className="px-3 px-md-4 py-4">
                             {children}
                         </CContainer>
                     </div>
