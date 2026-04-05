@@ -89,7 +89,7 @@ export default function Navbar({ auth }) {
         {
             label: "Motor Baru",
             href: "/motors",
-            active: url === "/motors",
+            active: url.split('?')[0] === "/motors",
         },
         {
             label: "Servis",
@@ -100,7 +100,7 @@ export default function Navbar({ auth }) {
             {
                 label: "Riwayat",
                 href: route("motors.user-transactions"),
-                active: url.startsWith("/user/transactions"),
+                active: url.startsWith("/motors/my-transactions"),
             },
             {
                 label: "Cicilan",
@@ -108,7 +108,8 @@ export default function Navbar({ auth }) {
                 active: url.startsWith("/installments"),
             }
         ] : []),
-        { label: "Tentang Kami", href: "/about", active: url === "/about" },
+        { label: "Tentang Kami", href: "/about", active: url.split('?')[0] === "/about" },
+        { label: "Bantuan", href: "/bantuan", active: url.split('?')[0] === "/bantuan" },
     ];
 
     return (
@@ -484,12 +485,7 @@ export default function Navbar({ auth }) {
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <Link
-                            href="/bantuan"
-                            className="text-[10px] font-bold text-[#757575] hover:text-[#262626] uppercase tracking-[0.2em] transition-colors"
-                        >
-                            Bantuan Pelanggan
-                        </Link>
+                        {/* The "Bantuan" link is now part of the categories for consistent active underline */}
                     </div>
                 </div>
             </div>

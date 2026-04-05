@@ -22,7 +22,7 @@ import CIcon from "@coreui/icons-react";
 import { cilArrowLeft, cilSave, cilTrash, cilBike } from "@coreui/icons";
 import { Banknote, Coins } from "lucide-react";
 
-export default function Edit({ motor, promotions }) {
+export default function Edit({ motor, promotions, brands }) {
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
         name: motor.name || "",
@@ -190,16 +190,10 @@ export default function Edit({ motor, promotions }) {
                                                 setData("brand", e.target.value)
                                             }
                                         >
-                                            <option value="Yamaha">
-                                                Yamaha
-                                            </option>
-                                            <option value="Honda">Honda</option>
-                                            <option value="Kawasaki">
-                                                Kawasaki
-                                            </option>
-                                            <option value="Suzuki">
-                                                Suzuki
-                                            </option>
+                                            <option value="">Pilih Merk</option>
+                                            {brands && brands.map((b) => (
+                                                <option key={b} value={b}>{b}</option>
+                                            ))}
                                         </CFormSelect>
                                     </CCol>
                                     <CCol md={6}>

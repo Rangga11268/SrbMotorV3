@@ -27,27 +27,12 @@ class MotorController extends Controller
     public function index(): \Inertia\Response|JsonResponse
     {
         $filters = [];
-        if (request('search')) {
-            $filters['search'] = request('search');
+        $status = request('status', request('tersedia'));
+        if ($status !== null && $status !== '') {
+            $filters['tersedia'] = $status;
         }
-        if (request('brand')) {
-            $filters['brand'] = request('brand');
-        }
-        if (request('type')) {
-            $filters['type'] = request('type');
-        }
-        if (request('year')) {
-            $filters['year'] = request('year');
-        }
-        if (request('min_price')) {
-            $filters['min_price'] = request('min_price');
-        }
-        if (request('max_price')) {
-            $filters['max_price'] = request('max_price');
-        }
-        if (request('tersedia') !== null) {
-            $filters['tersedia'] = request('tersedia');
-        }
+
+        $filters = array_merge($filters, request()->all(['search', 'brand', 'type', 'year', 'min_price', 'max_price']));
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 10);
 
@@ -63,6 +48,7 @@ class MotorController extends Controller
 
         return \Inertia\Inertia::render('Admin/Motors/Index', [
             'motors' => $motors,
+            'brands' => $this->motorRepository->getDistinctBrands(),
             'filters' => request()->all(['search', 'brand', 'status']),
         ]);
     }
@@ -70,7 +56,9 @@ class MotorController extends Controller
 
     public function create(): \Inertia\Response
     {
-        return \Inertia\Inertia::render('Admin/Motors/Create');
+        return \Inertia\Inertia::render('Admin/Motors/Create', [
+            'brands' => $this->motorRepository->getDistinctBrands(),
+        ]);
     }
 
 
@@ -78,7 +66,7 @@ class MotorController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'brand' => 'required|string|in:Yamaha,Honda',
+            'brand' => 'required|string|max:255',
             'model' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',
@@ -126,6 +114,7 @@ class MotorController extends Controller
     {
         return \Inertia\Inertia::render('Admin/Motors/Edit', [
             'motor' => $motor,
+            'brands' => $this->motorRepository->getDistinctBrands(),
         ]);
     }
 
@@ -134,7 +123,7 @@ class MotorController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'brand' => 'required|string|in:Yamaha,Honda',
+            'brand' => 'required|string|max:255',
             'model' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',

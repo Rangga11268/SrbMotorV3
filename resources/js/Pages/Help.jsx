@@ -24,6 +24,17 @@ import {
 
 export default function Help({ initialTab = "faq" }) {
     const { auth, settings } = usePage().props;
+
+    // Parse business hours
+    const businessHours = React.useMemo(() => {
+        try {
+            return typeof settings?.business_hours === 'string' 
+                ? JSON.parse(settings.business_hours) 
+                : settings?.business_hours || {};
+        } catch (e) {
+            return {};
+        }
+    }, [settings?.business_hours]);
     const [searchQuery, setSearchQuery] = useState("");
     const [openFaq, setOpenFaq] = useState(null);
     const [activeTab, setActiveTab] = useState(initialTab);
@@ -558,8 +569,11 @@ export default function Help({ initialTab = "faq" }) {
                                             <div>
                                                 <p className="font-bold text-[11px] uppercase tracking-widest text-[#1c69d4] mb-1">JAM OPERASIONAL</p>
                                                 <p className="font-light text-gray-300 uppercase leading-relaxed">
-                                                    SENIN - SABTU : 08.00 - 17.00 <br/>
-                                                    MINGGU : TUTUP
+                                                    {businessHours.monday === businessHours.saturday 
+                                                        ? `SENIN - SABTU : ${businessHours.monday}` 
+                                                        : `SENIN - JUMAT : ${businessHours.monday || "PAGI-SORE"}, SABTU: ${businessHours.saturday || "PAGI-SIANG"}`
+                                                    } <br/>
+                                                    MINGGU : {businessHours.sunday || "TUTUP"}
                                                 </p>
                                             </div>
                                         </div>

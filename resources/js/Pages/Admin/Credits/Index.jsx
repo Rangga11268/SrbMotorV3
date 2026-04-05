@@ -20,12 +20,15 @@ import {
     CInputGroup,
     CInputGroupText,
     CAvatar,
-    CPagination,
     CPaginationItem,
     CSpinner,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilSearch, cilZoom, cilReload, cilCreditCard } from "@coreui/icons";
+import { cilSearch, cilZoom, cilReload, cilCreditCard, cilUser, cilBike, cilOptions } from "@coreui/icons";
 
 export default function Index({
     credits: initialCredits,
@@ -261,10 +264,10 @@ export default function Index({
                                 <CTableHeaderCell className="ps-4">
                                     No. Kredit
                                 </CTableHeaderCell>
-                                <CTableHeaderCell>Pelanggan</CTableHeaderCell>
-                                <CTableHeaderCell>Motor</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Pelanggan</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Motor</CTableHeaderCell>
                                 <CTableHeaderCell>Jumlah</CTableHeaderCell>
-                                <CTableHeaderCell>Status</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Status</CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
                                 </CTableHeaderCell>
@@ -280,19 +283,25 @@ export default function Index({
                                                 <span className="fw-bold text-primary">
                                                     #{credit.transaction_id}
                                                 </span>
-                                                <span
-                                                    className="text-body-tertiary"
+                                                <div
+                                                    className="d-md-none text-body-tertiary fw-normal mt-1 d-flex flex-column gap-1"
                                                     style={{ fontSize: 11 }}
                                                 >
-                                                    {new Date(
-                                                        credit.created_at,
-                                                    ).toLocaleDateString(
-                                                        "id-ID",
-                                                    )}
-                                                </span>
+                                                    <div>
+                                                        <CIcon icon={cilUser} size="custom" height={10} className="me-1" />
+                                                        {credit.transaction?.name || credit.transaction?.user?.name || "N/A"}
+                                                    </div>
+                                                    <div>
+                                                        <CIcon icon={cilBike} size="custom" height={10} className="me-1" />
+                                                        {credit.transaction?.motor?.name || "N/A"}
+                                                    </div>
+                                                    <div className="mt-1">
+                                                        {getStatusBadge(credit.status)}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             <div className="d-flex align-items-center gap-2">
                                                 <CAvatar
                                                     color="primary"
@@ -325,7 +334,7 @@ export default function Index({
                                                 </div>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             <div className="d-flex align-items-center gap-2">
                                                 <CIcon
                                                     icon={cilCreditCard}
@@ -350,18 +359,38 @@ export default function Index({
                                                 )}
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             {getStatusBadge(credit.status)}
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
                                             <div className="d-flex justify-content-center">
                                                 <Link
                                                     href={route("admin.credits.show", credit.id)}
-                                                    className="btn btn-sm btn-primary px-3 d-flex align-items-center gap-1"
+                                                    className="btn btn-sm btn-primary px-3 d-none d-md-flex align-items-center gap-1"
                                                 >
                                                     <CIcon icon={cilZoom} size="sm" />
-                                                    <span className="d-none d-md-inline">Proses</span>
+                                                    <span>Proses</span>
                                                 </Link>
+                                                
+                                                {/* Mobile Actions */}
+                                                <div className="d-md-none">
+                                                    <CDropdown alignment="end">
+                                                        <CDropdownToggle
+                                                            color="light"
+                                                            size="sm"
+                                                            caret={false}
+                                                            className="p-1 border shadow-sm d-flex align-items-center justify-content-center"
+                                                            style={{ width: 32, height: 32, borderRadius: 8 }}
+                                                        >
+                                                            <CIcon icon={cilOptions} size="sm" />
+                                                        </CDropdownToggle>
+                                                        <CDropdownMenu>
+                                                            <CDropdownItem as={Link} href={route("admin.credits.show", credit.id)}>
+                                                                <CIcon icon={cilZoom} className="me-2" /> Detail / Proses
+                                                            </CDropdownItem>
+                                                        </CDropdownMenu>
+                                                    </CDropdown>
+                                                </div>
                                             </div>
                                         </CTableDataCell>
                                     </CTableRow>

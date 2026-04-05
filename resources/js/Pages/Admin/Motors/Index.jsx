@@ -43,7 +43,7 @@ import {
     cilOptions,
 } from "@coreui/icons";
 
-export default function Index({ motors: initialMotors, filters }) {
+export default function Index({ motors: initialMotors, filters, brands }) {
     const [localMotors, setLocalMotors] = useState(initialMotors);
     const [search, setSearch] = useState(filters.search || "");
     const [brand, setBrand] = useState(filters.brand || "");
@@ -168,10 +168,9 @@ export default function Index({ motors: initialMotors, filters }) {
                                 onChange={(e) => setBrand(e.target.value)}
                             >
                                 <option value="">Semua Merk</option>
-                                <option value="Yamaha">Yamaha</option>
-                                <option value="Honda">Honda</option>
-                                <option value="Kawasaki">Kawasaki</option>
-                                <option value="Suzuki">Suzuki</option>
+                                {brands && brands.map((b) => (
+                                    <option key={b} value={b}>{b}</option>
+                                ))}
                             </CFormSelect>
                         </CCol>
                         <CCol xs={12} sm={6} md={3}>

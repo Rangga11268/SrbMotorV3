@@ -14,7 +14,18 @@ import {
 import { motion } from "framer-motion";
 
 export default function About() {
-    const { auth } = usePage().props;
+    const { auth, settings = {} } = usePage().props;
+
+    // Parse service business hours
+    const serviceHours = React.useMemo(() => {
+        try {
+            return typeof settings.service_business_hours === 'string' 
+                ? JSON.parse(settings.service_business_hours) 
+                : settings.service_business_hours || {};
+        } catch (e) {
+            return {};
+        }
+    }, [settings.service_business_hours]);
 
     const stats = [
         { label: "UNIT TERJUAL", value: "500+" },
@@ -207,7 +218,11 @@ export default function About() {
                             </h2>
                             <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px]">DUKUNGAN AFTER-SALES DI BERBAGAI KOTA</p>
                             <p className="text-gray-600 font-light mt-4 max-w-2xl leading-relaxed">
-                                Sebagai tambahan fasilitas, kami bermitra dengan jaringan bengkel resmi SSM untuk memastikan pelanggan SRB Motor memiliki akses mudah ke layanan servis terstandarisasi. Jam operasional seluruh cabang 08.00–17.00 WIB setiap hari.
+                                Sebagai tambahan fasilitas, kami bermitra dengan jaringan bengkel resmi SSM untuk memastikan pelanggan SRB Motor memiliki akses mudah ke layanan servis terstandarisasi. Jam operasional seluruh cabang: {
+                                    serviceHours.monday === serviceHours.friday 
+                                        ? `SENIN - JUMAT : ${serviceHours.monday}, SABTU: ${serviceHours.saturday}`
+                                        : "08.00–17.00 WIB setiap hari"
+                                }.
                             </p>
                         </div>
                         

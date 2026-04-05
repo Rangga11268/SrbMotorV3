@@ -21,9 +21,12 @@ import {
     CInputGroup,
     CInputGroupText,
     CAvatar,
-    CPagination,
     CPaginationItem,
     CSpinner,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -35,6 +38,7 @@ import {
     cilBike,
     cilTrash,
     cilOptions,
+    cilUser,
 } from "@coreui/icons";
 
 export default function Index({
@@ -327,9 +331,9 @@ export default function Index({
                                     No. Transaksi
                                 </CTableHeaderCell>
                                 <CTableHeaderCell className="d-none d-md-table-cell">Pelanggan</CTableHeaderCell>
-                                <CTableHeaderCell>Motor</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Motor</CTableHeaderCell>
                                 <CTableHeaderCell>Total Bayar</CTableHeaderCell>
-                                <CTableHeaderCell>Status</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-md-table-cell">Status</CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
                                 </CTableHeaderCell>
@@ -351,12 +355,22 @@ export default function Index({
                                                         .toString()
                                                         .padStart(6, "0")}
                                                 </span>
-                                                <span
-                                                    className="d-md-none text-body-tertiary fw-normal"
+                                                <div
+                                                    className="d-md-none text-body-tertiary fw-normal mt-1 d-flex flex-column gap-1"
                                                     style={{ fontSize: 11 }}
                                                 >
-                                                    - {trx.name || trx.user?.name || "N/A"}
-                                                </span>
+                                                    <div>
+                                                        <CIcon icon={cilUser} size="custom" height={10} className="me-1" />
+                                                        {trx.name || trx.user?.name || "N/A"}
+                                                    </div>
+                                                    <div>
+                                                        <CIcon icon={cilBike} size="custom" height={10} className="me-1" />
+                                                        {trx.motor?.name || "N/A"}
+                                                    </div>
+                                                    <div className="mt-1">
+                                                        {getStatusBadge(trx.status)}
+                                                    </div>
+                                                </div>
                                                 <span
                                                     className="text-body-tertiary"
                                                     style={{ fontSize: 11 }}
@@ -396,7 +410,7 @@ export default function Index({
                                                 </div>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             <div className="d-flex align-items-center gap-2">
                                                 <div
                                                     className="bg-body-tertiary rounded-2 overflow-hidden flex-shrink-0 d-flex align-items-center justify-content-center"
@@ -442,7 +456,7 @@ export default function Index({
                                                 )}
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             {getStatusBadge(trx.status)}
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">

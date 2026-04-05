@@ -21,10 +21,14 @@ import {
     CTableRow,
     CTableHeaderCell,
     CTableBody,
-    CTableDataCell
+    CTableDataCell,
+    CDropdown,
+    CDropdownToggle,
+    CDropdownMenu,
+    CDropdownItem,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilCheck, cilX, cilPen, cilSettings } from "@coreui/icons";
+import { cilCheck, cilX, cilPen, cilSettings, cilUser, cilBike, cilOptions } from "@coreui/icons";
 
 export default function ServicesIndex({ appointments }) {
     const [selectedService, setSelectedService] = useState(null);
@@ -99,10 +103,10 @@ export default function ServicesIndex({ appointments }) {
                             <CTableHead color="light">
                                 <CTableRow>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 px-4">Tgl & Jam</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Pelanggan</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Unit Motor</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center">Status</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-end px-4">Aksi</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-md-table-cell">Pelanggan</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-md-table-cell">Unit Motor</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center d-none d-md-table-cell">Status</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center px-4">Aksi</CTableHeaderCell>
                                 </CTableRow>
                             </CTableHead>
                             <CTableBody>
@@ -117,13 +121,30 @@ export default function ServicesIndex({ appointments }) {
                                         <CTableDataCell className="px-4">
                                             <div className="fw-bold text-dark">{new Date(app.service_date).toLocaleDateString("id-ID")}</div>
                                             <div className="small text-secondary">{app.service_time}</div>
+                                            
+                                            {/* Mobile View Merged Info */}
+                                            <div className="d-md-none text-body-tertiary fw-normal mt-2 d-flex flex-column gap-1" style={{ fontSize: 11 }}>
+                                                <div>
+                                                    <CIcon icon={cilUser} size="custom" height={10} className="me-1" />
+                                                    {app.customer_name}
+                                                </div>
+                                                <div>
+                                                    <CIcon icon={cilBike} size="custom" height={10} className="me-1" />
+                                                    {app.motor_model}
+                                                </div>
+                                                <div className="mt-1">
+                                                    <CBadge color={getBadge(app.status)} shape="rounded-pill" className="px-2 py-1 text-uppercase" style={{ fontSize: "10px" }}>
+                                                        {app.status.replace("_", " ")}
+                                                    </CBadge>
+                                                </div>
+                                            </div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             <div className="fw-bold text-dark">{app.customer_name}</div>
                                             <div className="small text-secondary">{app.customer_phone}</div>
                                             <div className="small text-primary fw-bold mt-1 uppercase tracking-tight" style={{ fontSize: '0.75rem' }}>{app.branch}</div>
                                         </CTableDataCell>
-                                        <CTableDataCell>
+                                        <CTableDataCell className="d-none d-md-table-cell">
                                             <div className="fw-bold text-dark uppercase tracking-tighter" style={{ letterSpacing: '-0.2px' }}>{app.motor_model}</div>
                                             <div className="small text-secondary uppercase font-bold" style={{ fontSize: '10px' }}>{app.service_type}</div>
                                         </CTableDataCell>
@@ -132,10 +153,32 @@ export default function ServicesIndex({ appointments }) {
                                                 {app.status.replace("_", " ")}
                                             </CBadge>
                                         </CTableDataCell>
-                                        <CTableDataCell className="text-end px-4">
-                                            <CButton color="dark" variant="outline" size="sm" className="rounded-pill px-3" onClick={() => openModal(app)}>
-                                                <CIcon icon={cilSettings} className="me-1" /> KELOLA
-                                            </CButton>
+                                        <CTableDataCell className="text-center px-4">
+                                            <div className="d-flex justify-content-center">
+                                                <CButton color="dark" variant="outline" size="sm" className="rounded-pill px-3 d-none d-md-flex align-items-center" onClick={() => openModal(app)}>
+                                                    <CIcon icon={cilSettings} className="me-1" /> KELOLA
+                                                </CButton>
+                                                
+                                                {/* Mobile Actions Dropdown */}
+                                                <div className="d-md-none">
+                                                    <CDropdown alignment="end">
+                                                        <CDropdownToggle
+                                                            color="light"
+                                                            size="sm"
+                                                            caret={false}
+                                                            className="p-1 border shadow-sm d-flex align-items-center justify-content-center"
+                                                            style={{ width: 32, height: 32, borderRadius: 8 }}
+                                                        >
+                                                            <CIcon icon={cilOptions} size="sm" />
+                                                        </CDropdownToggle>
+                                                        <CDropdownMenu>
+                                                            <CDropdownItem onClick={() => openModal(app)}>
+                                                                <CIcon icon={cilSettings} className="me-2" /> Kelola Servis
+                                                            </CDropdownItem>
+                                                        </CDropdownMenu>
+                                                    </CDropdown>
+                                                </div>
+                                            </div>
                                         </CTableDataCell>
                                     </CTableRow>
                                 ))}

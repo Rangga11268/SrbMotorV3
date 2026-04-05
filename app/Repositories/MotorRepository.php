@@ -23,7 +23,9 @@ class MotorRepository implements MotorRepositoryInterface
 
 
 
-            return $query->orderBy('created_at', 'desc')->paginate($perPage);
+            return $query->orderBy('tersedia', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->paginate($perPage);
         });
     }
 
@@ -86,7 +88,9 @@ class MotorRepository implements MotorRepositoryInterface
             $query->where('tersedia', $filters['tersedia'] == 1);
         }
 
-        return $query->orderBy('created_at', 'desc')->paginate($perPage);
+        return $query->orderBy('tersedia', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
     }
 
     /**

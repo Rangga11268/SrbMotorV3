@@ -23,7 +23,7 @@ import toast from "react-hot-toast";
 import { router } from "@inertiajs/react";
 import { Banknote, Coins } from "lucide-react";
 
-export default function Create({ promotions }) {
+export default function Create({ promotions, brands }) {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         brand: "Yamaha",
@@ -163,16 +163,11 @@ export default function Create({ promotions }) {
                                                 setData("brand", e.target.value)
                                             }
                                         >
-                                            <option value="Yamaha">
-                                                Yamaha
-                                            </option>
-                                            <option value="Honda">Honda</option>
-                                            <option value="Kawasaki">
-                                                Kawasaki
-                                            </option>
-                                            <option value="Suzuki">
-                                                Suzuki
-                                            </option>
+                                            <option value="">Pilih Merk</option>
+                                            {brands && brands.map((b) => (
+                                                <option key={b} value={b}>{b}</option>
+                                            ))}
+                                            {/* Allow manual entry if needed or just keep it simple for now */}
                                         </CFormSelect>
                                     </CCol>
                                     <CCol md={6}>

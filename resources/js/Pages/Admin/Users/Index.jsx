@@ -43,7 +43,6 @@ import {
     cilUser,
     cilReload,
     cilPeople,
-    cilShieldAlt,
     cilCheckCircle,
     cilXCircle,
     cilOptions,
@@ -292,7 +291,7 @@ export default function Index({ users: initialUsers, filters }) {
                                 <CTableHeaderCell className="d-none d-md-table-cell">Email</CTableHeaderCell>
                                 <CTableHeaderCell>Role</CTableHeaderCell>
                                 <CTableHeaderCell className="d-none d-md-table-cell">Status</CTableHeaderCell>
-                                <CTableHeaderCell className="d-none d-md-table-cell">Terdaftar</CTableHeaderCell>
+                                <CTableHeaderCell className="d-none d-lg-table-cell">Terdaftar</CTableHeaderCell>
                                 <CTableHeaderCell className="text-center">
                                     Aksi
                                 </CTableHeaderCell>
@@ -384,22 +383,32 @@ export default function Index({ users: initialUsers, filters }) {
                                                             ? (user.profile_photo_path.startsWith('http') 
                                                                 ? user.profile_photo_path 
                                                                 : `/storage/${user.profile_photo_path}`) 
-                                                            : null
+                                                            : (user.profile_photo_url || null)
                                                     }
-                                                    color={user.profile_photo_path ? undefined : getAvatarColor(user.name)}
+                                                    color={user.profile_photo_path || user.profile_photo_url ? undefined : getAvatarColor(user.name)}
                                                     textColor="white"
                                                     size="md"
                                                 >
-                                                    {!user.profile_photo_path && getInitials(user.name)}
+                                                    {!(user.profile_photo_path || user.profile_photo_url) && getInitials(user.name)}
                                                 </CAvatar>
                                                 <div>
                                                     <div className="fw-semibold">
                                                         {user.name}
                                                     </div>
-                                                    <div className="d-md-none text-body-tertiary small">
-                                                        {user.email}
+                                                    <div className="d-md-none text-body-tertiary small d-flex flex-column gap-1 mt-1">
+                                                        <div>{user.email}</div>
+                                                        <div>
+                                                            {user.email_verified_at ? (
+                                                                <CBadge color="success-obtle" textColor="success" className="p-0 border-0" style={{ fontSize: '10px' }}>Terverifikasi</CBadge>
+                                                            ) : (
+                                                                <CBadge color="danger-subtle" textColor="danger" className="p-0 border-0" style={{ fontSize: '10px' }}>Belum Verifikasi</CBadge>
+                                                            )}
+                                                        </div>
+                                                        <div style={{ fontSize: '9px' }}>
+                                                            Bergabung: {new Date(user.created_at).toLocaleDateString("id-ID")}
+                                                        </div>
                                                     </div>
-                                                    <div className="text-body-tertiary small">
+                                                    <div className="text-body-tertiary small d-none d-md-block">
                                                         ID: #
                                                         {user.id
                                                             .toString()
@@ -435,7 +444,7 @@ export default function Index({ users: initialUsers, filters }) {
                                                 <CBadge color="danger" shape="rounded-pill">Belum Verifikasi</CBadge>
                                             )}
                                         </CTableDataCell>
-                                        <CTableDataCell className="d-none d-md-table-cell small text-body-secondary">
+                                        <CTableDataCell className="d-none d-lg-table-cell small text-body-secondary">
                                             {new Date(
                                                 user.created_at,
                                             ).toLocaleDateString("id-ID", {
@@ -538,3 +547,25 @@ export default function Index({ users: initialUsers, filters }) {
         </AdminLayout>
     );
 }
+
+const getInitials = (name) => {
+    return name
+        .split(" ")
+        .slice(0, 2)
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase();
+};
+
+const getAvatarColor = (name) => {
+    const colors = [
+        "primary",
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "secondary",
+    ];
+    const index = name.length % colors.length;
+    return colors[index];
+};

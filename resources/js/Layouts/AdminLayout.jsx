@@ -365,7 +365,7 @@ function AdminLayoutContent({ children, title }) {
                     <CSidebarFooter className="border-top p-3">
                         <div className="d-flex align-items-center gap-3">
                             <div
-                                className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold flex-shrink-0"
+                                className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold flex-shrink-0 overflow-hidden"
                                 style={{
                                     width: 38,
                                     height: 38,
@@ -374,7 +374,24 @@ function AdminLayoutContent({ children, title }) {
                                     fontSize: 14,
                                 }}
                             >
-                                {auth.user.name.charAt(0)}
+                                {auth.user.profile_photo_path ? (
+                                    <img
+                                        src={
+                                            auth.user.profile_photo_path.startsWith("http")
+                                                ? auth.user.profile_photo_path
+                                                : `/storage/${auth.user.profile_photo_path}`
+                                        }
+                                        alt={auth.user.name}
+                                        referrerPolicy="no-referrer"
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                            e.target.parentElement.innerHTML = auth.user.name.charAt(0);
+                                        }}
+                                    />
+                                ) : (
+                                    auth.user.name.charAt(0)
+                                )}
                             </div>
                             <div className="flex-grow-1 overflow-hidden">
                                 <div
@@ -458,7 +475,7 @@ function AdminLayoutContent({ children, title }) {
                                         </div>
                                     </div>
                                     <div
-                                        className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold"
+                                        className="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold overflow-hidden"
                                         style={{
                                             width: 32,
                                             height: 32,
@@ -467,7 +484,24 @@ function AdminLayoutContent({ children, title }) {
                                             fontSize: 12,
                                         }}
                                     >
-                                        {auth.user.name.charAt(0)}
+                                        {auth.user.profile_photo_path ? (
+                                            <img
+                                                src={
+                                                    auth.user.profile_photo_path.startsWith("http")
+                                                        ? auth.user.profile_photo_path
+                                                        : `/storage/${auth.user.profile_photo_path}`
+                                                }
+                                                alt={auth.user.name}
+                                                referrerPolicy="no-referrer"
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.parentElement.innerHTML = auth.user.name.charAt(0);
+                                                }}
+                                            />
+                                        ) : (
+                                            auth.user.name.charAt(0)
+                                        )}
                                     </div>
                                 </CDropdownToggle>
                                 <CDropdownMenu
