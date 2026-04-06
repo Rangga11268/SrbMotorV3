@@ -223,9 +223,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                                     BATALKAN
                                                                 </button>
                                                             )}
-                                                            <button className="w-full py-3 text-[9px] font-black uppercase tracking-widest text-gray-400 border border-gray-200 hover:border-black hover:text-black transition-all">
-                                                                DETAIL
-                                                            </button>
+
                                                         </div>
                                                     </div>
                                                 </div>
