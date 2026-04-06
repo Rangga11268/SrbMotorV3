@@ -74,8 +74,24 @@ export default function Activity({ appointments, orders, installments, auth, fil
                             </p>
                         </div>
                         <div className="flex flex-col items-start md:items-end gap-2">
-                             <div className="w-16 h-16 bg-[#1c69d4] flex items-center justify-center text-white text-2xl font-black mb-2">
-                                {auth.user.name.charAt(0)}
+                             <div className="w-16 h-16 bg-[#1c69d4] flex items-center justify-center text-white text-2xl font-black mb-2 overflow-hidden border border-white/10">
+                                {auth.user.profile_photo_path ? (
+                                    <img
+                                        src={
+                                            auth.user.profile_photo_path.startsWith("http")
+                                                ? auth.user.profile_photo_path
+                                                : `/storage/${auth.user.profile_photo_path}`
+                                        }
+                                        alt={auth.user.name}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                            e.target.parentElement.innerText = auth.user.name.charAt(0);
+                                        }}
+                                    />
+                                ) : (
+                                    auth.user.name.charAt(0)
+                                )}
                              </div>
                              <p className="text-sm font-black uppercase tracking-widest">{auth.user.name}</p>
                              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{auth.user.email}</p>
