@@ -32,8 +32,8 @@ export default function Create({ promotions, brands }) {
         year: new Date().getFullYear(),
         type: "",
         image: null,
-        image: null,
         description: "",
+
         min_dp_amount: 0,
         promotion_ids: [],
         tersedia: true,

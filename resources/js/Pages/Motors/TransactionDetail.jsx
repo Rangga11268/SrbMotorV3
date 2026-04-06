@@ -53,8 +53,8 @@ export default function TransactionDetail({ transaction }) {
             jadwal_survey: "info",
             survey_selesai: "success",
             dibayar: "success",
-            cancelled: "danger",
             // Transaction & Cash statuses
+
             new_order: "warning",
             waiting_payment: "warning",
             payment_confirmed: "success",
