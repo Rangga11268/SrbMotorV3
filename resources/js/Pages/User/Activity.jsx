@@ -56,25 +56,25 @@ export default function Activity({ appointments, orders, installments, auth, fil
         <PublicLayout title="Aktivitas Saya - SRB Motor">
             <div className="pt-28 pb-24 min-h-screen bg-[#fafafa]">
                 {/* HERO HEADER */}
-                <section className="bg-black text-white py-20 relative overflow-hidden mb-12">
+                <section className="bg-black text-white py-12 md:py-20 relative overflow-hidden mb-8 md:mb-12">
                      <div className="absolute inset-0 bg-[#1c69d4] blur-[150px] opacity-10 rounded-full pointer-events-none transform -translate-y-12 scale-150"></div>
                     <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
                         <div className="space-y-4">
-                            <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#1c69d4] mb-6">
+                            <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#1c69d4] mb-4 md:mb-6">
                                 <Link href="/" className="hover:text-white transition-colors">HOME</Link>
                                 <ChevronRight className="w-3 h-3 text-gray-700" />
                                 <span className="text-gray-500">MY ACCOUNT</span>
                             </nav>
-                            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+                            <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none">
                                 AKTIVITAS <br />
                                 <span className="text-[#1c69d4]">SAYA.</span>
                             </h1>
-                            <p className="text-gray-400 font-medium uppercase tracking-widest text-xs opacity-70">
+                            <p className="text-gray-400 font-medium uppercase tracking-widest text-[10px] md:text-xs opacity-70">
                                 Pantau pesanan, agenda servis, dan cicilan Anda dalam satu dashboard.
                             </p>
                         </div>
                         <div className="flex flex-col items-start md:items-end gap-2">
-                             <div className="w-16 h-16 bg-[#1c69d4] flex items-center justify-center text-white text-2xl font-black mb-2 overflow-hidden border border-white/10">
+                             <div className="w-12 h-12 md:w-16 md:h-16 bg-[#1c69d4] flex items-center justify-center text-white text-xl md:text-2xl font-black mb-2 overflow-hidden border border-white/10">
                                 {auth.user.profile_photo_path ? (
                                     <img
                                         src={
@@ -93,8 +93,8 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                     auth.user.name.charAt(0)
                                 )}
                              </div>
-                             <p className="text-sm font-black uppercase tracking-widest">{auth.user.name}</p>
-                             <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{auth.user.email}</p>
+                             <p className="text-xs md:text-sm font-black uppercase tracking-widest">{auth.user.name}</p>
+                             <p className="text-[9px] md:text-[10px] text-gray-500 uppercase tracking-widest font-bold">{auth.user.email}</p>
                         </div>
                     </div>
                 </section>
@@ -110,7 +110,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex-1 flex items-center justify-center gap-3 py-6 text-[11px] font-black uppercase tracking-[0.2em] transition-all border-b-4 md:border-b-0 md:border-r last:border-r-0 border-gray-200 ${
+                                className={`flex-1 flex items-center justify-center gap-3 py-5 md:py-6 text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] transition-all border-b-4 md:border-b-0 md:border-r last:border-r-0 border-gray-200 ${
                                     activeTab === tab.id 
                                     ? "bg-black text-white border-b-black md:border-r-black" 
                                     : "bg-white text-gray-400 hover:bg-gray-50 hover:text-black"
@@ -148,13 +148,13 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                 <div key={app.id} className="bg-white border border-gray-200 shadow-sm group hover:border-[#1c69d4] transition-all overflow-hidden">
                                                     <div className="flex flex-col lg:flex-row">
                                                         {/* Left Info Bar */}
-                                                        <div className="lg:w-1/4 p-8 bg-gray-50 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col justify-between">
+                                                        <div className="lg:w-1/4 p-5 md:p-8 bg-gray-50 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col justify-between">
                                                             <div>
                                                                 <span className="text-[9px] font-black text-[#1c69d4] uppercase tracking-widest mb-2 block">BOOKING ID</span>
-                                                                <h4 className="text-2xl font-black tracking-tighter">#SRB-{String(app.id).padStart(5, '0')}</h4>
+                                                                <h4 className="text-xl md:text-2xl font-black tracking-tighter">#SRB-{String(app.id).padStart(5, '0')}</h4>
                                                             </div>
-                                                            <div className="mt-8">
-                                                                <div className={`inline-flex items-center gap-2 px-4 py-2 border-2 ${st.border} ${st.text} font-black text-[10px] uppercase tracking-widest`}>
+                                                            <div className="mt-6 md:mt-8">
+                                                                <div className={`inline-flex items-center gap-2 px-3 md:px-4 py-2 border-2 ${st.border} ${st.text} font-black text-[9px] md:text-[10px] uppercase tracking-widest`}>
                                                                     {st.icon}
                                                                     {app.status.replace('_', ' ')}
                                                                 </div>
@@ -162,7 +162,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                         </div>
 
                                                         {/* Middle Content */}
-                                                        <div className="flex-1 p-8 grid md:grid-cols-2 gap-8">
+                                                        <div className="flex-1 p-5 md:p-8 grid md:grid-cols-2 gap-8">
                                                             <div className="space-y-6">
                                                                 <div>
                                                                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">UNIT KENDARAAN</p>
@@ -208,7 +208,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                         </div>
 
                                                         {/* Right Actions */}
-                                                        <div className="lg:w-1/6 p-8 flex flex-col justify-center items-center gap-4 bg-gray-50 lg:bg-white border-t lg:border-t-0 lg:border-l border-gray-100">
+                                                        <div className="lg:w-1/6 p-5 md:p-8 flex flex-col justify-center items-center gap-4 bg-gray-50 lg:bg-white border-t lg:border-t-0 lg:border-l border-gray-100">
                                                             {(app.status === 'pending' || app.status === 'confirmed') && (
                                                                 <button 
                                                                     onClick={() => {
@@ -270,18 +270,18 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                             return (
                                                 <div key={order.id} className="bg-white border border-gray-200 hover:border-black transition-all shadow-sm">
                                                     <div className="p-6 md:p-10">
-                                                        <div className="flex flex-col md:flex-row justify-between gap-6 mb-10 border-b border-gray-100 pb-10">
-                                                            <div className="flex items-center gap-6">
-                                                                <div className="w-32 h-24 bg-gray-50 p-4 border border-gray-100 flex items-center justify-center">
+                                                        <div className="flex flex-col lg:flex-row justify-between gap-8 mb-10 border-b border-gray-100 pb-10">
+                                                            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                                                                <div className="w-full sm:w-32 h-44 sm:h-24 bg-gray-50 p-4 border border-gray-100 flex items-center justify-center shrink-0">
                                                                     <img 
                                                                         src={order.motor?.image_path ? `/storage/${order.motor.image_path}` : "/assets/img/no-image.webp"} 
                                                                         className="max-h-full max-w-full object-contain"
                                                                         alt={order.motor?.name}
                                                                     />
                                                                 </div>
-                                                                <div>
+                                                                <div className="text-center sm:text-left min-w-0">
                                                                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{order.reference_number}</p>
-                                                                    <h3 className="text-2xl font-black tracking-tighter uppercase mb-2">{order.motor?.name}</h3>
+                                                                    <h3 className="text-2xl font-black tracking-tighter uppercase mb-2 truncate">{order.motor?.name}</h3>
                                                                     <div className="flex items-center gap-3">
                                                                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 bg-${st.color}-100 text-${st.color}-700 border border-${st.color}-200`}>
                                                                             {st.label}
@@ -290,14 +290,14 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div className="flex flex-col md:items-end justify-center">
+                                                            <div className="flex flex-col items-center lg:items-end justify-center pt-6 lg:pt-0 border-t lg:border-t-0 border-dashed border-gray-100">
                                                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">TOTAL PEMBAYARAN</p>
-                                                                <p className="text-2xl font-black tracking-tighter text-black">IDR {parseInt(order.final_price).toLocaleString("id-ID")}</p>
+                                                                <p className="text-2xl lg:text-3xl font-black tracking-tighter text-black">IDR {parseInt(order.final_price).toLocaleString("id-ID")}</p>
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                                                            <div className="flex items-center gap-12 w-full md:w-auto overflow-x-auto pb-4 md:pb-0">
+                                                        <div className="flex flex-col lg:flex-row justify-between items-center gap-8">
+                                                            <div className="grid grid-cols-2 sm:flex items-center gap-x-8 gap-y-6 md:gap-12 w-full lg:w-auto">
                                                                 <div className="flex flex-col">
                                                                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">METODE</span>
                                                                     <span className="text-xs font-black uppercase text-black">{order.payment_method}</span>
@@ -306,12 +306,12 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">TENOR</span>
                                                                     <span className="text-xs font-black uppercase text-black">{order.transaction_type === 'CREDIT' ? `${order.creditDetail?.tenor} Bulan` : 'CASH'}</span>
                                                                 </div>
-                                                                <div className="flex flex-col">
-                                                                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">DP/BOOKING</span>
+                                                                <div className="flex flex-col col-span-2 sm:col-span-1">
+                                                                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">DP/BOOKING FEE</span>
                                                                     <span className="text-xs font-black uppercase text-black">IDR {parseInt(order.booking_fee || 0).toLocaleString("id-ID")}</span>
                                                                 </div>
                                                             </div>
-                                                            <Link href={route('motors.transaction.show', order.id)} className="w-full md:w-auto px-8 py-4 bg-black text-white hover:bg-[#1c69d4] hover:text-white font-black text-[10px] uppercase tracking-widest transition-all text-center">
+                                                            <Link href={route('motors.transaction.show', order.id)} className="w-full lg:w-auto px-8 py-4 bg-black text-white hover:bg-[#1c69d4] hover:text-white font-black text-[10px] uppercase tracking-widest transition-all text-center">
                                                                 DETAIL PESANAN
                                                             </Link>
                                                         </div>
@@ -340,22 +340,22 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                 ) : (
                                     <div className="grid gap-12">
                                         {installments.map(transaction => (
-                                            <div key={transaction.id} className="bg-white border-t-8 border-t-black border x-border shadow-md">
-                                                <div className="p-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
-                                                    <div className="flex items-center gap-6">
-                                                        <div className="w-20 h-16 bg-gray-50 flex items-center justify-center p-3">
+                                            <div key={transaction.id} className="bg-white border-t-8 border-t-black border shadow-md">
+                                                <div className="p-5 md:p-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                                                    <div className="flex items-center gap-4 md:gap-6">
+                                                        <div className="w-16 md:w-20 h-12 md:h-16 bg-gray-50 flex items-center justify-center p-2 md:p-3 shrink-0">
                                                             <img src={transaction.motor?.image_path ? `/storage/${transaction.motor.image_path}` : "/assets/img/no-image.webp"} className="max-h-full max-w-full object-contain" />
                                                         </div>
-                                                        <div>
-                                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">TRANSAKSI #{transaction.id}</p>
-                                                            <h3 className="text-xl font-black tracking-tighter uppercase">{transaction.motor?.name}</h3>
+                                                        <div className="min-w-0">
+                                                            <p className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">TRANSAKSI #{transaction.id}</p>
+                                                            <h3 className="text-lg md:text-xl font-black tracking-tighter uppercase truncate">{transaction.motor?.name}</h3>
                                                         </div>
                                                     </div>
-                                                    <Link href={route('installments.index')} className="text-[10px] font-black uppercase tracking-widest text-[#1c69d4] hover:text-black transition-colors flex items-center gap-2">
+                                                    <Link href={route('installments.index')} className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-[#1c69d4] hover:text-black transition-colors flex items-center gap-2">
                                                         LIHAT DETAIL CICILAN <ArrowRight className="w-4 h-4" />
                                                     </Link>
                                                 </div>
-                                                <div className="overflow-x-auto">
+                                                <div className="overflow-x-auto hidden md:block">
                                                     <table className="w-full text-left">
                                                         <thead className="bg-gray-50 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 border-b border-gray-100">
                                                             <tr>
@@ -403,6 +403,51 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                             ))}
                                                         </tbody>
                                                     </table>
+                                                </div>
+
+                                                {/* Mobile Installment Cards */}
+                                                <div className="md:hidden divide-y divide-gray-100">
+                                                    {transaction.installments.map(inst => (
+                                                        <div key={inst.id} className="p-5 space-y-4">
+                                                            <div className="flex justify-between items-start">
+                                                                <div>
+                                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">CICILAN KE-</p>
+                                                                    <h4 className="text-sm font-black">#{inst.installment_number === 0 ? 'DP/BOOK' : inst.installment_number}</h4>
+                                                                </div>
+                                                                <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-none border ${
+                                                                    inst.status === 'paid' ? 'bg-green-50 text-green-700 border-green-200' : 
+                                                                    inst.status === 'pending' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' :
+                                                                    'bg-blue-50 text-blue-700 border-blue-200'
+                                                                }`}>
+                                                                    {inst.status === 'pending' ? 'BELUM BAYAR' : inst.status === 'waiting_approval' ? 'KONFIRMASI' : 'LUNAS'}
+                                                                </span>
+                                                            </div>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <div>
+                                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">JATUH TEMPO</p>
+                                                                    <p className="text-[10px] font-bold text-gray-600 uppercase">
+                                                                        {new Date(inst.due_date).toLocaleDateString("id-ID", { day: 'numeric', month: 'short' })}
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">TAGIHAN</p>
+                                                                    <p className="text-[10px] font-black text-black leading-none">IDR {parseInt(inst.amount).toLocaleString("id-ID")}</p>
+                                                                    {inst.penalty_amount > 0 && <p className="text-[8px] font-bold text-red-500 uppercase mt-0.5">+ Denda</p>}
+                                                                </div>
+                                                            </div>
+                                                            <div className="pt-2">
+                                                                {inst.status === 'paid' ? (
+                                                                    <a href={route('installments.receipt', inst.id)} className="w-full flex items-center justify-center gap-2 py-3 text-[9px] font-black uppercase tracking-widest text-black border border-black transition-colors">
+                                                                        <Download className="w-3 h-3" /> UNDUH KUITANSI
+                                                                    </a>
+                                                                ) : (
+                                                                    <Link href={route('installments.index')} className="w-full flex items-center justify-center py-3 bg-black text-white text-[9px] font-black uppercase tracking-widest hover:bg-[#1c69d4] transition-colors">
+                                                                        BAYAR SEKARANG
+                                                                    </Link>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
                                         ))}
