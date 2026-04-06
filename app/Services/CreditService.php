@@ -150,8 +150,13 @@ class CreditService
         // Validation: Verify if survey schedule exists and if today is the scheduled day or after
         $latestSchedule = $credit->surveySchedules()->latest()->first();
         if ($latestSchedule && $latestSchedule->status === 'pending') {
-            $scheduledDateTime = \Carbon\Carbon::parse($latestSchedule->scheduled_date . ' ' . $latestSchedule->scheduled_time);
+            // Concatenating Carbon objects as strings results in "date date time", causing a parsing error.
+            // Safely combine them using Carbon methods.
+            $scheduledDateTime = $latestSchedule->scheduled_date->copy()
+                ->setTimeFrom($latestSchedule->scheduled_time);
+
             if (now()->lt($scheduledDateTime)) {
+
                 throw new \Exception("Survey tidak dapat diselesaikan sebelum waktu yang dijadwalkan (" . $scheduledDateTime->format('d M Y H:i') . ").");
             }
             
