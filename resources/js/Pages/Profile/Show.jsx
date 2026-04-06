@@ -163,29 +163,31 @@ export default function Show({ user, dashboard }) {
                             {/* DASHBOARD SUMMARY CARDS */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {/* ORDER STATUS CARD */}
-                                <Link 
-                                    href={route("motors.user-transactions")}
-                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group"
-                                >
-                                    <div className="flex items-center justify-between mb-4">
-                                        <ShoppingBag className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
-                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-1 bg-gray-100 text-gray-600">Terakhir</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Status Pesanan</p>
-                                        <p className="text-sm font-black text-black uppercase tracking-tight truncate">
-                                            {dashboard.latest_transaction ? dashboard.latest_transaction.status.replace(/_/g, " ") : "Belum Ada"}
-                                        </p>
-                                    </div>
-                                    <div className="mt-4 flex items-center gap-2 text-[9px] font-bold text-[#1c69d4] uppercase tracking-widest">
-                                        LIHAT RIWAYAT <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                                    </div>
-                                </Link>
+                                <div className="hidden md:block">
+                                    <Link 
+                                        href={route("user.activity", { tab: "orders" })}
+                                        className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group h-full"
+                                    >
+                                        <div className="flex items-center justify-between mb-4">
+                                            <ShoppingBag className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
+                                            <span className="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-1 bg-gray-100 text-gray-600">Terakhir</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Status Pesanan</p>
+                                            <p className="text-sm font-black text-black uppercase tracking-tight truncate">
+                                                {dashboard.latest_transaction ? dashboard.latest_transaction.status.replace(/_/g, " ") : "Belum Ada"}
+                                            </p>
+                                        </div>
+                                        <div className="mt-4 flex items-center gap-2 text-[9px] font-bold text-[#1c69d4] uppercase tracking-widest">
+                                            LIHAT RIWAYAT <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                    </Link>
+                                </div>
 
                                 {/* INSTALLMENT CARD */}
                                 <Link 
-                                    href={route("installments.index")}
-                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group"
+                                    href={route("user.activity", { tab: "installments" })}
+                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group h-full"
                                 >
                                     <div className="flex items-center justify-between mb-4">
                                         <CreditCard className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />
@@ -207,8 +209,8 @@ export default function Show({ user, dashboard }) {
 
                                 {/* SERVICE CARD */}
                                 <Link 
-                                    href={route("services.index")}
-                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group"
+                                    href={route("user.activity", { tab: "service" })}
+                                    className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group h-full"
                                 >
                                     <div className="flex items-center justify-between mb-4">
                                         <Calendar className="w-5 h-5 text-gray-400 group-hover:text-black transition-colors" />

@@ -182,20 +182,20 @@ export default function UserTransactions({ transactions: initialTransactions, fi
         <PublicLayout auth={auth} title="RIWAYAT PESANAN - SRB MOTOR">
             <div className="flex-grow pt-[140px] bg-white min-h-screen">
                 {/* HERO SECTION */}
-                <section className="bg-black text-white pt-24 pb-32 border-b border-gray-800 relative overflow-hidden">
+                <section className="bg-black text-white pt-16 pb-24 border-b border-gray-800 relative overflow-hidden">
                     <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
                     
                     {/* Background Pattern */}
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                        <div className="mb-16">
+                        <div className="mb-8">
                             <Link
-                                href={route("profile.show")}
+                                href={route("user.activity", { tab: "orders" })}
                                 className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-white transition-all group uppercase"
                             >
                                 <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-                                KEMBALI KE PROFIL
+                                KEMBALI KE AKTIVITAS SAYA
                             </Link>
                         </div>
 

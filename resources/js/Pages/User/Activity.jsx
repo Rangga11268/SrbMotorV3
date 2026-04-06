@@ -337,8 +337,8 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                             <h3 className="text-xl font-black tracking-tighter uppercase">{transaction.motor?.name}</h3>
                                                         </div>
                                                     </div>
-                                                    <Link href={route('motors.transaction.show', transaction.id)} className="text-[10px] font-black uppercase tracking-widest text-[#1c69d4] hover:text-black transition-colors flex items-center gap-2">
-                                                        LIHAT DETAIL TRANSAKSI <ArrowRight className="w-4 h-4" />
+                                                    <Link href={route('installments.index')} className="text-[10px] font-black uppercase tracking-widest text-[#1c69d4] hover:text-black transition-colors flex items-center gap-2">
+                                                        LIHAT DETAIL CICILAN <ArrowRight className="w-4 h-4" />
                                                     </Link>
                                                 </div>
                                                 <div className="overflow-x-auto">
