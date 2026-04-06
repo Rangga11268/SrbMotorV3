@@ -644,12 +644,23 @@ export default function InstallmentIndex({ transactions }) {
                                                                                 >
                                                                                     <CreditCard size={14} /> ONLINE
                                                                                 </button>
+                                                                                {inst.midtrans_booking_code && (
+                                                                                    <button
+                                                                                        onClick={() => handleCheckStatus(inst)}
+                                                                                        disabled={isLoadingCheck}
+                                                                                        className="h-10 px-6 bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 disabled:opacity-50"
+                                                                                        title="Cek ke server Midtrans jika status belum berubah"
+                                                                                    >
+                                                                                        {isLoadingCheck ? <RefreshCw className="animate-spin w-3.5 h-3.5" /> : <RefreshCw size={14} />} CEK STATUS
+                                                                                    </button>
+                                                                                )}
                                                                                 <button
                                                                                     onClick={() => openUploadModal(inst)}
                                                                                     className="h-10 px-6 bg-white border-2 border-black text-black hover:bg-black hover:text-white text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                                                                                 >
                                                                                     <Upload size={14} /> TRANSFER
                                                                                 </button>
+
                                                                             </>
                                                                         ) : inst.status === "paid" ? (
                                                                             <a
@@ -730,12 +741,22 @@ export default function InstallmentIndex({ transactions }) {
                                                                     >
                                                                         <CreditCard size={14} /> ONLINE
                                                                     </button>
+                                                                    {inst.midtrans_booking_code && (
+                                                                        <button
+                                                                            onClick={() => handleCheckStatus(inst)}
+                                                                            disabled={isLoadingCheck}
+                                                                            className="h-12 bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
+                                                                        >
+                                                                            {isLoadingCheck ? <RefreshCw className="animate-spin w-3.5 h-3.5" /> : <RefreshCw size={14} />} CEK STATUS
+                                                                        </button>
+                                                                    )}
                                                                     <button
                                                                         onClick={() => openUploadModal(inst)}
                                                                         className="h-12 bg-white border-2 border-black text-black text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
                                                                     >
                                                                         <Upload size={14} /> TRANSFER
                                                                     </button>
+
                                                                 </>
                                                             ) : inst.status === "paid" ? (
                                                                 <a

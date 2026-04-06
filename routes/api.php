@@ -23,7 +23,8 @@ Route::get('/motors/{id}', [MotorController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('api.orders.invoice');
 
-Route::post('/midtrans/notification', [App\Http\Controllers\PaymentCallbackController::class, 'handle']);
+Route::post('/midtrans/notification', [App\Http\Controllers\PaymentCallbackController::class, 'handle'])->name('midtrans.notification');
+
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

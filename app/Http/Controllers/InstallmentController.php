@@ -116,6 +116,8 @@ class InstallmentController extends Controller
                 'order_id' => $orderId,
                 'gross_amount' => (int) $totalAmount,
             ],
+            'notification_url' => route('midtrans.notification'),
+
             'customer_details' => [
                 'first_name' => $transaction->name ?? Auth::user()->name ?? 'Customer',
                 'email' => Auth::user()->email ?? 'customer@example.com',
@@ -205,6 +207,8 @@ class InstallmentController extends Controller
                 'order_id' => $orderId,
                 'gross_amount' => (int) ($installment->amount + $installment->penalty_amount),
             ],
+            'notification_url' => route('midtrans.notification'),
+
             'customer_details' => [
                 'first_name' => $installment->transaction->name ?? Auth::user()->name ?? 'Customer',
                 'email' => Auth::user()->email ?? 'customer@example.com',

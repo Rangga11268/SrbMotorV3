@@ -99,6 +99,8 @@ class OrderController extends Controller
                         'order_id' => $orderId,
                         'gross_amount' => (int) $paymentAmount,
                     ],
+                    'notification_url' => route('midtrans.notification'),
+
                     'customer_details' => [
                         'first_name' => $request->customer_name,
                         'email' => $request->customer_email ?? $request->user()->email,
