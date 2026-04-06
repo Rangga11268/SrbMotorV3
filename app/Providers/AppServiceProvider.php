@@ -29,12 +29,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Force HTTPS if APP_URL starts with https
-        if (str_contains(config('app.url'), 'https://')) {
+        // Smart Force HTTPS: Only force it if the request is coming via an HTTPS proxy (like ngrok)
+        // or if explicitly set in APP_URL but only for those requests.
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
 
         // Register observers
+
         \App\Models\Transaction::observe(\App\Observers\TransactionObserver::class);
         CreditDetail::observe(CreditDetailObserver::class);
         \App\Models\SurveySchedule::observe(\App\Observers\SurveyScheduleObserver::class);
