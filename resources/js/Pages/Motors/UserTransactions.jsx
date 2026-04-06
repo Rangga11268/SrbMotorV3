@@ -180,7 +180,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
 
     return (
         <PublicLayout auth={auth} title="RIWAYAT PESANAN - SRB MOTOR">
-            <div className="flex-grow pt-[140px] bg-white min-h-screen">
+            <div className="flex-grow pt-[140px] bg-white min-h-screen overflow-x-hidden">
                 {/* HERO SECTION */}
                 <section className="bg-black text-white pt-16 pb-24 border-b border-gray-800 relative overflow-hidden">
                     <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
@@ -205,7 +205,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                     <div className="w-8 h-px bg-[#1c69d4]"></div>
                                     <p className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">TRANSAKSI & RIWAYAT</p>
                                 </div>
-                                <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
+                                <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
                                     DAFTAR <br/>
                                     PESANAN MOTOR
                                 </h1>
@@ -215,14 +215,14 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                             </div>
 
                             {/* ANALYTICS MINI BAR */}
-                            <div className="flex items-center gap-8 border-l border-gray-800 pl-8 h-fit self-start lg:self-end">
+                            <div className="flex items-center gap-8 border-l-0 lg:border-l lg:border-gray-800 lg:pl-8 h-fit self-start lg:self-end pt-8 lg:pt-0">
                                 <div className="space-y-1">
                                     <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase">TOTAL PESANAN</p>
-                                    <p className="text-3xl font-black text-white">{localTransactions.total || 0}</p>
+                                    <p className="text-2xl md:text-3xl font-black text-white">{localTransactions.total || 0}</p>
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase">AKTIF</p>
-                                    <p className="text-3xl font-black text-[#1c69d4]">
+                                    <p className="text-2xl md:text-3xl font-black text-[#1c69d4]">
                                         {localTransactions.data?.filter(t => !["completed", "cancelled"].includes(t.status)).length || 0}
                                     </p>
                                 </div>
@@ -297,7 +297,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                         initial={{ opacity: 0, y: 30 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.05 }}
-                                        className={`relative bg-white p-8 sm:p-12 border border-gray-200 flex flex-col md:flex-row gap-8 lg:gap-16 transition-all duration-300 hover:shadow-xl hover:border-black animate-in fade-in slide-in-from-bottom-5 ${transaction.status === 'cancelled' ? 'opacity-70' : ''}`}
+                                        className={`relative bg-white p-6 sm:p-12 border border-gray-200 flex flex-col md:flex-row gap-8 lg:gap-16 transition-all duration-300 hover:shadow-xl hover:border-black animate-in fade-in slide-in-from-bottom-5 ${transaction.status === 'cancelled' ? 'opacity-70' : ''}`}
                                     >
                                         {/* RED ACCENT FOR CANCELLED */}
                                         {transaction.status === "cancelled" && (

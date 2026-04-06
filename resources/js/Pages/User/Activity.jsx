@@ -54,7 +54,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
 
     return (
         <PublicLayout title="Aktivitas Saya - SRB Motor">
-            <div className="pt-28 pb-24 min-h-screen bg-[#fafafa]">
+            <div className="pt-28 pb-24 min-h-screen bg-[#fafafa] overflow-x-hidden">
                 {/* HERO HEADER */}
                 <section className="bg-black text-white py-12 md:py-20 relative overflow-hidden mb-8 md:mb-12">
                      <div className="absolute inset-0 bg-[#1c69d4] blur-[150px] opacity-10 rounded-full pointer-events-none transform -translate-y-12 scale-150"></div>
@@ -93,8 +93,8 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                     auth.user.name.charAt(0)
                                 )}
                              </div>
-                             <p className="text-xs md:text-sm font-black uppercase tracking-widest">{auth.user.name}</p>
-                             <p className="text-[9px] md:text-[10px] text-gray-500 uppercase tracking-widest font-bold">{auth.user.email}</p>
+                             <p className="text-xs md:text-sm font-black uppercase tracking-widest truncate max-w-full italic text-[#1c69d4]">{auth.user.name}</p>
+                             <p className="text-[9px] md:text-[10px] text-gray-500 uppercase tracking-widest font-bold truncate max-w-full">{auth.user.email}</p>
                         </div>
                     </div>
                 </section>
@@ -281,7 +281,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                                 </div>
                                                                 <div className="text-center sm:text-left min-w-0">
                                                                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{order.reference_number}</p>
-                                                                    <h3 className="text-2xl font-black tracking-tighter uppercase mb-2 truncate">{order.motor?.name}</h3>
+                                                                    <h3 className="text-2xl font-black tracking-tighter uppercase mb-2 whitespace-normal break-words leading-tight">{order.motor?.name}</h3>
                                                                     <div className="flex items-center gap-3">
                                                                         <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 bg-${st.color}-100 text-${st.color}-700 border border-${st.color}-200`}>
                                                                             {st.label}
@@ -348,7 +348,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                         </div>
                                                         <div className="min-w-0">
                                                             <p className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 md:mb-1">TRANSAKSI #{transaction.id}</p>
-                                                            <h3 className="text-lg md:text-xl font-black tracking-tighter uppercase truncate">{transaction.motor?.name}</h3>
+                                                            <h3 className="text-lg md:text-xl font-black tracking-tighter uppercase whitespace-normal break-words leading-tight">{transaction.motor?.name}</h3>
                                                         </div>
                                                     </div>
                                                     <Link href={route('installments.index')} className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-[#1c69d4] hover:text-black transition-colors flex items-center gap-2">
