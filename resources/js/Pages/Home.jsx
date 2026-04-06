@@ -57,7 +57,7 @@ export default function Home({
 
     return (
         <PublicLayout title="Beranda">
-            {/* HERO SLIDER SECTION (BMW Cinematic Style) */}
+            {/* HERO SLIDER SECTION (  Cinematic Style) */}
             <section className="relative w-full pt-20 min-h-[90vh] bg-[#111111] overflow-hidden flex flex-col justify-center">
                 {/* Full Bleed Image (Cinematic lighting) */}
                 <div className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
@@ -507,11 +507,12 @@ export default function Home({
 
             {/* FINANCING PARTNERS (Credibility) */}
             <section className="py-12 bg-white border-y border-gray-100 overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-12">
-                    <div className="flex-shrink-0 border-r border-gray-100 pr-12 hidden md:block">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center gap-6 md:gap-12">
+                    <div className="flex-shrink-0 border-b md:border-b-0 md:border-r border-gray-100 pb-6 md:pb-0 md:pr-12 text-center md:text-left">
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] leading-relaxed">
                             MITRA
-                            <br />
+                            <br className="hidden md:block" />
+                            <span className="md:hidden"> </span>
                             PEMBIAYAAN
                         </p>
                     </div>

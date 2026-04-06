@@ -44,14 +44,20 @@ export default function Navbar({ auth }) {
             setScrolled(window.scrollY > 10);
         };
         window.addEventListener("scroll", handleScroll);
-        
+
         // Handle login redirect from middleware
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has("login_required")) {
-            setAuthModalMessage("Sesi Diperlukan: Silakan masuk untuk mengakses fitur perbaikan dan servis.");
+            setAuthModalMessage(
+                "Sesi Diperlukan: Silakan masuk untuk mengakses fitur perbaikan dan servis.",
+            );
             setAuthModalVisible(true);
             // Clean up the URL (optional but cleaner)
-            window.history.replaceState({}, document.title, window.location.pathname);
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname,
+            );
         }
 
         return () => window.removeEventListener("scroll", handleScroll);
@@ -89,27 +95,32 @@ export default function Navbar({ auth }) {
         {
             label: "Motor Baru",
             href: "/motors",
-            active: url.split('?')[0] === "/motors",
+            active: url.split("?")[0] === "/motors",
         },
         {
             label: "Servis",
             href: "/services",
             active: url.startsWith("/services"),
         },
-        ...(auth?.user ? [
-            {
-                label: "Riwayat",
-                href: route("motors.user-transactions"),
-                active: url.startsWith("/motors/my-transactions"),
-            },
-            {
-                label: "Cicilan",
-                href: route("installments.index"),
-                active: url.startsWith("/installments"),
-            }
-        ] : []),
-        { label: "Tentang Kami", href: "/about", active: url.split('?')[0] === "/about" },
-        { label: "Bantuan", href: "/bantuan", active: url.split('?')[0] === "/bantuan" },
+        ...(auth?.user
+            ? [
+                  {
+                      label: "Aktivitas Saya",
+                      href: route("user.activity"),
+                      active: url.startsWith("/account/activity"),
+                  },
+              ]
+            : []),
+        {
+            label: "Tentang Kami",
+            href: "/about",
+            active: url.split("?")[0] === "/about",
+        },
+        {
+            label: "Bantuan",
+            href: "/bantuan",
+            active: url.split("?")[0] === "/bantuan",
+        },
     ];
 
     return (
@@ -124,7 +135,7 @@ export default function Navbar({ auth }) {
                     >
                         <Logo />
                     </Link>
-                    
+
                     {/* Authorized Dealer Badge (Hidden on mobile/tablet) */}
                     <div className="hidden xl:flex items-center gap-6">
                         <div className="w-px h-8 bg-gray-200"></div>
@@ -135,25 +146,31 @@ export default function Navbar({ auth }) {
                         </div>
                     </div>
 
-                    {/* Desktop Search & Location (BMW Style - Sharp Block) */}
+                    {/* Desktop Search & Location (  Style - Sharp Block) */}
                     <div className="hidden md:flex flex-1 items-center max-w-3xl relative gap-0 border border-gray-300">
                         {/* Location Picker / Branches */}
                         <div className="relative flex-shrink-0 border-r border-gray-300 bg-gray-50 group/branch">
-                            <button 
-                                onClick={() => setBranchDropdownOpen(!branchDropdownOpen)}
+                            <button
+                                onClick={() =>
+                                    setBranchDropdownOpen(!branchDropdownOpen)
+                                }
                                 className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold text-[#262626] hover:bg-[#f9f9f9] transition-colors uppercase tracking-[0.2em] rounded-none"
                             >
                                 <MapPin className="w-4 h-4 text-[#1c69d4]" />
                                 <span>BEKASI (PUSAT)</span>
-                                <ChevronDown className={`w-3 h-3 text-[#262626] transition-transform duration-300 ${branchDropdownOpen ? 'rotate-180' : ''}`} />
+                                <ChevronDown
+                                    className={`w-3 h-3 text-[#262626] transition-transform duration-300 ${branchDropdownOpen ? "rotate-180" : ""}`}
+                                />
                             </button>
 
                             <AnimatePresence>
                                 {branchDropdownOpen && (
                                     <>
-                                        <div 
-                                            className="fixed inset-0 z-[-1]" 
-                                            onClick={() => setBranchDropdownOpen(false)} 
+                                        <div
+                                            className="fixed inset-0 z-[-1]"
+                                            onClick={() =>
+                                                setBranchDropdownOpen(false)
+                                            }
                                         />
                                         <motion.div
                                             initial={{ opacity: 0, y: 0 }}
@@ -162,28 +179,53 @@ export default function Navbar({ auth }) {
                                             className="absolute top-full left-[-1px] w-[300px] bg-white border border-gray-300 border-t-0 shadow-2xl z-50 rounded-none overflow-hidden"
                                         >
                                             <div className="p-5 border-b border-gray-100 bg-gray-50/50">
-                                                <p className="text-[9px] font-black text-[#757575] uppercase tracking-[0.3em] mb-1">JARINGAN DEALER</p>
-                                                <p className="text-xs font-black text-[#262626] uppercase">SINAR SURYA MOTOR (SSM)</p>
+                                                <p className="text-[9px] font-black text-[#757575] uppercase tracking-[0.3em] mb-1">
+                                                    JARINGAN DEALER
+                                                </p>
+                                                <p className="text-xs font-black text-[#262626] uppercase">
+                                                    SINAR SURYA MOTOR (SSM)
+                                                </p>
                                             </div>
                                             <div className="py-2">
                                                 {[
-                                                    { name: "SSM JATIASIH", loc: "BEKASI", isPusat: true },
-                                                    { name: "SSM MEKAR SARI", loc: "BEKASI" },
-                                                    { name: "SSM DEPOK", loc: "DEPOK" },
-                                                    { name: "SSM BOGOR", loc: "BOGOR" },
-                                                    { name: "SSM TANGERANG", loc: "TANGERANG" }
+                                                    {
+                                                        name: "SSM JATIASIH",
+                                                        loc: "BEKASI",
+                                                        isPusat: true,
+                                                    },
+                                                    {
+                                                        name: "SSM MEKAR SARI",
+                                                        loc: "BEKASI",
+                                                    },
+                                                    {
+                                                        name: "SSM DEPOK",
+                                                        loc: "DEPOK",
+                                                    },
+                                                    {
+                                                        name: "SSM BOGOR",
+                                                        loc: "BOGOR",
+                                                    },
+                                                    {
+                                                        name: "SSM TANGERANG",
+                                                        loc: "TANGERANG",
+                                                    },
                                                 ].map((branch, i) => (
-                                                    <div 
+                                                    <div
                                                         key={i}
                                                         className="px-6 py-3 hover:bg-[#f9f9f9] group/item cursor-pointer transition-colors border-l-2 border-transparent hover:border-[#1c69d4]"
                                                     >
                                                         <div className="flex justify-between items-center">
                                                             <div>
                                                                 <p className="text-[10px] font-bold text-[#262626] uppercase tracking-wider group-hover/item:text-[#1c69d4]">
-                                                                    {branch.name}
+                                                                    {
+                                                                        branch.name
+                                                                    }
                                                                 </p>
                                                                 <p className="text-[8px] font-medium text-[#757575] uppercase tracking-widest mt-0.5">
-                                                                    {branch.loc} {branch.isPusat && "(PUSAT)" || ""}
+                                                                    {branch.loc}{" "}
+                                                                    {(branch.isPusat &&
+                                                                        "(PUSAT)") ||
+                                                                        ""}
                                                                 </p>
                                                             </div>
                                                             <ChevronRight className="w-3 h-3 text-gray-300 group-hover/item:text-[#1c69d4] group-hover/item:translate-x-1 transition-all" />
@@ -193,7 +235,9 @@ export default function Navbar({ auth }) {
                                             </div>
                                             <div className="p-4 bg-gray-50 border-t border-gray-100">
                                                 <p className="text-[8px] text-[#757575] font-bold uppercase leading-relaxed tracking-widest">
-                                                    * Seluruh unit SRB Motor dapat dilayani di seluruh jaringan SSM.
+                                                    * Seluruh unit SRB Motor
+                                                    dapat dilayani di seluruh
+                                                    jaringan SSM.
                                                 </p>
                                             </div>
                                         </motion.div>
@@ -351,16 +395,23 @@ export default function Navbar({ auth }) {
                                         {auth.user.profile_photo_path ? (
                                             <img
                                                 src={
-                                                    auth.user.profile_photo_path.startsWith("http")
-                                                        ? auth.user.profile_photo_path
+                                                    auth.user.profile_photo_path.startsWith(
+                                                        "http",
+                                                    )
+                                                        ? auth.user
+                                                              .profile_photo_path
                                                         : `/storage/${auth.user.profile_photo_path}`
                                                 }
                                                 alt={auth.user.name}
                                                 referrerPolicy="no-referrer"
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => {
-                                                    e.target.style.display = 'none';
-                                                    e.target.parentElement.innerHTML = auth.user.name.charAt(0);
+                                                    e.target.style.display =
+                                                        "none";
+                                                    e.target.parentElement.innerHTML =
+                                                        auth.user.name.charAt(
+                                                            0,
+                                                        );
                                                 }}
                                             />
                                         ) : (
@@ -417,19 +468,11 @@ export default function Navbar({ auth }) {
                                                     )}
                                                     <Link
                                                         href={route(
-                                                            "motors.user-transactions",
+                                                            "user.activity",
                                                         )}
                                                         className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
-                                                        Riwayat Pesanan
-                                                    </Link>
-                                                    <Link
-                                                        href={route(
-                                                            "installments.index",
-                                                        )}
-                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
-                                                    >
-                                                        Cicilan Saya
+                                                        Aktivitas Saya
                                                     </Link>
                                                 </div>
                                                 <div className="border-t border-gray-200" />
@@ -526,16 +569,23 @@ export default function Navbar({ auth }) {
                                         {isSearching ? (
                                             <div className="p-6 text-center text-gray-400">
                                                 <div className="w-5 h-5 border-2 border-[#1c69d4] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                                                <p className="text-[9px] font-bold uppercase tracking-widest">Memuat...</p>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest">
+                                                    Memuat...
+                                                </p>
                                             </div>
                                         ) : results.length > 0 ? (
                                             <div className="flex flex-col">
                                                 {results.map((motor) => (
                                                     <Link
                                                         key={motor.id}
-                                                        href={route("motors.show", motor.id)}
+                                                        href={route(
+                                                            "motors.show",
+                                                            motor.id,
+                                                        )}
                                                         onClick={() => {
-                                                            setMobileMenuOpen(false);
+                                                            setMobileMenuOpen(
+                                                                false,
+                                                            );
                                                             setSearchQuery("");
                                                         }}
                                                         className="flex items-center gap-4 p-4 border-b border-gray-800 hover:bg-[#1c69d4] transition-colors group"
@@ -552,15 +602,25 @@ export default function Navbar({ auth }) {
                                                                 {motor.name}
                                                             </h4>
                                                             <p className="text-[9px] font-bold text-[#1c69d4] mt-1 group-hover:text-white transition-colors">
-                                                                IDR {parseInt(motor.price).toLocaleString("id-ID")}
+                                                                IDR{" "}
+                                                                {parseInt(
+                                                                    motor.price,
+                                                                ).toLocaleString(
+                                                                    "id-ID",
+                                                                )}
                                                             </p>
                                                         </div>
                                                     </Link>
                                                 ))}
                                                 <Link
-                                                    href={route("motors.index", { search: searchQuery })}
+                                                    href={route(
+                                                        "motors.index",
+                                                        { search: searchQuery },
+                                                    )}
                                                     onClick={() => {
-                                                        setMobileMenuOpen(false);
+                                                        setMobileMenuOpen(
+                                                            false,
+                                                        );
                                                         setSearchQuery("");
                                                     }}
                                                     className="block w-full text-center py-3 bg-[#111111] text-[9px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors"
@@ -570,7 +630,9 @@ export default function Navbar({ auth }) {
                                             </div>
                                         ) : (
                                             <div className="p-6 text-center text-gray-500">
-                                                <p className="text-[9px] font-bold uppercase tracking-widest">Tidak Ditemukan</p>
+                                                <p className="text-[9px] font-bold uppercase tracking-widest">
+                                                    Tidak Ditemukan
+                                                </p>
                                             </div>
                                         )}
                                     </motion.div>

@@ -155,206 +155,32 @@ export default function History({ appointments }) {
                     </div>
                 </section>
 
-                <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-3 mb-12">
-                        <div className="w-12 h-1 bg-[#1c69d4]"></div>
-                        <h2 className="text-4xl font-black uppercase tracking-tighter">RIWAYAT & AGENDA SAYA</h2>
-                    </div>
+                <section className="py-24 bg-white border-b border-gray-100">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="bg-[#1c69d4] text-white p-12 md:p-20 relative overflow-hidden group">
+                             {/* Abstract geometric background */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-white blur-[120px] opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                            <div className="absolute -bottom-10 -left-10 w-96 h-96 bg-black blur-[120px] opacity-20"></div>
 
-                    {appointments.data.length === 0 ? (
-                        <div className="text-center py-32 bg-gray-50 border border-gray-200">
-                            <div className="w-24 h-24 bg-white border border-gray-200 flex items-center justify-center text-gray-300 mx-auto mb-8 rounded-none">
-                                <PenTool className="w-10 h-10" />
+                            <div className="relative z-10 flex flex-col items-center text-center space-y-8">
+                                <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">
+                                    CEK STATUS <br />
+                                    <span className="text-black">KENDARAAN ANDA?</span>
+                                </h2>
+                                <p className="text-white/80 font-medium max-w-2xl uppercase tracking-widest text-sm leading-relaxed">
+                                    Pantau jadwal servis, riwayat pengerjaan mekanik, hingga status cicilan Anda secara real-time di Dashboard Aktivitas.
+                                </p>
+                                <div className="pt-8">
+                                    <Link 
+                                        href={route('user.activity')} 
+                                        className="inline-flex items-center gap-4 px-12 py-6 bg-white text-black hover:bg-black hover:text-white font-black text-xs uppercase tracking-[0.3em] transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.2)] hover:shadow-none"
+                                    >
+                                        BUKA DASHBOARD SAYA <ArrowRight className="w-5 h-5" />
+                                    </Link>
+                                </div>
                             </div>
-                            <h3 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-black mb-4">BELUM ADA AGENDA</h3>
-                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] mb-8">Anda belum memiliki riwayat servis atau reservasi aktif.</p>
-                            <Link href={route('services.create')} className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white hover:bg-[#1c69d4] border border-black font-black uppercase tracking-widest text-[11px] transition-all duration-300 rounded-none mx-auto">
-                                AJUKAN SERVIS SEKARANG <ArrowRight className="w-4 h-4" />
-                            </Link>
                         </div>
-                    ) : (
-                        <div className="flex flex-col gap-8">
-                            {appointments.data.map(app => {
-                                const st = getStatusStyle(app.status);
-                                return (
-                                    <div key={app.id} className="bg-white border hover:shadow-2xl transition-all duration-500 border-gray-200 flex flex-col rounded-none overflow-hidden group">
-                                        {/* Status Progress Tracking (Top Bar) */}
-                                        <div className="flex w-full bg-gray-50 border-b border-gray-100">
-                                            {['pending', 'confirmed', 'in_progress', 'completed'].map((step, idx) => {
-                                                const statuses = ['pending', 'confirmed', 'in_progress', 'completed'];
-                                                const currentIdx = statuses.indexOf(app.status);
-                                                const isPast = currentIdx >= idx;
-                                                const labels = { pending: 'Antrean', confirmed: 'Jadwal', in_progress: 'Servis', completed: 'Selesai' };
-                                                
-                                                if (app.status === 'cancelled' && idx > 0) return null;
-
-                                                return (
-                                                    <div key={step} className={`flex-grow py-4 px-4 flex items-center justify-center gap-3 border-r last:border-r-0 border-gray-100 transition-colors ${isPast ? 'bg-[#1c69d4]/5' : ''}`}>
-                                                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${isPast ? 'bg-[#1c69d4] text-white shadow-[0_0_15px_rgba(28,105,212,0.5)]' : 'bg-gray-200 text-gray-400'}`}>
-                                                            {isPast ? <CheckCircle size={12} /> : idx + 1}
-                                                        </div>
-                                                        <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${isPast ? 'text-[#1c69d4]' : 'text-gray-400'}`}>
-                                                            {labels[step]}
-                                                        </span>
-                                                    </div>
-                                                );
-                                            })}
-                                            {app.status === 'cancelled' && (
-                                                <div className="flex-grow py-4 px-4 flex items-center justify-center gap-3 bg-red-50 text-red-600">
-                                                    <XCircle size={16} />
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Dibatalkan</span>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="p-8 md:p-12 flex flex-col md:flex-row gap-12 items-start relative">
-                                            {/* Section 1: Identity */}
-                                            <div className="md:w-1/4 space-y-6 w-full md:border-r border-gray-100 md:pr-12">
-                                                <div>
-                                                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#1c69d4] mb-3">BOOKING ID</p>
-                                                    <h3 className="text-3xl font-black tracking-tighter text-black leading-none">#SRB-{String(app.id).padStart(5, '0')}</h3>
-                                                </div>
-                                                <div className="pt-6 border-t border-gray-50">
-                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2">UNIT KENDARAAN</p>
-                                                    <h4 className="text-lg font-black text-black uppercase tracking-tight">{app.motor_model}</h4>
-                                                    <div className="mt-4 flex items-center gap-2">
-                                                        <MapPin className="w-3 h-3 text-[#1c69d4]" />
-                                                        <span className="text-[10px] font-black uppercase tracking-widest text-black bg-gray-100 px-2 py-1">{app.branch}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Section 2: Details */}
-                                            <div className="md:w-2/4 grid grid-cols-1 md:grid-cols-2 gap-10 w-full md:border-r border-gray-100 md:pr-12">
-                                                <div className="space-y-6">
-                                                    <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">WAKTU KUNJUNGAN</p>
-                                                        <div className="flex items-center gap-3 mb-2">
-                                                            <div className="w-10 h-10 bg-gray-50 flex items-center justify-center text-[#1c69d4]">
-                                                                <Calendar size={18} />
-                                                            </div>
-                                                            <span className="text-sm font-black text-black uppercase leading-none">{new Date(app.service_date).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-3">
-                                                            <div className="w-10 h-10 bg-gray-50 flex items-center justify-center text-[#1c69d4]">
-                                                                <Clock size={18} />
-                                                            </div>
-                                                            <span className="text-sm font-bold text-gray-600 leading-none">{app.service_time} WIB</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-6">
-                                                    <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">LAYANAN & KELUHAN</p>
-                                                        <div className="flex items-center gap-3 mb-4">
-                                                            <div className="w-10 h-10 bg-black flex items-center justify-center text-white">
-                                                                <PenTool size={18} />
-                                                            </div>
-                                                            <span className="text-sm font-black text-black uppercase leading-none">{app.service_type}</span>
-                                                        </div>
-                                                        <div className="bg-gray-50 p-4 border-l-4 border-[#1c69d4] relative group/notes">
-                                                            <p className="text-[9px] font-black text-[#1c69d4] uppercase tracking-widest mb-2 flex items-center gap-2">
-                                                                <AlertCircle size={10} /> CATATAN KELUHAN
-                                                            </p>
-                                                            <p className="text-xs text-black font-bold uppercase tracking-wide leading-relaxed line-clamp-3">
-                                                                "{app.complaint_notes || 'TIDAK ADA KELUHAN SPESIFIK.'}"
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                {/* Status Specifics */}
-                                                {(app.status === 'cancelled' && app.cancel_reason) && (
-                                                    <div className="col-span-1 md:col-span-2 p-4 bg-red-50 border border-red-100">
-                                                        <p className="text-[9px] font-black uppercase tracking-widest text-red-500 mb-2">ALASAN PEMBATALAN ({app.cancelled_by === 'user' ? 'ANDA' : 'PENGELOLA'})</p>
-                                                        <p className="text-xs font-bold text-red-700 uppercase tracking-wide leading-relaxed">"{app.cancel_reason}"</p>
-                                                    </div>
-                                                )}
-
-                                                {app.service_notes && (
-                                                    <div className="col-span-1 md:col-span-2 p-5 bg-[#1c69d4]/5 border border-[#1c69d4]/20 flex items-start gap-4">
-                                                        <CheckCircle className="w-5 h-5 text-[#1c69d4] flex-shrink-0 mt-0.5" />
-                                                        <div>
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-[#1c69d4] mb-2">CATATAN LAYANAN & BENEFIT ADMIN</p>
-                                                            <p className="text-xs font-black text-black uppercase leading-relaxed tracking-wider">{app.service_notes}</p>
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {app.admin_notes && (
-                                                    <div className="col-span-1 md:col-span-2 p-4 bg-gray-50 border border-gray-200 border-l-4 border-gray-400">
-                                                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-2">INFO TAMBAHAN ADMIN</p>
-                                                        <p className="text-xs text-gray-600 italic font-medium leading-relaxed">"{app.admin_notes}"</p>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Section 3: Actions */}
-                                            <div className="md:w-1/4 flex flex-col justify-between h-full space-y-8 w-full md:items-end">
-                                                <div className="space-y-4 md:text-right w-full">
-                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">BUTUH BANTUAN?</p>
-                                                    <button className="inline-flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 hover:border-[#1c69d4] text-[10px] font-black uppercase tracking-widest text-black transition-all duration-300 w-full md:w-auto justify-center group/call">
-                                                        <PhoneCall size={14} className="group-hover/call:rotate-12 transition-transform" /> HUBUNGI CABANG
-                                                    </button>
-                                                </div>
-
-                                                <div className="flex flex-col gap-4 w-full md:items-end">
-                                                    {(app.status === 'pending' || app.status === 'confirmed') && new Date(app.service_date) >= new Date(new Date().setHours(0,0,0,0)) && (
-                                                        <button 
-                                                            onClick={() => {
-                                                                Swal.fire({
-                                                                    title: 'BATALKAN SERVIS?',
-                                                                    text: "Informasikan alasan pembatalan Anda kepada kami:",
-                                                                    icon: 'warning',
-                                                                    input: 'textarea',
-                                                                    inputPlaceholder: 'Contoh: Ada keperluan mendadak...',
-                                                                    showCancelButton: true,
-                                                                    confirmButtonColor: '#000',
-                                                                    cancelButtonColor: '#d33',
-                                                                    confirmButtonText: 'YA, BATALKAN',
-                                                                    cancelButtonText: 'TIDAK',
-                                                                    background: '#fff',
-                                                                    borderRadius: '0px',
-                                                                    customClass: {
-                                                                        title: 'font-black uppercase tracking-tighter text-2xl',
-                                                                        confirmButton: 'rounded-none px-8 py-3 font-black uppercase tracking-widest text-[11px]',
-                                                                        cancelButton: 'rounded-none px-8 py-3 font-black uppercase tracking-widest text-[11px]'
-                                                                    }
-                                                                }).then((result) => {
-                                                                    if (result.isConfirmed) {
-                                                                        router.post(route('services.cancel', app.id), {
-                                                                            reason: result.value || 'DIBATALKAN SECARA MANDIRI OLEH PELANGGAN.'
-                                                                        }, {
-                                                                            onSuccess: () => {
-                                                                                Swal.fire({
-                                                                                    title: 'BERHASIL DIBATALKAN',
-                                                                                    text: 'Reservasi Anda telah dihapus dari antrean aktif.',
-                                                                                    icon: 'success',
-                                                                                    borderRadius: '0px',
-                                                                                    confirmButtonColor: '#1c69d4',
-                                                                                });
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }}
-                                                            className="text-[10px] uppercase font-black text-red-500 hover:text-white hover:bg-red-500 px-4 py-2 border border-red-500 tracking-[0.2em] transition-all text-center w-full md:w-fit"
-                                                        >
-                                                            BATALKAN RESERVASI
-                                                        </button>
-                                                    )}
-                                                    <div className={`px-6 py-3 border-2 ${st.border} ${st.text} text-[11px] font-black uppercase tracking-[0.3em] bg-white shadow-xl flex items-center gap-2 justify-center w-full md:w-fit`}>
-                                                        <div className={`w-2 h-2 rounded-full ${st.text.replace('text', 'bg')}`}></div>
-                                                        {app.status.replace('_', ' ')}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                    </div>
                 </section>
             </div>
         </PublicLayout>

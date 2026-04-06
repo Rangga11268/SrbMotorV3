@@ -308,10 +308,13 @@ export default function InstallmentIndex({ transactions }) {
         return (
             <span
                 className={`flex items-center gap-1.5 px-4 py-2 border-2 uppercase text-[9px] font-black tracking-[0.2em] w-fit ${
-                    status === "paid" ? "bg-green-50 text-green-600 border-green-500" :
-                    status === "overdue" || status === "cancelled" ? "bg-red-50 text-red-600 border-red-500" :
-                    status === "waiting_approval" ? "bg-blue-50 text-blue-600 border-blue-100" :
-                    "bg-white text-gray-500 border-gray-100"
+                    status === "paid"
+                        ? "bg-green-50 text-green-600 border-green-500"
+                        : status === "overdue" || status === "cancelled"
+                          ? "bg-red-50 text-red-600 border-red-500"
+                          : status === "waiting_approval"
+                            ? "bg-blue-50 text-blue-600 border-blue-100"
+                            : "bg-white text-gray-500 border-gray-100"
                 }`}
             >
                 <Icon size={12} strokeWidth={3} />
@@ -385,21 +388,28 @@ export default function InstallmentIndex({ transactions }) {
 
     return (
         <PublicLayout title="Cicilan Saya - SRB Motors">
-            {/* BMW INDUSTRIAL HEADER */}
-            <section className="bg-black text-white pt-24 pb-32 border-b border-gray-800 relative overflow-hidden">
+            {/*   INDUSTRIAL HEADER */}
+            <section className="bg-black text-white pt-44 pb-32 border-b border-gray-800 relative overflow-hidden">
                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#1c69d4] to-transparent opacity-50"></div>
-                
+
                 {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+                <div
+                    className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                    style={{
+                        backgroundImage:
+                            "radial-gradient(#ffffff 1px, transparent 1px)",
+                        backgroundSize: "32px 32px",
+                    }}
+                ></div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="mb-16">
+                    <div className="mb-6">
                         <Link
-                            href={route("home")}
-                            className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-white transition-all group uppercase"
+                            href={route("user.activity")}
+                            className="inline-flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest hover:text-white transition-colors group"
                         >
-                            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-                            KEMBALI KE BERANDA
+                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                            KEMBALI KE AKTIVITAS SAYA
                         </Link>
                     </div>
 
@@ -407,31 +417,43 @@ export default function InstallmentIndex({ transactions }) {
                         <div className="max-w-3xl">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-8 h-px bg-[#1c69d4]"></div>
-                                <p className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">FINANSIAL & CICILAN</p>
+                                <p className="text-[#1c69d4] font-black text-[10px] tracking-[0.4em] uppercase">
+                                    FINANSIAL & CICILAN
+                                </p>
                             </div>
                             <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
-                                MANAJEMEN <br/>
+                                MANAJEMEN <br />
                                 PEMBAYARAN
                             </h1>
                             <p className="text-gray-400 font-medium text-sm md:text-base max-w-xl uppercase tracking-widest leading-relaxed opacity-70">
-                                Pantau jadwal jatuh tempo, kelola cicilan berjalan, dan akses seluruh riwayat pembayaran Anda secara transparan.
+                                Pantau jadwal jatuh tempo, kelola cicilan
+                                berjalan, dan akses seluruh riwayat pembayaran
+                                Anda secara transparan.
                             </p>
                         </div>
 
                         {selectedTotal > 0 && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 className="bg-white p-8 border-l-4 border-[#1c69d4] min-w-[320px] shadow-2xl"
                             >
-                                <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase mb-2">TOTAL TERPILIH</p>
-                                <p className="text-4xl font-black text-black tracking-tighter mb-6">{formatCurrency(selectedTotal)}</p>
-                                <button 
+                                <p className="text-[10px] font-black text-gray-500 tracking-widest uppercase mb-2">
+                                    TOTAL TERPILIH
+                                </p>
+                                <p className="text-4xl font-black text-black tracking-tighter mb-6">
+                                    {formatCurrency(selectedTotal)}
+                                </p>
+                                <button
                                     onClick={handlePayMultiple}
                                     disabled={isLoadingPay}
                                     className="w-full h-14 bg-black hover:bg-[#1c69d4] text-white font-black uppercase text-[10px] tracking-[0.3em] transition-all flex items-center justify-center gap-3"
                                 >
-                                    {isLoadingPay ? <RefreshCw className="animate-spin w-4 h-4" /> : <CreditCard className="w-4 h-4" />}
+                                    {isLoadingPay ? (
+                                        <RefreshCw className="animate-spin w-4 h-4" />
+                                    ) : (
+                                        <CreditCard className="w-4 h-4" />
+                                    )}
                                     BAYAR SEKARANG
                                 </button>
                             </motion.div>
@@ -443,10 +465,8 @@ export default function InstallmentIndex({ transactions }) {
             <main className="flex-1 pb-32">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-20">
                     {transactions?.length > 0 ? (
-
                         <div className="flex flex-col gap-12">
                             {transactions?.map((transaction) => (
-
                                 <motion.div
                                     key={transaction.id}
                                     className={`group bg-white border border-gray-200 hover:border-black relative transition-all duration-500 hover:shadow-2xl ${
@@ -459,36 +479,74 @@ export default function InstallmentIndex({ transactions }) {
                                     {transaction.status === "cancelled" && (
                                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-red-600 z-20"></div>
                                     )}
-                                    {/* TRANSACTION HEADER - BMW INDUSTRIAL STYLE */}
+                                    {/* TRANSACTION HEADER -   INDUSTRIAL STYLE */}
                                     <div className="p-8 md:p-12 border-b border-gray-100 transition-colors group-hover:bg-gray-50/50">
                                         <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
                                             <div className="space-y-6">
                                                 <div className="flex items-center gap-4 text-[10px] font-black tracking-widest uppercase">
-                                                    <span className="text-gray-400">INV #{transaction.invoice_number || `INV-${transaction.id}`}</span>
+                                                    <span className="text-gray-400">
+                                                        INV #
+                                                        {transaction.invoice_number ||
+                                                            `INV-${transaction.id}`}
+                                                    </span>
                                                     <span className="w-1.5 h-1.5 bg-[#1c69d4]"></span>
-                                                    {transaction.status === "cancelled" ? (
-                                                        <span className="text-red-600 font-black">TRANSAKSI DIBATALKAN</span>
+                                                    {transaction.status ===
+                                                    "cancelled" ? (
+                                                        <span className="text-red-600 font-black">
+                                                            TRANSAKSI DIBATALKAN
+                                                        </span>
                                                     ) : (
-                                                        <span className="text-[#1c69d4]">AKTIF</span>
+                                                        <span className="text-[#1c69d4]">
+                                                            AKTIF
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <h3 className="text-4xl md:text-5xl font-black text-black tracking-tighter uppercase leading-none">
-                                                    {transaction.motor?.name || "UNIT MOTOR"}
+                                                    {transaction.motor?.name ||
+                                                        "UNIT MOTOR"}
                                                 </h3>
                                             </div>
-                                            
+
                                             <div className="flex flex-col md:items-end gap-2 w-full lg:w-auto">
-                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">UNIT PRICE</p>
-                                                <p className="text-4xl font-black text-black tracking-tighter">
-                                                    {formatCurrency(transaction.total_amount)}
-                                                </p>
+                                                <div className="flex flex-col md:items-end">
+                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">
+                                                        HARGA UNIT
+                                                    </p>
+                                                    <p className="text-3xl font-black text-black tracking-tighter">
+                                                        {formatCurrency(
+                                                            transaction.final_price,
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                {Number(
+                                                    transaction.total_amount,
+                                                ) > 0 && (
+                                                    <div className="flex flex-col md:items-end mt-2 p-3 bg-red-50 border-l-4 border-red-500">
+                                                        <p className="text-[8px] font-black text-red-600 uppercase tracking-widest mb-0.5">
+                                                            SISA KEWAJIBAN
+                                                        </p>
+                                                        <p className="text-xl font-black text-red-600 tracking-tighter">
+                                                            {formatCurrency(
+                                                                transaction.total_amount,
+                                                            )}
+                                                        </p>
+                                                    </div>
+                                                )}
                                                 <div className="mt-4 flex gap-2">
-                                                    {transaction.status === "cancelled" ? (
-                                                        <span className="px-4 py-2 bg-red-600 text-white text-[9px] font-black uppercase tracking-widest">DIBATALKAN</span>
-                                                    ) : transaction.status === "completed" ? (
-                                                        <span className="px-4 py-2 bg-black text-white text-[9px] font-black uppercase tracking-widest">LUNAS</span>
+                                                    {transaction.status ===
+                                                    "cancelled" ? (
+                                                        <span className="px-4 py-2 bg-red-600 text-white text-[9px] font-black uppercase tracking-widest">
+                                                            DIBATALKAN
+                                                        </span>
+                                                    ) : transaction.status ===
+                                                      "completed" ? (
+                                                        <span className="px-4 py-2 bg-black text-white text-[9px] font-black uppercase tracking-widest">
+                                                            LUNAS
+                                                        </span>
                                                     ) : (
-                                                        <span className="px-4 py-2 bg-white border-2 border-black text-black text-[9px] font-black uppercase tracking-widest">TRANSAKSI AKTIF</span>
+                                                        <span className="px-4 py-2 bg-white border-2 border-black text-black text-[9px] font-black uppercase tracking-widest">
+                                                            TRANSAKSI AKTIF
+                                                        </span>
                                                     )}
                                                 </div>
                                             </div>
@@ -633,49 +691,103 @@ export default function InstallmentIndex({ transactions }) {
                                                                 </td>
                                                                 <td className="px-6 py-6 text-center">
                                                                     <div className="flex justify-center">
-                                                                        {getStatusBadge(inst.status)}
+                                                                        {getStatusBadge(
+                                                                            inst.status,
+                                                                        )}
                                                                     </div>
                                                                 </td>
                                                                 <td className="px-6 py-6">
                                                                     <div className="flex items-center justify-center gap-2">
-                                                                        {inst.status === "pending" || inst.status === "overdue" ? (
+                                                                        {inst.status ===
+                                                                            "pending" ||
+                                                                        inst.status ===
+                                                                            "overdue" ? (
                                                                             <>
                                                                                 <button
-                                                                                    onClick={() => handleOnlinePayment(inst)}
-                                                                                    disabled={isLoadingPay}
-                                                                                    className="h-10 px-6 bg-black hover:bg-[#1c69d4] text-white text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 disabled:opacity-20"
+                                                                                    onClick={() =>
+                                                                                        handleOnlinePayment(
+                                                                                            inst,
+                                                                                        )
+                                                                                    }
+                                                                                    disabled={
+                                                                                        isLoadingPay
+                                                                                    }
+                                                                                    className="h-10 px-6 bg-black hover:bg-[#1c69d4] text-white hover:text-white text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 disabled:opacity-20"
                                                                                 >
-                                                                                    <CreditCard size={14} /> ONLINE
+                                                                                    <CreditCard
+                                                                                        size={
+                                                                                            14
+                                                                                        }
+                                                                                    />{" "}
+                                                                                    ONLINE
                                                                                 </button>
                                                                                 {inst.midtrans_booking_code && (
                                                                                     <button
-                                                                                        onClick={() => handleCheckStatus(inst)}
-                                                                                        disabled={isLoadingCheck}
+                                                                                        onClick={() =>
+                                                                                            handleCheckStatus(
+                                                                                                inst,
+                                                                                            )
+                                                                                        }
+                                                                                        disabled={
+                                                                                            isLoadingCheck
+                                                                                        }
                                                                                         className="h-10 px-6 bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 disabled:opacity-50"
                                                                                         title="Cek ke server Midtrans jika status belum berubah"
                                                                                     >
-                                                                                        {isLoadingCheck ? <RefreshCw className="animate-spin w-3.5 h-3.5" /> : <RefreshCw size={14} />} CEK STATUS
+                                                                                        {isLoadingCheck ? (
+                                                                                            <RefreshCw className="animate-spin w-3.5 h-3.5" />
+                                                                                        ) : (
+                                                                                            <RefreshCw
+                                                                                                size={
+                                                                                                    14
+                                                                                                }
+                                                                                            />
+                                                                                        )}{" "}
+                                                                                        CEK
+                                                                                        STATUS
                                                                                     </button>
                                                                                 )}
                                                                                 <button
-                                                                                    onClick={() => openUploadModal(inst)}
+                                                                                    onClick={() =>
+                                                                                        openUploadModal(
+                                                                                            inst,
+                                                                                        )
+                                                                                    }
                                                                                     className="h-10 px-6 bg-white border-2 border-black text-black hover:bg-black hover:text-white text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                                                                                 >
-                                                                                    <Upload size={14} /> TRANSFER
+                                                                                    <Upload
+                                                                                        size={
+                                                                                            14
+                                                                                        }
+                                                                                    />{" "}
+                                                                                    TRANSFER
                                                                                 </button>
-
                                                                             </>
-                                                                        ) : inst.status === "paid" ? (
+                                                                        ) : inst.status ===
+                                                                          "paid" ? (
                                                                             <a
-                                                                                href={route("installments.receipt", inst.id)}
+                                                                                href={route(
+                                                                                    "installments.receipt",
+                                                                                    inst.id,
+                                                                                )}
                                                                                 target="_blank"
                                                                                 className="h-10 px-6 bg-gray-100 text-black hover:bg-black hover:text-white text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                                                                             >
-                                                                                <Download size={14} /> RECEIPT
+                                                                                <Download
+                                                                                    size={
+                                                                                        14
+                                                                                    }
+                                                                                />{" "}
+                                                                                RECEIPT
                                                                             </a>
                                                                         ) : (
                                                                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                                                                <Clock size={14} /> VERIFYING
+                                                                                <Clock
+                                                                                    size={
+                                                                                        14
+                                                                                    }
+                                                                                />{" "}
+                                                                                VERIFYING
                                                                             </span>
                                                                         )}
                                                                     </div>
@@ -689,95 +801,193 @@ export default function InstallmentIndex({ transactions }) {
 
                                     <div className="md:hidden divide-y divide-gray-100">
                                         {transaction.installments &&
-                                            transaction.installments.map((inst) => (
-                                                <div 
-                                                    key={inst.id} 
-                                                    className={`p-8 transition-colors ${
-                                                        selectedIds.includes(inst.id) ? "bg-[#f4f7fa]" : ""
-                                                    }`}
-                                                >
-                                                    <div className="flex justify-between items-start mb-6">
-                                                        <div className="flex gap-4">
-                                                            {(inst.status === "pending" || inst.status === "overdue") && (
-                                                                <input
-                                                                    type="checkbox"
-                                                                    className="w-5 h-5 mt-1 border-2 border-black text-black focus:ring-0 cursor-pointer"
-                                                                    checked={selectedIds.includes(inst.id)}
-                                                                    onChange={() =>
-                                                                        transaction.status !== "cancelled" &&
-                                                                        toggleSelection(inst.id, inst.amount, inst.penalty_amount || 0)
-                                                                    }
-                                                                />
-                                                            )}
-                                                            <div>
-                                                                <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${inst.installment_number === 0 ? "text-[#1c69d4]" : "text-gray-400"}`}>
-                                                                    {inst.installment_number === 0 ? "UANG MUKA" : `CICILAN #${inst.installment_number}`}
+                                            transaction.installments.map(
+                                                (inst) => (
+                                                    <div
+                                                        key={inst.id}
+                                                        className={`p-8 transition-colors ${
+                                                            selectedIds.includes(
+                                                                inst.id,
+                                                            )
+                                                                ? "bg-[#f4f7fa]"
+                                                                : ""
+                                                        }`}
+                                                    >
+                                                        <div className="flex justify-between items-start mb-6">
+                                                            <div className="flex gap-4">
+                                                                {(inst.status ===
+                                                                    "pending" ||
+                                                                    inst.status ===
+                                                                        "overdue") && (
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="w-5 h-5 mt-1 border-2 border-black text-black focus:ring-0 cursor-pointer"
+                                                                        checked={selectedIds.includes(
+                                                                            inst.id,
+                                                                        )}
+                                                                        onChange={() =>
+                                                                            transaction.status !==
+                                                                                "cancelled" &&
+                                                                            toggleSelection(
+                                                                                inst.id,
+                                                                                inst.amount,
+                                                                                inst.penalty_amount ||
+                                                                                    0,
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                )}
+                                                                <div>
+                                                                    <p
+                                                                        className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${inst.installment_number === 0 ? "text-[#1c69d4]" : "text-gray-400"}`}
+                                                                    >
+                                                                        {inst.installment_number ===
+                                                                        0
+                                                                            ? "UANG MUKA"
+                                                                            : `CICILAN #${inst.installment_number}`}
+                                                                    </p>
+                                                                    <p className="text-sm font-black text-black uppercase tracking-tight">
+                                                                        {formatDate(
+                                                                            inst.due_date,
+                                                                        )}
+                                                                    </p>
+                                                                    {(inst.status ===
+                                                                        "pending" ||
+                                                                        inst.status ===
+                                                                            "overdue") && (
+                                                                        <div
+                                                                            className={`mt-2 text-[8px] font-black px-2 py-1 border uppercase tracking-widest w-fit ${getReminderBadge(getDaysUntilDue(inst.due_date)).color}`}
+                                                                        >
+                                                                            {
+                                                                                getReminderBadge(
+                                                                                    getDaysUntilDue(
+                                                                                        inst.due_date,
+                                                                                    ),
+                                                                                )
+                                                                                    .text
+                                                                            }
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <p className="text-lg font-black text-black tracking-tighter">
+                                                                    {formatCurrency(
+                                                                        Number(
+                                                                            inst.amount,
+                                                                        ) +
+                                                                            Number(
+                                                                                inst.penalty_amount ||
+                                                                                    0,
+                                                                            ),
+                                                                    )}
                                                                 </p>
-                                                                <p className="text-sm font-black text-black uppercase tracking-tight">
-                                                                    {formatDate(inst.due_date)}
-                                                                </p>
-                                                                {(inst.status === "pending" || inst.status === "overdue") && (
-                                                                    <div className={`mt-2 text-[8px] font-black px-2 py-1 border uppercase tracking-widest w-fit ${getReminderBadge(getDaysUntilDue(inst.due_date)).color}`}>
-                                                                        {getReminderBadge(getDaysUntilDue(inst.due_date)).text}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex flex-col gap-3">
+                                                            <div className="flex items-center gap-2">
+                                                                {getStatusBadge(
+                                                                    inst.status,
+                                                                )}
+                                                            </div>
+
+                                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                                {inst.status ===
+                                                                    "pending" ||
+                                                                inst.status ===
+                                                                    "overdue" ? (
+                                                                    <>
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                handleOnlinePayment(
+                                                                                    inst,
+                                                                                )
+                                                                            }
+                                                                            className="h-12 bg-black text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                                                                        >
+                                                                            <CreditCard
+                                                                                size={
+                                                                                    14
+                                                                                }
+                                                                            />{" "}
+                                                                            ONLINE
+                                                                        </button>
+                                                                        {inst.midtrans_booking_code && (
+                                                                            <button
+                                                                                onClick={() =>
+                                                                                    handleCheckStatus(
+                                                                                        inst,
+                                                                                    )
+                                                                                }
+                                                                                disabled={
+                                                                                    isLoadingCheck
+                                                                                }
+                                                                                className="h-12 bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
+                                                                            >
+                                                                                {isLoadingCheck ? (
+                                                                                    <RefreshCw className="animate-spin w-3.5 h-3.5" />
+                                                                                ) : (
+                                                                                    <RefreshCw
+                                                                                        size={
+                                                                                            14
+                                                                                        }
+                                                                                    />
+                                                                                )}{" "}
+                                                                                CEK
+                                                                                STATUS
+                                                                            </button>
+                                                                        )}
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                openUploadModal(
+                                                                                    inst,
+                                                                                )
+                                                                            }
+                                                                            className="h-12 bg-white border-2 border-black text-black text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                                                                        >
+                                                                            <Upload
+                                                                                size={
+                                                                                    14
+                                                                                }
+                                                                            />{" "}
+                                                                            TRANSFER
+                                                                        </button>
+                                                                    </>
+                                                                ) : inst.status ===
+                                                                  "paid" ? (
+                                                                    <a
+                                                                        href={route(
+                                                                            "installments.receipt",
+                                                                            inst.id,
+                                                                        )}
+                                                                        target="_blank"
+                                                                        className="col-span-2 h-12 bg-black text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
+                                                                    >
+                                                                        <Download
+                                                                            size={
+                                                                                14
+                                                                            }
+                                                                        />{" "}
+                                                                        DOWNLOAD
+                                                                        RECEIPT
+                                                                    </a>
+                                                                ) : (
+                                                                    <div className="col-span-2 h-12 bg-gray-50 flex items-center justify-center gap-2 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                                                                        <Clock
+                                                                            size={
+                                                                                14
+                                                                            }
+                                                                        />{" "}
+                                                                        VERIFYING
+                                                                        PAYMENT
                                                                     </div>
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        <div className="text-right">
-                                                            <p className="text-lg font-black text-black tracking-tighter">
-                                                                {formatCurrency(Number(inst.amount) + Number(inst.penalty_amount || 0))}
-                                                            </p>
-                                                        </div>
                                                     </div>
-
-                                                    <div className="flex flex-col gap-3">
-                                                        <div className="flex items-center gap-2">
-                                                            {getStatusBadge(inst.status)}
-                                                        </div>
-                                                        
-                                                        <div className="grid grid-cols-2 gap-2 mt-2">
-                                                            {inst.status === "pending" || inst.status === "overdue" ? (
-                                                                <>
-                                                                    <button
-                                                                        onClick={() => handleOnlinePayment(inst)}
-                                                                        className="h-12 bg-black text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
-                                                                    >
-                                                                        <CreditCard size={14} /> ONLINE
-                                                                    </button>
-                                                                    {inst.midtrans_booking_code && (
-                                                                        <button
-                                                                            onClick={() => handleCheckStatus(inst)}
-                                                                            disabled={isLoadingCheck}
-                                                                            className="h-12 bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
-                                                                        >
-                                                                            {isLoadingCheck ? <RefreshCw className="animate-spin w-3.5 h-3.5" /> : <RefreshCw size={14} />} CEK STATUS
-                                                                        </button>
-                                                                    )}
-                                                                    <button
-                                                                        onClick={() => openUploadModal(inst)}
-                                                                        className="h-12 bg-white border-2 border-black text-black text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
-                                                                    >
-                                                                        <Upload size={14} /> TRANSFER
-                                                                    </button>
-
-                                                                </>
-                                                            ) : inst.status === "paid" ? (
-                                                                <a
-                                                                    href={route("installments.receipt", inst.id)}
-                                                                    target="_blank"
-                                                                    className="col-span-2 h-12 bg-black text-white text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2"
-                                                                >
-                                                                    <Download size={14} /> DOWNLOAD RECEIPT
-                                                                </a>
-                                                            ) : (
-                                                                <div className="col-span-2 h-12 bg-gray-50 flex items-center justify-center gap-2 text-[9px] font-black text-gray-400 uppercase tracking-widest">
-                                                                    <Clock size={14} /> VERIFYING PAYMENT
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                ),
+                                            )}
                                     </div>
 
                                     {selectedIds.length > 0 && (
@@ -809,7 +1019,7 @@ export default function InstallmentIndex({ transactions }) {
                                                 <button
                                                     onClick={handlePayMultiple}
                                                     disabled={isLoadingPay}
-                                                    className="w-full md:w-auto px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-none transition-all disabled:opacity-50 flex items-center justify-center gap-3 border border-white hover:bg-transparent hover:text-white"
+                                                    className="w-full md:w-auto px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-xs rounded-none transition-all disabled:opacity-50 flex items-center justify-center gap-3 border border-white hover:bg-black hover:text-white"
                                                 >
                                                     <ShieldCheck className="w-5 h-5" />
                                                     {isLoadingPay
@@ -819,8 +1029,6 @@ export default function InstallmentIndex({ transactions }) {
                                             </div>
                                         </motion.div>
                                     )}
-
-
                                 </motion.div>
                             ))}
                         </div>
@@ -853,43 +1061,60 @@ export default function InstallmentIndex({ transactions }) {
                     <div className="flex flex-col md:flex-row items-center gap-8 p-10 bg-black text-white border-l-8 border-[#1c69d4] shadow-2xl relative overflow-hidden group">
                         {/* Background Accent */}
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#1c69d4] opacity-[0.05] -mr-16 -mt-16 rounded-full blur-3xl"></div>
-                        
+
                         <div className="flex-shrink-0 p-5 bg-white/5 border border-white/10 rounded-none text-[#1c69d4] group-hover:bg-[#1c69d4]/10 transition-colors">
                             <ShieldCheck size={40} strokeWidth={1.5} />
                         </div>
-                        
+
                         <div className="space-y-4 flex-grow text-center md:text-left">
                             <div className="flex flex-col md:flex-row md:items-center gap-3">
-                                <p className="text-sm font-black uppercase tracking-[0.3em] text-[#1c69d4]">SISTEM VERIFIKASI PEMBAYARAN</p>
+                                <p className="text-sm font-black uppercase tracking-[0.3em] text-[#1c69d4]">
+                                    SISTEM VERIFIKASI PEMBAYARAN
+                                </p>
                                 <div className="hidden md:block w-px h-4 bg-gray-700"></div>
                                 <div className="flex items-center justify-center md:justify-start gap-2">
                                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">TERINTEGRASI OJK</span>
+                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                                        TERINTEGRASI OJK
+                                    </span>
                                 </div>
                             </div>
                             <p className="text-xs font-medium text-gray-400 leading-relaxed uppercase tracking-[0.15em] max-w-2xl">
-                                KONFIRMASI OTOMATIS MEMAKAN WAKTU <span className="text-white font-black">1-5 MENIT</span>. 
-                                JIKA STATUS BELUM BERUBAH, SILAKAN GUNAKAN TOMBOL <span className="text-white font-black italic">'CEK STATUS'</span> PADA RIWAYAT ATAU 
-                                HUBUNGI <span className="text-white font-black">HELP DESK</span> KAMI MELALUI WHATSAPP DENGAN MENYERTAKAN BUKTI BAYAR.
+                                KONFIRMASI OTOMATIS MEMAKAN WAKTU{" "}
+                                <span className="text-white font-black">
+                                    1-5 MENIT
+                                </span>
+                                . JIKA STATUS BELUM BERUBAH, SILAKAN GUNAKAN
+                                TOMBOL{" "}
+                                <span className="text-white font-black italic">
+                                    'CEK STATUS'
+                                </span>{" "}
+                                PADA RIWAYAT ATAU HUBUNGI{" "}
+                                <span className="text-white font-black">
+                                    HELP DESK
+                                </span>{" "}
+                                KAMI MELALUI WHATSAPP DENGAN MENYERTAKAN BUKTI
+                                BAYAR.
                             </p>
                         </div>
-                        
+
                         <div className="flex flex-col gap-3 w-full md:w-auto">
-                            <a 
-                                href="https://wa.me/628121345678" 
+                            <a
+                                href="https://wa.me/628121345678"
                                 target="_blank"
                                 className="px-8 py-5 bg-[#1c69d4] hover:bg-white hover:text-black text-white font-black text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-3 group/btn"
                             >
-                                <MessageCircle size={18} /> 
+                                <MessageCircle size={18} />
                                 HUBUNGI SUPPORT
                                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                             </a>
-                            <p className="text-[9px] font-bold text-gray-600 text-center uppercase tracking-widest">RESPONS CEPAT: 08:00 - 21:00</p>
+                            <p className="text-[9px] font-bold text-gray-600 text-center uppercase tracking-widest">
+                                RESPONS CEPAT: 08:00 - 21:00
+                            </p>
                         </div>
                     </div>
                 </div>
             </main>
-            
 
             {/* MANUAL UPLOAD MODAL */}
             <AnimatePresence>

@@ -54,6 +54,8 @@ class Transaction extends Model
         'customer_phone',
         'customer_occupation',
         'customer_address',
+        'total_amount',
+        'unified_status',
     ];
 
     /**

@@ -107,16 +107,23 @@ export default function Index({
     return (
         <PublicLayout auth={auth} title="Katalog Motor - SRB Motor">
             <div className="flex-grow pt-28 bg-white">
-                {/* HERO SECTION - BMW BLACK */}
+                {/* HERO SECTION -   BLACK */}
                 <section className="bg-black text-white pt-12 pb-24 border-b border-gray-800 relative">
                     <div className="absolute inset-0 bg-[#1c69d4] blur-[150px] opacity-10 rounded-full pointer-events-none transform -translate-y-12"></div>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <nav className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#1c69d4] mb-8">
-                            <Link href="/" className="hover:text-white transition-colors">HOME</Link>
+                            <Link
+                                href="/"
+                                className="hover:text-white transition-colors"
+                            >
+                                HOME
+                            </Link>
                             <ChevronRight className="w-3 h-3 text-gray-600" />
-                            <span className="text-gray-400">KATALOG KENDARAAN</span>
+                            <span className="text-gray-400">
+                                KATALOG KENDARAAN
+                            </span>
                         </nav>
-                        
+
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div className="space-y-4">
                                 <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
@@ -189,7 +196,9 @@ export default function Index({
                                                 onChange={handleChange}
                                                 className="w-full bg-transparent border border-gray-300 rounded-none px-4 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-bold uppercase text-black"
                                             >
-                                                <option value="">SEMUA MEREK</option>
+                                                <option value="">
+                                                    SEMUA MEREK
+                                                </option>
                                                 {brands.map((b) => (
                                                     <option key={b} value={b}>
                                                         {b}
@@ -209,7 +218,9 @@ export default function Index({
                                                 onChange={handleChange}
                                                 className="w-full bg-transparent border border-gray-300 rounded-none px-4 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-bold uppercase text-black"
                                             >
-                                                <option value="">SEMUA TIPE</option>
+                                                <option value="">
+                                                    SEMUA TIPE
+                                                </option>
                                                 {types.map((t) => (
                                                     <option key={t} value={t}>
                                                         {t}
@@ -249,15 +260,24 @@ export default function Index({
                             {/* MOBILE FILTER TRIGGER */}
                             <div className="lg:hidden flex gap-4 mb-6">
                                 <button
-                                    onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                    onClick={() =>
+                                        setIsFiltersOpen(!isFiltersOpen)
+                                    }
                                     className="flex-grow flex items-center justify-between px-6 py-4 bg-black border border-black rounded-none text-white font-bold uppercase tracking-widest text-[11px]"
                                 >
                                     <span className="flex items-center gap-2">
-                                        <SlidersHorizontal size={16} /> BUKA FILTER
+                                        <SlidersHorizontal size={16} /> BUKA
+                                        FILTER
                                     </span>
-                                    {Object.values(values).filter(Boolean).length > 0 && (
+                                    {Object.values(values).filter(Boolean)
+                                        .length > 0 && (
                                         <span className="bg-[#1c69d4] px-2 py-1 text-white">
-                                            {Object.values(values).filter(Boolean).length} AKTIF
+                                            {
+                                                Object.values(values).filter(
+                                                    Boolean,
+                                                ).length
+                                            }{" "}
+                                            AKTIF
                                         </span>
                                     )}
                                 </button>
@@ -292,24 +312,37 @@ export default function Index({
                                                     key={motor.id}
                                                     initial={{ opacity: 0 }}
                                                     animate={{ opacity: 1 }}
-                                                    transition={{ delay: i * 0.05 }}
+                                                    transition={{
+                                                        delay: i * 0.05,
+                                                    }}
                                                     className="bg-white group"
                                                 >
                                                     <Link
-                                                        href={route("motors.show", motor.id)}
+                                                        href={route(
+                                                            "motors.show",
+                                                            motor.id,
+                                                        )}
                                                         className="block h-full flex flex-col"
                                                     >
                                                         {/* Image Container */}
                                                         <div className="relative aspect-[4/3] bg-white overflow-hidden p-6 border-b border-gray-100 flex items-center justify-center">
                                                             <img
-                                                                src={motor.image_path ? `/storage/${motor.image_path}` : "/assets/img/no-image.webp"}
+                                                                src={
+                                                                    motor.image_path
+                                                                        ? `/storage/${motor.image_path}`
+                                                                        : "/assets/img/no-image.webp"
+                                                                }
                                                                 alt={motor.name}
                                                                 className={`max-h-full object-contain transition-transform duration-500 group-hover:scale-105 ${!motor.tersedia ? "grayscale opacity-50" : ""}`}
                                                             />
-                                                            
+
                                                             {/* Brand Tag */}
                                                             <div className="absolute top-4 left-4 bg-gray-100 px-3 py-1 border border-gray-200">
-                                                                <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">{motor.brand}</span>
+                                                                <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+                                                                    {
+                                                                        motor.brand
+                                                                    }
+                                                                </span>
                                                             </div>
 
                                                             {/* Status Tag */}
@@ -325,18 +358,27 @@ export default function Index({
                                                         {/* Card Body */}
                                                         <div className="p-6 flex flex-col flex-grow">
                                                             <div className="flex items-center gap-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">
-                                                                <span>{motor.year}</span>
+                                                                <span>
+                                                                    {motor.year}
+                                                                </span>
                                                                 <span className="w-1 h-1 bg-gray-300"></span>
-                                                                <span className="truncate">{motor.type}</span>
+                                                                <span className="truncate">
+                                                                    {motor.type}
+                                                                </span>
                                                             </div>
                                                             <h3 className="text-xl font-black text-black uppercase tracking-tight leading-tight mb-6 group-hover:text-[#1c69d4] transition-colors line-clamp-2">
                                                                 {motor.name}
                                                             </h3>
-                                                            
+
                                                             <div className="mt-auto flex items-end justify-between pt-6 border-t border-gray-100">
                                                                 <div>
                                                                     <p className="text-lg font-light text-black">
-                                                                        Rp {parseFloat(motor.price).toLocaleString("id-ID")}
+                                                                        Rp{" "}
+                                                                        {parseFloat(
+                                                                            motor.price,
+                                                                        ).toLocaleString(
+                                                                            "id-ID",
+                                                                        )}
                                                                     </p>
                                                                 </div>
                                                                 <div className="w-10 h-10 bg-black flex items-center justify-center text-white group-hover:bg-[#1c69d4] transition-colors rounded-none">
@@ -363,7 +405,9 @@ export default function Index({
                                                 TIDAK ADA HASIL
                                             </h3>
                                             <p className="text-gray-500 text-sm mb-8">
-                                                Modifikasi parameter pencarian Anda untuk melihat ketersediaan unit lainnya.
+                                                Modifikasi parameter pencarian
+                                                Anda untuk melihat ketersediaan
+                                                unit lainnya.
                                             </p>
                                             <button
                                                 className="px-6 py-3 bg-black text-white font-bold uppercase tracking-widest text-[11px] rounded-none hover:bg-gray-800 transition-colors"
@@ -376,33 +420,54 @@ export default function Index({
                                 </AnimatePresence>
 
                                 {/* PAGINATION */}
-                                {!isLoading && motors.links && motors.links.length > 3 && (
-                                    <div className="flex justify-center gap-1 pt-12">
-                                        {motors.links.map((link, k) => (
-                                            <button
-                                                key={k}
-                                                disabled={!link.url}
-                                                onClick={() => {
-                                                    if (link.url) {
-                                                        const urlParams = new URLSearchParams(new URL(link.url).search);
-                                                        const pageParams = Object.fromEntries(urlParams.entries());
-                                                        fetchMotors({ ...values, ...pageParams });
-                                                    }
-                                                }}
-                                                className={`min-w-[48px] h-12 flex items-center justify-center font-bold text-[11px] transition-colors uppercase border ${
-                                                    link.active
-                                                        ? "bg-black text-white border-black"
-                                                        : link.url
-                                                          ? "bg-white text-black border-gray-200 hover:border-black"
-                                                          : "opacity-30 cursor-not-allowed border-transparent text-gray-500 bg-gray-100"
-                                                }`}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: link.label.replace("Previous", "&laquo;").replace("Next", "&raquo;"),
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
+                                {!isLoading &&
+                                    motors.links &&
+                                    motors.links.length > 3 && (
+                                        <div className="flex justify-center gap-1 pt-12">
+                                            {motors.links.map((link, k) => (
+                                                <button
+                                                    key={k}
+                                                    disabled={!link.url}
+                                                    onClick={() => {
+                                                        if (link.url) {
+                                                            const urlParams =
+                                                                new URLSearchParams(
+                                                                    new URL(
+                                                                        link.url,
+                                                                    ).search,
+                                                                );
+                                                            const pageParams =
+                                                                Object.fromEntries(
+                                                                    urlParams.entries(),
+                                                                );
+                                                            fetchMotors({
+                                                                ...values,
+                                                                ...pageParams,
+                                                            });
+                                                        }
+                                                    }}
+                                                    className={`min-w-[48px] h-12 flex items-center justify-center font-bold text-[11px] transition-colors uppercase border ${
+                                                        link.active
+                                                            ? "bg-black text-white border-black"
+                                                            : link.url
+                                                              ? "bg-white text-black border-gray-200 hover:border-black"
+                                                              : "opacity-30 cursor-not-allowed border-transparent text-gray-500 bg-gray-100"
+                                                    }`}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: link.label
+                                                            .replace(
+                                                                "Previous",
+                                                                "&laquo;",
+                                                            )
+                                                            .replace(
+                                                                "Next",
+                                                                "&raquo;",
+                                                            ),
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
                             </div>
                         </div>
                     </div>
@@ -417,7 +482,10 @@ export default function Index({
                             exit={{ opacity: 0 }}
                             className="fixed inset-0 z-[60] lg:hidden"
                         >
-                            <div className="absolute inset-0 bg-black/80" onClick={() => setIsFiltersOpen(false)} />
+                            <div
+                                className="absolute inset-0 bg-black/80"
+                                onClick={() => setIsFiltersOpen(false)}
+                            />
                             <motion.div
                                 initial={{ x: "100%" }}
                                 animate={{ x: 0 }}
@@ -439,7 +507,9 @@ export default function Index({
 
                                 <div className="space-y-8 flex-grow overflow-y-auto">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">CARI</label>
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                            CARI
+                                        </label>
                                         <input
                                             type="text"
                                             name="search"
@@ -450,7 +520,9 @@ export default function Index({
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">MEREK</label>
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                            MEREK
+                                        </label>
                                         <select
                                             name="brand"
                                             value={values.brand}
@@ -458,11 +530,17 @@ export default function Index({
                                             className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
                                         >
                                             <option value="">SEMUA</option>
-                                            {brands.map((b) => (<option key={b} value={b}>{b}</option>))}
+                                            {brands.map((b) => (
+                                                <option key={b} value={b}>
+                                                    {b}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">TIPE</label>
+                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                            TIPE
+                                        </label>
                                         <select
                                             name="type"
                                             value={values.type}
@@ -470,7 +548,11 @@ export default function Index({
                                             className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
                                         >
                                             <option value="">SEMUA</option>
-                                            {types.map((t) => (<option key={t} value={t}>{t}</option>))}
+                                            {types.map((t) => (
+                                                <option key={t} value={t}>
+                                                    {t}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>

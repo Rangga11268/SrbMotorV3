@@ -42,11 +42,11 @@ export default function AuthModal({ visible, onClose, message = null }) {
                         className="fixed inset-0 z-50 flex items-center justify-center p-4"
                     >
                         <div className="bg-white border border-gray-100 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.3)] max-w-md w-full max-h-[90vh] overflow-y-auto flex flex-col rounded-none">
-                            {/* Header: Pure BMW Style - Sharp, Blocky, Professional */}
+                            {/* Header: Pure   Style - Sharp, Blocky, Professional */}
                             <div className="relative bg-[#111111] px-8 py-8 text-white overflow-hidden shrink-0">
                                 {/* Subtle Background Brand Accent */}
                                 <div className="absolute top-0 right-0 w-32 h-full bg-[#1c69d4]/10 skew-x-[30deg] translate-x-16" />
-                                
+
                                 <div className="relative z-10 flex justify-between items-start">
                                     <div className="space-y-3">
                                         <div className="flex items-center gap-2">
@@ -57,9 +57,21 @@ export default function AuthModal({ visible, onClose, message = null }) {
                                         </div>
                                         <h2 className="text-2xl font-light uppercase tracking-[0.1em] leading-tight">
                                             {mode === "login" ? (
-                                                <>SILAKAN<br /><span className="font-bold text-[#1c69d4]">MASUK</span></>
+                                                <>
+                                                    SILAKAN
+                                                    <br />
+                                                    <span className="font-bold text-[#1c69d4]">
+                                                        MASUK
+                                                    </span>
+                                                </>
                                             ) : (
-                                                <>BUAT<br /><span className="font-bold text-[#1c69d4]">AKUN</span></>
+                                                <>
+                                                    BUAT
+                                                    <br />
+                                                    <span className="font-bold text-[#1c69d4]">
+                                                        AKUN
+                                                    </span>
+                                                </>
                                             )}
                                         </h2>
                                     </div>
