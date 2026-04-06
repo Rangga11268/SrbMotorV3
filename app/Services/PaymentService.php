@@ -24,40 +24,47 @@ class PaymentService
             'payment_type' => $type
         ]);
 
-        if ($transactionStatus == 'capture') {
-            if ($type == 'credit_card') {
-                if ($fraud == 'challenge') {
-                    $installment->update(['status' => 'waiting_approval']);
-                } else {
-                    $this->markAsPaid($installment, 'midtrans_' . $type, $midtransStatus);
+        // NEW: Fetch ALL installments with the same booking code to update them at once
+        $bookingCode = $midtransStatus->order_id ?? $installment->midtrans_booking_code;
+        $allRelated = Installment::where('midtrans_booking_code', $bookingCode)->get();
+
+        foreach ($allRelated as $inst) {
+            if ($transactionStatus == 'capture') {
+                if ($type == 'credit_card') {
+                    if ($fraud == 'challenge') {
+                        $inst->update(['status' => 'waiting_approval']);
+                    } else {
+                        $this->markAsPaid($inst, 'midtrans_' . $type, $midtransStatus);
+                    }
                 }
-            }
-        } else if ($transactionStatus == 'settlement') {
-            $methodStr = 'midtrans_' . $type;
-            
-            // Refined method mapping
-            if ($type == 'bank_transfer' && (isset($midtransStatus->va_numbers) || isset($midtransStatus->permata_va_number))) {
-                if (isset($midtransStatus->va_numbers) && count($midtransStatus->va_numbers) > 0) {
-                    $bank = $midtransStatus->va_numbers[0]->bank ?? 'other';
-                } else {
-                    $bank = 'permata';
-                }
-                $methodStr = 'midtrans_' . $bank . '_va';
-            } else if ($type == 'gopay' || $type == 'shopeepay') {
+            } else if ($transactionStatus == 'settlement') {
                 $methodStr = 'midtrans_' . $type;
-            } else if ($type == 'cstore') {
-                $store = $midtransStatus->store ?? 'store';
-                $methodStr = 'midtrans_' . $store;
+                
+                // Refined method mapping
+                if ($type == 'bank_transfer' && (isset($midtransStatus->va_numbers) || isset($midtransStatus->permata_va_number))) {
+                    if (isset($midtransStatus->va_numbers) && count($midtransStatus->va_numbers) > 0) {
+                        $bank = $midtransStatus->va_numbers[0]->bank ?? 'other';
+                    } else {
+                        $bank = 'permata';
+                    }
+                    $methodStr = 'midtrans_' . $bank . '_va';
+                } else if ($type == 'gopay' || $type == 'shopeepay') {
+                    $methodStr = 'midtrans_' . $type;
+                } else if ($type == 'cstore') {
+                    $store = $midtransStatus->store ?? 'store';
+                    $methodStr = 'midtrans_' . $store;
+                }
+                
+                $this->markAsPaid($inst, $methodStr, $midtransStatus);
+            } else if ($transactionStatus == 'pending') {
+                $inst->update(['status' => 'pending']);
+            } else if ($transactionStatus == 'deny') {
+                $inst->update(['status' => 'waiting_approval']);
+            } else if ($transactionStatus == 'expire' || $transactionStatus == 'cancel') {
+                $inst->update(['status' => 'overdue']);
             }
-            
-            $this->markAsPaid($installment, $methodStr, $midtransStatus);
-        } else if ($transactionStatus == 'pending') {
-            $installment->update(['status' => 'pending']);
-        } else if ($transactionStatus == 'deny') {
-            $installment->update(['status' => 'waiting_approval']);
-        } else if ($transactionStatus == 'expire' || $transactionStatus == 'cancel') {
-            $installment->update(['status' => 'overdue']);
         }
+
 
         return $transactionStatus;
     }

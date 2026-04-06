@@ -83,25 +83,27 @@ export default function InstallmentIndex({ transactions }) {
                 onSuccess: function (result) {
                     Swal.fire({
                         title: "PEMBAYARAN BERHASIL",
-                        text: "Transaksi terverifikasi.",
+                        text: "Transaksi terverifikasi. Tunggu sejenak saat kami memperbarui status...",
                         icon: "success",
                         background: "#fff",
                         color: "#1a1a1a",
                         confirmButtonColor: "#1a1a1a",
                     });
-                    router.reload();
+                    // Force check to DB even on localhost
+                    handleCheckStatus(installment);
                 },
                 onPending: function (result) {
                     Swal.fire({
                         title: "PEMBAYARAN TERTUNDA",
-                        text: "Menunggu penyelesaian.",
+                        text: "Menunggu penyelesaian. Kami akan mengecek status terbaru...",
                         icon: "info",
                         background: "#fff",
                         color: "#1a1a1a",
                         confirmButtonColor: "#1a1a1a",
                     });
-                    router.reload();
+                    handleCheckStatus(installment);
                 },
+
                 onError: function (result) {
                     Swal.fire({
                         title: "PEMBAYARAN GAGAL",
@@ -230,19 +232,19 @@ export default function InstallmentIndex({ transactions }) {
                 onSuccess: function (result) {
                     Swal.fire({
                         title: "PEMBAYARAN BERHASIL",
-                        text: "Transaksi semua cicilan diproses.",
+                        text: "Seluruh cicilan terpilih telah diproses. Tunggu sejenak saat kami memperbarui data...",
                         icon: "success",
                         background: "#fff",
                         color: "#1a1a1a",
                         confirmButtonColor: "#1a1a1a",
                     });
-                    setSelectedIds([]);
+                    // Refresh current page to see updates
                     router.reload();
                 },
                 onPending: function (result) {
                     Swal.fire({
                         title: "PEMBAYARAN TERTUNDA",
-                        text: "Menunggu penyelesaian.",
+                        text: "Menunggu penyelesaian semua pembayaran...",
                         icon: "info",
                         background: "#fff",
                         color: "#1a1a1a",
@@ -250,6 +252,7 @@ export default function InstallmentIndex({ transactions }) {
                     });
                     router.reload();
                 },
+
                 onError: function (result) {
                     Swal.fire({
                         title: "PEMBAYARAN GAGAL",
