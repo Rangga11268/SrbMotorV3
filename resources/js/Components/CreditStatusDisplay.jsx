@@ -16,7 +16,12 @@ import {
     Info,
 } from "lucide-react";
 
-export default function CreditStatusDisplay({ credit, showSurvey = true }) {
+export default function CreditStatusDisplay({
+    credit,
+    transaction,
+    showSurvey = true,
+}) {
+
     const statusMap = {
         pengajuan_masuk: {
             label: "Aplikasi Diterima",
@@ -131,8 +136,14 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
     const surveyNotes = latestSurvey?.notes || credit.survey_notes;
 
     const dpAmount = credit.dp_amount || credit.down_payment || 0;
-    const motorPrice = credit.transaction?.motor_price || credit.transaction?.total_price || 0;
+    const motorPrice =
+        transaction?.motor?.price ||
+        transaction?.total_price ||
+        transaction?.motor_price ||
+        credit.transaction?.motor_price ||
+        0;
     const creditAmount = motorPrice - dpAmount;
+
 
     return (
         <div className="space-y-6">
@@ -165,8 +176,16 @@ export default function CreditStatusDisplay({ credit, showSurvey = true }) {
                             style: "currency",
                             currency: "IDR",
                             minimumFractionDigits: 0,
-                        }).format(creditAmount > 0 ? creditAmount : 0)}
+                        }).format(
+                            creditAmount > 0
+                                ? creditAmount
+                                : motorPrice > 0
+                                ? motorPrice
+                                : 0,
+                        )}
                     </p>
+
+
                 </div>
 
                 {/* Down Payment */}

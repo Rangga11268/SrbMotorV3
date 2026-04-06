@@ -949,9 +949,11 @@ class MotorGalleryController extends Controller
         // Load relationships
         $transaction->load(['motor', 'installments']);
 
-        return \Inertia\Inertia::render('Motors/Installments', [
-            'transaction' => $transaction,
+        return \Inertia\Inertia::render('Installments/Index', [
+            'transactions' => [$transaction],
         ]);
+
+
     }
 
     /**

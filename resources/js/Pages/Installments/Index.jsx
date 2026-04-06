@@ -439,9 +439,11 @@ export default function InstallmentIndex({ transactions }) {
 
             <main className="flex-1 pb-32">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-20">
-                    {transactions.length > 0 ? (
+                    {transactions?.length > 0 ? (
+
                         <div className="flex flex-col gap-12">
-                            {transactions.map((transaction) => (
+                            {transactions?.map((transaction) => (
+
                                 <motion.div
                                     key={transaction.id}
                                     className={`group bg-white border border-gray-200 hover:border-black relative transition-all duration-500 hover:shadow-2xl ${

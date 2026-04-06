@@ -231,8 +231,11 @@ class CreditController extends Controller
         ]);
 
         $this->creditService->approveCredit(
-            $credit
+            $credit,
+            (float) $validated['approved_amount'],
+            (float) $validated['interest_rate']
         );
+
 
         // WhatsApp Notification
         try {

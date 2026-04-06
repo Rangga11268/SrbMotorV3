@@ -147,11 +147,16 @@ class CreditDetail extends Model
      */
     public function getDownPaymentAttribute()
     {
-        return $this->getDpAmountAttribute();
+        return $this->dp_amount;
     }
 
-    public function getDpAmountAttribute()
+
+    public function getDpAmountAttribute($value)
     {
+        if ($value && $value > 0) {
+            return $value;
+        }
+
         if ($this->relationLoaded('transaction') && $this->transaction->relationLoaded('installments')) {
             return $this->transaction->installments
                 ->where('installment_number', 0)
@@ -159,10 +164,9 @@ class CreditDetail extends Model
                 ->amount ?? 0;
         }
         
-        // Fallback to query but only if NOT already in a serialization loop
-        // However, for maximum safety, just return 0 if not loaded
         return 0;
     }
+
 
     public function getDpPaidAtAttribute()
     {

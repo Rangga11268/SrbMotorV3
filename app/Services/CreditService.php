@@ -187,24 +187,45 @@ class CreditService
      * Stage 6 - Approve: Mark credit as approved by leasing
      */
     public function approveCredit(
-        CreditDetail $credit
+        CreditDetail $credit,
+        float $approvedAmount,
+        float $interestRate
     ): bool {
         $oldStatus = $credit->status;
-        // Create DP Installment
-        if ($credit->transaction->installments()->where('installment_number', 0)->count() === 0) {
+        
+        // Calculate DP and Installments based on approved amount
+        $motorPrice = $credit->transaction->motor->price;
+        $dpAmount = $motorPrice - $approvedAmount;
+        
+        // Convert percentage interest rate to decimal (e.g. 2.5 -> 0.025)
+        $interestRateDecimal = $interestRate / 100;
+        
+        $totalInterest = $approvedAmount * $interestRateDecimal * $credit->tenor;
+        $monthlyInstallment = ($approvedAmount + $totalInterest) / $credit->tenor;
+
+        // Update Credit Detail
+        $res = $credit->update([
+            'status' => 'disetujui',
+            'verified_at' => now(),
+            'dp_amount' => $dpAmount,
+            'interest_rate' => $interestRateDecimal,
+            'monthly_installment' => $monthlyInstallment,
+            'total_interest' => $totalInterest,
+        ]);
+
+        // Create or Update DP Installment (#0)
+        $dpInstallment = $credit->transaction->installments()->where('installment_number', 0)->first();
+        if ($dpInstallment) {
+            $dpInstallment->update(['amount' => $dpAmount]);
+        } else {
             \App\Models\Installment::create([
                 'transaction_id' => $credit->transaction_id,
                 'installment_number' => 0, // DP
-                'amount' => $credit->dp_amount,
+                'amount' => $dpAmount,
                 'due_date' => now(), 
                 'status' => 'pending'
             ]);
         }
-
-        $res = $credit->update([
-            'status' => 'disetujui',
-            'verified_at' => now(),
-        ]);
 
         if ($res) {
             $credit->transaction->logs()->create([
@@ -213,11 +234,12 @@ class CreditService
                 'status' => 'disetujui',
                 'actor_id' => auth()->id(),
                 'actor_type' => 'App\Models\User',
-                'description' => 'Kredit disetujui oleh leasing',
+                'description' => "Kredit disetujui oleh leasing. Jumlah Pinjaman: Rp " . number_format($approvedAmount, 0, ',', '.') . ", Bunga: {$interestRate}%",
             ]);
         }
         return $res;
     }
+
 
     /**
      * Stage 6 - Reject: Mark credit as rejected by leasing

@@ -483,7 +483,8 @@ export default function TransactionDetail({ transaction }) {
                                         {/* Credit Status Display */}
                                         <div className="bg-white border-t border-gray-100 p-8 sm:p-12">
                                             <p className="text-[10px] font-black text-gray-400 tracking-[0.3em] uppercase mb-8">STATUS PROSES KREDIT</p>
-                                            <CreditStatusDisplay credit={transaction.creditDetail} showSurvey={false} />
+                                            <CreditStatusDisplay credit={transaction.creditDetail} transaction={transaction} showSurvey={false} />
+
                                         </div>
                                     </div>
                                 ) : (
@@ -599,8 +600,9 @@ export default function TransactionDetail({ transaction }) {
                                     <div className="space-y-8">
                                         <div className="flex justify-between items-end">
                                             <div>
-                                                <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">HARGA KENDARAAN</p>
-                                                <p className="text-xl font-black uppercase tracking-tight">{formatCurrency(transaction.motor.price)}</p>
+                                                <p className="text-[9px] font-black text-gray-300 tracking-widest uppercase mb-1">HARGA KENDARAAN</p>
+                                                <p className="text-xl font-black uppercase tracking-tight text-white">{formatCurrency(transaction.motor.price)}</p>
+
                                             </div>
                                         </div>
 
@@ -608,16 +610,18 @@ export default function TransactionDetail({ transaction }) {
                                             <>
                                                 <div className="flex justify-between items-end">
                                                     <div>
-                                                        <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">UANG MUKA (DP)</p>
+                                                        <p className="text-[9px] font-black text-gray-300 tracking-widest uppercase mb-1">UANG MUKA (DP)</p>
                                                         <p className="text-xl font-black uppercase tracking-tight text-[#1c69d4]">{formatCurrency(transaction.creditDetail.down_payment)}</p>
+
                                                     </div>
                                                 </div>
                                                 <div className="flex justify-between items-end pt-8 border-t border-gray-800">
                                                     <div>
-                                                        <p className="text-[9px] font-black text-gray-500 tracking-widest uppercase mb-1">POKOK PEMBIAYAAN</p>
-                                                        <p className="text-2xl font-black uppercase tracking-tight">
+                                                        <p className="text-[9px] font-black text-gray-300 tracking-widest uppercase mb-1">POKOK PEMBIAYAAN</p>
+                                                        <p className="text-2xl font-black uppercase tracking-tight text-white">
                                                             {formatCurrency(transaction.motor.price - transaction.creditDetail.down_payment)}
                                                         </p>
+
                                                     </div>
                                                 </div>
                                             </>
@@ -644,13 +648,15 @@ export default function TransactionDetail({ transaction }) {
                                             </Link>
                                         )}
                                         
-                                        {transaction.transaction_type === "CREDIT" && transaction.status === "disetujui" && (
+                                        {transaction.transaction_type === "CREDIT" && !["new_order", "pengajuan_masuk", "menunggu_persetujuan", "cancelled"].includes(transaction.status) && (
+
                                             <Link
                                                 href={route("motors.installments", transaction.id)}
-                                                className="w-full bg-[#1c69d4] text-white hover:bg-[#154fa1] h-16 transition-all font-black text-[10px] tracking-[0.3em] uppercase flex items-center justify-center gap-3 shadow-lg shadow-[#1c69d4]/20"
+                                                className="w-full bg-[#1c69d4] text-white hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] h-16 transition-all font-black text-[10px] tracking-[0.3em] uppercase flex items-center justify-center gap-3 shadow-lg shadow-[#1c69d4]/20"
                                             >
                                                 LIHAT CICILAN <ArrowRight size={16} />
                                             </Link>
+
                                         )}
                                         
                                         {canCancel && (
