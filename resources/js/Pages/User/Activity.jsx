@@ -5,7 +5,7 @@ import {
     ChevronRight, Calendar, PenTool, CheckCircle, Clock, XCircle, 
     AlertCircle, ArrowRight, ShieldCheck, Settings, Users, 
     Fuel, MapPin, PhoneCall, CreditCard, ShoppingBag, History,
-    MessageCircle, Package, ArrowLeft, Plus, Search
+    MessageCircle, Package, ArrowLeft, Plus, Search, Zap, Hash
 } from "lucide-react";
 import Swal from "sweetalert2";
 
@@ -160,104 +160,114 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                         {appointments.data.map(app => {
                                             const st = getStatusStyle(app.status);
                                             return (
-                                                <div key={app.id} className="bg-white border border-gray-200 shadow-sm group hover:border-[#1c69d4] transition-all overflow-hidden">
-                                                    <div className="flex flex-col lg:flex-row">
-                                                        {/* Left Info Bar */}
-                                                        <div className="lg:w-1/4 p-5 md:p-8 bg-gray-50 border-b lg:border-b-0 lg:border-r border-gray-100 flex flex-col justify-between">
-                                                            <div>
-                                                                <span className="text-[9px] font-black text-[#1c69d4] uppercase tracking-widest mb-2 block">BOOKING ID</span>
-                                                                <h4 className="text-xl md:text-2xl font-black tracking-tighter">#SRB-{String(app.id).padStart(5, '0')}</h4>
-                                                            </div>
-                                                            <div className="mt-6 md:mt-8">
-                                                                <div className={`inline-flex items-center gap-2 px-3 md:px-4 py-2 border-2 ${st.border} ${st.text} font-black text-[9px] md:text-[10px] uppercase tracking-widest`}>
-                                                                    {st.icon}
-                                                                    {app.status.replace('_', ' ')}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                 <div key={app.id} className="bg-white border border-gray-200 shadow-sm group hover:border-[#1c69d4] transition-all overflow-hidden">
+                                                     <div className="flex flex-col lg:flex-row">
+                                                         {/* Left Info Bar - TICKET STYLE */}
+                                                         <div className="lg:w-1/4 p-6 md:p-8 bg-black text-white border-b lg:border-b-0 lg:border-r border-gray-800 flex flex-col justify-between relative overflow-hidden">
+                                                             <div className="absolute top-0 right-0 p-2 opacity-10 rotate-12">
+                                                                 <Zap size={80} className="text-[#1c69d4]" />
+                                                             </div>
+                                                             <div className="relative z-10">
+                                                                 <span className="text-[10px] font-black text-[#1c69d4] uppercase tracking-[0.3em] mb-4 block">NO. ANTRIAN</span>
+                                                                 <h4 className="text-5xl md:text-6xl font-black tracking-tighter leading-none italic">{app.queue_number || '---'}</h4>
+                                                             </div>
+                                                             <div className="mt-8 relative z-10">
+                                                                 <div className={`inline-flex items-center gap-2 px-3 py-1.5 border ${st.border} ${st.text} ${st.bg} font-black text-[9px] uppercase tracking-widest`}>
+                                                                     {st.icon}
+                                                                     {app.status.replace('_', ' ')}
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+ 
+                                                         {/* Middle Content */}
+                                                         <div className="flex-1 p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                                                             <div className="space-y-6">
+                                                                 <div>
+                                                                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">UNIT & PLAT NOMOR</p>
+                                                                     <div className="flex items-center gap-4">
+                                                                         <div className="w-12 h-12 bg-gray-50 flex items-center justify-center text-black border border-gray-100">
+                                                                             <Hash className="w-6 h-6" />
+                                                                         </div>
+                                                                         <div>
+                                                                             <p className="text-sm font-black uppercase text-black">{app.motor_model}</p>
+                                                                             <p className="text-lg font-black tracking-[0.15em] text-[#1c69d4]">{app.plate_number || '---'}</p>
+                                                                         </div>
+                                                                     </div>
+                                                                 </div>
+                                                                 <div>
+                                                                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">JADWAL KEDATANGAN</p>
+                                                                     <div className="flex items-center gap-4">
+                                                                         <div className="w-12 h-12 bg-gray-50 flex items-center justify-center text-[#1c69d4] border border-gray-100">
+                                                                             <Clock className="w-6 h-6" />
+                                                                         </div>
+                                                                         <div>
+                                                                             <p className="text-sm font-black uppercase text-black">{new Date(app.service_date).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                                                                             <p className="text-xl font-black text-black leading-none mt-1">{app.service_time} <span className="text-[10px] text-gray-400">WIB</span></p>
+                                                                         </div>
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
+                                                             <div className="space-y-6">
+                                                                 <div>
+                                                                     <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">DETAIL LAYANAN</p>
+                                                                     <div className="flex items-center gap-3 mb-4">
+                                                                         <div className="w-8 h-8 bg-gray-100 flex items-center justify-center rounded-full">
+                                                                             <MapPin className="w-4 h-4 text-gray-600" />
+                                                                         </div>
+                                                                         <p className="text-[11px] font-black uppercase text-gray-800 tracking-wider font-medium">{app.branch}</p>
+                                                                     </div>
+                                                                     <div className="bg-gray-50 p-5 border-l-4 border-black group-hover:border-[#1c69d4] transition-colors">
+                                                                         <p className="text-[10px] font-bold uppercase tracking-widest text-[#1c69d4] mb-2">{app.service_type || 'SERVIS UMUM'}</p>
+                                                                         <p className="text-[11px] text-gray-600 font-bold italic leading-relaxed">
+                                                                             "{app.complaint_notes || 'Tidak ada catatan keluhan spesifik.'}"
+                                                                         </p>
+                                                                     </div>
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+ 
+                                                         {/* Right Actions */}
+                                                         <div className="lg:w-1/6 p-6 md:p-8 flex flex-col justify-center items-center gap-4 bg-gray-50 lg:bg-white border-t lg:border-t-0 lg:border-l border-gray-100">
+                                                             <Link 
+                                                                 href={route('services.index')} // Points to the index where more details might be
+                                                                 className="w-full py-4 text-[10px] font-black uppercase tracking-widest text-white bg-[#1c69d4] hover:bg-black transition-all text-center flex items-center justify-center gap-2"
+                                                             >
+                                                                 LIHAT TIKET
+                                                             </Link>
+                                                             {(app.status === 'pending' || app.status === 'confirmed') && (
+                                                                 <button 
+                                                                     onClick={() => {
+                                                                         Swal.fire({
+                                                                             title: 'BATALKAN SERVIS?',
+                                                                             text: "Berikan alasan pembatalan Anda:",
+                                                                             input: 'textarea',
+                                                                             showCancelButton: true,
+                                                                             confirmButtonColor: '#000',
+                                                                             cancelButtonColor: '#d33',
+                                                                             confirmButtonText: 'YA, BATALKAN',
+                                                                             cancelButtonText: 'TIDAK',
+                                                                             customClass: {
+                                                                                 title: 'font-black uppercase tracking-tighter',
+                                                                                 confirmButton: 'rounded-none px-6 py-3 font-black text-[10px] uppercase tracking-widest',
+                                                                                 cancelButton: 'rounded-none px-6 py-3 font-black text-[10px] uppercase tracking-widest'
+                                                                             }
+                                                                         }).then((result) => {
+                                                                             if (result.isConfirmed) {
+                                                                                 router.post(route('services.cancel', app.id), {
+                                                                                     reason: result.value || 'DIBATALKAN OLEH PELANGGAN.'
+                                                                                 });
+                                                                             }
+                                                                         });
+                                                                     }}
+                                                                     className="w-full py-3 text-[9px] font-black uppercase tracking-widest text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition-all"
+                                                                 >
+                                                                     BATALKAN
+                                                                 </button>
+                                                             )}
+                                                         </div>
+                                                     </div>
+                                                 </div>
 
-                                                        {/* Middle Content */}
-                                                        <div className="flex-1 p-5 md:p-8 grid md:grid-cols-2 gap-8">
-                                                            <div className="space-y-6">
-                                                                <div>
-                                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">UNIT KENDARAAN</p>
-                                                                    <div className="flex items-center gap-3">
-                                                                        <div className="w-10 h-10 bg-gray-100 flex items-center justify-center text-black">
-                                                                            <Fuel className="w-5 h-5" />
-                                                                        </div>
-                                                                        <div>
-                                                                            <p className="text-sm font-black uppercase text-black">{app.motor_model}</p>
-                                                                            <p className="text-[10px] font-bold text-gray-500 uppercase">{app.branch}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">WAKTU SERVIS</p>
-                                                                    <div className="flex items-center gap-3">
-                                                                        <div className="w-10 h-10 bg-gray-100 flex items-center justify-center text-[#1c69d4]">
-                                                                            <Calendar className="w-5 h-5" />
-                                                                        </div>
-                                                                        <div>
-                                                                            <p className="text-sm font-black uppercase text-black">{new Date(app.service_date).toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                                                                            <p className="text-[10px] font-bold text-gray-500 uppercase">{app.service_time} WIB</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="space-y-6">
-                                                                <div>
-                                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">LAYANAN & KELUHAN</p>
-                                                                    <div className="flex items-center gap-3 mb-4">
-                                                                        <div className="w-10 h-10 bg-black text-white flex items-center justify-center">
-                                                                            <PenTool className="w-5 h-5" />
-                                                                        </div>
-                                                                        <p className="text-sm font-black uppercase text-black">{app.service_type}</p>
-                                                                    </div>
-                                                                    <div className="bg-gray-50 p-4 border-l-4 border-[#1c69d4]">
-                                                                        <p className="text-[10px] text-gray-600 font-bold italic leading-relaxed">
-                                                                            "{app.complaint_notes || 'Tidak ada catatan keluhan spesifik.'}"
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Right Actions */}
-                                                        <div className="lg:w-1/6 p-5 md:p-8 flex flex-col justify-center items-center gap-4 bg-gray-50 lg:bg-white border-t lg:border-t-0 lg:border-l border-gray-100">
-                                                            {(app.status === 'pending' || app.status === 'confirmed') && (
-                                                                <button 
-                                                                    onClick={() => {
-                                                                        Swal.fire({
-                                                                            title: 'BATALKAN SERVIS?',
-                                                                            text: "Berikan alasan pembatalan Anda:",
-                                                                            input: 'textarea',
-                                                                            showCancelButton: true,
-                                                                            confirmButtonColor: '#000',
-                                                                            cancelButtonColor: '#d33',
-                                                                            confirmButtonText: 'YA, BATALKAN',
-                                                                            cancelButtonText: 'TIDAK',
-                                                                            customClass: {
-                                                                                title: 'font-black uppercase tracking-tighter',
-                                                                                confirmButton: 'rounded-none px-6 py-3 font-black text-[10px] uppercase tracking-widest',
-                                                                                cancelButton: 'rounded-none px-6 py-3 font-black text-[10px] uppercase tracking-widest'
-                                                                            }
-                                                                        }).then((result) => {
-                                                                            if (result.isConfirmed) {
-                                                                                router.post(route('services.cancel', app.id), {
-                                                                                    reason: result.value || 'DIBATALKAN OLEH PELANGGAN.'
-                                                                                });
-                                                                            }
-                                                                        });
-                                                                    }}
-                                                                    className="w-full py-3 text-[9px] font-black uppercase tracking-widest text-red-500 border border-red-500 hover:bg-red-500 hover:text-white transition-all"
-                                                                >
-                                                                    BATALKAN
-                                                                </button>
-                                                            )}
-
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             );
                                         })}
                                     </div>
