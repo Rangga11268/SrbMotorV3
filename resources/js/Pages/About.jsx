@@ -10,22 +10,15 @@ import {
     Star,
     ArrowLeft,
     ChevronRight,
+    MapPin,
+    Zap,
+    Hash,
+    ShieldCheck
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function About() {
     const { auth, settings = {} } = usePage().props;
-
-    // Parse service business hours
-    const serviceHours = React.useMemo(() => {
-        try {
-            return typeof settings.service_business_hours === 'string' 
-                ? JSON.parse(settings.service_business_hours) 
-                : settings.service_business_hours || {};
-        } catch (e) {
-            return {};
-        }
-    }, [settings.service_business_hours]);
 
     const stats = [
         { label: "UNIT TERJUAL", value: "500+" },
@@ -95,7 +88,7 @@ export default function About() {
                     </div>
                 </section>
 
-                {/* STATS STRIP - GRAY */}
+                {/* STATS STRIP */}
                 <section className="bg-gray-100 border-b border-gray-200">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-300">
@@ -104,176 +97,113 @@ export default function About() {
                                     key={idx}
                                     initial={{ opacity: 0, y: 10 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    viewport={{ once: true }}
                                     className="py-12 px-6 flex flex-col justify-center items-center text-center"
                                 >
-                                    <div className="text-5xl font-black text-black tracking-tighter mb-2">
-                                        {stat.value}
-                                    </div>
-                                    <p className="text-[#1c69d4] font-bold uppercase tracking-widest text-[11px]">
-                                        {stat.label}
-                                    </p>
+                                    <div className="text-5xl font-black text-black tracking-tighter mb-2">{stat.value}</div>
+                                    <p className="text-[#1c69d4] font-bold uppercase tracking-widest text-[11px]">{stat.label}</p>
                                 </motion.div>
                             ))}
                         </div>
                     </div>
                 </section>
 
-                {/* STORY & VISION */}
-                <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                        {/* Image Block */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            className="lg:col-span-5 h-[600px] bg-black relative"
-                        >
-                            <img
-                                src="/assets/img/about-us.webp"
-                                alt="SRB Motors Team"
-                                className="w-full h-full object-cover grayscale opacity-80"
-                            />
-                            <div className="absolute bottom-0 left-0 bg-[#1c69d4] px-6 py-4">
-                                <span className="text-white font-black text-2xl uppercase tracking-widest">EST. 2020</span>
-                            </div>
-                        </motion.div>
-
-                        {/* Text Block */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            viewport={{ once: true }}
-                            className="lg:col-span-7 flex flex-col justify-center space-y-12"
-                        >
-                            <div className="space-y-6">
-                                <div className="flex items-center gap-4">
-                                    <span className="w-12 h-1 bg-black"></span>
-                                    <h2 className="text-3xl font-black text-black uppercase tracking-tighter">
-                                        FILOSOFI KAMI
-                                    </h2>
-                                </div>
-                                <div className="space-y-6 text-lg text-gray-600 font-light leading-relaxed">
-                                    <p>
-                                        Didirikan atas satu keyakinan mendasar: proses akuisisi kendaraan bermotor seharusnya presisi, logis, dan sepenuhnya transparan. Kami lahir untuk menghapus stigma "perjudian" pada pasar motor sekunder.
-                                    </p>
-                                    <p>
-                                        Sebagai mitra terverifikasi SSM, kami memadukan standarisasi korporat dengan kelincahan dealer independen. Setiap kendaraan yang masuk ke garasi kami tidak sekadar dicuci; unit tersebut dibongkar, diperiksa, dan dipulihkan kembali ke titik optimal performanya.
-                                    </p>
-                                    <p className="text-black font-bold uppercase tracking-widest text-[12px] pt-4">
-                                        "KAMI TIDAK MENJUAL KENDARAAN. KAMI MENJUAL KEPASTIAN."
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                </section>
-
-                {/* VISUAL BREAK */}
-                <div className="w-full h-px bg-gray-200"></div>
-
-                {/* THE PILLARS (Grid Matrix) */}
-                <section className="py-24 bg-white">
+                {/* TWO NETWORK CLASSIFICATIONS */}
+                
+                {/* 1. JARINGAN DEALER UTAMA (WITH WORKSHOPS) */}
+                <section className="py-24 bg-white border-b border-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="mb-16">
                             <h2 className="text-4xl font-black text-black uppercase tracking-tighter mb-4">
-                                PILAR OPERASIONAL
+                                DEALER UTAMA & PUSAT LAYANAN (SSM)
                             </h2>
-                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px]">4 FONDASI STANDAR KERJA SRB MOTOR</p>
+                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px]">STANDAR LAYANAN PURNA JUAL (BENGKEL & SUKU CADANG)</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200">
-                            {missions.map((mission, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    initial={{ opacity: 0 }}
-                                    whileInView={{ opacity: 1 }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    viewport={{ once: true }}
-                                    className="bg-white p-10 flex flex-col hover:bg-gray-50 transition-colors group"
-                                >
-                                    <div className="w-12 h-12 bg-black flex items-center justify-center mb-8 group-hover:bg-[#1c69d4] transition-colors">
-                                        {mission.icon}
-                                    </div>
-                                    <h4 className="text-lg font-black text-black mb-4 uppercase tracking-tighter">
-                                        {mission.title}
-                                    </h4>
-                                    <p className="text-gray-600 font-light text-sm">
-                                        {mission.description}
-                                    </p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* JARINGAN SSM */}
-                <section className="bg-gray-100 py-24 border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="mb-16">
-                            <h2 className="text-4xl font-black text-black uppercase tracking-tighter mb-4">
-                                JARINGAN MITRA BENGKEL SSM
-                            </h2>
-                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px]">DUKUNGAN AFTER-SALES DI BERBAGAI KOTA</p>
-                            <p className="text-gray-600 font-light mt-4 max-w-2xl leading-relaxed">
-                                Sebagai tambahan fasilitas, kami bermitra dengan jaringan bengkel resmi SSM untuk memastikan pelanggan SRB Motor memiliki akses mudah ke layanan servis terstandarisasi. Jam operasional seluruh cabang: {
-                                    serviceHours.monday === serviceHours.friday 
-                                        ? `SENIN - JUMAT : ${serviceHours.monday}, SABTU: ${serviceHours.saturday}`
-                                        : "08.00–17.00 WIB setiap hari"
-                                }.
-                            </p>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-300 border border-gray-300">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
-                                { name: "SSM JATIASIH", city: "BEKASI", addr: "Jl. Raya Jatimekar No.17, Jatimekar, Kec. Jatiasih" },
-                                { name: "SSM MEKAR SARI", city: "BEKASI", addr: "Jl. Mekar Sari No.39, Bekasi Jaya, Kec. Bekasi Tim." },
-                                { name: "SSM DEPOK", city: "DEPOK", addr: "Jl. Tirta Mulya 5 No.78, Tirtajaya, Kec. Sukmajaya" },
-                                { name: "SSM BOGOR", city: "BOGOR", addr: "Jl. Raya Tajur No.39D, Tajur, Kec. Bogor Tim." },
-                                { name: "SSM TANGERANG", city: "TANGERANG", addr: "Jl. Imam Bonjol No.100A, Karawaci" }
+                                { name: "SSM MEKAR SARI (PUSAT)", addr: "Jl. Mekar Sari No.39, Bekasi Jaya, Kec. Bekasi Tim." },
+                                { name: "SSM JATIASIH", addr: "Jl. Raya Jatimekar No.17, Jatimekar, Kec. Jatiasih" },
+                                { name: "SSM DEPOK", addr: "Jl. Tirta Mulya 5 No.78, Tirtajaya, Kec. Sukmajaya" },
+                                { name: "SSM BOGOR", addr: "Jl. Raya Tajur No.39D, Tajur, Kec. Bogor Tim." },
+                                { name: "SSM TANGERANG", addr: "Jl. Imam Bonjol No.100A, Karawaci" }
                             ].map((branch, i) => (
-                                <div key={i} className="bg-white p-8 flex flex-col hover:bg-gray-50 cursor-pointer group">
-                                    <h4 className="text-lg font-black text-black uppercase tracking-tighter mb-2">{branch.name}</h4>
-                                    <p className="text-[#1c69d4] font-bold text-[10px] uppercase tracking-widest mb-4">{branch.city}</p>
-                                    <p className="text-gray-600 font-light text-sm flex-grow mb-6">{branch.addr}</p>
-                                    <div className="mt-auto pt-4 border-t border-gray-100">
-                                        <a href={`https://maps.google.com/?q=${encodeURIComponent(branch.addr + ', ' + branch.city)}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-black group-hover:text-[#1c69d4] transition-colors">
-                                            MAPS/NAVIGASI <ChevronRight className="w-3 h-3" />
-                                        </a>
+                                <div key={i} className="bg-gray-50 p-8 border border-gray-100 hover:border-[#1c69d4] transition-all group">
+                                    <h4 className="text-lg font-black text-black uppercase tracking-tighter mb-3">{branch.name}</h4>
+                                    <p className="text-gray-500 font-light text-xs mb-6 leading-relaxed">{branch.addr}</p>
+                                    <div className="flex items-center gap-2 mt-auto">
+                                        <div className="px-3 py-1 bg-green-100 text-green-700 text-[8px] font-black uppercase tracking-widest border border-green-200">
+                                            FASILITAS BENGKEL AKTIF
+                                        </div>
                                     </div>
                                 </div>
                             ))}
-                            {/* Empty filler block to make the grid perfect 3 cols */}
-                            <div className="bg-gray-100 p-8 flex items-center justify-center">
-                                <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">EKSPLORASI LEBIH LANJUT</span>
+                        </div>
+                    </div>
+                </section>
+
+                {/* 2. JARINGAN PENJUALAN (SALES NETWORK - NO WORKSHOPS) */}
+                <section className="py-24 bg-[#fafafa]">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="mb-16">
+                            <h2 className="text-4xl font-black text-black uppercase tracking-tighter mb-4 text-center">
+                                JARINGAN PENJUALAN (SALES NETWORK)
+                            </h2>
+                            <p className="text-gray-500 font-bold uppercase tracking-widest text-[11px] text-center italic">CABANG KHUSUS PENJUALAN UNIT & SHOWROOM (SETARA SRB)</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {[
+                                { name: "SRB MOTOR (CABANG INI)", addr: "Showroom Utama SRB Motor - Bekasi" },
+                                { name: "SSM PONDOK UNGU", addr: "Jl. Sultan Agung No.12, Pondok Ungu, Bekasi" },
+                                { name: "SSM ALINDA", addr: "Jl. Raya Alinda No.8, Bekasi Utara" }
+                            ].map((branch, i) => (
+                                <div key={i} className="bg-white p-10 border-2 border-black hover:bg-black hover:text-white transition-all duration-500 group relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-20 transition-opacity">
+                                        <ShieldCheck size={100} />
+                                    </div>
+                                    <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 relative z-10">{branch.name}</h4>
+                                    <p className="text-xs font-light text-gray-400 group-hover:text-gray-500 mb-8 leading-relaxed relative z-10 italic">
+                                        "Sales network terafiliasi SSM. Fokus pada distribusi unit motor pilihan dengan kualitas inspeksi standar tinggi."
+                                    </p>
+                                    <div className="mt-auto pt-6 border-t border-gray-100 group-hover:border-gray-800 relative z-10">
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">SALES ONLY POINT</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section className="bg-white py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-4">
+                                <span className="w-12 h-1 bg-black"></span>
+                                <h2 className="text-3xl font-black text-black uppercase tracking-tighter">FILOSOFI KAMI</h2>
+                            </div>
+                            <div className="space-y-6 text-lg text-gray-600 font-light leading-relaxed">
+                                <p>Didirikan atas satu keyakinan mendasar: proses akuisisi kendaraan bermotor seharusnya presisi, logis, dan sepenuhnya transparan.</p>
+                                <p>Sebagai mitra terverifikasi SSM, kami memadukan standarisasi korporat dengan kelincahan dealer independen.</p>
+                                <p className="text-black font-bold uppercase tracking-widest text-[12px] pt-4">"KAMI TIDAK MENJUAL KENDARAAN. KAMI MENJUAL KEPASTIAN."</p>
                             </div>
                         </div>
+                         <div className="bg-black aspect-video relative overflow-hidden">
+                             <img src="/assets/img/about-us.webp" className="w-full h-full object-cover opacity-60 grayscale" alt="About SRB" />
+                             <div className="absolute inset-0 flex items-center justify-center">
+                                 <div className="p-8 border border-white/20 backdrop-blur-md">
+                                     <span className="text-white font-black text-4xl uppercase tracking-widest">EST. 2020</span>
+                                 </div>
+                             </div>
+                         </div>
                     </div>
                 </section>
 
                 {/* FULL WIDTH CTA */}
                 <section className="bg-[#1c69d4] text-white py-24">
                     <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 space-y-10">
-                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">
-                            BUKTIKAN KENDALI MUTU KAMI SECARA LANGSUNG
-                        </h2>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link
-                                href={route("motors.index")}
-                                className="px-8 py-5 bg-black text-white font-bold uppercase tracking-[0.2em] text-[12px] hover:bg-white hover:text-black transition-colors"
-                            >
-                                AKSES KATALOG
-                            </Link>
-                            <a
-                                href="https://instagram.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-8 py-5 bg-transparent border border-white text-white font-bold uppercase tracking-[0.2em] text-[12px] hover:bg-white hover:text-black transition-colors"
-                            >
-                                @SRBMOTOR
-                            </a>
+                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter leading-none">BUKTIKAN KENDALI MUTU KAMI SECARA LANGSUNG</h2>
+                        <div className="flex flex-row gap-4 justify-center">
+                            <Link href={route("motors.index")} className="px-8 py-5 bg-black text-white font-bold uppercase tracking-[0.2em] text-[12px] hover:bg-white hover:text-black transition-colors">AKSES KATALOG</Link>
                         </div>
                     </div>
                 </section>
