@@ -158,7 +158,7 @@ export default function Navbar({ auth }) {
                                 className="flex items-center gap-2 px-6 py-3 text-[10px] font-bold text-[#262626] hover:bg-[#f9f9f9] transition-colors uppercase tracking-[0.2em] rounded-none"
                             >
                                 <MapPin className="w-4 h-4 text-[#1c69d4]" />
-                                <span>BEKASI (PUSAT)</span>
+                                <span>SSM MEKARSARI (PUSAT)</span>
                                 <ChevronDown
                                     className={`w-3 h-3 text-[#262626] transition-transform duration-300 ${branchDropdownOpen ? "rotate-180" : ""}`}
                                 />
