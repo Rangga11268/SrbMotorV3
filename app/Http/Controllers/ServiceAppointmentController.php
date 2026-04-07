@@ -57,63 +57,78 @@ class ServiceAppointmentController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created appointment
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'branch' => 'required|string|max:100',
-            'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:20',
-            'motor_model' => 'required|string|max:255',
+            'plate_number' => 'required|string|max:20',
             'service_date' => 'required|date|after_or_equal:today',
-            'service_time' => 'required',
-            'service_type' => 'required|in:Servis Berkala,Ganti Oli,Perbaikan Berat,Lainnya',
+            'service_time' => 'required|string',
+            'motor_model' => 'nullable|string|max:255',
+            'service_type' => 'nullable|string|max:255',
             'complaint_notes' => 'nullable|string|max:1000',
         ]);
 
-        // 1. Quota Check Logic (Per Slot Per Cabang)
-        $quotaPerSlot = (int) (Setting::where('key', 'service_slot_quota')->first()->value ?? 5);
-        $currentBookingsCount = ServiceAppointment::where('service_date', $request->service_date)
-            ->where('service_time', $request->service_time)
+        $serviceDate = $request->service_date;
+        $serviceTime = $request->service_time;
+        
+        // 1. Double Booking Check for same plate on same day/branch
+        $existing = ServiceAppointment::where('plate_number', $request->plate_number)
+            ->where('service_date', $serviceDate)
             ->where('branch', $request->branch)
-            ->whereIn('status', ['pending', 'confirmed', 'in_progress'])
-            ->count();
+            ->whereNotIn('status', ['cancelled'])
+            ->first();
 
-        if ($currentBookingsCount >= $quotaPerSlot && !Auth::user()->isAdmin()) {
-            return back()->withErrors([
-                'service_time' => "Mohon maaf, slot jam {$request->service_time} pada tanggal " . Carbon::parse($request->service_date)->format('d M Y') . " di {$request->branch} sudah penuh. Silakan pilih jam lain."
-            ]);
+        if ($existing) {
+            return back()->with('error', "Plat Nomor {$request->plate_number} sudah memiliki antrian terjadwal pada tanggal " . Carbon::parse($serviceDate)->format('d/m/Y') . " di {$request->branch} (#{$existing->queue_number}).");
         }
 
-        $validated['user_id'] = Auth::id();
-        $validated['status'] = 'pending';
+        // 2. Queue Number Generation (Daily per branch for selected date)
+        // Format: A-01, A-02...
+        $dateCount = ServiceAppointment::where('service_date', $serviceDate)
+            ->where('branch', $request->branch)
+            ->count();
+        
+        $queueNumber = 'A-' . str_pad($dateCount + 1, 2, '0', STR_PAD_LEFT);
 
-        $appointment = ServiceAppointment::create($validated);
+        // 3. Create Scheduled Digital Ticket
+        $appointment = ServiceAppointment::create([
+            'user_id' => Auth::id(),
+            'branch' => $request->branch,
+            'customer_name' => Auth::user()->name,
+            'customer_phone' => Auth::user()->phone ?? '-',
+            'plate_number' => strtoupper($request->plate_number),
+            'queue_number' => $queueNumber,
+            'motor_model' => $request->motor_model ?? 'Unit SRB/SSM',
+            'service_date' => $serviceDate,
+            'service_time' => $serviceTime,
+            'service_type' => $request->service_type ?? 'Servis Berkala',
+            'complaint_notes' => $request->complaint_notes,
+            'status' => 'pending',
+        ]);
 
-        // 2. Notify Admin via WhatsApp
+        // 4. Notify Admin via WhatsApp
         $adminPhone = config('services.fonnte.admin_phone');
         if ($adminPhone) {
-            $message = "*[ADMIN] Booking Servis Baru*\n\n" .
-                "Cabang: {$appointment->branch}\n" .
-                "Pelanggan: {$appointment->customer_name}\n" .
-                "Unit: {$appointment->motor_model}\n" .
-                "Jadwal: " . Carbon::parse($appointment->service_date)->format('d M Y') . " {$appointment->service_time}\n" .
-                "Kategori: {$appointment->service_type}\n" .
-                "Keluhan: " . ($appointment->complaint_notes ?? '-') . "\n\n" .
-                "Cek detail di dashboard.";
+            $message = "*[ANTRIAN TERJADWAL] Bengkel {$appointment->branch}*\n\n" .
+                "Nomor: *{$appointment->queue_number}*\n" .
+                "Waktu: " . Carbon::parse($appointment->service_date)->format('d/m/y') . " @ {$appointment->service_time} WIB\n" .
+                "Plat: {$appointment->plate_number}\n" .
+                "User: {$appointment->customer_name}\n\n" .
+                "Segera tinjau di dashboard admin.";
             WhatsAppService::sendMessage($adminPhone, $message);
         }
 
-        // 3. Notify User via WhatsApp
+        // 5. Notify User via WhatsApp (Ticket Style)
         $userMsg = "Halo {$appointment->customer_name},\n\n" .
-            "Terima kasih! Booking servis Anda (#{$appointment->id}) di cabang *{$appointment->branch}* untuk motor *{$appointment->motor_model}* telah kami terima.\n\n" .
-            "Jadwal: " . Carbon::parse($appointment->service_date)->format('d M Y') . " jam {$appointment->service_time}.\n\n" .
-            "Silakan datang tepat waktu sesuai jadwal. Antrean Anda akan diverifikasi oleh tim kami. — SRB Motor (Powered by SSM)";
+            "Ini adalah *TIKET ANTRIAN TERJADWAL* Anda untuk di *{$appointment->branch}*:\n\n" .
+            "NO. ANTRIAN: *{$appointment->queue_number}*\n" .
+            "JADWAL: " . Carbon::parse($appointment->service_date)->format('d M Y') . " Pukul *{$appointment->service_time}* WIB\n" .
+            "PLAT NOMOR: *{$appointment->plate_number}*\n\n" .
+            "Harap datang 10 menit lebih awal dari jadwal yang dipilih. Tunjukkan tiket ini kepada petugas bengkel. — Dealer SRB Motor (SSM Network)";
         WhatsAppService::sendMessage($appointment->customer_phone, $userMsg);
 
-        return redirect()->route('services.index')->with('success', 'Booking servis berhasil dibuat.');
+        return redirect()->route('services.index')->with('success', "Antrian Terjadwal {$queueNumber} untuk tanggal " . Carbon::parse($serviceDate)->format('d/m/Y') . " berhasil diterbitkan.");
     }
 
     /**

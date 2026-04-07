@@ -14,6 +14,8 @@ class ServiceAppointment extends Model
         'branch',
         'customer_name',
         'customer_phone',
+        'plate_number',
+        'queue_number',
         'motor_model',
         'service_date',
         'service_time',

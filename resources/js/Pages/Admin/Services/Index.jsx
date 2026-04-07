@@ -102,9 +102,9 @@ export default function ServicesIndex({ appointments }) {
                         <CTable align="middle" className="mb-0 border-top" hover>
                             <CTableHead color="light">
                                 <CTableRow>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 px-4">Tgl & Jam</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-md-table-cell">Pelanggan</CTableHeaderCell>
-                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-md-table-cell">Unit Motor</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 px-4" style={{ width: '10%' }}>No. Antrian</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Tgl & Jam</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-md-table-cell">Pelanggan & Unit</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center d-none d-md-table-cell">Status</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center px-4">Aksi</CTableHeaderCell>
                                 </CTableRow>
@@ -112,41 +112,39 @@ export default function ServicesIndex({ appointments }) {
                             <CTableBody>
                                 {appointments.length === 0 ? (
                                     <CTableRow>
-                                        <CTableDataCell colSpan="6" className="text-center p-5 text-secondary">
+                                        <CTableDataCell colSpan="5" className="text-center p-5 text-secondary">
                                             Tidak ada antrean servis saat ini.
                                         </CTableDataCell>
                                     </CTableRow>
                                 ) : appointments.map((app) => (
                                     <CTableRow key={app.id}>
                                         <CTableDataCell className="px-4">
-                                            <div className="fw-bold text-dark">{new Date(app.service_date).toLocaleDateString("id-ID")}</div>
-                                            <div className="small text-secondary">{app.service_time}</div>
-                                            
-                                            {/* Mobile View Merged Info */}
-                                            <div className="d-md-none text-body-tertiary fw-normal mt-2 d-flex flex-column gap-1" style={{ fontSize: 11 }}>
-                                                <div>
-                                                    <CIcon icon={cilUser} size="custom" height={10} className="me-1" />
-                                                    {app.customer_name}
-                                                </div>
-                                                <div>
-                                                    <CIcon icon={cilBike} size="custom" height={10} className="me-1" />
-                                                    {app.motor_model}
-                                                </div>
-                                                <div className="mt-1">
-                                                    <CBadge color={getBadge(app.status)} shape="rounded-pill" className="px-2 py-1 text-uppercase" style={{ fontSize: "10px" }}>
-                                                        {app.status.replace("_", " ")}
-                                                    </CBadge>
-                                                </div>
+                                            <div className="bg-primary text-white text-center rounded-3 py-2 px-1">
+                                                <div className="small fw-light uppercase" style={{ fontSize: '8px' }}>ANTRIAN</div>
+                                                <div className="h4 mb-0 fw-black">{app.queue_number || '---'}</div>
                                             </div>
                                         </CTableDataCell>
-                                        <CTableDataCell className="d-none d-md-table-cell">
-                                            <div className="fw-bold text-dark">{app.customer_name}</div>
-                                            <div className="small text-secondary">{app.customer_phone}</div>
+                                        <CTableDataCell>
+                                            <div className="fw-bold text-dark">{new Date(app.service_date).toLocaleDateString("id-ID")}</div>
+                                            <div className="small text-secondary">{app.service_time} WIB</div>
                                             <div className="small text-primary fw-bold mt-1 uppercase tracking-tight" style={{ fontSize: '0.75rem' }}>{app.branch}</div>
                                         </CTableDataCell>
                                         <CTableDataCell className="d-none d-md-table-cell">
-                                            <div className="fw-bold text-dark uppercase tracking-tighter" style={{ letterSpacing: '-0.2px' }}>{app.motor_model}</div>
-                                            <div className="small text-secondary uppercase font-bold" style={{ fontSize: '10px' }}>{app.service_type}</div>
+                                            <div className="d-flex align-items-center gap-3">
+                                                <div className="p-2 bg-light rounded-circle shadow-sm">
+                                                    <CIcon icon={cilBike} size="lg" className="text-dark" />
+                                                </div>
+                                                <div>
+                                                    <div className="fw-bold text-dark">{app.customer_name}</div>
+                                                    <div className="small text-secondary">{app.customer_phone}</div>
+                                                    <div className="mt-1">
+                                                        <span className="badge bg-dark rounded-none uppercase px-2 py-1" style={{ fontSize: '10px', letterSpacing: '1px' }}>
+                                                            {app.plate_number || 'NO PLAT'}
+                                                        </span>
+                                                        <span className="ms-2 text-secondary small uppercase">{app.motor_model}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
                                             <CBadge color={getBadge(app.status)} shape="rounded-pill" className="px-3 py-2 text-uppercase" style={{ fontSize: "0.7rem", letterSpacing: "1px" }}>
@@ -188,17 +186,28 @@ export default function ServicesIndex({ appointments }) {
                 </CCardBody>
             </CCard>
 
-            {/* Modal Manajemen Servis */}
             <CModal visible={visible} onClose={() => setVisible(false)} backdrop="static" alignment="center">
                 <CModalHeader closeButton>
-                    <CModalTitle>Tindak Lanjut Servis</CModalTitle>
+                    <CModalTitle className="fw-black text-uppercase tracking-tighter">
+                        PROSES ANTRIAN <span className="text-primary">#{selectedService?.queue_number || '---'}</span>
+                    </CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     {selectedService && (
                         <div className="mb-4 p-3 bg-light rounded text-sm">
                             <div className="row mb-2">
-                                <div className="col-4 fw-bold text-secondary">Pelanggan</div>
-                                <div className="col-8">{selectedService.customer_name} ({selectedService.customer_phone}) - <span className="text-primary">{selectedService.branch}</span></div>
+                                <div className="col-4 fw-bold text-secondary">Identitas</div>
+                                <div className="col-8">
+                                    <div className="fw-bold">{selectedService.customer_name}</div>
+                                    <div className="text-secondary small">{selectedService.customer_phone}</div>
+                                </div>
+                            </div>
+                            <div className="row mb-2">
+                                <div className="col-4 fw-bold text-secondary">Unit / Plat</div>
+                                <div className="col-8">
+                                    <CBadge color="dark" className="me-2">{selectedService.plate_number || 'NO PLAT'}</CBadge>
+                                    <span className="text-uppercase fw-bold">{selectedService.motor_model}</span>
+                                </div>
                             </div>
                             <div className="row mb-2">
                                 <div className="col-4 fw-bold text-secondary">Keluhan</div>
