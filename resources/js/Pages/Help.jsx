@@ -496,7 +496,7 @@ export default function Help({ initialTab = "faq" }) {
                                             h: "Harga & Pembayaran", 
                                             icon: <Bike className="w-5 h-5" />,
                                             p: "Harga yang tertera adalah OTR wilayah setempat. Kami menerima pembayaran Tunai dan Kredit melalui mitra lembaga pembiayaan resmi (Leasing).",
-                                            list: ["Harga sewaktu-waktu dapat berubah sebelum ada booking fee", "Pembayaran sah hanya melalui rekening PT Sinar Surya Motor", "Bukti transfer wajib diunggah ke sistem untuk verifikasi"]
+                                            list: ["Harga sewaktu-waktu dapat berubah sebelum ada booking fee", "Pembayaran sah hanya melalui rekening PT Sinar Surya Matahari", "Bukti transfer wajib diunggah ke sistem untuk verifikasi"]
                                         },
                                         { 
                                             h: "Pembatalan & Refund", 

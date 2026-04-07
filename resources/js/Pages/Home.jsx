@@ -441,7 +441,7 @@ export default function Home({
                                 <span className="text-white">PURNA JUAL</span>
                             </h2>
                             <p className="text-gray-400 font-medium text-[10px] md:text-xs lg:text-base max-w-xl lg:max-w-none mx-auto lg:mx-0 uppercase tracking-widest leading-relaxed opacity-70 mt-4 lg:mt-0">
-                                Melalui Sinar Surya Motor (SRB MOTOR - SSM),
+                                Melalui Sinar Surya Matahari (SRB MOTOR - SSM),
                                 nikmati performa terbaik bagi kendaraan Yamaha &
                                 Honda Anda dengan suku cadang asli dan teknisi
                                 bersertifikasi.
@@ -646,7 +646,7 @@ export default function Home({
                             className="space-y-4"
                         >
                             <span className="text-[#1c69d4] font-black text-[10px] tracking-[0.5em] uppercase block">
-                                SRB MOTOR - SINAR SURYA MOTOR DIGITAL
+                                SRB MOTOR - SINAR SURYA MATAHARI DIGITAL
                             </span>
                             <h2 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4">
                                 SHOWROOM <br />

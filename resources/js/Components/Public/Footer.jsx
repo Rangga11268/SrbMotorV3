@@ -56,7 +56,7 @@ export default function Footer() {
                                     Official Authorized Dealer
                                 </p>
                                 <p className="text-xs font-bold text-[#bbbbbb] uppercase tracking-widest">
-                                    Sinar Surya Motor (SSM)
+                                    Sinar Surya Matahari (SSM)
                                 </p>
                             </div>
                         </div>
