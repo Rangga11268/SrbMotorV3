@@ -1120,159 +1120,160 @@ export default function InstallmentIndex({ transactions }) {
             <AnimatePresence>
                 {isUploadModalOpen && selectedInstallment && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 bg-black/60"
+                                onClick={closeUploadModal}
+                            />
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-primary-dark/80 backdrop-blur-xl"
-                            onClick={closeUploadModal}
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-                            className="bg-white rounded-none w-full max-w-lg border-2 border-black relative z-20 overflow-hidden"
+                            initial={{ opacity: 0, scale: 1 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1 }}
+                            className="bg-white w-[92%] sm:w-full sm:max-w-md border-2 border-black relative z-20 shadow-2xl overflow-hidden"
                         >
-                            <div className="px-10 pt-10 pb-6 flex justify-between items-center border-b border-gray-200">
-                                <h3 className="text-2xl font-black text-black uppercase tracking-tight flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-none bg-black flex items-center justify-center text-white">
-                                        <Upload className="w-5 h-5" />
-                                    </div>
-                                    BUKTI PEMBAYARAN
+                            <div className="px-5 py-5 border-b border-gray-200 flex justify-between items-center bg-white">
+                                <h3 className="text-lg font-black text-black uppercase tracking-tight">
+                                    KONFIRMASI BAYAR
                                 </h3>
                                 <button
                                     onClick={closeUploadModal}
-                                    className="w-10 h-10 rounded-none border border-gray-300 text-gray-400 hover:text-black hover:border-black transition-colors flex items-center justify-center"
+                                    className="w-10 h-10 text-gray-400 hover:text-black transition-colors flex items-center justify-center font-bold"
                                 >
-                                    <X className="w-6 h-6" />
+                                    BATAL
                                 </button>
                             </div>
 
                             <form
                                 onSubmit={submitPayment}
-                                className="p-10 pt-8 space-y-8"
+                                className="p-5 space-y-6"
                             >
                                 <div className="space-y-4">
-                                    <div className="p-8 bg-gray-50 rounded-none border border-gray-300 flex items-center justify-between">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
-                                                Jumlah Bayar
-                                            </p>
-                                            <p className="text-4xl font-black text-black tracking-tight">
-                                                {formatCurrency(
-                                                    Number(
-                                                        selectedInstallment.amount,
-                                                    ) +
-                                                        Number(
-                                                            selectedInstallment.penalty_amount ||
-                                                                0,
-                                                        ),
-                                                )}
-                                            </p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">
-                                                Target
-                                            </p>
-                                            <p className="text-sm font-black text-black uppercase">
-                                                #Cicilan{" "}
-                                                {selectedInstallment.installment_number ||
-                                                    "DP"}
-                                            </p>
-                                        </div>
+                                    {/* CLEAN AMOUNT SECTION */}
+                                    <div className="p-5 bg-gray-50 border border-gray-200 text-center space-y-1">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                            NOMINAL PEMBAYARAN
+                                        </p>
+                                        <h2 className="text-2xl font-black text-black">
+                                            {formatCurrency(
+                                                Number(selectedInstallment.amount) + Number(selectedInstallment.penalty_amount || 0)
+                                            )}
+                                        </h2>
+                                        <p className="text-[9px] font-black text-[#1c69d4] uppercase tracking-widest">
+                                            {selectedInstallment.installment_number === 0 ? "DP MOTOR" : `CICILAN #${selectedInstallment.installment_number}`}
+                                        </p>
                                     </div>
 
-                                    <div className="p-6 bg-white rounded-none border border-black flex items-start gap-4">
-                                        <Shield className="w-6 h-6 text-primary shrink-0" />
-                                        <div className="space-y-1">
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest">
-                                                Informasi Rekening Tujuan
-                                            </p>
-                                            <p className="text-lg font-black text-gray-900">
+                                    {/* BANK INFO CARD */}
+                                    <div className="p-5 bg-white border border-gray-200 space-y-4 shadow-sm">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 bg-black flex items-center justify-center text-white shrink-0">
+                                                <Landmark size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-black text-[#1c69d4] uppercase tracking-widest leading-none">
+                                                    BANK BCA
+                                                </p>
+                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                                    PT SRB MOTOR INDONESIA
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                                            <p className="text-[1.25rem] font-black text-black select-all">
                                                 123-456-7890
                                             </p>
-                                            <p className="text-xs font-bold text-gray-500">
-                                                BCA - PT SRB MOTOR INDONESIA
-                                            </p>
+                                            <button 
+                                                type="button"
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText("123-456-7890");
+                                                    Swal.fire({
+                                                        toast: true,
+                                                        position: 'top-end',
+                                                        icon: 'success',
+                                                        title: 'Disalin',
+                                                        showConfirmButton: false,
+                                                        timer: 1500
+                                                    });
+                                                }}
+                                                className="px-3 py-2 bg-black text-white font-black text-[9px] uppercase tracking-widest hover:bg-[#1c69d4] transition-colors"
+                                            >
+                                                SALIN
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="space-y-6">
-                                    <div className="space-y-2">
+                                <div className="space-y-6">
+                                    <div className="space-y-3">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                            Pilih Metode
+                                            METODE PEMBAYARAN
                                         </label>
-                                        <select
-                                            value={data.payment_method}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "payment_method",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="w-full h-14 rounded-none bg-white border border-gray-300 px-6 font-bold text-black focus:ring-0 focus:border-black transition-colors appearance-none"
-                                        >
-                                            <option value="transfer">
-                                                TRANSFER BANK MANUAL
-                                            </option>
-                                            <option value="cash">
-                                                SETOR TUNAI DI DEALER
-                                            </option>
-                                        </select>
+                                        <div className="flex flex-col gap-2">
+                                            <button 
+                                                type="button"
+                                                onClick={() => setData("payment_method", "transfer")}
+                                                className={`px-4 py-3 border transition-all flex items-center gap-3 ${data.payment_method === 'transfer' ? 'border-black bg-black text-white' : 'border-gray-200 bg-white text-gray-500 hover:border-black'}`}
+                                            >
+                                                <Landmark size={16} />
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-left">TRANSFER BANK</span>
+                                            </button>
+                                            <button 
+                                                type="button"
+                                                onClick={() => setData("payment_method", "cash")}
+                                                className={`px-4 py-3 border transition-all flex items-center gap-3 ${data.payment_method === 'cash' ? 'border-black bg-black text-white' : 'border-gray-200 bg-white text-gray-500 hover:border-black'}`}
+                                            >
+                                                <Wallet size={16} />
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-left">SETOR TUNAI DEALER</span>
+                                            </button>
+                                        </div>
                                     </div>
 
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                            Unggah Foto Transaksi
+                                            UNGGAH BUKTI BAYAR
                                         </label>
                                         <div className="relative group">
                                             <input
                                                 type="file"
                                                 accept="image/*"
-                                                onChange={(e) =>
-                                                    setData(
-                                                        "payment_proof",
-                                                        e.target.files[0],
-                                                    )
-                                                }
+                                                onChange={(e) => setData("payment_proof", e.target.files[0])}
                                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                                 required
                                             />
-                                            <div className="w-full h-40 rounded-none border border-dashed border-gray-400 flex flex-col items-center justify-center gap-3 group-hover:bg-gray-50 group-hover:border-black transition-all bg-gray-50">
-                                                <div className="w-12 h-12 rounded-none bg-white border border-gray-300 flex items-center justify-center text-black">
-                                                    <Upload className="w-5 h-5" />
-                                                </div>
+                                            <div className="w-full py-6 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 group-hover:border-black transition-all bg-gray-50/50">
                                                 {data.payment_proof ? (
-                                                    <p className="text-xs font-black text-black">
-                                                        {
-                                                            data.payment_proof
-                                                                .name
-                                                        }
-                                                    </p>
-                                                ) : (
-                                                    <div className="text-center">
-                                                        <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">
-                                                            Seret gambar kesini
+                                                    <div className="flex items-center gap-3 text-green-600">
+                                                        <CheckCircle size={16} />
+                                                        <p className="text-[10px] font-black uppercase truncate max-w-[150px]">
+                                                            {data.payment_proof.name}
                                                         </p>
                                                     </div>
+                                                ) : (
+                                                    <>
+                                                        <Upload size={16} className="text-gray-400 group-hover:text-black" />
+                                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">PILIH FILE</p>
+                                                    </>
                                                 )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                </div>
 
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full h-16 bg-black text-white font-black uppercase tracking-widest rounded-none border border-black hover:bg-white hover:text-black disabled:opacity-50 transition-colors flex items-center justify-center gap-3"
+                                    className="w-full h-16 bg-black text-white font-black uppercase tracking-[0.15em] text-xs hover:bg-[#1c69d4] transition-all flex items-center justify-center gap-3"
                                 >
                                     {processing ? (
                                         <RefreshCw className="animate-spin" />
                                     ) : (
                                         <>
-                                            KIRIM UNTUK VERIFIKASI{" "}
-                                            <ArrowRight className="w-5 h-5" />
+                                            KIRIM VERIFIKASI <ArrowRight size={14} />
                                         </>
                                     )}
                                 </button>
