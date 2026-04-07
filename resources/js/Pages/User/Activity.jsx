@@ -5,12 +5,27 @@ import {
     ChevronRight, Calendar, PenTool, CheckCircle, Clock, XCircle, 
     AlertCircle, ArrowRight, ShieldCheck, Settings, Users, 
     Fuel, MapPin, PhoneCall, CreditCard, ShoppingBag, History,
-    MessageCircle, Package, ArrowLeft
+    MessageCircle, Package, ArrowLeft, Plus, Search
 } from "lucide-react";
 import Swal from "sweetalert2";
 
 export default function Activity({ appointments, orders, installments, auth, filters }) {
-    const [activeTab, setActiveTab] = useState(filters.tab || "service");
+    const [activeTab, setActiveTab] = useState(filters?.tab || "service");
+
+    const getSafeDP = (order) => {
+        // 1. Direct priority from order object
+        const fromOrder = Number(order.booking_fee || order.creditDetail?.down_payment || order.creditDetail?.dp_amount || 0);
+        if (fromOrder > 0) return fromOrder;
+
+        // 2. Cross-Prop Fallback: Look into global installments prop (which we know works)
+        const globalMatch = installments.find(t => t.id === order.id);
+        if (globalMatch?.installments?.length > 0) {
+            const dpInst = globalMatch.installments.find(i => String(i.installment_number) === '0');
+            return Number(dpInst?.amount || globalMatch.installments[0].amount || 0);
+        }
+
+        return 0;
+    };
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -308,7 +323,7 @@ export default function Activity({ appointments, orders, installments, auth, fil
                                                                 </div>
                                                                 <div className="flex flex-col col-span-2 sm:col-span-1">
                                                                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">DP/BOOKING FEE</span>
-                                                                    <span className="text-xs font-black uppercase text-black">IDR {Number(order.booking_fee || order.creditDetail?.dp_amount || order.installments?.find(i => String(i.installment_number) === '0')?.amount || 0).toLocaleString("id-ID")}</span>
+                                                                    <span className="text-xs font-black uppercase text-black">IDR {getSafeDP(order).toLocaleString("id-ID")}</span>
                                                                 </div>
                                                             </div>
                                                             <Link href={route('motors.transaction.show', order.id)} className="w-full lg:w-auto px-8 py-4 bg-black text-white hover:bg-[#1c69d4] hover:text-white font-black text-[10px] uppercase tracking-widest transition-all text-center">
