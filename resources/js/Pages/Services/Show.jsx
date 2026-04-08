@@ -1,9 +1,13 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, MapPin, Hash, CheckCircle2, AlertCircle, FileText, ChevronLeft, Phone, Wrench, Sparkles, Zap, ArrowRight, Wallet, Receipt, ShieldCheck, Printer, Clock, ArrowLeft } from 'lucide-react';
+import { 
+    X, Calendar, MapPin, Hash, CheckCircle2, AlertCircle, FileText, ChevronLeft, 
+    Phone, Wrench, Settings, Activity, ArrowRight, Wallet, Receipt, 
+    ShieldCheck, Printer, Clock, ArrowLeft 
+} from 'lucide-react';
 import { Link, usePage, router } from '@inertiajs/react';
 import PublicLayout from "@/Layouts/PublicLayout";
-import { toast } from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 export default function Show({ appointment }) {
     const { auth } = usePage().props;
@@ -15,21 +19,51 @@ export default function Show({ appointment }) {
             case 'pending': return { bg: 'bg-[#1c69d4]/10', border: 'border-[#1c69d4]', text: 'text-[#1c69d4]', label: 'MENUNGGU KONFIRMASI', icon: Clock };
             case 'confirmed': return { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-700', label: 'DIKONFIRMASI', icon: CheckCircle2 };
             case 'in_progress': return { bg: 'bg-amber-50', border: 'border-amber-500', text: 'text-amber-700', label: 'PENGERJAAN MEKANIK', icon: Wrench };
-            case 'completed': return { bg: 'bg-black', border: 'border-black', text: 'text-white', label: 'SELESAI & SIAP AMBIL', icon: Sparkles };
+            case 'completed': return { bg: 'bg-black', border: 'border-black', text: 'text-white', label: 'SELESAI & SIAP AMBIL', icon: ShieldCheck };
             case 'cancelled': return { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-700', label: 'DIBATALKAN', icon: X };
             default: return { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700', label: 'STATUS', icon: AlertCircle };
         }
     };
 
     const handleCancel = () => {
-        if (confirm('Apakah Anda yakin ingin membatalkan reservasi servis ini?')) {
-            router.post(route('services.cancel', appointment.id), {
-                _token: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
-            }, {
-                onSuccess: () => toast.success('Reservasi berhasil dibatalkan'),
-                onError: () => toast.error('Gagal membatalkan reservasi')
-            });
-        }
+        Swal.fire({
+            title: 'BATALKAN RESERVASI?',
+            text: "Reservasi yang sudah dibatalkan tidak dapat dikembalikan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#000000',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'YA, BATALKAN',
+            cancelButtonText: 'TIDAK',
+            borderRadius: '0px',
+            background: '#ffffff',
+            color: '#000000',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route('services.cancel', appointment.id), {
+                    _token: document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                }, {
+                    onSuccess: () => {
+                        Swal.fire({
+                            title: 'BERHASIL',
+                            text: 'Reservasi Anda telah dibatalkan.',
+                            icon: 'success',
+                            confirmButtonColor: '#1c69d4',
+                            borderRadius: '0px'
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            title: 'GAGAL',
+                            text: 'Terjadi kesalahan sistem.',
+                            icon: 'error',
+                            confirmButtonColor: '#1c69d4',
+                            borderRadius: '0px'
+                        });
+                    }
+                });
+            }
+        });
     };
 
     const statusStyle = getStatusStyle(appointment.status);
@@ -86,7 +120,7 @@ export default function Show({ appointment }) {
                         <div className="bg-black text-white p-10 md:p-14 relative overflow-hidden">
                              {/* Large Background Icon */}
                              <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12 scale-[3] pointer-events-none">
-                                <Zap size={100} className="text-[#1c69d4]" />
+                                <Settings size={100} className="text-[#1c69d4]" />
                             </div>
 
                             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
@@ -112,7 +146,7 @@ export default function Show({ appointment }) {
                                         <div className="relative inline-block">
                                             <h2 className="text-8xl md:text-9xl font-black italic tracking-tighter text-black leading-none">{appointment.queue_number || '---'}</h2>
                                             <div className="absolute -top-4 -right-4">
-                                                <Sparkles className="text-[#1c69d4] animate-pulse" size={24} />
+                                                <ShieldCheck className="text-[#1c69d4]" size={28} />
                                             </div>
                                         </div>
                                     </div>
@@ -209,6 +243,25 @@ export default function Show({ appointment }) {
                                 )}
                             </div>
                         </div>
+
+                        {/* DECORATIVE BARCODE SECTION */}
+                        <div className="bg-white px-10 py-8 border-t border-gray-100 flex flex-col items-center">
+                            <div className="w-full flex justify-between items-center mb-4">
+                                <div className="h-px flex-1 bg-gray-100"></div>
+                                <p className="px-6 text-[8px] font-black text-gray-300 uppercase tracking-[0.5em]">SCAN FOR QUICK CHECK-IN</p>
+                                <div className="h-px flex-1 bg-gray-100"></div>
+                            </div>
+                            <div className="flex gap-1 h-12">
+                                {[...Array(40)].map((_, i) => (
+                                    <div 
+                                        key={i} 
+                                        className="bg-gray-200" 
+                                        style={{ width: `${[1, 2, 3, 1][i % 4]}px`, opacity: i % 7 === 0 ? 0.2 : 1 }}
+                                    ></div>
+                                ))}
+                            </div>
+                            <p className="mt-2 text-[9px] font-mono text-gray-400 tracking-[0.8em]">*{appointment.id}{new Date(appointment.created_at).getTime()}*</p>
+                        </div>
                     </motion.div>
                     
                     {/* HELP BANNER */}
@@ -218,7 +271,7 @@ export default function Show({ appointment }) {
                         </div>
                         <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
                             <div className="w-14 h-14 bg-[#1c69d4] flex items-center justify-center shrink-0">
-                                <Sparkles size={24} className="text-white" />
+                                <Wrench size={24} className="text-white" />
                             </div>
                             <div>
                                 <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-1 italic">BUTUH LAYANAN EKSPRES?</h4>

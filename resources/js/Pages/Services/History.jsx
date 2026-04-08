@@ -6,7 +6,7 @@ import {
     ChevronRight, ChevronLeft, Calendar, PenTool, CheckCircle, Clock, 
     XCircle, AlertCircle, ArrowRight, ShieldCheck, 
     Settings, Users, Fuel, MapPin, PhoneCall, Hash, Bike, 
-    Wrench, Sparkles, ArrowLeft
+    Wrench, ArrowLeft, CheckCircle2
 } from "lucide-react";
 
 export default function History({ appointments }) {
@@ -64,7 +64,7 @@ export default function History({ appointments }) {
                             </div>
                             
                             <Link href={route('services.create')} className="w-full lg:w-auto inline-flex items-center justify-center gap-4 px-12 py-6 bg-white hover:bg-[#1c69d4] text-black hover:text-white font-black uppercase tracking-[0.25em] text-[10px] transition-all duration-500 rounded-none shadow-2xl group">
-                                <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 BOOKING SERVIS BARU
                             </Link>
                         </div>
@@ -196,7 +196,7 @@ export default function History({ appointments }) {
                                 { icon: Users, title: 'EXPERT MECHANICS', desc: 'Mekanik tersertifikasi khusus motor Honda & Yamaha dengan standar bengkel resmi.' },
                                 { icon: ShieldCheck, title: 'GENUINE PARTS', desc: 'Jaminan 100% suku cadang asli untuk keamanan berkendara Anda.' },
                                 { icon: Settings, title: 'MODERN TOOLS', desc: 'Sistem diagnostik terkomputerisasi untuk akurasi pengecekan sensor digital.' },
-                                { icon: Sparkles, title: 'SERVICE GUARANTEE', desc: 'Garansi pengerjaan 7 hari untuk kepuasan maksimal setiap pelanggan.' }
+                                { icon: CheckCircle2, title: 'SERVICE GUARANTEE', desc: 'Garansi pengerjaan 7 hari untuk kepuasan maksimal setiap pelanggan.' }
                             ].map((usp, index) => (
                                 <div key={index} className="space-y-6 group cursor-default">
                                     <div className="w-14 h-14 bg-gray-50 flex items-center justify-center group-hover:bg-[#1c69d4] transition-all duration-500 relative overflow-hidden">

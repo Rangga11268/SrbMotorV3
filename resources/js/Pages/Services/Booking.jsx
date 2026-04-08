@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { 
     ChevronRight, Bike, ArrowLeft, Hash, MapPin, 
-    ClipboardList, Zap, Calendar as CalendarIcon, 
+    ClipboardList, Activity, Calendar as CalendarIcon, 
     Clock, CheckCircle2, ChevronLeft, Phone 
 } from "lucide-react";
 
@@ -123,7 +123,7 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                 {/* Header Section */}
                 <section className="bg-black text-white pt-10 pb-28 border-b border-gray-800 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
-                        <Zap className="w-full h-full text-[#1c69d4] rotate-12 translate-x-20" />
+                        <Activity className="w-full h-full text-[#1c69d4] rotate-12 translate-x-20" />
                     </div>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="mb-8 flex justify-between items-center">
@@ -420,7 +420,7 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                 {processing ? "MEMPROSES..." : (
                                                     <>
                                                         TERBITKAN TIKET ANTRIAN SEKARANG
-                                                        <Zap size={24} className="fill-white group-hover:scale-125 transition-transform" />
+                                                        <CheckCircle2 size={24} className="fill-white group-hover:scale-125 transition-transform" />
                                                     </>
                                                 )}
                                             </button>
