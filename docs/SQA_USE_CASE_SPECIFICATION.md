@@ -11,6 +11,7 @@ Diagram ini menggambarkan interaksi antara pengguna, sistem, dan layanan ekstern
 ```mermaid
 useCaseDiagram
     actor "User (Pelanggan)" as User
+    actor "Admin (Petugas)" as Admin
     actor "Sistem SRB Motor" as System
     actor "Database" as DB
     actor "Midtrans API" as Midtrans
@@ -32,6 +33,10 @@ useCaseDiagram
         %% Fitur 4: Pembayaran
         usecase "UC-04: Sinkronisasi Bayar" as UC4
         usecase "Sub-UC: Update Status Lunas" as UC4a
+
+        %% BARU - Fitur Admin
+        usecase "UC-05: Verifikasi Pengajuan" as UC5
+        usecase "UC-06: Kelola Stok Kendaraan" as UC6
     }
 
     %% Hubungan User ke Fitur
@@ -39,6 +44,10 @@ useCaseDiagram
     User --> UC2
     User --> UC3
     User --> UC4
+
+    %% Hubungan Admin ke Fitur
+    Admin --> UC5
+    Admin --> UC6
 
     %% Hubungan Wajib (Include)
     UC1 ..> UC1a : <<include>>
@@ -51,6 +60,8 @@ useCaseDiagram
     UC3a ..> DB : "Read"
     UC4a ..> DB : "Write"
     UC4 ..> Midtrans : "Webhook"
+    UC5 ..> DB : "Write Status"
+    UC6 ..> DB : "Update Stock"
 ```
 
 ---
@@ -63,6 +74,8 @@ Setiap oval (lingkaran) di atas mewakili satu tugas spesifik yang dilakukan sist
 2.  **UC-02 (Validasi File KTP)**: Sistem memastikan dokumen wajib (KTP) sudah diunggah sebelum data dikirim.
 3.  **UC-03 (Cek Slot Servis)**: Sistem memeriksa apakah kuota harian mekanik masih tersedia untuk tanggal yang dipilih.
 4.  **UC-04 (Sinkronisasi Bayar)**: Sistem menerima notifikasi otomatis dari Midtrans jika pembayaran user sukses.
+5.  **UC-05 (Verifikasi Pengajuan)**: Admin memeriksa kelengkapan dokumen dan mengubah status pengajuan menjadi "Disetujui".
+6.  **UC-06 (Kelola Stok Kendaraan)**: Admin memperbarui data ketersediaan unit (Tersedia/Terjual) di katalog.
 
 ---
 
@@ -97,6 +110,12 @@ Agar laporan SQA Anda jelas, berikut arti dari setiap garis penghubung:
 
 ### UC-04: Sinkronisasi Bayar (SQA-TC-04)
 *   **Alur**: User bayar di Midtrans -> **Layanan Midtrans** mengirim notifikasi ke `UC4` -> Sistem memicu `UC4a` (Update DB jadi Lunas) -> Dashboard user berubah real-time.
+
+### UC-05: Verifikasi Pengajuan Kredit (SQA-TC-05)
+*   **Alur**: Admin login -> Admin pilih data pengajuan -> Admin klik "Approve" -> Sistem memicu `UC5` -> Data di DB berubah -> User melihat status "Disetujui".
+
+### UC-06: Kelola Stok Kendaraan (SQA-TC-06)
+*   **Alur**: Admin buka Manajemen Motor -> Admin ubah stok jadi 0 -> Sistem memicu `UC6` -> Galeri Publik otomatis menampilkan badge "TERJUAL".
 
 ---
 > [!TIP]
