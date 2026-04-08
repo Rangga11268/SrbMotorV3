@@ -86,14 +86,24 @@ class PaymentService
             $transaction = $installment->transaction;
             if ($transaction) {
                 // 1. Log the payment activity
+                $typeLabel = $installment->installment_number == 0 
+                    ? ($transaction->transaction_type === 'CASH' ? 'Booking Fee' : 'Uang Muka (DP)') 
+                    : "Cicilan ke-{$installment->installment_number}";
+
                 $transaction->logs()->create([
                     'status_from' => $transaction->status,
                     'status_to' => $transaction->status, // Use current status if not changing yet
                     'status' => $transaction->status,
                     'actor_id' => $transaction->user_id,
                     'actor_type' => \App\Models\User::class,
-                    'notes' => "Pembayaran " . ($installment->installment_number == 0 ? "Booking Fee" : "Pelunasan") . " sukses via " . $method,
+                    'notes' => "Pembayaran {$typeLabel} sukses via " . str_replace('midtrans_', '', $method),
                     'description' => "Pembayaran terverifikasi Midtrans",
+                    'payload' => [
+                        'installment_id' => $installment->id,
+                        'installment_number' => $installment->installment_number,
+                        'payment_method' => $method,
+                        'amount' => $installment->amount
+                    ],
                 ]);
 
                 // Refresh to get latest installments count

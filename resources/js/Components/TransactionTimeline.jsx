@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
     Clock, 
     CheckCircle2, 
@@ -10,10 +10,15 @@ import {
     AlertCircle,
     HardHat,
     User,
-    ArrowRight
+    ArrowRight,
+    ChevronDown,
+    ChevronUp
 } from "lucide-react";
 
 export default function TransactionTimeline({ logs = [] }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const INITIAL_SHOW = 3;
+
     if (!logs || logs.length === 0) {
         return (
             <div className="bg-white border border-gray-200 p-12 text-center">
@@ -37,19 +42,12 @@ export default function TransactionTimeline({ logs = [] }) {
         return Clock;
     };
 
-    const getStatusColor = (status) => {
-        const s = (status || "").toLowerCase();
-        if (s.includes("selesai") || s.includes("setuju") || s.includes("dikonfirmasi")) return "bg-[#1c69d4] text-white";
-        if (s.includes("batal") || s.includes("cancel") || s.includes("tolak")) return "bg-red-600 text-white";
-        if (s.includes("tunggu") || s.includes("proses") || s.includes("jadwal")) return "bg-amber-500 text-white";
-        return "bg-black text-white";
-    };
-
     // Sort logs by created_at descending (newest on top)
     const sortedLogs = [...logs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const displayLogs = isExpanded ? sortedLogs : sortedLogs.slice(0, INITIAL_SHOW);
 
     return (
-        <div className="bg-white border border-gray-200 relative overflow-hidden">
+        <div className="bg-white border border-gray-200 relative overflow-hidden transition-all duration-500">
             {/* Header Timeline */}
             <div className="bg-black px-8 py-6 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -66,13 +64,17 @@ export default function TransactionTimeline({ logs = [] }) {
                 <div className="absolute left-[44px] sm:left-[60px] top-12 bottom-12 w-px bg-gray-100"></div>
 
                 <div className="space-y-12">
-                    {sortedLogs.map((log, index) => {
+                    {displayLogs.map((log, index) => {
                         const Icon = getStatusIcon(log.status_to || log.status);
                         const isFirst = index === 0;
                         const date = new Date(log.created_at);
 
+                        // Extract installment info if available
+                        const installmentNum = log.payload?.installment_number;
+                        const isPayment = (log.notes || "").toLowerCase().includes("pembayaran");
+
                         return (
-                            <div key={log.id} className={`relative flex gap-8 items-start group`}>
+                            <div key={log.id} className={`relative flex gap-8 items-start group animate-in fade-in slide-in-from-top-4 duration-500`}>
                                 {/* Timeline Marker */}
                                 <div className="relative z-10 shrink-0">
                                     <div className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-300 ${isFirst ? 'bg-black text-white scale-110 shadow-lg' : 'bg-gray-50 text-gray-400 border border-gray-100 group-hover:bg-gray-100'}`}>
@@ -93,6 +95,11 @@ export default function TransactionTimeline({ logs = [] }) {
                                                 </p>
                                                 {isFirst && (
                                                     <span className="bg-[#1c69d4] text-white px-2 py-0.5 text-[8px] font-black tracking-widest uppercase">TERBARU</span>
+                                                )}
+                                                {installmentNum !== undefined && (
+                                                    <span className="bg-black text-white px-2 py-0.5 text-[8px] font-black tracking-widest uppercase">
+                                                        {installmentNum === 0 ? "PEMBAYARAN AWAL" : `CICILAN KE-${installmentNum}`}
+                                                    </span>
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-3 text-gray-400">
@@ -135,6 +142,25 @@ export default function TransactionTimeline({ logs = [] }) {
                         );
                     })}
                 </div>
+
+                {/* See More / Minimize Toggle */}
+                {sortedLogs.length > INITIAL_SHOW && (
+                    <div className="mt-12 flex justify-center">
+                        <button 
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="group flex items-center gap-3 px-6 py-3 bg-white border border-gray-200 hover:border-black transition-all"
+                        >
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 group-hover:text-black">
+                                {isExpanded ? "Sembunyikan Aktivitas Lama" : `Lihat ${sortedLogs.length - INITIAL_SHOW} Aktivitas Lainnya`}
+                            </span>
+                            {isExpanded ? (
+                                <ChevronUp className="w-4 h-4 text-gray-400 group-hover:text-black" />
+                            ) : (
+                                <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-black" />
+                            )}
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Bottom Accent */}
@@ -142,3 +168,4 @@ export default function TransactionTimeline({ logs = [] }) {
         </div>
     );
 }
+
