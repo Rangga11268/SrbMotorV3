@@ -105,6 +105,7 @@ export default function ServicesIndex({ appointments }) {
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 px-4" style={{ width: '10%' }}>No. Antrian</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3">Tgl & Jam</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-md-table-cell">Pelanggan & Unit</CTableHeaderCell>
+                                    <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 d-none d-lg-table-cell text-center">Layanan</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center d-none d-md-table-cell">Status</CTableHeaderCell>
                                     <CTableHeaderCell className="text-uppercase text-secondary small fw-bold py-3 text-center px-4">Aksi</CTableHeaderCell>
                                 </CTableRow>
@@ -144,6 +145,11 @@ export default function ServicesIndex({ appointments }) {
                                                         <span className="ms-2 text-secondary small uppercase">{app.motor_model}</span>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </CTableDataCell>
+                                        <CTableDataCell className="d-none d-lg-table-cell text-center">
+                                            <div className="text-xs fw-black text-uppercase tracking-tight text-[#1c69d4] bg-[#1c69d4]/5 py-1 px-2 rounded-none border border-[#1c69d4]/10">
+                                                {app.service_type}
                                             </div>
                                         </CTableDataCell>
                                         <CTableDataCell className="text-center">
@@ -200,6 +206,12 @@ export default function ServicesIndex({ appointments }) {
                                 <div className="col-8">
                                     <div className="fw-bold">{selectedService.customer_name}</div>
                                     <div className="text-secondary small">{selectedService.customer_phone}</div>
+                                </div>
+                            </div>
+                            <div className="row mb-2">
+                                <div className="col-4 fw-bold text-secondary">Layanan</div>
+                                <div className="col-8">
+                                    <span className="fw-black text-primary text-uppercase">{selectedService.service_type}</span>
                                 </div>
                             </div>
                             <div className="row mb-2">

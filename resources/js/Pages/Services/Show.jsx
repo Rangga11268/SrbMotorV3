@@ -133,14 +133,14 @@ export default function Show({ appointment }) {
                             {/* Right: Details Info */}
                             <div className="flex-1 p-10 md:p-16 space-y-14 bg-gray-50/30">
                                 <div className="grid grid-cols-2 gap-10">
-                                    <div>
+                                    <div className="col-span-2 md:col-span-1">
                                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5 shadow-sm bg-white w-fit px-2 py-1">
                                             <Calendar size={10} className="text-[#1c69d4]" /> JADWAL
                                         </p>
                                         <p className="text-sm font-black text-black uppercase tracking-tight">{new Date(appointment.service_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                                         <p className="text-xl font-black text-[#1c69d4] tracking-tighter mt-1">{appointment.service_time} <span className="text-[10px] text-gray-400 uppercase">WIB</span></p>
                                     </div>
-                                    <div>
+                                    <div className="col-span-2 md:col-span-1">
                                         <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5 shadow-sm bg-white w-fit px-2 py-1">
                                             <MapPin size={10} className="text-[#1c69d4]" /> LOKASI
                                         </p>
@@ -149,28 +149,33 @@ export default function Show({ appointment }) {
                                     </div>
                                 </div>
 
-                                <div className="space-y-6 pt-10 border-t border-gray-200">
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">UNIT MOTOR</p>
-                                            <p className="text-sm font-black uppercase text-black italic">{appointment.motor_model || 'UNIT SRB'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">PLAT NOMOR</p>
-                                            <p className="text-sm font-black uppercase text-black tracking-[0.2em]">{appointment.plate_number || '---'}</p>
-                                        </div>
-                                    </div>
-
+                                <div className="grid grid-cols-2 gap-10 pt-10 border-t border-gray-100">
                                     <div>
-                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">LAYANAN DIPESAN</p>
-                                        <p className="text-sm font-black uppercase text-black">{appointment.service_type || 'SERVIS BERKALA'}</p>
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">PELANGGAN</p>
+                                        <p className="text-sm font-black uppercase text-black line-clamp-1">{appointment.customer_name || 'GUEST'}</p>
+                                        <p className="text-[10px] font-bold text-[#1c69d4] mt-1 tracking-widest">{appointment.customer_phone || '---'}</p>
                                     </div>
-
                                     <div>
-                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">CATATAN KELUHAN</p>
-                                        <div className="p-4 bg-white border border-gray-100 italic text-[11px] text-gray-600 font-medium leading-relaxed uppercase tracking-wider">
-                                            "{appointment.complaint_notes || 'Tidak ada catatan keluhan tambahan.'}"
-                                        </div>
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">LAYANAN DIPESAN</p>
+                                        <p className="text-sm font-black uppercase text-[#1c69d4]">{appointment.service_type || 'SERVIS BERKALA'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-10 pt-10 border-t border-gray-100">
+                                    <div>
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">UNIT MOTOR</p>
+                                        <p className="text-sm font-black uppercase text-black italic">{appointment.motor_model || 'UNIT SRB'}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">PLAT NOMOR</p>
+                                        <p className="text-sm font-black uppercase text-black tracking-[0.2em]">{appointment.plate_number || '---'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="pt-10 border-t border-gray-100">
+                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-3">CATATAN KELUHAN</p>
+                                    <div className="p-6 bg-white border-2 border-dashed border-gray-100 italic text-[11px] text-gray-500 font-bold leading-relaxed uppercase tracking-wider">
+                                        "{appointment.complaint_notes || 'Tidak ada catatan keluhan tambahan.'}"
                                     </div>
                                 </div>
                             </div>

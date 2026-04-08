@@ -7,7 +7,7 @@ import axios from "axios";
 import { 
     ChevronRight, Bike, ArrowLeft, Hash, MapPin, 
     ClipboardList, Zap, Calendar as CalendarIcon, 
-    Clock, CheckCircle2, ChevronLeft 
+    Clock, CheckCircle2, ChevronLeft, Phone 
 } from "lucide-react";
 
 export default function Booking({ user, branches = [], serviceHours = {} }) {
@@ -21,9 +21,10 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
     const { data, setData, post, processing, errors, clearErrors } = useForm({
         branch: "",
         plate_number: "",
+        customer_phone: user?.phone || "",
+        motor_model: "",
         service_date: "",
         service_time: "",
-        motor_model: "",
         service_type: "Servis Berkala",
         complaint_notes: "",
     });
@@ -54,10 +55,10 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
     }, [data.service_date, data.branch]);
 
     const nextStep = () => {
-        if (step === 1 && (!data.branch || !data.plate_number)) {
+        if (step === 1 && (!data.branch || !data.plate_number || !data.motor_model || !data.customer_phone)) {
             Swal.fire({
                 title: 'Peringatan',
-                text: 'Mohon isi Cabang dan Plat Nomor kendaraan Anda.',
+                text: 'Mohon isi Cabang, Plat Nomor, Model Motor, dan Nomor WhatsApp Anda.',
                 icon: 'warning',
                 confirmButtonColor: '#1c69d4',
                 borderRadius: '0px'
@@ -205,7 +206,41 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                 </div>
                                             </div>
                                             
-                                            <button onClick={nextStep} className="w-full bg-[#1c69d4] text-white py-6 font-black uppercase tracking-[0.3em] hover:bg-black transition-all">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                                <div>
+                                                    <div className="flex items-center gap-3 mb-6 text-[#1c69d4]">
+                                                        <Bike size={24} />
+                                                        <h2 className="text-xl font-black uppercase tracking-tight text-black">MODEL MOTOR</h2>
+                                                    </div>
+                                                    <div className="relative">
+                                                        <input 
+                                                            type="text" 
+                                                            value={data.motor_model}
+                                                            onChange={e => setData('motor_model', e.target.value.toUpperCase())}
+                                                            placeholder="CONTOH: VARIO 160 / NMAX"
+                                                            className="w-full bg-gray-50 border-2 border-gray-100 p-6 text-xl font-black outline-none focus:border-black transition-all uppercase placeholder:text-gray-200"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <div className="flex items-center gap-3 mb-6 text-[#1c69d4]">
+                                                        <Phone size={24} />
+                                                        <h2 className="text-xl font-black uppercase tracking-tight text-black">NOMOR WHATSAPP</h2>
+                                                    </div>
+                                                    <div className="relative">
+                                                        <input 
+                                                            type="text" 
+                                                            value={data.customer_phone}
+                                                            onChange={e => setData('customer_phone', e.target.value)}
+                                                            placeholder="0812XXXXXXXX"
+                                                            className="w-full bg-gray-50 border-2 border-gray-100 p-6 text-xl font-black outline-none focus:border-black transition-all uppercase placeholder:text-gray-200"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <button onClick={nextStep} className="w-full bg-black text-white py-6 font-black uppercase tracking-[0.3em] hover:bg-[#1c69d4] transition-all">
                                                 LANJUTKAN PILIH HARI
                                             </button>
                                         </motion.div>

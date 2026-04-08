@@ -128,12 +128,16 @@ export default function History({ appointments }) {
                                                         </div>
 
                                                         <div className="pt-8 border-t border-gray-100 flex items-center justify-between">
-                                                            <div>
+                                                            <div className="flex-1">
                                                                 <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5">UNIT & PLAT</p>
-                                                                <p className="text-[11px] font-black uppercase text-black tracking-wider">{item.motor_model || 'UNIT SRB'}</p>
+                                                                <p className="text-[11px] font-black uppercase text-black tracking-wider line-clamp-1">{item.motor_model || 'UNIT SRB'}</p>
                                                                 <p className="text-[9px] font-bold text-[#1c69d4] mt-1 tracking-[0.2em]">{item.plate_number || '---'}</p>
                                                             </div>
-                                                            <div className="w-12 h-12 bg-gray-50 flex items-center justify-center group-hover:bg-[#1c69d4] group-hover:text-white transition-all transform group-hover:rotate-12">
+                                                            <div className="text-right px-4 border-r border-gray-100 mr-4">
+                                                                <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1.5 italic">LAYANAN</p>
+                                                                <p className="text-[9px] font-black uppercase text-black italic whitespace-nowrap">{item.service_type}</p>
+                                                            </div>
+                                                            <div className="w-12 h-12 bg-gray-50 flex items-center justify-center group-hover:bg-[#1c69d4] group-hover:text-white transition-all transform group-hover:rotate-12 shrink-0">
                                                                 <Bike size={22} />
                                                             </div>
                                                         </div>
