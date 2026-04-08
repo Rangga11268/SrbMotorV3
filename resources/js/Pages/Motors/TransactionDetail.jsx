@@ -21,6 +21,7 @@ import {
     XCircle,
     ArrowRight,
 } from "lucide-react";
+import TransactionTimeline from "@/Components/TransactionTimeline";
 
 export default function TransactionDetail({ transaction }) {
     const [expandedSection, setExpandedSection] = useState(null);
@@ -517,6 +518,15 @@ export default function TransactionDetail({ transaction }) {
                                         </div>
                                     </div>
                                 )}
+                            </section>
+
+                            {/* TRANSACTION TIMELINE - THE "REAL" HISTORY */}
+                            <section>
+                                <div className="flex items-center gap-4 mb-8">
+                                    <div className="w-1.5 h-8 bg-black"></div>
+                                    <h2 className="text-2xl font-black uppercase tracking-tight">RIWAYAT TRANSAKSI BERDASARKAN SYSTEM LOGS</h2>
+                                </div>
+                                <TransactionTimeline logs={transaction.logs} />
                             </section>
 
 
