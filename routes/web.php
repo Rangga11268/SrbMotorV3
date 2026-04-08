@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/services', [ServiceAppointmentController::class, 'index'])->name('services.index');
     Route::get('/services/booking', [ServiceAppointmentController::class, 'create'])->name('services.create');
     Route::post('/services/booking', [ServiceAppointmentController::class, 'store'])->name('services.store');
+    Route::get('/services/{appointment}', [ServiceAppointmentController::class, 'show'])->name('services.show');
     Route::post('/services/{appointment}/cancel', [ServiceAppointmentController::class, 'cancelUser'])->name('services.cancel');
 });
 // API for checking available slots (Can be accessed by guests too)

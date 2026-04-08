@@ -32,6 +32,21 @@ class ServiceAppointmentController extends Controller
     }
 
     /**
+     * Show a specific ticket detail
+     */
+    public function show(ServiceAppointment $appointment)
+    {
+        // Safety: only owner or admin can see
+        if ($appointment->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        return Inertia::render('Services/Show', [
+            'appointment' => $appointment
+        ]);
+    }
+
+    /**
      * Show the booking form
      */
     public function create()
