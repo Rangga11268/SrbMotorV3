@@ -23,9 +23,9 @@ export default function Logo({
                         SRB<span className="text-blue-600">MOTOR</span>
                     </span>
                     <span
-                        className={`text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 ${dark ? "text-gray-400" : "text-gray-400"}`}
+                        className={`text-[8px] font-black uppercase tracking-[0.15em] leading-tight mt-1 transition-colors ${dark ? "text-gray-400" : "text-gray-500"}`}
                     >
-                        Trusted Dealer
+                        SUPPORT BY <span className={dark ? "text-blue-400" : "text-[#1c69d4]"}>SSM</span> SINAR SURYA MATAHARI
                     </span>
                 </div>
             )}

@@ -437,24 +437,24 @@ export default function TransactionDetail({ transaction }) {
                                         </div>
 
                                         {/* Key Metrics Grid */}
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-100">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-gray-100">
                                             <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">UANG MUKA (DP)</p>
-                                                <p className="text-2xl font-black text-[#1c69d4] tracking-tighter">{formatCurrency(transaction.creditDetail.down_payment)}</p>
+                                                <p className="text-xl sm:text-2xl font-black text-[#1c69d4] tracking-tighter">{formatCurrency(transaction.creditDetail.down_payment)}</p>
                                             </div>
                                             <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">ANGSURAN / BULAN</p>
-                                                <p className="text-2xl font-black text-black tracking-tighter">{formatCurrency(transaction.creditDetail.monthly_installment)}</p>
+                                                <p className="text-xl sm:text-2xl font-black text-black tracking-tighter">{formatCurrency(transaction.creditDetail.monthly_installment)}</p>
                                                 <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">{transaction.creditDetail.tenor} BULAN</p>
                                             </div>
                                             <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">PENYEDIA LEASING</p>
-                                                <p className="text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.leasing_provider || "PENDING"}</p>
+                                                <p className="text-xl sm:text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.leasing_provider || "PENDING"}</p>
                                                 <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">PARTNER RESMI</p>
                                             </div>
                                             <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">TENOR</p>
-                                                <p className="text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.tenor}</p>
+                                                <p className="text-xl sm:text-2xl font-black text-black tracking-tighter">{transaction.creditDetail.tenor}</p>
                                                 <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mt-1">BULAN</p>
                                             </div>
                                         </div>
@@ -497,14 +497,14 @@ export default function TransactionDetail({ transaction }) {
                                         </div>
 
                                         {/* Key Metrics Grid */}
-                                        <div className="grid grid-cols-2 gap-px bg-gray-100">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-gray-100">
                                             <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">TOTAL PEMBAYARAN</p>
-                                                <p className="text-3xl font-black text-black tracking-tighter">{formatCurrency(transaction.total_price)}</p>
+                                                <p className="text-2xl sm:text-3xl font-black text-black tracking-tighter">{formatCurrency(transaction.total_price)}</p>
                                             </div>
                                             <div className="bg-white px-8 py-8">
                                                 <p className="text-[9px] font-black text-gray-400 tracking-[0.2em] uppercase mb-3">BOOKING FEE</p>
-                                                <p className="text-3xl font-black text-[#1c69d4] tracking-tighter">
+                                                <p className="text-2xl sm:text-3xl font-black text-[#1c69d4] tracking-tighter">
                                                     {formatCurrency(transaction.booking_fee || 0)}
                                                 </p>
                                                 <p className="text-[8px] font-bold text-gray-400 tracking-widest uppercase mt-2">SUDAH TERMASUK TOTAL</p>
@@ -551,7 +551,7 @@ export default function TransactionDetail({ transaction }) {
                                                 </p>
                                             </div>
                                             <div>
-                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">PETUGAS SURVAI (SURVEYOR)</p>
+                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">PETUGAS SURVEI (SURVEYOR)</p>
                                                 <p className="font-bold text-black uppercase">{survey.surveyor_name || "MENUNGGU PENUGASAN"}</p>
                                                 <p className="text-[#1c69d4] font-bold text-xs mt-1">{survey.surveyor_phone || "KONTAK BELUM TERSEDIA"}</p>
                                             </div>
