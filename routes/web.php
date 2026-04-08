@@ -145,8 +145,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/installments/{installment}/check-status', [\App\Http\Controllers\InstallmentController::class, 'checkPaymentStatus'])->name('installments.check-status');
     Route::get('/installments/{installment}/receipt', [\App\Http\Controllers\InstallmentController::class, 'downloadReceipt'])->name('installments.receipt');
     
-    // User Activity Dashboard (The unified portal)
-    Route::get('/account/activity', [\App\Http\Controllers\UserActivityController::class, 'index'])->name('user.activity');
 });
 
 Route::get('/payments/success', [\App\Http\Controllers\InstallmentController::class, 'paymentSuccess'])->name('payments.success');

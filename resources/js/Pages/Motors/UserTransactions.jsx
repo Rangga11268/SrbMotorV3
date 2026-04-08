@@ -191,7 +191,7 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="mb-8">
                             <Link
-                                href={route("user.activity", { tab: "orders" })}
+                                href={route("motors.user-transactions")}
                                 className="inline-flex items-center gap-3 text-[10px] font-black tracking-[0.3em] text-gray-500 hover:text-white transition-all group uppercase"
                             >
                                 <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />

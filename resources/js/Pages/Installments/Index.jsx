@@ -405,7 +405,7 @@ export default function InstallmentIndex({ transactions }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="mb-6">
                         <Link
-                            href={route("user.activity")}
+                            href={route("installments.index")}
                             className="inline-flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest hover:text-white transition-colors group"
                         >
                             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

@@ -96,8 +96,10 @@ export default function CashStatusDisplay({ transaction }) {
         );
     };
 
-    const statusInfo = getStatusInfo(transaction.status);
-    const currentStep = statusInfo.step;
+    if (!transaction) return <div className="p-4 text-xs font-bold text-gray-400">DATA TRANSAKSI TIDAK TERSEDIA</div>;
+
+    const statusInfo = getStatusInfo(transaction?.status || 'unknown');
+    const currentStep = statusInfo.step || 0;
 
     const getColorClass = (color) => {
         const colorMap = {

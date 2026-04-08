@@ -106,9 +106,14 @@ export default function Navbar({ auth }) {
         ...(auth?.user
             ? [
                   {
-                      label: "Aktivitas Saya",
-                      href: route("user.activity"),
-                      active: url.startsWith("/account/activity"),
+                      label: "Pesanan Saya",
+                      href: route("motors.user-transactions"),
+                      active: url === "/motors/my-transactions",
+                  },
+                  {
+                      label: "Cicilan Saya",
+                      href: route("installments.index"),
+                      active: url.startsWith("/installments"),
                   },
               ]
             : []),
@@ -527,11 +532,19 @@ export default function Navbar({ auth }) {
                                                     )}
                                                     <Link
                                                         href={route(
-                                                            "user.activity",
+                                                            "motors.user-transactions",
                                                         )}
                                                         className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
-                                                        Aktivitas Saya
+                                                        Pesanan Saya
+                                                    </Link>
+                                                    <Link
+                                                        href={route(
+                                                            "installments.index",
+                                                        )}
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                    >
+                                                        Cicilan Saya
                                                     </Link>
                                                 </div>
                                                 <div className="border-t border-gray-200" />
@@ -579,7 +592,7 @@ export default function Navbar({ auth }) {
                             <Link
                                 key={cat.label}
                                 href={cat.href}
-                                className={`px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors border-b-2 ${cat.active ? "text-[#262626] border-[#1c69d4]" : "text-[#757575] border-transparent hover:text-[#1c69d4]"}`}
+                                className={`px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors border-b-2 relative flex items-center gap-2 ${cat.active ? "text-[#262626] border-[#1c69d4]" : "text-[#757575] border-transparent hover:text-[#1c69d4]"}`}
                             >
                                 {cat.label}
                             </Link>
@@ -703,7 +716,7 @@ export default function Navbar({ auth }) {
                                     key={cat.label}
                                     href={cat.href}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="block py-4 border-b border-gray-800 text-[10px] font-bold text-[#bbbbbb] uppercase tracking-[0.2em] hover:text-white transition-colors"
+                                    className="flex items-center justify-between py-4 border-b border-gray-800 text-[10px] font-bold text-[#bbbbbb] uppercase tracking-[0.2em] hover:text-white transition-colors"
                                 >
                                     {cat.label}
                                 </Link>

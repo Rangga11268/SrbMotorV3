@@ -121,26 +121,28 @@ export default function CreditStatusDisplay({
         return colorMap[color] || colorMap.gray;
     };
 
-    const currentStatus = credit.status || credit.credit_status;
+    if (!credit) return <div className="p-4 text-xs font-bold text-gray-400 uppercase tracking-widest">DATA PENGAJUAN TIDAK TERSEDIA</div>;
+
+    const currentStatus = credit?.status || credit?.credit_status || 'unknown';
     const statusInfo = getStatusInfo(currentStatus);
 
     // Dynamic data extraction from surveySchedules if available
-    const latestSurvey = credit.surveySchedules && credit.surveySchedules.length > 0 
+    const latestSurvey = credit?.surveySchedules && credit?.surveySchedules.length > 0 
         ? [...credit.surveySchedules].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0]
         : null;
 
-    const surveyDate = latestSurvey?.scheduled_date || credit.survey_scheduled_date;
-    const surveyTime = latestSurvey?.scheduled_time || credit.survey_scheduled_time;
-    const surveyorName = latestSurvey?.surveyor_name || credit.surveyor_name;
-    const surveyorPhone = latestSurvey?.surveyor_phone || credit.surveyor_phone;
-    const surveyNotes = latestSurvey?.notes || credit.survey_notes;
+    const surveyDate = latestSurvey?.scheduled_date || credit?.survey_scheduled_date;
+    const surveyTime = latestSurvey?.scheduled_time || credit?.survey_scheduled_time;
+    const surveyorName = latestSurvey?.surveyor_name || credit?.surveyor_name;
+    const surveyorPhone = latestSurvey?.surveyor_phone || credit?.surveyor_phone;
+    const surveyNotes = latestSurvey?.notes || credit?.survey_notes;
 
-    const dpAmount = credit.dp_amount || credit.down_payment || 0;
+    const dpAmount = credit?.dp_amount || credit?.down_payment || 0;
     const motorPrice =
         transaction?.motor?.price ||
         transaction?.total_price ||
         transaction?.motor_price ||
-        credit.transaction?.motor_price ||
+        credit?.transaction?.motor_price ||
         0;
     const creditAmount = motorPrice - dpAmount;
 

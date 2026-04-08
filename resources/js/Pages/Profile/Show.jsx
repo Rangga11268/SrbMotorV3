@@ -165,7 +165,7 @@ export default function Show({ user, dashboard }) {
                                 {/* ORDER STATUS CARD */}
                                 <div className="hidden md:block">
                                     <Link 
-                                        href={route("user.activity", { tab: "orders" })}
+                                        href={route("motors.user-transactions")}
                                         className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group h-full"
                                     >
                                         <div className="flex items-center justify-between mb-4">
@@ -186,7 +186,7 @@ export default function Show({ user, dashboard }) {
 
                                 {/* INSTALLMENT CARD */}
                                 <Link 
-                                    href={route("user.activity", { tab: "installments" })}
+                                    href={route("installments.index")}
                                     className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group h-full"
                                 >
                                     <div className="flex items-center justify-between mb-4">
@@ -209,7 +209,7 @@ export default function Show({ user, dashboard }) {
 
                                 {/* SERVICE CARD */}
                                 <Link 
-                                    href={route("user.activity", { tab: "service" })}
+                                    href={route("services.index")}
                                     className="bg-white border-2 border-gray-200 p-6 flex flex-col justify-between hover:border-black transition-all group h-full"
                                 >
                                     <div className="flex items-center justify-between mb-4">
