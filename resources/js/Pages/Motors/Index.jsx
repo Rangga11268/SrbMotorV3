@@ -18,6 +18,7 @@ import {
     Gauge,
 } from "lucide-react";
 import axios from "axios";
+import MotorCardSkeleton from "@/Components/Public/MotorCardSkeleton";
 
 export default function Index({
     auth,
@@ -292,12 +293,13 @@ export default function Index({
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
-                                            className="min-h-[50vh] flex flex-col items-center justify-center text-center bg-white border border-gray-200 rounded-none p-12"
+                                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200"
                                         >
-                                            <Loader2 className="w-12 h-12 text-[#1c69d4] animate-spin mb-6" />
-                                            <h3 className="text-xl font-black text-black uppercase tracking-tighter">
-                                                MENGAKSES DATABASE
-                                            </h3>
+                                            {[...Array(6)].map((_, i) => (
+                                                <div key={i} className="bg-white">
+                                                    <MotorCardSkeleton />
+                                                </div>
+                                            ))}
                                         </motion.div>
                                     ) : motors.data.length > 0 ? (
                                         <motion.div
