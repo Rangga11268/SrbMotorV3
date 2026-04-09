@@ -94,6 +94,11 @@ export default function Navbar({ auth }) {
 
     const categories = [
         {
+            label: "Beranda",
+            href: "/",
+            active: url.split("?")[0] === "/",
+        },
+        {
             label: "Motor Baru",
             href: "/motors",
             active: url.split("?")[0] === "/motors",
@@ -137,7 +142,7 @@ export default function Navbar({ auth }) {
                     {/* Logo */}
                     <Link
                         href="/"
-                        className="flex flex-row items-center gap-4 flex-shrink-0 group"
+                        className="flex flex-row items-center gap-2 sm:gap-4 min-w-0 group"
                     >
                         <Logo />
                     </Link>
