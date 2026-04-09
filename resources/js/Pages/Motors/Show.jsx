@@ -405,23 +405,31 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                         className="bg-white group overflow-hidden flex flex-col"
                                     >
                                         <div className="p-8 pb-0 h-48 flex items-center justify-center bg-white relative">
+                                            {!m.tersedia && (
+                                                <div className="absolute top-4 left-4 z-20">
+                                                    <span className="bg-red-600 text-white px-3 py-1 font-bold text-[10px] uppercase tracking-widest rounded-none shadow-sm">
+                                                        TERJUAL
+                                                    </span>
+                                                </div>
+                                            )}
                                             <img
                                                 src={
                                                     m.image_path
                                                         ? `/storage/${m.image_path}`
                                                         : "/assets/img/no-image.webp"
                                                 }
-                                                className="max-h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                                                className={`max-h-full object-contain transition-transform duration-500 ${m.tersedia ? 'group-hover:scale-105' : 'grayscale opacity-70'}`}
+                                                alt={m.name}
                                             />
                                         </div>
                                         <div className="p-6 mt-auto">
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
                                                 {m.brand}
                                             </p>
-                                            <h4 className="text-lg font-black text-black uppercase tracking-tight mb-2 limit-1-line group-hover:text-[#1c69d4] transition-colors">
+                                            <h4 className={`text-lg font-black uppercase tracking-tight mb-2 limit-1-line transition-colors ${m.tersedia ? 'text-black group-hover:text-[#1c69d4]' : 'text-gray-500 line-through decoration-red-500 decoration-2'}`}>
                                                 {m.name}
                                             </h4>
-                                            <p className="text-lg font-light text-gray-600">
+                                            <p className={`text-lg font-light ${m.tersedia ? 'text-gray-600' : 'text-gray-400'}`}>
                                                 Rp{" "}
                                                 {parseInt(
                                                     m.price,
