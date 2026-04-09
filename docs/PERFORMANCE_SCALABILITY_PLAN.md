@@ -1,83 +1,87 @@
-# 🛠️ Master Plan: Optimasi Performa & Skalabilitas (SRB Motor)
+# 🚀 Master Plan 2.0: Optimasi Performa, Skalabilitas & Stabilitas (SRB Motor)
 
-Dokumen ini adalah peta jalan (Roadmap) teknis untuk meningkatkan kecepatan, stabilitas, dan kemudahan pemeliharaan aplikasi SRB Motor.
-
----
-
-## 📖 Daftar Istilah (Glosarium)
-Agar kita memiliki pemahaman yang sama, berikut adalah istilah kunci yang digunakan dalam rencana ini:
-*   **Aggregation**: Proses menghitung data (Total, Rata-rata, Jumlah).
-*   **Queue (Antrean)**: Menjalankan tugas berat (seperti kirim WA) di "belakang layar" agar user tidak perlu menunggu.
-*   **Fat Controller**: Istilah untuk Controller yang terlalu banyak menampung logika, sehingga sulit dibaca.
-*   **Service Layer**: "Dapur" khusus tempat memasak logika bisnis, membuat Controller tetap bersih.
-*   **Index**: "Daftar isi" pada database agar pencarian data tidak harus memindai seluruh tabel.
+Dokumen ini adalah peta jalan (Roadmap) teknis termutakhir untuk menjadikan ekosistem SRB Motor (Web & Android) memiliki performa kelas industri tanpa mengorbankan stabilitas sistem.
 
 ---
 
-## 🚀 FASE 1: PERFORMA & PENGALAMAN PENGGUNA (Prioritas: SANGAT TINGGI)
-*Fokus: Membuat aplikasi terasa kilat dan menghemat penggunaan RAM server.*
+## 📖 Prinsip Utama (Master Principles)
+1.  **Mobile-First Performance**: Mengurangi beban data seminimal mungkin untuk aplikasi Android.
+2.  **API Stability Guarantee**: Memastikan setiap pembaruan sistem tidak merusak koneksi dengan `SrbMotorApp`.
+3.  **Data Integrity**: Keamanan data adalah prioritas di atas kecepatan.
+
+---
+
+## ⚡ FASE 0: MONITORING & VISUAL QUICK-WINS (Fokus: Kecepatan Muat)
+*Tujuan: Memberikan dampak instan yang terlihat oleh pengguna.*
+
+### 0.1 Optimasi Gambar (WebP Conversion)
+*   **Masalah**: File gambar `.jpg` atau `.png` berukuran besar (1MB+) memperlambat loading galeri.
+*   **Tindakan**: Implementasi otomatisasi konversi gambar ke format `.webp` saat admin mengunggah aset.
+*   **Manfaat**: Ukuran file turun hingga 70% tanpa mengurangi kualitas visual.
+
+### 0.2 Instalasi Monitoring (Laravel Pulse)
+*   **Tindakan**: Memasang dashboard pemantau performa *real-time*.
+*   **Manfaat**: Mengidentifikasi query lambat dan beban CPU secara akurat, bukan tebakan.
+
+---
+
+## 🚀 FASE 1: EFISIENSI DATA & ANTREAN (Fokus: Responsivitas)
+*Tujuan: Menghilangkan jeda waktu pada transaksi.*
 
 ### 1.1 Laporan Kilat (SQL Aggregation)
-*   **Analogi**: Ibarat menghitung total belanjaan. Cara lama: Mengambil semua barang dari rak ke meja kasir baru dihitung pelan-pelan. Cara baru: Kasir langsung melihat label total di rak.
-*   **Masalah**: Menarik ribuan data transaksi ke RAM server hanya untuk menghitung total pendapatan.
-*   **Tindakan**: Mengubah `ReportController` agar database langsung menghitung `SUM()` dan `COUNT()`.
-*   **Manfaat**: Laporan muncul instan, penggunaan RAM server turun drastis (hingga 90%).
+*   **Tindakan**: Menghindari pengambilan data massal ke RAM. Gunakan `SUM()` dan `COUNT()` langsung di level database.
+*   **Manfaat**: Dashboard admin tetap ringan meski data transaksi mencapai jutaan baris.
 
-### 1.2 Transaksi Tanpa Jeda (Laravel Queues)
-*   **Analogi**: Seperti memesan kopi. Cara lama: Anda harus berdiri diam di depan kasir sampai kopinya jadi. Cara baru (Queue): Anda dapat struk pemesanan, kasir langsung melayani orang berikutnya, dan kopi dibuatkan oleh barista di belakang.
-*   **Masalah**: User harus menunggu WA terkirim sebelum halaman "Sukses" muncul. Jika API WA lemot, user merasa aplikasi hang.
-*   **Tindakan**: Implementasi **Background Jobs** untuk kirim WA.
-*   **Manfaat**: Pemesanan motor terasa instan bagi pembeli.
-
-### 1.3 Jalan Pintas Data (Database Indexing)
-*   **Masalah**: Pencarian data status atau tanggal transaksi lambat karena database harus membaca jutaan baris satu per satu.
-*   **Tindakan**: Menambah `Index` pada kolom `status` dan `created_at`.
-*   **Manfaat**: Pencarian data dan filter laporan jadi 10x lebih cepat.
+### 1.2 Background Jobs (Laravel Queues)
+*   **Tindakan**: Memisahkan pengiriman notifikasi WhatsApp dari alur utama pemesanan.
+*   **Manfaat**: Tombol "Pesan Sekarang" akan merespon < 1 detik.
 
 ---
 
-## 🏗️ FASE 2: INTEGRITAS ARSITEKTUR (Prioritas: SEDANG)
-*Fokus: Membersihkan kode agar aplikasi mudah dikembangkan di masa depan.*
+## 🏗️ FASE 2: INTEGRITAS ARSITEKTUR & API (Fokus: Keamanan Mobile)
+*Tujuan: Memisahkan "Dapur" (Logika) dari "Meja Saji" (Tampilan).*
 
-### 2.1 "Dapur Khusus" (Service Layer Pattern)
-*   **Masalah**: File `MotorGalleryController` terlalu gemuk (1100+ baris). Mencampur urusan tampilan dengan urusan hitung-hitungan rumus kredit.
-*   **Tindakan**: Memindahkan logika pembuatan order ke `OrderService`.
-*   **Manfaat**: Kode lebih rapi, mudah diperbaiki jika ada bug, dan mudah dites.
+### 2.1 Service Layer & JSON Resources
+*   **Tindakan**: Memisahkan logika bisnis ke `OrderService` dan menggunakan `JsonResource` untuk memformat output API.
+*   **Manfaat**: **Proteksi API Android**. Meskipun kode di belakang layar berubah total, format data yang dikirim ke aplikasi mobile tetap identik (tidak rusak).
 
 ### 2.2 Reusable Validation (Form Requests)
-*   **Tindakan**: Memindahkan aturan validasi input ke file tersendiri.
-*   **Manfaat**: Menghilangkan 200+ baris kode "sampah" dari Controller utama.
+*   **Tindakan**: Menstandarisasi validasi data agar konsisten antara Web dan Mobile.
 
 ---
 
-## ⚡ FASE 3: KECEPATAN & KEAMANAN DATA (Final Polish)
-*Fokus: Melindungi data dan mempercepat akses data berulang.*
+## ⚡ FASE 3: KEAMANAN & SKALABILITAS (Fokus: High Availability)
+*Tujuan: Kesiapan untuk menangani traffik yang lebih besar.*
 
-### 3.1 Brankas Transaksi (Database Transactions)
-*   **Masalah**: Saat order dibuat, sistem menulis ke tabel transaksi, log, dan cicilan. Jika listrik mati di tengah proses, data bisa "setengah jadi" (corrupt).
-*   **Tindakan**: Menggunakan `DB::transaction()`: Semua berhasil ditulis, atau semua dibatalkan jika ada satu error.
-*   **Manfaat**: Data transaksi dijamin 100% akurat dan konsisten.
+### 3.1 Brankas Transaksi (DB Transactions)
+*   **Tindakan**: Menggunakan `DB::transaction()` untuk memastikan proses simpan data order, log, dan cicilan bersifat "All or Nothing".
 
-### 3.2 Ingatan Cepat (Laravel Caching)
-*   **Masalah**: Database terus ditanya hal yang sama berkali-kali (contoh: "Apa saja merk motor yang ada?").
-*   **Tindakan**: Menyimpan daftar Merk dan Tipe di Cache selama 24 jam.
-*   **Manfaat**: Mengurangi beban kerja database secara signifikan.
+### 3.2 Redis Cache & Sessions
+*   **Tindakan**: Migrasi penyimpanan Cache dan Session dari file ke **Redis**.
+*   **Manfaat**: Kecepatan akses data berulang meningkat 5x lipat dan aplikasi siap dijalankan di banyak server sekaligus (Load Balancing).
 
 ---
 
-## 📊 Tabel Target Perbaikan
+## 📱 Protokol Keamanan Android (SrbMotorApp)
+Untuk menjamin aplikasi Android tetap berjalan lancar selama optimasi:
+1.  **Versioning**: Menambahkan header versi pada API.
+2.  **Compatibility Test**: Setiap perubahan pada Controller wajib diuji menggunakan Postman untuk memastikan response JSON tidak berubah kunci/key-nya.
+3.  **Asset Delivery**: Path gambar di API akan selalu diarahkan ke URL statis yang optimal.
 
-| Fitur | Status Sekarang | Target Setelah Optimasi |
+---
+
+## 📊 Tabel Target Performa 2.0
+
+| Fitur | Status Sekarang | Target Master Plan 2.0 |
 | :--- | :--- | :--- |
-| **Buka Laporan** | Lambat jika data > 1000 | Instan berapa pun jumlah datanya |
-| **Pesan Motor** | Menunggu WA (~3-5 detik) | Instan (< 1 detik) |
-| **RAM Server** | Tinggi (Memory Leak) | Stabil & Rendah |
-| **Kesehatan Kode** | Sulit dipelihara (Fat) | Rapi & Terstandarisasi (Clean) |
+| **Ukuran Gambar Galeri** | 1.2 MB (Avg) | 300 KB (WebP) |
+| **Response Time API** | 800ms - 2s | < 200ms |
+| **Stabilitas Data** | Risiko Interupsi | 100% Atomik (Transaction) |
+| **Monitoring** | Manual | Real-time Dashboard (Pulse) |
 
 ---
-## 💡 Instruksi Pemeliharaan (Maintenance)
-Setelah rencana ini dijalankan, satu hal yang harus dipastikan menyala adalah:
+## 💡 Maintenance Command
+Pastikan 'Worker' selalu menyala untuk memproses antrean:
 ```bash
-php artisan queue:work
+php artisan queue:work --tries=3
 ```
-*Ini adalah "barista" yang bertugas membuatkan kopi (mengirim WA) di belakang layar.*
