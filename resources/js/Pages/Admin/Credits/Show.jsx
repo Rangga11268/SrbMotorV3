@@ -28,6 +28,9 @@ import {
     CTableBody,
     CTableRow,
     CTableDataCell,
+    CNav,
+    CNavItem,
+    CNavLink,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
@@ -53,6 +56,7 @@ export default function Show({
 }) {
     const [activeModal, setActiveModal] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('info');
 
     // Form for unit allocation
     const allocationForm = useForm({
