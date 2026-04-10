@@ -1643,7 +1643,12 @@ export default function Show({
                             </CCardBody>
                         </CCard>
                     )}
+                    </>
+                    )}
 
+                    {/* Tab 3: Tagihan & Bukti TF */}
+                    {activeTab === 'installments' && (
+                        <>
                     {/* Installments / Jadwal Cicilan Section */}
                     {credit.transaction?.installments && credit.transaction.installments.length > 0 && (
                         <CCard className="mb-4 border-0 shadow-sm">
