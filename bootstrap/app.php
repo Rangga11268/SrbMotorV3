@@ -24,6 +24,12 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule) {
+        // Proses denda angsuran setiap hari jam 00:01
+        $schedule->command('installments:process-overdue')
+            ->dailyAt('00:01')
+            ->timezone('Asia/Jakarta')
+            ->withoutOverlapping();
+
         // Send installment reminders every day at 9 AM
         $schedule->command('installments:send-reminders')
             ->dailyAt('09:00')
