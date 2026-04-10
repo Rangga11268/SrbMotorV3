@@ -850,6 +850,68 @@ export default function Show({
         });
     };
 
+    const handleViewProof = (paymentProof) => {
+        Swal.fire({
+            title: "Bukti Transfer",
+            imageUrl: `/storage/${paymentProof}`,
+            imageAlt: "Bukti Transfer",
+            showConfirmButton: true,
+            confirmButtonText: "Tutup",
+            width: "80%",
+            customClass: {
+                image: "img-fluid object-fit-contain",
+            },
+        });
+    };
+
+    const handleApproveInstallment = (installmentId) => {
+        Swal.fire({
+            title: "Setujui Cicilan?",
+            text: "Pastikan nominal bukti transfer dan rekening koran sudah sesuai.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Setujui (Lunas)",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#28a745",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.installments.approve", installmentId), {}, {
+                    onSuccess: () => {
+                        Swal.fire("Berhasil", "Cicilan berhasil disetujui dan ditandai Lunas.", "success");
+                    }
+                });
+            }
+        });
+    };
+
+    const handleRejectInstallment = (installmentId) => {
+        Swal.fire({
+            title: "Tolak Bukti Transfer?",
+            text: "Berikan alasan kenapa bukti transfer ini ditolak. User akan diminta mengunggah ulang.",
+            input: "textarea",
+            inputPlaceholder: "Cth: Nominal kurang, foto buram...",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Tolak Pembayaran",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#dc3545",
+            preConfirm: (reason) => {
+                if (!reason) {
+                    Swal.showValidationMessage("Alasan wajib diisi");
+                }
+                return reason;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.installments.reject", installmentId), { reason: result.value }, {
+                    onSuccess: () => {
+                        Swal.fire("Berhasil", "Bukti transfer ditolak.", "success");
+                    }
+                });
+            }
+        });
+    };
+
     return (
         <AdminLayout title={`Detail Pengajuan Kredit #${credit.id}`}>
             {/* Header */}
@@ -1540,6 +1602,111 @@ export default function Show({
                                             ))}
                                         </tbody>
                                     </table>
+                                </div>
+                            </CCardBody>
+                        </CCard>
+                    )}
+
+                    {/* Installments / Jadwal Cicilan Section */}
+                    {credit.transaction?.installments && credit.transaction.installments.length > 0 && (
+                        <CCard className="mb-4 border-0 shadow-sm">
+                            <CCardHeader className="bg-transparent border-bottom border-light py-3 d-flex justify-content-between align-items-center">
+                                <strong className="d-flex align-items-center gap-2 fs-6">
+                                    <CIcon icon={cilMoney} size="sm" />
+                                    Jadwal & Info Pembayaran Cicilan
+                                </strong>
+                            </CCardHeader>
+                            <CCardBody className="p-0">
+                                <div className="table-responsive">
+                                    <CTable hover className="mb-0 align-middle small">
+                                        <CTableHead className="bg-light">
+                                            <CTableRow>
+                                                <CTableHeaderCell className="border-0">Bulan Ke-</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0">Jatuh Tempo</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0">Nominal Pokok</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0">Total Denda</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0">Total Tagihan</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0 text-center">Status</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0 text-center">Bukti TF</CTableHeaderCell>
+                                                <CTableHeaderCell className="border-0 text-end pe-4">Aksi</CTableHeaderCell>
+                                            </CTableRow>
+                                        </CTableHead>
+                                        <CTableBody>
+                                            {credit.transaction.installments.map((installment) => {
+                                                let badgeColor = "secondary";
+                                                let statusLabel = installment.status;
+                                                
+                                                if (installment.status === 'paid') { badgeColor = "success"; statusLabel = "Lunas"; }
+                                                else if (installment.status === 'belum_dibayar') { badgeColor = "danger"; statusLabel = "Belum Bayar"; }
+                                                else if (installment.status === 'pending') { badgeColor = "warning"; statusLabel = "Menunggu"; }
+                                                else if (installment.status === 'overdue') { badgeColor = "danger"; statusLabel = "Jatuh Tempo"; }
+                                                else if (installment.status === 'waiting_approval') { badgeColor = "info"; statusLabel = "Review Admin"; }
+                                                else if (installment.status === 'dibatalkan_sistem') { badgeColor = "dark"; statusLabel = "Hangus"; }
+
+                                                const isReviewing = installment.status === 'waiting_approval';
+
+                                                return (
+                                                    <CTableRow key={installment.id} className={isReviewing ? "table-warning" : ""}>
+                                                        <CTableDataCell className="fw-semibold">
+                                                            {installment.installment_number === 0 ? "DP (Uang Muka)" : `Ke-${installment.installment_number}`}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell>
+                                                            {new Date(installment.due_date).toLocaleDateString("id-ID")}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell>{formatCurrency(installment.amount)}</CTableDataCell>
+                                                        <CTableDataCell className={installment.penalty_amount > 0 ? "text-danger" : ""}>
+                                                            {formatCurrency(installment.penalty_amount || 0)}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell className="fw-bold">
+                                                            {formatCurrency(installment.total_with_penalty || installment.amount)}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell className="text-center">
+                                                            <CBadge color={badgeColor}>{statusLabel}</CBadge>
+                                                        </CTableDataCell>
+                                                        <CTableDataCell className="text-center">
+                                                            {installment.payment_proof ? (
+                                                                <CButton 
+                                                                    color="info" 
+                                                                    variant="ghost" 
+                                                                    size="sm" 
+                                                                    onClick={() => handleViewProof(installment.payment_proof)}
+                                                                >
+                                                                    Lihat Struk
+                                                                </CButton>
+                                                            ) : "-"}
+                                                        </CTableDataCell>
+                                                        <CTableDataCell className="text-end pe-4">
+                                                            {isReviewing && (
+                                                                <div className="d-flex gap-1 justify-content-end">
+                                                                    <CButton 
+                                                                        color="success" 
+                                                                        size="sm" 
+                                                                        title="Setujui"
+                                                                        onClick={() => handleApproveInstallment(installment.id)}
+                                                                    >
+                                                                        <CheckCircle size={14} />
+                                                                    </CButton>
+                                                                    <CButton 
+                                                                        color="danger" 
+                                                                        size="sm" 
+                                                                        title="Tolak"
+                                                                        onClick={() => handleRejectInstallment(installment.id)}
+                                                                    >
+                                                                        <XCircle size={14} />
+                                                                    </CButton>
+                                                                </div>
+                                                            )}
+                                                            {!isReviewing && installment.paid_at && (
+                                                                <small className="text-muted text-nowrap">
+                                                                    Lunas: {new Date(installment.paid_at).toLocaleDateString("id-ID")}
+                                                                </small>
+                                                            )}
+                                                        </CTableDataCell>
+                                                    </CTableRow>
+                                                );
+                                            })}
+                                        </CTableBody>
+                                    </CTable>
                                 </div>
                             </CCardBody>
                         </CCard>
