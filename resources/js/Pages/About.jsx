@@ -191,7 +191,7 @@ export default function About() {
                              <img src="/assets/img/about-us.webp" className="w-full h-full object-cover opacity-60 grayscale" alt="About SRB" />
                              <div className="absolute inset-0 flex items-center justify-center">
                                  <div className="p-8 border border-white/20 backdrop-blur-md">
-                                     <span className="text-white font-black text-4xl uppercase tracking-widest">EST. 2020</span>
+                                     <span className="text-white font-black text-4xl uppercase tracking-widest">EST. 2023</span>
                                  </div>
                              </div>
                          </div>
