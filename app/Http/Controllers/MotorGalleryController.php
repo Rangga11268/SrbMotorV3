@@ -391,7 +391,10 @@ class MotorGalleryController extends Controller
     {
         $transaction = Transaction::with(['motor', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments', 'user', 'logs.actor'])->findOrFail($transactionId);
 
-        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+        if ($transaction->user_id !== Auth::id()) {
+            if (Auth::user() && Auth::user()->isAdmin()) {
+                return redirect()->route('admin.transactions.show', $transaction->id);
+            }
             abort(403, 'Unauthorized access to this transaction');
         }
 
@@ -414,6 +417,9 @@ class MotorGalleryController extends Controller
 
 
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
+            if (Auth::user() && Auth::user()->isAdmin()) {
+                return redirect()->route('admin.transactions.show', $transaction->id);
+            }
             abort(403, 'Unauthorized access to this transaction');
         }
 
@@ -509,6 +515,9 @@ class MotorGalleryController extends Controller
 
 
         if ($transaction->user_id !== Auth::id() || $transaction->transaction_type !== 'CREDIT') {
+            if (Auth::user() && Auth::user()->isAdmin()) {
+                return redirect()->route('admin.transactions.show', $transaction->id);
+            }
             abort(403, 'Unauthorized access to this transaction');
         }
 
@@ -906,8 +915,10 @@ class MotorGalleryController extends Controller
      */
     public function showTransaction(Transaction $transaction)
     {
-        // Authorize - user can only view their own transactions
-        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+        if ($transaction->user_id !== Auth::id()) {
+            if (Auth::user() && Auth::user()->isAdmin()) {
+                return redirect()->route('admin.transactions.show', $transaction->id);
+            }
             abort(403, 'Unauthorized access');
         }
 
@@ -941,8 +952,10 @@ class MotorGalleryController extends Controller
      */
     public function showInstallments(Transaction $transaction)
     {
-        // Authorize - user can only view their own transactions
-        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+        if ($transaction->user_id !== Auth::id()) {
+            if (Auth::user() && Auth::user()->isAdmin()) {
+                return redirect()->route('admin.transactions.show', $transaction->id);
+            }
             abort(403, 'Unauthorized access');
         }
 
@@ -961,8 +974,10 @@ class MotorGalleryController extends Controller
      */
     public function showCreditStatus(Transaction $transaction)
     {
-        // Authorize - user can only view their own transactions
-        if ($transaction->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+        if ($transaction->user_id !== Auth::id()) {
+            if (Auth::user() && Auth::user()->isAdmin()) {
+                return redirect()->route('admin.transactions.show', $transaction->id);
+            }
             abort(403, 'Unauthorized access');
         }
 
