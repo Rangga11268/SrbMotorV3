@@ -379,6 +379,46 @@ class CreditService
     }
 
     /**
+     * Repossess Credit (Motor ditarik leasing)
+     */
+    public function repossessCredit(CreditDetail $credit, string $reason = ''): bool
+    {
+        DB::transaction(function () use ($credit, $reason) {
+            $oldStatus = $credit->status;
+            
+            // 1. Ubah status credit_details
+            $credit->update([
+                'status' => 'ditarik_leasing',
+                'completion_notes' => 'Unit Ditarik: ' . $reason
+            ]);
+            
+            // 2. Ubah status transactions
+            $credit->transaction->update([
+                'status' => 'ditarik_leasing',
+                'cancellation_reason' => 'Ditarik Leasing: ' . $reason
+            ]);
+
+            // 3. Batalkan sisa cicilan yang belum dibayar
+            $credit->transaction->installments()
+                ->whereIn('status', ['belum_dibayar', 'pending', 'overdue'])
+                ->update(['status' => 'dibatalkan_sistem']);
+
+            // 4. Log Action
+            $credit->transaction->logs()->create([
+                'status_from' => $oldStatus,
+                'status_to' => 'ditarik_leasing',
+                'status' => 'ditarik_leasing',
+                'actor_id' => auth()->id(),
+                'actor_type' => 'App\Models\User',
+                'notes' => $reason,
+                'description' => 'Motor ditarik oleh leasing karena menunggak: ' . $reason,
+            ]);
+        });
+        
+        return true;
+    }
+
+    /**
      * Cancel by customer with validation
      */
     public function cancelByCustomer(\App\Models\Transaction $transaction, ?string $reason = null): array
@@ -530,6 +570,9 @@ class CreditService
             'dp_dibayar' => [
                 'selesai' => 'Complete Credit',
             ],
+            'selesai' => [
+                'ditarik_leasing' => 'Repossess Unit',
+            ]
         ];
 
         return $transitions[$currentStatus] ?? [];
@@ -586,6 +629,11 @@ class CreditService
                 'badge' => 'success',
                 'icon' => 'check-double',
             ],
+            'ditarik_leasing' => [
+                'label' => 'Motor Ditarik',
+                'badge' => 'danger',
+                'icon' => 'x-mark',
+            ],
         ];
 
         return $statusInfo[$status] ?? [
@@ -610,6 +658,7 @@ class CreditService
             'ditolak' => 'danger',
             'dp_dibayar' => 'success',
             'selesai' => 'success',
+            'ditarik_leasing' => 'danger',
             'dibatalkan' => 'secondary'
         ];
 

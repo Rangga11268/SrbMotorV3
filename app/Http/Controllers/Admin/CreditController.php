@@ -320,6 +320,21 @@ class CreditController extends Controller
     }
 
     /**
+     * Repossess Motor Unit
+     */
+    public function repossess(Request $request, CreditDetail $credit)
+    {
+        $validated = $request->validate([
+            'reason' => 'required|string|max:1000',
+        ]);
+
+        $this->creditService->repossessCredit($credit, $validated['reason']);
+
+        return redirect()->route('admin.credits.show', $credit)
+            ->with('success', 'Motor berhasil dinyatakan ditarik oleh leasing dan tagihan sisa dibatalkan.');
+    }
+
+    /**
      * Destroy Credit Application
      */
     public function destroy(CreditDetail $credit)

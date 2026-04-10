@@ -822,6 +822,34 @@ export default function Show({
         });
     };
 
+    const handleRepossess = () => {
+        Swal.fire({
+            title: "Tarik Motor (Repossess)?",
+            text: "Status akan menjadi Tarik Leasing, semua sisa cicilan akan dibatalkan/hangus. Berikan alasan penarikan (misal: Menunggak 6 bulan).",
+            input: 'textarea',
+            inputPlaceholder: 'Alasan penarikan...',
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Tarik Motor",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#dc3545",
+            preConfirm: (reason) => {
+                if (!reason) {
+                    Swal.showValidationMessage('Alasan penarikan wajib diisi')
+                }
+                return reason;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("admin.credits.repossess", credit.id), { reason: result.value }, {
+                    onSuccess: () => {
+                        Swal.fire("Berhasil", "Motor berhasil berstatus Ditarik/Repossess.", "success");
+                    }
+                });
+            }
+        });
+    };
+
     return (
         <AdminLayout title={`Detail Pengajuan Kredit #${credit.id}`}>
             {/* Header */}
@@ -838,6 +866,7 @@ export default function Show({
                 </h3>
                 <div className="d-flex gap-2">
                     {credit.status !== "dibatalkan" &&
+                        credit.status !== "ditarik_leasing" &&
                         credit.status !== "selesai" && (
                             <CButton
                                 color="secondary"
@@ -850,6 +879,18 @@ export default function Show({
                                 Batalkan
                             </CButton>
                         )}
+                        
+                    {credit.status === "selesai" && (
+                        <CButton
+                            color="danger"
+                            size="sm"
+                            className="d-flex align-items-center gap-2 text-white"
+                            onClick={handleRepossess}
+                        >
+                            <CIcon icon={cilBan} size="sm" />
+                            Tarik Motor (Repossess)
+                        </CButton>
+                    )}
                     <CButton
                         color="danger"
                         variant="outline"

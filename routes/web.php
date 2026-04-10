@@ -168,6 +168,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/credits/{credit}/record-dp-payment', [App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
     Route::post('/credits/{credit}/complete', [App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
     Route::post('/credits/{credit}/cancel', [App\Http\Controllers\Admin\CreditController::class, 'cancel'])->name('credits.cancel');
+    Route::post('/credits/{credit}/repossess', [App\Http\Controllers\Admin\CreditController::class, 'repossess'])->name('credits.repossess');
     Route::delete('/credits/{credit}', [App\Http\Controllers\Admin\CreditController::class, 'destroy'])->name('credits.destroy');
     Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
     Route::post('/documents/{document}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveDocument'])->name('documents.approve');
