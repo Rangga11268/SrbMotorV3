@@ -972,6 +972,32 @@ export default function Show({
 
             <CRow className="g-4">
                 <CCol xl={8}>
+                    <CNav variant="tabs" className="mb-4" style={{ borderBottom: '2px solid #dee2e6' }}>
+                        <CNavItem>
+                            <CNavLink active={activeTab === 'info'} onClick={() => setActiveTab('info')} style={{ cursor: 'pointer' }} className={activeTab === 'info' ? 'fw-bold' : ''}>
+                                Info Utama
+                            </CNavLink>
+                        </CNavItem>
+                        <CNavItem>
+                            <CNavLink active={activeTab === 'doc'} onClick={() => setActiveTab('doc')} style={{ cursor: 'pointer' }} className={activeTab === 'doc' ? 'fw-bold' : ''}>
+                                Dok. & Survey
+                            </CNavLink>
+                        </CNavItem>
+                        <CNavItem>
+                            <CNavLink active={activeTab === 'installments'} onClick={() => setActiveTab('installments')} style={{ cursor: 'pointer' }} className={activeTab === 'installments' ? 'fw-bold' : ''}>
+                                Tagihan & TF
+                            </CNavLink>
+                        </CNavItem>
+                        <CNavItem>
+                            <CNavLink active={activeTab === 'logs'} onClick={() => setActiveTab('logs')} style={{ cursor: 'pointer' }} className={activeTab === 'logs' ? 'fw-bold' : ''}>
+                                Riwayat
+                            </CNavLink>
+                        </CNavItem>
+                    </CNav>
+
+                    {/* Tab 1: Info Utama */}
+                    {activeTab === 'info' && (
+                        <>
                     {/* Current Status */}
                     <CCard className="mb-4 border-0 shadow-sm">
                         <CCardHeader className="bg-transparent border-bottom border-light py-3">
@@ -1343,14 +1369,16 @@ export default function Show({
                                                 letterSpacing: "0.5px",
                                             }}
                                         >
-                                            Tangal Keputusan
+                                            Tanggal Disetujui
                                         </small>
                                         <strong>
-                                            {credit.leasing_decision_date
+                                            {credit.verified_at
                                                 ? new Date(
-                                                      credit.leasing_decision_date,
+                                                      credit.verified_at,
                                                   ).toLocaleDateString("id-ID")
-                                                : "Menunggu"}
+                                                : credit.status === 'disetujui' || credit.status === 'dp_dibayar' || credit.status === 'selesai'
+                                                    ? "-"
+                                                    : "Menunggu"}
                                         </strong>
                                     </p>
                                     <p className="mb-0">
@@ -1364,20 +1392,25 @@ export default function Show({
                                             DP Dibayar
                                         </small>
                                         <strong>
-                                            {credit.dp_paid_date
+                                            {credit.dp_paid_at
                                                 ? new Date(
-                                                      credit.dp_paid_date,
+                                                      credit.dp_paid_at,
                                                   ).toLocaleDateString("id-ID")
-                                                : "Belum dibayar"}
+                                                : credit.status === 'dp_dibayar' || credit.status === 'selesai'
+                                                    ? "Sudah Dibayar"
+                                                    : "Belum dibayar"}
                                         </strong>
                                     </p>
                                 </CCardBody>
                             </CCard>
                         </CCol>
                     </CRow>
+                    </>
+                    )}
 
-
-
+                    {/* Tab 2: Dokumen & Survey */}
+                    {activeTab === 'doc' && (
+                        <>
                     {/* Document Status Alert */}
                     {credit.documents &&
                         credit.documents.length > 0 &&
@@ -1715,7 +1748,12 @@ export default function Show({
                             </CCardBody>
                         </CCard>
                     )}
+                    </>
+                    )}
 
+                    {/* Tab 4: Logs & Histori */}
+                    {activeTab === 'logs' && (
+                        <>
                     {/* Transaction Logs (PHASE 6) */}
                     <CCard className="mb-4 border-0 shadow-sm">
                         <CCardHeader className="bg-transparent border-bottom border-light py-3">
@@ -1770,6 +1808,9 @@ export default function Show({
                         </CCardBody>
                     </CCard>
 
+                    {/* Survey Information & Rejection Reason di Tab 2 */}
+                    {activeTab === 'doc' && (
+                        <>
                     {/* Survey Information */}
                     {(credit.survey_scheduled_date || credit.survey_notes) && (
                         <CCard className="mb-4 border-0 shadow-sm">
@@ -1833,6 +1874,8 @@ export default function Show({
                             {credit.rejection_reason}
                         </CAlert>
                     )}
+                        </>
+                    )}
 
                     {/* Timeline */}
                     <CCard className="border-0 shadow-sm">
@@ -1890,6 +1933,8 @@ export default function Show({
                             )}
                         </CCardBody>
                     </CCard>
+                    </>
+                    )}
                 </CCol>
 
                 {/* Action Panel */}
