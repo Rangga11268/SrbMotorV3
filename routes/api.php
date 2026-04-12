@@ -22,6 +22,11 @@ Route::get('/motors/brands', [MotorController::class, 'brands']);
 Route::get('/motors/{id}', [MotorController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('api.orders.invoice');
+Route::get('/settings/contact', function () {
+    $keys = ['site_name', 'contact_phone', 'contact_email', 'contact_address', 'contact_city'];
+    $settings = \App\Models\Setting::whereIn('key', $keys)->pluck('value', 'key');
+    return response()->json($settings);
+});
 
 Route::post('/midtrans/notification', [App\Http\Controllers\PaymentCallbackController::class, 'handle'])->name('midtrans.notification');
 
