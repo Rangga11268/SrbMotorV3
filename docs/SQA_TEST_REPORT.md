@@ -16,7 +16,7 @@ Dokumen ini berisi hasil pengujian fungsional yang mendalam terhadap sistem SRB 
 | Test Case ID | Preconditions | Test Steps | Input Data | Expected Results | Actual Results | Test Environment | Execution Status | Bug Severity | Bug Priority | Attachments | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **SQA-TC-01** | User berada di hal. utama Galeri Motor | 1. Klik dropdown filter Merk<br>2. Pilih "Yamaha"<br>3. Amati hasil filter | Brand selection: *Yamaha* | Sistem hanya menampilkan daftar motor dengan merk Yamaha. | Menampilkan 12 motor Yamaha sesuai database. | Localhost (Chrome) | **PASS** | - | - | [Screen-1.png] | Filter akurat |
-| **SQA-TC-02** | User login & pada Form Pengajuan Kredit | 1. Masukkan data diri<br>2. Kosongkan upload file KTP<br>3. Klik "Ajukan" | Empty file inputs | Muncul validasi "Dokumen KTP wajib diunggah" & submit terhenti. | Muncul popup validasi merah & submit gagal. | Localhost (Chrome) | **PASS** | - | - | [Screen-2.png] | Validasi lancar |
+| **SQA-TC-02** | Admin login & terdapat data kredit dengan status `ditarik_leasing` di database | 1. Buka halaman **Daftar Pengajuan Kredit** (`/admin/credits`)<br>2. Klik dropdown filter **Status**<br>3. Amati apakah opsi `Ditarik Leasing` tersedia<br>4. Jika tersedia, pilih opsi tersebut<br>5. Amati daftar kredit yang ditampilkan | Filter: *ditarik_leasing* | Dropdown menampilkan opsi "Ditarik Leasing" dan sistem memfilter serta menampilkan hanya kredit berstatus `ditarik_leasing`. | Opsi `ditarik_leasing` **tidak muncul** di dropdown filter karena `CreditController@index` hanya membaca status yang sudah ada via `distinct()->pluck('status')` — jika belum ada record dengan status ini, opsi tidak tampil secara dinamis. Admin tidak dapat memfilter unit yang sudah ditarik. | Localhost (Chrome) | **FAIL** | **Medium** | **Medium** | [Screen-2.png] | Filter status baru tidak terdaftar secara statis; bergantung sepenuhnya pada ketersediaan data di DB. Perlu hardcode daftar status atau seed data awal. |
 | **SQA-TC-03** | Kuota harian mekanik sudah mencapai batas penuh | 1. Pilih menu Reservasi Servis<br>2. Pilih tanggal yang penuh<br>3. Coba klik tanggal tsb | Date: *Today (Full)* | Slot tanggal pada UI kalender otomatis terkunci (Disabled) & tidak bisa dipilih. | Tanggal penuh tidak merespon klik input. | Localhost (Chrome) | **PASS** | - | - | [Screen-3.png] | Auto-lock aktif |
 | **SQA-TC-04** | User memiliki transaksi status 'Pending' | 1. Buka dashboard Bayar<br>2. Selesaikan bayar via Midtrans<br>3. Klik 'Back to Store' | Payment: *IDR 500k* | Status transaksi otomatis berubah dari "Pending" ke "Selesai/Lunas". | Webhook diterima & status lunas diperbarui. | Localhost (Chrome) | **PASS** | - | - | [Screen-4.png] | Real-time update |
 | **SQA-TC-05** | Admin login & terdapat 1 pengajuan kredit baru. | 1. Memeriksa pengajuan kredit melalui CreditController<br>2. Menyetujui pengajuan kredit. | Action: *Approve* | Saat disetujui, sistem secara otomatis (<<include>>) menjalankan perintah Mengirim Notifikasi WhatsApp ke nomor pelanggan. | Status pengajuan berhasil disetujui dan Notifikasi WA berhasil terkirim ke pelanggan secara otomatis. | Localhost (Chrome) | **PASS** | - | - | [Screen-5.png] | Pengujian <<include>> berhasil |
@@ -25,7 +25,12 @@ Dokumen ini berisi hasil pengujian fungsional yang mendalam terhadap sistem SRB 
 ---
 
 ## 📊 Ringkasan Temuan (Bug Reports)
-Saat ini seluruh fungsionalitas utama berjalan sesuai dengan spesifikasi (**100% Pass Rate**). Tidak ditemukan bug kritis yang menghambat alur bisnis utama (*Happy Path*).
+
+| Bug ID | Terkait TC | Deskripsi Singkat | Severity | Priority | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **BUG-01** | SQA-TC-02 | Dropdown filter status di halaman daftar kredit tidak menampilkan opsi `ditarik_leasing` karena daftar status diambil secara dinamis dari DB (`distinct pluck`). Jika belum ada data kredit dengan status tersebut, opsi filter tidak tampil — Admin kehilangan kemampuan filter unit yang ditarik. | Medium | Medium | **Open** |
+
+> **Catatan:** 5 dari 6 test case berhasil (**83% Pass Rate**). Ditemukan **1 bug** berkategori medium pada fitur filter status kredit yang baru (`ditarik_leasing`). Bug ini tidak memblokir alur bisnis utama (*Happy Path*), namun mempengaruhi kemampuan monitoring admin terhadap kredit bermasalah.
 
 ---
 
