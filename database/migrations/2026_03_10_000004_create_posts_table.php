@@ -24,10 +24,7 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->index('slug');
-            $table->index('status');
-            $table->index('published_at');
+            // Foreign key removed as categories table was dropped in later migrations
         });
     }
 
