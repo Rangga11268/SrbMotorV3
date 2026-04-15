@@ -175,7 +175,7 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                     <h2 className="text-2xl font-black uppercase tracking-tight text-black">LOKASI BENGKEL</h2>
                                                 </div>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {branches.map((b) => (
+                                                    {Array.isArray(branches) && branches.map((b) => (
                                                         <button 
                                                             key={b}
                                                             type="button"
@@ -183,7 +183,7 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                             className={`p-6 border-2 text-left transition-all ${data.branch === b ? 'border-[#1c69d4] bg-[#1c69d4]/5' : 'border-gray-100 hover:border-gray-300'}`}
                                                         >
                                                             <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">CABANG</p>
-                                                            <p className="text-xs font-black uppercase">{b}</p>
+                                                            <p className="text-xs font-black uppercase">{typeof b === 'object' ? b.name : b}</p>
                                                         </button>
                                                     ))}
                                                 </div>

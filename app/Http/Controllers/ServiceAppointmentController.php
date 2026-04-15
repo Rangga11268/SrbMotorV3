@@ -51,15 +51,25 @@ class ServiceAppointmentController extends Controller
      */
     public function create()
     {
+        $branches = Setting::get('service_branches', [
+            "SSM JATIASIH (BEKASI)",
+            "SSM MEKAR SARI (BEKASI)",
+        ]);
+
+        // Robust check: if data is still a string (due to type mismatch in DB), try to decode it
+        if (is_string($branches)) {
+            $decoded = json_decode($branches, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $branches = $decoded;
+            } else {
+                // If it's just a plain string (not JSON), wrap it in an array or handle as needed
+                $branches = [$branches];
+            }
+        }
+
         return Inertia::render('Services/Booking', [
             'user' => Auth::user(),
-            'branches' => Setting::get('service_branches', [
-                "SSM JATIASIH (BEKASI)",
-                "SSM MEKAR SARI (BEKASI)",
-                "SSM DEPOK (DEPOK)",
-                "SSM BOGOR (BOGOR)",
-                "SSM TANGERANG (TANGERANG)"
-            ]),
+            'branches' => $branches,
             'serviceHours' => Setting::get('service_business_hours', [
                 'monday' => '08:00 - 16:00',
                 'tuesday' => '08:00 - 16:00',
