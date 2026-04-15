@@ -198,36 +198,81 @@ export default function Navbar({ auth }) {
                                                 </p>
                                             </div>
                                             <div className="max-h-[450px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
-                                                {/* PUSAT & SALES NETWORK */}
+                                                {/* PUSAT & SERVICE BENGKEL */}
                                                 <div className="px-6 py-3 bg-[#f9f9f9]/50 border-b border-gray-100">
                                                     <p className="text-[8px] font-black text-[#1c69d4] uppercase tracking-[0.2em]">
-                                                        PUSAT & JARINGAN SALES (DEALER)
+                                                        PUSAT & BENGKEL SERVIS
                                                     </p>
                                                 </div>
                                                 <div className="py-1">
                                                     {[
                                                         {
-                                                            name: "SSM MEKAR SARI",
+                                                            name: "SSM MEKAR SARI (PUSAT)",
                                                             loc: "BEKASI (PUSAT & BENGKEL)",
-                                                            isSales: true,
+                                                            url: "https://maps.app.goo.gl/49JT2gMetP4nPsiw5",
+                                                            isService: true,
                                                         },
                                                         {
-                                                            name: "SRB MOTOR",
-                                                            loc: "BEKASI UTARA (CABANG)",
-                                                            url: "https://maps.app.goo.gl/kK1BtQhsT6cE1rs56",
-                                                            isSales: true,
+                                                            name: "SSM JATIMEKAR",
+                                                            loc: "JATIASIH (PREMIUM R-SHOP)",
+                                                            url: "https://maps.app.goo.gl/EG1vYtfchbEMKUG88",
+                                                            isService: true,
+                                                        },
+                                                    ].map((branch, i) => (
+                                                        <a
+                                                            key={i}
+                                                            href={branch.url || "#"}
+                                                            target={branch.url ? "_blank" : "_self"}
+                                                            rel="noopener noreferrer"
+                                                            className="block px-6 py-3 hover:bg-[#1c69d4]/5 group/item cursor-pointer transition-colors border-l-2 border-transparent hover:border-[#1c69d4]"
+                                                        >
+                                                            <div className="flex justify-between items-center">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-6 h-6 bg-gray-100 flex items-center justify-center text-[#1c69d4] rounded-none">
+                                                                        <Wrench className="w-3 h-3" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-[10px] font-bold text-[#262626] uppercase tracking-wider group-hover/item:text-[#1c69d4]">
+                                                                            {branch.name}
+                                                                        </p>
+                                                                        <p className="text-[8px] font-medium text-[#757575] uppercase tracking-widest mt-0.5">
+                                                                            {branch.loc}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <ChevronRight className="w-3 h-3 text-gray-300 group-hover/item:text-[#1c69d4] group-hover/item:translate-x-1 transition-all" />
+                                                            </div>
+                                                        </a>
+                                                    ))}
+                                                </div>
+
+                                                {/* SALES NETWORK */}
+                                                <div className="px-6 py-3 bg-[#f9f9f9]/50 border-y border-gray-100">
+                                                    <p className="text-[8px] font-black text-[#757575] uppercase tracking-[0.2em]">
+                                                        JARINGAN SALES (SHOWROOM)
+                                                    </p>
+                                                </div>
+                                                <div className="py-1">
+                                                    {[
+                                                        {
+                                                            name: "SRB MOTORS",
+                                                            loc: "KALIABANG (CABANG NETWORK)",
+                                                            url: "https://maps.app.goo.gl/XY85E7th3cARM2719",
                                                         },
                                                         {
                                                             name: "SSM PONDOK UNGU",
-                                                            loc: "BEKASI UTARA (CABANG)",
-                                                            url: "https://maps.app.goo.gl/arrJgbYHcUs3pkY26",
-                                                            isSales: true,
+                                                            loc: "KALIABANG (CABANG)",
+                                                            url: "https://maps.app.goo.gl/rQjY7M3pqxPovESBA",
                                                         },
                                                         {
                                                             name: "SSM ALINDA",
                                                             loc: "BEKASI UTARA (CABANG)",
-                                                            url: "https://maps.app.goo.gl/jRoPMJs3enBPLor2A",
-                                                            isSales: true,
+                                                            url: "https://maps.app.goo.gl/3o9sWM73i8RzLbaR6",
+                                                        },
+                                                        {
+                                                            name: "SSM JATIBENING",
+                                                            loc: "BEKASI (CABANG)",
+                                                            url: "https://maps.app.goo.gl/5yjNcZwW7US5nV816",
                                                         },
                                                     ].map((branch, i) => (
                                                         <a
@@ -254,51 +299,6 @@ export default function Navbar({ auth }) {
                                                                 <ChevronRight className="w-3 h-3 text-gray-300 group-hover/item:text-[#1c69d4] group-hover/item:translate-x-1 transition-all" />
                                                             </div>
                                                         </a>
-                                                    ))}
-                                                </div>
-
-                                                {/* SSM SERVICE NETWORK */}
-                                                <div className="px-6 py-3 bg-[#f9f9f9]/50 border-y border-gray-100">
-                                                    <p className="text-[8px] font-black text-[#757575] uppercase tracking-[0.2em]">
-                                                        JARINGAN SERVIS SSM (BENGKEL)
-                                                    </p>
-                                                </div>
-                                                <div className="py-1">
-                                                    {[
-                                                        {
-                                                            name: "SSM DEPOK",
-                                                            loc: "DEPOK (BENGKEL)",
-                                                        },
-                                                        {
-                                                            name: "SSM BOGOR",
-                                                            loc: "BOGOR (BENGKEL)",
-                                                        },
-                                                        {
-                                                            name: "SSM TANGERANG",
-                                                            loc: "TANGERANG (BENGKEL)",
-                                                        },
-                                                    ].map((branch, i) => (
-                                                        <div
-                                                            key={i}
-                                                            className="block px-6 py-3 hover:bg-[#A855F7]/10 group/item cursor-pointer transition-colors border-l-2 border-transparent hover:border-[#A855F7]"
-                                                        >
-                                                            <div className="flex justify-between items-center">
-                                                                <div className="flex items-center gap-3">
-                                                                    <div className="w-6 h-6 bg-gray-100 flex items-center justify-center text-[#757575] rounded-none">
-                                                                        <Wrench className="w-3 h-3" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <p className="text-[10px] font-bold text-[#757575] uppercase tracking-wider group-hover/item:text-[#A855F7]">
-                                                                            {branch.name}
-                                                                        </p>
-                                                                        <p className="text-[8px] font-medium text-[#757575] uppercase tracking-widest mt-0.5">
-                                                                            {branch.loc}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                <ChevronRight className="w-3 h-3 text-gray-300 group-hover/item:text-[#A855F7] group-hover/item:translate-x-1 transition-all" />
-                                                            </div>
-                                                        </div>
                                                     ))}
                                                 </div>
                                             </div>

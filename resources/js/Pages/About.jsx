@@ -121,19 +121,18 @@ export default function About() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
-                                { name: "SSM MEKAR SARI (PUSAT)", addr: "Jl. Mekar Sari No.39, Bekasi Jaya, Kec. Bekasi Tim." },
-                                { name: "SSM JATIASIH", addr: "Jl. Raya Jatimekar No.17, Jatimekar, Kec. Jatiasih" },
-                                { name: "SSM DEPOK", addr: "Jl. Tirta Mulya 5 No.78, Tirtajaya, Kec. Sukmajaya" },
-                                { name: "SSM BOGOR", addr: "Jl. Raya Tajur No.39D, Tajur, Kec. Bogor Tim." },
-                                { name: "SSM TANGERANG", addr: "Jl. Imam Bonjol No.100A, Karawaci" }
+                                { name: "SSM MEKAR SARI (PUSAT)", addr: "Jl. Mekar Sari No.39, Bekasi Jaya, Kec. Bekasi Tim.", maps: "https://maps.app.goo.gl/49JT2gMetP4nPsiw5", phone: "02189094308" },
+                                { name: "SSM JATIMEKAR (PREMIUM R-SHOP)", addr: "Jl. Raya Jatimekar No.72A, RT.004/RW.012, Jatimekar", maps: "https://maps.app.goo.gl/EG1vYtfchbEMKUG88", phone: "(021)8485060" },
                             ].map((branch, i) => (
                                 <div key={i} className="bg-gray-50 p-8 border border-gray-100 hover:border-[#1c69d4] transition-all group">
                                     <h4 className="text-lg font-black text-black uppercase tracking-tighter mb-3">{branch.name}</h4>
-                                    <p className="text-gray-500 font-light text-xs mb-6 leading-relaxed">{branch.addr}</p>
-                                    <div className="flex items-center gap-2 mt-auto">
+                                    <p className="text-gray-500 font-light text-xs mb-4 leading-relaxed">{branch.addr}</p>
+                                    <p className="text-[10px] font-bold text-gray-400 mb-6 font-mono">{branch.phone}</p>
+                                    <div className="flex flex-wrap items-center gap-3 mt-auto">
                                         <div className="px-3 py-1 bg-green-100 text-green-700 text-[8px] font-black uppercase tracking-widest border border-green-200">
                                             FASILITAS BENGKEL AKTIF
                                         </div>
+                                        <a href={branch.maps} target="_blank" className="text-[8px] font-black uppercase text-[#1c69d4] hover:underline">LIHAT MAPS</a>
                                     </div>
                                 </div>
                             ))}
@@ -153,20 +152,23 @@ export default function About() {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
-                                { name: "SRB MOTOR (CABANG INI)", addr: "Showroom Utama SRB Motor - Bekasi" },
-                                { name: "SSM PONDOK UNGU", addr: "Jl. Sultan Agung No.12, Pondok Ungu, Bekasi" },
-                                { name: "SSM ALINDA", addr: "Jl. Raya Alinda No.8, Bekasi Utara" }
+                                { name: "SRB MOTORS (KALIABANG)", addr: "Jl. Lori Sakti No.22, Kaliabang Tengah, Bekasi Utara", maps: "https://maps.app.goo.gl/XY85E7th3cARM2719" },
+                                { name: "SSM PONDOK UNGU", addr: "Jl. Raya Pd. Ungu Permai Blok II 10 No.86, Bekasi", maps: "https://maps.app.goo.gl/rQjY7M3pqxPovESBA" },
+                                { name: "SSM ALINDA", addr: "Jl. Alinda, RT.03/RW.13, Bekasi Utara", maps: "https://maps.app.goo.gl/3o9sWM73i8RzLbaR6" },
+                                { name: "SSM JATIBENING", addr: "Jatibening, Kec. Pd. Gede, Kota Bks", maps: "https://maps.app.goo.gl/5yjNcZwW7US5nV816" }
                             ].map((branch, i) => (
                                 <div key={i} className="bg-white p-10 border-2 border-black hover:bg-black hover:text-white transition-all duration-500 group relative overflow-hidden">
                                     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:opacity-20 transition-opacity">
                                         <ShieldCheck size={100} />
                                     </div>
-                                    <h4 className="text-2xl font-black uppercase tracking-tighter mb-4 relative z-10">{branch.name}</h4>
-                                    <p className="text-xs font-light text-gray-400 group-hover:text-gray-500 mb-8 leading-relaxed relative z-10 italic">
+                                    <h4 className="text-xl font-black uppercase tracking-tighter mb-2 relative z-10">{branch.name}</h4>
+                                    <p className="text-[10px] font-medium text-gray-500 mb-4 truncate">{branch.addr}</p>
+                                    <p className="text-xs font-light text-gray-400 group-hover:text-gray-500 mb-6 leading-relaxed relative z-10 italic">
                                         "Sales network terafiliasi SSM. Fokus pada distribusi unit motor pilihan dengan kualitas inspeksi standar tinggi."
                                     </p>
-                                    <div className="mt-auto pt-6 border-t border-gray-100 group-hover:border-gray-800 relative z-10">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">SALES ONLY POINT</span>
+                                    <div className="mt-auto pt-6 border-t border-gray-100 group-hover:border-gray-800 relative z-10 flex justify-between items-center">
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">SALES ONLY</span>
+                                        <a href={branch.maps} target="_blank" className="text-[10px] font-black uppercase text-[#1c69d4] group-hover:text-white transition-colors">MAPS</a>
                                     </div>
                                 </div>
                             ))}

@@ -200,9 +200,6 @@ class SettingSeeder extends Seeder
                 'value' => json_encode([
                     "SSM JATIASIH (BEKASI)",
                     "SSM MEKAR SARI (BEKASI)",
-                    "SSM DEPOK (DEPOK)",
-                    "SSM BOGOR (BOGOR)",
-                    "SSM TANGERANG (TANGERANG)"
                 ]),
                 'type' => 'json',
                 'category' => 'service',
