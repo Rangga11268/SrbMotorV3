@@ -59,11 +59,12 @@ Karena SRB Motor adalah Sales Network tanpa bengkel, fitur Booking Servis akan s
 - **Metode**: Filter di Controller di mana `can_service: true`.
 - **Dampak**: User tetap merasa dalam satu ekosistem yang sama meskipun servis dilakukan di lokasi berbeda.
 
-#### C. Deteksi Cabang Terdekat (Nearest Dealer)
-Menggunakan **Haversine Formula** sederhana di sisi Frontend (Javascript):
-1.  Minta izin lokasi user (`navigator.geolocation`).
-2.  Hitung jarak udara antara user dan koordinat semua cabang di daftar `settings`.
-3.  Urutkan dropdown cabang berdasarkan jarak terdekat untuk memberikan kenyamanan navigasi bagi user.
+#### C. Deteksi Cabang Terdekat (Pickup Dealer)
+Saat pengguna memilih metode penyerahan **"Ambil di Dealer"** pada form pemesanan:
+1.  **Geolocation Request**: Sistem meminta izin akses lokasi browser untuk mendapatkan koordinat pengguna.
+2.  **Proximity Calculation**: Menggunakan rumus *Haversine* untuk menghitung jarak antara lokasi pengguna dan semua cabang aktif di `dealer_network`.
+3.  **Sorted Selection**: Dropdown pilihan cabang akan otomatis diurutkan berdasarkan jarak terdekat, lengkap dengan informasi jarak (misal: "TERDEKAT - 1.2 KM").
+4.  **Selection Capture**: Lokasi pengambilan yang dipilih akan disimpan dalam data transaksi untuk koordinasi persiapan unit oleh tim admin.
 
 #### D. Standarisasi Nama Cabang (Data Matching)
 Untuk menjaga agar filter berfungsi, kolom `branch` di tabel `motors` dan `service_appointments` harus menggunakan **Alias** tetap dari `settings` (bukan nama display yang bisa berubah):
@@ -82,6 +83,7 @@ Untuk menjaga agar filter berfungsi, kolom `branch` di tabel `motors` dan `servi
 | **Integritas Data** | Gunakan `alias` yang singkat dan tidak berubah (misal: "MEKARSARI", "SRB") sebagai nilai di kolom `branch` tabel lain, bukan nama panjang yang rawan perubahan typo. |
 | **Performa Query** | Gunakan cache pada `Setting::get()` agar parsing JSON tidak dilakukan berulang kali pada setiap request. |
 | **Admin Complexity** | Buat UI khusus di Admin Panel untuk mengelola JSON settings ini agar admin tidak perlu mengedit teks manual di database. |
+| **User Privacy** | Jika user menolak izin lokasi, fitur "Terdekat" akan fallback ke daftar cabang standar secara alfabetis. |
 | **Ketidakakuratan Stok** | Menambahkan meta-data `last_stock_update` pada tiap motor untuk memberi info ke user kapan data stok terakhir diverifikasi (opsional). |
 
 ---
