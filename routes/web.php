@@ -175,8 +175,18 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('/documents/{document}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectDocumentUpload'])->name('documents.reject');
 
     Route::resource('motors', MotorController::class);
-    Route::post('/users/{user}/toggle-verify', [UserController::class, 'toggleVerify'])->name('users.toggle-verify');
-    Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
+    // === OWNER EXCLUSIVE ROUTES ===
+    Route::middleware('owner')->group(function () {
+        Route::post('/users/{user}/toggle-verify', [UserController::class, 'toggleVerify'])->name('users.toggle-verify');
+        Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
+
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
+        Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
+        Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
+        Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
+    });
+    // ==============================
 
     // Cash Transaction Management Routes (CASH ONLY - tunai)
     Route::resource('transactions', AdminTransactionController::class);
@@ -191,12 +201,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');
     Route::get('/transactions/{transaction}/invoice/download', [InvoiceController::class, 'generate'])->name('transactions.invoice.download');
-
-    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
-    Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
-    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
-    Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
 
     // Settings Management
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');

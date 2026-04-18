@@ -48,31 +48,39 @@ Berdasarkan investigasi pada direktori `resources/js/Pages/Admin/`, terdapat 9 m
 
 ## Rencana Implementasi Bertahap (Phased Strategy - Zero Breakage)
 
-Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, proses akan dibagi menjadi 4 fase terisolasi. Kita tidak akan langsung menghancurkan layout yang lama, melainkan melakukan transisi secara hati-hati halaman demi halaman.
+Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, proses dibagi menjadi 4 fase terisolasi. 
 
-### FASE 1: Fondasi Layout & Dashboard Base
+### FASE 1: Fondasi Layout & Dashboard Base ✅ (SELESAI)
 *Fokus pada pembuatan "Wadah" aplikasi baru tanpa merusak yang sudah ada.*
-1. **New Layout Container**: Membuat file `resources/js/Layouts/MetronicAdminLayout.jsx`. File lawas `AdminLayout.jsx` akan dibiarkan dulu sebagai *fallback*.
-2. **Setup Komponen Kerangka**: Membangun UI Sidebar (Dark/Light mode), Header (Glassmorphism), dan Dropdown User bergaya Keenthemes murni.
-3. **Migrasi Dashboard**: Menerapkan tata letak pelindung ini pada halaman `Dashboard.jsx`. Kita juga akan memperbarui kotak statistik (Quick Stats) dan grafik dengan UI Metronic Cards.
+- [x] **New Layout Container**: Membuat file `resources/js/Layouts/MetronicAdminLayout.jsx`.
+- [x] **Setup Komponen Kerangka**: Membangun UI Sidebar (Dark/Light mode), Header, dan Dropdown User bergaya Keenthemes murni.
+- [x] **Migrasi Dashboard**: Menerapkan tata letak pelindung pada halaman `Dashboard.jsx`.
 
-### FASE 2: Modul Non-Kritikal (Master Data & Settings)
+### FASE 2: Modul Non-Kritikal (Master Data & Settings) ✅ (SELESAI)
 *Fase pemanasan: Menguji integrasi layout data dalam tabel bergaya Metronic.*
-1. **Pengguna & Laporan (`Users`, `Reports`)**: Mendesain ulang struktur List/DataTables dengan komponen Header Toolbar, Status Badges, dan Styling Grid ala Metronic.
-2. **Pengaturan (`Settings`)**: Transformasi form UI pengaturan menjadi struktur profesional dua-kolom.
-3. **Manajemen Servis**: Memoles UI tiket servis tanpa mengubah logika reservasi.
+- [x] **Pengguna (`Users`)**: Mendesain ulang struktur DataTables menjadi grid responsif Metronic.
+- [x] **Laporan (`Reports`)**: Mendesain UI generator laporan (`Index.jsx`) dan halaman rincian cetak laporan (`Show.jsx`) yang bersih dan tajam.
+- [x] **Pengaturan (`Settings`)**: Transformasi form konfigurasi 2 kolom kombo dengan sidebar terpisah (`Index.jsx` & `Edit.jsx`).
+- [x] **Manajemen Servis**: Memoles UI tiket servis dengan Modal Custom interaktif.
 
-### FASE 3: Modul Motor CRUD (Kritikal Level Menengah)
+### FASE 3: Modul Motor CRUD (Kritikal Level Menengah) 🔄 (ON PROGRESS)
 *Sangat hati-hati pada manipulasi data JSON warna dan unggah gambar.*
-1. **Katalog Stok (`Motors/Index.jsx`)**: Memperbarui tabel produk dengan *Quick Status Switch* untuk menampilkan mana unit yang ready.
-2. **Form Motor (`Create/Edit.jsx`)**: Input form, JSON array warna, dan file upload *preview* diubah styling CSS-nya secara statis tanpa sedikitpun menyentuh event handler Inertia (`setData`, `post`).
-3. **Spesifikasi (`Show.jsx`)**: Tata letak rapi untuk spesifikasi teknis unit.
+- [x] **Katalog Stok (`Motors/Index.jsx`)**: Memperbarui tabel produk dengan *thumbnail image*.
+- [x] **Spesifikasi (`Motors/Show.jsx`)**: Tata letak dua kolom rapi bergaya *e-Commerce Profile* untuk detail spesifikasi teknis unit.
+- [ ] **Form Motor (`Motors/Create.jsx` & `Edit.jsx`)**: Mendesain layout pembuatan motor dalam satu wungkus grid bertingkat ala katalog raksasa. *(Sedang Dikerjakan)*
 
-### FASE 4: Proses Transaksional (Kritikal Level Tertinggi)
+### FASE 3.5: Infrastruktur Autentikasi "Owner" (NEW REQUIREMENT) 🔄
+*Diinstruksikan berdasarkan `WEBSITE_USE_CASE_ANALYSIS.md` untuk memisahkan visibilitas Laporan & Akun Administrasi.*
+- [ ] **Middleware**: Membuat `OwnerMiddleware`.
+- [ ] **Routing Security**: Melindungi URL backend laporan.
+- [ ] **Layout Restriction**: Menyembunyikan menu berdasarkan `role`.
+- [ ] **DB Provisioning**: Generate satu akun eksekutif (owner).
+
+### FASE 4: Proses Transaksional (Kritikal Level Tertinggi) ❌ (BELUM)
 *Zona "Do Not Touch Logic". Redesign **HANYA** memanipulasi Div dan struktur Grid Tailwind.*
-1. **Daftar Kredit & Cash (`Index.jsx`)**: Daftar transaksi akan dilengkapi dengan indikator status dinamis ala enterprise UI (Menunggu, Disetujui, Ditolak).
-2. **Engine Verifikasi (`Credits/Show.jsx`)**: Mengimplementasikan UI *Approval Stepper* (Langkah 1: Cek Dokumen -> Langkah 2: Survey) untuk visibilitas progres. Logika tombol "Approve Validation" akan persis sama (Endpoint tidak berubah).
-3. **Pembersihan Akhir**: Setelah 100% halaman dipastikan jalan di MetronicLayout dan sudah dites user, baru modul `@coreui` lama kita `npm uninstall` untuk meringkas aplikasi.
+- [ ] **Daftar Kredit & Cash (`Index.jsx`)**: Daftar transaksi dilengkapi indikator status.
+- [ ] **Engine Verifikasi (`Credits/Show.jsx`)**: Mengimplementasikan UI *Approval Stepper*.
+- [ ] **Pembersihan Akhir**: Menghapus sisa `@coreui` lama via `npm uninstall`.
 
 ---
 

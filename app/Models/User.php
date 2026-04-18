@@ -56,10 +56,18 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Check if the user has admin role
+     * Check if the user has admin role (Owner inherits admin role)
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return in_array($this->role, ['admin', 'owner']);
+    }
+
+    /**
+     * Check if the user is explicitly set as Owner (Super Admin)
+     */
+    public function isOwner(): bool
+    {
+        return $this->role === 'owner';
     }
 }

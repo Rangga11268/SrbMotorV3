@@ -10,7 +10,8 @@ Dokumen ini adalah analisis fungsional menyeluruh dari aplikasi **Sistem Penjual
 | ------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **Guest**    | Primary   | Pengguna yang belum login. Bisa melihat katalog, detail motor, fitur perbandingan.                                                        |
 | **Customer** | Primary   | Pengguna terdaftar. Mewarisi Guest. Melakukan pembelian (cash/kredit), upload dokumen, bayar DP/angsuran via gateway, dan booking servis. |
-| **Admin**    | Primary   | Pengelola data sistem, persetujuan kredit, penjadwalan survey, validasi manual, manajemen bengkel & laporan eksekutif.                    |
+| **Admin**    | Primary   | Pengelola data sistem operasional, persetujuan kredit, penjadwalan survey, validasi manual, dan manajemen bengkel.                        |
+| **Owner**    | Primary   | Pemilik bisnis (Super Admin). Mengakses dashboard eksekutif, export laporan keuangan, dan mengelola (CRUD) akun Admin.                    |
 | **Midtrans** | Secondary | API Gateway untuk transaksi. Mengirim webhook/callback pembayaran secara _asynchronous_ ke sistem.                                        |
 
 ---
@@ -24,6 +25,7 @@ usecaseDiagram
     actor Guest
     actor Customer
     actor Admin
+    actor Owner
 
     package "Modul 1: Akun & Notifikasi" {
         usecase "UC-1.1: Daftar Akun Baru" as Reg
@@ -41,6 +43,7 @@ usecaseDiagram
 
     Guest <|-- Customer
     Guest <|-- Admin
+    Admin <|-- Owner
 
     Customer --> UpdProf
     Customer --> Pass
@@ -107,6 +110,7 @@ Di sinilah fungsi "Kelola" dipecah satu-per-satu agar urutan fungsinya jelas sec
 ```mermaid
 usecaseDiagram
     actor Admin
+    actor Owner
 
     package "Manajemen Motor (CRUD Detail)" {
         usecase "UC-5.1a: Lihat Daftar Motor" as R_Motor
@@ -129,6 +133,7 @@ usecaseDiagram
         usecase "UC-5.3b: Tandai Servis Selesai" as Done_Srv
         usecase "UC-5.4a: Generate Export Excel" as Exp_XLS
         usecase "UC-5.4b: Generate Export PDF" as Exp_PDF
+        usecase "UC-5.5: Manajemen Akun Admin" as Manage_Admin
     }
 
     Admin --> R_Motor
@@ -145,8 +150,11 @@ usecaseDiagram
 
     Admin --> Acc_Srv
     Admin --> Done_Srv
-    Admin --> Exp_XLS
-    Admin --> Exp_PDF
+
+    Admin <|-- Owner
+    Owner --> Exp_XLS
+    Owner --> Exp_PDF
+    Owner --> Manage_Admin
 ```
 
 ---
@@ -192,9 +200,34 @@ usecaseDiagram
     1. Admin meninjau antrean. Admin meng-klik tombol **Setujui** (Mekanik dialokasikan).
     2. Saat motor pelanggan sudah selesai diservis sorenya, Admin wajib meng-klik **Tandai Selesai (UC-5.3b)** untuk membebaskan antrean _history_ pelanggan.
 
-### ��� Flow 5: Generate Export Laporan (ReportController)
+### 🔐 Flow 5: Generate Export Laporan (ReportController)
 
 - **Normal Flow (UC-5.4a & UC-5.4b)**:
-    1. Admin mengatur "Dari Tanggal" s/d "Hingga Tanggal".
+    1. Owner (Pemilik) mengatur "Dari Tanggal" s/d "Hingga Tanggal".
     2. Memilih apakah Laporan Excel (Library Maatwebsite) atau PDF (DomPDF).
-    3. Sistem melooping relasi _Transaction -> Motor -> User_ lalu mengkompilasi file fisik `.xlsx` atau `.pdf` yang terunduh instan ke laptop Admin.
+    3. Sistem melooping relasi _Transaction -> Motor -> User_ lalu mengkompilasi file fisik `.xlsx` atau `.pdf` yang terunduh instan ke laptop Owner.
+
+> ⚠️ **Akses Eksklusif**: Halaman Laporan dan Manajemen Pengguna **hanya bisa diakses oleh Role `owner`**. Admin biasa akan mendapat HTTP 403 jika mencoba mengakses URL ini secara langsung.
+
+---
+
+## ✅ Status Implementasi Role per Fitur (Real System)
+
+Berikut adalah status implementasi aktual sistem berdasarkan `routes/web.php`, `AdminMiddleware`, dan `OwnerMiddleware`:
+
+| Fitur / Route | Role yang Diizinkan | Status |
+|---|---|---|
+| Dashboard `/admin` | Admin, Owner | ✅ Aktif |
+| Motor CRUD `/admin/motors` | Admin, Owner | ✅ Aktif |
+| Kredit `/admin/credits` | Admin, Owner | ✅ Aktif |
+| Transaksi Tunai `/admin/transactions` | Admin, Owner | ✅ Aktif |
+| Manajemen Servis `/admin/services` | Admin, Owner | ✅ Aktif |
+| Pengaturan `/admin/settings` | Admin, Owner | ✅ Aktif |
+| **Pengguna** `/admin/users` | **Owner Only** | ✅ Aktif |
+| **Laporan** `/admin/reports` | **Owner Only** | ✅ Aktif |
+
+### Mekanisme Teknis Role
+- **`isAdmin()`** → `true` jika `role` adalah `'admin'` **atau** `'owner'` (Owner mewarisi semua hak Admin)
+- **`isOwner()`** → `true` hanya jika `role === 'owner'`
+- **Sidebar UI** → Menu "Pengguna" dan "Laporan" disembunyikan secara kondisional di `MetronicAdminLayout.jsx` jika `auth.user.role !== 'owner'`
+- **Middleware Stack**: Semua rute `/admin/*` wajib lolos `AdminMiddleware`, lalu rute eksklusif Owner wajib lolos tambahan `OwnerMiddleware`.

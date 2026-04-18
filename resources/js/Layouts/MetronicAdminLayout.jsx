@@ -70,13 +70,19 @@ export default function MetronicAdminLayout({ children, title }) {
         }
     }, [flash]);
 
+    const isOwner = auth.user.role === 'owner';
+    const roleLabel = isOwner ? 'Pemilik (Owner)' : 'Administrator';
+    const roleBadgeColor = isOwner ? 'from-amber-500 to-orange-600' : 'from-[#3699FF] to-[#0070e3]';
+
     const navItems = [
         { name: "Dashboard", href: route("admin.dashboard"), icon: LayoutDashboard, active: route().current("admin.dashboard") },
         { name: "Motor", href: route("admin.motors.index"), icon: Bike, active: route().current("admin.motors.*") },
         { name: "Pengajuan Kredit", href: route("admin.credits.index"), icon: CreditCard, active: route().current("admin.credits.*") },
         { name: "Transaksi Tunai", href: route("admin.transactions.index"), icon: ShoppingCart, active: route().current("admin.transactions.*") },
-        { name: "Pengguna", href: route("admin.users.index"), icon: Users, active: route().current("admin.users.*") },
-        { name: "Laporan", href: route("admin.reports.index"), icon: BarChart3, active: route().current("admin.reports.*") },
+        ...(isOwner ? [
+            { name: "Pengguna", href: route("admin.users.index"), icon: Users, active: route().current("admin.users.*") },
+            { name: "Laporan", href: route("admin.reports.index"), icon: BarChart3, active: route().current("admin.reports.*") },
+        ] : []),
         { name: "Manajemen Servis", href: "/admin/services", icon: Wrench, active: route().current("admin.services.*") },
     ];
 
@@ -187,14 +193,14 @@ export default function MetronicAdminLayout({ children, title }) {
                 {/* Sidebar Footer User Info */}
                 <div className="p-4 bg-[#1A1A27]">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#3699FF] to-[#0070e3] flex items-center justify-center text-white font-bold overflow-hidden">
+                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${roleBadgeColor} flex items-center justify-center text-white font-bold overflow-hidden`}>
                             {auth.user.profile_photo_path ? (
                                 <img src={`/storage/${auth.user.profile_photo_path}`} alt="User" className="w-full h-full object-cover" />
                             ) : auth.user.name.charAt(0)}
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <div className="text-white text-sm font-semibold truncate">{auth.user.name}</div>
-                            <div className="text-[#A2A3B7] text-xs">Administrator</div>
+                            <div className={`text-xs font-medium ${isOwner ? 'text-amber-400' : 'text-[#A2A3B7]'}`}>{roleLabel}</div>
                         </div>
                         <Link href={route("logout")} method="post" as="button" className="text-[#6D6D80] hover:text-white p-2">
                             <LogOut size={18} />
@@ -223,7 +229,7 @@ export default function MetronicAdminLayout({ children, title }) {
                             <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-3 p-1 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none">
                                 <div className="text-right hidden md:block">
                                     <div className="text-sm font-semibold text-gray-800">{auth.user.name}</div>
-                                    <div className="text-xs text-gray-500">Admin</div>
+                                    <div className={`text-xs font-medium ${isOwner ? 'text-amber-500' : 'text-gray-500'}`}>{roleLabel}</div>
                                 </div>
                                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold overflow-hidden shadow-sm">
                                     {auth.user.profile_photo_path ? (
