@@ -1,34 +1,18 @@
 import React, { useState } from "react";
-import { useForm, Head } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import {
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CCol,
-    CRow,
-    CForm,
-    CFormLabel,
-    CFormInput,
-    CFormTextarea,
-    CButton,
-    CSpinner,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { cilSave, cilArrowLeft, cilInfo } from "@coreui/icons";
-import { Link } from "@inertiajs/react";
+import { useForm, Head, Link } from "@inertiajs/react";
+import MetronicAdminLayout from "@/Layouts/MetronicAdminLayout";
 import {
     Clock,
-    MapPin,
-    Mail,
-    Phone,
     Palette,
     Globe,
     Upload,
-    X,
     Plus,
     Trash2,
     PenTool,
+    Save,
+    ArrowLeft,
+    Loader2,
+    ImageIcon
 } from "lucide-react";
 
 import {
@@ -36,9 +20,8 @@ import {
     getCategoryConfig,
 } from "@/Config/SettingsConfig";
 
-
 export default function SettingsEdit({ category, settings }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, put, processing } = useForm({
         settings: settings.map((setting) => ({
             key: setting.key,
             value: setting.value,
@@ -71,7 +54,6 @@ export default function SettingsEdit({ category, settings }) {
     const handleFileUpload = async (index, file) => {
         if (!file) return;
 
-        // Validate file-
         const validTypes = ["image/png", "image/jpeg", "image/jpg"];
         const maxSize = 2 * 1024 * 1024; // 2MB
 
@@ -106,17 +88,10 @@ export default function SettingsEdit({ category, settings }) {
         formData.append("field", data.settings[index].key);
 
         try {
-            // Simulate upload progress
             const progressInterval = setInterval(() => {
                 setUploadProgress((prev) => {
                     const current = prev[data.settings[index].key] || 0;
-                    if (current < 90) {
-                        return {
-                            ...prev,
-                            [data.settings[index].key]:
-                                current + Math.random() * 30,
-                        };
-                    }
+                    if (current < 90) return { ...prev, [data.settings[index].key]: current + 20 };
                     clearInterval(progressInterval);
                     return prev;
                 });
@@ -126,31 +101,22 @@ export default function SettingsEdit({ category, settings }) {
                 method: "POST",
                 body: formData,
                 headers: {
-                    "X-CSRF-TOKEN": document
-                        .querySelector('meta[name="csrf-token"]')
-                        .getAttribute("content"),
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
                 },
             });
 
             clearInterval(progressInterval);
 
-            if (!response.ok) {
-                throw new Error("Upload gagal");
-            }
+            if (!response.ok) throw new Error("Upload gagal");
 
             const result = await response.json();
 
-            // Update setting value dengan path dari server
             const updatedSettings = [...data.settings];
             updatedSettings[index].value = result.path;
             setData("settings", updatedSettings);
 
-            setUploadProgress((prev) => ({
-                ...prev,
-                [data.settings[index].key]: 100,
-            }));
+            setUploadProgress((prev) => ({ ...prev, [data.settings[index].key]: 100 }));
 
-            // Clear progress setelah 1 detik
             setTimeout(() => {
                 setUploadProgress((prev) => {
                     const newProgress = { ...prev };
@@ -176,26 +142,16 @@ export default function SettingsEdit({ category, settings }) {
 
     const categoryConfig = getCategoryConfig(category);
 
-
     const handleJsonArrayChange = (index, arrayIndex, value, action = 'edit') => {
         const updatedSettings = [...data.settings];
         try {
             let list = [];
-            try {
-                list = JSON.parse(updatedSettings[index].value || "[]");
-            } catch (e) {
-                list = [];
-            }
-            
+            try { list = JSON.parse(updatedSettings[index].value || "[]"); } catch (e) { list = []; }
             if (!Array.isArray(list)) list = [];
 
-            if (action === 'edit') {
-                list[arrayIndex] = value;
-            } else if (action === 'delete') {
-                list.splice(arrayIndex, 1);
-            } else if (action === 'add') {
-                list.push("");
-            }
+            if (action === 'edit') list[arrayIndex] = value;
+            else if (action === 'delete') list.splice(arrayIndex, 1);
+            else if (action === 'add') list.push("");
             
             updatedSettings[index].value = JSON.stringify(list);
             setData("settings", updatedSettings);
@@ -216,399 +172,284 @@ export default function SettingsEdit({ category, settings }) {
 
     const renderInputField = (setting, index) => {
         const fieldConfig = getSettingFieldConfig(category, setting.key);
+        const titleLabel = fieldConfig?.label || setting.key;
+        const helperText = fieldConfig?.helper || setting.description;
 
+        // Custom Layout Wrapper
+        const CardWrapper = ({ icon: Icon, children }) => (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group hover:border-blue-200 transition-colors">
+                <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+                    <div className="flex items-start gap-3">
+                        {Icon && <Icon className="text-blue-500 shrink-0 mt-0.5" size={20} />}
+                        <div>
+                            <h4 className="font-bold text-gray-800 text-sm">{titleLabel}</h4>
+                            <p className="text-xs text-gray-500 mt-0.5">{helperText}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="p-6">
+                    {children}
+                </div>
+            </div>
+        );
 
-        // Special handling for business_hours and service_business_hours
+        // 1. Business Hours
         if (setting.key === "business_hours" || setting.key === "service_business_hours") {
             let hours = {};
             try {
-                const parseValue =
-                    typeof setting.value === "string"
-                        ? JSON.parse(setting.value || "{}")
-                        : setting.value;
-                hours = parseValue || {};
-            } catch (e) {
-                console.error("Error parsing business hours:", e);
-                // If parse fails, try splitting by commas
-                try {
-                    const values = setting.value?.split(",") || [];
-                    if (values.length === 0) {
-                        hours = {};
-                    } else {
-                        // If it's a simple string, we'll let it show the 7-day form anyway
-                        hours = {};
-                    }
-                } catch (err) {
-                    hours = {};
-                }
-            }
+                hours = typeof setting.value === "string" ? JSON.parse(setting.value || "{}") : setting.value || {};
+            } catch (e) { hours = {}; }
 
             return (
-                <div key={index} className="card border-0 bg-light p-4 mb-4">
-                    <div className="mb-3">
-                        <h6 className="font-weight-bold text-dark mb-2">
-                            <Clock size={20} className="me-2" />
-                            {fieldConfig?.label || setting.key}
-                        </h6>
-                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
-                    </div>
-                    <div className="row g-3">
+                <CardWrapper key={index} icon={Clock}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {daysOfWeek.map(({ key: dayKey, label: dayLabel }) => (
-                            <div key={dayKey} className="col-md-6">
-                                <label className="form-label small fw-bold text-dark">
-                                    {dayLabel}
-                                </label>
+                            <div key={dayKey}>
+                                <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-1.5">{dayLabel}</label>
                                 <input
                                     type="text"
-                                    className="form-control form-control-sm"
-                                    placeholder="Contoh: 08:00 - 17:00"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    placeholder="08:00 - 17:00"
                                     value={hours[dayKey] || ""}
-                                    onChange={(e) =>
-                                        handleBusinessHourChange(
-                                            index,
-                                            dayKey,
-                                            e.target.value,
-                                        )
-                                    }
+                                    onChange={(e) => handleBusinessHourChange(index, dayKey, e.target.value)}
                                 />
                             </div>
                         ))}
                     </div>
-                </div>
+                </CardWrapper>
             );
         }
 
-        // Special handling for service_branches (list of strings)
+        // 2. Service Branches (Array)
         if (setting.key === "service_branches") {
             let branches = [];
             try {
-                branches = typeof setting.value === "string" 
-                    ? JSON.parse(setting.value || "[]") 
-                    : setting.value;
+                branches = typeof setting.value === "string" ? JSON.parse(setting.value || "[]") : setting.value;
                 if (!Array.isArray(branches)) branches = [];
-            } catch (e) {
-                branches = [];
-            }
+            } catch (e) { branches = []; }
 
             return (
-                <div key={index} className="card border-0 bg-light p-4 mb-4">
-                    <div className="mb-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 className="font-weight-bold text-dark mb-2">
-                                <PenTool size={20} className="me-2" />
-                                {fieldConfig?.label || setting.key}
-                            </h6>
-                            <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
+                <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-4">
+                    <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+                        <div className="flex items-start gap-3">
+                            <PenTool className="text-blue-500 shrink-0 mt-0.5" size={20} />
+                            <div>
+                                <h4 className="font-bold text-gray-800 text-sm">{titleLabel}</h4>
+                                <p className="text-xs text-gray-500 mt-0.5">{helperText}</p>
+                            </div>
                         </div>
                         <button 
                             type="button" 
-                            className="btn btn-primary btn-sm rounded-pill px-3"
                             onClick={() => handleJsonArrayChange(index, null, null, 'add')}
+                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 shadow-sm"
                         >
-                            <Plus size={16} className="me-1" /> Tambah Cabang
+                            <Plus size={14} /> Cabang Baru
                         </button>
                     </div>
-                    <div className="row g-3">
-                        {branches.map((branch, bIndex) => (
-                            <div key={bIndex} className="col-12">
-                                <div className="input-group">
-                                    <span className="input-group-text bg-white border-end-0">
-                                        <small className="fw-bold text-muted">{bIndex + 1}</small>
-                                    </span>
+                    <div className="p-6">
+                        <div className="space-y-3">
+                            {branches.map((branch, bIndex) => (
+                                <div key={bIndex} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center relative">
+                                    <div className="w-8 h-10shrink-0 flex items-center justify-center bg-gray-100 text-gray-500 rounded-lg text-xs font-bold border border-gray-200 h-10 w-10">
+                                        {bIndex + 1}
+                                    </div>
                                     <input
                                         type="text"
-                                        className="form-control border-start-0"
+                                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-10"
                                         placeholder="Nama Cabang (Contoh: SSM BEKASI)"
                                         value={branch}
                                         onChange={(e) => handleJsonArrayChange(index, bIndex, e.target.value, 'edit')}
                                     />
                                     <button 
-                                        className="btn btn-outline-danger" 
                                         type="button"
                                         onClick={() => handleJsonArrayChange(index, bIndex, null, 'delete')}
+                                        className="h-10 px-3 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-lg shrink-0 transition-colors"
                                     >
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
-                            </div>
-                        ))}
-                        {branches.length === 0 && (
-                            <div className="col-12 text-center py-3 text-muted small border rounded bg-white">
-                                Belum ada cabang. Klik "Tambah Cabang" untuk memulai.
-                            </div>
-                        )}
+                            ))}
+                            {branches.length === 0 && (
+                                <div className="text-center py-6 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
+                                    Belum ada cabang terdaftar. Klik "Cabang Baru".
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             );
         }
 
-        // Color picker for brand colors
+        // 3. Color Picker
         if (setting.key.includes("color") && setting.type === "string") {
             return (
-                <div key={index} className="card border-0 bg-light p-4 mb-4">
-                    <div className="mb-3">
-                        <h6 className="font-weight-bold text-dark mb-2">
-                            <Palette size={20} className="me-2" />
-                            {fieldConfig?.label || setting.key}
-                        </h6>
-                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
-                    </div>
-                    <div className="d-flex gap-2 align-items-center">
-                        <input
-                            type="color"
-                            className="form-control form-control-color"
-                            style={{ width: "80px", height: "40px" }}
-                            value={data.settings[index].value || "#2563EB"}
-                            onChange={(e) =>
-                                handleSettingChange(
-                                    index,
-                                    "value",
-                                    e.target.value,
-                                )
-                            }
-                        />
+                <CardWrapper key={index} icon={Palette}>
+                    <div className="flex gap-4 items-center">
+                        <div className="relative w-14 h-14 rounded-xl border-2 border-gray-200 overflow-hidden shrink-0 shadow-sm">
+                            <input
+                                type="color"
+                                className="absolute -top-2 -left-2 w-20 h-20 cursor-pointer"
+                                value={data.settings[index].value || "#2563EB"}
+                                onChange={(e) => handleSettingChange(index, "value", e.target.value)}
+                            />
+                        </div>
                         <input
                             type="text"
-                            className="form-control"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full uppercase font-mono tracking-widest max-w-[200px] p-2.5"
                             value={data.settings[index].value || ""}
-                            onChange={(e) =>
-                                handleSettingChange(
-                                    index,
-                                    "value",
-                                    e.target.value,
-                                )
-                            }
+                            onChange={(e) => handleSettingChange(index, "value", e.target.value)}
                             placeholder="#2563EB"
                         />
                     </div>
-                </div>
+                </CardWrapper>
             );
         }
 
-        // URL fields
+        // 4. URL/Social
         if (setting.key.includes("social") || setting.key.includes("url")) {
             return (
-                <div key={index} className="card border-0 bg-light p-4 mb-4">
-                    <div className="mb-3">
-                        <h6 className="font-weight-bold text-dark mb-2">
-                            <Globe size={20} className="me-2" />
-                            {fieldConfig?.label || setting.key}
-                        </h6>
-                        <p className="text-muted small mb-3">{fieldConfig?.helper || setting.description}</p>
-                    </div>
+                <CardWrapper key={index} icon={Globe}>
                     <input
-                        type="text"
-                        className="form-control"
+                        type="url"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         placeholder={fieldConfig?.placeholder || "https://..."}
                         value={data.settings[index].value || ""}
-                        onChange={(e) =>
-                            handleSettingChange(index, "value", e.target.value)
-                        }
+                        onChange={(e) => handleSettingChange(index, "value", e.target.value)}
                     />
-                </div>
+                </CardWrapper>
             );
         }
 
-        // Text area for long text
-        if (setting.type === "text") {
-            return (
-                <div key={index} className="card border-0 bg-light p-4 mb-4">
-                    <div className="mb-3">
-                        <h6 className="font-weight-bold text-dark mb-2">
-                            {fieldConfig?.label || setting.key}
-                        </h6>
-                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
-                    </div>
-                    <textarea
-                        className="form-control"
-                        rows="3"
-                        placeholder={fieldConfig?.placeholder}
-                        value={data.settings[index].value || ""}
-                        onChange={(e) =>
-                            handleSettingChange(index, "value", e.target.value)
-                        }
-                    />
-                </div>
-            );
-        }
-
-        // File upload for images
+        // 5. File / Image
         if (fieldConfig?.type === "file" || setting.key === "site_logo") {
             return (
-                <div key={index} className="card border-0 bg-light p-4 mb-4">
-                    <div className="mb-3">
-                        <h6 className="font-weight-bold text-dark mb-2">
-                            <Upload size={20} className="me-2" />
-                            {fieldConfig?.label || setting.key}
-                        </h6>
-                        <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
-                    </div>
-
-                    {/* Show preview if exists */}
-                    {(filePreview[setting.key] || setting.value) && (
-                        <div className="mb-3">
-                            <div
-                                className="rounded border border-2"
-                                style={{
-                                    maxWidth: "200px",
-                                    overflow: "hidden",
-                                    backgroundColor: "#fff",
-                                }}
-                            >
+                <CardWrapper key={index} icon={Upload}>
+                    <div className="flex flex-col sm:flex-row items-start gap-6">
+                        
+                        {/* Preview */}
+                        <div className="w-32 h-32 rounded-xl border-2 border-gray-200 border-dashed bg-gray-50 flex items-center justify-center shrink-0 overflow-hidden relative">
+                            {(filePreview[setting.key] || setting.value) ? (
                                 <img
-                                    src={
-                                        filePreview[setting.key] ||
-                                        setting.value
-                                    }
+                                    src={filePreview[setting.key] || setting.value}
                                     alt="Preview"
-                                    style={{
-                                        maxWidth: "100%",
-                                        height: "auto",
-                                        display: "block",
-                                    }}
+                                    className="max-w-full max-h-full object-contain p-2"
                                 />
-                            </div>
-                            <small className="text-muted d-block mt-2">
-                                Path: {setting.value}
-                            </small>
+                            ) : (
+                                <ImageIcon size={32} className="text-gray-300" />
+                            )}
                         </div>
-                    )}
 
-                    {/* Upload progress */}
-                    {uploadProgress[setting.key] && (
-                        <div className="mb-3">
-                            <div
-                                className="progress"
-                                style={{ height: "25px" }}
-                            >
-                                <div
-                                    className="progress-bar progress-bar-striped progress-bar-animated"
-                                    role="progressbar"
-                                    aria-valuenow={uploadProgress[setting.key]}
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
-                                    style={{
-                                        width: `${uploadProgress[setting.key]}%`,
-                                    }}
-                                >
-                                    {Math.round(uploadProgress[setting.key])}%
+                        {/* Upload Tools */}
+                        <div className="flex-1 w-full">
+                            <div className="relative">
+                                <label className="flex flex-col items-center justify-center w-full h-16 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                    <div className="flex items-center gap-2">
+                                        <Upload size={16} className="text-gray-500" />
+                                        <p className="text-sm font-semibold text-gray-700">Pilih file gambar</p>
+                                    </div>
+                                    <input 
+                                        type="file" 
+                                        className="hidden" 
+                                        accept="image/png,image/jpeg,image/jpg"
+                                        onChange={(e) => {
+                                            if (e.target.files && e.target.files[0]) handleFileUpload(index, e.target.files[0]);
+                                        }}
+                                        disabled={uploadProgress[setting.key]}
+                                    />
+                                </label>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2 font-medium">Format: PNG, JPG (Maksimal 2MB). Auto-upload.</p>
+
+                            {uploadProgress[setting.key] && (
+                                <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3 overflow-hidden">
+                                    <div className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${uploadProgress[setting.key]}%` }}></div>
                                 </div>
-                            </div>
+                            )}
+                            
+                            {setting.value && (
+                                <div className="mt-2 text-[10px] text-gray-400 font-mono overflow-hidden text-ellipsis whitespace-nowrap">
+                                    {setting.value}
+                                </div>
+                            )}
                         </div>
-                    )}
-
-                    {/* File input */}
-                    <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg"
-                        className="form-control"
-                        onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                                handleFileUpload(index, e.target.files[0]);
-                            }
-                        }}
-                        disabled={uploadProgress[setting.key]}
-                    />
-                    <small className="text-muted d-block mt-2">
-                        Format: PNG, JPG. Max 2MB. Auto-upload ke server.
-                    </small>
-                </div>
+                    </div>
+                </CardWrapper>
             );
         }
 
-        // Default text input
+        // 6. Text Area
+        if (setting.type === "text") {
+            return (
+                <CardWrapper key={index} icon={PenTool}>
+                    <textarea
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 min-h-[100px] resize-y"
+                        placeholder={fieldConfig?.placeholder}
+                        value={data.settings[index].value || ""}
+                        onChange={(e) => handleSettingChange(index, "value", e.target.value)}
+                    />
+                </CardWrapper>
+            );
+        }
+
+        // 7. Default Simple Input
         return (
-            <div key={index} className="card border-0 bg-light p-4 mb-4">
-                <div className="mb-3">
-                    <h6 className="font-weight-bold text-dark mb-2">
-                    {fieldConfig?.label || setting.key}
-                    </h6>
-                    <p className="text-muted small mb-0">{fieldConfig?.helper || setting.description}</p>
-                </div>
+            <CardWrapper key={index} icon={PenTool}>
                 <input
-                    type={
-                        fieldConfig?.type === "number"
-                            ? "number"
-                            : setting.key.includes("email")
-                              ? "email"
-                              : setting.key.includes("phone")
-                                ? "tel"
-                                : "text"
-                    }
-                    className="form-control"
+                    type={fieldConfig?.type === "number" ? "number" : setting.key.includes("email") ? "email" : setting.key.includes("phone") ? "tel" : "text"}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 max-w-lg"
                     placeholder={fieldConfig?.placeholder}
                     value={data.settings[index].value || ""}
-                    onChange={(e) =>
-                        handleSettingChange(index, "value", e.target.value)
-                    }
+                    onChange={(e) => handleSettingChange(index, "value", e.target.value)}
                 />
-            </div>
+            </CardWrapper>
         );
     };
 
     return (
-        <AdminLayout>
-            <Head title={`Edit ${categoryConfig?.label || category}`} />
-            <CRow>
-                <CCol xs={12}>
-                    <CCard className="mb-4 shadow-sm border-0 rounded-4 overflow-hidden">
-                        <CCardHeader className="d-flex justify-content-between align-items-center bg-white border-bottom py-4 px-4">
-                            <div>
-                                <h1 className="h4 fw-black text-dark mb-1">
-                                    {categoryConfig?.label || category}
-                                </h1>
-                                <p className="text-muted small mb-0">
-                                    {categoryConfig?.description || "Kelola pengaturan website Anda"}
-                                </p>
-                            </div>
-                            <Link
-                                href={route("admin.settings.index")}
-                                className="btn btn-sm btn-outline-secondary rounded-pill px-3"
-                            >
-                                <CIcon icon={cilArrowLeft} className="me-2" />
-                                Kembali
-                            </Link>
-                        </CCardHeader>
-                        <CCardBody className="p-4">
-                            <CForm onSubmit={handleSubmit}>
-                                <div className="space-y-4">
-                                    {data.settings.map((setting, index) =>
-                                        renderInputField(setting, index),
-                                    )}
-                                </div>
+        <MetronicAdminLayout title={`Edit ${categoryConfig?.label || category}`}>
+            <Head title={`Edit Konfigurasi - ${categoryConfig?.label || category}`} />
 
-                                <div className="d-flex gap-2 mt-5">
-                                    <CButton
-                                        type="submit"
-                                        color="primary"
-                                        disabled={processing}
-                                    >
-                                        {processing && (
-                                            <CSpinner
-                                                component="span"
-                                                size="sm"
-                                                className="me-2"
-                                                aria-hidden="true"
-                                            />
-                                        )}
-                                        <CIcon
-                                            icon={cilSave}
-                                            className="me-2"
-                                        />
-                                        Simpan Perubahan
-                                    </CButton>
-                                    <Link
-                                        href={route("admin.settings.index")}
-                                        className="btn btn-secondary"
-                                    >
-                                        Batal
-                                    </Link>
-                                </div>
-                            </CForm>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-        </AdminLayout>
+            <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-800">
+                        {categoryConfig?.label || category}
+                    </h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                        {categoryConfig?.description || "Kelola variabel spesifik untuk sistem."}
+                    </p>
+                </div>
+                <Link
+                    href={route("admin.settings.index")}
+                    className="px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors w-fit"
+                >
+                    <ArrowLeft size={16} /> Kembali
+                </Link>
+            </div>
+
+            <form onSubmit={handleSubmit} className="max-w-4xl">
+                <div className="flex flex-col gap-6">
+                    {data.settings.map((setting, index) => renderInputField(setting, index))}
+                </div>
+
+                {/* Fixed Footer Actions */}
+                <div className="mt-8 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center gap-3">
+                    <button
+                        type="submit"
+                        disabled={processing}
+                        className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors disabled:opacity-70 shadow-sm"
+                    >
+                        {processing ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                    </button>
+                    <Link
+                        href={route("admin.settings.index")}
+                        className="w-full sm:w-auto px-6 py-2.5 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 rounded-lg text-sm font-bold text-center transition-colors shadow-sm"
+                    >
+                        Batalkan
+                    </Link>
+                </div>
+            </form>
+
+        </MetronicAdminLayout>
     );
 }

@@ -1,30 +1,17 @@
 import React, { useState } from "react";
 import { Head, Link } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import MetronicAdminLayout from "@/Layouts/MetronicAdminLayout";
 import {
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CCol,
-    CRow,
-    CNav,
-    CNavItem,
-    CNavLink,
-    CTabContent,
-    CTabPane,
-    CButton,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+    Settings,
+    Phone,
+    Globe,
+    Mail,
+    Wrench,
+    Pencil,
+    Info,
+    ChevronRight
+} from "lucide-react";
 import {
-    cilSettings,
-    cilPhone,
-    cilGlobeAlt,
-    cilEnvelopeClosed,
-    cilInfo,
-    cilPencil,
-} from "@coreui/icons";
-import {
-    settingsConfig,
     getFieldLabel,
     getFieldHelper,
 } from "@/Config/SettingsConfig";
@@ -34,29 +21,39 @@ export default function SettingsIndex({ settings }) {
 
     const categories = {
         general: {
-            label: "Umum",
-            icon: cilSettings,
-            description: "Pengaturan dasar website dan brand",
+            label: "Pengaturan Umum",
+            icon: Settings,
+            description: "Informasi dasar website dan branding",
+            color: "text-blue-500 bg-blue-50",
+            activeColor: "bg-blue-600 text-white"
         },
         contact: {
-            label: "Kontak",
-            icon: cilPhone,
-            description: "Informasi kontak bisnis untuk pelanggan",
+            label: "Info Kontak",
+            icon: Phone,
+            description: "Nomor telepon & alamat bisnis",
+            color: "text-emerald-500 bg-emerald-50",
+            activeColor: "bg-emerald-600 text-white"
         },
         social: {
             label: "Media Sosial",
-            icon: cilGlobeAlt,
-            description: "Link profil media sosial untuk terhubung",
+            icon: Globe,
+            description: "Link integrasi sosial",
+            color: "text-purple-500 bg-purple-50",
+            activeColor: "bg-purple-600 text-white"
         },
         email: {
-            label: "Email",
-            icon: cilEnvelopeClosed,
-            description: "Konfigurasi sistem email untuk notifikasi",
+            label: "Sistem Email",
+            icon: Mail,
+            description: "Konfigurasi notifikasi",
+            color: "text-amber-500 bg-amber-50",
+            activeColor: "bg-amber-600 text-white"
         },
         service: {
-            label: "Layanan Servis (SSM)",
-            icon: cilSettings,
-            description: "Konfigurasi operasional bengkel (Sinarsurya Motor)",
+            label: "Layanan Servis",
+            icon: Wrench,
+            description: "Operasional bengkel khusus",
+            color: "text-cyan-500 bg-cyan-50",
+            activeColor: "bg-cyan-600 text-white"
         },
     };
 
@@ -65,203 +62,137 @@ export default function SettingsIndex({ settings }) {
     };
 
     return (
-        <AdminLayout>
-            <Head title="Pengaturan Website" />
-            <CRow>
-                <CCol xs={12}>
-                    <CCard className="mb-4 shadow-sm">
-                        <CCardHeader className="d-flex justify-content-between align-items-center bg-white py-3">
-                            <strong className="h5 mb-0">
-                                Pengaturan Website
-                            </strong>
-                        </CCardHeader>
-                        <CCardBody>
-                            <CNav variant="tabs" role="tablist">
-                                {Object.entries(categories).map(
-                                    ([key, cat]) => (
-                                        <CNavItem key={key} role="presentation">
-                                            <CNavLink
-                                                active={activeTab === key}
-                                                component="button"
-                                                role="tab"
-                                                aria-selected={
-                                                    activeTab === key
-                                                }
-                                                onClick={() =>
-                                                    setActiveTab(key)
-                                                }
-                                            >
-                                                <CIcon
-                                                    icon={cat.icon}
-                                                    className="me-2"
-                                                />
-                                                {cat.label}
-                                            </CNavLink>
-                                        </CNavItem>
-                                    ),
-                                )}
-                            </CNav>
+        <MetronicAdminLayout title="Pengaturan Sistem">
+            <Head title="Pengaturan Sistem" />
 
-                            <CTabContent className="mt-4">
-                                {Object.entries(categories).map(
-                                    ([category, cat]) => (
-                                        <CTabPane
-                                            key={category}
-                                            role="tabpanel"
-                                            aria-labelledby={`tab-${category}`}
-                                            visible={activeTab === category}
-                                        >
-                                            <div className="mb-4">
-                                                <p className="text-muted mb-3">
-                                                    {cat.description}
-                                                </p>
-                                                <Link
-                                                    href={route(
-                                                        "admin.settings.edit",
-                                                        category,
-                                                    )}
-                                                >
-                                                    <CButton color="primary">
-                                                        Edit Pengaturan
-                                                    </CButton>
-                                                </Link>
-                                            </div>
+            <div className="mb-6">
+                <h2 className="text-xl font-bold text-gray-800">Manajemen Pengaturan Mulus</h2>
+                <p className="text-sm text-gray-500 mt-1">Konfigurasikan seluruh aspek platform SRB secara terpusat.</p>
+            </div>
 
-                                            {getSettingsByCategory(category)
-                                                .length > 0 ? (
-                                                <div className="space-y-3">
-                                                    {getSettingsByCategory(
-                                                        category,
-                                                    ).map((setting) => (
-                                                        <div
-                                                            key={setting.id}
-                                                            className="p-4 bg-white rounded-3 border border-light-subtle"
-                                                        >
-                                                            <div>
-                                                                <h6 className="font-weight-bold text-dark mb-1">
-                                                                    {getFieldLabel(category, setting.key) ||
-                                                                        setting.key}
-                                                                </h6>
-                                                                <small className="text-muted d-block mt-1">
-                                                                    {getFieldHelper(
-                                                                        category,
-                                                                        setting.key,
-                                                                    ) ||
-                                                                        setting.description}
-                                                                </small>
-                                                                <div className="mt-2 p-2 bg-light rounded-2 overflow-hidden">
-                                                                    {(() => {
-                                                                        if (setting.key === "site_logo") {
-                                                                            return (
-                                                                                <div className="text-center p-2 bg-white rounded border">
-                                                                                    <img src={setting.value} alt="Logo" style={{ maxHeight: "40px" }} />
-                                                                                </div>
-                                                                            );
-                                                                        }
-                                                                        
-                                                                        if (setting.key === "business_hours" || setting.key === "service_business_hours") {
-                                                                            try {
-                                                                                const hours = JSON.parse(setting.value);
-                                                                                return (
-                                                                                    <div className="small text-muted">
-                                                                                        <span className="fw-bold">Harian:</span> {hours.monday} | <span className="fw-bold">Minggu:</span> {hours.sunday}
-                                                                                    </div>
-                                                                                );
-                                                                            } catch(e) { return <span className="small">Format error</span>; }
-                                                                        }
+            <div className="flex flex-col lg:flex-row gap-6">
+                
+                {/* Left Sidebar Menu (Metronic Nav View) */}
+                <div className="w-full lg:w-1/3 xl:w-1/4 shrink-0">
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col p-4 gap-2">
+                        {Object.entries(categories).map(([key, cat]) => (
+                            <button
+                                key={key}
+                                onClick={() => setActiveTab(key)}
+                                className={`flex items-start gap-4 px-4 py-4 rounded-xl text-left transition-colors ${
+                                    activeTab === key ? "bg-gray-50 border border-gray-100 shadow-sm" : "hover:bg-gray-50 border border-transparent"
+                                }`}
+                            >
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${activeTab === key ? cat.activeColor : cat.color}`}>
+                                    <cat.icon size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <div className={`font-bold text-sm ${activeTab === key ? 'text-gray-900' : 'text-gray-700'}`}>{cat.label}</div>
+                                    <div className="text-xs text-gray-500 font-medium leading-relaxed mt-1">{cat.description}</div>
+                                </div>
+                            </button>
+                        ))}
 
-                                                                        if (setting.key === "service_branches") {
-                                                                            try {
-                                                                                const branches = JSON.parse(setting.value);
-                                                                                return (
-                                                                                    <div className="small text-muted">
-                                                                                        <span className="fw-bold">Cabang:</span> {branches.join(", ")}
-                                                                                    </div>
-                                                                                );
-                                                                            } catch(e) { return <span className="small">Format error</span>; }
-                                                                        }
-
-                                                                        // Default for simple strings
-                                                                        return (
-                                                                            <small className="d-block text-truncate text-monospace">
-                                                                                <strong className="text-dark">Nilai:</strong> {setting.value}
-                                                                            </small>
-                                                                        );
-                                                                    })()}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            ) : (
-                                                <div className="alert alert-info d-flex align-items-center gap-3">
-                                                    <CIcon
-                                                        icon={cilInfo}
-                                                        size="lg"
-                                                    />
-                                                    <div>
-                                                        <strong>
-                                                            Belum ada pengaturan
-                                                        </strong>
-                                                        <p className="mb-0 small text-muted">
-                                                            Pengaturan untuk
-                                                            kategori ini akan
-                                                            muncul setelah
-                                                            diatur
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </CTabPane>
-                                    ),
-                                )}
-                            </CTabContent>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-
-            {/* Info Box */}
-            <CRow>
-                <CCol xs={12}>
-                    <CCard className="bg-light border-0">
-                        <CCardBody>
-                            <div className="d-flex align-items-start gap-3">
-                                <CIcon
-                                    icon={cilInfo}
-                                    size="xl"
-                                    className="text-primary flex-shrink-0 mt-1"
-                                />
-                                <div>
-                                    <strong className="d-block mb-2">
-                                        Panduan Pengaturan
-                                    </strong>
-                                    <ul className="mb-0 small">
-                                        <li>
-                                            Klik tombol <strong>"Edit"</strong>{" "}
-                                            untuk mengubah pengaturan di
-                                            kategori masing-masing
-                                        </li>
-                                        <li>
-                                            Setiap field memiliki penjelasan
-                                            untuk memandu Anda mengisi nilai
-                                            yang benar
-                                        </li>
-                                        <li>
-                                            Perubahan akan tersimpan otomatis
-                                            dan langsung berdampak ke website
-                                        </li>
-                                        <li>
-                                            Hubungi tim teknis jika tidak yakin
-                                            dengan pengaturan yang diperlukan
-                                        </li>
-                                    </ul>
+                        <div className="mt-8 pt-6 border-t border-gray-100">
+                            <div className="flex items-start gap-3 p-3 bg-[#e8f3ff] rounded-xl text-[#006ee6]">
+                                <Info size={18} className="shrink-0 mt-0.5" />
+                                <div className="text-xs font-semibold">
+                                    Setiap nilai yang diubah di sini akan otomatis sinkron ke seluruh platform <i>real-time</i>.
                                 </div>
                             </div>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-        </AdminLayout>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Content Area */}
+                <div className="flex-1">
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        
+                        {/* Dynamic Header */}
+                        <div className="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                {(() => {
+                                    const CurrentIcon = categories[activeTab].icon;
+                                    return <CurrentIcon size={24} className="text-gray-400" />
+                                })()}
+                                <div>
+                                    <h3 className="font-bold text-gray-800 text-lg">{categories[activeTab].label}</h3>
+                                    <p className="text-xs text-gray-500 mt-1">{categories[activeTab].description}</p>
+                                </div>
+                            </div>
+                            
+                            <Link href={route("admin.settings.edit", activeTab)} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white hover:text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-sm shadow-blue-500/20">
+                                <Pencil size={16} /> Ubah Konfigurasi
+                            </Link>
+                        </div>
+
+                        {/* List Settings */}
+                        <div className="p-6">
+                            {getSettingsByCategory(activeTab).length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {getSettingsByCategory(activeTab).map((setting) => (
+                                        <div key={setting.id} className="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col">
+                                            <h6 className="font-bold text-gray-800 text-sm mb-1">{getFieldLabel(activeTab, setting.key) || setting.key}</h6>
+                                            <p className="text-xs text-gray-500 font-medium mb-3">{getFieldHelper(activeTab, setting.key) || setting.description}</p>
+                                            
+                                            <div className="mt-auto bg-white border border-gray-100 rounded-lg p-3 overflow-hidden shadow-sm">
+                                                {(() => {
+                                                    if (setting.key === "site_logo") {
+                                                        return (
+                                                            <div className="flex items-center justify-center bg-gray-100 rounded-md p-2 border border-gray-200 border-dashed">
+                                                                <img src={setting.value} alt="Logo" className="max-h-[40px] object-contain" />
+                                                            </div>
+                                                        );
+                                                    }
+                                                    
+                                                    if (setting.key === "business_hours" || setting.key === "service_business_hours") {
+                                                        try {
+                                                            const hours = JSON.parse(setting.value);
+                                                            return (
+                                                                <div className="text-xs text-gray-600 flex flex-col gap-1">
+                                                                    <div className="flex justify-between"><span className="font-semibold">Senin - Sabtu:</span> <span>{hours.monday}</span></div>
+                                                                    <div className="flex justify-between"><span className="font-semibold text-rose-500">Minggu:</span> <span>{hours.sunday}</span></div>
+                                                                </div>
+                                                            );
+                                                        } catch(e) { return <span className="text-xs text-red-500 font-medium">Format Error</span>; }
+                                                    }
+
+                                                    if (setting.key === "service_branches") {
+                                                        try {
+                                                            const branches = JSON.parse(setting.value);
+                                                            return (
+                                                                <div className="text-xs text-gray-600 flex flex-wrap gap-1">
+                                                                    {branches.map((b, i) => (
+                                                                        <span key={i} className="px-2 py-1 bg-gray-100 rounded text-gray-700 font-medium border border-gray-200">{b}</span>
+                                                                    ))}
+                                                                </div>
+                                                            );
+                                                        } catch(e) { return <span className="text-xs text-red-500 font-medium">Format Error</span>; }
+                                                    }
+
+                                                    // Default simple text
+                                                    return (
+                                                        <div className="text-sm font-semibold text-gray-800 break-words">{setting.value || <span className="text-gray-400 italic">Belum diatur</span>}</div>
+                                                    );
+                                                })()}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 border border-gray-200 border-dashed">
+                                        <Settings size={28} className="text-gray-400 animate-[spin_4s_linear_infinite]" />
+                                    </div>
+                                    <h4 className="font-bold text-gray-800">Tidak ada pengaturan</h4>
+                                    <p className="text-sm text-gray-500 mt-1 max-w-sm">Kategori pengaturan ini belum dikonfigurasi sama sekali dalam database.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </MetronicAdminLayout>
     );
 }
