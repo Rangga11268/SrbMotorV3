@@ -46,23 +46,33 @@ Berdasarkan investigasi pada direktori `resources/js/Pages/Admin/`, terdapat 9 m
 
 ---
 
-## Rencana Implementasi Redesign
+## Rencana Implementasi Bertahap (Phased Strategy - Zero Breakage)
 
-Proses pengerjaan akan dibagi menjadi **3 Fase** agar aman dan tidak memecah aplikasi *(no breakages)*:
+Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, proses akan dibagi menjadi 4 fase terisolasi. Kita tidak akan langsung menghancurkan layout yang lama, melainkan melakukan transisi secara hati-hati halaman demi halaman.
 
-### FASE 1: Penggantian Layout Inti (Kerangka App)
-1. Menonaktifkan (remove) dependensi `@coreui/react` dan `@coreui/coreui`.
-2. Menerapkan struktur *Wrapper* Metronic (App Container, Sidebar, Header, Content, Footer) pada file `AdminLayout.jsx`.
-3. Mengaplikasikan tema warna (dark/light) dan typography default Metronic.
+### FASE 1: Fondasi Layout & Dashboard Base
+*Fokus pada pembuatan "Wadah" aplikasi baru tanpa merusak yang sudah ada.*
+1. **New Layout Container**: Membuat file `resources/js/Layouts/MetronicAdminLayout.jsx`. File lawas `AdminLayout.jsx` akan dibiarkan dulu sebagai *fallback*.
+2. **Setup Komponen Kerangka**: Membangun UI Sidebar (Dark/Light mode), Header (Glassmorphism), dan Dropdown User bergaya Keenthemes murni.
+3. **Migrasi Dashboard**: Menerapkan tata letak pelindung ini pada halaman `Dashboard.jsx`. Kita juga akan memperbarui kotak statistik (Quick Stats) dan grafik dengan UI Metronic Cards.
 
-### FASE 2: Standardisasi Komponen (Data Display & Forms)
-1. Mengubah struktur *DataTables* atau list item di semua file `Index.jsx` agar menggunakan "Metronic Card View" dengan table styling elegan.
-2. Mengubah semua *Form Controls* (input, textareas, switch, selects) di `Create.jsx` dan `Edit.jsx` agar menggunakan kelas form Metronic.
-3. Merapikan penempatan *Buttons, Badges (Status), dan Icons* menggunakan style kit Metronic.
+### FASE 2: Modul Non-Kritikal (Master Data & Settings)
+*Fase pemanasan: Menguji integrasi layout data dalam tabel bergaya Metronic.*
+1. **Pengguna & Laporan (`Users`, `Reports`)**: Mendesain ulang struktur List/DataTables dengan komponen Header Toolbar, Status Badges, dan Styling Grid ala Metronic.
+2. **Pengaturan (`Settings`)**: Transformasi form UI pengaturan menjadi struktur profesional dua-kolom.
+3. **Manajemen Servis**: Memoles UI tiket servis tanpa mengubah logika reservasi.
 
-### FASE 3: Penyempurnaan Detail (Show / Detail Pages)
-1. Merombak halaman `Show.jsx` yang kompleks (terutama di bagian Kredit dan Transaksi) untuk menggunakan "Metronic Invoice Layout" atau "Timeline View" untuk log dan dokumen.
-2. Memastikan responsivitas penuh (Mobile View) di seluruh halaman Admin.
+### FASE 3: Modul Motor CRUD (Kritikal Level Menengah)
+*Sangat hati-hati pada manipulasi data JSON warna dan unggah gambar.*
+1. **Katalog Stok (`Motors/Index.jsx`)**: Memperbarui tabel produk dengan *Quick Status Switch* untuk menampilkan mana unit yang ready.
+2. **Form Motor (`Create/Edit.jsx`)**: Input form, JSON array warna, dan file upload *preview* diubah styling CSS-nya secara statis tanpa sedikitpun menyentuh event handler Inertia (`setData`, `post`).
+3. **Spesifikasi (`Show.jsx`)**: Tata letak rapi untuk spesifikasi teknis unit.
+
+### FASE 4: Proses Transaksional (Kritikal Level Tertinggi)
+*Zona "Do Not Touch Logic". Redesign **HANYA** memanipulasi Div dan struktur Grid Tailwind.*
+1. **Daftar Kredit & Cash (`Index.jsx`)**: Daftar transaksi akan dilengkapi dengan indikator status dinamis ala enterprise UI (Menunggu, Disetujui, Ditolak).
+2. **Engine Verifikasi (`Credits/Show.jsx`)**: Mengimplementasikan UI *Approval Stepper* (Langkah 1: Cek Dokumen -> Langkah 2: Survey) untuk visibilitas progres. Logika tombol "Approve Validation" akan persis sama (Endpoint tidak berubah).
+3. **Pembersihan Akhir**: Setelah 100% halaman dipastikan jalan di MetronicLayout dan sudah dites user, baru modul `@coreui` lama kita `npm uninstall` untuk meringkas aplikasi.
 
 ---
 
