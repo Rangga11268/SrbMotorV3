@@ -25,8 +25,8 @@ export default function Index() {
             desc: "Metrik transaksi & performa produk",
             icon: LineChart,
             baseColor: "text-blue-600",
-            bgActive: "bg-blue-50 border-blue-500",
-            bgInactive: "bg-white border-gray-200",
+            bgActive: "bg-blue-50 border-blue-500 shadow-sm",
+            bgInactive: "bg-white border-gray-200 text-gray-500 hover:shadow-md hover:border-blue-300",
             iconBg: "bg-blue-100",
             isPrimary: true
         },
@@ -36,8 +36,8 @@ export default function Index() {
             desc: "Arus kas & detail revenue",
             icon: Wallet,
             baseColor: "text-emerald-600",
-            bgActive: "bg-emerald-50 border-emerald-500",
-            bgInactive: "bg-white border-gray-200",
+            bgActive: "bg-emerald-50 border-emerald-500 shadow-sm",
+            bgInactive: "bg-white border-gray-200 text-gray-500 hover:shadow-md hover:border-emerald-300",
             iconBg: "bg-emerald-100",
             isPrimary: false
         },
@@ -47,8 +47,8 @@ export default function Index() {
             desc: "Demografi & top spender",
             icon: Users,
             baseColor: "text-purple-600",
-            bgActive: "bg-purple-50 border-purple-500",
-            bgInactive: "bg-white border-gray-200",
+            bgActive: "bg-purple-50 border-purple-500 shadow-sm",
+            bgInactive: "bg-white border-gray-200 text-gray-500 hover:shadow-md hover:border-purple-300",
             iconBg: "bg-purple-100",
             isPrimary: false
         },
@@ -58,8 +58,8 @@ export default function Index() {
             desc: "Monitoring logistik & proses",
             icon: PieChart,
             baseColor: "text-amber-600",
-            bgActive: "bg-amber-50 border-amber-500",
-            bgInactive: "bg-white border-gray-200",
+            bgActive: "bg-amber-50 border-amber-500 shadow-sm",
+            bgInactive: "bg-white border-gray-200 text-gray-500 hover:shadow-md hover:border-amber-300",
             iconBg: "bg-amber-100",
             isPrimary: false
         },
