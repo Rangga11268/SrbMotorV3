@@ -1,4 +1,4 @@
-# Perencanaan Redesign Admin Panel (CoreUI -> Metronic)
+# Perencanaan Redesign Admin Panel (CoreUI → Metronic)
 
 Dokumen ini berisi hasil analisis menyeluruh terhadap Admin Panel SRB Motor saat ini dan rencana migrasi antarmuka dari **CoreUI** menuju **Metronic** (Keenthemes). Tujuan utamanya adalah memastikan tampilan admin lebih modern, premium, tanpa menghilangkan satu pun fitur atau fungsionalitas yang sudah ada.
 
@@ -12,7 +12,7 @@ Saat ini tata letak menggunakan library `@coreui/react`. Semua komponen ini haru
 - **Header (`CHeader`)**: Topbar yang berisi tombol toggle menu, bell notifikasi, dan menu dropdown user profil.
 - **Breadcrumbs/Page Title**: Judul halaman dinamis.
 - **Footer (`CFooter`)**: Copyright dan versi aplikasi.
-- **Flash Messages (Toasts)**: Notifikasi sukses/gagal di pojok kanan atas (menggunakan framer-motion saat ini, bisa dipertahankan atau diganti dengan toast Metronic/SweetAlert2).
+- **Flash Messages (Toasts)**: Notifikasi sukses/gagal di pojok kanan atas.
 
 ### 2. Modul & Halaman (Pages)
 Berdasarkan investigasi pada direktori `resources/js/Pages/Admin/`, terdapat 9 modul utama dengan rincian halamannya:
@@ -48,7 +48,7 @@ Berdasarkan investigasi pada direktori `resources/js/Pages/Admin/`, terdapat 9 m
 
 ## Rencana Implementasi Bertahap (Phased Strategy - Zero Breakage)
 
-Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, proses dibagi menjadi 4 fase terisolasi. 
+Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, proses dibagi menjadi fase terisolasi.
 
 ### FASE 1: Fondasi Layout & Dashboard Base ✅ (SELESAI)
 *Fokus pada pembuatan "Wadah" aplikasi baru tanpa merusak yang sudah ada.*
@@ -58,53 +58,69 @@ Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, prose
 
 ### FASE 2: Modul Non-Kritikal (Master Data & Settings) ✅ (SELESAI)
 *Fase pemanasan: Menguji integrasi layout data dalam tabel bergaya Metronic.*
-- [x] **Pengguna (`Users`)**: Mendesain ulang struktur DataTables menjadi grid responsif Metronic.
-- [x] **Laporan (`Reports`)**: Mendesain UI generator laporan (`Index.jsx`) dan halaman rincian cetak laporan (`Show.jsx`) yang bersih dan tajam.
-- [x] **Pengaturan (`Settings`)**: Transformasi form konfigurasi 2 kolom kombo dengan sidebar terpisah (`Index.jsx` & `Edit.jsx`).
-- [x] **Manajemen Servis**: Memoles UI tiket servis dengan Modal Custom interaktif.
+- [x] **Pengguna (`Users/Index.jsx`)**: Mendesain ulang struktur DataTables menjadi grid responsif Metronic.
+- [x] **Laporan (`Reports/Index.jsx` & `Show.jsx`)**: Mendesain UI generator laporan dan halaman rincian cetak laporan yang bersih. Fix bug `final_price`.
+- [x] **Pengaturan (`Settings/Index.jsx` & `Edit.jsx`)**: Transformasi form konfigurasi 2 kolom kombo dengan sidebar terpisah.
+- [x] **Manajemen Servis (`Services/Index.jsx`)**: Memoles UI tiket servis dengan Modal Custom interaktif.
 
-### FASE 3: Modul Motor CRUD (Kritikal Level Menengah) 🔄 (ON PROGRESS)
+### FASE 3: Modul Motor CRUD (Kritikal Level Menengah) ✅ (SELESAI)
 *Sangat hati-hati pada manipulasi data JSON warna dan unggah gambar.*
-- [x] **Katalog Stok (`Motors/Index.jsx`)**: Memperbarui tabel produk dengan *thumbnail image*.
-- [x] **Spesifikasi (`Motors/Show.jsx`)**: Tata letak dua kolom rapi bergaya *e-Commerce Profile* untuk detail spesifikasi teknis unit.
-- [ ] **Form Motor (`Motors/Create.jsx` & `Edit.jsx`)**: Mendesain layout pembuatan motor dalam satu wungkus grid bertingkat ala katalog raksasa. *(Sedang Dikerjakan)*
+- [x] **Katalog Stok (`Motors/Index.jsx`)**: Memperbarui tabel produk dengan *thumbnail image* dan filter bar.
+- [x] **Spesifikasi (`Motors/Show.jsx`)**: Tata letak dua kolom rapi bergaya *e-Commerce Profile*.
+- [x] **Form Tambah (`Motors/Create.jsx`)**: Layout 2-col dengan live preview sidebar, color tag chips, toggle switch & drag-and-drop upload area.
+- [x] **Form Edit (`Motors/Edit.jsx`)**: Identik dengan Create, dilengkapi Danger Zone (hapus motor) di sidebar.
 
-### FASE 3.5: Infrastruktur Autentikasi "Owner" (NEW REQUIREMENT) 🔄
-*Diinstruksikan berdasarkan `WEBSITE_USE_CASE_ANALYSIS.md` untuk memisahkan visibilitas Laporan & Akun Administrasi.*
-- [ ] **Middleware**: Membuat `OwnerMiddleware`.
-- [ ] **Routing Security**: Melindungi URL backend laporan.
-- [ ] **Layout Restriction**: Menyembunyikan menu berdasarkan `role`.
-- [ ] **DB Provisioning**: Generate satu akun eksekutif (owner).
+### FASE 3.5: Infrastruktur Autentikasi "Owner" ✅ (SELESAI)
+*Diinstruksikan berdasarkan `WEBSITE_USE_CASE_ANALYSIS.md` untuk memisahkan visibilitas Laporan & Akun.*
+- [x] **Middleware**: Membuat `app/Http/Middleware/OwnerMiddleware.php`.
+- [x] **Routing Security**: Melindungi `/admin/users` & `/admin/reports` dengan `->middleware('owner')`.
+- [x] **Model Update**: Menambahkan `isOwner()` dan mengekspansi `isAdmin()` di `User.php`.
+- [x] **Layout Restriction**: Menyembunyikan menu berdasarkan `role` di `MetronicAdminLayout.jsx`. Badge sidebar berubah warna (amber = owner, biru = admin).
+- [x] **DB Provisioning**: Akun Owner dibuat via Tinker: `owner@srbmotor.test` / `password123`.
 
-### FASE 4: Proses Transaksional (Kritikal Level Tertinggi) ❌ (BELUM)
+### FASE 4: Proses Transaksional (Kritikal Level Tertinggi) 🔄 (ON PROGRESS)
 *Zona "Do Not Touch Logic". Redesign **HANYA** memanipulasi Div dan struktur Grid Tailwind.*
-- [ ] **Daftar Kredit & Cash (`Index.jsx`)**: Daftar transaksi dilengkapi indikator status.
-- [ ] **Engine Verifikasi (`Credits/Show.jsx`)**: Mengimplementasikan UI *Approval Stepper*.
-- [ ] **Pembersihan Akhir**: Menghapus sisa `@coreui` lama via `npm uninstall`.
+- [x] **`Transactions/Index.jsx`**: Tabel modern, filter bar kompak, status badge kontekstual, pagination kotak.
+- [x] **`Transactions/Show.jsx`**: 2-col layout, log timeline bersih, mode edit inline, tombol WhatsApp pelanggan.
+- [x] **`Transactions/Edit.jsx`**: Form 2-col + sidebar kalkulasi total sticky.
+- [x] **`Transactions/Create.jsx`**: 3-card form + live preview motor + kalkulasi harga otomatis.
+- [x] **`Credits/Index.jsx`**: Status badge per tahapan kredit, filter bar & tombol Proses solid biru.
+- [ ] **`Credits/Show.jsx`**: Engine verifikasi kredit — UI *Approval Stepper* dengan document viewer. *(Belum)*
+
+### FASE 5: Pembersihan Akhir ❌ (BELUM)
+- [ ] **Uninstall CoreUI**: Hapus `@coreui/react` & `@coreui/icons-react` dari `package.json`.
+- [ ] **Audit Sisa Import**: Cek seluruh file yang masih meng-import dari `@coreui`.
+- [ ] **Optimasi Bundle**: Rebuild final untuk memangkas ukuran bundle.
+
+---
+
+## Ringkasan Progress Keseluruhan
+
+| Fase | Keterangan | Status |
+|---|---|---|
+| **Fase 1** | Layout & Dashboard | ✅ Selesai |
+| **Fase 2** | Master Data & Settings | ✅ Selesai |
+| **Fase 3** | Modul Motor CRUD | ✅ Selesai |
+| **Fase 3.5** | Infrastruktur Role Owner | ✅ Selesai |
+| **Fase 4** | Modul Transaksi & Kredit | 🔄 5/6 halaman selesai |
+| **Fase 5** | Pembersihan & Uninstall CoreUI | ❌ Belum |
+
+**Total Halaman**: 18 halaman teridentifikasi.
+**Sudah Dimigrasi**: 16 halaman ✅
+**Tersisa**: 2 halaman (`Credits/Show.jsx` + profil cleanup)
 
 ---
 
 ## Saran Peningkatan UI/UX Tambahan (Opsional & Aman)
 
-Selain sekadar mengganti skin, momen redesign ini sangat bagus untuk memberikan nilai tambah pada interaksi dan kejelasan (tanpa merusak database atau controller yang sudah jalan). Berikut saran tambahan yang akan saya buat sesuai standar desain enterprise Metronic:
-
 ### 1. Dashboard Enhancements
-- **Quick Actions Bar**: Menambahkan tombol akses cepat di atas (misal: "Proses Kredit Tertunda", "Tambah Motor Baru", "Cetak Laporan Hari Ini") agar admin tidak banyak membuang waktu navigasi.
-- **Activity Timeline**: Mengubah log aktivitas yang flat menjadi tampilan *vertical timeline* khas Metronic yang lebih informatif (kapan order dibuat, kapan dikonfirmasi, kapan dokumen diunggah).
+- **Quick Actions Bar**: Tombol akses cepat (Proses Kredit Tertunda, Tambah Motor Baru, Cetak Laporan Hari Ini).
+- **Activity Timeline**: Log aktivitas berbentuk *vertical timeline* khas Metronic.
 
-### 2. Evaluasi Halaman Pengajuan Kredit & Cash (Hati-Hati & Aman)
-- **Stepping Wizard / Proses Approval**: Pada halaman `Show.jsx` (detail kredit), kita tidak akan mengubah field, tetapi UI approval bisa kita perbarui menjadi sistem *Stepper* (Langkah 1: Cek Dokumen -> Langkah 2: Survey -> Langkah 3: Keputusan Leasing). Ini membuat admin tahu persis transaksi sedang tertahan di tahap mana.
-- **Side-by-Side Document Viewer**: Saat admin mereview file KTP/KK/Slip Gaji, kita buat agar gambar/PDF terbuka di sidebar panel sebelah kanan (*Drawer* atau *Modal* premium ala Metronic) alih-alih membuka tab baru, sementara tombol Approve/Reject tetap terlihat di sebelah kirinya. (Logika controller tidak disentuh, murni perbaikan *view*).
+### 2. Evaluasi Halaman Pengajuan Kredit (Hati-Hati & Aman)
+- **Stepping Wizard**: Pada `Credits/Show.jsx`, UI approval diperbarui menjadi sistem *Stepper* (Langkah 1: Cek Dokumen → Langkah 2: Survey → Langkah 3: Keputusan Leasing).
+- **Side-by-Side Document Viewer**: Gambar/PDF terbuka di sidebar panel sebelah kanan alih-alih membuka tab baru.
 
 ### 3. Halaman Inventaris Motor
-- **Quick Status Toggle**: Di dalam tabel daftar motor, badge status (Tersedia/Habis) bisa diubah tampilannya menggunakan *Status Dot* atau *Toggle Switch* agar secara visual lebih mencolok mana unit yang ready stock.
-- **Filter Bar Interaktif**: Filter pencarian (berdasarkan Brand, Tipe, Status) diletakkan di dalam *Header Toolbar* atau *Filter Menu Dropdown* memanjang khas Metronic agar tabel utama lebih ringkas dan tidak memakan terlalu banyak ruang ke bawah.
-
----
-
-## Pertanyaan Krusial Sebelum Mengeksekusi
-
-Sebelum kita mulai, saya perlu mengonfirmasi 2 hal terkait Metronic agar implementasi kita berjalan lancar:
-
-1. **Dependensi & Versi Metronic**: Metronic adalah template premium yang rilisannya terbagi (V8 menggunakan Bootstrap, V9 full Tailwind CSS). Aplikasi Anda saat ini sangat kental menggunakan Tailwind murni. Apakah Anda punya source file/aset Metronic yang ingin kita inject, **ATAU** Anda ingin saya merancang ulang UI Admin panel Anda benar-benar *dari nol* menggunakan **Tailwind CSS** dengan panduan desain ("look and feel") yang sama persis menyerupai Metronic?
-2. **Pendekatan Refactor**: Apakah Anda ingin saya menimpa (`overwrite`) file lama yang menggunakan CoreUI satu-per-satu, atau kita buatkan layout admin baru dan dimigrasikan secara perlahan agar jika terjadi error, versi CoreUI masih bisa digunakan?
+- **Quick Status Toggle**: Badge status (Tersedia/Habis) diubah menjadi *Toggle Switch* visual.
+- **Filter Bar Interaktif**: Filter pencarian diletakkan di dalam *Header Toolbar*.

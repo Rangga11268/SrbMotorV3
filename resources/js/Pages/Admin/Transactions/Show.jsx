@@ -1,628 +1,316 @@
 import React, { useState } from "react";
 import { Link, useForm, router } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import MetronicAdminLayout from "@/Layouts/MetronicAdminLayout";
 import Swal from "sweetalert2";
 import {
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CCol,
-    CRow,
-    CBadge,
-    CButton,
-    CFormSelect,
-    CFormLabel,
-    CFormTextarea,
-    CTable,
-    CTableHead,
-    CTableHeaderCell,
-    CTableBody,
-    CTableRow,
-    CTableDataCell,
-    CAlert,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-    cilArrowLeft,
-    cilTrash,
-    cilPencil,
-    cilSave,
-    cilX,
-    cilBike,
-} from "@coreui/icons";
+    ArrowLeft, Pencil, Save, X, Bike, User, Phone, Mail,
+    MapPin, FileText, CreditCard, Calendar, FileCheck,
+    Clock, AlertTriangle, ReceiptText, MessageCircle, Package
+} from "lucide-react";
+
+const STATUS_MAP = {
+    new_order:               { label: "Pesanan Masuk",           cls: "bg-amber-100 text-amber-700 border-amber-200" },
+    waiting_payment:         { label: "Menunggu Pembayaran",     cls: "bg-amber-100 text-amber-700 border-amber-200" },
+    pembayaran_dikonfirmasi: { label: "Pembayaran Dikonfirmasi", cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    payment_confirmed:       { label: "Pembayaran Dikonfirmasi", cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    unit_preparation:        { label: "Motor Disiapkan",         cls: "bg-blue-100 text-blue-700 border-blue-200" },
+    ready_for_delivery:      { label: "Siap Dikirim/Ambil",      cls: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+    dalam_pengiriman:        { label: "Dalam Pengiriman",        cls: "bg-purple-100 text-purple-700 border-purple-200" },
+    completed:               { label: "Selesai",                 cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    cancelled:               { label: "Dibatalkan",              cls: "bg-red-100 text-red-600 border-red-200" },
+};
+
+const StatusBadge = ({ status }) => {
+    const s = STATUS_MAP[status] || { label: status, cls: "bg-gray-100 text-gray-600 border-gray-200" };
+    return <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${s.cls}`}>{s.label}</span>;
+};
+
+const InfoRow = ({ label, value }) => (
+    <div className="py-3 border-b border-gray-100 last:border-0 flex flex-col sm:flex-row sm:items-start gap-1">
+        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">{label}</span>
+        <span className="text-sm font-bold text-gray-800">{value || <span className="text-gray-300 font-medium italic">—</span>}</span>
+    </div>
+);
 
 export default function Show({ transaction, motors, users, availableUnits }) {
     const [isEditMode, setIsEditMode] = useState(false);
-    
-    // Form for unit allocation
-    const allocationForm = useForm({
-        motor_unit_id: transaction.motor_unit_id || "",
-    });
 
+    const allocationForm = useForm({ motor_unit_id: transaction.motor_unit_id || "" });
     const { data, setData, put, processing, errors } = useForm({
-        user_id: transaction.user_id || "",
-        motor_id: transaction.motor_id || "",
-        name: transaction.name || "",
-        nik: transaction.nik || "",
-        phone: transaction.phone || "",
-        email: transaction.email || "",
-        motor_color: transaction.motor_color || "",
+        user_id:         transaction.user_id || "",
+        motor_id:        transaction.motor_id || "",
+        name:            transaction.name || "",
+        nik:             transaction.nik || "",
+        phone:           transaction.phone || "",
+        email:           transaction.email || "",
+        motor_color:     transaction.motor_color || "",
         delivery_method: transaction.delivery_method || "Ambil di Dealer",
-        address: transaction.address || "",
-        notes: transaction.notes || "",
-        status: transaction.status || "new_order",
-        booking_fee: transaction.booking_fee || 0,
-        delivery_date: transaction.delivery_date || "",
+        address:         transaction.address || "",
+        notes:           transaction.notes || "",
+        status:          transaction.status || "new_order",
+        booking_fee:     transaction.booking_fee || 0,
+        delivery_date:   transaction.delivery_date || "",
     });
 
-    const formatCurrency = (n) =>
-        new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(n || 0);
+    const formatCurrency = (n) => `Rp ${new Intl.NumberFormat("id-ID").format(n || 0)}`;
 
-    const statusLabelMap = {
-        new_order: "Pesanan Masuk",
-        waiting_payment: "Menunggu Pembayaran",
-        pembayaran_dikonfirmasi: "Pembayaran Dikonfirmasi",
-        payment_confirmed: "Pembayaran Dikonfirmasi", // Backward compatibility
-        unit_preparation: "Motor Disiapkan",
-        ready_for_delivery: "Siap Dikirim/Ambil",
-        dalam_pengiriman: "Dalam Pengiriman",
-        completed: "Selesai",
-        cancelled: "Dibatalkan",
-    };
-
-    const getStatusBadge = (status) => {
-        const map = {
-            new_order: { color: "warning", label: statusLabelMap.new_order },
-            waiting_payment: { color: "warning", label: statusLabelMap.waiting_payment },
-            pembayaran_dikonfirmasi: {
-                color: "success",
-                label: statusLabelMap.pembayaran_dikonfirmasi,
-            },
-            payment_confirmed: {
-                color: "success",
-                label: statusLabelMap.payment_confirmed,
-            },
-            unit_preparation: { color: "info", label: statusLabelMap.unit_preparation },
-            ready_for_delivery: { color: "primary", label: statusLabelMap.ready_for_delivery },
-            dalam_pengiriman: { color: "info", label: statusLabelMap.dalam_pengiriman },
-            completed: { color: "success", label: statusLabelMap.completed },
-            cancelled: { color: "danger", label: statusLabelMap.cancelled },
-        };
-        const badge = map[status] || { color: "secondary", label: status };
-        return <CBadge color={badge.color}>{badge.label}</CBadge>;
-    };
+    const statusLabelMap = Object.fromEntries(Object.entries(STATUS_MAP).map(([k, v]) => [k, v.label]));
 
     const handleSubmit = (e) => {
         e.preventDefault();
         put(route("admin.transactions.update", transaction.id), {
-            onSuccess: () => {
-                setIsEditMode(false);
-                Swal.fire({
-                    title: "Berhasil!",
-                    text: "Transaksi telah diperbarui.",
-                    icon: "success",
-                    timer: 2000,
-                    showConfirmButton: false,
-                });
-            },
-            onError: () => {
-                Swal.fire({
-                    title: "Gagal!",
-                    text: "Terjadi kesalahan.",
-                    icon: "error",
-                });
-            },
+            onSuccess: () => { setIsEditMode(false); Swal.fire({ title: "Berhasil!", text: "Transaksi telah diperbarui.", icon: "success", timer: 2000, showConfirmButton: false }); },
+            onError: () => Swal.fire({ title: "Gagal!", text: "Terjadi kesalahan.", icon: "error" }),
         });
     };
 
     const confirmDelete = () => {
-        Swal.fire({
-            title: "Hapus Transaksi?",
-            text: "Data pembayaran dan detail transaksi akan dihapus.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Hapus",
-            cancelButtonText: "Batal",
-            confirmButtonColor: "#dc3545",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.delete(
-                    route("admin.transactions.destroy", transaction.id),
-                    {
-                        onSuccess: () => {
-                            Swal.fire(
-                                "Terhapus!",
-                                "Transaksi berhasil dihapus.",
-                                "success",
-                            );
-                            router.visit(route("admin.transactions.index"));
-                        },
-                    },
-                );
-            }
-        });
+        Swal.fire({ title: "Hapus Transaksi?", text: "Data pembayaran dan detail transaksi akan dihapus.", icon: "warning", showCancelButton: true, confirmButtonText: "Hapus", cancelButtonText: "Batal", confirmButtonColor: "#ef4444" })
+            .then((result) => { if (result.isConfirmed) router.delete(route("admin.transactions.destroy", transaction.id), { onSuccess: () => router.visit(route("admin.transactions.index")) }); });
+    };
+
+    const handleCancel = () => {
+        Swal.fire({ title: "Batalkan Transaksi?", text: "Status akan diubah menjadi Dibatalkan.", icon: "warning", showCancelButton: true, confirmButtonText: "Ya", cancelButtonText: "Tidak" })
+            .then((result) => { if (result.isConfirmed) router.post(route("admin.transactions.updateStatus", transaction.id), { status: "cancelled" }); });
     };
 
     const motor = motors.find((m) => m.id == transaction.motor_id);
     const user = users.find((u) => u.id == transaction.user_id);
+    const waUrl = `https://wa.me/${(transaction.phone || user?.phone || "").replace(/\D/g, "")}?text=${encodeURIComponent(`Halo ${transaction.name || user?.name}, saya admin SRB Motor. Terkait pesanan motor ${motor?.name || ""} Anda...`)}`;
 
     return (
-        <AdminLayout title={`Transaksi Tunai #${transaction.id}`}>
+        <MetronicAdminLayout title={`Transaksi #${String(transaction.id).padStart(6, "0")}`}>
             {/* Header */}
-            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                <Link
-                    href={route("admin.transactions.index")}
-                    className="btn btn-outline-secondary d-flex align-items-center gap-2"
-                >
-                    <CIcon icon={cilArrowLeft} size="sm" />
-                    Kembali
-                </Link>
-
-                <div className="d-flex flex-wrap gap-2">
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                    <Link href={route("admin.transactions.index")} className="p-2 border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 rounded-lg transition-colors shadow-sm shrink-0">
+                        <ArrowLeft size={18} />
+                    </Link>
+                    <div>
+                        <h2 className="text-xl font-black text-gray-800">Transaksi Tunai <span className="text-blue-600 font-mono">#{String(transaction.id).padStart(6, "0")}</span></h2>
+                        <p className="text-xs text-gray-400 mt-0.5">{new Date(transaction.created_at).toLocaleDateString("id-ID", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+                    </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
                     {!isEditMode ? (
                         <>
-                            <CButton
-                                color="primary"
-                                size="sm"
-                                onClick={() => setIsEditMode(true)}
-                                className="d-flex align-items-center gap-2"
-                            >
-                                <CIcon icon={cilPencil} size="sm" />
-                                Edit
-                            </CButton>
-                            {getStatusBadge(transaction.status)}
-                            <a
-                                href={route("admin.transactions.invoice.preview", transaction.id)}
-                                target="_blank"
-                                className="btn btn-info btn-sm text-white d-flex align-items-center gap-2"
-                            >
-                                <CIcon icon={cilSave} size="sm" />
-                                Invoice
+                            <StatusBadge status={transaction.status} />
+                            <button onClick={() => setIsEditMode(true)} className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-lg text-xs font-bold transition-colors shadow-sm">
+                                <Pencil size={13} /> Edit
+                            </button>
+                            <a href={route("admin.transactions.invoice.preview", transaction.id)} target="_blank" className="inline-flex items-center gap-1.5 px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition-colors shadow-sm">
+                                <ReceiptText size={13} /> Invoice
                             </a>
                             {transaction.status !== "cancelled" && (
-                                <CButton
-                                    color="secondary"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => {
-                                        Swal.fire({
-                                            title: "Batalkan Transaksi?",
-                                            text: "Status akan diubah menjadi Dibatalkan.",
-                                            icon: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonText: "Ya",
-                                            cancelButtonText: "Tidak",
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                router.post(
-                                                    route(
-                                                        "admin.transactions.updateStatus",
-                                                        transaction.id,
-                                                    ),
-                                                    {
-                                                        status: "cancelled",
-                                                    },
-                                                );
-                                            }
-                                        });
-                                    }}
-                                >
-                                    Batalkan
-                                </CButton>
+                                <button onClick={handleCancel} className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-red-200 text-red-500 hover:bg-red-50 rounded-lg text-xs font-bold transition-colors">
+                                    <AlertTriangle size={13} /> Batalkan
+                                </button>
                             )}
                         </>
                     ) : (
                         <>
-                            <CButton
-                                color="success"
-                                size="sm"
-                                onClick={handleSubmit}
-                                disabled={processing}
-                            >
-                                <CIcon icon={cilSave} size="sm" />
-                                Simpan
-                            </CButton>
-                            <CButton
-                                color="secondary"
-                                size="sm"
-                                onClick={() => setIsEditMode(false)}
-                            >
-                                <CIcon icon={cilX} size="sm" />
-                                Batal
-                            </CButton>
+                            <button onClick={handleSubmit} disabled={processing} className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold disabled:opacity-60">
+                                {processing ? <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save size={13} />} Simpan
+                            </button>
+                            <button onClick={() => setIsEditMode(false)} className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-lg text-xs font-bold">
+                                <X size={13} /> Batal
+                            </button>
                         </>
                     )}
                 </div>
             </div>
 
-            <CRow>
-                <CCol xl={8}>
-                    {/* Unit Info */}
-                    <CCard className="mb-4">
-                        <CCardHeader className="bg-transparent border-bottom">
-                            <strong className="d-flex align-items-center gap-2">
-                                <CIcon icon={cilBike} size="sm" />
-                                Data Unit Motor
-                            </strong>
-                        </CCardHeader>
-                        <CCardBody>
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                {/* ===== LEFT (8 cols) ===== */}
+                <div className="xl:col-span-8 space-y-6">
+                    {/* Card: Data Pemesanan */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
+                            <Bike size={16} className="text-blue-500" />
+                            <h3 className="font-bold text-gray-800 text-sm">Data Pemesanan</h3>
+                        </div>
+                        <div className="p-6">
                             {isEditMode ? (
-                                <CRow className="g-3">
-                                    <CCol md={6}>
-                                        <CFormLabel>Pelanggan</CFormLabel>
-                                        <CFormSelect
-                                            value={data.user_id}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "user_id",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        >
-                                            <option value="" disabled>Pilih Pelanggan</option>
-                                            {users.map((u) => (
-                                                <option key={u.id} value={u.id}>
-                                                    {u.name} ({u.email})
-                                                </option>
-                                            ))}
-                                        </CFormSelect>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <CFormLabel>Motor</CFormLabel>
-                                        <CFormSelect
-                                            value={data.motor_id}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "motor_id",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        >
-                                            {motors.map((m) => (
-                                                <option key={m.id} value={m.id}>
-                                                    {m.name}
-                                                </option>
-                                            ))}
-                                        </CFormSelect>
-                                    </CCol>
-                                    <CCol md={12}>
-                                        <CFormLabel>Alamat</CFormLabel>
-                                        <CFormTextarea
-                                            value={data.address}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "address",
-                                                    e.target.value,
-                                                )
-                                            }
-                                            rows={3}
-                                        />
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <CFormLabel>Status</CFormLabel>
-                                        <CFormSelect
-                                            value={data.status}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "status",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        >
-                                            <option value="new_order">
-                                                Pesanan Masuk
-                                            </option>
-                                            <option value="waiting_payment">
-                                                Menunggu Pembayaran
-                                            </option>
-                                            <option value="payment_confirmed">
-                                                Pembayaran Dikonfirmasi
-                                            </option>
-                                            <option value="unit_preparation">
-                                                Motor Disiapkan
-                                            </option>
-                                            <option value="ready_for_delivery">
-                                                Siap Dikirim/Ambil
-                                            </option>
-                                            <option value="dalam_pengiriman">
-                                                Dalam Pengiriman
-                                            </option>
-                                            <option value="completed">
-                                                Selesai
-                                            </option>
-                                            <option value="cancelled">
-                                                Dibatalkan
-                                            </option>
-                                        </CFormSelect>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <CFormLabel>Booking Fee</CFormLabel>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            value={data.booking_fee}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "booking_fee",
-                                                    e.target.value,
-                                                )
-                                            }
-                                        />
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <CFormLabel>Estimasi Pengiriman</CFormLabel>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            value={data.delivery_date}
-                                            onChange={(e) => setData("delivery_date", e.target.value)}
-                                        />
-                                    </CCol>
-                                    <CCol md={12}>
-                                        <CFormLabel>Catatan</CFormLabel>
-                                        <CFormTextarea
-                                            value={data.notes}
-                                            onChange={(e) =>
-                                                setData("notes", e.target.value)
-                                            }
-                                            rows={2}
-                                        />
-                                    </CCol>
-                                </CRow>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {[
+                                        { label: "Pelanggan", key: "user_id", type: "select", options: users.map(u => ({ value: u.id, label: `${u.name} (${u.email})` })) },
+                                        { label: "Motor", key: "motor_id", type: "select", options: motors.map(m => ({ value: m.id, label: m.name })) },
+                                        { label: "Status", key: "status", type: "select", options: Object.entries(statusLabelMap).map(([k, v]) => ({ value: k, label: v })) },
+                                        { label: "Booking Fee", key: "booking_fee", type: "number" },
+                                        { label: "Estimasi Pengiriman", key: "delivery_date", type: "date" },
+                                    ].map(({ label, key, type, options }) => (
+                                        <div key={key}>
+                                            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">{label}</label>
+                                            {type === "select" ? (
+                                                <select value={data[key]} onChange={(e) => setData(key, e.target.value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500">
+                                                    {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                                                </select>
+                                            ) : (
+                                                <input type={type} value={data[key]} onChange={(e) => setData(key, e.target.value)} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500" />
+                                            )}
+                                            {errors[key] && <p className="text-red-500 text-xs mt-1">{errors[key]}</p>}
+                                        </div>
+                                    ))}
+                                    <div className="sm:col-span-2">
+                                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Alamat</label>
+                                        <textarea value={data.address} onChange={(e) => setData("address", e.target.value)} rows={3} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 resize-none" />
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Catatan</label>
+                                        <textarea value={data.notes} onChange={(e) => setData("notes", e.target.value)} rows={2} className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500 resize-none" />
+                                    </div>
+                                </div>
                             ) : (
-                                <CRow className="g-4">
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Nama Lengkap (KTP)
-                                            </p>
-                                            <p className="fw-semibold">
-                                                {transaction.name || user?.name || "N/A"}
-                                            </p>
+                                <div className="divide-y divide-gray-100">
+                                    <InfoRow label="Nama Lengkap (KTP)" value={transaction.name || user?.name} />
+                                    <InfoRow label="NIK" value={transaction.nik} />
+                                    <div className="py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">WhatsApp</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-bold text-gray-800">{transaction.phone || user?.phone || "—"}</span>
+                                            {(transaction.phone || user?.phone) && (
+                                                <a href={waUrl} target="_blank" className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full text-[10px] font-black transition-colors">
+                                                    <MessageCircle size={10} /> WA
+                                                </a>
+                                            )}
                                         </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                NIK
-                                            </p>
-                                            <p className="fw-semibold">
-                                                {transaction.nik || "-"}
-                                            </p>
+                                    </div>
+                                    <InfoRow label="Email" value={transaction.email || user?.email} />
+                                    <div className="py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">Motor</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-bold text-gray-800">{motor?.name || "N/A"}</span>
+                                            {transaction.motor_color && <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded border">({transaction.motor_color})</span>}
                                         </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                WhatsApp
-                                            </p>
-                                            <p className="d-flex align-items-center gap-2">
-                                                <span className="fw-semibold">{transaction.phone || user?.phone || "N/A"}</span>
-                                                {(transaction.phone || user?.phone) && (
-                                                    <a 
-                                                        href={`https://wa.me/${(transaction.phone || user?.phone).replace(/\D/g, '')}?text=${encodeURIComponent(`Halo ${transaction.name || user?.name}, saya admin dari SRB Motor. Terkait pesanan motor ${motor?.name} Anda...`)}`}
-                                                        target="_blank"
-                                                        className="btn btn-success btn-sm py-0 px-2 rounded-pill"
-                                                        style={{ fontSize: '10px' }}
-                                                    >
-                                                        Hubungi WA
-                                                    </a>
-                                                )}
-                                            </p>
-                                        </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Email
-                                            </p>
-                                            <p className="fw-semibold">
-                                                {transaction.email || user?.email || "-"}
-                                            </p>
-                                        </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Motor
-                                            </p>
-                                            <p className="fw-semibold">
-                                                {motor?.name || "N/A"} 
-                                                {transaction.motor_color && <span className="text-body-secondary ms-1">({transaction.motor_color})</span>}
-                                            </p>
-                                        </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Metode Penyerahan
-                                            </p>
-                                            <p className="fw-semibold">
-                                                <CBadge color={transaction.delivery_method === 'Ambil di Dealer' ? 'info' : 'primary'} variant="outline">
-                                                    {transaction.delivery_method || "Ambil di Dealer"}
-                                                </CBadge>
-                                            </p>
-                                        </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Harga Unit
-                                            </p>
-                                            <p className="fw-semibold text-primary">
-                                                {formatCurrency(motor?.price)}
-                                            </p>
-                                        </div>
-                                    </CCol>
-                                    <CCol md={6}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Booking Fee
-                                            </p>
-                                            <p className="fw-semibold">
-                                                {formatCurrency(transaction.booking_fee || 0)}
-                                            </p>
-                                        </div>
-                                    </CCol>
-
-                                    {/* Estimasi Pengiriman Display */}
+                                    </div>
+                                    <div className="py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">Metode Pengambilan</span>
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black border ${transaction.delivery_method === "Ambil di Dealer" ? "bg-sky-100 text-sky-700 border-sky-200" : "bg-indigo-100 text-indigo-700 border-indigo-200"}`}>{transaction.delivery_method || "Ambil di Dealer"}</span>
+                                    </div>
+                                    <InfoRow label="Alamat" value={transaction.address} />
                                     {transaction.delivery_date && (
-                                        <CCol md={12}>
-                                            <div className="p-3 bg-light rounded shadow-sm border-start border-4 border-info">
-                                                <h7 className="d-block mb-3 fw-bold text-info">ESTIMASI PENGIRIMAN</h7>
-                                                <CRow>
-                                                    <CCol md={12}>
-                                                        <p className="text-body-secondary small mb-1">Estimasi Tiba</p>
-                                                        <p className="fw-bold mb-0 text-primary">
-                                                            {new Date(transaction.delivery_date).toLocaleDateString("id-ID", {
-                                                                year: "numeric",
-                                                                month: "long",
-                                                                day: "numeric",
-                                                            })}
-                                                        </p>
-                                                    </CCol>
-                                                </CRow>
-                                            </div>
-                                        </CCol>
-                                    )}
-
-                                    <CCol md={12}>
-                                        <div>
-                                            <p className="text-body-secondary small mb-1">
-                                                Alamat Lengkap
-                                            </p>
-                                            <p className="fw-semibold">
-                                                {transaction.address || "-"}
-                                            </p>
+                                        <div className="py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">Estimasi Pengiriman</span>
+                                            <span className="flex items-center gap-2 text-sm font-bold text-blue-600">
+                                                <Calendar size={14} />
+                                                {new Date(transaction.delivery_date).toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" })}
+                                            </span>
                                         </div>
-                                    </CCol>
-                                    {transaction.notes && (
-                                        <CCol md={12}>
-                                            <div>
-                                                <p className="text-body-secondary small mb-1">
-                                                    Catatan Pembeli
-                                                </p>
-                                                <p className="fw-semibold italic">
-                                                    "{transaction.notes}"
-                                                </p>
-                                            </div>
-                                        </CCol>
                                     )}
-                                </CRow>
+                                    {transaction.notes && <InfoRow label="Catatan Pembeli" value={`"${transaction.notes}"`} />}
+                                </div>
                             )}
-                        </CCardBody>
-                    </CCard>
+                        </div>
+                    </div>
 
-
-
-                    {/* Transaction Logs (PHASE 6) */}
-                    <CCard className="mb-4">
-                        <CCardHeader className="bg-transparent">
-                            <strong>Riwayat Status & Log Transaksi</strong>
-                        </CCardHeader>
-                        <CCardBody className="p-0">
-                            <CTable hover responsive className="mb-0 small">
-                                <CTableHead className="bg-light">
-                                    <CTableRow>
-                                        <CTableHeaderCell>Waktu</CTableHeaderCell>
-                                        <CTableHeaderCell>Status</CTableHeaderCell>
-                                        <CTableHeaderCell>Actor</CTableHeaderCell>
-                                        <CTableHeaderCell>Catatan</CTableHeaderCell>
-                                    </CTableRow>
-                                </CTableHead>
-                                <CTableBody>
+                    {/* Card: Riwayat Log */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
+                            <Clock size={16} className="text-blue-500" />
+                            <h3 className="font-bold text-gray-800 text-sm">Riwayat Status & Log</h3>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead>
+                                    <tr className="border-b border-gray-100 text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-50/50">
+                                        <th className="px-6 py-3">Waktu</th>
+                                        <th className="px-6 py-3">Perubahan Status</th>
+                                        <th className="px-6 py-3">Oleh</th>
+                                        <th className="px-6 py-3">Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
                                     {transaction.logs && transaction.logs.length > 0 ? (
                                         transaction.logs.map(log => (
-                                            <CTableRow key={log.id}>
-                                                <CTableDataCell className="text-nowrap">
-                                                    {new Date(log.created_at).toLocaleString('id-ID')}
-                                                </CTableDataCell>
-                                                <CTableDataCell>
-                                                    {log.status_from && (
-                                                        <>
-                                                            <CBadge color="secondary" variant="outline" className="me-1">
-                                                                {statusLabelMap[log.status_from] || log.status_from}
-                                                            </CBadge>
-                                                            &rarr;
-                                                        </>
-                                                    )}
-                                                    <CBadge color="primary" className="ms-1">
-                                                        {statusLabelMap[log.status_to || log.status] || log.status_to || log.status}
-                                                    </CBadge>
-                                                </CTableDataCell>
-                                                <CTableDataCell>
-                                                    <div className="fw-semibold">{log.actor?.name || 'System'}</div>
-                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>
-                                                        {log.actor?.role === 'admin' ? 'ADMIN' : (log.actor?.role === 'user' ? 'PELANGGAN' : (log.actor_type?.includes('User') ? 'ADMIN' : 'SYSTEM'))}
+                                            <tr key={log.id} className="hover:bg-gray-50/50">
+                                                <td className="px-6 py-3 text-xs text-gray-500 whitespace-nowrap">{new Date(log.created_at).toLocaleString("id-ID")}</td>
+                                                <td className="px-6 py-3">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        {log.status_from && <span className="text-[10px] font-bold text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">{statusLabelMap[log.status_from] || log.status_from}</span>}
+                                                        {log.status_from && <span className="text-gray-400 text-xs">→</span>}
+                                                        <span className="text-[10px] font-black text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">{statusLabelMap[log.status_to || log.status] || log.status_to || log.status}</span>
                                                     </div>
-                                                </CTableDataCell>
-                                                <CTableDataCell>{log.notes || log.description || '-'}</CTableDataCell>
-                                            </CTableRow>
+                                                </td>
+                                                <td className="px-6 py-3">
+                                                    <div className="text-xs font-bold text-gray-800">{log.actor?.name || "System"}</div>
+                                                    <div className="text-[10px] text-gray-400 font-bold uppercase">{log.actor?.role === "admin" || log.actor?.role === "owner" ? "ADMIN" : log.actor?.role === "user" ? "PELANGGAN" : "SYSTEM"}</div>
+                                                </td>
+                                                <td className="px-6 py-3 text-xs text-gray-500">{log.notes || log.description || "—"}</td>
+                                            </tr>
                                         ))
                                     ) : (
-                                        <CTableRow>
-                                            <CTableDataCell colSpan={4} className="text-center py-3">Belum ada log rincian.</CTableDataCell>
-                                        </CTableRow>
+                                        <tr><td colSpan={4} className="px-6 py-8 text-center text-gray-400 text-sm">Belum ada log rincian.</td></tr>
                                     )}
-                                </CTableBody>
-                            </CTable>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-                <CCol xl={4}>
-                    {/* Summary */}
-                    <CCard className="mb-4">
-                        <CCardHeader className="bg-transparent border-bottom">
-                            <strong>Ringkasan</strong>
-                        </CCardHeader>
-                        <CCardBody>
-                            <div className="mb-3 pb-3 border-bottom">
-                                <p className="text-body-secondary small mb-1">
-                                    No. Transaksi
-                                </p>
-                                <p className="fw-bold text-primary">
-                                    #
-                                    {transaction.id.toString().padStart(6, "0")}
-                                </p>
+                {/* ===== RIGHT SIDEBAR (4 cols) ===== */}
+                <div className="xl:col-span-4 space-y-4">
+                    {/* Ringkasan */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                            <h3 className="font-bold text-gray-800 text-sm">Ringkasan Pembayaran</h3>
+                        </div>
+                        <div className="p-5 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500 font-bold">No. Transaksi</span>
+                                <span className="text-sm font-black text-blue-600 font-mono">#{String(transaction.id).padStart(6, "0")}</span>
                             </div>
-                            <div className="mb-3 pb-3 border-bottom">
-                                <p className="text-body-secondary small mb-1">
-                                    Tanggal
-                                </p>
-                                <p className="fw-semibold">
-                                    {new Date(
-                                        transaction.created_at,
-                                    ).toLocaleDateString("id-ID", {
-                                        weekday: "long",
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                    })}
-                                </p>
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500 font-bold">Harga Motor</span>
+                                <span className="text-sm font-bold text-gray-800">{formatCurrency(motor?.price)}</span>
                             </div>
-                            <div className="mb-3 pb-3 border-bottom">
-                                <p className="text-body-secondary small mb-1">
-                                    Total Bayar
-                                </p>
-                                <p className="fw-bold fs-5 text-dark">
-                                    {formatCurrency(transaction.total_price)}
-                                </p>
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs text-gray-500 font-bold">Booking Fee</span>
+                                <span className="text-sm font-bold text-gray-800">{formatCurrency(transaction.booking_fee)}</span>
                             </div>
-                            <div>
-                                <p className="text-body-secondary small mb-1">
-                                    Status
-                                </p>
-                                <p>{getStatusBadge(transaction.status)}</p>
+                            <div className="pt-3 border-t border-dashed border-gray-200">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-gray-500 font-bold uppercase tracking-widest">Total Bayar</span>
+                                    <span className="text-lg font-black text-gray-900">{formatCurrency(transaction.total_price)}</span>
+                                </div>
                             </div>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
-        </AdminLayout>
+                            <div className="pt-1">
+                                <StatusBadge status={transaction.status} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Foto Motor */}
+                    {motor?.image_path && (
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                                <h3 className="font-bold text-gray-800 text-sm">Unit Motor</h3>
+                            </div>
+                            <div className="p-4">
+                                <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                                    <img src={`/storage/${motor.image_path}`} alt={motor.name} className="w-full h-full object-cover" />
+                                </div>
+                                <div className="mt-3">
+                                    <p className="font-black text-gray-800 text-sm">{motor.name}</p>
+                                    <p className="text-xs text-gray-500 mt-0.5">{motor.brand} · {motor.type} · {motor.year}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Danger Zone */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-red-200 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-red-100 bg-red-50/50">
+                            <h3 className="font-bold text-red-700 text-sm flex items-center gap-2"><AlertTriangle size={14} /> Zona Bahaya</h3>
+                        </div>
+                        <div className="p-4">
+                            <p className="text-gray-500 text-xs leading-relaxed mb-3">Menghapus transaksi ini bersifat permanen dan tidak dapat dipulihkan.</p>
+                            <button onClick={confirmDelete} className="w-full py-2.5 border-2 border-red-300 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-black transition-colors">
+                                Hapus Transaksi Ini
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </MetronicAdminLayout>
     );
 }

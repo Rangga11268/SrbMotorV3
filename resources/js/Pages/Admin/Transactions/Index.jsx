@@ -1,68 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { Link, router } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import MetronicAdminLayout from "@/Layouts/MetronicAdminLayout";
 import axios from "axios";
 import Swal from "sweetalert2";
 import {
-    CCard,
-    CCardBody,
-    CCol,
-    CRow,
-    CTable,
-    CTableHead,
-    CTableBody,
-    CTableRow,
-    CTableHeaderCell,
-    CTableDataCell,
-    CBadge,
-    CButton,
-    CFormInput,
-    CFormSelect,
-    CInputGroup,
-    CInputGroupText,
-    CAvatar,
-    CPaginationItem,
-    CSpinner,
-    CDropdown,
-    CDropdownToggle,
-    CDropdownMenu,
-    CDropdownItem,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-    cilSearch,
-    cilPlus,
-    cilPencil,
-    cilZoom,
-    cilReload,
-    cilBike,
-    cilTrash,
-    cilOptions,
-    cilUser,
-} from "@coreui/icons";
+    Search, Plus, RefreshCw, Eye, Pencil, Trash2,
+    MoreVertical, ShoppingCart, Bike, User, ChevronLeft, ChevronRight
+} from "lucide-react";
 
-export default function Index({
-    transactions: initialTransactions,
-    filters,
-    statuses,
-}) {
-    const [localTransactions, setLocalTransactions] =
-        useState(initialTransactions);
+const STATUS_MAP = {
+    new_order:               { label: "Pesanan Masuk",          cls: "bg-amber-100 text-amber-700 border-amber-200" },
+    waiting_payment:         { label: "Menunggu Pembayaran",    cls: "bg-amber-100 text-amber-700 border-amber-200" },
+    pembayaran_dikonfirmasi: { label: "Pembayaran Dikonfirmasi",cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    payment_confirmed:       { label: "Pembayaran Dikonfirmasi",cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    unit_preparation:        { label: "Motor Disiapkan",        cls: "bg-blue-100 text-blue-700 border-blue-200" },
+    ready_for_delivery:      { label: "Siap Dikirim/Ambil",     cls: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+    dalam_pengiriman:        { label: "Dalam Pengiriman",       cls: "bg-purple-100 text-purple-700 border-purple-200" },
+    completed:               { label: "Selesai",                cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    cancelled:               { label: "Dibatalkan",             cls: "bg-red-100 text-red-600 border-red-200" },
+};
+
+const StatusBadge = ({ status }) => {
+    const s = STATUS_MAP[status] || { label: status, cls: "bg-gray-100 text-gray-600 border-gray-200" };
+    return (
+        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${s.cls}`}>
+            {s.label}
+        </span>
+    );
+};
+
+export default function Index({ transactions: initialTransactions, filters, statuses }) {
+    const [localTransactions, setLocalTransactions] = useState(initialTransactions);
     const [search, setSearch] = useState(filters.search || "");
     const [status, setStatus] = useState(filters.status || "");
     const [loading, setLoading] = useState(false);
     const [isFirstRender, setIsFirstRender] = useState(true);
+    const [openDropdownId, setOpenDropdownId] = useState(null);
 
     const fetchTransactions = async (params) => {
         setLoading(true);
         try {
-            const response = await axios.get(
-                route("admin.transactions.index"),
-                {
-                    params,
-                    headers: { "X-Requested-With": "XMLHttpRequest" },
-                },
-            );
+            const response = await axios.get(route("admin.transactions.index"), {
+                params,
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            });
             setLocalTransactions(response.data);
         } catch (error) {
             console.error("Error fetching transactions:", error);
@@ -72,79 +53,28 @@ export default function Index({
     };
 
     useEffect(() => {
-        if (isFirstRender) {
-            setIsFirstRender(false);
-            return;
-        }
-
+        if (isFirstRender) { setIsFirstRender(false); return; }
         const params = {};
         if (search) params.search = search;
         if (status) params.status = status;
-
-        const delayDebounceFn = setTimeout(() => {
+        const delay = setTimeout(() => {
             const url = new URL(window.location.href);
             url.search = new URLSearchParams(params).toString();
             window.history.replaceState({}, "", url);
-
             fetchTransactions(params);
         }, 500);
-
-        return () => clearTimeout(delayDebounceFn);
+        return () => clearTimeout(delay);
     }, [search, status]);
 
     const formatCurrency = (amount) =>
-        new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(amount || 0);
-
-    const getStatusBadge = (status) => {
-        const map = {
-            new_order: { color: "warning", label: "Pesanan Masuk" },
-            waiting_payment: { color: "warning", label: "Menunggu Pembayaran" },
-            pembayaran_dikonfirmasi: {
-                color: "success",
-                label: "Pembayaran Dikonfirmasi",
-            },
-            payment_confirmed: {
-                color: "success",
-                label: "Pembayaran Dikonfirmasi",
-            },
-            unit_preparation: { color: "info", label: "Motor Disiapkan" },
-            ready_for_delivery: {
-                color: "primary",
-                label: "Siap Dikirim/Ambil",
-            },
-            dalam_pengiriman: { color: "info", label: "Dalam Pengiriman" },
-            completed: { color: "success", label: "Selesai" },
-            cancelled: { color: "danger", label: "Dibatalkan" },
-        };
-        const badge = map[status] || { color: "secondary", label: status };
-        return (
-            <CBadge
-                color={badge.color}
-                shape="rounded-pill"
-                className="px-3 py-1"
-            >
-                {badge.label}
-            </CBadge>
-        );
-    };
+        `Rp ${new Intl.NumberFormat("id-ID").format(amount || 0)}`;
 
     const getInitials = (name) => {
         if (!name) return "?";
-        return name
-            .split(" ")
-            .map((n) => n[0])
-            .slice(0, 2)
-            .join("")
-            .toUpperCase();
+        return name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
     };
 
-    const handleSearch = (value) => {
-        setSearch(value);
-    };
+    const handleReset = () => { setSearch(""); setStatus(""); };
 
     const handleDelete = (transactionId) => {
         Swal.fire({
@@ -154,418 +84,258 @@ export default function Index({
             showCancelButton: true,
             confirmButtonText: "Hapus",
             cancelButtonText: "Batal",
-            confirmButtonColor: "#dc3545",
+            confirmButtonColor: "#ef4444",
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(
-                    route("admin.transactions.destroy", transactionId),
-                    {
-                        onSuccess: () => {
-                            Swal.fire(
-                                "Terhapus!",
-                                "Transaksi berhasil dihapus.",
-                                "success",
-                            );
-                            fetchTransactions({ search, status });
-                        },
-                        onError: () => {
-                            Swal.fire(
-                                "Error",
-                                "Gagal menghapus transaksi",
-                                "error",
-                            );
-                        },
-                    },
-                );
+                router.delete(route("admin.transactions.destroy", transactionId), {
+                    onSuccess: () => fetchTransactions({ search, status }),
+                    onError: () => Swal.fire("Error", "Gagal menghapus transaksi", "error"),
+                });
             }
         });
-    };
-
-    const handleStatusFilter = (value) => {
-        setStatus(value);
-    };
-
-    const handleReset = () => {
-        setSearch("");
-        setStatus("");
     };
 
     const handlePageChange = (url) => {
         if (!url) return;
         const urlObj = new URL(url);
         const params = Object.fromEntries(urlObj.searchParams);
-        fetchTransactions(params);
-
-        // Update URL
         window.history.replaceState({}, "", url);
+        fetchTransactions(params);
     };
 
     return (
-        <AdminLayout title="Manajemen Transaksi Tunai">
+        <MetronicAdminLayout title="Manajemen Transaksi Tunai">
             {/* Header */}
-            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="h4 fw-bold mb-1">Daftar Transaksi Tunai</h2>
-                    <p className="text-body-secondary mb-0 small">
-                        Kelola transaksi pembayaran tunai pelanggan
-                    </p>
+                    <h2 className="text-2xl font-black text-gray-800 tracking-tight">Transaksi Tunai</h2>
+                    <p className="text-sm text-gray-500 mt-1">Kelola dan pantau semua transaksi pembayaran tunai pelanggan.</p>
                 </div>
                 <Link
                     href={route("admin.transactions.create")}
-                    className="btn btn-primary d-flex align-items-center gap-2 px-4 shadow-sm"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-colors shrink-0"
                 >
-                    <CIcon icon={cilPlus} size="sm" />
-                    Tambah Transaksi
+                    <Plus size={16} /> Tambah Transaksi
                 </Link>
             </div>
 
-            {/* Filter Card */}
-            <CCard className="mb-4 border-0 shadow-sm">
-                <CCardBody>
-                    <CRow className="g-3 align-items-end">
-                        <CCol xs={12} md={6}>
-                            <label className="small text-body-secondary mb-1">
-                                Cari Transaksi
-                            </label>
-                            <CInputGroup>
-                                <CInputGroupText className="bg-transparent border-end-0">
-                                    <CIcon icon={cilSearch} size="sm" />
-                                </CInputGroupText>
-                                <CFormInput
-                                    className="border-start-0"
-                                    placeholder="ID, nama, motor..."
-                                    value={search}
-                                    onChange={(e) =>
-                                        handleSearch(e.target.value)
-                                    }
-                                />
-                            </CInputGroup>
-                        </CCol>
-                        <CCol xs={12} sm={8} md={4}>
-                            <label className="small text-body-secondary mb-1">
-                                Status
-                            </label>
-                            <CFormSelect
-                                value={status}
-                                onChange={(e) =>
-                                    handleStatusFilter(e.target.value)
-                                }
-                            >
-                                <option value="">Semua Status</option>
-                                {statuses?.map((s) => (
-                                    <option key={s} value={s}>
-                                        {s === "new_order"
-                                            ? "Pesanan Masuk"
-                                            : s === "waiting_payment"
-                                              ? "Menunggu Pembayaran"
-                                              : s === "pembayaran_dikonfirmasi"
-                                                ? "Pembayaran Dikonfirmasi"
-                                                : s === "payment_confirmed"
-                                                  ? "Pembayaran Dikonfirmasi"
-                                                  : s === "unit_preparation"
-                                                    ? "Motor Disiapkan"
-                                                    : s === "ready_for_delivery"
-                                                      ? "Siap Dikirim/Ambil"
-                                                      : s === "dalam_pengiriman"
-                                                        ? "Dalam Pengiriman"
-                                                        : s === "completed"
-                                                          ? "Selesai"
-                                                          : s === "cancelled"
-                                                            ? "Dibatalkan"
-                                                            : s
-                                                                  .replace(
-                                                                      /_/g,
-                                                                      " ",
-                                                                  )
-                                                                  .replace(
-                                                                      /\b\w/g,
-                                                                      (l) =>
-                                                                          l.toUpperCase(),
-                                                                  )}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
-                        <CCol xs={12} sm={4} md={2}>
-                            {(search || status) && (
-                                <CButton
-                                    color="light"
-                                    className="w-100 mt-md-0"
-                                    onClick={handleReset}
-                                >
-                                    <CIcon icon={cilReload} size="sm" /> Reset
-                                </CButton>
-                            )}
-                        </CCol>
-                    </CRow>
-                </CCardBody>
-            </CCard>
-
-            {/* Data Table */}
-            <CCard className="border-0 shadow-sm overflow-hidden position-relative">
-                {loading && (
-                    <div
-                        className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                        style={{
-                            zIndex: 10,
-                            backgroundColor: "rgba(255, 255, 255, 0.7)",
-                            backdropFilter: "blur(2px)",
-                        }}
+            {/* Filter Bar */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-5 flex flex-col sm:flex-row gap-3 items-end">
+                <div className="flex-1 min-w-0">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Pencarian</label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search size={15} className="text-gray-400" />
+                        </div>
+                        <input
+                            type="text"
+                            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="ID, nama, motor..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <div className="w-full sm:w-52 shrink-0">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Status</label>
+                    <select
+                        className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
                     >
+                        <option value="">Semua Status</option>
+                        {statuses?.map((s) => (
+                            <option key={s} value={s}>{STATUS_MAP[s]?.label || s}</option>
+                        ))}
+                    </select>
+                </div>
+                {(search || status) && (
+                    <button
+                        onClick={handleReset}
+                        className="shrink-0 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors"
+                    >
+                        <RefreshCw size={14} /> Reset
+                    </button>
+                )}
+            </div>
+
+            {/* Table Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden relative">
+                {/* Loading Overlay */}
+                {loading && (
+                    <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-10 flex items-center justify-center">
                         <div className="text-center">
-                            <CSpinner color="primary" />
-                            <p className="mt-2 text-body-secondary small">
-                                Memuat data...
-                            </p>
+                            <div className="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-2" />
+                            <p className="text-sm text-gray-500 font-medium">Memuat data...</p>
                         </div>
                     </div>
                 )}
-                <CCardBody
-                    className="p-0"
-                    style={{ opacity: loading ? 0.6 : 1 }}
-                >
-                    <CTable hover responsive className="mb-0">
-                        <CTableHead className="text-body-secondary bg-body-tertiary">
-                            <CTableRow>
-                                <CTableHeaderCell className="ps-4">
-                                    No. Transaksi
-                                </CTableHeaderCell>
-                                <CTableHeaderCell className="d-none d-md-table-cell">Pelanggan</CTableHeaderCell>
-                                <CTableHeaderCell className="d-none d-md-table-cell">Motor</CTableHeaderCell>
-                                <CTableHeaderCell>Total Bayar</CTableHeaderCell>
-                                <CTableHeaderCell className="d-none d-md-table-cell">Status</CTableHeaderCell>
-                                <CTableHeaderCell className="text-center">
-                                    Aksi
-                                </CTableHeaderCell>
-                            </CTableRow>
-                        </CTableHead>
-                        <CTableBody>
-                            {localTransactions.data &&
-                            localTransactions.data.length > 0 ? (
+
+                <div className={`overflow-x-auto transition-opacity ${loading ? 'opacity-50' : 'opacity-100'}`}>
+                    <table className="w-full text-left border-collapse whitespace-nowrap">
+                        <thead>
+                            <tr className="border-b border-gray-100 text-[10px] font-bold uppercase tracking-widest text-gray-500 bg-gray-50/50">
+                                <th className="px-6 py-4">No. Transaksi</th>
+                                <th className="px-6 py-4 hidden md:table-cell">Pelanggan</th>
+                                <th className="px-6 py-4 hidden md:table-cell">Unit Motor</th>
+                                <th className="px-6 py-4">Total Bayar</th>
+                                <th className="px-6 py-4 hidden md:table-cell">Status</th>
+                                <th className="px-6 py-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100 text-sm">
+                            {localTransactions.data && localTransactions.data.length > 0 ? (
                                 localTransactions.data.map((trx) => (
-                                    <CTableRow
-                                        key={trx.id}
-                                        className="align-middle"
-                                    >
-                                        <CTableDataCell className="ps-4">
-                                            <div className="d-flex flex-column">
-                                                <span className="fw-bold text-primary">
-                                                    #
-                                                    {trx.id
-                                                        .toString()
-                                                        .padStart(6, "0")}
-                                                </span>
-                                                <div
-                                                    className="d-md-none text-body-tertiary fw-normal mt-1 d-flex flex-column gap-1"
-                                                    style={{ fontSize: 11 }}
-                                                >
-                                                    <div>
-                                                        <CIcon icon={cilUser} size="custom" height={10} className="me-1" />
-                                                        {trx.name || trx.user?.name || "N/A"}
-                                                    </div>
-                                                    <div>
-                                                        <CIcon icon={cilBike} size="custom" height={10} className="me-1" />
-                                                        {trx.motor?.name || "N/A"}
-                                                    </div>
-                                                    <div className="mt-1">
-                                                        {getStatusBadge(trx.status)}
-                                                    </div>
-                                                </div>
-                                                <span
-                                                    className="text-body-tertiary"
-                                                    style={{ fontSize: 11 }}
-                                                >
-                                                    {new Date(
-                                                        trx.created_at,
-                                                    ).toLocaleDateString(
-                                                        "id-ID",
-                                                    )}
-                                                </span>
+                                    <tr key={trx.id} className="hover:bg-gray-50/50 group">
+                                        {/* ID + tanggal */}
+                                        <td className="px-6 py-4">
+                                            <div className="font-black text-blue-600 font-mono">
+                                                #{String(trx.id).padStart(6, "0")}
                                             </div>
-                                        </CTableDataCell>
-                                        <CTableDataCell className="d-none d-md-table-cell">
-                                            <div className="d-flex align-items-center gap-2">
-                                                <CAvatar
-                                                    color="success"
-                                                    textColor="white"
-                                                    size="sm"
-                                                    className="fw-bold"
-                                                >
-                                                    {getInitials(
-                                                        trx.name ||
-                                                            trx.user?.name,
-                                                    )}
-                                                </CAvatar>
+                                            <div className="text-xs text-gray-400 font-medium mt-0.5">
+                                                {new Date(trx.created_at).toLocaleDateString("id-ID")}
+                                            </div>
+                                            {/* Mobile only - status + motor */}
+                                            <div className="md:hidden mt-1.5 space-y-1">
+                                                <div className="text-xs text-gray-500 flex items-center gap-1"><User size={10} /> {trx.name || trx.user?.name || "N/A"}</div>
+                                                <div className="text-xs text-gray-500 flex items-center gap-1"><Bike size={10} /> {trx.motor?.name || "N/A"}</div>
+                                                <StatusBadge status={trx.status} />
+                                            </div>
+                                        </td>
+
+                                        {/* Pelanggan */}
+                                        <td className="px-6 py-4 hidden md:table-cell">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-black text-xs flex items-center justify-center border border-emerald-200 shrink-0">
+                                                    {getInitials(trx.name || trx.user?.name)}
+                                                </div>
                                                 <div>
-                                                    <div className="fw-semibold">
-                                                        {trx.name ||
-                                                            trx.user?.name ||
-                                                            "N/A"}
-                                                    </div>
-                                                    <div className="text-body-tertiary small">
-                                                        {trx.phone ||
-                                                            trx.user?.phone ||
-                                                            "-"}
-                                                    </div>
+                                                    <div className="font-bold text-gray-800">{trx.name || trx.user?.name || "N/A"}</div>
+                                                    <div className="text-xs text-gray-400">{trx.phone || trx.user?.phone || "-"}</div>
                                                 </div>
                                             </div>
-                                        </CTableDataCell>
-                                        <CTableDataCell className="d-none d-md-table-cell">
-                                            <div className="d-flex align-items-center gap-2">
-                                                <div
-                                                    className="bg-body-tertiary rounded-2 overflow-hidden flex-shrink-0 d-flex align-items-center justify-content-center"
-                                                    style={{
-                                                        width: 45,
-                                                        height: 45,
-                                                    }}
-                                                >
+                                        </td>
+
+                                        {/* Motor */}
+                                        <td className="px-6 py-4 hidden md:table-cell">
+                                            <div className="flex items-center gap-2.5">
+                                                <div className="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center">
                                                     {trx.motor?.image_path ? (
-                                                        <img
-                                                            src={`/storage/${trx.motor.image_path}`}
-                                                            alt={trx.motor.name}
-                                                            className="w-100 h-100 object-fit-cover"
-                                                        />
+                                                        <img src={`/storage/${trx.motor.image_path}`} alt={trx.motor.name} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <CIcon
-                                                            icon={cilBike}
-                                                            className="text-body-tertiary"
-                                                            size="sm"
-                                                        />
+                                                        <Bike size={16} className="text-gray-300" />
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <div className="fw-medium small pb-1">
-                                                        {trx.motor?.name ||
-                                                            "Unit Dihapus"}
-                                                    </div>
-                                                    <CBadge
-                                                        color="primary-subtle"
-                                                        textColor="primary"
-                                                        style={{ fontSize: 9 }}
-                                                    >
-                                                        {trx.motor?.brand ||
-                                                            "N/A"}
-                                                    </CBadge>
+                                                    <div className="font-bold text-gray-800 text-xs">{trx.motor?.name || "Unit Dihapus"}</div>
+                                                    <span className="text-[10px] font-black px-1.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded">{trx.motor?.brand || "N/A"}</span>
                                                 </div>
                                             </div>
-                                        </CTableDataCell>
-                                        <CTableDataCell>
-                                            <div className="fw-bold text-dark">
-                                                {formatCurrency(
-                                                    trx.total_price,
+                                        </td>
+
+                                        {/* Total */}
+                                        <td className="px-6 py-4">
+                                            <div className="font-black text-gray-900">{formatCurrency(trx.total_price)}</div>
+                                        </td>
+
+                                        {/* Status */}
+                                        <td className="px-6 py-4 hidden md:table-cell">
+                                            <StatusBadge status={trx.status} />
+                                        </td>
+
+                                        {/* Aksi */}
+                                        <td className="px-6 py-4 text-center">
+                                            {/* Desktop */}
+                                            <div className="hidden md:flex items-center justify-center gap-1.5">
+                                                <Link
+                                                    href={route("admin.transactions.show", trx.id)}
+                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="Detail"
+                                                >
+                                                    <Eye size={16} />
+                                                </Link>
+                                                <Link
+                                                    href={route("admin.transactions.edit", trx.id)}
+                                                    className="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <Pencil size={16} />
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleDelete(trx.id)}
+                                                    className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Hapus"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+
+                                            {/* Mobile dropdown */}
+                                            <div className="md:hidden relative">
+                                                <button
+                                                    onClick={() => setOpenDropdownId(openDropdownId === trx.id ? null : trx.id)}
+                                                    className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                                >
+                                                    <MoreVertical size={16} />
+                                                </button>
+                                                {openDropdownId === trx.id && (
+                                                    <>
+                                                        <div className="fixed inset-0 z-10" onClick={() => setOpenDropdownId(null)} />
+                                                        <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-gray-100 z-20 overflow-hidden">
+                                                            <Link href={route("admin.transactions.show", trx.id)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
+                                                                <Eye size={14} className="text-blue-500" /> Detail
+                                                            </Link>
+                                                            <Link href={route("admin.transactions.edit", trx.id)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
+                                                                <Pencil size={14} className="text-amber-500" /> Edit
+                                                            </Link>
+                                                            <button onClick={() => { setOpenDropdownId(null); handleDelete(trx.id); }} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50">
+                                                                <Trash2 size={14} /> Hapus
+                                                            </button>
+                                                        </div>
+                                                    </>
                                                 )}
                                             </div>
-                                        </CTableDataCell>
-                                        <CTableDataCell className="d-none d-md-table-cell">
-                                            {getStatusBadge(trx.status)}
-                                        </CTableDataCell>
-                                        <CTableDataCell className="text-center">
-                                            <div className="d-flex gap-1 justify-content-center">
-                                                {/* Desktop Actions */}
-                                                <div className="d-none d-md-flex gap-1">
-                                                    <Link
-                                                        href={route("admin.transactions.show", trx.id)}
-                                                        className="btn btn-sm btn-outline-primary"
-                                                        title="Detail"
-                                                    >
-                                                        <CIcon icon={cilZoom} size="sm" />
-                                                    </Link>
-                                                    <Link
-                                                        href={route("admin.transactions.edit", trx.id)}
-                                                        className="btn btn-sm btn-outline-warning"
-                                                        title="Edit"
-                                                    >
-                                                        <CIcon icon={cilPencil} size="sm" />
-                                                    </Link>
-                                                    <button
-                                                        onClick={() => handleDelete(trx.id)}
-                                                        className="btn btn-sm btn-outline-danger"
-                                                        title="Hapus"
-                                                    >
-                                                        <CIcon icon={cilTrash} size="sm" />
-                                                    </button>
-                                                </div>
-
-                                                {/* Mobile Actions Dropdown */}
-                                                <div className="d-md-none">
-                                                    <CDropdown alignment="end">
-                                                        <CDropdownToggle
-                                                            color="light"
-                                                            size="sm"
-                                                            caret={false}
-                                                            className="p-1 border shadow-sm d-flex align-items-center justify-content-center"
-                                                            style={{ width: 32, height: 32, borderRadius: 8 }}
-                                                        >
-                                                            <CIcon icon={cilOptions} size="sm" />
-                                                        </CDropdownToggle>
-                                                        <CDropdownMenu>
-                                                            <CDropdownItem as={Link} href={route("admin.transactions.show", trx.id)}>
-                                                                <CIcon icon={cilZoom} className="me-2" /> Detail
-                                                            </CDropdownItem>
-                                                            <CDropdownItem as={Link} href={route("admin.transactions.edit", trx.id)}>
-                                                                <CIcon icon={cilPencil} className="me-2" /> Edit
-                                                            </CDropdownItem>
-                                                            <CDropdownItem 
-                                                                onClick={() => handleDelete(trx.id)}
-                                                                className="text-danger"
-                                                            >
-                                                                <CIcon icon={cilTrash} className="me-2" /> Hapus
-                                                            </CDropdownItem>
-                                                        </CDropdownMenu>
-                                                    </CDropdown>
-                                                </div>
-                                            </div>
-                                        </CTableDataCell>
-                                    </CTableRow>
+                                        </td>
+                                    </tr>
                                 ))
                             ) : (
-                                <CTableRow>
-                                    <CTableDataCell
-                                        colSpan={6}
-                                        className="text-center py-5 text-body-tertiary"
-                                    >
-                                        Tidak ada transaksi tunai yang
-                                        ditemukan.
-                                    </CTableDataCell>
-                                </CTableRow>
+                                <tr>
+                                    <td colSpan="6" className="px-6 py-16 text-center">
+                                        <ShoppingCart size={36} className="mx-auto mb-3 text-gray-300" />
+                                        <p className="text-gray-400 font-bold">Tidak ada transaksi tunai.</p>
+                                        <p className="text-gray-400 text-xs mt-1">Coba ubah filter pencarian Anda.</p>
+                                    </td>
+                                </tr>
                             )}
-                        </CTableBody>
-                    </CTable>
-                </CCardBody>
+                        </tbody>
+                    </table>
+                </div>
 
                 {/* Pagination */}
-                {localTransactions.links &&
-                    localTransactions.links.length > 3 && (
-                        <div className="card-footer d-flex justify-content-center py-3 bg-white border-top-0">
-                            <CPagination className="mb-0">
-                                {localTransactions.links.map((link, index) => {
-                                    if (!link.url && !link.label) return null;
-                                    return (
-                                        <CPaginationItem
-                                            key={index}
-                                            active={link.active}
-                                            disabled={!link.url}
-                                            onClick={() =>
-                                                handlePageChange(link.url)
-                                            }
-                                            style={{
-                                                cursor: link.url
-                                                    ? "pointer"
-                                                    : "default",
-                                            }}
-                                        >
-                                            <span
-                                                dangerouslySetInnerHTML={{
-                                                    __html: link.label,
-                                                }}
-                                            />
-                                        </CPaginationItem>
-                                    );
-                                })}
-                            </CPagination>
+                {localTransactions.links && localTransactions.links.length > 3 && (
+                    <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between gap-4">
+                        <p className="text-xs text-gray-500 font-medium">
+                            Menampilkan <span className="font-black text-gray-700">{localTransactions.from}</span>–<span className="font-black text-gray-700">{localTransactions.to}</span> dari <span className="font-black text-gray-700">{localTransactions.total}</span> data
+                        </p>
+                        <div className="flex items-center gap-1">
+                            {localTransactions.links.map((link, index) => {
+                                if (!link.url && !link.label) return null;
+                                const isArrow = link.label.includes("&laquo;") || link.label.includes("&raquo;");
+                                return (
+                                    <button
+                                        key={index}
+                                        onClick={() => handlePageChange(link.url)}
+                                        disabled={!link.url}
+                                        className={`min-w-[32px] h-8 px-2 rounded-lg text-xs font-bold flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${link.active ? 'bg-blue-600 text-white shadow-sm' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                    >
+                                        {link.label.includes("&laquo;") ? <ChevronLeft size={13} /> : link.label.includes("&raquo;") ? <ChevronRight size={13} /> : link.label}
+                                    </button>
+                                );
+                            })}
                         </div>
-                    )}
-            </CCard>
-        </AdminLayout>
+                    </div>
+                )}
+            </div>
+        </MetronicAdminLayout>
     );
 }

@@ -1,2053 +1,736 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, Link, router } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
+import MetronicAdminLayout from "@/Layouts/MetronicAdminLayout";
 import Swal from "sweetalert2";
 import {
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CCol,
-    CRow,
-    CBadge,
-    CButton,
-    CForm,
-    CFormLabel,
-    CFormInput,
-    CFormSelect,
-    CFormTextarea,
-    CAlert,
-    CSpinner,
-    CModal,
-    CModalHeader,
-    CModalTitle,
-    CModalBody,
-    CModalFooter,
-    CTable,
-    CTableHead,
-    CTableHeaderCell,
-    CTableBody,
-    CTableRow,
-    CTableDataCell,
-    CNav,
-    CNavItem,
-    CNavLink,
-} from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import {
-    cilArrowLeft,
-    cilCheck,
-    cilX,
-    cilCheckAlt,
-    cilNotes,
-    cilCalendar,
-    cilMoney,
-    cilBike,
-    cilTrash,
-    cilBan,
-} from "@coreui/icons";
-import { CheckCircle, XCircle, Eye } from "lucide-react";
+    ArrowLeft, CheckCircle, XCircle, Eye, Clock, FileText,
+    Send, Calendar, Banknote, CreditCard, Bike, User, Phone,
+    AlertTriangle, Trash2, Check, X, RotateCcw,
+    MessageCircle, FileCheck, ClipboardList, ReceiptText
+} from "lucide-react";
 
-export default function Show({
-    credit,
-    availableTransitions,
-    timeline,
-    leasingProviders,
-    availableUnits,
-}) {
+/* ─── Status Config ─────────────────────────────────────────── */
+const STATUS_MAP = {
+    pengajuan_masuk:            { label: "Pengajuan Masuk",        cls: "bg-sky-100 text-sky-700 border-sky-200" },
+    menunggu_persetujuan:       { label: "Menunggu Persetujuan",   cls: "bg-amber-100 text-amber-700 border-amber-200" },
+    verifikasi_dokumen:         { label: "Verifikasi Dokumen",     cls: "bg-amber-100 text-amber-700 border-amber-200" },
+    dikirim_ke_leasing:         { label: "Dikirim ke Leasing",     cls: "bg-blue-100 text-blue-700 border-blue-200" },
+    survey_dijadwalkan:         { label: "Survey Dijadwalkan",     cls: "bg-purple-100 text-purple-700 border-purple-200" },
+    survey_berjalan:            { label: "Survey Berjalan",        cls: "bg-purple-100 text-purple-700 border-purple-200" },
+    menunggu_keputusan_leasing: { label: "Menunggu Keputusan",     cls: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+    disetujui:                  { label: "Disetujui",              cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    ditolak:                    { label: "Ditolak",                cls: "bg-red-100 text-red-600 border-red-200" },
+    dp_dibayar:                 { label: "DP Dibayar",             cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    selesai:                    { label: "Selesai",                cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    dibatalkan:                 { label: "Dibatalkan",             cls: "bg-gray-100 text-gray-500 border-gray-200" },
+};
+
+const STEPPER = [
+    { key: "pengajuan_masuk",            label: "Pengajuan",  icon: FileText },
+    { key: "verifikasi_dokumen",         label: "Verifikasi", icon: FileCheck },
+    { key: "dikirim_ke_leasing",         label: "Ke Leasing", icon: Send },
+    { key: "survey_dijadwalkan",         label: "Survey",     icon: Calendar },
+    { key: "menunggu_keputusan_leasing", label: "Keputusan",  icon: ClipboardList },
+    { key: "disetujui",                  label: "Disetujui",  icon: Check },
+    { key: "dp_dibayar",                 label: "DP Dibayar", icon: Banknote },
+    { key: "selesai",                    label: "Selesai",    icon: CheckCircle },
+];
+const STATUS_ORDER = STEPPER.map(s => s.key);
+
+const StatusBadge = ({ status }) => {
+    const s = STATUS_MAP[status] || { label: status, cls: "bg-gray-100 text-gray-600 border-gray-200" };
+    return <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${s.cls}`}>{s.label}</span>;
+};
+
+/* ─── Modal ─────────────────────────────────────────────────── */
+function Modal({ open, onClose, title, children, footer }) {
+    if (!open) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md z-10 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-black text-gray-800 text-base">{title}</h3>
+                    <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"><X size={16} /></button>
+                </div>
+                <div className="p-6">{children}</div>
+                {footer && <div className="px-6 pb-6 flex justify-end gap-3">{footer}</div>}
+            </div>
+        </div>
+    );
+}
+
+const Btn = ({ onClick, variant = "primary", disabled, type = "button", children }) => {
+    const cls = {
+        primary: "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20",
+        success: "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/20",
+        danger:  "bg-red-500 hover:bg-red-600 text-white",
+        cancel:  "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50",
+    }[variant];
+    return (
+        <button type={type} onClick={onClick} disabled={disabled} className={`px-5 py-2.5 rounded-xl text-sm font-black transition-colors disabled:opacity-50 flex items-center gap-2 ${cls}`}>
+            {disabled && <div className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />}
+            {children}
+        </button>
+    );
+};
+
+const Label = ({ children }) => <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">{children}</label>;
+const iCls = "w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500";
+
+/* ─── Main ───────────────────────────────────────────────────── */
+export default function Show({ credit, availableTransitions, timeline, leasingProviders }) {
     const [activeModal, setActiveModal] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('info');
+    const [activeTab,   setActiveTab]   = useState("info");
 
-    // Form for unit allocation
-    const allocationForm = useForm({
-        motor_unit_id: credit.transaction?.motor_unit_id || "",
-    });
+    const fmt = (n) => `Rp ${new Intl.NumberFormat("id-ID").format(n || 0)}`;
 
-    const formatCurrency = (amount) =>
-        new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(amount || 0);
+    // Shorthand aliases
+    const trx          = credit.transaction;
+    const motor        = trx?.motor;
+    const installments = trx?.installments || [];
+    // Latest survey from relation (surveySchedules loaded by controller)
+    const latestSurvey = credit.surveySchedules?.length
+        ? credit.surveySchedules[credit.surveySchedules.length - 1]
+        : null;
 
-    const statuses = {
-        pengajuan_masuk: { label: "Pengajuan Masuk", color: "info" },
-        menunggu_persetujuan: { label: "Menunggu Persetujuan", color: "info" },
-        verifikasi_dokumen: { label: "Verifikasi Dokumen", color: "warning" },
-        dikirim_ke_leasing: {
-            label: "Dikirim ke Leasing",
-            color: "info",
-        },
-        survey_dijadwalkan: {
-            label: "Survey Dijadwalkan",
-            color: "warning",
-        },
-        survey_berjalan: {
-            label: "Survey Berjalan",
-            color: "warning",
-        },
-        menunggu_keputusan_leasing: {
-            label: "Menunggu Keputusan",
-            color: "info",
-        },
-        disetujui: { label: "Disetujui", color: "success" },
-        ditolak: { label: "Ditolak", color: "danger" },
-        dp_dibayar: { label: "DP Dibayar", color: "success" },
-        selesai: { label: "Selesai", color: "success" },
-        dibatalkan: { label: "Dibatalkan", color: "secondary" },
+    const currentStepIdx = STATUS_ORDER.indexOf(credit.status);
+    const isDone     = credit.status === "selesai";
+    const isRejected = credit.status === "ditolak" || credit.status === "dibatalkan";
 
-        // Common transaction statuses (for log mapping)
-        new_order: { label: "Pesanan Masuk", color: "warning" },
-        waiting_payment: { label: "Menunggu Pembayaran", color: "warning" },
-        pembayaran_dikonfirmasi: { label: "Pembayaran Dikonfirmasi", color: "success" },
-        payment_confirmed: { label: "Pembayaran Dikonfirmasi", color: "success" },
-        unit_preparation: { label: "Motor Disiapkan", color: "info" },
-        ready_for_delivery: { label: "Siap Dikirim/Ambil", color: "primary" },
-        dalam_pengiriman: { label: "Dalam Pengiriman", color: "info" },
-        completed: { label: "Selesai", color: "success" },
-        cancelled: { label: "Dibatalkan", color: "danger" },
-    };
+    /* ── Swal action helpers ── */
+    const handleCancel = () =>
+        Swal.fire({ title: "Batalkan Pengajuan?", text: "Status akan berubah permanen.", icon: "warning", showCancelButton: true, confirmButtonText: "Ya, Batalkan", cancelButtonText: "Tutup", confirmButtonColor: "#6b7280" })
+            .then(r => r.isConfirmed && router.post(route("admin.credits.cancel", credit.id)));
 
-    const currentStatus = statuses[credit.status] || {};
+    const handleDelete = () =>
+        Swal.fire({ title: "Hapus Pengajuan?", text: "Data akan dihapus permanen.", icon: "warning", showCancelButton: true, confirmButtonText: "Hapus", cancelButtonText: "Batal", confirmButtonColor: "#ef4444" })
+            .then(r => r.isConfirmed && router.delete(route("admin.credits.destroy", credit.id), { onSuccess: () => router.visit(route("admin.credits.index")) }));
 
-    // Modal Components
-    function VerifyDocumentsModal() {
-        const { data, setData, post, processing } = useForm({
-            internal_notes: "",
-        });
+    const handleRepossess = () =>
+        Swal.fire({ title: "Tarik Motor?", input: "textarea", inputPlaceholder: "Alasan penarikan...", icon: "warning", showCancelButton: true, confirmButtonText: "Ya, Tarik", confirmButtonColor: "#ef4444",
+            preConfirm: r => r || Swal.showValidationMessage("Wajib diisi") })
+            .then(r => r.isConfirmed && router.post(route("admin.credits.repossess", credit.id), { reason: r.value }));
 
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.verify-documents", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
+    const handleApproveInstallment = (id) =>
+        Swal.fire({ title: "Setujui Cicilan?", icon: "question", showCancelButton: true, confirmButtonText: "Ya, Setujui", confirmButtonColor: "#059669" })
+            .then(r => r.isConfirmed && router.post(route("admin.installments.approve", id)));
 
+    const handleRejectInstallment = (id) =>
+        Swal.fire({ title: "Tolak Bukti Transfer?", input: "textarea", inputPlaceholder: "Alasan...", icon: "warning", showCancelButton: true, confirmButtonText: "Tolak", confirmButtonColor: "#ef4444" })
+            .then(r => r.isConfirmed && router.post(route("admin.installments.reject", id), { rejection_reason: r.value }));
+
+    const handleApproveDoc = (docId) =>
+        Swal.fire({ title: "Setujui Dokumen?", icon: "question", showCancelButton: true, confirmButtonText: "Setujui", confirmButtonColor: "#059669" })
+            .then(r => r.isConfirmed && router.post(route("admin.documents.approve", docId), {}, { onSuccess: () => window.location.reload() }));
+
+    const handleViewProof = (path) =>
+        Swal.fire({ title: "Bukti Transfer", imageUrl: `/storage/${path}`, imageAlt: "Bukti", showConfirmButton: true, confirmButtonText: "Tutup", width: "80%" });
+
+    /* ── Sub-modal components (with own useForm) ── */
+    function VerifyModal() {
+        const f = useForm({ internal_notes: "" });
         return (
-            <CModal
-                visible={activeModal === "verify"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Verifikasi Dokumen</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Catatan Internal</CFormLabel>
-                            <CFormTextarea
-                                rows="3"
-                                value={data.internal_notes}
-                                onChange={(e) =>
-                                    setData("internal_notes", e.target.value)
-                                }
-                                placeholder="Masukkan catatan verifikasi dokumen..."
-                            />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="primary"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Lanjutkan
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "verify"} onClose={() => setActiveModal(null)} title="Verifikasi Dokumen"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="primary" disabled={f.processing} onClick={() => f.post(route("admin.credits.verify-documents", credit.id), { onFinish: () => setActiveModal(null) })}>Lanjutkan</Btn></>}>
+                <Label>Catatan Internal</Label>
+                <textarea rows={3} value={f.data.internal_notes} onChange={e => f.setData("internal_notes", e.target.value)} placeholder="Catatan verifikasi..." className={`${iCls} resize-none`} />
+            </Modal>
         );
     }
 
-    function RejectModal({ action }) {
-        const { data, setData, post, processing } = useForm({
-            rejection_reason: "",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route(action, credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
+    function RejectModal() {
+        const f = useForm({ rejection_reason: "" });
         return (
-            <CModal
-                visible={activeModal === "reject"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Tolak Pengajuan</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Alasan Penolakan</CFormLabel>
-                            <CFormTextarea
-                                rows="3"
-                                value={data.rejection_reason}
-                                onChange={(e) =>
-                                    setData("rejection_reason", e.target.value)
-                                }
-                                placeholder="Jelaskan alasan penolakan..."
-                                required
-                            />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="danger"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Tolak
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "reject"} onClose={() => setActiveModal(null)} title="Tolak Pengajuan"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="danger" disabled={f.processing} onClick={() => f.post(route("admin.credits.reject", credit.id), { onFinish: () => setActiveModal(null) })}>Tolak</Btn></>}>
+                <Label>Alasan Penolakan <span className="text-red-500">*</span></Label>
+                <textarea rows={3} required value={f.data.rejection_reason} onChange={e => f.setData("rejection_reason", e.target.value)} placeholder="Jelaskan alasan..." className={`${iCls} resize-none`} />
+            </Modal>
         );
     }
 
-    function SendToLeasingModal() {
-        const { data, setData, post, processing } = useForm({
-            leasing_provider: credit.leasing_provider || "",
-            leasing_application_ref: credit.reference_number || "",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.send-to-leasing", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
+    function SendLeasingModal() {
+        const f = useForm({ leasing_provider: credit.leasing_provider || "", leasing_application_ref: credit.reference_number || "" });
         return (
-            <CModal
-                visible={activeModal === "sendLeasing"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Kirim ke Leasing</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <CAlert color="info" className="mb-4">
-                            Langkah ini menandai bahwa pengajuan telah dikirimkan ke pihak eksternal untuk proses verifikasi/survey lebih lanjut.
-                        </CAlert>
-                        <div className="mb-3">
-                            <CFormLabel>Pilih Penyedia Leasing</CFormLabel>
-                            <CFormSelect
-                                value={data.leasing_provider}
-                                onChange={(e) =>
-                                    setData(
-                                        "leasing_provider",
-                                        e.target.value,
-                                    )
-                                }
-                                required
-                            >
-                                <option value="">-- Pilih Leasing --</option>
-                                {leasingProviders.map((provider) => (
-                                    <option
-                                        key={provider.id}
-                                        value={provider.id}
-                                    >
-                                        {provider.name}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </div>
-                        <div className="mb-3">
-                            <CFormLabel>Nomor Referensi Aplikasi</CFormLabel>
-                            <CFormInput
-                                type="text"
-                                value={data.leasing_application_ref}
-                                onChange={(e) =>
-                                    setData(
-                                        "leasing_application_ref",
-                                        e.target.value,
-                                    )
-                                }
-                                placeholder="Masukkan nomor referensi (opsional)"
-                            />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="primary"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Kirim
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "sendLeasing"} onClose={() => setActiveModal(null)} title="Kirim ke Leasing"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="primary" disabled={f.processing} onClick={() => f.post(route("admin.credits.send-to-leasing", credit.id), { onFinish: () => setActiveModal(null) })}>Kirim</Btn></>}>
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">Pengajuan akan dikirim ke pihak leasing eksternal untuk proses lanjutan.</div>
+                <div className="mb-4"><Label>Pilih Penyedia Leasing *</Label>
+                    <select required value={f.data.leasing_provider} onChange={e => f.setData("leasing_provider", e.target.value)} className={iCls}>
+                        <option value="">-- Pilih Leasing --</option>
+                        {leasingProviders?.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                    </select>
+                </div>
+                <div><Label>Nomor Referensi (Opsional)</Label>
+                    <input type="text" value={f.data.leasing_application_ref} onChange={e => f.setData("leasing_application_ref", e.target.value)} placeholder="Nomor referensi aplikasi" className={iCls} />
+                </div>
+            </Modal>
         );
     }
 
     function ScheduleSurveyModal() {
-        const { data, setData, post, processing } = useForm({
-            survey_scheduled_date: "",
-            survey_scheduled_time: "",
-            surveyor_name: "",
-            surveyor_phone: "",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.schedule-survey", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
+        const f = useForm({ survey_scheduled_date: "", survey_scheduled_time: "", surveyor_name: "", surveyor_phone: "" });
         return (
-            <CModal
-                visible={activeModal === "survey"}
-                onClose={() => setActiveModal(null)}
-                size="lg"
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Jadwalkan Survey</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <CRow>
-                            <CCol md={6} className="mb-3">
-                                <CFormLabel>Tanggal</CFormLabel>
-                                <CFormInput
-                                    type="date"
-                                    value={data.survey_scheduled_date}
-                                    onChange={(e) =>
-                                        setData(
-                                            "survey_scheduled_date",
-                                            e.target.value,
-                                        )
-                                    }
-                                    required
-                                />
-                            </CCol>
-                            <CCol md={6} className="mb-3">
-                                <CFormLabel>Jam</CFormLabel>
-                                <CFormInput
-                                    type="time"
-                                    value={data.survey_scheduled_time}
-                                    onChange={(e) =>
-                                        setData(
-                                            "survey_scheduled_time",
-                                            e.target.value,
-                                        )
-                                    }
-                                    required
-                                />
-                            </CCol>
-                        </CRow>
-                        <CRow>
-                            <CCol md={6} className="mb-3">
-                                <CFormLabel>Nama Surveyor</CFormLabel>
-                                <CFormInput
-                                    type="text"
-                                    value={data.surveyor_name}
-                                    onChange={(e) =>
-                                        setData("surveyor_name", e.target.value)
-                                    }
-                                    required
-                                />
-                            </CCol>
-                            <CCol md={6} className="mb-3">
-                                <CFormLabel>No. HP Surveyor</CFormLabel>
-                                <CFormInput
-                                    type="text"
-                                    value={data.surveyor_phone}
-                                    onChange={(e) =>
-                                        setData(
-                                            "surveyor_phone",
-                                            e.target.value,
-                                        )
-                                    }
-                                    required
-                                />
-                            </CCol>
-                        </CRow>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="primary"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Jadwalkan
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "survey"} onClose={() => setActiveModal(null)} title="Jadwalkan Survey"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="primary" disabled={f.processing} onClick={() => f.post(route("admin.credits.schedule-survey", credit.id), { onFinish: () => setActiveModal(null) })}>Jadwalkan</Btn></>}>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div><Label>Tanggal *</Label><input required type="date" value={f.data.survey_scheduled_date} onChange={e => f.setData("survey_scheduled_date", e.target.value)} className={iCls} /></div>
+                    <div><Label>Jam *</Label><input required type="time" value={f.data.survey_scheduled_time} onChange={e => f.setData("survey_scheduled_time", e.target.value)} className={iCls} /></div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div><Label>Nama Surveyor *</Label><input required type="text" value={f.data.surveyor_name} onChange={e => f.setData("surveyor_name", e.target.value)} className={iCls} /></div>
+                    <div><Label>No. HP Surveyor *</Label><input required type="text" value={f.data.surveyor_phone} onChange={e => f.setData("surveyor_phone", e.target.value)} className={iCls} /></div>
+                </div>
+            </Modal>
         );
     }
 
     function CompleteSurveyModal() {
-        const { data, setData, post, processing } = useForm({
-            survey_notes: "",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.complete-survey", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
+        const f = useForm({ survey_notes: "" });
         return (
-            <CModal
-                visible={activeModal === "completeSurvey"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Selesaikan Survey</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Catatan Survey</CFormLabel>
-                            <CFormTextarea
-                                rows="4"
-                                value={data.survey_notes}
-                                onChange={(e) =>
-                                    setData("survey_notes", e.target.value)
-                                }
-                                placeholder="Masukkan hasil dan catatan survey..."
-                            />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="primary"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Selesai
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "completeSurvey"} onClose={() => setActiveModal(null)} title="Selesaikan Survey"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="primary" disabled={f.processing} onClick={() => f.post(route("admin.credits.complete-survey", credit.id), { onFinish: () => setActiveModal(null) })}>Selesai</Btn></>}>
+                <Label>Catatan Hasil Survey</Label>
+                <textarea rows={4} value={f.data.survey_notes} onChange={e => f.setData("survey_notes", e.target.value)} placeholder="Hasil dan catatan survey..." className={`${iCls} resize-none`} />
+            </Modal>
         );
     }
 
     function ApproveCreditModal() {
-        const { data, setData, post, processing } = useForm({
-            approved_amount:
-                credit.transaction?.credit_amount ||
-                credit.transaction?.motor?.price - credit.dp_amount ||
-                "",
-            interest_rate: "2.5",
+        const f = useForm({
+            approved_amount: trx?.credit_amount || (motor?.price && credit.dp_amount ? motor.price - credit.dp_amount : "") || "",
+            interest_rate: "2.5"
         });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.approve", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
         return (
-            <CModal
-                visible={activeModal === "approve"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Setujui Kredit</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Jumlah Persetujuan</CFormLabel>
-                            <CFormInput
-                                type="number"
-                                value={data.approved_amount}
-                                onChange={(e) =>
-                                    setData("approved_amount", e.target.value)
-                                }
-                                required
-                                step="0.01"
-                                min="0"
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <CFormLabel>Suku Bunga (%)</CFormLabel>
-                            <CFormInput
-                                type="number"
-                                value={data.interest_rate}
-                                onChange={(e) =>
-                                    setData("interest_rate", e.target.value)
-                                }
-                                required
-                                step="0.01"
-                                min="0"
-                                max="100"
-                            />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="success"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Setujui
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "approve"} onClose={() => setActiveModal(null)} title="Setujui Kredit"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="success" disabled={f.processing} onClick={() => f.post(route("admin.credits.approve", credit.id), { onFinish: () => setActiveModal(null) })}>Setujui</Btn></>}>
+                <div className="mb-4"><Label>Jumlah Persetujuan *</Label><input required type="number" step="0.01" min="0" value={f.data.approved_amount} onChange={e => f.setData("approved_amount", e.target.value)} className={iCls} /></div>
+                <div><Label>Suku Bunga (%) *</Label><input required type="number" step="0.01" min="0" max="100" value={f.data.interest_rate} onChange={e => f.setData("interest_rate", e.target.value)} className={iCls} /></div>
+            </Modal>
         );
     }
 
     function RecordDPModal() {
-        const { data, setData, post, processing } = useForm({
-            dp_payment_method: "bank_transfer",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.record-dp-payment", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
+        const f = useForm({ dp_payment_method: "bank_transfer" });
         return (
-            <CModal
-                visible={activeModal === "recordDP"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Catat Pembayaran DP</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Metode Pembayaran</CFormLabel>
-                            <CFormSelect
-                                value={data.dp_payment_method}
-                                onChange={(e) =>
-                                    setData("dp_payment_method", e.target.value)
-                                }
-                                required
-                            >
-                                <option value="bank_transfer">
-                                    Transfer Bank
-                                </option>
-                                <option value="cash">Tunai</option>
-                                <option value="check">Cek</option>
-                                <option value="other">Lainnya</option>
-                            </CFormSelect>
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="success"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Catat
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "recordDP"} onClose={() => setActiveModal(null)} title="Catat Pembayaran DP"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="success" disabled={f.processing} onClick={() => f.post(route("admin.credits.record-dp-payment", credit.id), { onFinish: () => setActiveModal(null) })}>Catat</Btn></>}>
+                <Label>Metode Pembayaran</Label>
+                <select value={f.data.dp_payment_method} onChange={e => f.setData("dp_payment_method", e.target.value)} className={iCls}>
+                    <option value="bank_transfer">Transfer Bank</option>
+                    <option value="cash">Tunai</option>
+                    <option value="check">Cek</option>
+                    <option value="other">Lainnya</option>
+                </select>
+                {credit.dp_amount && (
+                    <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                        <p className="text-xs text-emerald-700 font-bold">Jumlah DP yang harus dibayar:</p>
+                        <p className="text-lg font-black text-emerald-700 mt-0.5">{fmt(credit.dp_amount)}</p>
+                    </div>
+                )}
+            </Modal>
         );
     }
 
     function CompleteCreditModal() {
-        const { data, setData, post, processing } = useForm({
-            internal_notes: "",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.credits.complete", credit.id), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-            });
-        };
-
+        const f = useForm({ internal_notes: "" });
         return (
-            <CModal
-                visible={activeModal === "completeCredit"}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Selesaikan Proses Kredit</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Catatan Internal (Opsional)</CFormLabel>
-                            <CFormTextarea
-                                value={data.internal_notes}
-                                onChange={(e) =>
-                                    setData("internal_notes", e.target.value)
-                                }
-                                placeholder="Catat informasi penting tentang proses kredit ini..."
-                                rows={4}
-                            />
-                        </div>
-                        <CAlert color="info">
-                            <strong>Perhatian:</strong> Menyelesaikan proses
-                            kredit berarti customer dapat mulai mengambil motor
-                            dan cicilan akan dimulai sesuai jadwal.
-                        </CAlert>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="success"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Selesaikan
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === "completeCredit"} onClose={() => setActiveModal(null)} title="Selesaikan Proses Kredit"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="success" disabled={f.processing} onClick={() => f.post(route("admin.credits.complete", credit.id), { onFinish: () => setActiveModal(null) })}>Selesaikan</Btn></>}>
+                <div className="mb-4 p-3 bg-sky-50 border border-sky-200 rounded-lg text-sm text-sky-700">Menyelesaikan proses kredit berarti pelanggan dapat mulai mengambil motor dan cicilan akan berjalan.</div>
+                <Label>Catatan Internal (Opsional)</Label>
+                <textarea rows={4} value={f.data.internal_notes} onChange={e => f.setData("internal_notes", e.target.value)} placeholder="Catat informasi penting..." className={`${iCls} resize-none`} />
+            </Modal>
         );
     }
 
-    // Create a function to handle document reject modals dynamically
-    function DocumentRejectModal({ documentId }) {
-        const { data, setData, post, processing } = useForm({
-            rejection_reason: "",
-        });
-
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            setIsLoading(true);
-            post(route("admin.documents.reject", documentId), {
-                onFinish: () => {
-                    setIsLoading(false);
-                    setActiveModal(null);
-                },
-                onSuccess: () => {
-                    Swal.fire("Berhasil!", "Dokumen telah ditolak.", "success");
-                    window.location.reload();
-                },
-                onError: () => {
-                    Swal.fire("Error", "Gagal menolak dokumen", "error");
-                },
-            });
-        };
-
+    function RejectDocModal({ docId }) {
+        const f = useForm({ rejection_reason: "" });
         return (
-            <CModal
-                visible={activeModal === `rejectDoc-${documentId}`}
-                onClose={() => setActiveModal(null)}
-            >
-                <CModalHeader onClose={() => setActiveModal(null)}>
-                    <CModalTitle>Tolak Dokumen</CModalTitle>
-                </CModalHeader>
-                <CForm onSubmit={handleSubmit}>
-                    <CModalBody>
-                        <div className="mb-3">
-                            <CFormLabel>Alasan Penolakan</CFormLabel>
-                            <CFormTextarea
-                                rows="3"
-                                value={data.rejection_reason}
-                                onChange={(e) =>
-                                    setData("rejection_reason", e.target.value)
-                                }
-                                placeholder="Jelaskan alasan penolakan dokumen..."
-                                required
-                            />
-                        </div>
-                    </CModalBody>
-                    <CModalFooter>
-                        <CButton
-                            type="button"
-                            color="secondary"
-                            onClick={() => setActiveModal(null)}
-                        >
-                            Batal
-                        </CButton>
-                        <CButton
-                            type="submit"
-                            color="danger"
-                            disabled={processing || isLoading}
-                        >
-                            {processing || isLoading ? (
-                                <CSpinner size="sm" />
-                            ) : null}{" "}
-                            Tolak
-                        </CButton>
-                    </CModalFooter>
-                </CForm>
-            </CModal>
+            <Modal open={activeModal === `rejectDoc-${docId}`} onClose={() => setActiveModal(null)} title="Tolak Dokumen"
+                footer={<><Btn variant="cancel" onClick={() => setActiveModal(null)}>Batal</Btn><Btn variant="danger" disabled={f.processing} onClick={() => f.post(route("admin.documents.reject", docId), { onFinish: () => setActiveModal(null), onSuccess: () => window.location.reload() })}>Tolak</Btn></>}>
+                <Label>Alasan Penolakan *</Label>
+                <textarea rows={3} required value={f.data.rejection_reason} onChange={e => f.setData("rejection_reason", e.target.value)} placeholder="Jelaskan alasan..." className={`${iCls} resize-none`} />
+            </Modal>
         );
     }
 
-    const handleCancel = () => {
-        Swal.fire({
-            title: "Batalkan Pengajuan?",
-            text: "Status akan diubah menjadi Dibatalkan secara permanen.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Ya, Batalkan",
-            cancelButtonText: "Tutup",
-            confirmButtonColor: "#6c757d",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.credits.cancel", credit.id));
-            }
-        });
-    };
-
-    const handleDelete = () => {
-        Swal.fire({
-            title: "Hapus Pengajuan?",
-            text: "Data pengajuan dan transaksi terkait akan dihapus permanen.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Hapus Sekarang",
-            cancelButtonText: "Batal",
-            confirmButtonColor: "#dc3545",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.delete(route("admin.credits.destroy", credit.id), {
-                    onSuccess: () => {
-                        router.visit(route("admin.credits.index"));
-                    },
-                });
-            }
-        });
-    };
-
-    const handleRepossess = () => {
-        Swal.fire({
-            title: "Tarik Motor (Repossess)?",
-            text: "Status akan menjadi Tarik Leasing, semua sisa cicilan akan dibatalkan/hangus. Berikan alasan penarikan (misal: Menunggak 6 bulan).",
-            input: 'textarea',
-            inputPlaceholder: 'Alasan penarikan...',
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Ya, Tarik Motor",
-            cancelButtonText: "Batal",
-            confirmButtonColor: "#dc3545",
-            preConfirm: (reason) => {
-                if (!reason) {
-                    Swal.showValidationMessage('Alasan penarikan wajib diisi')
-                }
-                return reason;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.credits.repossess", credit.id), { reason: result.value }, {
-                    onSuccess: () => {
-                        Swal.fire("Berhasil", "Motor berhasil berstatus Ditarik/Repossess.", "success");
-                    }
-                });
-            }
-        });
-    };
-
-    const handleViewProof = (paymentProof) => {
-        Swal.fire({
-            title: "Bukti Transfer",
-            imageUrl: `/storage/${paymentProof}`,
-            imageAlt: "Bukti Transfer",
-            showConfirmButton: true,
-            confirmButtonText: "Tutup",
-            width: "80%",
-            customClass: {
-                image: "img-fluid object-fit-contain",
-            },
-        });
-    };
-
-    const handleApproveInstallment = (installmentId) => {
-        Swal.fire({
-            title: "Setujui Cicilan?",
-            text: "Pastikan nominal bukti transfer dan rekening koran sudah sesuai.",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "Ya, Setujui (Lunas)",
-            cancelButtonText: "Batal",
-            confirmButtonColor: "#28a745",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.installments.approve", installmentId), {}, {
-                    onSuccess: () => {
-                        Swal.fire("Berhasil", "Cicilan berhasil disetujui dan ditandai Lunas.", "success");
-                    }
-                });
-            }
-        });
-    };
-
-    const handleRejectInstallment = (installmentId) => {
-        Swal.fire({
-            title: "Tolak Bukti Transfer?",
-            text: "Berikan alasan kenapa bukti transfer ini ditolak. User akan diminta mengunggah ulang.",
-            input: "textarea",
-            inputPlaceholder: "Cth: Nominal kurang, foto buram...",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Tolak Pembayaran",
-            cancelButtonText: "Batal",
-            confirmButtonColor: "#dc3545",
-            preConfirm: (reason) => {
-                if (!reason) {
-                    Swal.showValidationMessage("Alasan wajib diisi");
-                }
-                return reason;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(route("admin.installments.reject", installmentId), { reason: result.value }, {
-                    onSuccess: () => {
-                        Swal.fire("Berhasil", "Bukti transfer ditolak.", "success");
-                    }
-                });
-            }
-        });
+    /* ── Action buttons — availableTransitions is a PHP assoc array: { "target_status": "Label" } ── */
+    // Map target status → modal + display config
+    const STATUS_TO_ACTION = {
+        verifikasi_dokumen:         { label: "Verifikasi Dokumen", icon: FileCheck,   cls: "bg-indigo-600 hover:bg-indigo-700 text-white hover:text-white shadow-indigo-100", modal: "verify" },
+        dikirim_ke_leasing:         { label: "Kirim ke Leasing",   icon: Send,         cls: "bg-indigo-600 hover:bg-indigo-700 text-white hover:text-white shadow-indigo-100", modal: "sendLeasing" },
+        survey_dijadwalkan:         { label: "Jadwalkan Survey",   icon: Calendar,     cls: "bg-purple-600 hover:bg-purple-700 text-white hover:text-white shadow-purple-100", modal: "survey" },
+        menunggu_keputusan_leasing: { label: "Selesai Survey",     icon: Check,        cls: "bg-blue-600 hover:bg-blue-700 text-white hover:text-white shadow-blue-100",     modal: "completeSurvey" },
+        disetujui:                  { label: "Setujui Kredit",     icon: CheckCircle,  cls: "bg-emerald-600 hover:bg-emerald-700 text-white hover:text-white shadow-emerald-100", modal: "approve" },
+        dp_dibayar:                 { label: "Catat Bayar DP",     icon: Banknote,     cls: "bg-emerald-600 hover:bg-emerald-700 text-white hover:text-white shadow-emerald-100", modal: "recordDP" },
+        selesai:                    { label: "Selesaikan",         icon: Check,        cls: "bg-emerald-600 hover:bg-emerald-700 text-white hover:text-white shadow-emerald-100", modal: "completeCredit" },
+        ditolak:                    { label: "Tolak",              icon: XCircle,      cls: "bg-red-500 hover:bg-red-600 text-white hover:text-white shadow-red-100",        modal: "reject" },
     };
 
     return (
-        <AdminLayout title={`Detail Pengajuan Kredit #${credit.id}`}>
-            {/* Header */}
-            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                <Link
-                    href={route("admin.credits.index")}
-                    className="btn btn-outline-secondary d-flex align-items-center gap-2"
-                >
-                    <CIcon icon={cilArrowLeft} size="sm" />
-                    Kembali
-                </Link>
-                <h3 className="mb-0">
-                    Transaksi #{credit.transaction_id} - {currentStatus.label}
-                </h3>
-                <div className="d-flex gap-2">
-                    {credit.status !== "dibatalkan" &&
-                        credit.status !== "ditarik_leasing" &&
-                        credit.status !== "selesai" && (
-                            <CButton
-                                color="secondary"
-                                variant="outline"
-                                size="sm"
-                                className="d-flex align-items-center gap-2"
-                                onClick={handleCancel}
-                            >
-                                <CIcon icon={cilBan} size="sm" />
-                                Batalkan
-                            </CButton>
-                        )}
-                        
-                    {credit.status === "selesai" && (
-                        <CButton
-                            color="danger"
-                            size="sm"
-                            className="d-flex align-items-center gap-2 text-white"
-                            onClick={handleRepossess}
-                        >
-                            <CIcon icon={cilBan} size="sm" />
-                            Tarik Motor (Repossess)
-                        </CButton>
-                    )}
-                    <CButton
-                        color="danger"
-                        variant="outline"
-                        size="sm"
-                        className="d-flex align-items-center gap-2"
-                        onClick={handleDelete}
-                    >
-                        <CIcon icon={cilTrash} size="sm" />
-                        Hapus
-                    </CButton>
-                </div>
-            </div>
-
-            <CRow className="g-4">
-                <CCol xl={8}>
-                    <CNav variant="tabs" className="mb-4" style={{ borderBottom: '2px solid #dee2e6' }}>
-                        <CNavItem>
-                            <CNavLink active={activeTab === 'info'} onClick={() => setActiveTab('info')} style={{ cursor: 'pointer' }} className={activeTab === 'info' ? 'fw-bold' : ''}>
-                                Info Utama
-                            </CNavLink>
-                        </CNavItem>
-                        <CNavItem>
-                            <CNavLink active={activeTab === 'doc'} onClick={() => setActiveTab('doc')} style={{ cursor: 'pointer' }} className={activeTab === 'doc' ? 'fw-bold' : ''}>
-                                Dok. & Survey
-                            </CNavLink>
-                        </CNavItem>
-                        <CNavItem>
-                            <CNavLink active={activeTab === 'installments'} onClick={() => setActiveTab('installments')} style={{ cursor: 'pointer' }} className={activeTab === 'installments' ? 'fw-bold' : ''}>
-                                Tagihan & TF
-                            </CNavLink>
-                        </CNavItem>
-                        <CNavItem>
-                            <CNavLink active={activeTab === 'logs'} onClick={() => setActiveTab('logs')} style={{ cursor: 'pointer' }} className={activeTab === 'logs' ? 'fw-bold' : ''}>
-                                Riwayat
-                            </CNavLink>
-                        </CNavItem>
-                    </CNav>
-
-                    {/* Tab 1: Info Utama */}
-                    {activeTab === 'info' && (
-                        <>
-                    {/* Current Status */}
-                    <CCard className="mb-4 border-0 shadow-sm">
-                        <CCardHeader className="bg-transparent border-bottom border-light py-3">
-                            <strong className="fs-6">Status Saat Ini</strong>
-                        </CCardHeader>
-                        <CCardBody className="text-center py-4">
-                            <CBadge
-                                color={currentStatus.color}
-                                className="fs-5"
-                            >
-                                {currentStatus.label || credit.status}
-                            </CBadge>
-                        </CCardBody>
-                    </CCard>
-
-                    {/* Customer & Motor Info */}
-                    <CRow className="mb-4 g-4">
-                        <CCol md={6}>
-                            <CCard className="h-100 border-0 shadow-sm">
-                                <CCardHeader className="bg-transparent border-bottom border-light">
-                                    <strong className="fs-6">
-                                        Data Pelanggan
-                                    </strong>
-                                </CCardHeader>
-                                <CCardBody className="p-4">
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Nama
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.name ||
-                                                credit.transaction?.user?.name}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Email
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.user?.email}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            No. HP
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.phone ||
-                                                credit.transaction?.user
-                                                    ?.phone ||
-                                                "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            NIK
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.nik ||
-                                                credit.transaction?.user?.nik ||
-                                                "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Nomor Referensi (External)
-                                        </small>
-                                        <strong>
-                                            {credit.reference_number || "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Pekerjaan
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.occupation ||
-                                                credit.transaction?.user
-                                                    ?.pekerjaan ||
-                                                "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Pemasukan Bulanan
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.monthly_income
-                                                ? new Intl.NumberFormat(
-                                                      "id-ID",
-                                                      {
-                                                          style: "currency",
-                                                          currency: "IDR",
-                                                      },
-                                                  ).format(
-                                                      credit.transaction
-                                                          .monthly_income,
-                                                  )
-                                                : credit.transaction?.user
-                                                        ?.monthly_income
-                                                  ? new Intl.NumberFormat(
-                                                        "id-ID",
-                                                        {
-                                                            style: "currency",
-                                                            currency: "IDR",
-                                                        },
-                                                    ).format(
-                                                        credit.transaction.user
-                                                            .monthly_income,
-                                                    )
-                                                  : "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Lama Bekerja
-                                        </small>
-                                        <strong>
-                                            {credit.transaction
-                                                ?.employment_duration || "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-0">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Alamat
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.address ||
-                                                credit.transaction?.user
-                                                    ?.alamat ||
-                                                "-"}
-                                        </strong>
-                                    </p>
-                                </CCardBody>
-                            </CCard>
-                        </CCol>
-                        <CCol md={6}>
-                            <CCard className="h-100 border-0 shadow-sm">
-                                <CCardHeader className="bg-transparent border-bottom border-light">
-                                    <strong className="d-flex align-items-center gap-2 fs-6">
-                                        <CIcon icon={cilBike} size="sm" />
-                                        Data Motor
-                                    </strong>
-                                </CCardHeader>
-                                <CCardBody className="p-4">
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Motor
-                                        </small>
-                                        <strong>
-                                            {credit.transaction?.motor?.name}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Harga
-                                        </small>
-                                        <strong>
-                                            {formatCurrency(
-                                                credit.transaction?.motor
-                                                    ?.price,
-                                            )}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-0">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Jumlah Kredit
-                                        </small>
-                                        <strong>
-                                            {formatCurrency(
-                                                (credit.transaction?.motor
-                                                    ?.price || 0) -
-                                                    (credit.dp_amount || 0),
-                                            )}
-                                        </strong>
-                                    </p>
-                                </CCardBody>
-                            </CCard>
-                        </CCol>
-                    </CRow>
-
-                    {/* Credit Details */}
-                    <CRow className="mb-4 g-4">
-                        <CCol md={6}>
-                            <CCard className="h-100 border-0 shadow-sm">
-                                <CCardHeader className="bg-transparent border-bottom border-light">
-                                    <strong className="d-flex align-items-center gap-2 fs-6">
-                                        <CIcon icon={cilMoney} size="sm" />
-                                        Detail Kredit
-                                    </strong>
-                                </CCardHeader>
-                                <CCardBody className="p-4">
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Uang Muka
-                                        </small>
-                                        <strong>
-                                            {formatCurrency(credit.dp_amount)}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Tenor
-                                        </small>
-                                        <strong>{credit.tenor} bulan</strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Cicilan Bulanan
-                                        </small>
-                                        <strong>
-                                            {formatCurrency(
-                                                credit.monthly_installment,
-                                            )}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-0">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Suku Bunga
-                                        </small>
-                                        <strong>
-                                            {(
-                                                credit.interest_rate * 100
-                                            ).toFixed(2)}
-                                            %
-                                        </strong>
-                                    </p>
-                                </CCardBody>
-                            </CCard>
-                        </CCol>
-                        <CCol md={6}>
-                            <CCard className="h-100 border-0 shadow-sm">
-                                <CCardHeader className="bg-transparent border-bottom border-light">
-                                    <strong className="fs-6">
-                                        Info Leasing
-                                    </strong>
-                                </CCardHeader>
-                                <CCardBody className="p-4">
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Penyedia
-                                        </small>
-                                        <strong>
-                                            {credit.leasing_provider ||
-                                                "Belum ditentukan"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            No. Referensi
-                                        </small>
-                                        <strong>
-                                            {credit.reference_number || "-"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-3">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            Tanggal Disetujui
-                                        </small>
-                                        <strong>
-                                            {credit.verified_at
-                                                ? new Date(
-                                                      credit.verified_at,
-                                                  ).toLocaleDateString("id-ID")
-                                                : credit.status === 'disetujui' || credit.status === 'dp_dibayar' || credit.status === 'selesai'
-                                                    ? "-"
-                                                    : "Menunggu"}
-                                        </strong>
-                                    </p>
-                                    <p className="mb-0">
-                                        <small
-                                            className="text-body-secondary d-block fw-500 text-uppercase"
-                                            style={{
-                                                fontSize: "0.7rem",
-                                                letterSpacing: "0.5px",
-                                            }}
-                                        >
-                                            DP Dibayar
-                                        </small>
-                                        <strong>
-                                            {credit.dp_paid_at
-                                                ? new Date(
-                                                      credit.dp_paid_at,
-                                                  ).toLocaleDateString("id-ID")
-                                                : credit.status === 'dp_dibayar' || credit.status === 'selesai'
-                                                    ? "Sudah Dibayar"
-                                                    : "Belum dibayar"}
-                                        </strong>
-                                    </p>
-                                </CCardBody>
-                            </CCard>
-                        </CCol>
-                    </CRow>
-                    </>
-                    )}
-
-                    {/* Tab 2: Dokumen & Survey */}
-                    {activeTab === 'doc' && (
-                        <>
-                    {/* Document Status Alert */}
-                    {credit.documents &&
-                        credit.documents.length > 0 &&
-                        (() => {
-                            const pendingCount = credit.documents.filter(
-                                (d) => d.approval_status === "pending",
-                            ).length;
-                            const approvedCount = credit.documents.filter(
-                                (d) => d.approval_status === "approved",
-                            ).length;
-                            const rejectedCount = credit.documents.filter(
-                                (d) => d.approval_status === "rejected",
-                            ).length;
-
-                            return (
-                                <CAlert
-                                    color={
-                                        pendingCount > 0 ? "warning" : "success"
-                                    }
-                                    className="mb-4 border-0"
-                                >
-                                    <strong className="mb-2 d-block">
-                                        Status Dokumen
-                                    </strong>
-                                    <div className="small mb-2">
-                                        <span className="badge bg-success me-2">
-                                            {approvedCount} Disetujui
-                                        </span>
-                                        <span className="badge bg-danger me-2">
-                                            {rejectedCount} Ditolak
-                                        </span>
-                                        <span className="badge bg-warning">
-                                            {pendingCount} Menunggu
-                                        </span>
-                                    </div>
-                                    {pendingCount > 0 && (
-                                        <div className="small mt-2">
-                                            Semua dokumen harus disetujui
-                                            atau ditolak sebelum melanjutkan
-                                            verifikasi.
-                                        </div>
-                                    )}
-                                </CAlert>
-                            );
-                        })()}
-
-                    {/* Documents Section */}
-                    {credit.documents && credit.documents.length > 0 && (
-                        <CCard className="mb-4 border-0 shadow-sm">
-                            <CCardHeader className="bg-transparent border-bottom border-light py-3">
-                                <strong className="d-flex align-items-center gap-2 fs-6">
-                                    <CIcon icon={cilNotes} size="sm" />
-                                    Dokumen Pendukung ({credit.documents.length}
-                                    )
-                                </strong>
-                            </CCardHeader>
-                            <CCardBody className="p-0">
-                                <div className="table-responsive">
-                                    <table
-                                        className="table table-sm table-hover mb-0"
-                                        style={{ fontSize: "0.9rem" }}
-                                    >
-                                        <thead className="table-light border-top border-bottom">
-                                            <tr>
-                                                <th className="ps-4 pe-3">
-                                                    Tipe Dokumen
-                                                </th>
-                                                <th className="px-3">
-                                                    Nama File
-                                                </th>
-                                                <th className="px-3">Status</th>
-                                                <th className="ps-3 pe-4 text-end">
-                                                    Aksi
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {credit.documents.map((doc) => (
-                                                <tr
-                                                    key={doc.id}
-                                                    style={{
-                                                        verticalAlign: "middle",
-                                                    }}
-                                                >
-                                                    <td className="ps-4 pe-3">
-                                                        <small>
-                                                            {doc.document_type}
-                                                        </small>
-                                                    </td>
-                                                    <td className="px-3">
-                                                        <a
-                                                            href={`/storage/${doc.file_path}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-decoration-none fw-500"
-                                                        >
-                                                            {doc.original_name}
-                                                        </a>
-                                                    </td>
-                                                    <td className="px-3">
-                                                        <CBadge
-                                                            color={
-                                                                doc.approval_status ===
-                                                                "approved"
-                                                                    ? "success"
-                                                                    : doc.approval_status ===
-                                                                        "rejected"
-                                                                      ? "danger"
-                                                                      : "warning"
-                                                            }
-                                                        >
-                                                            {doc.approval_status ===
-                                                            "approved"
-                                                                ? "Disetujui"
-                                                                : doc.approval_status ===
-                                                                    "rejected"
-                                                                  ? "Ditolak"
-                                                                  : "Menunggu"}
-                                                        </CBadge>
-                                                    </td>
-                                                    <td className="ps-3 pe-4 text-end">
-                                                        <div className="d-flex gap-2 justify-content-end">
-                                                            {doc.approval_status ===
-                                                                "pending" && (
-                                                                <>
-                                                                    <CButton
-                                                                        color="success"
-                                                                        size="sm"
-                                                                        onClick={() => {
-                                                                            Swal.fire(
-                                                                                {
-                                                                                    title: "Setujui Dokumen?",
-                                                                                    text: doc.original_name,
-                                                                                    icon: "question",
-                                                                                    showCancelButton: true,
-                                                                                    confirmButtonText:
-                                                                                        "Setujui",
-                                                                                    cancelButtonText:
-                                                                                        "Batal",
-                                                                                },
-                                                                            ).then(
-                                                                                (
-                                                                                    result,
-                                                                                ) => {
-                                                                                    if (
-                                                                                        result.isConfirmed
-                                                                                    ) {
-                                                                                        router.post(
-                                                                                            route(
-                                                                                                "admin.documents.approve",
-                                                                                                doc.id,
-                                                                                            ),
-                                                                                            {},
-                                                                                            {
-                                                                                                onSuccess:
-                                                                                                    () => {
-                                                                                                        Swal.fire(
-                                                                                                            "Berhasil",
-                                                                                                            "Dokumen disetujui",
-                                                                                                            "success",
-                                                                                                        );
-                                                                                                        window.location.reload();
-                                                                                                    },
-                                                                                                onError:
-                                                                                                    () => {
-                                                                                                        Swal.fire(
-                                                                                                            "Gagal",
-                                                                                                            "Error approve dokumen",
-                                                                                                            "error",
-                                                                                                        );
-                                                                                                    },
-                                                                                            },
-                                                                                        );
-                                                                                    }
-                                                                                },
-                                                                            );
-                                                                        }}
-                                                                        className="d-flex align-items-center gap-2"
-                                                                        title="Setujui Dokumen"
-                                                                    >
-                                                                        <CheckCircle
-                                                                            size={
-                                                                                16
-                                                                            }
-                                                                        />
-                                                                        Setujui
-                                                                    </CButton>
-                                                                    <CButton
-                                                                        color="danger"
-                                                                        size="sm"
-                                                                        onClick={() => {
-                                                                            setActiveModal(
-                                                                                `rejectDoc-${doc.id}`,
-                                                                            );
-                                                                        }}
-                                                                        className="d-flex align-items-center gap-2"
-                                                                        title="Tolak Dokumen"
-                                                                    >
-                                                                        <XCircle
-                                                                            size={
-                                                                                16
-                                                                            }
-                                                                        />
-                                                                        Tolak
-                                                                    </CButton>
-                                                                </>
-                                                            )}
-                                                            <CButton
-                                                                color="info"
-                                                                size="sm"
-                                                                as="a"
-                                                                href={`/storage/${doc.file_path}`}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="d-flex align-items-center gap-2"
-                                                                title="Download/Lihat Dokumen"
-                                                            >
-                                                                <Eye
-                                                                    size={16}
-                                                                />
-                                                                Lihat
-                                                            </CButton>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </CCardBody>
-                        </CCard>
-                    )}
-                    </>
-                    )}
-
-                    {/* Tab 3: Tagihan & Bukti TF */}
-                    {activeTab === 'installments' && (
-                        <>
-                    {/* Installments / Jadwal Cicilan Section */}
-                    {credit.transaction?.installments && credit.transaction.installments.length > 0 && (
-                        <CCard className="mb-4 border-0 shadow-sm">
-                            <CCardHeader className="bg-transparent border-bottom border-light py-3 d-flex justify-content-between align-items-center">
-                                <strong className="d-flex align-items-center gap-2 fs-6">
-                                    <CIcon icon={cilMoney} size="sm" />
-                                    Jadwal & Info Pembayaran Cicilan
-                                </strong>
-                            </CCardHeader>
-                            <CCardBody className="p-0">
-                                <div className="table-responsive">
-                                    <CTable hover className="mb-0 align-middle small">
-                                        <CTableHead className="bg-light">
-                                            <CTableRow>
-                                                <CTableHeaderCell className="border-0">Bulan Ke-</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0">Jatuh Tempo</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0">Nominal Pokok</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0">Total Denda</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0">Total Tagihan</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0 text-center">Status</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0 text-center">Bukti TF</CTableHeaderCell>
-                                                <CTableHeaderCell className="border-0 text-end pe-4">Aksi</CTableHeaderCell>
-                                            </CTableRow>
-                                        </CTableHead>
-                                        <CTableBody>
-                                            {credit.transaction.installments.map((installment) => {
-                                                let badgeColor = "secondary";
-                                                let statusLabel = installment.status;
-                                                
-                                                if (installment.status === 'paid') { badgeColor = "success"; statusLabel = "Lunas"; }
-                                                else if (installment.status === 'belum_dibayar') { badgeColor = "danger"; statusLabel = "Belum Bayar"; }
-                                                else if (installment.status === 'pending') { badgeColor = "warning"; statusLabel = "Menunggu"; }
-                                                else if (installment.status === 'overdue') { badgeColor = "danger"; statusLabel = "Jatuh Tempo"; }
-                                                else if (installment.status === 'waiting_approval') { badgeColor = "info"; statusLabel = "Review Admin"; }
-                                                else if (installment.status === 'dibatalkan_sistem') { badgeColor = "dark"; statusLabel = "Hangus"; }
-
-                                                const isReviewing = installment.status === 'waiting_approval';
-
-                                                return (
-                                                    <CTableRow key={installment.id} className={isReviewing ? "table-warning" : ""}>
-                                                        <CTableDataCell className="fw-semibold">
-                                                            {installment.installment_number === 0 ? "DP (Uang Muka)" : `Ke-${installment.installment_number}`}
-                                                        </CTableDataCell>
-                                                        <CTableDataCell>
-                                                            {new Date(installment.due_date).toLocaleDateString("id-ID")}
-                                                        </CTableDataCell>
-                                                        <CTableDataCell>{formatCurrency(installment.amount)}</CTableDataCell>
-                                                        <CTableDataCell className={installment.penalty_amount > 0 ? "text-danger" : ""}>
-                                                            {formatCurrency(installment.penalty_amount || 0)}
-                                                        </CTableDataCell>
-                                                        <CTableDataCell className="fw-bold">
-                                                            {formatCurrency(installment.total_with_penalty || installment.amount)}
-                                                        </CTableDataCell>
-                                                        <CTableDataCell className="text-center">
-                                                            <CBadge color={badgeColor}>{statusLabel}</CBadge>
-                                                        </CTableDataCell>
-                                                        <CTableDataCell className="text-center">
-                                                            {installment.payment_proof ? (
-                                                                <CButton 
-                                                                    color="info" 
-                                                                    variant="ghost" 
-                                                                    size="sm" 
-                                                                    onClick={() => handleViewProof(installment.payment_proof)}
-                                                                >
-                                                                    Lihat Struk
-                                                                </CButton>
-                                                            ) : "-"}
-                                                        </CTableDataCell>
-                                                        <CTableDataCell className="text-end pe-4">
-                                                            {isReviewing && (
-                                                                <div className="d-flex gap-1 justify-content-end">
-                                                                    <CButton 
-                                                                        color="success" 
-                                                                        size="sm" 
-                                                                        title="Setujui"
-                                                                        onClick={() => handleApproveInstallment(installment.id)}
-                                                                    >
-                                                                        <CheckCircle size={14} />
-                                                                    </CButton>
-                                                                    <CButton 
-                                                                        color="danger" 
-                                                                        size="sm" 
-                                                                        title="Tolak"
-                                                                        onClick={() => handleRejectInstallment(installment.id)}
-                                                                    >
-                                                                        <XCircle size={14} />
-                                                                    </CButton>
-                                                                </div>
-                                                            )}
-                                                            {!isReviewing && installment.paid_at && (
-                                                                <small className="text-muted text-nowrap">
-                                                                    Lunas: {new Date(installment.paid_at).toLocaleDateString("id-ID")}
-                                                                </small>
-                                                            )}
-                                                        </CTableDataCell>
-                                                    </CTableRow>
-                                                );
-                                            })}
-                                        </CTableBody>
-                                    </CTable>
-                                </div>
-                            </CCardBody>
-                        </CCard>
-                    )}
-                    </>
-                    )}
-
-                    {/* Tab 4: Logs & Histori */}
-                    {activeTab === 'logs' && (
-                        <>
-                    {/* Transaction Logs (PHASE 6) */}
-                    <CCard className="mb-4 border-0 shadow-sm">
-                        <CCardHeader className="bg-transparent border-bottom border-light py-3">
-                            <strong className="fs-6">Audit Trail & Log Status</strong>
-                        </CCardHeader>
-                        <CCardBody className="p-0">
-                            <CTable hover responsive className="mb-0 small">
-                                <CTableHead className="bg-light">
-                                    <CTableRow>
-                                        <CTableHeaderCell className="border-0">Waktu</CTableHeaderCell>
-                                        <CTableHeaderCell className="border-0">Status</CTableHeaderCell>
-                                        <CTableHeaderCell className="border-0">Actor</CTableHeaderCell>
-                                        <CTableHeaderCell className="border-0">Catatan</CTableHeaderCell>
-                                    </CTableRow>
-                                </CTableHead>
-                                <CTableBody>
-                                    {credit.transaction?.logs && credit.transaction.logs.length > 0 ? (
-                                        credit.transaction.logs.map(log => (
-                                            <CTableRow key={log.id}>
-                                                <CTableDataCell className="text-nowrap border-0">
-                                                    {new Date(log.created_at).toLocaleString('id-ID')}
-                                                </CTableDataCell>
-                                                <CTableDataCell className="border-0">
-                                                    {log.status_from && (
-                                                        <>
-                                                            <CBadge color="secondary" variant="outline" className="me-1">
-                                                                {statuses[log.status_from]?.label || log.status_from}
-                                                            </CBadge>
-                                                            &rarr;
-                                                        </>
-                                                    )}
-                                                    <CBadge color="primary" className="ms-1">
-                                                        {statuses[log.status_to || log.status]?.label || log.status_to || log.status}
-                                                    </CBadge>
-                                                </CTableDataCell>
-                                                <CTableDataCell className="border-0">
-                                                    <div className="fw-semibold">{log.actor?.name || 'System'}</div>
-                                                    <div className="text-body-secondary" style={{fontSize: '9px'}}>
-                                                        {log.actor?.role === 'admin' ? 'ADMIN' : (log.actor?.role === 'user' ? 'PELANGGAN' : (log.actor_type?.includes('User') ? 'ADMIN' : 'SYSTEM'))}
-                                                    </div>
-                                                </CTableDataCell>
-                                                <CTableDataCell className="border-0">{log.notes || log.description || '-'}</CTableDataCell>
-                                            </CTableRow>
-                                        ))
-                                    ) : (
-                                        <CTableRow>
-                                            <CTableDataCell colSpan={4} className="text-center py-3 border-0">Belum ada log rincian.</CTableDataCell>
-                                        </CTableRow>
-                                    )}
-                                </CTableBody>
-                            </CTable>
-                        </CCardBody>
-                    </CCard>
-
-                    {/* Survey Information & Rejection Reason di Tab 2 */}
-                    {activeTab === 'doc' && (
-                        <>
-                    {/* Survey Information */}
-                    {(credit.survey_scheduled_date || credit.survey_notes) && (
-                        <CCard className="mb-4 border-0 shadow-sm">
-                            <CCardHeader className="bg-transparent border-bottom border-light py-3">
-                                <strong className="d-flex align-items-center gap-2 fs-6">
-                                    <CIcon icon={cilCalendar} size="sm" />
-                                    Info Survey
-                                </strong>
-                            </CCardHeader>
-                            <CCardBody className="p-4">
-                                {credit.survey_scheduled_date && (
-                                    <>
-                                        <p className="mb-2">
-                                            <small className="text-body-secondary d-block">
-                                                Tanggal Dijadwalkan
-                                            </small>
-                                            <strong>
-                                                {new Date(
-                                                    credit.survey_scheduled_date,
-                                                ).toLocaleDateString("id-ID")}
-                                                {credit.survey_schedules
-                                                    ?.length > 0 &&
-                                                    credit.survey_schedules[
-                                                        credit.survey_schedules
-                                                            .length - 1
-                                                    ].scheduled_time &&
-                                                    ` jam ${credit.survey_schedules[credit.survey_schedules.length - 1].scheduled_time.slice(0, 5)}`}
-                                            </strong>
-                                        </p>
-                                        <p className="mb-2">
-                                            <small className="text-body-secondary d-block">
-                                                Surveyor
-                                            </small>
-                                            <strong>
-                                                {credit.survey_schedules
-                                                    ?.length > 0
-                                                    ? `${credit.survey_schedules[credit.survey_schedules.length - 1].surveyor_name} (${credit.survey_schedules[credit.survey_schedules.length - 1].surveyor_phone})`
-                                                    : "-"}
-                                            </strong>
-                                        </p>
-                                    </>
-                                )}
-                                {credit.survey_notes && (
-                                    <div>
-                                        <small className="text-body-secondary d-block mb-1">
-                                            Catatan Survey
-                                        </small>
-                                        <div className="bg-light p-2 rounded small">
-                                            {credit.survey_notes}
-                                        </div>
-                                    </div>
-                                )}
-                            </CCardBody>
-                        </CCard>
-                    )}
-
-                    {/* Rejection Reason */}
-                    {credit.rejection_reason && (
-                        <CAlert color="danger" className="mb-4">
-                            <strong>Alasan Penolakan:</strong>{" "}
-                            {credit.rejection_reason}
-                        </CAlert>
-                    )}
-                        </>
-                    )}
-
-                    {/* Timeline */}
-                    <CCard className="border-0 shadow-sm">
-                        <CCardHeader className="bg-transparent border-bottom border-light py-3">
-                            <strong className="d-flex align-items-center gap-2 fs-6">
-                                <CIcon icon={cilNotes} size="sm" />
-                                Riwayat Perubahan
-                            </strong>
-                        </CCardHeader>
-                        <CCardBody className="p-4">
-                            {timeline && timeline.length > 0 ? (
-                                <div className="timeline">
-                                    {timeline.map((item, index) => (
-                                        <div
-                                            key={index}
-                                            className="d-flex gap-3 mb-3"
-                                        >
-                                            <div className="timeline-marker mt-1">
-                                                <span className="badge bg-secondary rounded-circle">
-                                                    {index + 1}
-                                                </span>
-                                            </div>
-                                            <div className="flex-grow-1">
-                                                <h6 className="mb-1">
-                                                    {statuses[item.status]
-                                                        ?.label || item.status}
-                                                </h6>
-                                                <p className="text-muted small mb-1">
-                                                    {new Date(
-                                                        item.date,
-                                                    ).toLocaleDateString(
-                                                        "id-ID",
-                                                        {
-                                                            year: "numeric",
-                                                            month: "long",
-                                                            day: "numeric",
-                                                            hour: "2-digit",
-                                                            minute: "2-digit",
-                                                        },
-                                                    )}
-                                                </p>
-                                                {item.notes && (
-                                                    <p className="small mb-0">
-                                                        {item.notes}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-muted small mb-0">
-                                    Belum ada riwayat
-                                </p>
-                            )}
-                        </CCardBody>
-                    </CCard>
-                    </>
-                    )}
-                </CCol>
-
-                {/* Action Panel */}
-                <CCol xl={4}>
-                    {availableTransitions &&
-                    Object.keys(availableTransitions).length > 0 ? (
-                        <CCard
-                            className="sticky-top border-0 shadow-sm"
-                            style={{ top: "20px" }}
-                        >
-                            <CCardHeader className="bg-transparent border-bottom border-light py-3">
-                                <strong className="fs-6">Aksi Tersedia</strong>
-                            </CCardHeader>
-                            <CCardBody className="d-flex flex-column gap-3 p-3">
-                                {Object.entries(availableTransitions).map(
-                                    ([key, label]) => {
-                                        let handleClick = () => {}; // Default
-                                        let buttonColor = "primary";
-
-                                        if (key === "verifikasi_dokumen") {
-                                            handleClick = () =>
-                                                setActiveModal("verify");
-                                        } else if (
-                                            key === "dikirim_ke_leasing"
-                                        ) {
-                                            handleClick = () =>
-                                                setActiveModal("sendLeasing");
-                                        } else if (
-                                            key === "survey_dijadwalkan"
-                                        ) {
-                                            handleClick = () =>
-                                                setActiveModal("survey");
-                                        } else if (
-                                            key === "menunggu_keputusan_leasing"
-                                        ) {
-                                            handleClick = () =>
-                                                setActiveModal(
-                                                    "completeSurvey",
-                                                );
-                                        } else if (key === "disetujui") {
-                                            handleClick = () =>
-                                                setActiveModal("approve");
-                                            buttonColor = "success";
-                                        } else if (key === "ditolak") {
-                                            handleClick = () =>
-                                                setActiveModal("reject");
-                                            buttonColor = "danger";
-                                        } else if (key === "dp_dibayar") {
-                                            handleClick = () =>
-                                                setActiveModal("recordDP");
-                                            buttonColor = "success";
-                                        } else if (key === "survey_berjalan") {
-                                            handleClick = () =>
-                                                setActiveModal(
-                                                    "completeSurvey",
-                                                );
-                                        } else if (key === "selesai") {
-                                            handleClick = () =>
-                                                setActiveModal(
-                                                    "completeCredit",
-                                                );
-                                            buttonColor = "success";
-                                        }
-
-                                        return (
-                                            <CButton
-                                                key={key}
-                                                color={buttonColor}
-                                                onClick={handleClick}
-                                                size="sm"
-                                                className="w-100"
-                                            >
-                                                {label}
-                                            </CButton>
-                                        );
-                                    },
-                                )}
-                            </CCardBody>
-                        </CCard>
-                    ) : (
-                        <div className="text-center p-4 border border-dashed rounded-3 bg-light">
-                            <p className="text-muted small mb-1 uppercase tracking-widest font-black">
-                                Status: {statuses[credit.status]?.label || credit.status}
-                            </p>
-
-                            <p className="text-body-secondary small mb-0">
-                                Tidak ada aksi alur tersedia untuk tahap ini.
-                            </p>
-                        </div>
-                    )}
-
-                </CCol>
-            </CRow>
-
-            {/* Modals */}
-            <VerifyDocumentsModal />
-            <RejectModal action="admin.credits.reject-document" />
-            <SendToLeasingModal />
+        <MetronicAdminLayout title={`Kredit #${credit.id}`}>
+            {/* ── Modals ── */}
+            <VerifyModal />
+            <RejectModal />
+            <SendLeasingModal />
             <ScheduleSurveyModal />
             <CompleteSurveyModal />
             <ApproveCreditModal />
             <RecordDPModal />
             <CompleteCreditModal />
-            {/* Document Reject Modals */}
-            {credit.documents &&
-                credit.documents.map((doc) => (
-                    <DocumentRejectModal key={doc.id} documentId={doc.id} />
-                ))}
-        </AdminLayout>
+            {credit.documents?.map(doc => <RejectDocModal key={doc.id} docId={doc.id} />)}
+
+            {/* ── Header ── */}
+            <div className="mb-6 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                    <Link href={route("admin.credits.index")} className="p-2 border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 rounded-lg transition-colors shadow-sm shrink-0">
+                        <ArrowLeft size={18} />
+                    </Link>
+                    <div>
+                        <h2 className="text-xl font-black text-gray-800">Kredit <span className="text-indigo-600 font-mono">#{credit.id}</span> — {motor?.name || "Unit Motor"}</h2>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                            <StatusBadge status={credit.status} />
+                            <span className="text-xs text-gray-400">{new Date(credit.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                    {Object.entries(availableTransitions || {}).map(([targetStatus]) => {
+                        const cfg = STATUS_TO_ACTION[targetStatus];
+                        if (!cfg) return null;
+                        const Icon = cfg.icon;
+                        return (
+                            <button key={targetStatus} onClick={() => setActiveModal(cfg.modal)} className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition-colors ${cfg.cls}`}>
+                                <Icon size={14} /> {cfg.label}
+                            </button>
+                        );
+                    })}
+                    {!isDone && !isRejected && (
+                        <button onClick={handleCancel} className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 rounded-xl text-xs font-black transition-colors">
+                            <RotateCcw size={13} /> Batalkan
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            {/* ── Approval Stepper ── */}
+            {!isRejected && (
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-6 overflow-x-auto">
+                    <div className="flex items-center min-w-max">
+                        {STEPPER.map((step, i) => {
+                            const stepIdx = STATUS_ORDER.indexOf(step.key);
+                            const done    = currentStepIdx > stepIdx || isDone;
+                            const current = currentStepIdx === stepIdx && !isDone;
+                            const Icon    = step.icon;
+                            return (
+                                <React.Fragment key={step.key}>
+                                    <div className="flex flex-col items-center gap-1.5 min-w-[64px]">
+                                        <div className={`w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all ${
+                                            done    ? "bg-emerald-500 border-emerald-500 text-white" :
+                                            current ? "bg-indigo-600 border-indigo-600 text-white ring-4 ring-indigo-100" :
+                                                      "bg-white border-gray-200 text-gray-300"}`}>
+                                            {done ? <Check size={16} /> : <Icon size={14} />}
+                                        </div>
+                                        <span className={`text-[9px] font-black uppercase tracking-widest text-center leading-tight ${done ? "text-emerald-600" : current ? "text-indigo-600" : "text-gray-300"}`}>
+                                            {step.label}
+                                        </span>
+                                    </div>
+                                    {i < STEPPER.length - 1 && (
+                                        <div className={`flex-1 h-0.5 mx-1 rounded-full ${(currentStepIdx > i || isDone) ? "bg-emerald-400" : "bg-gray-200"}`} style={{ minWidth: 24 }} />
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                {/* ── Kiri 8 cols ── */}
+                <div className="xl:col-span-8 space-y-6">
+                    {/* Tab Nav */}
+                    <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
+                        {[
+                            { key: "info",    label: "Info Pemohon",                         icon: User },
+                            { key: "dokumen", label: `Dokumen (${credit.documents?.length || 0})`, icon: FileText },
+                            { key: "cicilan", label: `Cicilan (${installments.length})`,     icon: CreditCard },
+                        ].map(tab => {
+                            const Icon = tab.icon;
+                            return (
+                                <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black transition-all ${activeTab === tab.key ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}>
+                                    <Icon size={13} /> {tab.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Tab: Info Pemohon */}
+                    {activeTab === "info" && (
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                                <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2"><User size={15} className="text-indigo-500" /> Informasi Pemohon & Kredit</h3>
+                            </div>
+                            <div className="p-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
+                                    {/* Data pemohon */}
+                                    {[
+                                        { label: "Nama Pemohon",      value: trx?.name || trx?.user?.name },
+                                        { label: "NIK",               value: trx?.nik },
+                                        { label: "Email",             value: trx?.email || trx?.user?.email },
+                                        { label: "Motorwarna Pilihan",value: trx?.motor_color },
+                                        { label: "Alamat",            value: trx?.address, full: true },
+                                    ].map(({ label, value, full }) => (
+                                        <div key={label} className={`py-3 border-b border-gray-100 ${full ? "sm:col-span-2" : ""}`}>
+                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{label}</div>
+                                            <div className="text-sm font-bold text-gray-800">{value || <span className="text-gray-300 italic text-xs font-normal">—</span>}</div>
+                                        </div>
+                                    ))}
+
+                                    {/* WhatsApp row khusus */}
+                                    <div className="py-3 border-b border-gray-100">
+                                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">WhatsApp</div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm font-bold text-gray-800">{trx?.phone || trx?.user?.phone || "—"}</span>
+                                            {(trx?.phone || trx?.user?.phone) && (
+                                                <a href={`https://wa.me/${(trx.phone || trx.user.phone).replace(/\D/g, "")}`} target="_blank"
+                                                    className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500 text-white rounded-full text-[10px] font-black">
+                                                    <MessageCircle size={9} /> WA
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Data kredit */}
+                                    {[
+                                        { label: "Unit Motor",         value: motor?.name },
+                                        { label: "Harga Motor",        value: motor?.price ? fmt(motor.price) : null },
+                                        { label: "Penyedia Leasing",   value: credit.leasing_provider },
+                                        { label: "No. Referensi",      value: credit.reference_number },
+                                        { label: "Uang Muka (DP)",     value: credit.dp_amount ? fmt(credit.dp_amount) : null },
+                                        { label: "Tenor",              value: credit.tenor ? `${credit.tenor} Bulan` : null },
+                                        { label: "Suku Bunga",         value: credit.interest_rate ? `${credit.interest_rate}%` : null },
+                                        { label: "Cicilan / Bulan",    value: credit.monthly_installment ? fmt(credit.monthly_installment) : null },
+                                        { label: "Total Bunga",        value: credit.total_interest ? fmt(credit.total_interest) : null },
+                                        { label: "Metode DP",          value: credit.dp_payment_method?.replace(/_/g, " ") },
+                                        { label: "DP Dibayar Tanggal", value: credit.dp_paid_at ? new Date(credit.dp_paid_at).toLocaleDateString("id-ID") : null },
+                                        { label: "Diverifikasi",       value: credit.verified_at ? new Date(credit.verified_at).toLocaleString("id-ID") : null },
+                                        { label: "Selesai",            value: credit.completed_at ? new Date(credit.completed_at).toLocaleString("id-ID") : null },
+                                    ].map(({ label, value }) => value ? (
+                                        <div key={label} className="py-3 border-b border-gray-100">
+                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{label}</div>
+                                            <div className="text-sm font-bold text-gray-800">{value}</div>
+                                        </div>
+                                    ) : null)}
+
+                                    {/* Catatan verifikasi */}
+                                    {credit.verification_notes && (
+                                        <div className="py-3 border-b border-gray-100 sm:col-span-2">
+                                            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Catatan Verifikasi</div>
+                                            <div className="text-sm font-bold text-gray-800 italic">"{credit.verification_notes}"</div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Survey Info dari relasi surveySchedules */}
+                                {latestSurvey && (
+                                    <div className="mt-4 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                                        <div className="text-xs font-black text-purple-700 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                                            <Calendar size={13} /> Info Survey
+                                            <span className={`ml-auto text-[10px] px-2 py-0.5 rounded-full border font-black ${latestSurvey.status === "completed" ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-purple-100 text-purple-700 border-purple-200"}`}>
+                                                {latestSurvey.status}
+                                            </span>
+                                        </div>
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                                            <div><span className="text-gray-500">Tanggal</span><p className="font-bold text-gray-800">{latestSurvey.scheduled_date ? new Date(latestSurvey.scheduled_date).toLocaleDateString("id-ID") : "—"}</p></div>
+                                            <div><span className="text-gray-500">Jam</span><p className="font-bold text-gray-800">{latestSurvey.scheduled_time || "—"}</p></div>
+                                            <div><span className="text-gray-500">Surveyor</span><p className="font-bold text-gray-800">{latestSurvey.surveyor_name || "—"}</p></div>
+                                            <div><span className="text-gray-500">HP Surveyor</span><p className="font-bold text-gray-800">{latestSurvey.surveyor_phone || "—"}</p></div>
+                                        </div>
+                                        {latestSurvey.notes && <p className="mt-2 text-xs text-gray-600 italic">"{latestSurvey.notes}"</p>}
+                                        {latestSurvey.location && <p className="mt-1 text-xs text-gray-500">📍 {latestSurvey.location}</p>}
+                                    </div>
+                                )}
+
+                                {/* Alasan penolakan */}
+                                {credit.rejection_reason && (
+                                    <div className="mt-4 p-4 bg-red-50 rounded-xl border border-red-200">
+                                        <div className="text-xs font-black text-red-600 uppercase tracking-widest mb-1 flex items-center gap-1.5"><XCircle size={13} /> Alasan Penolakan</div>
+                                        <p className="text-sm text-red-700">{credit.rejection_reason}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Tab: Dokumen */}
+                    {activeTab === "dokumen" && (
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                                <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2"><FileText size={15} className="text-indigo-500" /> Dokumen Pengajuan</h3>
+                            </div>
+                            <div className="p-6">
+                                {credit.documents && credit.documents.length > 0 ? (
+                                    <div className="space-y-3">
+                                        {credit.documents.map(doc => {
+                                            // Field dari DB: approval_status (bukan status)
+                                            const approvalStatus = doc.approval_status || "pending";
+                                            const isImg = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc.file_path || "");
+                                            const statusCls = {
+                                                approved: "bg-emerald-100 text-emerald-700 border-emerald-200",
+                                                rejected: "bg-red-100 text-red-600 border-red-200",
+                                                pending:  "bg-amber-100 text-amber-700 border-amber-200",
+                                            }[approvalStatus] || "bg-gray-100 text-gray-600 border-gray-200";
+
+                                            return (
+                                                <div key={doc.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                                    <div className="w-14 h-14 rounded-lg bg-white border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center">
+                                                        {isImg && doc.file_path
+                                                            ? <img src={`/storage/${doc.file_path}`} alt={doc.document_type} className="w-full h-full object-cover" />
+                                                            : <FileText size={22} className="text-gray-300" />}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="font-bold text-gray-800 text-sm capitalize">{doc.document_type?.replace(/_/g, " ")}</div>
+                                                        {doc.original_name && <div className="text-xs text-gray-400 truncate mt-0.5">{doc.original_name}</div>}
+                                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${statusCls}`}>{approvalStatus}</span>
+                                                            {doc.reviewed_at && <span className="text-[10px] text-gray-400">Direview: {new Date(doc.reviewed_at).toLocaleDateString("id-ID")}</span>}
+                                                            {doc.rejection_reason && <span className="text-xs text-red-500 truncate">• {doc.rejection_reason}</span>}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 shrink-0">
+                                                        {doc.file_path && (
+                                                            <a href={`/storage/${doc.file_path}`} target="_blank" className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat File"><Eye size={15} /></a>
+                                                        )}
+                                                        {approvalStatus !== "approved" && (
+                                                            <button onClick={() => handleApproveDoc(doc.id)} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Setujui"><Check size={15} /></button>
+                                                        )}
+                                                        {approvalStatus !== "rejected" && (
+                                                            <button onClick={() => setActiveModal(`rejectDoc-${doc.id}`)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Tolak"><X size={15} /></button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-10"><FileText size={36} className="mx-auto mb-3 text-gray-300" /><p className="text-gray-400 font-bold text-sm">Belum ada dokumen diunggah.</p></div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Tab: Cicilan — dari transaction.installments */}
+                    {activeTab === "cicilan" && (
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                                <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2"><CreditCard size={15} className="text-indigo-500" /> Jadwal & Riwayat Cicilan</h3>
+                            </div>
+                            <div className="overflow-x-auto">
+                                {installments.length > 0 ? (
+                                    <table className="w-full text-sm text-left whitespace-nowrap">
+                                        <thead><tr className="border-b border-gray-100 text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-50/50">
+                                            <th className="px-5 py-3">Cicilan ke-</th>
+                                            <th className="px-5 py-3">Jatuh Tempo</th>
+                                            <th className="px-5 py-3">Nominal</th>
+                                            <th className="px-5 py-3">Status</th>
+                                            <th className="px-5 py-3">Dibayar</th>
+                                            <th className="px-5 py-3">Bukti</th>
+                                            <th className="px-5 py-3 text-center">Aksi</th>
+                                        </tr></thead>
+                                        <tbody className="divide-y divide-gray-100">
+                                            {installments.map((inst) => {
+                                                const stMap = {
+                                                    paid:    "bg-emerald-100 text-emerald-700 border-emerald-200",
+                                                    pending: "bg-amber-100 text-amber-700 border-amber-200",
+                                                    overdue: "bg-red-100 text-red-600 border-red-200",
+                                                    rejected:"bg-red-100 text-red-600 border-red-200",
+                                                };
+                                                return (
+                                                    <tr key={inst.id} className="hover:bg-gray-50/50">
+                                                        <td className="px-5 py-3 font-bold text-gray-800">#{inst.installment_number ?? inst.id}</td>
+                                                        <td className="px-5 py-3 text-gray-600">{inst.due_date ? new Date(inst.due_date).toLocaleDateString("id-ID") : "—"}</td>
+                                                        <td className="px-5 py-3 font-black text-gray-900">{fmt(inst.amount)}</td>
+                                                        <td className="px-5 py-3"><span className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${stMap[inst.status] || "bg-gray-100 text-gray-600 border-gray-200"}`}>{inst.status}</span></td>
+                                                        <td className="px-5 py-3 text-xs text-gray-400">{inst.paid_at ? new Date(inst.paid_at).toLocaleDateString("id-ID") : "—"}</td>
+                                                        <td className="px-5 py-3">
+                                                            {inst.payment_proof
+                                                                ? <button onClick={() => handleViewProof(inst.payment_proof)} className="text-blue-600 hover:text-blue-800 text-xs font-bold flex items-center gap-1"><Eye size={12} /> Lihat</button>
+                                                                : <span className="text-gray-300 text-xs">—</span>}
+                                                        </td>
+                                                        <td className="px-5 py-3 text-center">
+                                                            {inst.status !== "paid" && inst.payment_proof && (
+                                                                <div className="flex items-center justify-center gap-1">
+                                                                    <button onClick={() => handleApproveInstallment(inst.id)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg" title="Setujui"><Check size={14} /></button>
+                                                                    <button onClick={() => handleRejectInstallment(inst.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg" title="Tolak"><X size={14} /></button>
+                                                                </div>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                ) : (
+                                    <div className="text-center py-10"><CreditCard size={36} className="mx-auto mb-3 text-gray-300" /><p className="text-gray-400 font-bold text-sm">Belum ada data cicilan.</p></div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Timeline */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                            <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2"><Clock size={15} className="text-indigo-500" /> Riwayat Aktivitas</h3>
+                        </div>
+                        <div className="p-6">
+                            {timeline && timeline.length > 0 ? (
+                                <div className="space-y-0">
+                                    {timeline.map((log, i) => {
+                                        const sKey = log.status;
+                                        const s = STATUS_MAP[sKey] || { cls: "bg-gray-100 border-gray-200 text-gray-600" };
+                                        return (
+                                            <div key={i} className="flex gap-4">
+                                                <div className="flex flex-col items-center">
+                                                    <div className={`w-3 h-3 rounded-full border-2 shrink-0 mt-1 ${log.is_completed ? "bg-emerald-500 border-emerald-500" : "bg-gray-300 border-gray-300"}`} />
+                                                    {i < timeline.length - 1 && <div className="w-0.5 flex-1 bg-gray-200 my-1" />}
+                                                </div>
+                                                <div className="pb-5">
+                                                    <span className={`text-[10px] font-black px-2 py-0.5 rounded border ${s.cls}`}>
+                                                        {STATUS_MAP[sKey]?.label || sKey}
+                                                    </span>
+                                                    {log.date && (
+                                                        <div className="text-[10px] text-gray-400 mt-0.5">
+                                                            {new Date(log.date).toLocaleString("id-ID")}
+                                                        </div>
+                                                    )}
+                                                    {log.notes && (
+                                                        <div className="text-xs text-gray-500 mt-0.5 italic">"{log.notes}"</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <p className="text-gray-400 text-sm text-center py-4">Belum ada riwayat aktivitas.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Sidebar 4 cols ── */}
+                <div className="xl:col-span-4 space-y-4">
+                    {/* Ringkasan Kredit */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                            <h3 className="font-bold text-gray-800 text-sm">Ringkasan Kredit</h3>
+                        </div>
+                        <div className="p-5 space-y-0 divide-y divide-gray-100 text-sm">
+                            <div className="flex items-center justify-between py-2.5">
+                                <span className="text-xs text-gray-500 font-bold">No. Kredit</span>
+                                <span className="text-xs font-black text-indigo-600 font-mono">#{credit.id}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-2.5">
+                                <span className="text-xs text-gray-500 font-bold">Status</span>
+                                <StatusBadge status={credit.status} />
+                            </div>
+                            {motor?.price && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Harga Motor</span>
+                                    <span className="text-xs font-bold text-gray-800">{fmt(motor.price)}</span>
+                                </div>
+                            )}
+                            {credit.dp_amount > 0 && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Uang Muka (DP)</span>
+                                    <span className="text-xs font-bold text-gray-800">{fmt(credit.dp_amount)}</span>
+                                </div>
+                            )}
+                            {credit.tenor && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Tenor</span>
+                                    <span className="text-xs font-bold text-gray-800">{credit.tenor} Bulan</span>
+                                </div>
+                            )}
+                            {credit.interest_rate && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Suku Bunga</span>
+                                    <span className="text-xs font-bold text-gray-800">{credit.interest_rate}%</span>
+                                </div>
+                            )}
+                            {credit.monthly_installment && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Cicilan / Bulan</span>
+                                    <span className="text-sm font-black text-indigo-700">{fmt(credit.monthly_installment)}</span>
+                                </div>
+                            )}
+                            {credit.total_interest && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Total Bunga</span>
+                                    <span className="text-xs font-bold text-gray-800">{fmt(credit.total_interest)}</span>
+                                </div>
+                            )}
+                            {credit.leasing_provider && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Leasing</span>
+                                    <span className="text-xs font-bold text-gray-800 text-right max-w-[120px]">{credit.leasing_provider}</span>
+                                </div>
+                            )}
+                            {credit.reference_number && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">No. Referensi</span>
+                                    <span className="text-xs font-black text-gray-700 font-mono">{credit.reference_number}</span>
+                                </div>
+                            )}
+                            {credit.dp_payment_method && (
+                                <div className="flex items-center justify-between py-2.5">
+                                    <span className="text-xs text-gray-500 font-bold">Metode DP</span>
+                                    <span className="text-xs font-bold text-gray-800 capitalize">{credit.dp_payment_method.replace(/_/g, " ")}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Unit Motor */}
+                    {motor && (
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                                <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2"><Bike size={14} /> Unit Motor</h3>
+                            </div>
+                            <div className="p-4">
+                                {motor.image_path && (
+                                    <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border border-gray-200 mb-3">
+                                        <img src={`/storage/${motor.image_path}`} alt={motor.name} className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                                <p className="font-black text-gray-800 text-sm">{motor.name}</p>
+                                <p className="text-xs text-gray-500 mt-0.5">{motor.brand} · {motor.type} · {motor.year}</p>
+                                {motor.price && <p className="font-black text-indigo-600 mt-2">{fmt(motor.price)}</p>}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Danger Zone */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-red-200 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-red-100 bg-red-50/50">
+                            <h3 className="font-bold text-red-700 text-sm flex items-center gap-2"><AlertTriangle size={14} /> Zona Bahaya</h3>
+                        </div>
+                        <div className="p-4 space-y-2">
+                            {credit.status === "selesai" && (
+                                <button onClick={handleRepossess} className="w-full py-2.5 border border-orange-300 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-xs font-black transition-colors">
+                                    Tarik Motor (Repossess)
+                                </button>
+                            )}
+                            <button onClick={handleDelete} className="w-full py-2.5 border-2 border-red-300 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-black transition-colors flex items-center justify-center gap-2">
+                                <Trash2 size={13} /> Hapus Pengajuan Ini
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </MetronicAdminLayout>
     );
 }
