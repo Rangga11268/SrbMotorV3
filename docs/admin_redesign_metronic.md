@@ -85,12 +85,13 @@ Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, prose
 - [x] **`Transactions/Edit.jsx`**: Form 2-col + sidebar kalkulasi total sticky.
 - [x] **`Transactions/Create.jsx`**: 3-card form + live preview motor + kalkulasi harga otomatis.
 - [x] **`Credits/Index.jsx`**: Status badge per tahapan kredit, filter bar & tombol Proses solid biru.
-- [ ] **`Credits/Show.jsx`**: Engine verifikasi kredit — UI *Approval Stepper* dengan document viewer. *(Belum)*
+- [x] **`Credits/Show.jsx`**: Engine verifikasi kredit — UI *Approval Stepper* dengan document viewer integrasi.
+- [x] **`Admin/Profile/Edit.jsx`**: Redesign halaman profil dengan layout Metronic dan skema kartu informasi/keamanan.
 
-### FASE 5: Pembersihan Akhir ❌ (BELUM)
-- [ ] **Uninstall CoreUI**: Hapus `@coreui/react` & `@coreui/icons-react` dari `package.json`.
-- [ ] **Audit Sisa Import**: Cek seluruh file yang masih meng-import dari `@coreui`.
-- [ ] **Optimasi Bundle**: Rebuild final untuk memangkas ukuran bundle.
+### FASE 5: Pembersihan Akhir ✅ (SELESAI)
+- [x] **Uninstall CoreUI**: Hapus `@coreui/react` & `@coreui/icons-react` dari `package.json`.
+- [x] **Audit Sisa Import**: Cek seluruh file yang masih meng-import dari `@coreui`.
+- [x] **Optimasi Bundle**: Rebuild final untuk memangkas ukuran bundle.
 
 ---
 
@@ -102,12 +103,12 @@ Untuk memastikan **tingkat keamanan 100% pada logika CRUD dan Transaksi**, prose
 | **Fase 2** | Master Data & Settings | ✅ Selesai |
 | **Fase 3** | Modul Motor CRUD | ✅ Selesai |
 | **Fase 3.5** | Infrastruktur Role Owner | ✅ Selesai |
-| **Fase 4** | Modul Transaksi & Kredit | 🔄 5/6 halaman selesai |
-| **Fase 5** | Pembersihan & Uninstall CoreUI | ❌ Belum |
+| **Fase 4** | Modul Transaksi & Kredit | ✅ Selesai (6/6) |
+| **Fase 5** | Pembersihan & Uninstall CoreUI | ✅ Selesai (100%) |
 
-**Total Halaman**: 18 halaman teridentifikasi.
-**Sudah Dimigrasi**: 16 halaman ✅
-**Tersisa**: 2 halaman (`Credits/Show.jsx` + profil cleanup)
+**Total Halaman**: 18 halaman teridentifikasi + layout utama.
+**Sudah Dimigrasi**: 18 halaman ✅
+**Tersisa**: 0 Halaman (Proyek Selesai)
 
 ---
 
