@@ -14,7 +14,7 @@ class InvoiceController extends Controller
 
     public function generate(Transaction $transaction): Response
     {
-        $transaction->load(['user', 'motor', 'motor.specifications', 'creditDetail', 'creditDetail.documents']);
+        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents']);
 
 
         $pdf = Pdf::loadView('pages.admin.invoices.invoice', [
@@ -33,7 +33,7 @@ class InvoiceController extends Controller
 
     public function preview(Transaction $transaction): View
     {
-        $transaction->load(['user', 'motor', 'motor.specifications', 'creditDetail', 'creditDetail.documents']);
+        $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents']);
 
         return view('pages.admin.invoices.invoice', [
             'transaction' => $transaction,
