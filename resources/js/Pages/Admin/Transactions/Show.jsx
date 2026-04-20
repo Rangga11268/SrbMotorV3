@@ -176,6 +176,7 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                         </div>
                                     </div>
                                     <InfoRow label="Email" value={transaction.email || user?.email} />
+                                    <InfoRow label="Pekerjaan" value={transaction.customer_occupation || user?.occupation} />
                                     <div className="py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1">
                                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">Motor</span>
                                         <div className="flex items-center gap-2">

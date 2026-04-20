@@ -380,7 +380,8 @@ export default function Show({ credit, availableTransitions, timeline, leasingPr
                                         { label: "Nama Pemohon",      value: trx?.name || trx?.user?.name },
                                         { label: "NIK",               value: trx?.nik },
                                         { label: "Email",             value: trx?.email || trx?.user?.email },
-                                        { label: "Motorwarna Pilihan",value: trx?.motor_color },
+                                        { label: "Pekerjaan",         value: trx?.customer_occupation || trx?.user?.occupation },
+                                        { label: "Warna Motor",       value: trx?.motor_color },
                                         { label: "Alamat",            value: trx?.address, full: true },
                                     ].map(({ label, value, full }) => (
                                         <div key={label} className={`py-3 border-b border-gray-100 ${full ? "sm:col-span-2" : ""}`}>
