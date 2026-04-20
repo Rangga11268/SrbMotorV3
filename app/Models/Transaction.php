@@ -220,7 +220,7 @@ class Transaction extends Model
 
     public function getCustomerOccupationAttribute()
     {
-        return $this->occupation ?? '';
+        return $this->occupation ?: ($this->user->occupation ?? '');
     }
 
     public function getCustomerAddressAttribute()

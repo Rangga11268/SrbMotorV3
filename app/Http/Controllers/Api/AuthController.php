@@ -110,6 +110,7 @@ class AuthController extends Controller
             'phone' => 'nullable|string|max:20',
             'nik' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:500',
+            'occupation' => 'nullable|string|max:255',
         ], [
             'name.required' => 'Nama wajib diisi.',
             'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
@@ -128,6 +129,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'nik' => $request->nik,
             'alamat' => $request->alamat,
+            'occupation' => $request->occupation,
         ]);
 
         return response()->json([

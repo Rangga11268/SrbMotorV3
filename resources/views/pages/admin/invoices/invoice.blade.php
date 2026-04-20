@@ -237,7 +237,7 @@
             @endif
             <tr class="total">
                 <td style="text-align: right;">Total Nilai Transaksi:</td>
-                <td style="text-align: right;">Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
+                <td style="text-align: right;">Rp {{ number_format($transaction->total_price, 0, ',', '.') }}</td>
             </tr>
         </table>
 

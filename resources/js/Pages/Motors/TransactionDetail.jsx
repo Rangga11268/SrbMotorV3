@@ -403,7 +403,7 @@ export default function TransactionDetail({ transaction }) {
                                         { label: "NAMA LENGKAP (SESUAI KTP)", value: transaction.name || transaction.user?.name },
                                         { label: "NIK KEPENDUDUKAN", value: transaction.nik || "TIDAK TERSEDIA" },
                                         { label: "NOMOR WHATSAPP", value: transaction.phone || "TIDAK TERSEDIA" },
-                                        { label: "PEKERJAAN", value: transaction.occupation || "TIDAK TERSEDIA" }
+                                        { label: "PEKERJAAN", value: transaction.customer_occupation || "TIDAK TERSEDIA" }
                                     ].map((item, i) => (
                                         <div key={i} className="bg-white p-8">
                                             <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase mb-2">{item.label}</p>
