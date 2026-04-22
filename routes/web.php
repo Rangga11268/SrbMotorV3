@@ -18,201 +18,582 @@ use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\ServiceAppointmentController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\BranchController;
 
-
-Route::get('/', [HomeController::class, '__invoke'])->name('home');
-Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/bantuan', [PageController::class, 'help'])->name('help');
-Route::get('/panduan-pemesanan', [PageController::class, 'guide'])->name('guide');
-Route::get('/syarat-ketentuan', [PageController::class, 'terms'])->name('terms');
-Route::get('/kebijakan-privasi', [PageController::class, 'privacy'])->name('privacy');
-Route::get('/motors/compare', [MotorGalleryController::class, 'compare'])->name('motors.compare');
-Route::get('/motors', [MotorGalleryController::class, 'index'])->name('motors.index');
-Route::get('/api/search/motors', [MotorGalleryController::class, 'search'])->name('api.motors.search');
-Route::get('/motors/my-transactions', [MotorGalleryController::class, 'showUserTransactions'])->name('motors.user-transactions')->middleware('auth');
-Route::get('/motors/{motor}', [MotorGalleryController::class, 'show'])->name('motors.show');
+Route::get("/", [HomeController::class, "__invoke"])->name("home");
+Route::get("/about", [PageController::class, "about"])->name("about");
+Route::get("/bantuan", [PageController::class, "help"])->name("help");
+Route::get("/panduan-pemesanan", [PageController::class, "guide"])->name(
+    "guide",
+);
+Route::get("/syarat-ketentuan", [PageController::class, "terms"])->name(
+    "terms",
+);
+Route::get("/kebijakan-privasi", [PageController::class, "privacy"])->name(
+    "privacy",
+);
+Route::get("/motors/compare", [MotorGalleryController::class, "compare"])->name(
+    "motors.compare",
+);
+Route::get("/motors", [MotorGalleryController::class, "index"])->name(
+    "motors.index",
+);
+Route::get("/api/search/motors", [
+    MotorGalleryController::class,
+    "search",
+])->name("api.motors.search");
+Route::get("/motors/my-transactions", [
+    MotorGalleryController::class,
+    "showUserTransactions",
+])
+    ->name("motors.user-transactions")
+    ->middleware("auth");
+Route::get("/motors/{motor}", [MotorGalleryController::class, "show"])->name(
+    "motors.show",
+);
 // Order routes - auth + email verification required (security fix: prevent unauthenticated access + applying rate limits)
-Route::middleware(['auth', 'throttle:15,1'])->group(function () {
-    Route::get('/motors/{motor}/cash-order', [MotorGalleryController::class, 'showCashOrderForm'])->name('motors.cash-order');
-    Route::post('/motors/{motor}/process-cash-order', [MotorGalleryController::class, 'processCashOrder'])->name('motors.process-cash-order');
-    Route::get('/motors/{motor}/credit-order', [MotorGalleryController::class, 'showCreditOrderForm'])->name('motors.credit-order');
-    Route::post('/motors/{motor}/process-credit-order', [MotorGalleryController::class, 'processCreditOrder'])->name('motors.process-credit-order');
+Route::middleware(["auth", "throttle:15,1"])->group(function () {
+    Route::get("/motors/{motor}/cash-order", [
+        MotorGalleryController::class,
+        "showCashOrderForm",
+    ])->name("motors.cash-order");
+    Route::post("/motors/{motor}/process-cash-order", [
+        MotorGalleryController::class,
+        "processCashOrder",
+    ])->name("motors.process-cash-order");
+    Route::get("/motors/{motor}/credit-order", [
+        MotorGalleryController::class,
+        "showCreditOrderForm",
+    ])->name("motors.credit-order");
+    Route::post("/motors/{motor}/process-credit-order", [
+        MotorGalleryController::class,
+        "processCreditOrder",
+    ])->name("motors.process-credit-order");
 });
-Route::get('/motors/order-confirmation/{transaction}', [MotorGalleryController::class, 'showOrderConfirmation'])->name('motors.order.confirmation')->middleware(['auth']);
-Route::get('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'showUploadCreditDocuments'])->name('motors.upload-credit-documents')->middleware(['auth']);
-Route::post('/motors/{transaction}/upload-credit-documents', [MotorGalleryController::class, 'uploadCreditDocuments'])->name('motors.upload-credit-documents.post')->middleware(['auth']);
-Route::get('/motors/{transaction}/manage-documents', [MotorGalleryController::class, 'showDocumentManagement'])->name('motors.manage-documents')->middleware(['auth']);
-Route::post('/motors/{transaction}/update-documents', [MotorGalleryController::class, 'updateDocuments'])->name('motors.update-documents')->middleware(['auth']);
-Route::post('/motors/{transaction}/cancel', [MotorGalleryController::class, 'cancelOrder'])->name('motors.cancel')->middleware(['auth']);
-Route::post('/documents/{document}/approve', [MotorGalleryController::class, 'approveDocument'])->name('documents.approve')->middleware(['auth']);
-Route::post('/documents/{document}/reject', [MotorGalleryController::class, 'rejectDocument'])->name('documents.reject')->middleware(['auth']);
-Route::get('/credit-details/{creditDetail}/schedule-survey', function ($creditDetailId) {
-    return redirect()->back()->with('error', 'Akses tidak valid. Gunakan form di halaman transaksi.');
-})->middleware(['auth']);
-Route::post('/credit-details/{creditDetail}/schedule-survey', [MotorGalleryController::class, 'scheduleSurvey'])->name('credit-details.schedule-survey')->middleware(['auth']);
-Route::post('/survey-schedules/{surveySchedule}/confirm-completion', [MotorGalleryController::class, 'confirmSurveyCompletion'])->name('survey-schedules.confirm-completion')->middleware(['auth']);
+Route::get("/motors/order-confirmation/{transaction}", [
+    MotorGalleryController::class,
+    "showOrderConfirmation",
+])
+    ->name("motors.order.confirmation")
+    ->middleware(["auth"]);
+Route::get("/motors/{transaction}/upload-credit-documents", [
+    MotorGalleryController::class,
+    "showUploadCreditDocuments",
+])
+    ->name("motors.upload-credit-documents")
+    ->middleware(["auth"]);
+Route::post("/motors/{transaction}/upload-credit-documents", [
+    MotorGalleryController::class,
+    "uploadCreditDocuments",
+])
+    ->name("motors.upload-credit-documents.post")
+    ->middleware(["auth"]);
+Route::get("/motors/{transaction}/manage-documents", [
+    MotorGalleryController::class,
+    "showDocumentManagement",
+])
+    ->name("motors.manage-documents")
+    ->middleware(["auth"]);
+Route::post("/motors/{transaction}/update-documents", [
+    MotorGalleryController::class,
+    "updateDocuments",
+])
+    ->name("motors.update-documents")
+    ->middleware(["auth"]);
+Route::post("/motors/{transaction}/cancel", [
+    MotorGalleryController::class,
+    "cancelOrder",
+])
+    ->name("motors.cancel")
+    ->middleware(["auth"]);
+Route::post("/documents/{document}/approve", [
+    MotorGalleryController::class,
+    "approveDocument",
+])
+    ->name("documents.approve")
+    ->middleware(["auth"]);
+Route::post("/documents/{document}/reject", [
+    MotorGalleryController::class,
+    "rejectDocument",
+])
+    ->name("documents.reject")
+    ->middleware(["auth"]);
+Route::get("/credit-details/{creditDetail}/schedule-survey", function (
+    $creditDetailId,
+) {
+    return redirect()
+        ->back()
+        ->with(
+            "error",
+            "Akses tidak valid. Gunakan form di halaman transaksi.",
+        );
+})->middleware(["auth"]);
+Route::post("/credit-details/{creditDetail}/schedule-survey", [
+    MotorGalleryController::class,
+    "scheduleSurvey",
+])
+    ->name("credit-details.schedule-survey")
+    ->middleware(["auth"]);
+Route::post("/survey-schedules/{surveySchedule}/confirm-completion", [
+    MotorGalleryController::class,
+    "confirmSurveyCompletion",
+])
+    ->name("survey-schedules.confirm-completion")
+    ->middleware(["auth"]);
 
 // Customer transaction & survey routes
-Route::get('/motors/transactions/{transaction}', [MotorGalleryController::class, 'showTransaction'])->name('motors.transaction.show')->middleware(['auth']);
-Route::get('/motors/transactions/{transaction}/installments', [MotorGalleryController::class, 'showInstallments'])->name('motors.installments')->middleware(['auth']);
-Route::get('/credit-status/{transaction}', [MotorGalleryController::class, 'showCreditStatus'])->name('credit-status.show')->middleware(['auth']);
-Route::post('/survey-schedules/{surveySchedule}/confirm-attendance', [MotorGalleryController::class, 'confirmSurveyAttendance'])->name('survey.confirm-attendance')->middleware(['auth']);
-Route::post('/survey-schedules/{surveySchedule}/request-reschedule', [MotorGalleryController::class, 'requestSurveyReschedule'])->name('survey.request-reschedule')->middleware(['auth']);
-Route::get('/api/survey-history/{creditDetail}', [MotorGalleryController::class, 'getSurveyHistory'])->name('api.survey-history')->middleware(['auth']);
+Route::get("/motors/transactions/{transaction}", [
+    MotorGalleryController::class,
+    "showTransaction",
+])
+    ->name("motors.transaction.show")
+    ->middleware(["auth"]);
+Route::get("/motors/transactions/{transaction}/installments", [
+    MotorGalleryController::class,
+    "showInstallments",
+])
+    ->name("motors.installments")
+    ->middleware(["auth"]);
+Route::get("/credit-status/{transaction}", [
+    MotorGalleryController::class,
+    "showCreditStatus",
+])
+    ->name("credit-status.show")
+    ->middleware(["auth"]);
+Route::post("/survey-schedules/{surveySchedule}/confirm-attendance", [
+    MotorGalleryController::class,
+    "confirmSurveyAttendance",
+])
+    ->name("survey.confirm-attendance")
+    ->middleware(["auth"]);
+Route::post("/survey-schedules/{surveySchedule}/request-reschedule", [
+    MotorGalleryController::class,
+    "requestSurveyReschedule",
+])
+    ->name("survey.request-reschedule")
+    ->middleware(["auth"]);
+Route::get("/api/survey-history/{creditDetail}", [
+    MotorGalleryController::class,
+    "getSurveyHistory",
+])
+    ->name("api.survey-history")
+    ->middleware(["auth"]);
+
+// Branch routes
+// Branch routes (Consolidated into About page)
+Route::get("/branches", function() {
+    return redirect()->to(route('about') . '#branches');
+})->name("branches.index");
+Route::get("/branches/{code}", function() {
+    return redirect()->to(route('about') . '#branches');
+})->name("branches.show");
+
+// Branch API endpoints for frontend
+Route::get("/api/branches", [
+    BranchController::class,
+    "index",
+])->name("api.branches.index");
+Route::get("/api/branches/options", [
+    BranchController::class,
+    "getOptions",
+])->name("api.branches.options");
+Route::get("/api/branches/find-nearest", [
+    BranchController::class,
+    "findNearest",
+])->name("api.branches.nearest");
+Route::get("/api/branches/with-distance", [
+    BranchController::class,
+    "allWithDistance",
+])->name("api.branches.with-distance");
+Route::get("/api/branches/{code}", [
+    BranchController::class,
+    "show",
+])->name("api.branches.show");
+Route::get("/api/motors/{motorId}/available-branches", [
+    BranchController::class,
+    "getAvailableBranches",
+])->name("api.motors.branches");
+Route::get("/api/motors/{motorId}/check-stock", [
+    BranchController::class,
+    "checkStock",
+])->name("api.motors.stock");
+
+// Authenticated branch routes
+Route::middleware(["auth"])->group(function () {
+    Route::post("/api/branches/set-preferred", [
+        BranchController::class,
+        "setPreferredBranch",
+    ])->name("api.branches.set-preferred");
+    Route::post("/api/branches/update-location", [
+        BranchController::class,
+        "updateUserLocation",
+    ])->name("api.branches.update-location");
+});
 
 // Customer-facing news routes (REMOVED)
 
 // Service Booking Routes (User)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/services', [ServiceAppointmentController::class, 'index'])->name('services.index');
-    Route::get('/services/booking', [ServiceAppointmentController::class, 'create'])->name('services.create');
-    Route::post('/services/booking', [ServiceAppointmentController::class, 'store'])->name('services.store');
-    Route::get('/services/{appointment}', [ServiceAppointmentController::class, 'show'])->name('services.show');
-    Route::post('/services/{appointment}/cancel', [ServiceAppointmentController::class, 'cancelUser'])->name('services.cancel');
+Route::middleware(["auth"])->group(function () {
+    Route::get("/services", [
+        ServiceAppointmentController::class,
+        "index",
+    ])->name("services.index");
+    Route::get("/services/booking", [
+        ServiceAppointmentController::class,
+        "create",
+    ])->name("services.create");
+    Route::post("/services/booking", [
+        ServiceAppointmentController::class,
+        "store",
+    ])->name("services.store");
+    Route::get("/services/{appointment}", [
+        ServiceAppointmentController::class,
+        "show",
+    ])->name("services.show");
+    Route::post("/services/{appointment}/cancel", [
+        ServiceAppointmentController::class,
+        "cancelUser",
+    ])->name("services.cancel");
 });
 // API for checking available slots (Can be accessed by guests too)
-Route::get('/api/services/available-slots', [ServiceAppointmentController::class, 'getAvailableTimeSlots'])->name('api.services.available-slots');
-Route::get('/api/services/unavailable-dates', [ServiceAppointmentController::class, 'getUnavailableDates'])->name('api.services.unavailable-dates');
+Route::get("/api/services/available-slots", [
+    ServiceAppointmentController::class,
+    "getAvailableTimeSlots",
+])->name("api.services.available-slots");
+Route::get("/api/services/unavailable-dates", [
+    ServiceAppointmentController::class,
+    "getUnavailableDates",
+])->name("api.services.unavailable-dates");
 
-
-
-Route::middleware(['guest', 'throttle:5,1'])->group(function () {
-    Route::get('/login', function () {
-        return redirect()->route('home', ['login_required' => 1]);
-    })->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::middleware(["guest", "throttle:5,1"])->group(function () {
+    Route::get("/login", function () {
+        return redirect()->route("home", ["login_required" => 1]);
+    })->name("login");
+    Route::post("/login", [AuthController::class, "login"]);
+    Route::post("/register", [AuthController::class, "register"])->name(
+        "register",
+    );
 });
 
 // Email Verification Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', function () {
-        return \Inertia\Inertia::render('Auth/VerifyEmail', [
-            'user' => auth()->user(),
+Route::middleware("auth")->group(function () {
+    Route::get("/email/verify", function () {
+        return \Inertia\Inertia::render("Auth/VerifyEmail", [
+            "user" => auth()->user(),
         ]);
-    })->name('verification.notice');
+    })->name("verification.notice");
 
-    Route::post('/email/verify-debug/{method}', function (\Illuminate\Http\Request $request, $method) {
-        if (!config('app.debug') || env('DEBUG_MODE') !== true) {
-            abort(403, 'Debug mode is not enabled');
+    Route::post("/email/verify-debug/{method}", function (
+        \Illuminate\Http\Request $request,
+        $method,
+    ) {
+        if (!config("app.debug") || env("DEBUG_MODE") !== true) {
+            abort(403, "Debug mode is not enabled");
         }
 
         $user = $request->user();
         $user->markEmailAsVerified();
 
-        return back()->with('status', 'Email anda telah berhasil diverifikasi!');
-    })->name('verification.verify-debug');
+        return back()->with(
+            "status",
+            "Email anda telah berhasil diverifikasi!",
+        );
+    })->name("verification.verify-debug");
 
-    Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+    Route::get("/email/verify/{id}/{hash}", function (
+        \Illuminate\Foundation\Auth\EmailVerificationRequest $request,
+    ) {
         $request->fulfill();
-        return redirect('/')->with('status', 'Email anda telah berhasil diverifikasi!');
-    })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+        return redirect("/")->with(
+            "status",
+            "Email anda telah berhasil diverifikasi!",
+        );
+    })
+        ->middleware(["signed", "throttle:6,1"])
+        ->name("verification.verify");
 
-    Route::post('/email/verification-notification', function (\Illuminate\Http\Request $request) {
+    Route::post("/email/verification-notification", function (
+        \Illuminate\Http\Request $request,
+    ) {
         $request->user()->sendEmailVerificationNotification();
-        return back()->with('status', 'Verifikasi email telah dikirim!');
-    })->middleware(['throttle:6,1'])->name('verification.send');
+        return back()->with("status", "Verifikasi email telah dikirim!");
+    })
+        ->middleware(["throttle:6,1"])
+        ->name("verification.send");
 
     // Notification routes
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
-    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
-    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::get("/notifications", [
+        NotificationController::class,
+        "index",
+    ])->name("notifications.index");
+    Route::get("/notifications/unread-count", [
+        NotificationController::class,
+        "unreadCount",
+    ])->name("notifications.unread-count");
+    Route::post("/notifications/{id}/read", [
+        NotificationController::class,
+        "markAsRead",
+    ])->name("notifications.mark-as-read");
+    Route::post("/notifications/mark-all-read", [
+        NotificationController::class,
+        "markAllAsRead",
+    ])->name("notifications.mark-all-read");
+    Route::delete("/notifications/{id}", [
+        NotificationController::class,
+        "destroy",
+    ])->name("notifications.destroy");
 });
 
 // Google OAuth routes
-Route::get('/auth/google', [\App\Http\Controllers\GoogleAuthController::class, 'redirect'])->name('auth.google');
-Route::get('/auth/google/callback', [\App\Http\Controllers\GoogleAuthController::class, 'callback'])->name('google.callback');
+Route::get("/auth/google", [
+    \App\Http\Controllers\GoogleAuthController::class,
+    "redirect",
+])->name("auth.google");
+Route::get("/auth/google/callback", [
+    \App\Http\Controllers\GoogleAuthController::class,
+    "callback",
+])->name("google.callback");
 
+Route::post("/logout", [AuthController::class, "logout"])
+    ->name("logout")
+    ->middleware("auth");
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+Route::middleware("auth")->group(function () {
+    Route::get("/profile", [ProfileController::class, "show"])->name(
+        "profile.show",
+    );
+    Route::get("/profile/edit", [ProfileController::class, "edit"])->name(
+        "profile.edit",
+    );
+    Route::put("/profile", [ProfileController::class, "update"])->name(
+        "profile.update",
+    );
+    Route::put("/profile/password", [
+        ProfileController::class,
+        "updatePassword",
+    ])->name("profile.password.update");
 });
 
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/installments', [\App\Http\Controllers\InstallmentController::class, 'index'])->name('installments.index');
-    Route::post('/installments/pay-multiple', [\App\Http\Controllers\InstallmentController::class, 'payMultiple'])->name('installments.pay-multiple');
-    Route::post('/installments/{installment}/pay', [\App\Http\Controllers\InstallmentController::class, 'store'])->name('installments.pay');
-    Route::post('/installments/{installment}/pay-online', [\App\Http\Controllers\InstallmentController::class, 'createPayment'])->name('installments.create-payment');
-    Route::post('/installments/{installment}/check-status', [\App\Http\Controllers\InstallmentController::class, 'checkPaymentStatus'])->name('installments.check-status');
-    Route::get('/installments/{installment}/receipt', [\App\Http\Controllers\InstallmentController::class, 'downloadReceipt'])->name('installments.receipt');
-    
+Route::middleware(["auth"])->group(function () {
+    Route::get("/installments", [
+        \App\Http\Controllers\InstallmentController::class,
+        "index",
+    ])->name("installments.index");
+    Route::post("/installments/pay-multiple", [
+        \App\Http\Controllers\InstallmentController::class,
+        "payMultiple",
+    ])->name("installments.pay-multiple");
+    Route::post("/installments/{installment}/pay", [
+        \App\Http\Controllers\InstallmentController::class,
+        "store",
+    ])->name("installments.pay");
+    Route::post("/installments/{installment}/pay-online", [
+        \App\Http\Controllers\InstallmentController::class,
+        "createPayment",
+    ])->name("installments.create-payment");
+    Route::post("/installments/{installment}/check-status", [
+        \App\Http\Controllers\InstallmentController::class,
+        "checkPaymentStatus",
+    ])->name("installments.check-status");
+    Route::get("/installments/{installment}/receipt", [
+        \App\Http\Controllers\InstallmentController::class,
+        "downloadReceipt",
+    ])->name("installments.receipt");
 });
 
-Route::get('/payments/success', [\App\Http\Controllers\InstallmentController::class, 'paymentSuccess'])->name('payments.success');
+Route::get("/payments/success", [
+    \App\Http\Controllers\InstallmentController::class,
+    "paymentSuccess",
+])->name("payments.success");
 
+Route::prefix("admin")
+    ->name("admin.")
+    ->middleware("admin")
+    ->group(function () {
+        Route::get("/", [AdminController::class, "index"])->name("dashboard");
 
-Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+        // Credit Management Routes (Consolidated)
+        Route::get("/credits", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "index",
+        ])->name("credits.index");
+        Route::get("/credits/{credit}", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "show",
+        ])->name("credits.show");
+        Route::post("/credits/{credit}/verify-documents", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "verifyDocuments",
+        ])->name("credits.verify-documents");
+        Route::post("/credits/{credit}/reject-document", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "rejectDocument",
+        ])->name("credits.reject-document");
+        Route::post("/credits/{credit}/send-to-leasing", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "sendToLeasing",
+        ])->name("credits.send-to-leasing");
+        Route::post("/credits/{credit}/schedule-survey", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "scheduleSurvey",
+        ])->name("credits.schedule-survey");
+        Route::post("/credits/{credit}/start-survey", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "startSurvey",
+        ])->name("credits.start-survey");
+        Route::post("/credits/{credit}/complete-survey", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "completeSurvey",
+        ])->name("credits.complete-survey");
+        Route::post("/credits/{credit}/approve", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "approveCredit",
+        ])->name("credits.approve");
+        Route::post("/credits/{credit}/reject", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "rejectCredit",
+        ])->name("credits.reject");
+        Route::post("/credits/{credit}/record-dp-payment", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "recordDPPayment",
+        ])->name("credits.record-dp-payment");
+        Route::post("/credits/{credit}/complete", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "completeCredit",
+        ])->name("credits.complete");
+        Route::post("/credits/{credit}/cancel", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "cancel",
+        ])->name("credits.cancel");
+        Route::post("/credits/{credit}/repossess", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "repossess",
+        ])->name("credits.repossess");
+        Route::delete("/credits/{credit}", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "destroy",
+        ])->name("credits.destroy");
+        Route::get("/credits/export", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "export",
+        ])->name("credits.export");
+        Route::post("/documents/{document}/approve", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "approveDocument",
+        ])->name("documents.approve");
+        Route::post("/documents/{document}/reject", [
+            App\Http\Controllers\Admin\CreditController::class,
+            "rejectDocumentUpload",
+        ])->name("documents.reject");
 
-    // Credit Management Routes (Consolidated)
-    Route::get('/credits', [App\Http\Controllers\Admin\CreditController::class, 'index'])->name('credits.index');
-    Route::get('/credits/{credit}', [App\Http\Controllers\Admin\CreditController::class, 'show'])->name('credits.show');
-    Route::post('/credits/{credit}/verify-documents', [App\Http\Controllers\Admin\CreditController::class, 'verifyDocuments'])->name('credits.verify-documents');
-    Route::post('/credits/{credit}/reject-document', [App\Http\Controllers\Admin\CreditController::class, 'rejectDocument'])->name('credits.reject-document');
-    Route::post('/credits/{credit}/send-to-leasing', [App\Http\Controllers\Admin\CreditController::class, 'sendToLeasing'])->name('credits.send-to-leasing');
-    Route::post('/credits/{credit}/schedule-survey', [App\Http\Controllers\Admin\CreditController::class, 'scheduleSurvey'])->name('credits.schedule-survey');
-    Route::post('/credits/{credit}/start-survey', [App\Http\Controllers\Admin\CreditController::class, 'startSurvey'])->name('credits.start-survey');
-    Route::post('/credits/{credit}/complete-survey', [App\Http\Controllers\Admin\CreditController::class, 'completeSurvey'])->name('credits.complete-survey');
-    Route::post('/credits/{credit}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveCredit'])->name('credits.approve');
-    Route::post('/credits/{credit}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectCredit'])->name('credits.reject');
-    Route::post('/credits/{credit}/record-dp-payment', [App\Http\Controllers\Admin\CreditController::class, 'recordDPPayment'])->name('credits.record-dp-payment');
-    Route::post('/credits/{credit}/complete', [App\Http\Controllers\Admin\CreditController::class, 'completeCredit'])->name('credits.complete');
-    Route::post('/credits/{credit}/cancel', [App\Http\Controllers\Admin\CreditController::class, 'cancel'])->name('credits.cancel');
-    Route::post('/credits/{credit}/repossess', [App\Http\Controllers\Admin\CreditController::class, 'repossess'])->name('credits.repossess');
-    Route::delete('/credits/{credit}', [App\Http\Controllers\Admin\CreditController::class, 'destroy'])->name('credits.destroy');
-    Route::get('/credits/export', [App\Http\Controllers\Admin\CreditController::class, 'export'])->name('credits.export');
-    Route::post('/documents/{document}/approve', [App\Http\Controllers\Admin\CreditController::class, 'approveDocument'])->name('documents.approve');
-    Route::post('/documents/{document}/reject', [App\Http\Controllers\Admin\CreditController::class, 'rejectDocumentUpload'])->name('documents.reject');
+        Route::resource("motors", MotorController::class);
+        // === OWNER EXCLUSIVE ROUTES ===
+        Route::middleware("owner")->group(function () {
+            Route::post("/users/{user}/toggle-verify", [
+                UserController::class,
+                "toggleVerify",
+            ])->name("users.toggle-verify");
+            Route::resource("users", UserController::class)->except([
+                "create",
+                "store",
+                "show",
+            ]);
 
-    Route::resource('motors', MotorController::class);
-    // === OWNER EXCLUSIVE ROUTES ===
-    Route::middleware('owner')->group(function () {
-        Route::post('/users/{user}/toggle-verify', [UserController::class, 'toggleVerify'])->name('users.toggle-verify');
-        Route::resource('users', UserController::class)->except(['create', 'store', 'show']);
+            Route::get("/reports", [ReportController::class, "index"])->name(
+                "reports.index",
+            );
+            Route::get("/reports/create", [
+                ReportController::class,
+                "create",
+            ])->name("reports.create");
+            Route::get("/reports/generate", [
+                ReportController::class,
+                "generate",
+            ])->name("reports.generate");
+            Route::get("/reports/export", [
+                ReportController::class,
+                "export",
+            ])->name("reports.export");
+            Route::get("/reports/export-excel", [
+                ReportController::class,
+                "exportExcel",
+            ])->name("reports.export-excel");
+        });
+        // ==============================
 
-        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-        Route::get('/reports/create', [ReportController::class, 'create'])->name('reports.create');
-        Route::get('/reports/generate', [ReportController::class, 'generate'])->name('reports.generate');
-        Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
-        Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('reports.export-excel');
+        // Cash Transaction Management Routes (CASH ONLY - tunai)
+        Route::resource("transactions", AdminTransactionController::class);
+        Route::post("/transactions/{transaction}/status", [
+            AdminTransactionController::class,
+            "updateStatus",
+        ])->name("transactions.updateStatus");
+
+        // Admin Service Management Routes
+        Route::get("/services", [
+            ServiceAppointmentController::class,
+            "adminIndex",
+        ])->name("services.index");
+        Route::put("/services/{service}/status", [
+            ServiceAppointmentController::class,
+            "updateStatus",
+        ])->name("services.update-status");
+
+        Route::post("/installments/{installment}/approve", [
+            \App\Http\Controllers\InstallmentController::class,
+            "approve",
+        ])->name("installments.approve");
+        Route::post("/installments/{installment}/reject", [
+            \App\Http\Controllers\InstallmentController::class,
+            "reject",
+        ])->name("installments.reject");
+
+        Route::get("/transactions/{transaction}/invoice", [
+            InvoiceController::class,
+            "preview",
+        ])->name("transactions.invoice.preview");
+        Route::get("/transactions/{transaction}/invoice/download", [
+            InvoiceController::class,
+            "generate",
+        ])->name("transactions.invoice.download");
+
+        // Settings Management
+        Route::get("/settings", [
+            \App\Http\Controllers\Admin\SettingController::class,
+            "index",
+        ])->name("settings.index");
+        Route::get("/settings/{category}/edit", [
+            \App\Http\Controllers\Admin\SettingController::class,
+            "edit",
+        ])->name("settings.edit");
+        Route::put("/settings/{category}", [
+            \App\Http\Controllers\Admin\SettingController::class,
+            "update",
+        ])->name("settings.update");
+        Route::post("/settings", [
+            \App\Http\Controllers\Admin\SettingController::class,
+            "store",
+        ])->name("settings.store");
+        Route::delete("/settings/{setting}", [
+            \App\Http\Controllers\Admin\SettingController::class,
+            "destroy",
+        ])->name("settings.destroy");
+        Route::post("/settings/upload", [
+            \App\Http\Controllers\Admin\SettingController::class,
+            "upload",
+        ])->name("settings.upload");
+
+        Route::get("/profile", [AdminProfileController::class, "show"])->name(
+            "profile.show",
+        );
+        Route::get("/profile/edit", [
+            AdminProfileController::class,
+            "edit",
+        ])->name("profile.edit");
+        Route::put("/profile", [AdminProfileController::class, "update"])->name(
+            "profile.update",
+        );
+        Route::put("/profile/password", [
+            AdminProfileController::class,
+            "updatePassword",
+        ])->name("profile.password.update");
     });
-    // ==============================
-
-    // Cash Transaction Management Routes (CASH ONLY - tunai)
-    Route::resource('transactions', AdminTransactionController::class);
-    Route::post('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.updateStatus');
-
-    // Admin Service Management Routes
-    Route::get('/services', [ServiceAppointmentController::class, 'adminIndex'])->name('services.index');
-    Route::put('/services/{service}/status', [ServiceAppointmentController::class, 'updateStatus'])->name('services.update-status');
-
-    Route::post('/installments/{installment}/approve', [\App\Http\Controllers\InstallmentController::class, 'approve'])->name('installments.approve');
-    Route::post('/installments/{installment}/reject', [\App\Http\Controllers\InstallmentController::class, 'reject'])->name('installments.reject');
-
-    Route::get('/transactions/{transaction}/invoice', [InvoiceController::class, 'preview'])->name('transactions.invoice.preview');
-    Route::get('/transactions/{transaction}/invoice/download', [InvoiceController::class, 'generate'])->name('transactions.invoice.download');
-
-    // Settings Management
-    Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
-    Route::get('/settings/{category}/edit', [\App\Http\Controllers\Admin\SettingController::class, 'edit'])->name('settings.edit');
-    Route::put('/settings/{category}', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
-    Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'store'])->name('settings.store');
-    Route::delete('/settings/{setting}', [\App\Http\Controllers\Admin\SettingController::class, 'destroy'])->name('settings.destroy');
-    Route::post('/settings/upload', [\App\Http\Controllers\Admin\SettingController::class, 'upload'])->name('settings.upload');
-
-
-    Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password.update');
-});

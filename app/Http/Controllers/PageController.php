@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\BranchService;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    protected $branchService;
+
+    public function __construct(BranchService $branchService)
+    {
+        $this->branchService = $branchService;
+    }
+
     /**
      * Show the About Us page.
      */
     public function about()
     {
-        return \Inertia\Inertia::render('About');
+        return \Inertia\Inertia::render('About', [
+            'branches' => $this->branchService->getAllBranches()
+        ]);
     }
 
     /**

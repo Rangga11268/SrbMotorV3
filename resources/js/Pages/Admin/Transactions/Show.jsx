@@ -184,9 +184,21 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                             {transaction.motor_color && <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded border">({transaction.motor_color})</span>}
                                         </div>
                                     </div>
-                                    <div className="py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1">
+                                    <div className={`py-3 border-b border-gray-100 flex flex-col sm:flex-row sm:items-start gap-1`}>
                                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest sm:w-40 shrink-0">Metode Pengambilan</span>
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black border ${transaction.delivery_method === "Ambil di Dealer" ? "bg-sky-100 text-sky-700 border-sky-200" : "bg-indigo-100 text-indigo-700 border-indigo-200"}`}>{transaction.delivery_method || "Ambil di Dealer"}</span>
+                                        <div className="flex flex-col gap-1.5">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black border w-fit ${transaction.delivery_method === "Ambil di Dealer" ? "bg-sky-100 text-sky-700 border-sky-200" : "bg-indigo-100 text-indigo-700 border-indigo-200"}`}>{transaction.delivery_method || "Ambil di Dealer"}</span>
+                                            
+                                            {transaction.branch_info && (
+                                                <div className="flex items-center gap-2 mt-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+                                                    <MapPin size={12} className="text-blue-500" />
+                                                    <div>
+                                                        <p className="text-xs font-black text-gray-800 uppercase">{transaction.branch_info.name}</p>
+                                                        <p className="text-[10px] text-gray-500 font-medium">{transaction.branch_info.address}</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <InfoRow label="Alamat" value={transaction.address} />
                                     {transaction.delivery_date && (

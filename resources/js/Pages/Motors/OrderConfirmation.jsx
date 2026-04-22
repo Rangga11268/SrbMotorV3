@@ -21,7 +21,11 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-export default function OrderConfirmation({ transaction, midtransClientKey }) {
+export default function OrderConfirmation({
+    transaction,
+    midtransClientKey,
+    branch,
+}) {
     const [isLoadingPay, setIsLoadingPay] = useState(false);
     const { auth, config } = usePage().props;
 
@@ -132,7 +136,8 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
     };
 
     const formatCurrency = (amount) => {
-        if (amount === null || amount === undefined || isNaN(amount)) return "Rp 0";
+        if (amount === null || amount === undefined || isNaN(amount))
+            return "Rp 0";
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
@@ -164,10 +169,15 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                     </div>
                                 </motion.div>
                                 <h1 className="text-4xl font-black uppercase tracking-tighter text-white mb-2">
-                                    PESANAN <span className="text-green-500">DIKONFIRMASI</span>
+                                    PESANAN{" "}
+                                    <span className="text-green-500">
+                                        DIKONFIRMASI
+                                    </span>
                                 </h1>
                                 <p className="text-gray-400 font-bold uppercase tracking-widest text-[11px] max-w-2xl mx-auto">
-                                    TERIMA KASIH TELAH MELAKUKAN PEMESANAN. SIMPAN BUKTI TRANSAKSI INI UNTUK KEPERLUAN ADMINISTRASI.
+                                    TERIMA KASIH TELAH MELAKUKAN PEMESANAN.
+                                    SIMPAN BUKTI TRANSAKSI INI UNTUK KEPERLUAN
+                                    ADMINISTRASI.
                                 </p>
                             </div>
                         </div>
@@ -235,6 +245,75 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
 
                             {/* Right: Order Details */}
                             <div className="lg:col-span-2 space-y-6">
+                                {/* Branch Information */}
+                                {branch && (
+                                    <div className="bg-blue-50 border border-blue-200 rounded-none p-6 md:p-8">
+                                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-blue-200">
+                                            <div className="w-8 h-8 bg-blue-600 flex items-center justify-center">
+                                                <MapPin
+                                                    size={16}
+                                                    className="text-white"
+                                                />
+                                            </div>
+                                            <h2 className="text-lg font-black text-blue-900 uppercase tracking-widest">
+                                                LOKASI PICKUP
+                                            </h2>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <h4 className="text-[10px] font-bold text-blue-600 mb-1 uppercase tracking-widest">
+                                                    NAMA CABANG
+                                                </h4>
+                                                <p className="font-bold text-blue-900 uppercase">
+                                                    {branch.name}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <h4 className="text-[10px] font-bold text-blue-600 mb-1 uppercase tracking-widest">
+                                                    ALAMAT
+                                                </h4>
+                                                <p className="font-bold text-blue-900">
+                                                    {branch.address}
+                                                </p>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <h4 className="text-[10px] font-bold text-blue-600 mb-1 uppercase tracking-widest">
+                                                        TELEPON
+                                                    </h4>
+                                                    <p className="font-bold text-blue-900">
+                                                        {branch.phone}
+                                                    </p>
+                                                </div>
+                                                {branch.whatsapp && (
+                                                    <div>
+                                                        <h4 className="text-[10px] font-bold text-blue-600 mb-1 uppercase tracking-widest">
+                                                            WHATSAPP
+                                                        </h4>
+                                                        <p className="font-bold text-blue-900">
+                                                            {branch.whatsapp}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {branch.operational_hours && (
+                                                <div>
+                                                    <h4 className="text-[10px] font-bold text-blue-600 mb-1 uppercase tracking-widest">
+                                                        JAM OPERASIONAL
+                                                    </h4>
+                                                    <p className="text-xs font-bold text-blue-800">
+                                                        Senin - Sabtu:{" "}
+                                                        {branch
+                                                            .operational_hours
+                                                            .monday ||
+                                                            "08:00 - 17:00"}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Customer Information */}
                                 <div className="bg-white border border-gray-200 rounded-none p-6 md:p-8">
                                     <div className="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
@@ -254,7 +333,11 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 NAMA LENGKAP
                                             </h4>
                                             <p className="font-bold text-black uppercase">
-                                                {transaction.name || (transaction.user && transaction.user.name) || "-"}
+                                                {transaction.name ||
+                                                    (transaction.user &&
+                                                        transaction.user
+                                                            .name) ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div>
@@ -262,7 +345,11 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 NOMOR WHASTAPP
                                             </h4>
                                             <p className="font-bold text-black">
-                                                {transaction.phone || (transaction.user && transaction.user.phone) || "-"}
+                                                {transaction.phone ||
+                                                    (transaction.user &&
+                                                        transaction.user
+                                                            .phone) ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div>
@@ -270,7 +357,11 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 EMAIL
                                             </h4>
                                             <p className="font-bold text-black uppercase">
-                                                {transaction.email || (transaction.user && transaction.user.email) || "-"}
+                                                {transaction.email ||
+                                                    (transaction.user &&
+                                                        transaction.user
+                                                            .email) ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div>
@@ -278,17 +369,24 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 NIK (NO. KTP)
                                             </h4>
                                             <p className="font-bold text-black">
-                                                {transaction.nik || (transaction.user && transaction.user.nik) || "-"}
+                                                {transaction.nik ||
+                                                    (transaction.user &&
+                                                        transaction.user.nik) ||
+                                                    "-"}
                                             </p>
                                         </div>
-                                        
+
                                         {isCredit && (
                                             <div>
                                                 <h4 className="text-[10px] font-bold text-gray-500 mb-1 uppercase tracking-widest">
                                                     PEKERJAAN
                                                 </h4>
                                                 <p className="font-bold text-black uppercase">
-                                                    {transaction.occupation || (transaction.user && transaction.user.pekerjaan) || "-"}
+                                                    {transaction.occupation ||
+                                                        (transaction.user &&
+                                                            transaction.user
+                                                                .pekerjaan) ||
+                                                        "-"}
                                                 </p>
                                             </div>
                                         )}
@@ -300,7 +398,8 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                         WARNA MOTOR
                                                     </h4>
                                                     <p className="font-bold text-black uppercase">
-                                                        {transaction.motor_color || "-"}
+                                                        {transaction.motor_color ||
+                                                            "-"}
                                                     </p>
                                                 </div>
                                                 <div>
@@ -308,7 +407,8 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                         METODE PENYERAHAN
                                                     </h4>
                                                     <p className="font-bold text-black uppercase">
-                                                        {transaction.delivery_method || "-"}
+                                                        {transaction.delivery_method ||
+                                                            "-"}
                                                     </p>
                                                 </div>
                                             </>
@@ -319,7 +419,11 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 ALAMAT LENGKAP
                                             </h4>
                                             <p className="font-bold text-black uppercase leading-relaxed">
-                                                {transaction.address || (transaction.user && transaction.user.alamat) || "-"}
+                                                {transaction.address ||
+                                                    (transaction.user &&
+                                                        transaction.user
+                                                            .alamat) ||
+                                                    "-"}
                                             </p>
                                         </div>
                                         <div className="sm:col-span-2 pt-6 border-t border-gray-100">
@@ -353,7 +457,12 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                     NO. REFERENSI
                                                 </label>
                                                 <p className="font-bold text-black uppercase">
-                                                    {transaction.creditDetail?.reference_number || transaction.credit_detail?.reference_number || "-"}
+                                                    {transaction.creditDetail
+                                                        ?.reference_number ||
+                                                        transaction
+                                                            .credit_detail
+                                                            ?.reference_number ||
+                                                        "-"}
                                                 </p>
                                             </div>
                                             <div>
@@ -363,7 +472,12 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 <p className="font-black text-black">
                                                     {formatCurrency(
                                                         transaction
-                                                            .credit_detail?.dp_amount || transaction.creditDetail?.dp_amount || 0,
+                                                            .credit_detail
+                                                            ?.dp_amount ||
+                                                            transaction
+                                                                .creditDetail
+                                                                ?.dp_amount ||
+                                                            0,
                                                     )}
                                                 </p>
                                             </div>
@@ -372,10 +486,11 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                     TENOR
                                                 </label>
                                                 <p className="font-black text-black">
-                                                    {
-                                                        transaction
-                                                            .credit_detail?.tenor || transaction.creditDetail?.tenor || 0
-                                                    }{" "}
+                                                    {transaction.credit_detail
+                                                        ?.tenor ||
+                                                        transaction.creditDetail
+                                                            ?.tenor ||
+                                                        0}{" "}
                                                     BULAN
                                                 </p>
                                             </div>
@@ -384,7 +499,12 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                     BUNGA/BULAN
                                                 </label>
                                                 <p className="font-black text-black">
-                                                    {transaction.credit_detail?.interest_rate || transaction.creditDetail?.interest_rate || 0}%
+                                                    {transaction.credit_detail
+                                                        ?.interest_rate ||
+                                                        transaction.creditDetail
+                                                            ?.interest_rate ||
+                                                        0}
+                                                    %
                                                 </p>
                                             </div>
                                             <div>
@@ -394,7 +514,12 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 <p className="font-black text-[#1c69d4]">
                                                     {formatCurrency(
                                                         transaction
-                                                            .credit_detail?.monthly_installment || transaction.creditDetail?.monthly_installment || 0,
+                                                            .credit_detail
+                                                            ?.monthly_installment ||
+                                                            transaction
+                                                                .creditDetail
+                                                                ?.monthly_installment ||
+                                                            0,
                                                     )}
                                                 </p>
                                             </div>
@@ -404,7 +529,13 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 </label>
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-bold text-black uppercase">
-                                                        {transaction.credit_detail?.leasing_provider || transaction.creditDetail?.leasing_provider || "-"}
+                                                        {transaction
+                                                            .credit_detail
+                                                            ?.leasing_provider ||
+                                                            transaction
+                                                                .creditDetail
+                                                                ?.leasing_provider ||
+                                                            "-"}
                                                     </span>
                                                 </div>
                                             </div>
@@ -430,29 +561,60 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
 
                                             {/* Booking Fee / Down Payment */}
                                             {transaction.installments?.find(
-                                                (i) => i.installment_number === 0,
-                                            ) && (
-                                                isCredit ? (
+                                                (i) =>
+                                                    i.installment_number === 0,
+                                            ) &&
+                                                (isCredit ? (
                                                     // Kredit: DP hanya bisa dibayar setelah disetujui
-                                                    (transaction.credit_detail?.status === "disetujui" || transaction.creditDetail?.status === "disetujui") ? (
+                                                    transaction.credit_detail
+                                                        ?.status ===
+                                                        "disetujui" ||
+                                                    transaction.creditDetail
+                                                        ?.status ===
+                                                        "disetujui" ? (
                                                         <CashPaymentModule
                                                             installment={transaction.installments.find(
-                                                                (i) => i.installment_number === 0,
+                                                                (i) =>
+                                                                    i.installment_number ===
+                                                                    0,
                                                             )}
                                                             type="UANG MUKA (DP)"
-                                                            isLoading={isLoadingPay}
-                                                            onPay={handleOnlinePayment}
-                                                            formatCurrency={formatCurrency}
+                                                            isLoading={
+                                                                isLoadingPay
+                                                            }
+                                                            onPay={
+                                                                handleOnlinePayment
+                                                            }
+                                                            formatCurrency={
+                                                                formatCurrency
+                                                            }
                                                         />
                                                     ) : (
                                                         <div className="flex items-start gap-4 bg-amber-50 border border-amber-200 p-5">
-                                                            <AlertCircle size={20} className="text-amber-500 shrink-0 mt-0.5" />
+                                                            <AlertCircle
+                                                                size={20}
+                                                                className="text-amber-500 shrink-0 mt-0.5"
+                                                            />
                                                             <div>
                                                                 <p className="font-black text-amber-800 uppercase tracking-widest text-sm mb-1">
-                                                                    MENUNGGU PERSETUJUAN LEASING
+                                                                    MENUNGGU
+                                                                    PERSETUJUAN
+                                                                    LEASING
                                                                 </p>
                                                                 <p className="text-[11px] font-bold text-amber-700 uppercase tracking-widest">
-                                                                    Pembayaran Uang Muka (DP) akan tersedia setelah pengajuan kredit Anda disetujui oleh pihak leasing. Harap tunggu notifikasi dari kami.
+                                                                    Pembayaran
+                                                                    Uang Muka
+                                                                    (DP) akan
+                                                                    tersedia
+                                                                    setelah
+                                                                    pengajuan
+                                                                    kredit Anda
+                                                                    disetujui
+                                                                    oleh pihak
+                                                                    leasing.
+                                                                    Harap tunggu
+                                                                    notifikasi
+                                                                    dari kami.
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -461,15 +623,20 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                     // CASH: Booking fee langsung bisa dibayar
                                                     <CashPaymentModule
                                                         installment={transaction.installments.find(
-                                                            (i) => i.installment_number === 0,
+                                                            (i) =>
+                                                                i.installment_number ===
+                                                                0,
                                                         )}
                                                         type="BOOKING FEE"
                                                         isLoading={isLoadingPay}
-                                                        onPay={handleOnlinePayment}
-                                                        formatCurrency={formatCurrency}
+                                                        onPay={
+                                                            handleOnlinePayment
+                                                        }
+                                                        formatCurrency={
+                                                            formatCurrency
+                                                        }
                                                     />
-                                                )
-                                            )}
+                                                ))}
 
                                             {/* Pelunasan (if booking fee paid OR no booking fee exists) */}
                                             {!isCredit &&
@@ -477,12 +644,12 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                     (i) =>
                                                         i.installment_number ===
                                                         0,
-                                                )?.status === "paid" || 
-                                                !transaction.installments?.find(
-                                                    (i) =>
-                                                        i.installment_number ===
-                                                        0,
-                                                )) &&
+                                                )?.status === "paid" ||
+                                                    !transaction.installments?.find(
+                                                        (i) =>
+                                                            i.installment_number ===
+                                                            0,
+                                                    )) &&
                                                 transaction.installments?.find(
                                                     (i) =>
                                                         i.installment_number ===
@@ -521,13 +688,9 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                                 className={`w-12 h-12 flex items-center justify-center shrink-0 ${transaction.documents_complete ? "bg-green-100 text-green-600" : "bg-black text-white"}`}
                                             >
                                                 {transaction.documents_complete ? (
-                                                    <CheckCircle
-                                                        size={24}
-                                                    />
+                                                    <CheckCircle size={24} />
                                                 ) : (
-                                                    <AlertCircle
-                                                        size={24}
-                                                    />
+                                                    <AlertCircle size={24} />
                                                 )}
                                             </div>
                                             <div className="flex-1">
@@ -557,9 +720,7 @@ export default function OrderConfirmation({ transaction, midtransClientKey }) {
                                             >
                                                 {transaction.documents_complete ? (
                                                     <>
-                                                        <FileText
-                                                            size={16}
-                                                        />{" "}
+                                                        <FileText size={16} />{" "}
                                                         KELOLA
                                                     </>
                                                 ) : (
@@ -637,7 +798,9 @@ function CashPaymentModule({
                     ) : (
                         <AlertCircle className="text-red-500" size={16} />
                     )}
-                    <h5 className="font-bold text-[10px] uppercase tracking-widest text-black">{type}</h5>
+                    <h5 className="font-bold text-[10px] uppercase tracking-widest text-black">
+                        {type}
+                    </h5>
                 </div>
                 <div className="text-2xl font-black text-black">
                     {formatCurrency(installment.amount)}

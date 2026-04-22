@@ -1,0 +1,1300 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Waktu pembuatan: 21 Apr 2026 pada 08.49
+-- Versi server: 8.0.30
+-- Versi PHP: 8.3.23
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `srbmotor`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `cache`
+--
+
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('srb-motor-cache-5c785c036466adea360111aa28563bfd556b5fba', 'i:2;', 1776693609),
+('srb-motor-cache-5c785c036466adea360111aa28563bfd556b5fba:timer', 'i:1776693609;', 1776693609),
+('srb-motor-cache-c1dfd96eea8cc2b62785275bca38ac261256e278', 'i:2;', 1776694931),
+('srb-motor-cache-c1dfd96eea8cc2b62785275bca38ac261256e278:timer', 'i:1776694931;', 1776694931),
+('srb-motor-cache-motors:filter-options:all', 'a:3:{s:6:\"brands\";O:29:\"Illuminate\\Support\\Collection\":2:{s:8:\"\0*\0items\";a:2:{i:0;s:6:\"Yamaha\";i:1;s:5:\"Honda\";}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:5:\"types\";O:29:\"Illuminate\\Support\\Collection\":2:{s:8:\"\0*\0items\";a:5:{i:0;s:5:\"Matic\";i:1;s:11:\"Sport Matic\";i:2;s:6:\"Classy\";i:3;s:13:\"Matic Premium\";i:4;s:7:\"Classic\";}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:5:\"years\";O:29:\"Illuminate\\Support\\Collection\":2:{s:8:\"\0*\0items\";a:1:{i:0;i:2024;}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}}', 1776698631),
+('srb-motor-cache-motors:filtered:33dc318b5d737cb11503d517069aa105:withSpecs:12', 'O:42:\"Illuminate\\Pagination\\LengthAwarePaginator\":12:{s:8:\"\0*\0items\";O:39:\"Illuminate\\Database\\Eloquent\\Collection\":2:{s:8:\"\0*\0items\";a:3:{i:0;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:1;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:2;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:10:\"\0*\0perPage\";i:12;s:14:\"\0*\0currentPage\";i:1;s:7:\"\0*\0path\";s:52:\"http://jerrie-lagoonal-cherryl.ngrok-free.dev/motors\";s:8:\"\0*\0query\";a:0:{}s:11:\"\0*\0fragment\";N;s:11:\"\0*\0pageName\";s:4:\"page\";s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:10:\"onEachSide\";i:3;s:10:\"\0*\0options\";a:2:{s:4:\"path\";s:52:\"http://jerrie-lagoonal-cherryl.ngrok-free.dev/motors\";s:8:\"pageName\";s:4:\"page\";}s:8:\"\0*\0total\";i:3;s:11:\"\0*\0lastPage\";i:1;}', 1776581126),
+('srb-motor-cache-motors:filtered:d41d8cd98f00b204e9800998ecf8427e:withSpecs:10', 'O:42:\"Illuminate\\Pagination\\LengthAwarePaginator\":12:{s:8:\"\0*\0items\";O:39:\"Illuminate\\Database\\Eloquent\\Collection\":2:{s:8:\"\0*\0items\";a:6:{i:0;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:1;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:2;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:3;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:4;s:4:\"name\";s:17:\"Honda PCX 160 ABS\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:7:\"PCX 160\";s:5:\"price\";s:11:\"36000000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:88:\"[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:13:\"Matic Premium\";s:10:\"image_path\";s:51:\"motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png\";s:7:\"details\";s:171:\"Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:4;s:4:\"name\";s:17:\"Honda PCX 160 ABS\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:7:\"PCX 160\";s:5:\"price\";s:11:\"36000000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:88:\"[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:13:\"Matic Premium\";s:10:\"image_path\";s:51:\"motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png\";s:7:\"details\";s:171:\"Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:4;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:5;s:4:\"name\";s:15:\"Honda Vario 160\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:9:\"Vario 160\";s:5:\"price\";s:11:\"27350000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:58:\"[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png\";s:7:\"details\";s:143:\"Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:5;s:4:\"name\";s:15:\"Honda Vario 160\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:9:\"Vario 160\";s:5:\"price\";s:11:\"27350000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:58:\"[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png\";s:7:\"details\";s:143:\"Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:5;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:6;s:4:\"name\";s:21:\"Honda Scoopy Prestige\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:6:\"Scoopy\";s:5:\"price\";s:11:\"22000000.00\";s:13:\"min_dp_amount\";s:7:\"2000000\";s:6:\"colors\";s:36:\"[\"Prestige White\", \"Prestige Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:7:\"Classic\";s:10:\"image_path\";s:51:\"motors/fWtFwcNhEWgMDbgqw3W03XPxhcQVTIdPyO4tDdNe.png\";s:7:\"details\";s:137:\"Scoopy Prestige hadir sebagai skutik ikonik yang elegan dan berkarakter unik. Menggunakan Smart Key System, charger USB, dan bagasi luas.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-04 16:53:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:6;s:4:\"name\";s:21:\"Honda Scoopy Prestige\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:6:\"Scoopy\";s:5:\"price\";s:11:\"22000000.00\";s:13:\"min_dp_amount\";s:7:\"2000000\";s:6:\"colors\";s:36:\"[\"Prestige White\", \"Prestige Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:7:\"Classic\";s:10:\"image_path\";s:51:\"motors/fWtFwcNhEWgMDbgqw3W03XPxhcQVTIdPyO4tDdNe.png\";s:7:\"details\";s:137:\"Scoopy Prestige hadir sebagai skutik ikonik yang elegan dan berkarakter unik. Menggunakan Smart Key System, charger USB, dan bagasi luas.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-04 16:53:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:10:\"\0*\0perPage\";i:10;s:14:\"\0*\0currentPage\";i:1;s:7:\"\0*\0path\";s:33:\"http://srbmotor.test/admin/motors\";s:8:\"\0*\0query\";a:0:{}s:11:\"\0*\0fragment\";N;s:11:\"\0*\0pageName\";s:4:\"page\";s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:10:\"onEachSide\";i:3;s:10:\"\0*\0options\";a:2:{s:4:\"path\";s:33:\"http://srbmotor.test/admin/motors\";s:8:\"pageName\";s:4:\"page\";}s:8:\"\0*\0total\";i:6;s:11:\"\0*\0lastPage\";i:1;}', 1776605698),
+('srb-motor-cache-motors:filtered:d41d8cd98f00b204e9800998ecf8427e:withSpecs:12', 'O:42:\"Illuminate\\Pagination\\LengthAwarePaginator\":12:{s:8:\"\0*\0items\";O:39:\"Illuminate\\Database\\Eloquent\\Collection\":2:{s:8:\"\0*\0items\";a:6:{i:0;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:1;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:2;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:3;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:4;s:4:\"name\";s:17:\"Honda PCX 160 ABS\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:7:\"PCX 160\";s:5:\"price\";s:11:\"36000000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:88:\"[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:13:\"Matic Premium\";s:10:\"image_path\";s:51:\"motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png\";s:7:\"details\";s:171:\"Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:4;s:4:\"name\";s:17:\"Honda PCX 160 ABS\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:7:\"PCX 160\";s:5:\"price\";s:11:\"36000000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:88:\"[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:13:\"Matic Premium\";s:10:\"image_path\";s:51:\"motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png\";s:7:\"details\";s:171:\"Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:4;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:5;s:4:\"name\";s:15:\"Honda Vario 160\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:9:\"Vario 160\";s:5:\"price\";s:11:\"27350000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:58:\"[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png\";s:7:\"details\";s:143:\"Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:5;s:4:\"name\";s:15:\"Honda Vario 160\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:9:\"Vario 160\";s:5:\"price\";s:11:\"27350000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:58:\"[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png\";s:7:\"details\";s:143:\"Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:5;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:6;s:4:\"name\";s:21:\"Honda Scoopy Prestige\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:6:\"Scoopy\";s:5:\"price\";s:11:\"22000000.00\";s:13:\"min_dp_amount\";s:7:\"2000000\";s:6:\"colors\";s:36:\"[\"Prestige White\", \"Prestige Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:7:\"Classic\";s:10:\"image_path\";s:51:\"motors/fWtFwcNhEWgMDbgqw3W03XPxhcQVTIdPyO4tDdNe.png\";s:7:\"details\";s:137:\"Scoopy Prestige hadir sebagai skutik ikonik yang elegan dan berkarakter unik. Menggunakan Smart Key System, charger USB, dan bagasi luas.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-04 16:53:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:6;s:4:\"name\";s:21:\"Honda Scoopy Prestige\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:6:\"Scoopy\";s:5:\"price\";s:11:\"22000000.00\";s:13:\"min_dp_amount\";s:7:\"2000000\";s:6:\"colors\";s:36:\"[\"Prestige White\", \"Prestige Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:7:\"Classic\";s:10:\"image_path\";s:51:\"motors/fWtFwcNhEWgMDbgqw3W03XPxhcQVTIdPyO4tDdNe.png\";s:7:\"details\";s:137:\"Scoopy Prestige hadir sebagai skutik ikonik yang elegan dan berkarakter unik. Menggunakan Smart Key System, charger USB, dan bagasi luas.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-04 16:53:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}s:10:\"\0*\0perPage\";i:12;s:14:\"\0*\0currentPage\";i:1;s:7:\"\0*\0path\";s:52:\"http://jerrie-lagoonal-cherryl.ngrok-free.dev/motors\";s:8:\"\0*\0query\";a:0:{}s:11:\"\0*\0fragment\";N;s:11:\"\0*\0pageName\";s:4:\"page\";s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:10:\"onEachSide\";i:3;s:10:\"\0*\0options\";a:2:{s:4:\"path\";s:52:\"http://jerrie-lagoonal-cherryl.ngrok-free.dev/motors\";s:8:\"pageName\";s:4:\"page\";}s:8:\"\0*\0total\";i:6;s:11:\"\0*\0lastPage\";i:1;}', 1776698631);
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('srb-motor-cache-motors:id:1:withSpecs', 'O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}', 1776698466),
+('srb-motor-cache-motors:popular:5:withSpecs', 'O:39:\"Illuminate\\Database\\Eloquent\\Collection\":2:{s:8:\"\0*\0items\";a:5:{i:0;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:1;s:4:\"name\";s:22:\"Yamaha NMAX Turbo 2024\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:4:\"NMAX\";s:5:\"price\";s:11:\"35500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:41:\"[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:5:\"Matic\";s:10:\"image_path\";s:51:\"motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png\";s:7:\"details\";s:144:\"NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.\";s:8:\"tersedia\";i:1;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-18 21:39:52\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:1;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:2;s:4:\"name\";s:27:\"Yamaha Aerox 155 Cyber City\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:5:\"Aerox\";s:5:\"price\";s:11:\"31200000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:32:\"[\"Cyber City\", \"Merah\", \"Hitam\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png\";s:7:\"details\";s:157:\"Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-10 13:17:42\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:2;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:3;s:4:\"name\";s:25:\"Yamaha Fazzio Lux Edition\";s:5:\"brand\";s:6:\"Yamaha\";s:5:\"model\";s:6:\"Fazzio\";s:5:\"price\";s:11:\"23500000.00\";s:13:\"min_dp_amount\";s:6:\"600000\";s:6:\"colors\";s:49:\"[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:6:\"Classy\";s:10:\"image_path\";s:51:\"motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png\";s:7:\"details\";s:154:\"Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-06 12:48:13\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:3;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:4;s:4:\"name\";s:17:\"Honda PCX 160 ABS\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:7:\"PCX 160\";s:5:\"price\";s:11:\"36000000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:88:\"[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:13:\"Matic Premium\";s:10:\"image_path\";s:51:\"motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png\";s:7:\"details\";s:171:\"Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:4;s:4:\"name\";s:17:\"Honda PCX 160 ABS\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:7:\"PCX 160\";s:5:\"price\";s:11:\"36000000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:88:\"[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:13:\"Matic Premium\";s:10:\"image_path\";s:51:\"motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png\";s:7:\"details\";s:171:\"Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}i:4;O:16:\"App\\Models\\Motor\":33:{s:13:\"\0*\0connection\";s:5:\"mysql\";s:8:\"\0*\0table\";s:6:\"motors\";s:13:\"\0*\0primaryKey\";s:2:\"id\";s:10:\"\0*\0keyType\";s:3:\"int\";s:12:\"incrementing\";b:1;s:7:\"\0*\0with\";a:0:{}s:12:\"\0*\0withCount\";a:0:{}s:19:\"preventsLazyLoading\";b:0;s:10:\"\0*\0perPage\";i:15;s:6:\"exists\";b:1;s:18:\"wasRecentlyCreated\";b:0;s:28:\"\0*\0escapeWhenCastingToString\";b:0;s:13:\"\0*\0attributes\";a:15:{s:2:\"id\";i:5;s:4:\"name\";s:15:\"Honda Vario 160\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:9:\"Vario 160\";s:5:\"price\";s:11:\"27350000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:58:\"[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png\";s:7:\"details\";s:143:\"Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:11:\"\0*\0original\";a:15:{s:2:\"id\";i:5;s:4:\"name\";s:15:\"Honda Vario 160\";s:5:\"brand\";s:5:\"Honda\";s:5:\"model\";s:9:\"Vario 160\";s:5:\"price\";s:11:\"27350000.00\";s:13:\"min_dp_amount\";s:1:\"0\";s:6:\"colors\";s:58:\"[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]\";s:6:\"branch\";s:23:\"SSM MEKAR SARI (BEKASI)\";s:4:\"year\";i:2024;s:4:\"type\";s:11:\"Sport Matic\";s:10:\"image_path\";s:51:\"motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png\";s:7:\"details\";s:143:\"Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.\";s:8:\"tersedia\";i:0;s:10:\"created_at\";s:19:\"2026-03-22 20:43:56\";s:10:\"updated_at\";s:19:\"2026-04-01 14:26:40\";}s:10:\"\0*\0changes\";a:0:{}s:11:\"\0*\0previous\";a:0:{}s:8:\"\0*\0casts\";a:4:{s:5:\"price\";s:9:\"decimal:2\";s:8:\"tersedia\";s:7:\"boolean\";s:13:\"min_dp_amount\";s:9:\"decimal:2\";s:6:\"colors\";s:5:\"array\";}s:17:\"\0*\0classCastCache\";a:0:{}s:21:\"\0*\0attributeCastCache\";a:0:{}s:13:\"\0*\0dateFormat\";N;s:10:\"\0*\0appends\";a:2:{i:0;s:5:\"image\";i:1;s:11:\"description\";}s:19:\"\0*\0dispatchesEvents\";a:0:{}s:14:\"\0*\0observables\";a:0:{}s:12:\"\0*\0relations\";a:0:{}s:10:\"\0*\0touches\";a:0:{}s:27:\"\0*\0relationAutoloadCallback\";N;s:26:\"\0*\0relationAutoloadContext\";N;s:10:\"timestamps\";b:1;s:13:\"usesUniqueIds\";b:0;s:9:\"\0*\0hidden\";a:0:{}s:10:\"\0*\0visible\";a:0:{}s:11:\"\0*\0fillable\";a:12:{i:0;s:4:\"name\";i:1;s:5:\"brand\";i:2;s:5:\"model\";i:3;s:5:\"price\";i:4;s:4:\"year\";i:5;s:4:\"type\";i:6;s:10:\"image_path\";i:7;s:7:\"details\";i:8;s:11:\"description\";i:9;s:8:\"tersedia\";i:10;s:13:\"min_dp_amount\";i:11;s:6:\"colors\";}s:10:\"\0*\0guarded\";a:1:{i:0;s:1:\"*\";}}}s:28:\"\0*\0escapeWhenCastingToString\";b:0;}', 1776764139),
+('srb-motor-cache-setting_service_branches', 's:51:\"[\"SSM JATIASIH (BEKASI)\",\"SSM MEKAR SARI (BEKASI)\"]\";', 1776583162),
+('srb-motor-cache-setting_service_business_hours', 's:176:\"{\"monday\":\"08:00 - 16:00\",\"tuesday\":\"08:00 - 16:00\",\"wednesday\":\"08:00 - 16:00\",\"thursday\":\"08:00 - 16:00\",\"friday\":\"08:00 - 16:00\",\"saturday\":\"08:00 - 14:00\",\"sunday\":\"Tutup\"}\";', 1776583162);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `cache_locks`
+--
+
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `credit_details`
+--
+
+CREATE TABLE `credit_details` (
+  `id` bigint UNSIGNED NOT NULL,
+  `transaction_id` bigint UNSIGNED NOT NULL,
+  `leasing_provider` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pengajuan_masuk',
+  `reference_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Leasing provider reference',
+  `tenor` int NOT NULL COMMENT 'Loan tenure in months',
+  `interest_rate` decimal(5,2) DEFAULT NULL COMMENT 'Annual interest rate %',
+  `monthly_installment` decimal(15,0) DEFAULT NULL,
+  `verification_notes` text COLLATE utf8mb4_unicode_ci,
+  `verified_at` timestamp NULL DEFAULT NULL,
+  `dp_amount` decimal(15,0) DEFAULT NULL COMMENT 'Down payment amount required',
+  `dp_paid_at` timestamp NULL DEFAULT NULL,
+  `dp_payment_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `completed_at` timestamp NULL DEFAULT NULL,
+  `completion_notes` text COLLATE utf8mb4_unicode_ci,
+  `is_completed` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `credit_details`
+--
+
+INSERT INTO `credit_details` (`id`, `transaction_id`, `leasing_provider`, `status`, `reference_number`, `tenor`, `interest_rate`, `monthly_installment`, `verification_notes`, `verified_at`, `dp_amount`, `dp_paid_at`, `dp_payment_method`, `completed_at`, `completion_notes`, `is_completed`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 14, NULL, 'dibatalkan', 'REF-69CD1C4994FC8', 12, 0.02, 1966667, NULL, NULL, 2000000, NULL, NULL, NULL, NULL, 0, '2026-04-01 13:23:21', '2026-04-01 13:34:14', NULL),
+(2, 15, 'BAF', 'ditolak', 'REF-69D0DE486054C', 12, 0.02, 1966667, 'Slik ojk buruk', '2026-04-04 09:50:58', 2000000, NULL, NULL, NULL, NULL, 0, '2026-04-04 09:47:52', '2026-04-04 10:24:17', NULL),
+(4, 17, 'BAF', 'selesai', 'REF-69D2EAAE6520B', 12, 0.02, 2251833, '', '2026-04-06 05:18:57', 600000, '2026-04-06 05:48:24', 'bank_transfer', '2026-04-06 05:48:33', '', 1, '2026-04-05 23:05:18', '2026-04-06 05:48:33', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `documents`
+--
+
+CREATE TABLE `documents` (
+  `id` bigint UNSIGNED NOT NULL,
+  `credit_detail_id` bigint UNSIGNED NOT NULL,
+  `document_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'KTP, BPKB, STNK, Slip Gaji, Bukti Domisili, etc',
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Path to stored file',
+  `original_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file_size` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending' COMMENT 'pending, approved, rejected',
+  `approval_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending' COMMENT 'pending, approved, rejected',
+  `rejection_reason` text COLLATE utf8mb4_unicode_ci,
+  `reviewed_at` timestamp NULL DEFAULT NULL,
+  `submitted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `documents`
+--
+
+INSERT INTO `documents` (`id`, `credit_detail_id`, `document_type`, `description`, `file_path`, `original_name`, `file_size`, `status`, `approval_status`, `rejection_reason`, `reviewed_at`, `submitted_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 2, 'KTP', NULL, 'credit-documents/15/ieMPAHOTU5k7JJuk2SUtkS2x2NaT6qPm9EzyHHSg.png', 'ktpDummy.png', NULL, 'pending', 'approved', NULL, '2026-04-04 09:50:26', NULL, '2026-04-04 09:48:57', '2026-04-04 09:50:26', NULL),
+(2, 2, 'KK', NULL, 'credit-documents/15/MTcjAxCd5AqljwP2BjlVN4fTm8yQkb5XV8UE4D8I.png', 'KKDummy.png', NULL, 'pending', 'approved', NULL, '2026-04-04 09:50:34', NULL, '2026-04-04 09:48:57', '2026-04-04 09:50:34', NULL),
+(3, 2, 'SLIP_GAJI', NULL, 'credit-documents/15/BFSKpNDMIDH1SmQVDDOTHTefcDpvSovOXmxDXimj.png', 'SlipGajiDummy.png', NULL, 'pending', 'approved', NULL, '2026-04-04 09:50:41', NULL, '2026-04-04 09:48:57', '2026-04-04 09:50:41', NULL),
+(4, 2, 'LAINNYA', NULL, 'credit-documents/15/48yJBa0Tbk2FhBEp74v7lR70CfLQEskz1l7ouIBL.png', 'SIMdummy.png', NULL, 'pending', 'approved', NULL, '2026-04-04 09:50:49', NULL, '2026-04-04 09:48:57', '2026-04-04 09:50:49', NULL),
+(5, 4, 'KTP', NULL, 'credit-documents/17/4b0u3v6mSjZEfrrvn99ugOamDhbqkfYJg3kddQY6.png', 'ktpDummy.png', NULL, 'pending', 'approved', NULL, '2026-04-05 23:11:30', NULL, '2026-04-05 23:05:36', '2026-04-05 23:11:30', NULL),
+(6, 4, 'KK', NULL, 'credit-documents/17/wiuk0DXtArtaLLq1TzIWo1k3hGpQrNEB4BNpXM6G.jpg', 'KKDummy.jpg', NULL, 'pending', 'approved', NULL, '2026-04-05 23:11:38', NULL, '2026-04-05 23:05:36', '2026-04-05 23:11:38', NULL),
+(7, 4, 'SLIP_GAJI', NULL, 'credit-documents/17/as5h9OuI5ehN1gAbBAXxgN9XcwdbHt4y3MgtZAHF.png', 'SlipGajiDummy.png', NULL, 'pending', 'approved', NULL, '2026-04-05 23:11:45', NULL, '2026-04-05 23:05:36', '2026-04-05 23:11:45', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `installments`
+--
+
+CREATE TABLE `installments` (
+  `id` bigint UNSIGNED NOT NULL,
+  `transaction_id` bigint UNSIGNED NOT NULL,
+  `installment_number` int NOT NULL COMMENT '1st, 2nd, 3rd... installment',
+  `due_date` date NOT NULL COMMENT 'When payment is due',
+  `amount` decimal(15,0) NOT NULL COMMENT 'Monthly installment amount',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'belum_dibayar' COMMENT 'belum_dibayar, dibayar, overdue, tertangguh',
+  `paid_at` timestamp NULL DEFAULT NULL,
+  `payment_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Bank transfer, online, cash, etc',
+  `payment_proof` text COLLATE utf8mb4_unicode_ci COMMENT 'Path to payment proof file',
+  `snap_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Midtrans Snap payment token',
+  `midtrans_booking_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_overdue` tinyint(1) NOT NULL DEFAULT '0',
+  `days_overdue` int NOT NULL DEFAULT '0',
+  `penalty_amount` decimal(15,0) NOT NULL DEFAULT '0' COMMENT 'Late payment penalty',
+  `total_with_penalty` decimal(15,0) DEFAULT NULL,
+  `reminder_sent` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Whether reminder notification sent',
+  `reminder_sent_at` timestamp NULL DEFAULT NULL,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `installments`
+--
+
+INSERT INTO `installments` (`id`, `transaction_id`, `installment_number`, `due_date`, `amount`, `status`, `paid_at`, `payment_method`, `payment_proof`, `snap_token`, `midtrans_booking_code`, `is_overdue`, `days_overdue`, `penalty_amount`, `total_with_penalty`, `reminder_sent`, `reminder_sent_at`, `notes`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(3, 4, 0, '2026-03-25', 1000000, 'paid', '2026-03-25 10:27:21', 'midtrans_bca_va', NULL, '836f915d-b569-4504-b709-2c9ee2340489', 'INST-3-1774434411', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-25 06:16:15', '2026-03-25 10:27:21', NULL),
+(4, 4, 1, '2026-04-02', 30200000, 'paid', '2026-03-26 06:45:35', 'midtrans_bca_va', NULL, '51adbafb-05b9-4027-b42f-eb584b61e349', 'INST-4-1774507313', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 05:58:57', '2026-03-26 06:45:35', NULL),
+(5, 5, 0, '2026-03-26', 1000000, 'paid', '2026-03-26 07:21:46', 'midtrans_bca_va', NULL, 'd8151cad-f157-4f2b-8b66-c589c0d25d75', 'INST-5-1774509649', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 07:15:08', '2026-03-26 07:21:46', NULL),
+(6, 5, 1, '2026-04-02', 35000000, 'paid', '2026-03-26 07:31:39', 'midtrans_bca_va', NULL, '2038ee92-10d6-47d9-9140-706eaacdd1d1', 'INST-6-1774510259', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 07:21:46', '2026-03-26 07:31:39', NULL),
+(7, 6, 0, '2026-03-26', 1000000, 'paid', '2026-03-26 07:53:12', 'midtrans_bca_va', NULL, 'dc80e09b-7cd2-4c45-81e5-b35e4122e27a', 'INST-7-1774511552', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 07:52:32', '2026-03-26 07:53:12', NULL),
+(8, 6, 1, '2026-04-02', 26350000, 'paid', '2026-03-26 08:05:48', 'midtrans_bca_va', NULL, '875e2435-f9fa-47ad-aa76-5da6518b9077', 'INST-8-1774512313', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 07:53:12', '2026-03-26 08:05:48', NULL),
+(9, 7, 0, '2026-03-27', 1000000, 'paid', '2026-03-26 13:29:35', 'midtrans_bca_va', NULL, '0274f51f-61ef-4231-b9e7-f3011111dee2', 'INST-9-1774531755', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:35', NULL),
+(10, 7, 1, '2026-04-02', 34500000, 'paid', '2026-04-01 04:23:28', 'midtrans_bca_va', NULL, '5e0ae3ee-2baa-4d1f-97a2-b38ffa697af5', 'INST-10-1775017386', 0, 0, 0, NULL, 0, NULL, NULL, '2026-03-26 13:29:08', '2026-04-01 04:23:28', NULL),
+(11, 8, 0, '2026-04-02', 1000000, 'paid', '2026-04-01 04:22:57', 'midtrans_bca_va', NULL, 'cd093020-2851-445b-8ebe-908c262f21ad', 'INST-11-1775017359', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:57', NULL),
+(12, 8, 1, '2026-04-08', 22500000, 'overdue', NULL, NULL, NULL, 'b25a2b92-221b-4f97-a3c5-184515d1a464', 'INST-12-1775113979', 0, 0, 225000, NULL, 0, NULL, NULL, '2026-04-01 04:22:34', '2026-04-10 12:58:04', NULL),
+(16, 12, 0, '2026-04-01', 1000000, 'paid', '2026-04-01 05:04:30', 'midtrans_bca_va', NULL, 'acaa0fbf-b953-48e4-899d-3606d1b927c5', 'INST-16-1775019580', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-01 04:59:40', '2026-04-01 05:04:30', NULL),
+(17, 12, 1, '2026-04-08', 34500000, 'paid', '2026-04-01 07:24:42', 'midtrans_bca_va', NULL, '8f76cbf0-9d47-48bc-90f0-ea7c07484313', 'INST-17-1775028199', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-01 05:04:30', '2026-04-01 07:24:42', NULL),
+(18, 13, 0, '2026-04-01', 1000000, 'paid', '2026-04-01 06:48:46', 'midtrans_bca_va', NULL, '07eba66d-1076-4938-8030-aaed1083b4dd', 'INST-18-1775026068', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-01 05:05:45', '2026-04-01 06:48:46', NULL),
+(19, 13, 1, '2026-04-08', 34500000, 'paid', '2026-04-01 07:06:25', 'midtrans_bca_va', NULL, '8fbba5fe-da9f-4875-930e-49d04e7a2664', 'INST-19-1775027119', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-01 06:48:46', '2026-04-01 07:06:25', NULL),
+(20, 14, 0, '2026-04-02', 2000000, 'overdue', NULL, NULL, NULL, NULL, NULL, 0, 0, 80000, NULL, 0, NULL, NULL, '2026-04-01 13:23:21', '2026-04-10 12:58:04', NULL),
+(21, 15, 0, '2026-04-05', 2000000, 'paid', '2026-04-04 09:53:39', 'midtrans_bca_va', NULL, '5cfa9ccb-6f94-4f61-bd20-318f777f40d5', 'INST-21-1775296400', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-04 09:47:52', '2026-04-04 09:53:39', NULL),
+(23, 17, 0, '2026-04-07', 600000, 'paid', '2026-04-06 05:48:12', 'midtrans_bca_va', NULL, 'e74528b0-26a7-47b0-821e-78cee3971ecf', 'INST-23-1775454322', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-05 23:05:18', '2026-04-06 05:48:12', NULL),
+(24, 17, 1, '2026-05-06', 2251833, 'paid', '2026-04-06 06:27:09', 'midtrans_bca_va', NULL, '517cd07a-fc52-459f-a47e-f2f1ae6f3859', 'INST-24-1775456811', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 06:27:09', NULL),
+(25, 17, 2, '2026-06-06', 2251833, 'pending', NULL, NULL, NULL, 'e3275ceb-e2b5-4121-90a7-d59fdb947a45', 'INST-25-1775613025', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-08 01:50:26', NULL),
+(26, 17, 3, '2026-07-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(27, 17, 4, '2026-08-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(28, 17, 5, '2026-09-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(29, 17, 6, '2026-10-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(30, 17, 7, '2026-11-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(31, 17, 8, '2026-12-06', 2251833, 'pending', NULL, NULL, NULL, '9dea5e77-d623-45dc-b1da-44644cbfacc1', 'INST-31-1775545949', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-07 07:12:30', NULL),
+(32, 17, 9, '2027-01-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(33, 17, 10, '2027-02-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(34, 17, 11, '2027-03-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(35, 17, 12, '2027-04-06', 2251833, 'pending', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-06 05:48:33', '2026-04-06 05:48:33', NULL),
+(36, 18, 0, '2026-04-10', 100000, 'paid', '2026-04-10 06:20:54', 'midtrans_bca_va', NULL, 'e5be8eed-b202-4ccc-838d-4a949aa6232f', 'INST-36-1775802025', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-10 06:17:42', '2026-04-10 06:20:54', NULL),
+(37, 18, 1, '2026-04-17', 31100000, 'paid', '2026-04-10 06:29:21', 'midtrans_bca_va', NULL, 'a187f6ba-9b5d-4185-8c8d-88a6f700557b', 'INST-37-1775802509', 0, 0, 0, NULL, 0, NULL, NULL, '2026-04-10 06:20:54', '2026-04-10 06:29:21', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `attempts` tinyint UNSIGNED NOT NULL,
+  `reserved_at` int UNSIGNED DEFAULT NULL,
+  `available_at` int UNSIGNED NOT NULL,
+  `created_at` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `job_batches`
+--
+
+CREATE TABLE `job_batches` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_jobs` int NOT NULL,
+  `pending_jobs` int NOT NULL,
+  `failed_jobs` int NOT NULL,
+  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `cancelled_at` int DEFAULT NULL,
+  `created_at` int NOT NULL,
+  `finished_at` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '0001_01_01_000001_create_cache_table', 1),
+(2, '0001_01_01_000002_create_jobs_table', 1),
+(3, '2025_10_30_092515_create_complete_motors_table', 1),
+(4, '2025_10_30_092517_create_complete_contact_messages_table', 1),
+(5, '2025_11_04_000000_consolidate_users_table', 1),
+(6, '2025_11_05_064733_create_complete_notifications_table', 1),
+(7, '2025_11_05_140000_create_sessions_table', 1),
+(8, '2025_11_05_150000_create_password_reset_tokens_table', 1),
+(9, '2025_11_05_160000_create_personal_access_tokens_table', 1),
+(10, '2025_11_07_120000_add_indexes_to_tables', 1),
+(11, '2025_11_19_125905_make_subject_nullable_in_contact_messages_table', 1),
+(12, '2026_03_07_195731_create_promotions_tables', 1),
+(13, '2026_03_07_195734_create_leasing_tables', 1),
+(14, '2026_03_10_000001_create_settings_table', 1),
+(15, '2026_03_10_000002_create_banners_table', 1),
+(16, '2026_03_10_000003_create_categories_table', 1),
+(17, '2026_03_10_000004_create_posts_table', 1),
+(18, '2026_03_11_000200_consolidate_transactions_table', 1),
+(19, '2026_03_11_000300_consolidate_credit_details_table', 1),
+(20, '2026_03_11_000400_consolidate_installments_table', 1),
+(21, '2026_03_11_000500_consolidate_survey_schedules_table', 1),
+(22, '2026_03_11_000600_consolidate_documents_table', 1),
+(23, '2026_03_11_161725_add_customer_fields_to_transactions_table', 1),
+(24, '2026_03_11_162000_add_missing_survey_fields_to_survey_schedules_table', 1),
+(25, '2026_03_12_204027_add_modern_cash_fields_to_transactions_table', 1),
+(26, '2026_03_13_051133_add_midtrans_fields_to_installments_table', 1),
+(27, '2026_03_13_052626_rename_paid_date_to_paid_at_in_installments_table', 1),
+(28, '2026_03_13_155522_add_min_dp_to_motors_and_drop_schemes', 1),
+(29, '2026_03_13_161537_create_user_profiles_table', 1),
+(30, '2026_03_13_161719_create_transaction_logs_table', 1),
+(31, '2026_03_13_161958_cleanup_users_table', 1),
+(32, '2026_03_13_162704_create_motor_units_table', 1),
+(33, '2026_03_13_162809_add_motor_unit_id_to_transactions_table', 1),
+(34, '2026_03_14_225011_simplify_inventory_to_colors', 1),
+(35, '2026_03_15_133554_drop_banner_promo_contact_tables', 1),
+(36, '2026_03_16_021537_cleanup_orphaned_motor_units', 1),
+(37, '2026_03_16_021608_merge_user_profiles_to_users', 1),
+(38, '2026_03_17_161341_remove_redundant_columns_from_transactions_table', 1),
+(39, '2026_03_17_162010_consolidate_redundant_database_columns', 1),
+(40, '2026_03_18_000000_update_transaction_logs_table', 1),
+(41, '2026_03_22_201331_add_email_to_transactions_table', 2),
+(42, '2026_03_22_203729_remove_unused_columns', 2),
+(43, '2026_04_01_124530_remove_leasing_providers_and_restructure_credit_details', 3),
+(45, '2026_04_01_142648_create_service_appointments_table', 4),
+(46, '2026_04_02_191947_drop_news_and_categories_tables', 5),
+(47, '2026_04_03_054537_add_branch_to_service_appointments_table', 5),
+(48, '2026_04_03_055500_add_cancellation_fields_to_service_appointments_table', 6),
+(52, '2026_04_04_212919_add_benefit_notes_to_users_table', 7),
+(53, '2026_04_05_132415_remove_benefit_notes_from_users_table', 8),
+(54, '2026_04_05_133550_simplify_service_appointments_table', 9),
+(55, '2026_04_07_200843_add_queue_fields_to_service_appointments_table', 10),
+(56, '2026_04_13_082852_add_missing_performance_indexes_to_all_tables', 11),
+(57, '2026_04_13_085000_add_catalog_performance_indexes_to_motors_table', 12),
+(58, '2026_04_15_131613_create_service_area_mappings_table', 13);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `motors`
+--
+
+CREATE TABLE `motors` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `brand` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `min_dp_amount` decimal(15,0) NOT NULL DEFAULT '0' COMMENT 'Minimum Down Payment for this motor',
+  `colors` json DEFAULT NULL,
+  `branch` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'SSM MEKAR SARI (BEKASI)',
+  `year` int DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `details` text COLLATE utf8mb4_unicode_ci,
+  `tersedia` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `motors`
+--
+
+INSERT INTO `motors` (`id`, `name`, `brand`, `model`, `price`, `min_dp_amount`, `colors`, `branch`, `year`, `type`, `image_path`, `details`, `tersedia`, `created_at`, `updated_at`) VALUES
+(1, 'Yamaha NMAX Turbo 2024', 'Yamaha', 'NMAX', 35500000.00, 600000, '[\"Hitam\", \"Putih\", \"Merah\", \"Biru Matte\"]', 'SSM MEKAR SARI (BEKASI)', 2024, 'Matic', 'motors/QDnZPJKAk6BOVTh7IAI24qZ3n8vlhywAHj6AXAql.png', 'NMAX \"TURBO\" hadir dengan teknologi YECVT, performa mesin 155cc yang lebih bertenaga, desain premium yang agresif, serta fitur navigasi canggih.', 1, '2026-03-22 13:43:56', '2026-04-18 14:39:52'),
+(2, 'Yamaha Aerox 155 Cyber City', 'Yamaha', 'Aerox', 31200000.00, 0, '[\"Cyber City\", \"Merah\", \"Hitam\"]', 'SSM MEKAR SARI (BEKASI)', 2024, 'Sport Matic', 'motors/PFN8M2LC2Lhi6WQV2F3BJzRydayzC3s7uZhXoNRW.png', 'Aerox 155 dengan desain sporty agresif dan warna Cyber City yang modern. Dilengkapi dengan mesin Blue Core 155cc VVA, ban lebar, dan panel instrumen digital.', 0, '2026-03-22 13:43:56', '2026-04-10 06:17:42'),
+(3, 'Yamaha Fazzio Lux Edition', 'Yamaha', 'Fazzio', 23500000.00, 600000, '[\"Prestige Silver\", \"Matte Black\", \"White Pearl\"]', 'SSM MEKAR SARI (BEKASI)', 2024, 'Classy', 'motors/Al2PmhDCvZkL1YsmnApn9eXmsWtPPgdAbGzwF3Ky.png', 'Fazzio Lux tampil stylish dengan balutan warna premium. Motor hybrid 125cc yang hemat bahan bakar namun tetap bertenaga dengan teknologi Blue Core Hybrid.', 0, '2026-03-22 13:43:56', '2026-04-06 05:48:13'),
+(4, 'Honda PCX 160 ABS', 'Honda', 'PCX 160', 36000000.00, 0, '[\"Imperial Matte Blue\", \"Wonderful White\", \"Majestic Matte Red\", \"Glorious Matte Black\"]', 'SSM MEKAR SARI (BEKASI)', 2024, 'Matic Premium', 'motors/a7Yit4uO6vIpTll75bqGLHvHSrZpLnpHIZ8okXQX.png', 'Honda PCX 160 mengusung mesin eSP+ 160cc yang responsif. Desain mewah dan elegan dengan fitur keselamatan ABS, Honda Selectable Torque Control (HSTC), dan kunci smart key.', 0, '2026-03-22 13:43:56', '2026-04-01 07:26:40'),
+(5, 'Honda Vario 160', 'Honda', 'Vario 160', 27350000.00, 0, '[\"Active Black\", \"Grande Matte White\", \"Grande Matte Red\"]', 'SSM MEKAR SARI (BEKASI)', 2024, 'Sport Matic', 'motors/pw4miQgml2zjCfz2HEm7zDfd1kHefqIndWs3eFQO.png', 'Skutik premium bergaya sporty yang mengusung mesin performa tinggi 160cc eSP+. Desain bodi besar yang kokoh dan lincah untuk penggunaan harian.', 0, '2026-03-22 13:43:56', '2026-04-01 07:26:40'),
+(6, 'Honda Scoopy Prestige', 'Honda', 'Scoopy', 22000000.00, 2000000, '[\"Prestige White\", \"Prestige Black\"]', 'SSM MEKAR SARI (BEKASI)', 2024, 'Classic', 'motors/fWtFwcNhEWgMDbgqw3W03XPxhcQVTIdPyO4tDdNe.png', 'Scoopy Prestige hadir sebagai skutik ikonik yang elegan dan berkarakter unik. Menggunakan Smart Key System, charger USB, dan bagasi luas.', 0, '2026-03-22 13:43:56', '2026-04-04 09:53:40');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notifiable_id` bigint UNSIGNED NOT NULL,
+  `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('0073deef-f9fa-4530-9c61-d08a00b9ab15', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T10:24:05.038713Z\"}', '2026-04-04 14:21:43', '2026-04-04 10:24:05', '2026-04-04 14:21:43'),
+('0092a62d-9c76-4e5e-9e5d-09d39d8af3f4', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":2,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 2\",\"created_at\":\"2026-03-25T06:13:33.348441Z\"}', '2026-03-26 08:19:16', '2026-03-25 06:13:33', '2026-03-26 08:19:16'),
+('02090766-3e7b-4cb8-8d0e-f9887be364a8', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-05T23:12:02.988711Z\"}', '2026-04-06 05:12:55', '2026-04-05 23:12:02', '2026-04-06 05:12:55'),
+('02b4c291-7b77-4ab7-8857-eb6f0e941184', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0009\",\"created_at\":\"2026-04-01T04:25:49.755606Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:25:49', '2026-04-04 14:21:44'),
+('02d958ee-ef4a-41c6-a3c8-d8cf6cdf608b', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Waiting payment\",\"created_at\":\"2026-04-01T04:22:34.320446Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:22:34', '2026-04-04 14:21:44'),
+('052fe245-3bd7-4744-9154-c7edefd7b0fa', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0011 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:59:09.563316Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:59:09', '2026-04-01 06:30:51'),
+('05865fec-a804-4fa9-beef-b9527acfa597', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:32:07.477325Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:32:07', '2026-04-12 11:44:46'),
+('0750fe02-ac13-4a72-a3c0-35b7d4d69030', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0008\",\"created_at\":\"2026-04-01T04:22:34.206788Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:22:34', '2026-04-04 14:21:44'),
+('07fa34f1-67a7-4f0a-a616-f61334137355', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0012\",\"created_at\":\"2026-04-01T04:59:39.988818Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:59:39', '2026-04-04 14:21:44'),
+('09b3748c-5f01-422b-8c7c-0f962f75c382', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0005 saat ini: Dalam pengiriman\",\"created_at\":\"2026-03-28T06:24:17.191384Z\"}', '2026-03-28 06:25:11', '2026-03-28 06:24:17', '2026-03-28 06:25:11'),
+('0da17593-f804-4351-a7b6-b6196ce98bd9', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 9, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0016\",\"created_at\":\"2026-04-05T22:49:46.892804Z\"}', '2026-04-05 23:03:57', '2026-04-05 22:49:46', '2026-04-05 23:03:57'),
+('0da859b8-b64c-4ee0-9c33-56b63c4ae703', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":2,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 2 telah diubah menjadi cancelled\",\"created_at\":\"2026-03-25T08:54:32.115474Z\"}', '2026-04-04 14:21:44', '2026-03-25 08:54:32', '2026-04-04 14:21:44'),
+('0e0829e5-ffd7-4eef-a5f8-f9e3f2062259', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi pembayaran_dikonfirmasi\",\"created_at\":\"2026-03-26T07:53:12.492974Z\"}', '2026-04-04 14:21:44', '2026-03-26 07:53:12', '2026-04-04 14:21:44'),
+('14d97f65-cf38-453b-ad9d-c131156f79ec', 'App\\Notifications\\BenefitNotesUpdated', 'App\\Models\\User', 9, '{\"type\":\"benefit_update\",\"title\":\"Update Keuntungan & Manfaat\",\"message\":\"Gratis ganti oli\",\"action_url\":\"\\/profile\",\"icon\":\"star\",\"created_at\":\"2026-04-04T14:58:53.565264Z\"}', '2026-04-04 15:00:13', '2026-04-04 14:58:53', '2026-04-04 15:00:13'),
+('15052131-9db0-46f2-9381-77dc130fe7d9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi dalam_pengiriman\",\"created_at\":\"2026-03-28T06:19:50.913071Z\"}', '2026-03-28 06:20:17', '2026-03-28 06:19:50', '2026-03-28 06:20:17'),
+('15835b2b-35dc-49e1-a4d5-b7fe7cead814', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"27350000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 6\",\"created_at\":\"2026-03-26T07:52:32.643938Z\"}', '2026-03-26 08:19:16', '2026-03-26 07:52:32', '2026-03-26 08:19:16'),
+('16679f07-0789-4bff-939b-5103148c1870', 'App\\Notifications\\BenefitNotesUpdated', 'App\\Models\\User', 9, '{\"type\":\"benefit_update\",\"title\":\"Update Keuntungan & Manfaat\",\"message\":\"Test 1\",\"action_url\":\"\\/profile\",\"icon\":\"star\",\"created_at\":\"2026-04-04T15:05:46.790149Z\"}', '2026-04-04 22:40:25', '2026-04-04 15:05:46', '2026-04-04 22:40:25'),
+('168d2155-6fe3-48af-bf08-1ba95adb23f5', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Unit preparation\",\"created_at\":\"2026-04-02T14:22:37.567841Z\"}', '2026-04-09 22:34:34', '2026-04-02 14:22:37', '2026-04-09 22:34:34'),
+('18479b47-dced-4d4f-bf35-9a8e8f47dbad', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:18:57.748308Z\"}', '2026-04-06 05:22:37', '2026-04-06 05:18:57', '2026-04-06 05:22:37'),
+('198c487f-6653-4309-993a-a6fd68da0b75', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T10:24:04.945168Z\"}', '2026-04-04 14:21:43', '2026-04-04 10:24:04', '2026-04-04 14:21:43'),
+('199dcff8-b09c-45df-bdf8-5f9cc8b3f2ba', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0016 saat ini: Cancelled\",\"created_at\":\"2026-04-05T23:01:54.947636Z\"}', '2026-04-05 23:04:21', '2026-04-05 23:01:54', '2026-04-05 23:04:21'),
+('1a089551-e549-4650-9684-e76a016e03f2', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"ready_for_delivery\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi completed\",\"created_at\":\"2026-03-26T13:38:42.616458Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:38:42', '2026-04-04 14:21:44'),
+('1b51bd71-505c-437c-83c2-d2673bd50aab', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Cancelled\",\"created_at\":\"2026-04-01T05:03:41.467595Z\"}', '2026-04-04 14:21:44', '2026-04-01 05:03:41', '2026-04-04 14:21:44'),
+('1c35c618-374b-4349-91ac-1f85327b7e60', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-10T06:20:55.089012Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:20:55', '2026-04-12 11:44:46'),
+('1cd9cbdf-e546-4caa-879a-be99901e1ce7', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-06T05:18:18.206425Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:18:18', '2026-04-06 05:49:00'),
+('1d07e80e-b212-4e18-84f8-93a69903e76b', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T06:48:47.548075Z\"}', '2026-04-09 22:34:34', '2026-04-01 06:48:47', '2026-04-09 22:34:34'),
+('1d2b9556-603c-4e70-bc18-41cd147d1d77', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi waiting_payment\",\"created_at\":\"2026-03-26T13:29:08.694897Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:29:08', '2026-04-04 14:21:44'),
+('1d53cd44-187b-44e3-9c24-a00c9b471fdd', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-06T05:18:18.163818Z\"}', '2026-04-06 05:22:37', '2026-04-06 05:18:18', '2026-04-06 05:22:37'),
+('1d86dbef-7917-4b77-b63d-ba355c2fed05', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T13:29:35.466682Z\"}', NULL, '2026-03-26 13:29:35', '2026-03-26 13:29:35'),
+('1e9d4b7a-b0bb-40e7-9245-1b5e77614466', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":3,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 3\",\"created_at\":\"2026-03-25T06:14:01.046641Z\"}', '2026-03-26 08:19:16', '2026-03-25 06:14:01', '2026-03-26 08:19:16'),
+('203816de-95e1-4956-af74-c59be6d44429', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0014 saat ini: Cancelled\",\"created_at\":\"2026-04-01T13:34:14.433836Z\"}', NULL, '2026-04-01 13:34:14', '2026-04-01 13:34:14'),
+('21b7a827-f1c3-49f8-84ce-302b28ab1733', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 1, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0014\",\"created_at\":\"2026-04-01T13:23:21.525956Z\"}', NULL, '2026-04-01 13:23:21', '2026-04-01 13:23:21'),
+('228714a2-6b59-4d1b-bba6-49a87feb9e41', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Waiting payment\",\"created_at\":\"2026-04-01T04:22:34.287926Z\"}', NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:34'),
+('2343ff38-1985-4478-b6ab-e43d5aa86a92', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T10:24:04.887998Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:24:04', '2026-04-04 13:28:33'),
+('23837201-0fe1-4ea6-acca-185902d4ac34', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:13.039787Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:13', '2026-04-06 05:49:00'),
+('251b7a70-e9ee-41c6-8e28-b33334f56fc6', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0017\",\"created_at\":\"2026-04-05T23:05:18.335261Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:05:18', '2026-04-06 05:13:36'),
+('25acb67a-5657-4caf-a70d-84b9a5b55414', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0014 saat ini: Cancelled\",\"created_at\":\"2026-04-01T13:34:14.467839Z\"}', '2026-04-04 14:21:44', '2026-04-01 13:34:14', '2026-04-04 14:21:44'),
+('268afda1-d8cb-4531-be31-12d4f03c2535', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T04:23:28.488057Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:23:28', '2026-04-04 14:21:44'),
+('276fc5e6-b528-49f0-a516-ef229c588c0a', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0009\",\"created_at\":\"2026-04-01T04:25:49.711724Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:25:49', '2026-04-01 06:30:51'),
+('2a1018cc-3aaf-464a-9200-5ecc4da919fb', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0010\",\"created_at\":\"2026-04-01T04:43:17.489632Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:43:17', '2026-04-04 14:21:44'),
+('2a4b28ab-922a-42cf-9036-66ee45fd33e4', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0010 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:44:01.936669Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:44:01', '2026-04-01 06:30:51'),
+('2b802de1-485e-4870-b7c5-e2b817594a25', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T06:48:47.464363Z\"}', '2026-04-09 22:34:34', '2026-04-01 06:48:47', '2026-04-09 22:34:34'),
+('2def0eba-06b7-487f-b7e8-77ef803b9ae9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi dalam_pengiriman\",\"created_at\":\"2026-03-28T06:19:51.061573Z\"}', '2026-04-04 14:21:44', '2026-03-28 06:19:51', '2026-04-04 14:21:44'),
+('2eb83da0-06a2-4844-84d1-fc87da4ef3a0', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0010 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:44:02.076627Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:44:02', '2026-04-04 14:21:44'),
+('2f253c07-2d87-4e52-829c-d8155c214f5e', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0005 saat ini: Dalam pengiriman\",\"created_at\":\"2026-03-28T06:24:17.234451Z\"}', '2026-04-04 14:21:44', '2026-03-28 06:24:17', '2026-04-04 14:21:44'),
+('31300dbb-6605-4359-b482-e3b61356395e', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0010 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:44:02.033227Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:44:02', '2026-04-01 06:30:51'),
+('32cc2320-1299-4a44-8d36-6afe36a1e90d', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0011\",\"created_at\":\"2026-04-01T04:44:25.865078Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:44:25', '2026-04-01 06:30:51'),
+('3438c556-5ca9-4ddc-8e9d-a3a015b26685', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0017\",\"created_at\":\"2026-04-05T23:05:18.371672Z\"}', '2026-04-05 23:10:22', '2026-04-05 23:05:18', '2026-04-05 23:10:22'),
+('348d3a48-b2c5-4660-b4a3-7a84ea2a187c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"cancelled\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T05:04:30.871653Z\"}', '2026-04-01 06:30:50', '2026-04-01 05:04:30', '2026-04-01 06:30:50'),
+('36d797c3-2f45-4e3d-afb6-44d19967f53f', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T06:48:47.508172Z\"}', '2026-04-04 14:21:44', '2026-04-01 06:48:47', '2026-04-04 14:21:44'),
+('381fde57-e24a-42a5-a3bc-1cd1ce7e7df8', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0010\",\"created_at\":\"2026-04-01T04:43:17.570502Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:43:17', '2026-04-04 14:21:44'),
+('3addd9e1-1d0a-4e16-9f67-3f4c7df15059', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"ready_for_delivery\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi completed\",\"created_at\":\"2026-03-26T13:38:42.574408Z\"}', '2026-03-26 13:39:34', '2026-03-26 13:38:42', '2026-03-26 13:39:34'),
+('3b334fb3-61f8-4176-9652-8eac4b26bd9d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:34.194337Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:34', '2026-04-06 05:49:00'),
+('3b777d71-b14a-4c23-bd8c-b67120c9410c', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0016\",\"created_at\":\"2026-04-05T22:49:46.931156Z\"}', '2026-04-05 23:04:21', '2026-04-05 22:49:46', '2026-04-05 23:04:21'),
+('3d2d0427-f639-4f58-a62f-6f457f2e4877', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0016\",\"created_at\":\"2026-04-05T22:49:46.846659Z\"}', '2026-04-05 23:04:21', '2026-04-05 22:49:46', '2026-04-05 23:04:21'),
+('3d51d3f9-43f6-4669-b45e-14b8650b304e', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T06:48:47.591399Z\"}', '2026-04-04 14:21:44', '2026-04-01 06:48:47', '2026-04-04 14:21:44'),
+('3f18549c-45e6-404d-9487-6757d596f6b6', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0012\",\"created_at\":\"2026-04-01T04:59:40.025874Z\"}', '2026-04-01 06:30:50', '2026-04-01 04:59:40', '2026-04-01 06:30:50'),
+('4004bce5-69c3-4157-ae7f-73cba88d2a74', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"31200000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0018\",\"created_at\":\"2026-04-10T06:17:42.522249Z\"}', '2026-04-10 13:26:45', '2026-04-10 06:17:42', '2026-04-10 13:26:45'),
+('4206c52e-4c8e-4c56-a07d-33e14457823e', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Cancelled\",\"created_at\":\"2026-04-04T10:24:18.172411Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:24:18', '2026-04-04 13:28:33'),
+('427e1b1c-3962-49f1-898d-106cb47b0ef3', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Cancelled\",\"created_at\":\"2026-04-01T05:03:41.415841Z\"}', '2026-04-01 06:30:50', '2026-04-01 05:03:41', '2026-04-01 06:30:50'),
+('42fd39b0-0029-4dae-b5e7-db146fb08251', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":1,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 1 telah diubah menjadi cancelled\",\"created_at\":\"2026-03-26T06:57:43.467787Z\"}', '2026-03-26 08:19:16', '2026-03-26 06:57:43', '2026-03-26 08:19:16'),
+('4370f0a3-dcfa-404e-825d-b9a890896290', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 5 telah diubah menjadi pembayaran_dikonfirmasi\",\"created_at\":\"2026-03-26T07:21:46.490318Z\"}', '2026-03-26 08:19:16', '2026-03-26 07:21:46', '2026-03-26 08:19:16'),
+('44070070-c8e2-4c77-80a5-d467caa2047a', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 7\",\"created_at\":\"2026-03-26T13:29:08.529343Z\"}', NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:08'),
+('4425ba17-f834-49df-962e-e1692648dcfa', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Survey scheduled\",\"created_at\":\"2026-04-05T23:12:47.701682Z\"}', '2026-04-06 05:12:55', '2026-04-05 23:12:47', '2026-04-06 05:12:55'),
+('44770811-de12-43bb-90a0-1f764cc27293', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:34.157449Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:34', '2026-04-06 05:59:36'),
+('44f5134e-6b26-45bc-8c36-ce90c654cd8b', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 5 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T07:36:24.251135Z\"}', '2026-04-04 14:21:44', '2026-03-26 07:36:24', '2026-04-04 14:21:44'),
+('462c8e45-0b3f-4928-a959-102dfb903828', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 1, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0008\",\"created_at\":\"2026-04-01T04:22:34.237318Z\"}', NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:34'),
+('487bd863-27f6-45c4-b5bf-8d2e3abb647a', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Completed\",\"created_at\":\"2026-04-20T14:04:13.920210Z\"}', NULL, '2026-04-20 14:04:13', '2026-04-20 14:04:13'),
+('488227fa-8316-4905-b1e1-ad7eee335249', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-05T23:12:02.893871Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:12:02', '2026-04-06 05:13:36'),
+('48be0952-3a0a-4125-bb0a-7fe84f42900d', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":2,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 2\",\"created_at\":\"2026-03-25T06:13:33.298517Z\"}', '2026-04-04 14:21:44', '2026-03-25 06:13:33', '2026-04-04 14:21:44'),
+('48d055a1-ef79-4f26-a7df-900f4d0510ab', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Completed\",\"created_at\":\"2026-04-20T14:04:13.841281Z\"}', NULL, '2026-04-20 14:04:13', '2026-04-20 14:04:13'),
+('48d4090e-5427-4ed8-8887-7202fcbd9c37', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T04:23:28.456011Z\"}', NULL, '2026-04-01 04:23:28', '2026-04-01 04:23:28'),
+('48f34a22-79fa-4aba-9bdc-4b2aef246262', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Cancelled\",\"created_at\":\"2026-04-04T10:24:18.277246Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:24:18', '2026-04-04 13:28:33'),
+('49a6bab0-310a-419c-99ae-fcd852e9a779', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"31200000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 4\",\"created_at\":\"2026-03-25T06:16:15.188976Z\"}', '2026-03-26 08:19:16', '2026-03-25 06:16:15', '2026-03-26 08:19:16'),
+('4a9de653-47fd-4a8a-bded-c3374c0f73f3', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-06T05:48:24.647419Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:24', '2026-04-06 05:49:00'),
+('4ac6e480-fdb6-4362-82a5-e8382ea9fa92', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"36000000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 5\",\"created_at\":\"2026-03-26T07:15:08.821821Z\"}', '2026-03-26 08:19:16', '2026-03-26 07:15:08', '2026-03-26 08:19:16'),
+('4af42589-fd13-424a-969a-84edebe77f5a', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:34.122639Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:34', '2026-04-06 05:49:00'),
+('4b8b45c8-20ac-4591-b522-c450fc21a209', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Completed\",\"created_at\":\"2026-04-20T14:04:13.979840Z\"}', NULL, '2026-04-20 14:04:13', '2026-04-20 14:04:13'),
+('4bb4de87-6a12-4fc1-9f9b-9ecfa3e655f3', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"31200000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0018\",\"created_at\":\"2026-04-10T06:17:42.486256Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:17:42', '2026-04-12 11:44:46'),
+('4bd2af6f-95ed-4bbe-9261-f06a937489da', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"31200000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0018\",\"created_at\":\"2026-04-10T06:17:42.555023Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:17:42', '2026-04-12 11:44:46'),
+('4d8b4b31-f92e-43ed-979e-9237891ad1b9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"ready_for_delivery\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Ready for delivery\",\"created_at\":\"2026-04-01T13:42:35.689856Z\"}', NULL, '2026-04-01 13:42:35', '2026-04-01 13:42:35'),
+('4df84d24-a219-4b41-9bd8-d3d3cb590219', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0012\",\"created_at\":\"2026-04-01T04:59:40.058477Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:59:40', '2026-04-04 14:21:44'),
+('4dfa4bd1-6f5e-4221-bcda-0c0ebab725c5', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:12.991671Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:12', '2026-04-06 05:59:36'),
+('4e39212b-2cfd-407f-82dd-9ba31fd1541c', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 7\",\"created_at\":\"2026-03-26T13:29:08.494079Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:29:08', '2026-04-04 14:21:44'),
+('50eee87d-e1a4-437a-ac0d-443b482f17b9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Survey scheduled\",\"created_at\":\"2026-04-05T23:12:47.771961Z\"}', '2026-04-06 05:12:55', '2026-04-05 23:12:47', '2026-04-06 05:12:55'),
+('521b0047-3755-42eb-b8c9-d4c2c6ee3fbd', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 1, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0008\",\"created_at\":\"2026-04-01T04:22:34.171754Z\"}', NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:34'),
+('52d3bc5b-a520-40f7-8661-6976a92b9adb', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0011\",\"created_at\":\"2026-04-01T04:44:25.906615Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:44:25', '2026-04-04 14:21:44'),
+('55b06a19-d9b3-407d-a94a-2c290c32bd1c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:18:57.797157Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:18:57', '2026-04-06 05:49:00'),
+('57af9c29-04b1-4c55-8ced-ad636a1e9b69', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:48:24.445645Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:24', '2026-04-06 05:59:36'),
+('58497e1d-5884-425a-a8da-45ec28893f96', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"ready_for_delivery\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Ready for delivery\",\"created_at\":\"2026-04-01T13:42:35.785883Z\"}', '2026-04-04 14:21:44', '2026-04-01 13:42:35', '2026-04-04 14:21:44'),
+('59cdd9d9-b9b2-4a8b-81fd-5317ea85098a', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0009 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:42:45.501113Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:42:45', '2026-04-01 06:30:51'),
+('5c7323a9-b979-4be4-86e5-729e54c69a79', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0014 saat ini: Cancelled\",\"created_at\":\"2026-04-01T13:34:14.389409Z\"}', '2026-04-04 14:21:44', '2026-04-01 13:34:14', '2026-04-04 14:21:44'),
+('5d522837-2ca6-4bbd-b583-ac57b465ed73', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Waiting payment\",\"created_at\":\"2026-04-01T04:22:34.353428Z\"}', NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:34'),
+('5d8aba03-280f-4125-a41e-32434835ab9d', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 9, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0016\",\"created_at\":\"2026-04-05T22:49:46.967516Z\"}', '2026-04-05 23:03:57', '2026-04-05 22:49:46', '2026-04-05 23:03:57'),
+('5dc2247f-6a8c-461a-bfbc-92ae4c771dd1', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Unit preparation\",\"created_at\":\"2026-04-02T14:22:37.706185Z\"}', '2026-04-04 14:21:44', '2026-04-02 14:22:37', '2026-04-04 14:21:44'),
+('5e1b4bfc-6535-4899-b1da-dfd5f4e1a0ed', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Waiting payment\",\"created_at\":\"2026-04-01T04:22:34.386642Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:22:34', '2026-04-04 14:21:44'),
+('5e56e5ab-4fa4-4619-845c-829ecb95533e', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-05T23:12:02.859064Z\"}', '2026-04-06 05:12:55', '2026-04-05 23:12:02', '2026-04-06 05:12:55'),
+('63915084-7820-45ec-bff1-9d9b4da4a2d9', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"31200000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 4\",\"created_at\":\"2026-03-25T06:16:15.136699Z\"}', '2026-04-04 14:21:44', '2026-03-25 06:16:15', '2026-04-04 14:21:44'),
+('64ce46e6-070f-46ec-a5f4-ee4249754eb7', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"36000000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 5\",\"created_at\":\"2026-03-26T07:15:08.775597Z\"}', '2026-04-04 14:21:44', '2026-03-26 07:15:08', '2026-04-04 14:21:44'),
+('65893165-83d9-43c2-8246-562720888844', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:18:57.884032Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:18:57', '2026-04-06 05:49:00'),
+('661bb14f-b738-4820-9258-28d03949dcab', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0011 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:59:09.602816Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:59:09', '2026-04-04 14:21:44'),
+('68be7fda-6793-400f-ba44-9d4eaff4f63f', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi waiting_payment\",\"created_at\":\"2026-03-26T13:29:08.583141Z\"}', NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:08'),
+('69be293b-e0c1-45de-bc00-0f360cdf1f38', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"ready_for_delivery\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Ready for delivery\",\"created_at\":\"2026-04-01T13:42:35.756251Z\"}', NULL, '2026-04-01 13:42:35', '2026-04-01 13:42:35');
+INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('6b615fd0-722f-42c9-a774-6c528c5e6777', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":3,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 3 telah diubah menjadi cancelled\",\"created_at\":\"2026-03-25T08:54:04.719596Z\"}', '2026-03-26 08:19:16', '2026-03-25 08:54:04', '2026-03-26 08:19:16'),
+('6ca83b2e-7609-4445-9741-c70a420d0ebe', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:48:24.569112Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:24', '2026-04-06 05:49:00'),
+('6caeee45-6772-484c-9e9b-df973f33407f', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0015\",\"created_at\":\"2026-04-04T09:47:52.261800Z\"}', '2026-04-04 14:21:44', '2026-04-04 09:47:52', '2026-04-04 14:21:44'),
+('6d3db3bf-4c2b-479d-80fe-f00ea17d8857', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":1,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 1\",\"created_at\":\"2026-03-25T05:57:47.312672Z\"}', '2026-03-26 08:19:16', '2026-03-25 05:57:47', '2026-03-26 08:19:16'),
+('7008980f-86c4-4c21-bf83-b70a0dc86393', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi pembayaran_dikonfirmasi\",\"created_at\":\"2026-03-25T10:27:22.004910Z\"}', '2026-03-26 08:19:16', '2026-03-25 10:27:22', '2026-03-26 08:19:16'),
+('70600902-2ef6-49ec-8cb6-934364fc6fb1', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi pembayaran_dikonfirmasi\",\"created_at\":\"2026-03-25T10:27:22.060578Z\"}', '2026-04-04 14:21:44', '2026-03-25 10:27:22', '2026-04-04 14:21:44'),
+('7210b8ea-e0c9-482a-a38b-72075e544410', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T13:29:35.566276Z\"}', NULL, '2026-03-26 13:29:35', '2026-03-26 13:29:35'),
+('7583a998-8080-4c37-ba22-6c378d10c629', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:13.119447Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:13', '2026-04-06 05:49:00'),
+('7691aaeb-3edf-4dfd-86c2-9f86e90af189', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0011\",\"created_at\":\"2026-04-01T04:44:25.953156Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:44:25', '2026-04-01 06:30:51'),
+('782b1d3a-fc46-4381-9438-8eca36d8a53d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Completed\",\"created_at\":\"2026-04-04T09:53:40.162412Z\"}', '2026-04-04 14:21:43', '2026-04-04 09:53:40', '2026-04-04 14:21:43'),
+('79aec8cb-9f5c-4c56-a387-ade819aabe3c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"cancelled\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T05:04:30.984416Z\"}', '2026-04-04 14:21:44', '2026-04-01 05:04:30', '2026-04-04 14:21:44'),
+('7b6c263b-ed2f-4076-a0c0-6d0a452a8611', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0015\",\"created_at\":\"2026-04-04T09:47:52.310058Z\"}', '2026-04-04 13:28:33', '2026-04-04 09:47:52', '2026-04-04 13:28:33'),
+('7ce463f8-22bb-457a-8928-3633281be951', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0005 saat ini: Dalam pengiriman\",\"created_at\":\"2026-03-28T06:24:17.104375Z\"}', '2026-03-28 06:25:11', '2026-03-28 06:24:17', '2026-03-28 06:25:11'),
+('7d5f62ae-027b-4dd9-a34e-464d53b3c54f', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0016 saat ini: Cancelled\",\"created_at\":\"2026-04-05T23:01:54.903675Z\"}', '2026-04-05 23:03:57', '2026-04-05 23:01:54', '2026-04-05 23:03:57'),
+('7e7018f1-ad40-4a7e-ac28-6339eb3aae4d', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0009\",\"created_at\":\"2026-04-01T04:25:49.675212Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:25:49', '2026-04-04 14:21:44'),
+('7f036ef2-09ac-4aaa-a372-2d2c798a2ea2', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Completed\",\"created_at\":\"2026-04-20T14:04:14.040018Z\"}', NULL, '2026-04-20 14:04:14', '2026-04-20 14:04:14'),
+('8028c3fa-f6cc-4ecd-9e8f-eefda2dac30f', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0005 saat ini: Dalam pengiriman\",\"created_at\":\"2026-03-28T06:24:17.148291Z\"}', '2026-04-04 14:21:44', '2026-03-28 06:24:17', '2026-04-04 14:21:44'),
+('81007b27-7855-4d00-94fa-a10854ee9f34', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T10:24:04.992516Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:24:04', '2026-04-04 13:28:33'),
+('820d79db-e976-40b6-b3ca-f2291732ccf7', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-05T23:12:02.809023Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:12:02', '2026-04-06 05:13:36'),
+('825225c3-882c-48a6-8873-3a3d9d2d2c1c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Completed\",\"created_at\":\"2026-04-04T09:53:40.242149Z\"}', '2026-04-04 14:21:43', '2026-04-04 09:53:40', '2026-04-04 14:21:43'),
+('82cf7e08-711f-4365-91cc-7beb6afc9011', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"cancelled\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T05:04:30.941249Z\"}', '2026-04-01 06:30:50', '2026-04-01 05:04:30', '2026-04-01 06:30:50'),
+('83d4f3c8-90cc-4688-bfa2-1b64ba340a45', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T09:50:58.980996Z\"}', '2026-04-04 14:21:44', '2026-04-04 09:50:58', '2026-04-04 14:21:44'),
+('844b4e3e-4425-4e9e-8c6e-2d8a36305c59', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Cancelled\",\"created_at\":\"2026-04-04T10:24:18.318928Z\"}', '2026-04-04 14:21:43', '2026-04-04 10:24:18', '2026-04-04 14:21:43'),
+('8485cfe5-f682-4a95-996f-c9b3f29008c9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:48:24.529856Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:24', '2026-04-06 05:59:36'),
+('86cad124-ba70-47cf-b260-425bb3e7d022', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"cancelled\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T05:04:30.906130Z\"}', '2026-04-04 14:21:44', '2026-04-01 05:04:30', '2026-04-04 14:21:44'),
+('878d6885-9650-47a5-b4cf-457de76e8656', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:33:00.585664Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:33:00', '2026-04-12 11:44:46'),
+('8825b5a1-b947-48f8-b202-a04905c874de', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:32:07.539569Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:32:07', '2026-04-12 11:44:46'),
+('88ab8602-77ae-44af-8ed8-001a8ccd7a2c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Survey scheduled\",\"created_at\":\"2026-04-05T23:12:47.737100Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:12:47', '2026-04-06 05:13:36'),
+('89958acb-4931-4fb7-acc7-9e82b316d76b', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T08:07:04.973879Z\"}', '2026-03-26 08:19:16', '2026-03-26 08:07:04', '2026-03-26 08:19:16'),
+('8b3d6ff0-d236-4340-81e4-829c4c77b556', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:33:00.628432Z\"}', '2026-04-10 06:44:31', '2026-04-10 06:33:00', '2026-04-10 06:44:31'),
+('8c0eacb9-20da-4930-ab1a-e6f865afd8ef', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"ready_for_delivery\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi ready_for_delivery\",\"created_at\":\"2026-03-26T07:06:04.981169Z\"}', '2026-04-04 14:21:44', '2026-03-26 07:06:04', '2026-04-04 14:21:44'),
+('8cbe5621-f9bd-4ef8-914d-3073960a08ba', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"ready_for_delivery\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi ready_for_delivery\",\"created_at\":\"2026-03-26T07:06:04.940612Z\"}', '2026-03-26 08:19:16', '2026-03-26 07:06:04', '2026-03-26 08:19:16'),
+('8d10b666-05bf-4b34-8cb8-c40a487c5a5c', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0012\",\"created_at\":\"2026-04-01T04:59:40.089697Z\"}', '2026-04-01 06:30:50', '2026-04-01 04:59:40', '2026-04-01 06:30:51'),
+('8de0bc48-52eb-4af8-85b5-4f47aa40cae0', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:32:07.568867Z\"}', '2026-04-10 13:26:45', '2026-04-10 06:32:07', '2026-04-10 13:26:45'),
+('8e5629e3-b873-4e3d-a8aa-039b909d9e6a', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"27350000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 6\",\"created_at\":\"2026-03-26T07:52:32.607545Z\"}', '2026-04-04 14:21:44', '2026-03-26 07:52:32', '2026-04-04 14:21:44'),
+('90884e97-dfe0-4c09-9fd2-6eaacbfff50a', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0017\",\"created_at\":\"2026-04-05T23:05:18.405301Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:05:18', '2026-04-06 05:13:36'),
+('92ac2e63-4d3a-4800-99a3-2d10f4b5410d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T09:50:58.934549Z\"}', '2026-04-04 13:28:33', '2026-04-04 09:50:58', '2026-04-04 13:28:33'),
+('9351fe18-c5d2-4f06-a6cc-60724ec888a7', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"ready_for_delivery\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi completed\",\"created_at\":\"2026-03-26T13:38:42.690550Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:38:42', '2026-04-04 14:21:44'),
+('94e7c6e8-a2d3-4296-b44f-99b43fecc5a9', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0013\",\"created_at\":\"2026-04-01T05:05:45.608346Z\"}', '2026-04-04 14:21:44', '2026-04-01 05:05:45', '2026-04-04 14:21:44'),
+('9528d0bf-e053-4c81-aac8-98d528e8a734', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Unit preparation\",\"created_at\":\"2026-04-01T04:22:57.369733Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:22:57', '2026-04-04 14:21:44'),
+('95701bac-a0ea-4750-9db8-cc2dda57c7a8', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-06T05:48:24.724958Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:24', '2026-04-06 05:49:00'),
+('96df7be1-0f0c-425e-b8e9-cdb92523c6c9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T06:48:23.235149Z\"}', '2026-04-04 14:21:44', '2026-03-26 06:48:23', '2026-04-04 14:21:44'),
+('986112cd-6a26-4566-95d3-ed85d860fc65', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Survey scheduled\",\"created_at\":\"2026-04-04T10:23:51.544161Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:23:51', '2026-04-04 13:28:33'),
+('9866b35f-b945-4d7b-9e28-b797a946f99a', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Survey scheduled\",\"created_at\":\"2026-04-05T23:12:47.663475Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:12:47', '2026-04-06 05:13:36'),
+('99e29798-67da-424c-b572-5d8ce246e656', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0009 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:42:45.537981Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:42:45', '2026-04-04 14:21:44'),
+('9a1c0c4c-1f99-4cf1-a38b-6519722ea8d7', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T13:29:35.611776Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:29:35', '2026-04-04 14:21:44'),
+('9ae55edd-8d7f-453a-ad29-77bc8ed5d47d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0009 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:42:45.424194Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:42:45', '2026-04-01 06:30:51'),
+('9bad2f39-9291-4ef4-9b80-fd8f82e54d93', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:34.076178Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:34', '2026-04-06 05:59:36'),
+('9d45118c-b67b-469e-b10f-1bdde291df0c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0016 saat ini: Cancelled\",\"created_at\":\"2026-04-05T23:01:54.815328Z\"}', '2026-04-05 23:03:57', '2026-04-05 23:01:54', '2026-04-05 23:03:57'),
+('9dff3cb6-2715-45de-8977-dceabc68156d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T09:50:59.055613Z\"}', '2026-04-04 14:21:44', '2026-04-04 09:50:59', '2026-04-04 14:21:44'),
+('9e466c4a-52e7-43d0-b855-0e00ace73010', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:33:00.656873Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:33:00', '2026-04-12 11:44:46'),
+('9f1f6ac2-717f-4337-9fda-4af4a93cf85f', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0010 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:44:01.993810Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:44:01', '2026-04-04 14:21:44'),
+('a1330087-2f95-4daf-af10-88deaf453edd', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0011 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:59:09.674750Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:59:09', '2026-04-04 14:21:44'),
+('a15c13b1-ee87-4ad3-a35f-c8873aceed90', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi waiting_payment\",\"created_at\":\"2026-03-26T13:29:08.620180Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:29:08', '2026-04-04 14:21:44'),
+('a1e096f6-bbe0-4308-96cc-f270d80c2109', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"ready_for_delivery\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Ready for delivery\",\"created_at\":\"2026-04-01T13:42:35.727252Z\"}', '2026-04-04 14:21:44', '2026-04-01 13:42:35', '2026-04-04 14:21:44'),
+('a3a9f8ab-eec7-457a-adea-0c753f1e3bc0', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":16,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0016 saat ini: Cancelled\",\"created_at\":\"2026-04-05T23:01:54.863294Z\"}', '2026-04-05 23:04:21', '2026-04-05 23:01:54', '2026-04-05 23:04:21'),
+('a4ae5a12-4c44-42ad-93b8-895efba7b6c5', 'App\\Notifications\\SurveyScheduled', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"survey_id\":1,\"type\":\"SURVEY_SCHEDULED\",\"title\":\"Jadwal Survey Dikonfirmasi\",\"message\":\"Survey Anda dijadwalkan pada 05 Apr 2026 pukul 19:00\",\"scheduled_date\":\"2026-04-04T17:00:00.000000Z\",\"scheduled_time\":\"2026-04-04T12:00:00.000000Z\",\"location\":null,\"created_at\":\"2026-04-04T10:23:51.426351Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:23:51', '2026-04-04 13:28:33'),
+('a7bbd338-5a9e-4a6c-bb4d-132c28e7d6ca', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0013\",\"created_at\":\"2026-04-01T05:05:45.574965Z\"}', '2026-04-01 06:30:50', '2026-04-01 05:05:45', '2026-04-01 06:30:50'),
+('aaddcaa4-37f5-4ef9-b9d0-4edf8996610f', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Unit preparation\",\"created_at\":\"2026-04-01T04:22:57.284050Z\"}', NULL, '2026-04-01 04:22:57', '2026-04-01 04:22:57'),
+('ac1c193c-dcad-4934-ba64-7f30c98d5830', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T04:23:28.427310Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:23:28', '2026-04-04 14:21:44'),
+('ac31b5b6-b217-437a-9b15-382ca4b946d5', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 7\",\"created_at\":\"2026-03-26T13:29:08.453952Z\"}', NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:08'),
+('adb899ad-dcbf-4cdb-8967-e85743036aa9', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0013\",\"created_at\":\"2026-04-01T05:05:45.641857Z\"}', '2026-04-01 06:30:50', '2026-04-01 05:05:45', '2026-04-01 06:30:50'),
+('ae69d3ee-e2d0-4914-8f59-869ecee15936', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0011 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:59:09.637811Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:59:09', '2026-04-01 06:30:51'),
+('af77534f-a9c7-459a-b482-432340e1ae1c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"waiting_payment\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi waiting_payment\",\"created_at\":\"2026-03-26T13:29:08.655779Z\"}', NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:08'),
+('b144a03e-ab04-485f-9acf-4881ccdcb3f6', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0014\",\"created_at\":\"2026-04-01T13:23:21.567847Z\"}', '2026-04-04 14:21:44', '2026-04-01 13:23:21', '2026-04-04 14:21:44'),
+('b1675702-d0ed-40e9-9bd7-811c43869737', 'App\\Notifications\\SurveyScheduled', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"survey_id\":2,\"type\":\"SURVEY_SCHEDULED\",\"title\":\"Jadwal Survey Dikonfirmasi\",\"message\":\"Survey Anda dijadwalkan pada 06 Apr 2026 pukul 12:00\",\"scheduled_date\":\"2026-04-05T17:00:00.000000Z\",\"scheduled_time\":\"2026-04-06T05:00:00.000000Z\",\"location\":null,\"created_at\":\"2026-04-05T23:12:47.593932Z\"}', '2026-04-06 05:13:36', '2026-04-05 23:12:47', '2026-04-06 05:13:36'),
+('b2b15eaa-f394-4a4a-851d-3048c2219ce5', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 7\",\"created_at\":\"2026-03-26T13:29:08.400965Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:29:08', '2026-04-04 14:21:44'),
+('b4c40393-33ea-4d42-8d63-0a9bfebcc544', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 5 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T07:36:24.210235Z\"}', '2026-03-26 08:19:16', '2026-03-26 07:36:24', '2026-03-26 08:19:16'),
+('b5ea35c1-8ea2-43f4-81a1-11bf97cae830', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0010\",\"created_at\":\"2026-04-01T04:43:17.530536Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:43:17', '2026-04-01 06:30:51'),
+('b97eba94-ac8b-4361-a126-0d5d2b83e4bf', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi dalam_pengiriman\",\"created_at\":\"2026-03-28T06:19:50.969888Z\"}', '2026-04-04 14:21:44', '2026-03-28 06:19:50', '2026-04-04 14:21:44'),
+('ba6f95c8-8d74-42f9-9edb-b2cadc91c4b4', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 7 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T13:29:35.517952Z\"}', '2026-04-04 14:21:44', '2026-03-26 13:29:35', '2026-04-04 14:21:44'),
+('bb149204-0861-49e6-959f-a8c42e69508a', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-04T09:50:59.017115Z\"}', '2026-04-04 13:28:33', '2026-04-04 09:50:59', '2026-04-04 13:28:33'),
+('bc5ef6bd-6487-4ae0-ac55-2ebe3fb16a5d', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"31200000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0018\",\"created_at\":\"2026-04-10T06:17:42.447031Z\"}', '2026-04-10 13:26:45', '2026-04-10 06:17:42', '2026-04-10 13:26:45'),
+('bd4beaa4-5a9d-466f-9668-b52044e7faef', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T08:07:05.016885Z\"}', '2026-04-04 14:21:44', '2026-03-26 08:07:05', '2026-04-04 14:21:44'),
+('beac43ec-0441-47b1-b824-5b6902f08aa3', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":5,\"motor_name\":\"Honda PCX 160 ABS\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 5 telah diubah menjadi pembayaran_dikonfirmasi\",\"created_at\":\"2026-03-26T07:21:46.523705Z\"}', '2026-04-04 14:21:44', '2026-03-26 07:21:46', '2026-04-04 14:21:44'),
+('bf4a4f32-644e-4b85-b44a-410db43d6c55', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0017\",\"created_at\":\"2026-04-05T23:05:18.292126Z\"}', '2026-04-05 23:10:22', '2026-04-05 23:05:18', '2026-04-05 23:10:22'),
+('c04977bb-497b-43a0-ab47-7b049263b79c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Completed\",\"created_at\":\"2026-04-04T09:53:40.115120Z\"}', '2026-04-04 13:28:33', '2026-04-04 09:53:40', '2026-04-04 13:28:33'),
+('c61c5b89-0698-40e5-abd7-cd5ebe1a15e0', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-10T06:20:55.120684Z\"}', '2026-04-10 06:30:42', '2026-04-10 06:20:55', '2026-04-10 06:30:42'),
+('c6c9dd39-0a67-4d37-be56-4211ceeed51f', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 1, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0014\",\"created_at\":\"2026-04-01T13:23:21.599720Z\"}', NULL, '2026-04-01 13:23:21', '2026-04-01 13:23:21'),
+('c8f1e643-f2df-444d-addb-8003c91bbdfb', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":1,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 1 telah diubah menjadi cancelled\",\"created_at\":\"2026-03-26T06:57:43.533687Z\"}', '2026-04-04 14:21:44', '2026-03-26 06:57:43', '2026-04-04 14:21:44'),
+('c8f88e1a-cfe5-48b6-8a6c-3877df7e3b26', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:18:57.841010Z\"}', '2026-04-06 05:19:22', '2026-04-06 05:18:57', '2026-04-06 05:19:22'),
+('cbc10312-7bfb-4403-8216-06196cd99759', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi unit_preparation\",\"created_at\":\"2026-03-26T06:48:23.132369Z\"}', '2026-03-26 08:19:16', '2026-03-26 06:48:23', '2026-03-26 08:19:16'),
+('ce49efc1-d039-4c68-947a-56c4d3d118be', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"23500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0008\",\"created_at\":\"2026-04-01T04:22:34.131706Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:22:34', '2026-04-04 14:21:44'),
+('ce75464d-bfe7-447c-9763-744b5bfdc6b1', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Unit preparation\",\"created_at\":\"2026-04-02T14:22:37.676716Z\"}', '2026-04-09 22:34:34', '2026-04-02 14:22:37', '2026-04-09 22:34:34'),
+('cec2764a-ddea-4110-b01a-2e60f61f0661', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"menunggu_persetujuan\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0014 saat ini: Cancelled\",\"created_at\":\"2026-04-01T13:34:14.350488Z\"}', NULL, '2026-04-01 13:34:14', '2026-04-01 13:34:14'),
+('d0552737-1a49-4d7b-abe9-38bb3692796d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Survey scheduled\",\"created_at\":\"2026-04-04T10:23:51.617344Z\"}', '2026-04-04 14:21:43', '2026-04-04 10:23:51', '2026-04-04 14:21:43'),
+('d0888346-246a-4445-ba7e-b71d307c6d43', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":10,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0010\",\"created_at\":\"2026-04-01T04:43:17.603494Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:43:17', '2026-04-01 06:30:51'),
+('d6f85e42-a010-4aac-86e0-1210d9c12312', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-06T05:48:24.683982Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:24', '2026-04-06 05:59:36'),
+('d884e19c-956b-4a32-8af9-3a16cdde2482', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:32:07.511426Z\"}', '2026-04-10 13:26:45', '2026-04-10 06:32:07', '2026-04-10 13:26:45'),
+('db26455c-54ab-4432-8244-f2112b2fad8c', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Unit preparation\",\"created_at\":\"2026-04-02T14:22:37.647236Z\"}', '2026-04-04 14:21:44', '2026-04-02 14:22:37', '2026-04-04 14:21:44'),
+('dc1ce51a-2149-48db-96f0-96875330ad01', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Survey scheduled\",\"created_at\":\"2026-04-04T10:23:51.756723Z\"}', '2026-04-04 14:21:43', '2026-04-04 10:23:51', '2026-04-04 14:21:43'),
+('dc277e86-a8ab-416b-8b67-00b2487ad492', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":3,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru telah dibuat dengan ID: 3\",\"created_at\":\"2026-03-25T06:14:00.994019Z\"}', '2026-04-04 14:21:44', '2026-03-25 06:14:00', '2026-04-04 14:21:44'),
+('e0f130da-80e9-46a6-8edd-b74d4aadba68', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-10T06:20:55.189605Z\"}', '2026-04-10 06:30:23', '2026-04-10 06:20:55', '2026-04-10 06:30:23'),
+('e1fc4080-c2aa-4962-b26e-9067b94e08f4', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":3,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 3 telah diubah menjadi cancelled\",\"created_at\":\"2026-03-25T08:54:04.785079Z\"}', '2026-04-04 14:21:44', '2026-03-25 08:54:04', '2026-04-04 14:21:44'),
+('e26b0a7c-2ca8-4f5f-9653-8d50d3d442e4', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0009 saat ini: Cancelled\",\"created_at\":\"2026-04-01T04:42:45.468598Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:42:45', '2026-04-04 14:21:44'),
+('e283a7cf-21e9-4259-90b3-8dd29ec734e9', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":18,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0018 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-10T06:20:55.153410Z\"}', '2026-04-12 11:44:46', '2026-04-10 06:20:55', '2026-04-12 11:44:46'),
+('e2a39fdb-536b-413f-bb93-2f656a6f948b', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":11,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0011\",\"created_at\":\"2026-04-01T04:44:25.817559Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:44:25', '2026-04-04 14:21:44'),
+('e3c44964-c697-4dcf-ab41-6a9dfe896544', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":14,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0014\",\"created_at\":\"2026-04-01T13:23:21.461600Z\"}', '2026-04-04 14:21:44', '2026-04-01 13:23:21', '2026-04-04 14:21:44'),
+('e3e6403c-63bc-46ce-8d9f-da348a7d359d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":4,\"motor_name\":\"Yamaha Aerox 155 Cyber City\",\"transaction_type\":\"CASH\",\"previous_status\":\"ready_for_delivery\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 4 telah diubah menjadi completed\",\"created_at\":\"2026-03-26T13:38:42.653294Z\"}', '2026-03-26 13:39:34', '2026-03-26 13:38:42', '2026-03-26 13:39:34'),
+('e6cf9017-e02a-429f-ab85-cda609210015', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0015\",\"created_at\":\"2026-04-04T09:47:52.384167Z\"}', '2026-04-04 13:28:33', '2026-04-04 09:47:52', '2026-04-04 13:28:33'),
+('e8746067-5903-4b24-9edc-a533e95d8783', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"status\":\"menunggu_persetujuan\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0015\",\"created_at\":\"2026-04-04T09:47:52.347538Z\"}', '2026-04-04 14:21:44', '2026-04-04 09:47:52', '2026-04-04 14:21:44');
+INSERT INTO `notifications` (`id`, `type`, `notifiable_type`, `notifiable_id`, `data`, `read_at`, `created_at`, `updated_at`) VALUES
+('e90c60d0-c30a-4dcd-9861-7338d1b9dd75', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":2,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 2 telah diubah menjadi cancelled\",\"created_at\":\"2026-03-25T08:54:32.071819Z\"}', '2026-03-26 08:19:16', '2026-03-25 08:54:32', '2026-03-26 08:19:16'),
+('e9852cac-8ff5-47f8-9384-aa92193a9bee', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Cancelled\",\"created_at\":\"2026-04-04T10:24:18.233753Z\"}', '2026-04-04 14:21:43', '2026-04-04 10:24:18', '2026-04-04 14:21:43'),
+('ea0b0e0b-c738-4a6e-a689-781aa5495eae', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Completed\",\"created_at\":\"2026-04-06T05:48:13.077367Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:13', '2026-04-06 05:59:36'),
+('eb86540b-b2c0-4533-8b49-36c5f21b2fa7', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-06T05:48:24.611989Z\"}', '2026-04-06 05:59:36', '2026-04-06 05:48:24', '2026-04-06 05:59:36'),
+('ed206956-80e0-4908-86c1-0e368587de15', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-06T05:18:18.246726Z\"}', '2026-04-06 05:22:37', '2026-04-06 05:18:18', '2026-04-06 05:22:37'),
+('ed31921f-5809-41fd-a14c-aff3dfcae856', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Unit preparation\",\"created_at\":\"2026-04-06T05:48:24.491854Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:48:24', '2026-04-06 05:49:00'),
+('ed4fdb39-99a4-42ea-88a3-7773976ff7ce', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Cancelled\",\"created_at\":\"2026-04-01T05:03:41.520316Z\"}', '2026-04-01 06:30:50', '2026-04-01 05:03:41', '2026-04-01 06:30:50'),
+('edd1a5de-ad93-4321-ba53-7d96cb4045e6', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi pembayaran_dikonfirmasi\",\"created_at\":\"2026-03-26T07:53:12.448060Z\"}', '2026-03-26 08:19:16', '2026-03-26 07:53:12', '2026-03-26 08:19:16'),
+('ef08603d-99dd-417c-8d00-e4364ae32252', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 6, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"35500000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0013\",\"created_at\":\"2026-04-01T05:05:45.524582Z\"}', '2026-04-04 14:21:44', '2026-04-01 05:05:45', '2026-04-04 14:21:44'),
+('ef5ec51a-061d-4a84-a7e6-370aca4b668d', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Unit preparation\",\"created_at\":\"2026-04-01T04:22:57.342117Z\"}', NULL, '2026-04-01 04:22:57', '2026-04-01 04:22:57'),
+('f0d02cf3-b5e8-40ec-881f-33099f0979c1', 'App\\Notifications\\TransactionCreated', 'App\\Models\\User', 5, '{\"transaction_id\":9,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CASH\",\"status\":\"new_order\",\"final_price\":\"22000000.00\",\"message\":\"Pesanan baru Anda berhasil dibuat dengan No #0009\",\"created_at\":\"2026-04-01T04:25:49.794240Z\"}', '2026-04-01 06:30:51', '2026-04-01 04:25:49', '2026-04-01 06:30:51'),
+('f1361c80-642b-41b8-98ac-5b3c6eeefa1b', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":17,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"survey_scheduled\",\"current_status\":\"waiting_credit_approval\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0017 saat ini: Waiting credit approval\",\"created_at\":\"2026-04-06T05:18:18.285660Z\"}', '2026-04-06 05:49:00', '2026-04-06 05:18:18', '2026-04-06 05:49:00'),
+('f68f47e0-f8d6-43b5-b742-f97b29b322c8', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 5, '{\"transaction_id\":6,\"motor_name\":\"Honda Vario 160\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"dalam_pengiriman\",\"is_credit_status_change\":false,\"message\":\"Status transaksi dengan ID: 6 telah diubah menjadi dalam_pengiriman\",\"created_at\":\"2026-03-28T06:19:51.015443Z\"}', '2026-03-28 06:20:22', '2026-03-28 06:19:51', '2026-03-28 06:20:22'),
+('f7605217-9a99-4aa1-8fe2-14316302ec91', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"completed\",\"current_status\":\"survey_scheduled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Survey scheduled\",\"created_at\":\"2026-04-04T10:23:51.687182Z\"}', '2026-04-04 13:28:33', '2026-04-04 10:23:51', '2026-04-04 13:28:33'),
+('f95d9bb6-bbe2-4098-9263-8b7244548370', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 9, '{\"transaction_id\":15,\"motor_name\":\"Honda Scoopy Prestige\",\"transaction_type\":\"CREDIT\",\"previous_status\":\"waiting_credit_approval\",\"current_status\":\"completed\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0015 saat ini: Completed\",\"created_at\":\"2026-04-04T09:53:40.204705Z\"}', '2026-04-04 13:28:33', '2026-04-04 09:53:40', '2026-04-04 13:28:33'),
+('fa8d6f61-3cf8-4641-ad94-94817f44a06a', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":13,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"pembayaran_dikonfirmasi\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0013 saat ini: Unit preparation\",\"created_at\":\"2026-04-10T06:33:00.687697Z\"}', '2026-04-10 13:26:45', '2026-04-10 06:33:00', '2026-04-10 13:26:45'),
+('fc3dc2d4-4e48-45ba-9cc9-153d05baf263', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":12,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"new_order\",\"current_status\":\"cancelled\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0012 saat ini: Cancelled\",\"created_at\":\"2026-04-01T05:03:41.562069Z\"}', '2026-04-04 14:21:44', '2026-04-01 05:03:41', '2026-04-04 14:21:44'),
+('fdc19e2d-631f-4220-bd7c-6590e8761fef', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 1, '{\"transaction_id\":7,\"motor_name\":\"Yamaha NMAX Turbo 2024\",\"transaction_type\":\"CASH\",\"previous_status\":\"unit_preparation\",\"current_status\":\"pembayaran_dikonfirmasi\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0007 saat ini: Pembayaran dikonfirmasi\",\"created_at\":\"2026-04-01T04:23:28.395920Z\"}', NULL, '2026-04-01 04:23:28', '2026-04-01 04:23:28'),
+('fe3bbf04-0be9-4371-856a-83ab74b49dd1', 'App\\Notifications\\TransactionStatusChanged', 'App\\Models\\User', 6, '{\"transaction_id\":8,\"motor_name\":\"Yamaha Fazzio Lux Edition\",\"transaction_type\":\"CASH\",\"previous_status\":\"waiting_payment\",\"current_status\":\"unit_preparation\",\"is_credit_status_change\":false,\"message\":\"Pesanan #0008 saat ini: Unit preparation\",\"created_at\":\"2026-04-01T04:22:57.314844Z\"}', '2026-04-04 14:21:44', '2026-04-01 04:22:57', '2026-04-04 14:21:44');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `personal_access_tokens`
+--
+
+INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at`, `created_at`, `updated_at`) VALUES
+(1, 'App\\Models\\User', 2, 'auth_token', 'e2466ae69fe336fa30d41d9b8113c04320c91008f14d09c800571cfbcc931415', '[\"*\"]', NULL, NULL, '2026-03-24 06:01:02', '2026-03-24 06:01:02'),
+(2, 'App\\Models\\User', 3, 'auth_token', '7b3299b9029d8042841a51b4fc55081d1f42d5e23c06e1d265daa7bcf8277c82', '[\"*\"]', NULL, NULL, '2026-03-24 06:03:36', '2026-03-24 06:03:36'),
+(3, 'App\\Models\\User', 4, 'auth_token', '7ff4594c4c803b4d216ad93052d83dc5255d9ea2d5eec3846b5edc76d5bbd21a', '[\"*\"]', NULL, NULL, '2026-03-24 06:04:17', '2026-03-24 06:04:17'),
+(4, 'App\\Models\\User', 5, 'auth_token', 'f1ec3bdc31a6cd9f10a341a55b27bfaf9fd7e31439b24adea902ab06c1464e17', '[\"*\"]', NULL, NULL, '2026-03-24 06:11:26', '2026-03-24 06:11:26'),
+(5, 'App\\Models\\User', 5, 'auth_token', '73f90296b7cde19e68156aa58421b2fd636eb37784608cc51ffbe9a67006df58', '[\"*\"]', NULL, NULL, '2026-03-24 06:11:40', '2026-03-24 06:11:40'),
+(6, 'App\\Models\\User', 5, 'auth_token', '4c7b70c0af7cbef0e1702fdfd6bca3248d24cfa3882d06c9635d166985740ffc', '[\"*\"]', '2026-03-24 13:08:07', NULL, '2026-03-24 06:11:44', '2026-03-24 13:08:07'),
+(7, 'App\\Models\\User', 5, 'auth_token', 'ec88cf87d16c656b9a386c0677ce320968310bc86a12f7a6a0fb3edd696e6660', '[\"*\"]', '2026-03-24 23:39:35', NULL, '2026-03-24 23:08:15', '2026-03-24 23:39:35'),
+(8, 'App\\Models\\User', 5, 'auth_token', '7c26795c1bb8ca76854ad211606bd414d1b338415d575ccc85b7da5a0a0cdaf4', '[\"*\"]', NULL, NULL, '2026-03-25 00:11:15', '2026-03-25 00:11:15'),
+(9, 'App\\Models\\User', 5, 'auth_token', '4e7920065047ec777cb114dc1ffa9d8452ac3ce4067eaf449ef2aefc58e03501', '[\"*\"]', '2026-03-25 07:14:19', NULL, '2026-03-25 00:16:02', '2026-03-25 07:14:19'),
+(10, 'App\\Models\\User', 5, 'auth_token', '142b0fe14e713529057a5763fd8aa163c36be033cda2e3eae0150daa2d110871', '[\"*\"]', '2026-03-25 09:23:19', NULL, '2026-03-25 08:47:59', '2026-03-25 09:23:19'),
+(11, 'App\\Models\\User', 5, 'auth_token', '72e50e081f2022d6be4843419df95faf91e39f8479857e83c954137a323040c8', '[\"*\"]', '2026-03-25 09:52:38', NULL, '2026-03-25 09:51:17', '2026-03-25 09:52:38'),
+(12, 'App\\Models\\User', 5, 'auth_token', 'bc1cf978af8401715f628dea1321eb83fb8f59fbcc3de429f5a57016b0d4af62', '[\"*\"]', '2026-04-01 08:54:11', NULL, '2026-03-25 10:06:20', '2026-04-01 08:54:11'),
+(13, 'App\\Models\\User', 5, 'auth_token', '43042ad8f5c5ecf055aee1d6ca82ee0f46273711fb78594bc2e408644ea07acf', '[\"*\"]', '2026-04-10 06:29:41', NULL, '2026-04-01 09:16:50', '2026-04-10 06:29:41'),
+(14, 'App\\Models\\User', 5, 'auth_token', '9bf4dc1aa18b023ac0776b0fe646767720df385337b878ea29a375ef89d51a4c', '[\"*\"]', '2026-04-13 09:34:33', NULL, '2026-04-12 11:44:26', '2026-04-13 09:34:33'),
+(15, 'App\\Models\\User', 5, 'auth_token', '592e529fb54158c74015132e293b764750296e411b4432d99eea40ef7ab81d00', '[\"*\"]', '2026-04-14 13:08:45', NULL, '2026-04-13 09:35:44', '2026-04-14 13:08:45'),
+(16, 'App\\Models\\User', 5, 'auth_token', 'b2af10627f80b027a82aed02dbd3a77432a4f8ac73aaa0bccafb32eaea8540fe', '[\"*\"]', '2026-04-18 06:57:24', NULL, '2026-04-14 13:08:57', '2026-04-18 06:57:24'),
+(17, 'App\\Models\\User', 5, 'auth_token', '7c7ac8b84c8142feabe040ef4f6ea3eb55f1254d080675cd929b74ca198d4a67', '[\"*\"]', '2026-04-20 14:39:26', NULL, '2026-04-20 14:20:29', '2026-04-20 14:39:26');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `service_appointments`
+--
+
+CREATE TABLE `service_appointments` (
+  `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `branch` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `customer_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `plate_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `queue_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `motor_model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `service_date` date NOT NULL,
+  `service_time` time NOT NULL,
+  `service_type` enum('Servis Berkala','Ganti Oli','Perbaikan Berat','Lainnya') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Servis Berkala',
+  `complaint_notes` text COLLATE utf8mb4_unicode_ci,
+  `status` enum('pending','confirmed','in_progress','completed','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `cancelled_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cancel_reason` text COLLATE utf8mb4_unicode_ci,
+  `admin_notes` text COLLATE utf8mb4_unicode_ci,
+  `service_notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `service_appointments`
+--
+
+INSERT INTO `service_appointments` (`id`, `user_id`, `branch`, `customer_name`, `customer_phone`, `plate_number`, `queue_number`, `motor_model`, `service_date`, `service_time`, `service_type`, `complaint_notes`, `status`, `cancelled_by`, `cancel_reason`, `admin_notes`, `service_notes`, `created_at`, `updated_at`) VALUES
+(2, 1, 'SSM JATIASIH (BEKASI)', 'Mamat Gunshop', '089212131', NULL, NULL, NULL, '2026-04-04', '08:00:00', 'Servis Berkala', '-', 'cancelled', 'user', 'Dibatalkan langsung secara mandiri oleh pelanggan melalui sistem.', NULL, NULL, '2026-04-02 23:13:34', '2026-04-02 23:23:11'),
+(3, 9, 'SSM MEKAR SARI (BEKASI)', 'fuck you', '089212121212', NULL, NULL, NULL, '2026-04-06', '08:00:00', 'Ganti Oli', '-', 'cancelled', 'user', 'Dibatalkan secara mandiri oleh pelanggan.', NULL, NULL, '2026-04-04 14:53:24', '2026-04-04 22:40:16'),
+(4, 9, 'SSM JATIASIH (BEKASI)', 'fuck you', '08921213151', NULL, NULL, 'nmax', '2026-04-06', '08:00:00', 'Perbaikan Berat', '-', 'completed', NULL, NULL, '-', 'Test benefit', '2026-04-05 08:38:11', '2026-04-06 12:25:45'),
+(5, 9, 'SSM DEPOK (DEPOK)', 'fuck you', '08927121213', 'B1212CSD', 'A-01', 'Unit SRB/SSM', '2026-04-08', '08:00:00', 'Servis Berkala', 'test', 'confirmed', NULL, NULL, 'Tidak ada', 'Diskon 10%', '2026-04-07 13:23:31', '2026-04-08 09:33:00'),
+(6, 9, 'SSM JATIASIH (BEKASI)', 'fuck you', '08927121213', 'B1213CBA', 'A-01', 'NMAX', '2026-04-09', '08:00:00', 'Servis Berkala', 'Servis berkala', 'pending', NULL, NULL, NULL, NULL, '2026-04-08 10:07:22', '2026-04-08 10:07:22'),
+(7, 9, 'SSM JATIASIH (BEKASI)', 'fuck you', '08927121213', 'TEST', 'A-02', 'TEST', '2026-04-09', '08:00:00', 'Servis Berkala', 'gak ada', 'pending', NULL, NULL, NULL, NULL, '2026-04-08 10:08:15', '2026-04-08 10:08:15');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_activity` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('84U4HTXqtayhSDGkNL2c66BdNWzNZcOZ2kf50uGn', 9, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiUHV3VnM0NDVyd2pPY0R4dUtTU3FjVlppUjZNcktnM0tSVmhnNXM3QiI7czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6OTtzOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czo1MjoiaHR0cDovL2plcnJpZS1sYWdvb25hbC1jaGVycnlsLm5ncm9rLWZyZWUuZGV2L21vdG9ycyI7czo1OiJyb3V0ZSI7czoxMjoibW90b3JzLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1776695973),
+('DITXBeHLyok9NKfEZjzt7A7ypzXimQULNReuRAu7', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiZndLNHZTOElkbDlHcE41WGFKMnlVSWxXNnpDZXNwc2F0OHlKYkNmOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzI6Imh0dHA6Ly9zcmJtb3Rvci50ZXN0L2F1dGgvZ29vZ2xlIjtzOjU6InJvdXRlIjtzOjExOiJhdXRoLmdvb2dsZSI7fX0=', 1776695022),
+('Efi3Ym1lxdzZfx3wYkMvenPULmyaFvQsw9Tzt1vJ', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoibDhiQmVnTm5UZjg0Mkg2YTRTRWJJZHZLc0VCSkFWR3pxdTlJTGVmdyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjA6Imh0dHA6Ly9zcmJtb3Rvci50ZXN0IjtzOjU6InJvdXRlIjtzOjQ6ImhvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1776760539),
+('qbKuOR9MczHmNb1n8KpqvRC33m5VgGGMT5nSeI67', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoidE5BaVVyZFpCRVVQUVg1TG1pd2JQNGtSSHhsT1BDOUg0b2VHNVVUbyI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjA6Imh0dHA6Ly9zcmJtb3Rvci50ZXN0IjtzOjU6InJvdXRlIjtzOjQ6ImhvbWUiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1776724416),
+('UwA3qf7OczZ9hRDmSWQqeIT0zQGNH6B8aYIjJ4FM', 11, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicUZIN2dISGhVZWFtdTBlc2JNS3NUelEwRWZqdWJvNVUyRGtyRGJFayI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDM6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi90cmFuc2FjdGlvbnMvMTgiO3M6NToicm91dGUiO3M6MjM6ImFkbWluLnRyYW5zYWN0aW9ucy5zaG93Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTE7fQ==', 1776695978);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` bigint UNSIGNED NOT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` longtext COLLATE utf8mb4_unicode_ci,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'string',
+  `category` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'general',
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `settings`
+--
+
+INSERT INTO `settings` (`id`, `key`, `value`, `type`, `category`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'site_name', 'SRB Motor', 'string', 'general', 'Nama website', '2026-03-25 06:10:33', '2026-04-15 06:28:47'),
+(2, 'site_description', 'Platform dealer motor terpercaya dengan layanan terbaik', 'text', 'general', 'Deskripsi singkat website', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(3, 'site_logo', '/assets/icon/logo trans.png', 'string', 'general', 'Logo website', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(4, 'contact_email', 'info@srbmotors.com', 'string', 'contact', 'Email kontak utama', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(5, 'contact_phone', '+6281234567890', 'string', 'contact', 'Nomor telepon kontak', '2026-03-25 06:10:33', '2026-04-15 06:28:47'),
+(7, 'contact_address', 'Jl. Raya Utama No. 123, Jakarta Selatan, DKI Jakarta 12345', 'text', 'contact', 'Alamat kantor', '2026-03-25 06:10:33', '2026-04-15 06:28:47'),
+(8, 'contact_city', 'Jakarta', 'string', 'contact', 'Kota', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(9, 'business_hours', '{\"monday\":\"08:00 - 17:00\",\"tuesday\":\"08:00 - 17:00\",\"wednesday\":\"08:00 - 17:00\",\"thursday\":\"08:00 - 17:00\",\"friday\":\"08:00 - 17:00\",\"saturday\":\"09:00 - 16:00\",\"sunday\":\"Tutup\"}', 'json', 'contact', 'Jam operasional', '2026-03-25 06:10:33', '2026-04-15 06:28:47'),
+(10, 'social_facebook', 'https://facebook.com/srbmotors', 'string', 'social', 'URL Facebook', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(11, 'social_instagram', 'https://instagram.com/srbmotors', 'string', 'social', 'URL Instagram', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(12, 'social_youtube', 'https://youtube.com/@srbmotors', 'string', 'social', 'URL YouTube', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(13, 'social_tiktok', 'https://tiktok.com/@srbmotors', 'string', 'social', 'URL TikTok', '2026-03-25 06:10:33', '2026-03-25 06:10:33'),
+(14, 'email_from_name', 'SRB Motor', 'string', 'email', 'Nama pengirim email', '2026-03-25 06:10:33', '2026-04-15 06:28:47'),
+(15, 'email_from_address', 'noreply@srbmotor.id', 'string', 'email', 'Email pengirim', '2026-03-25 06:10:33', '2026-04-15 06:28:47'),
+(16, 'service_business_hours', '{\"monday\":\"08:00 - 16:00\",\"tuesday\":\"08:00 - 16:00\",\"wednesday\":\"08:00 - 16:00\",\"thursday\":\"08:00 - 16:00\",\"friday\":\"08:00 - 16:00\",\"saturday\":\"08:00 - 14:00\",\"sunday\":\"Tutup\"}', 'string', 'service', 'Jam operasional bengkel (SSM)', '2026-04-02 23:03:33', '2026-04-15 12:52:50'),
+(17, 'service_slot_quota', '5', 'string', 'service', 'Kuota motor per slot waktu', '2026-04-02 23:03:33', '2026-04-15 12:52:50'),
+(18, 'service_branches', '[\"SSM JATIASIH (BEKASI)\",\"SSM MEKAR SARI (BEKASI)\"]', 'string', 'service', 'Daftar cabang bengkel Sinarsurya Motor (SSM)', NULL, '2026-04-15 12:55:27');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `survey_schedules`
+--
+
+CREATE TABLE `survey_schedules` (
+  `id` bigint UNSIGNED NOT NULL,
+  `credit_detail_id` bigint UNSIGNED NOT NULL,
+  `scheduled_date` datetime NOT NULL COMMENT 'When survey is scheduled',
+  `scheduled_time` time DEFAULT NULL,
+  `surveyor_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `surveyor_phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'scheduled' COMMENT 'scheduled, completed, rescheduled, cancelled',
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `customer_notes` text COLLATE utf8mb4_unicode_ci,
+  `customer_confirms` tinyint(1) NOT NULL DEFAULT '0',
+  `customer_confirmed_at` timestamp NULL DEFAULT NULL,
+  `customer_confirmation_notes` text COLLATE utf8mb4_unicode_ci,
+  `completed_at` timestamp NULL DEFAULT NULL,
+  `survey_result` text COLLATE utf8mb4_unicode_ci,
+  `findings` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `survey_schedules`
+--
+
+INSERT INTO `survey_schedules` (`id`, `credit_detail_id`, `scheduled_date`, `scheduled_time`, `surveyor_name`, `surveyor_phone`, `status`, `location`, `notes`, `customer_notes`, `customer_confirms`, `customer_confirmed_at`, `customer_confirmation_notes`, `completed_at`, `survey_result`, `findings`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 2, '2026-04-05 00:00:00', '19:00:00', 'Sriyadi', '0892121313', 'pending', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2026-04-04 10:23:50', '2026-04-04 10:23:50', NULL),
+(2, 4, '2026-04-06 00:00:00', '12:00:00', 'Fauzan', '08972131414', 'completed', NULL, 'Good', NULL, 0, NULL, NULL, NULL, NULL, NULL, '2026-04-05 23:12:47', '2026-04-06 05:18:17', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` bigint UNSIGNED NOT NULL,
+  `user_id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reference_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Transaction reference code',
+  `transaction_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'CASH, CREDIT, TRADE-IN, etc',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `motor_id` bigint UNSIGNED NOT NULL,
+  `motor_color` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `motor_price` decimal(15,0) NOT NULL COMMENT 'Motor selling price',
+  `booking_fee` decimal(15,0) DEFAULT '0',
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Customer phone number',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci COMMENT 'Customer delivery address',
+  `delivery_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `delivery_date` date DEFAULT NULL,
+  `occupation` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `monthly_income` decimal(15,0) DEFAULT NULL,
+  `employment_duration` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_price` decimal(15,0) NOT NULL,
+  `final_price` decimal(15,0) NOT NULL,
+  `payment_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Bank transfer, cash, installment, etc',
+  `cancelled_at` timestamp NULL DEFAULT NULL,
+  `cancellation_reason` text COLLATE utf8mb4_unicode_ci,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `user_id`, `name`, `nik`, `reference_number`, `transaction_type`, `status`, `motor_id`, `motor_color`, `motor_price`, `booking_fee`, `phone`, `email`, `address`, `delivery_method`, `delivery_date`, `occupation`, `monthly_income`, `employment_duration`, `total_price`, `final_price`, `payment_method`, `cancelled_at`, `cancellation_reason`, `notes`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(4, 5, 'mamatnew', '1234567890111213', 'ORD-69C37DAE9FBBB', 'CASH', 'completed', 2, 'Putih', 31200000, 1000000, '086443355544', 'mamatNew@gmail.com', 'jl cendana raya nomor 4 kaliabang tengah bekasi utara', 'Ambil di Dealer', NULL, NULL, NULL, NULL, 31200000, 31200000, 'Transfer Bank', NULL, NULL, '-', '2026-03-25 06:16:14', '2026-03-26 13:38:42', NULL),
+(5, 5, 'mamatnew', '1234567890111213', 'ORD-69C4DCFC0CCEA', 'CASH', 'dalam_pengiriman', 4, 'Putih', 36000000, 1000000, '086443355544', 'mamatNew@gmail.com', 'JL cendana raya no 4 kaliabang tengah bekasi utara', 'Kirim ke Rumah', NULL, NULL, NULL, NULL, 36000000, 36000000, 'Transfer Bank', NULL, NULL, '-', '2026-03-26 07:15:08', '2026-03-28 06:24:16', NULL),
+(6, 5, 'mamatnew', '1234567890111213', 'ORD-69C4E5C01F2FE', 'CASH', 'dalam_pengiriman', 5, 'Putih', 27350000, 1000000, '086443355544', 'mamatNew@gmail.com', 'jl cendana raya no 4 kaliabang tengah bekasi utara', 'Ambil di Dealer', NULL, NULL, NULL, NULL, 27350000, 27350000, 'Transfer Bank', NULL, NULL, '-', '2026-03-26 07:52:32', '2026-03-28 06:19:50', NULL),
+(7, 1, 'Mamat Gunshop', '1234567890000000', 'TRX-69C534A379828', 'CASH', 'ready_for_delivery', 1, 'Merah', 35500000, 1000000, '08971212121', 'gunshopmamat025@gmail.com', 'Gg Lori Sakti No 78 Bekasi Utara', 'Ambil di Dealer', NULL, NULL, NULL, NULL, 35500000, 35500000, 'Transfer Bank', NULL, NULL, '-', '2026-03-26 13:29:07', '2026-04-01 13:42:35', NULL),
+(8, 1, 'Mamat Gunshop', '1234567890000000', 'TRX-69CC9D894DB07', 'CASH', 'unit_preparation', 3, 'Hijau', 23500000, 1000000, '08971212121', 'gunshopmamat025@gmail.com', 'Gg Lori Sakti No 78 Bekasi Utara', 'Ambil di Dealer', NULL, NULL, NULL, NULL, 23500000, 23500000, 'Transfer Bank', NULL, NULL, '-', '2026-04-01 04:22:33', '2026-04-01 04:22:57', NULL),
+(12, 5, 'mamatnew', '1112223334455667', 'ORD-69CCA63BA9B44', 'CASH', 'unit_preparation', 1, 'Merah', 35500000, 1000000, '086443355544', 'mamatNew@gmail.com', 'JL Cendana raya no 4 kaliabang tengah bekasi utara', 'Kirim ke Rumah', NULL, NULL, NULL, NULL, 35500000, 35500000, 'Transfer Bank', '2026-04-01 05:03:40', 'Dibatalkan melalui aplikasi mobile', NULL, '2026-04-01 04:59:39', '2026-04-02 14:22:37', NULL),
+(13, 5, 'mamatnew', '1112223334455667', 'ORD-69CCA7A92C11A', 'CASH', 'unit_preparation', 1, 'Merah', 35500000, 1000000, '086443355544', 'mamatNew@gmail.com', 'JL Cendana raya no 4 kaliabang tengah bekasi utara', 'Ambil di Dealer', NULL, NULL, NULL, NULL, 35500000, 35500000, 'Transfer Bank', NULL, NULL, NULL, '2026-04-01 05:05:45', '2026-04-10 06:33:00', NULL),
+(14, 1, 'Mamat Gunshop', '1234567890000000', 'TRX-69CD1C48A51AD', 'CREDIT', 'cancelled', 6, 'Prestige White', 22000000, 0, '08971212121', NULL, 'Gg Lori Sakti No 78 Bekasi Utara', 'Kirim ke Rumah', NULL, 'Kariawan swasta', 5000000, '3 tahun', 22000000, 22000000, 'Transfer Bank', '2026-04-01 13:34:13', 'Dibatalkan oleh pelanggan', '-', '2026-04-01 13:23:20', '2026-04-01 13:34:13', NULL),
+(15, 9, 'fuck you', '1234556611415151', 'TRX-69D0DE47BAD77', 'CREDIT', 'cancelled', 6, 'Prestige White', 22000000, 0, '08927121213', NULL, 'jl cemara raya no 14 kaliabang tengah bekasi utara', 'Kirim ke Rumah', NULL, 'Kuli bangunan', 1200000, '6 tahun', 22000000, 22000000, 'Transfer Bank', NULL, NULL, '-', '2026-04-04 09:47:51', '2026-04-04 10:24:17', NULL),
+(17, 9, 'fuck you', '1234556611415151', 'TRX-69D2EAADDDFD2', 'CREDIT', 'completed', 3, 'Prestige Silver', 23500000, 0, '08927121213', NULL, 'jl cemara raya no 14 kaliabang tengah bekasi utara', 'Kirim ke Rumah', NULL, 'Kuli bangunan', 5000000, '3 tahun', 23500000, 23500000, 'Transfer Bank', NULL, NULL, '-', '2026-04-05 23:05:17', '2026-04-06 05:48:33', NULL),
+(18, 5, 'mamatnew', '1112223334455667', 'ORD-69D896059982C', 'CASH', 'completed', 2, 'Merah', 31200000, 100000, '086443355544', 'mamatNew@gmail.com', 'JL Cendana raya no 4 kaliabang tengah bekasi utara', 'Ambil di Dealer', NULL, NULL, NULL, NULL, 31200000, 31200000, 'Transfer Bank', NULL, NULL, '-', '2026-04-10 06:17:41', '2026-04-20 14:04:12', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `transaction_logs`
+--
+
+CREATE TABLE `transaction_logs` (
+  `id` bigint UNSIGNED NOT NULL,
+  `transaction_id` bigint UNSIGNED NOT NULL,
+  `status_from` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status_to` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `actor_id` bigint UNSIGNED DEFAULT NULL,
+  `actor_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `payload` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `transaction_logs`
+--
+
+INSERT INTO `transaction_logs` (`id`, `transaction_id`, `status_from`, `status_to`, `actor_id`, `actor_type`, `description`, `notes`, `payload`, `created_at`, `updated_at`, `status`) VALUES
+(1, 4, 'pembayaran_dikonfirmasi', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-03-26 06:45:35', '2026-03-26 06:45:35', NULL),
+(2, 4, 'pembayaran_dikonfirmasi', 'unit_preparation', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-26 06:48:23', '2026-03-26 06:48:23', NULL),
+(3, 4, 'unit_preparation', 'ready_for_delivery', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-26 07:06:04', '2026-03-26 07:06:04', NULL),
+(4, 5, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-03-26 07:21:46', '2026-03-26 07:21:46', NULL),
+(5, 5, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Sistem otomatis membuat tagihan sisa', 'Tagihan sisa pelunasan otomatis dibuat sebesar Rp 35.000.000', NULL, '2026-03-26 07:21:46', '2026-03-26 07:21:46', NULL),
+(6, 5, 'new_order', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pembayaran Dikonfirmasi', NULL, '2026-03-26 07:21:46', '2026-03-26 07:21:46', NULL),
+(7, 5, 'pembayaran_dikonfirmasi', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-03-26 07:31:39', '2026-03-26 07:31:39', NULL),
+(8, 5, 'pembayaran_dikonfirmasi', 'unit_preparation', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-26 07:36:24', '2026-03-26 07:36:24', NULL),
+(9, 6, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-03-26 07:53:12', '2026-03-26 07:53:12', NULL),
+(10, 6, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Sistem otomatis membuat tagihan sisa', 'Tagihan sisa pelunasan otomatis dibuat sebesar Rp 26.350.000', NULL, '2026-03-26 07:53:12', '2026-03-26 07:53:12', NULL),
+(11, 6, 'new_order', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pembayaran Dikonfirmasi', NULL, '2026-03-26 07:53:12', '2026-03-26 07:53:12', NULL),
+(12, 6, 'pembayaran_dikonfirmasi', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-03-26 08:05:48', '2026-03-26 08:05:48', NULL),
+(13, 6, 'pembayaran_dikonfirmasi', 'unit_preparation', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-26 08:07:05', '2026-03-26 08:07:05', NULL),
+(14, 7, NULL, 'new_order', 1, 'App\\Models\\User', 'Pesanan tunai baru dibuat', 'Pesanan tunai baru dibuat oleh pelanggan', NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:08', NULL),
+(15, 7, 'new_order', 'waiting_payment', 1, 'App\\Models\\User', 'Tagihan booking fee dibuat', 'Menunggu pembayaran awal (Booking Fee) sebesar Rp 1.000.000', NULL, '2026-03-26 13:29:08', '2026-03-26 13:29:08', NULL),
+(16, 7, 'waiting_payment', 'waiting_payment', 1, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-03-26 13:29:35', '2026-03-26 13:29:35', NULL),
+(17, 7, 'waiting_payment', 'unit_preparation', 1, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Motor Disiapkan', NULL, '2026-03-26 13:29:35', '2026-03-26 13:29:35', NULL),
+(18, 4, 'ready_for_delivery', 'completed', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-26 13:38:42', '2026-03-26 13:38:42', NULL),
+(19, 6, 'unit_preparation', 'dalam_pengiriman', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-28 06:19:51', '2026-03-28 06:19:51', NULL),
+(20, 5, 'unit_preparation', 'dalam_pengiriman', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-03-28 06:24:17', '2026-03-28 06:24:17', NULL),
+(21, 8, NULL, 'new_order', 1, 'App\\Models\\User', 'Pesanan tunai baru dibuat', 'Pesanan tunai baru dibuat oleh pelanggan', NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:34', NULL),
+(22, 8, 'new_order', 'waiting_payment', 1, 'App\\Models\\User', 'Tagihan booking fee dibuat', 'Menunggu pembayaran awal (Booking Fee) sebesar Rp 1.000.000', NULL, '2026-04-01 04:22:34', '2026-04-01 04:22:34', NULL),
+(23, 8, 'waiting_payment', 'waiting_payment', 1, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-04-01 04:22:57', '2026-04-01 04:22:57', NULL),
+(24, 8, 'waiting_payment', 'unit_preparation', 1, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Motor Disiapkan', NULL, '2026-04-01 04:22:57', '2026-04-01 04:22:57', NULL),
+(25, 7, 'unit_preparation', 'unit_preparation', 1, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-04-01 04:23:28', '2026-04-01 04:23:28', NULL),
+(26, 7, 'unit_preparation', 'pembayaran_dikonfirmasi', 1, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pembayaran Dikonfirmasi', NULL, '2026-04-01 04:23:28', '2026-04-01 04:23:28', NULL),
+(27, 12, 'cancelled', 'cancelled', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-04-01 05:04:30', '2026-04-01 05:04:30', NULL),
+(28, 12, 'cancelled', 'cancelled', 5, 'App\\Models\\User', 'Sistem otomatis membuat tagihan sisa', 'Tagihan sisa pelunasan otomatis dibuat sebesar Rp 34.500.000', NULL, '2026-04-01 05:04:30', '2026-04-01 05:04:30', NULL),
+(29, 12, 'cancelled', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pembayaran Dikonfirmasi', NULL, '2026-04-01 05:04:30', '2026-04-01 05:04:30', NULL),
+(30, 13, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-04-01 06:48:46', '2026-04-01 06:48:46', NULL),
+(31, 13, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Sistem otomatis membuat tagihan sisa', 'Tagihan sisa pelunasan otomatis dibuat sebesar Rp 34.500.000', NULL, '2026-04-01 06:48:46', '2026-04-01 06:48:46', NULL),
+(32, 13, 'new_order', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pembayaran Dikonfirmasi', NULL, '2026-04-01 06:48:47', '2026-04-01 06:48:47', NULL),
+(33, 13, 'pembayaran_dikonfirmasi', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-04-01 07:06:25', '2026-04-01 07:06:25', NULL),
+(34, 12, 'pembayaran_dikonfirmasi', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-04-01 07:24:42', '2026-04-01 07:24:42', NULL),
+(35, 14, NULL, 'menunggu_persetujuan', 1, 'App\\Models\\User', 'Pengajuan kredit baru dibuat', 'Pengajuan kredit baru dibuat oleh pelanggan', NULL, '2026-04-01 13:23:21', '2026-04-01 13:23:21', NULL),
+(36, 7, 'pembayaran_dikonfirmasi', 'ready_for_delivery', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-04-01 13:42:35', '2026-04-01 13:42:35', NULL),
+(37, 12, 'pembayaran_dikonfirmasi', 'unit_preparation', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-04-02 14:22:37', '2026-04-02 14:22:37', NULL),
+(38, 15, NULL, 'menunggu_persetujuan', 9, 'App\\Models\\User', 'Pengajuan kredit baru dibuat', 'Pengajuan kredit baru dibuat oleh pelanggan', NULL, '2026-04-04 09:47:52', '2026-04-04 09:47:52', 'menunggu_persetujuan'),
+(39, 15, 'menunggu_persetujuan', 'verifikasi_dokumen', 6, 'App\\Models\\User', 'Dokumen diverifikasi: ', '', NULL, '2026-04-04 09:50:59', '2026-04-04 09:50:59', 'verifikasi_dokumen'),
+(40, 15, 'verifikasi_dokumen', 'dikirim_ke_leasing', 6, 'App\\Models\\User', 'Pengajuan dikirim ke Leasing: BAF', 'Ref: REF-69D0DE486054C', NULL, '2026-04-04 09:51:09', '2026-04-04 09:51:09', 'dikirim_ke_leasing'),
+(41, 15, 'waiting_credit_approval', 'waiting_credit_approval', 9, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-04-04 09:53:39', '2026-04-04 09:53:39', 'waiting_credit_approval'),
+(42, 15, 'waiting_credit_approval', 'completed', 9, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pesanan Selesai', NULL, '2026-04-04 09:53:40', '2026-04-04 09:53:40', 'completed'),
+(43, 15, 'dikirim_ke_leasing', 'survey_dijadwalkan', 6, 'App\\Models\\User', 'Survey dijadwalkan pada 2026-04-05', 'Dijadwalkan: 2026-04-05', NULL, '2026-04-04 10:23:51', '2026-04-04 10:23:51', 'survey_dijadwalkan'),
+(44, 15, 'survey_dijadwalkan', 'menunggu_keputusan_leasing', 6, 'App\\Models\\User', 'Survey selesai: bagus', 'bagus', NULL, '2026-04-04 10:24:05', '2026-04-04 10:24:05', 'menunggu_keputusan_leasing'),
+(45, 15, 'menunggu_keputusan_leasing', 'ditolak', 6, 'App\\Models\\User', 'Aplikasi ditolak (dokumen tidak valid): Slik ojk buruk', 'Slik ojk buruk', NULL, '2026-04-04 10:24:18', '2026-04-04 10:24:18', 'ditolak'),
+(48, 17, NULL, 'menunggu_persetujuan', 9, 'App\\Models\\User', 'Pengajuan kredit baru dibuat', 'Pengajuan kredit baru dibuat oleh pelanggan', NULL, '2026-04-05 23:05:18', '2026-04-05 23:05:18', 'menunggu_persetujuan'),
+(49, 17, 'menunggu_persetujuan', 'verifikasi_dokumen', 6, 'App\\Models\\User', 'Dokumen diverifikasi: ', '', NULL, '2026-04-05 23:12:03', '2026-04-05 23:12:03', 'verifikasi_dokumen'),
+(50, 17, 'verifikasi_dokumen', 'dikirim_ke_leasing', 6, 'App\\Models\\User', 'Pengajuan dikirim ke Leasing: BAF', 'Ref: REF-69D2EAAE6520B', NULL, '2026-04-05 23:12:12', '2026-04-05 23:12:12', 'dikirim_ke_leasing'),
+(51, 17, 'dikirim_ke_leasing', 'survey_dijadwalkan', 6, 'App\\Models\\User', 'Survey dijadwalkan pada 2026-04-06', 'Dijadwalkan: 2026-04-06', NULL, '2026-04-05 23:12:47', '2026-04-05 23:12:47', 'survey_dijadwalkan'),
+(52, 17, 'survey_dijadwalkan', 'menunggu_keputusan_leasing', 6, 'App\\Models\\User', 'Survey selesai: Good', 'Good', NULL, '2026-04-06 05:18:18', '2026-04-06 05:18:18', 'menunggu_keputusan_leasing'),
+(53, 17, 'menunggu_keputusan_leasing', 'disetujui', 6, 'App\\Models\\User', 'Kredit disetujui oleh leasing', NULL, NULL, '2026-04-06 05:18:57', '2026-04-06 05:18:57', 'disetujui'),
+(54, 17, 'unit_preparation', 'unit_preparation', 9, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via midtrans_bca_va', NULL, '2026-04-06 05:48:12', '2026-04-06 05:48:12', 'unit_preparation'),
+(55, 17, 'unit_preparation', 'completed', 9, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pesanan Selesai', NULL, '2026-04-06 05:48:13', '2026-04-06 05:48:13', 'completed'),
+(56, 17, 'disetujui', 'dp_dibayar', 6, 'App\\Models\\User', 'Pembayaran DP dikonfirmasi: bank_transfer', 'Metode: bank_transfer', NULL, '2026-04-06 05:48:24', '2026-04-06 05:48:24', 'dp_dibayar'),
+(57, 17, 'dp_dibayar', 'selesai', 6, 'App\\Models\\User', 'Proses kredit selesai. Unit siap dikirim.', '', NULL, '2026-04-06 05:48:34', '2026-04-06 05:48:34', 'selesai'),
+(58, 17, 'completed', 'completed', 9, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Pelunasan sukses via midtrans_bca_va', NULL, '2026-04-06 06:27:09', '2026-04-06 06:27:09', 'completed'),
+(59, 18, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Booking Fee sukses via bca_va', '{\"amount\": \"100000.00\", \"installment_id\": 36, \"payment_method\": \"midtrans_bca_va\", \"installment_number\": 0}', '2026-04-10 06:20:54', '2026-04-10 06:20:54', 'new_order'),
+(60, 18, 'new_order', 'new_order', 5, 'App\\Models\\User', 'Sistem otomatis membuat tagihan sisa', 'Tagihan sisa pelunasan otomatis dibuat sebesar Rp 31.100.000', NULL, '2026-04-10 06:20:54', '2026-04-10 06:20:54', 'new_order'),
+(61, 18, 'new_order', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Status Update Otomatis', 'Status diperbarui otomatis setelah pembayaran: Pembayaran Dikonfirmasi', NULL, '2026-04-10 06:20:55', '2026-04-10 06:20:55', 'pembayaran_dikonfirmasi'),
+(62, 18, 'pembayaran_dikonfirmasi', 'pembayaran_dikonfirmasi', 5, 'App\\Models\\User', 'Pembayaran terverifikasi Midtrans', 'Pembayaran Cicilan ke-1 sukses via bca_va', '{\"amount\": \"31100000.00\", \"installment_id\": 37, \"payment_method\": \"midtrans_bca_va\", \"installment_number\": 1}', '2026-04-10 06:29:21', '2026-04-10 06:29:21', 'pembayaran_dikonfirmasi'),
+(63, 18, 'pembayaran_dikonfirmasi', 'unit_preparation', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-04-10 06:32:07', '2026-04-10 06:32:07', 'unit_preparation'),
+(64, 13, 'pembayaran_dikonfirmasi', 'unit_preparation', 6, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-04-10 06:33:00', '2026-04-10 06:33:00', 'unit_preparation'),
+(65, 18, 'unit_preparation', 'completed', 11, 'App\\Models\\User', 'Status diperbarui oleh admin melalui form edit', 'Status diperbarui oleh admin melalui form edit', NULL, '2026-04-20 14:04:14', '2026-04-20 14:04:14', 'completed');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
+  `google_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `profile_photo_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `alamat` text COLLATE utf8mb4_unicode_ci,
+  `nik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `occupation` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `monthly_income` decimal(15,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `google_id`, `profile_photo_path`, `phone`, `created_at`, `updated_at`, `alamat`, `nik`, `occupation`, `email_verified_at`, `remember_token`, `monthly_income`) VALUES
+(1, 'Mamat Gunshop', 'gunshopmamat025@gmail.com', '$2y$12$uvHF29s54yjhUNLMJJnJZeu6TzjjZyLZLrqQ3b5y7r2ILoYSTsFbq', 'user', '100585967897353650015', 'https://lh3.googleusercontent.com/a/ACg8ocIr_2g3M0P2RHK2OJlsx5Y1_kOTt42MO0ga_jXre0l7YXVqSw=s96-c', '08971212121', '2026-03-22 13:26:42', '2026-03-26 13:28:07', 'Gg Lori Sakti No 78 Bekasi Utara', '1234567890000000', 'Kariawan swasta', NULL, NULL, NULL),
+(4, 'Test User', 'test1774332255@example.com', '$2y$12$.FsRXxktOp2dm9AKha.tFO1duvWTCTnW1xTyXkRqrT3HzqAaY7si.', 'user', NULL, NULL, '08123456789', '2026-03-24 06:04:17', '2026-03-24 06:04:17', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'mamatnew', 'mamatNew@gmail.com', '$2y$12$1A518p4avWrjb1JDpi8yfe.4doRvERYWqjqHwZPcpjKhormn4anAK', 'user', NULL, NULL, '086443355544', '2026-03-24 06:11:26', '2026-04-20 14:39:26', 'JL Cendana raya no 4 kaliabang tengah bekasi utara', '1112223334455667', 'Test', '2026-04-04 22:54:55', NULL, NULL),
+(6, 'Admin User', 'admin@srbmotors.com', '$2y$12$NngFDzKhtMvSDzlREDZ88.LB4cO6A0P6l1z86GNSgJpEI.lI9FFTe', 'admin', NULL, NULL, '08972121313', '2026-03-25 06:10:32', '2026-04-04 22:54:51', 'JL alinda permai no5 kaliabang tengah bekasi utara', '1910201301020301', 'Programmer', '2026-04-04 22:54:51', 'rmgiIHeT7VjFgy22mr4p7YiWlKZ9OLpOu8A2L33KxixzuScsLDJZ4Kk3oZav', NULL),
+(7, 'Regular User', 'user@srbmotors.com', '$2y$12$DTzUn.ljWoM1g/Z2jx0bHO3UV0bMVIbpAsZey0nEVXwhx98xW4BDm', 'user', NULL, NULL, NULL, '2026-03-25 06:10:32', '2026-03-25 06:10:32', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'Test Customer', 'customer@test.com', '$2y$12$OW2XnUNLXYZhwIsqveoZoebHLZOURaIMIwnPag6xh3yORaX.XCIvO', 'user', NULL, NULL, NULL, '2026-03-25 06:10:33', '2026-03-25 06:10:33', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'fuck you', 'darellrangga188@gmail.com', '$2y$12$NQqAHAqxVzEt9zeB17qxGO1I/gr93gJlD4ktVRXFzNNTrqfNVh0mW', 'user', '112997423804636869523', 'https://lh3.googleusercontent.com/a/ACg8ocKZfPWYY2ihW2dykgvxDoBT0MIGifdpxYepV9iqYDKjQTMZkOg=s96-c', '08927121213', '2026-04-03 22:59:06', '2026-04-05 22:48:30', 'jl cemara raya no 14 kaliabang tengah bekasi utara', '1234556611415151', 'Kuli bangunan', '2026-04-04 22:54:39', 'GL2YX9arBSwnlKGuDf3IbsmwrpMnSNUVbYukB3WtgqVbqpk1xyOanF8DF0se', NULL),
+(10, 'Super Jjjj555', 'superjj990@gmail.com', '$2y$12$uJKgUWALHy63IgTMqLlSFOjw1WUhi0I1.EhwUgRpl4WgwMo6UWCHu', 'user', '104976435833361011123', 'https://lh3.googleusercontent.com/a/ACg8ocJFEd4Ab2s1Ta1JK1MJEMVjvTBCz28WgIMYoG5DimjXdWQiYw=s96-c', NULL, '2026-04-15 22:21:20', '2026-04-20 14:11:19', NULL, NULL, NULL, '2026-04-20 14:11:19', 'yfVB0hMK5m7Y3CPEi6CjoVs1mw4CkmcKf5IdUlt5WwhZhmgTjGGC3vFaCHdB', NULL),
+(11, 'Owner SRB Motor', 'owner@srbmotor.test', '$2y$12$K7SZ3EQh9fktMUSKqR6IROYfqY7tYudUKE9aKH8.Q7pchjSRJbqkW', 'owner', NULL, NULL, NULL, '2026-04-18 14:22:23', '2026-04-18 14:22:42', NULL, NULL, NULL, '2026-04-18 14:22:42', 'yVs3n2kBOJ7DEG13hm5cehXKM5zvp7bMdEi6SZ8xByIKR42QkPnGw6cR7eC8', NULL),
+(12, 'v', 'v@gmail.com', '$2y$12$sldakiMexJpH63i09kXQEe76aACVRC2nIIuFU5WhkyR5diJuRWQeu', 'user', NULL, NULL, NULL, '2026-04-19 06:06:52', '2026-04-19 06:06:52', NULL, NULL, NULL, NULL, NULL, NULL);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indeks untuk tabel `cache`
+--
+ALTER TABLE `cache`
+  ADD PRIMARY KEY (`key`);
+
+--
+-- Indeks untuk tabel `cache_locks`
+--
+ALTER TABLE `cache_locks`
+  ADD PRIMARY KEY (`key`);
+
+--
+-- Indeks untuk tabel `credit_details`
+--
+ALTER TABLE `credit_details`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `credit_details_reference_number_unique` (`reference_number`),
+  ADD KEY `credit_details_transaction_id_index` (`transaction_id`),
+  ADD KEY `credit_details_status_index` (`status`);
+
+--
+-- Indeks untuk tabel `documents`
+--
+ALTER TABLE `documents`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `documents_credit_detail_id_index` (`credit_detail_id`),
+  ADD KEY `documents_status_index` (`status`),
+  ADD KEY `documents_approval_status_index` (`approval_status`);
+
+--
+-- Indeks untuk tabel `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indeks untuk tabel `installments`
+--
+ALTER TABLE `installments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `installments_transaction_id_index` (`transaction_id`),
+  ADD KEY `installments_status_index` (`status`),
+  ADD KEY `installments_due_date_index` (`due_date`),
+  ADD KEY `installments_installment_number_index` (`installment_number`);
+
+--
+-- Indeks untuk tabel `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indeks untuk tabel `job_batches`
+--
+ALTER TABLE `job_batches`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `motors`
+--
+ALTER TABLE `motors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `motors_brand_type_index` (`brand`,`type`),
+  ADD KEY `motors_year_index` (`year`),
+  ADD KEY `motors_price_index` (`price`),
+  ADD KEY `motors_tersedia_index` (`tersedia`),
+  ADD KEY `motors_brand_tersedia_index` (`brand`,`tersedia`),
+  ADD KEY `motors_type_index` (`type`),
+  ADD KEY `motors_brand_index` (`brand`);
+
+--
+-- Indeks untuk tabel `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
+
+--
+-- Indeks untuk tabel `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
+
+--
+-- Indeks untuk tabel `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
+
+--
+-- Indeks untuk tabel `service_appointments`
+--
+ALTER TABLE `service_appointments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `service_appointments_status_index` (`status`),
+  ADD KEY `service_appointments_service_date_index` (`service_date`),
+  ADD KEY `service_appointments_user_id_index` (`user_id`);
+
+--
+-- Indeks untuk tabel `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sessions_user_id_index` (`user_id`),
+  ADD KEY `sessions_last_activity_index` (`last_activity`);
+
+--
+-- Indeks untuk tabel `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `settings_key_unique` (`key`);
+
+--
+-- Indeks untuk tabel `survey_schedules`
+--
+ALTER TABLE `survey_schedules`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `survey_schedules_credit_detail_id_index` (`credit_detail_id`),
+  ADD KEY `survey_schedules_status_index` (`status`);
+
+--
+-- Indeks untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `transactions_reference_number_unique` (`reference_number`),
+  ADD KEY `transactions_motor_id_foreign` (`motor_id`),
+  ADD KEY `transactions_user_id_index` (`user_id`),
+  ADD KEY `transactions_status_index` (`status`),
+  ADD KEY `transactions_transaction_type_index` (`transaction_type`);
+
+--
+-- Indeks untuk tabel `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_logs_transaction_id_index` (`transaction_id`),
+  ADD KEY `transaction_logs_created_at_index` (`created_at`);
+
+--
+-- Indeks untuk tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD UNIQUE KEY `users_google_id_unique` (`google_id`),
+  ADD KEY `users_role_index` (`role`),
+  ADD KEY `users_email_index` (`email`),
+  ADD KEY `users_created_at_index` (`created_at`);
+
+--
+-- AUTO_INCREMENT untuk tabel yang dibuang
+--
+
+--
+-- AUTO_INCREMENT untuk tabel `credit_details`
+--
+ALTER TABLE `credit_details`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT untuk tabel `documents`
+--
+ALTER TABLE `documents`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT untuk tabel `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `installments`
+--
+ALTER TABLE `installments`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT untuk tabel `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
+--
+-- AUTO_INCREMENT untuk tabel `motors`
+--
+ALTER TABLE `motors`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT untuk tabel `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT untuk tabel `service_appointments`
+--
+ALTER TABLE `service_appointments`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT untuk tabel `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT untuk tabel `survey_schedules`
+--
+ALTER TABLE `survey_schedules`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT untuk tabel `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `credit_details`
+--
+ALTER TABLE `credit_details`
+  ADD CONSTRAINT `credit_details_transaction_id_foreign` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `documents`
+--
+ALTER TABLE `documents`
+  ADD CONSTRAINT `documents_credit_detail_id_foreign` FOREIGN KEY (`credit_detail_id`) REFERENCES `credit_details` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `installments`
+--
+ALTER TABLE `installments`
+  ADD CONSTRAINT `installments_transaction_id_foreign` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `service_appointments`
+--
+ALTER TABLE `service_appointments`
+  ADD CONSTRAINT `service_appointments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Ketidakleluasaan untuk tabel `survey_schedules`
+--
+ALTER TABLE `survey_schedules`
+  ADD CONSTRAINT `survey_schedules_credit_detail_id_foreign` FOREIGN KEY (`credit_detail_id`) REFERENCES `credit_details` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `transactions_motor_id_foreign` FOREIGN KEY (`motor_id`) REFERENCES `motors` (`id`) ON DELETE RESTRICT,
+  ADD CONSTRAINT `transactions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `transaction_logs`
+--
+ALTER TABLE `transaction_logs`
+  ADD CONSTRAINT `transaction_logs_transaction_id_foreign` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

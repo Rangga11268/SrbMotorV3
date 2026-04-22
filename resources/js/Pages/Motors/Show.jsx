@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import BranchSelector from "@/Components/Branch/BranchSelector";
 import { motion } from "framer-motion";
 import {
     ChevronRight,
@@ -38,6 +39,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
     const [dpAmount, setDpAmount] = useState(
         parseFloat(motor.min_dp_amount || motor.price * 0.2),
     );
+    const [selectedBranch, setSelectedBranch] = useState(null);
 
     const monthlyInstallment = useMemo(() => {
         const principal = parseFloat(motor.price) - dpAmount;
@@ -65,10 +67,19 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
         e.preventDefault();
         const phoneNumber =
             settings.contact_phone?.replace(/\D/g, "") || "628978638849";
+        
+        // If selectedBranch is just a code (string), we need to find its name if possible
+        // But for consistency, let's just use the code or pass the info
+        const branchDisplay = typeof selectedBranch === 'object' && selectedBranch?.name 
+            ? ` di cabang ${selectedBranch.name}` 
+            : selectedBranch 
+                ? ` di cabang ${selectedBranch}`
+                : "";
+
         const message = encodeURIComponent(
             `Halo SRB Motors, saya tertarik dengan unit ${
                 motor.name
-            } (Rp ${parseFloat(motor.price).toLocaleString("id-ID")}). Bisa minta info lebih lanjut?`,
+            } (Rp ${parseFloat(motor.price).toLocaleString("id-ID")})${branchDisplay}. Bisa minta info lebih lanjut?`,
         );
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
     };
@@ -248,58 +259,75 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
 
                         {/* RIGHT SIDEBAR - FIXED PANELS */}
                         <aside className="lg:col-span-4 space-y-8">
-                            {/* ACTION PANEL */}
-                            <div className="bg-black text-white p-8 rounded-none">
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                                    HARGA KENDARAAN
-                                </p>
-                                <div className="text-4xl font-black tracking-tighter mb-8 leading-none">
-                                    Rp{" "}
-                                    {parseInt(motor.price).toLocaleString(
-                                        "id-ID",
-                                    )}
+                            {/* ACTION PANEL (Combined with Branch Selection) */}
+                            <div className="bg-black text-white p-8 rounded-none space-y-8">
+                                <div>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                                        PILIH LOKASI PENGAMBILAN
+                                    </p>
+                                    <BranchSelector
+                                        motorId={motor.id}
+                                        selectedBranch={selectedBranch}
+                                        onBranchSelect={setSelectedBranch}
+                                        showOnlyWithStock={false}
+                                        className="mb-0"
+                                    />
                                 </div>
 
-                                <div className="space-y-3">
-                                    {motor.tersedia ? (
-                                        <>
-                                            <Link
-                                                href={route(
-                                                    "motors.cash-order",
-                                                    motor.id,
-                                                )}
-                                                className="block"
+                                <div className="pt-8 border-t border-gray-800">
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                                        HARGA KENDARAAN OTR
+                                    </p>
+                                    <div className="text-4xl font-black tracking-tighter mb-8 leading-none">
+                                        Rp{" "}
+                                        {parseInt(motor.price).toLocaleString(
+                                            "id-ID",
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {motor.tersedia ? (
+                                            <>
+                                                <Link
+                                                    href={route(
+                                                        "motors.cash-order",
+                                                        motor.id
+                                                    )}
+                                                    data={{ branch: selectedBranch }}
+                                                    className="block"
+                                                >
+                                                    <button className="w-full bg-[#1c69d4] text-white font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                                                        PEMBELIAN TUNAI
+                                                    </button>
+                                                </Link>
+                                                <Link
+                                                    href={route(
+                                                        "motors.credit-order",
+                                                        motor.id
+                                                    )}
+                                                    data={{ branch: selectedBranch }}
+                                                    className="block"
+                                                >
+                                                    <button className="w-full bg-transparent border border-white text-white font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2">
+                                                        PENGAJUAN KREDIT
+                                                    </button>
+                                                </Link>
+                                            </>
+                                        ) : (
+                                            <button
+                                                disabled
+                                                className="w-full bg-gray-800 text-gray-500 font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none cursor-not-allowed"
                                             >
-                                                <button className="w-full bg-[#1c69d4] text-white font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-                                                    PEMBELIAN TUNAI
-                                                </button>
-                                            </Link>
-                                            <Link
-                                                href={route(
-                                                    "motors.credit-order",
-                                                    motor.id,
-                                                )}
-                                                className="block"
-                                            >
-                                                <button className="w-full bg-transparent border border-white text-white font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2">
-                                                    PENGAJUAN KREDIT
-                                                </button>
-                                            </Link>
-                                        </>
-                                    ) : (
+                                                UNIT TERJUAL
+                                            </button>
+                                        )}
                                         <button
-                                            disabled
-                                            className="w-full bg-gray-800 text-gray-500 font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none cursor-not-allowed"
+                                            onClick={openWhatsApp}
+                                            className="w-full bg-white text-black font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                                         >
-                                            UNIT TERJUAL
+                                            <Phone size={16} /> HUBUNGI KAMI
                                         </button>
-                                    )}
-                                    <button
-                                        onClick={openWhatsApp}
-                                        className="w-full bg-white text-black font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Phone size={16} /> HUBUNGI KAMI
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -418,7 +446,7 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                                         ? `/storage/${m.image_path}`
                                                         : "/assets/img/no-image.webp"
                                                 }
-                                                className={`max-h-full object-contain transition-transform duration-500 ${m.tersedia ? 'group-hover:scale-105' : 'grayscale opacity-70'}`}
+                                                className={`max-h-full object-contain transition-transform duration-500 ${m.tersedia ? "group-hover:scale-105" : "grayscale opacity-70"}`}
                                                 alt={m.name}
                                             />
                                         </div>
@@ -426,10 +454,14 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
                                                 {m.brand}
                                             </p>
-                                            <h4 className={`text-lg font-black uppercase tracking-tight mb-2 limit-1-line transition-colors ${m.tersedia ? 'text-black group-hover:text-[#1c69d4]' : 'text-gray-500 line-through decoration-red-500 decoration-2'}`}>
+                                            <h4
+                                                className={`text-lg font-black uppercase tracking-tight mb-2 limit-1-line transition-colors ${m.tersedia ? "text-black group-hover:text-[#1c69d4]" : "text-gray-500 line-through decoration-red-500 decoration-2"}`}
+                                            >
                                                 {m.name}
                                             </h4>
-                                            <p className={`text-lg font-light ${m.tersedia ? 'text-gray-600' : 'text-gray-400'}`}>
+                                            <p
+                                                className={`text-lg font-light ${m.tersedia ? "text-gray-600" : "text-gray-400"}`}
+                                            >
                                                 Rp{" "}
                                                 {parseInt(
                                                     m.price,

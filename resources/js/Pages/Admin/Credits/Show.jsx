@@ -451,7 +451,7 @@ export default function Show({ credit, availableTransitions, timeline, leasingPr
                                             <div><span className="text-gray-500">HP Surveyor</span><p className="font-bold text-gray-800">{latestSurvey.surveyor_phone || "—"}</p></div>
                                         </div>
                                         {latestSurvey.notes && <p className="mt-2 text-xs text-gray-600 italic">"{latestSurvey.notes}"</p>}
-                                        {latestSurvey.location && <p className="mt-1 text-xs text-gray-500">📍 {latestSurvey.location}</p>}
+                                        {latestSurvey.location && <p className="mt-1 text-xs text-gray-500">{latestSurvey.location}</p>}
                                     </div>
                                 )}
 

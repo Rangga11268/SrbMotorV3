@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Link } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import Button from "@/Components/UI/Button";
@@ -30,6 +30,10 @@ import {
 import { motion } from "framer-motion";
 
 export default function CashOrderForm({ motor, auth }) {
+    // Get branch from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const branchFromUrl = urlParams.get("branch");
+
     const { data, setData, post, processing, errors } = useForm({
         name: auth.user?.name || "",
         email: auth.user?.email || "",
@@ -41,7 +45,113 @@ export default function CashOrderForm({ motor, auth }) {
         notes: "",
         booking_fee: 0,
         payment_method: "Transfer Bank",
+        branch_code: branchFromUrl || "",
     });
+
+    const [branchInfo, setBranchInfo] = useState(null);
+    const [loadingBranch, setLoadingBranch] = useState(!!branchFromUrl);
+    const [branchOptions, setBranchOptions] = useState([]);
+    const [detectedNearestBranch, setDetectedNearestBranch] = useState(null);
+    const [isLocating, setIsLocating] = useState(false);
+
+    useEffect(() => {
+        // Fetch specific branch if from URL
+        if (branchFromUrl) {
+            fetch(`/api/branches/${branchFromUrl}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        setBranchInfo(data.branch);
+                    }
+                })
+                .catch((err) => console.error("Error fetching branch:", err))
+                .finally(() => setLoadingBranch(false));
+        }
+
+        // Always fetch options for the dropdown
+        fetch("/api/branches/options")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setBranchOptions(data.options);
+                }
+            })
+            .catch((err) => console.error("Error fetching branch options:", err));
+
+        // Detect nearest branch
+        if (!branchFromUrl && "geolocation" in navigator) {
+            setIsLocating(true);
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    fetch(`/api/branches/nearest?latitude=${latitude}&longitude=${longitude}`)
+                        .then((res) => res.json())
+                        .then((d) => {
+                            if (d.success) {
+                                setDetectedNearestBranch(d.branch);
+                                // Auto-select if nothing selected yet
+                                if (!data.branch_code) {
+                                    handleBranchChange(d.branch.code);
+                                }
+                            }
+                        })
+                        .catch((err) => console.error("Error finding nearest branch:", err))
+                        .finally(() => setIsLocating(false));
+                },
+                () => setIsLocating(false),
+                { timeout: 10000 }
+            );
+        }
+    }, [branchFromUrl]);
+
+    const handleBranchChange = (code) => {
+        setData("branch_code", code);
+        if (code) {
+            setLoadingBranch(true);
+            fetch(`/api/branches/${code}`)
+                .then((res) => res.json())
+                .then((d) => {
+                    if (d.success) setBranchInfo(d.branch);
+                })
+                .finally(() => setLoadingBranch(false));
+        } else {
+            setBranchInfo(null);
+        }
+    };
+
+    const findNearestBranch = () => {
+        if ("geolocation" in navigator) {
+            setIsLocating(true);
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    fetch(`/api/motors/${motor.id}/nearest-branches?latitude=${latitude}&longitude=${longitude}`)
+                        .then((res) => res.json())
+                        .then((d) => {
+                            if (d.success && d.branches && d.branches.length > 0) {
+                                const nearest = d.branches[0];
+                                setDetectedNearestBranch(nearest);
+                                if (!data.branch_code) {
+                                    handleBranchChange(nearest.code);
+                                }
+                            } else {
+                                alert("Cabang terdekat dengan stok tersedia tidak ditemukan. Silakan pilih cabang secara manual.");
+                            }
+                        })
+                        .catch((err) => console.error("Error finding nearest branch:", err))
+                        .finally(() => setIsLocating(false));
+                },
+                (error) => {
+                    console.error("Geolocation error:", error);
+                    setIsLocating(false);
+                    alert("Gagal mendapatkan lokasi. Pastikan izin lokasi sudah diberikan di browser Anda.");
+                },
+                { timeout: 10000 }
+            );
+        } else {
+            alert("Browser Anda tidak mendukung fitur lokasi.");
+        }
+    };
 
     const [hasValidationErrors, setHasValidationErrors] = useState(false);
 
@@ -615,10 +725,117 @@ export default function CashOrderForm({ motor, auth }) {
                                             )}
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <Label htmlFor="notes" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                                Catatan Tambahan (Opsional)
-                                            </Label>
+                                        <div className="space-y-4">
+                                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Catatan Tambahan (Opsional)</Label>
+                                            
+                                            {/* Pickup Branch Selection/Display */}
+                                            {branchInfo ? (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    className="p-5 border-2 border-black bg-white rounded-none relative group"
+                                                >
+                                                    <button 
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setBranchInfo(null);
+                                                            setData("branch_code", "");
+                                                        }}
+                                                        className="absolute top-2 right-2 text-[9px] font-bold text-gray-400 hover:text-red-600 transition-colors uppercase tracking-widest opacity-0 group-hover:opacity-100"
+                                                    >
+                                                        [ UBAH LOKASI ]
+                                                    </button>
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="w-10 h-10 bg-black flex items-center justify-center text-white shrink-0">
+                                                            <MapPin className="w-5 h-5" />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-[10px] font-bold text-[#1c69d4] uppercase tracking-[0.2em] mb-1">
+                                                                LOKASI PENGAMBILAN UNIT
+                                                            </p>
+                                                            <h4 className="text-sm font-black text-black uppercase tracking-tight mb-2">
+                                                                {branchInfo.name}
+                                                            </h4>
+                                                            <div className="space-y-1">
+                                                                <p className="text-[11px] font-bold text-gray-600 uppercase flex items-start gap-2">
+                                                                    <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
+                                                                    {branchInfo.address}
+                                                                </p>
+                                                                {branchInfo.phone && (
+                                                                    <p className="text-[11px] font-bold text-gray-600 uppercase flex items-center gap-2">
+                                                                        <Phone className="w-3 h-3 shrink-0" />
+                                                                        {branchInfo.phone}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            ) : branchFromUrl && loadingBranch ? (
+                                                <div className="p-5 border border-gray-200 bg-gray-50 flex items-center justify-center gap-3">
+                                                    <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin"></div>
+                                                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">MEMUAT DATA LOKASI...</p>
+                                                </div>
+                                            ) : (
+                                                <div className="bg-gray-50 border border-gray-200 p-5 space-y-3">
+                                                    <Label htmlFor="branch_code" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">
+                                                        Pilih Cabang Pengambilan
+                                                    </Label>
+                                                    <div className="relative">
+                                                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                                        <select
+                                                            id="branch_code"
+                                                            className="w-full bg-white border border-gray-200 rounded-none pl-10 pr-4 py-3 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none text-xs"
+                                                            value={data.branch_code}
+                                                            onChange={(e) => handleBranchChange(e.target.value)}
+                                                            required
+                                                        >
+                                                            <option value="">-- PILIH CABANG TERDEKAT --</option>
+                                                            {branchOptions.map((branch) => (
+                                                                <option key={branch.code} value={branch.code}>{branch.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    {detectedNearestBranch ? (
+                                                        data.branch_code !== detectedNearestBranch.code && (
+                                                            <motion.button
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                type="button"
+                                                                onClick={() => handleBranchChange(detectedNearestBranch.code)}
+                                                                className="flex items-center gap-2 text-[9px] font-black text-[#1c69d4] hover:text-black transition-colors uppercase tracking-widest pl-1 mt-2 group"
+                                                            >
+                                                                <MapPin className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                                                                Gunakan Cabang Terdekat ({detectedNearestBranch.name})
+                                                            </motion.button>
+                                                        )
+                                                    ) : (
+                                                        <button
+                                                            type="button"
+                                                            onClick={findNearestBranch}
+                                                            disabled={isLocating}
+                                                            className="flex items-center gap-2 text-[9px] font-black text-gray-400 hover:text-[#1c69d4] transition-colors uppercase tracking-widest pl-1 mt-2 disabled:opacity-50"
+                                                        >
+                                                            {isLocating ? (
+                                                                <>
+                                                                    <div className="w-2.5 h-2.5 border border-gray-400 border-t-transparent animate-spin rounded-full"></div>
+                                                                    Mencari Lokasi...
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <MapPin className="w-3.5 h-3.5" />
+                                                                    Cari Cabang Terdekat Saya
+                                                                </>
+                                                            )}
+                                                        </button>
+                                                    )}
+                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                                                        *Pilih cabang di mana Anda akan mengambil unit motor.
+                                                    </p>
+                                                </div>
+                                            )}
+
                                             <textarea
                                                 id="notes"
                                                 rows="4"

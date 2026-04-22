@@ -18,30 +18,31 @@ class Transaction extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
-        'motor_id',
-        'name',
-        'nik',
-        'phone',
-        'email',
-        'address',
-        'delivery_method',
-        'delivery_date',
-        'motor_color',
-        'occupation',
-        'monthly_income',
-        'employment_duration',
-        'reference_number',
-        'transaction_type',
-        'status',
-        'motor_price',
-        'booking_fee',
-        'total_price',
-        'final_price',
-        'payment_method',
-        'cancelled_at',
-        'cancellation_reason',
-        'notes',
+        "user_id",
+        "motor_id",
+        "name",
+        "nik",
+        "phone",
+        "email",
+        "address",
+        "delivery_method",
+        "delivery_date",
+        "motor_color",
+        "occupation",
+        "monthly_income",
+        "employment_duration",
+        "reference_number",
+        "transaction_type",
+        "status",
+        "motor_price",
+        "booking_fee",
+        "total_price",
+        "final_price",
+        "payment_method",
+        "cancelled_at",
+        "cancellation_reason",
+        "notes",
+        "branch_code",
     ];
 
     /**
@@ -50,12 +51,13 @@ class Transaction extends Model
      * @var array
      */
     protected $appends = [
-        'customer_name',
-        'customer_phone',
-        'customer_occupation',
-        'customer_address',
-        'total_amount',
-        'unified_status',
+        "customer_name",
+        "customer_phone",
+        "customer_occupation",
+        "customer_address",
+        "total_amount",
+        "unified_status",
+        "branch_info",
     ];
 
     /**
@@ -64,15 +66,15 @@ class Transaction extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'motor_price' => 'decimal:2',
-        'booking_fee' => 'decimal:2',
-        'total_price' => 'decimal:2',
-        'discount_amount' => 'decimal:2',
-        'final_price' => 'decimal:2',
-        'monthly_income' => 'decimal:2',
-        'payment_date' => 'datetime',
-        'delivery_date' => 'date',
-        'cancelled_at' => 'datetime',
+        "motor_price" => "decimal:2",
+        "booking_fee" => "decimal:2",
+        "total_price" => "decimal:2",
+        "discount_amount" => "decimal:2",
+        "final_price" => "decimal:2",
+        "monthly_income" => "decimal:2",
+        "payment_date" => "datetime",
+        "delivery_date" => "date",
+        "cancelled_at" => "datetime",
     ];
 
     /**
@@ -121,21 +123,21 @@ class Transaction extends Model
     public function getStatusTextAttribute()
     {
         $statusMap = [
-            'new_order' => 'Pesanan Masuk',
-            'waiting_payment' => 'Menunggu Pembayaran',
-            'pembayaran_dikonfirmasi' => 'Pembayaran Dikonfirmasi',
-            'unit_preparation' => 'Motor Disiapkan',
-            'ready_for_delivery' => 'Motor Siap Dikirim/Ambil',
-            'dalam_pengiriman' => 'Dalam Pengiriman',
-            'completed' => 'Pesanan Selesai',
-            'cancelled' => 'Dibatalkan',
-            'menunggu_persetujuan' => 'Verifikasi Berkas',
-            'data_tidak_valid' => 'Perbaiki Dokumen',
-            'dikirim_ke_surveyor' => 'Proses Surveyor',
-            'jadwal_survey' => 'Jadwal Survey',
-            'disetujui' => 'Kredit Disetujui',
-            'ditolak' => 'Kredit Ditolak',
-            'waiting_credit_approval' => 'Menunggu Persetujuan Kredit',
+            "new_order" => "Pesanan Masuk",
+            "waiting_payment" => "Menunggu Pembayaran",
+            "pembayaran_dikonfirmasi" => "Pembayaran Dikonfirmasi",
+            "unit_preparation" => "Motor Disiapkan",
+            "ready_for_delivery" => "Motor Siap Dikirim/Ambil",
+            "dalam_pengiriman" => "Dalam Pengiriman",
+            "completed" => "Pesanan Selesai",
+            "cancelled" => "Dibatalkan",
+            "menunggu_persetujuan" => "Verifikasi Berkas",
+            "data_tidak_valid" => "Perbaiki Dokumen",
+            "dikirim_ke_surveyor" => "Proses Surveyor",
+            "jadwal_survey" => "Jadwal Survey",
+            "disetujui" => "Kredit Disetujui",
+            "ditolak" => "Kredit Ditolak",
+            "waiting_credit_approval" => "Menunggu Persetujuan Kredit",
         ];
 
         return $statusMap[$this->status] ?? $this->status;
@@ -147,20 +149,21 @@ class Transaction extends Model
     public function getCreditStatusTextAttribute()
     {
         if (!$this->creditDetail) {
-            return '';
+            return "";
         }
 
         $creditMap = [
-            'pengajuan_masuk' => 'Pengajuan Masuk',
-            'menunggu_persetujuan' => 'Menunggu Persetujuan',
-            'data_tidak_valid' => 'Data Tidak Valid',
-            'dikirim_ke_surveyor' => 'Dikirim ke Surveyor',
-            'jadwal_survey' => 'Jadwal Survey',
-            'disetujui' => 'Disetujui',
-            'ditolak' => 'Ditolak',
+            "pengajuan_masuk" => "Pengajuan Masuk",
+            "menunggu_persetujuan" => "Menunggu Persetujuan",
+            "data_tidak_valid" => "Data Tidak Valid",
+            "dikirim_ke_surveyor" => "Dikirim ke Surveyor",
+            "jadwal_survey" => "Jadwal Survey",
+            "disetujui" => "Disetujui",
+            "ditolak" => "Ditolak",
         ];
 
-        return $creditMap[$this->creditDetail->status] ?? $this->creditDetail->status;
+        return $creditMap[$this->creditDetail->status] ??
+            $this->creditDetail->status;
     }
 
     /**
@@ -170,36 +173,48 @@ class Transaction extends Model
     public function getUnifiedStatusAttribute(): string
     {
         // 1. If cancelled or completed, show that immediately
-        if ($this->status === 'cancelled') return 'Dibatalkan';
-        if ($this->status === 'completed') return 'Selesai';
+        if ($this->status === "cancelled") {
+            return "Dibatalkan";
+        }
+        if ($this->status === "completed") {
+            return "Selesai";
+        }
 
         // 2. For credit transactions, only check if relation is already loaded to prevent N+1 or recursion
-        if ($this->transaction_type === 'CREDIT' && $this->relationLoaded('creditDetail') && $this->creditDetail) {
+        if (
+            $this->transaction_type === "CREDIT" &&
+            $this->relationLoaded("creditDetail") &&
+            $this->creditDetail
+        ) {
             $creditStatus = $this->creditDetail->status;
 
             // If it's still in the "order" stage but credit is already processed
-            if ($this->status === 'new_order' || $this->status === 'menunggu_persetujuan' || $this->status === 'waiting_payment') {
+            if (
+                $this->status === "new_order" ||
+                $this->status === "menunggu_persetujuan" ||
+                $this->status === "waiting_payment"
+            ) {
                 $creditMap = [
-                    'menunggu_persetujuan' => 'Verifikasi Berkas',
-                    'data_tidak_valid' => 'Perbaiki Dokumen',
-                    'dikirim_ke_surveyor' => 'Proses Surveyor',
-                    'jadwal_survey' => 'Jadwal Survey',
-                    'disetujui' => 'Kredit Disetujui',
-                    'ditolak' => 'Kredit Ditolak',
+                    "menunggu_persetujuan" => "Verifikasi Berkas",
+                    "data_tidak_valid" => "Perbaiki Dokumen",
+                    "dikirim_ke_surveyor" => "Proses Surveyor",
+                    "jadwal_survey" => "Jadwal Survey",
+                    "disetujui" => "Kredit Disetujui",
+                    "ditolak" => "Kredit Ditolak",
                 ];
-                return $creditMap[$creditStatus] ?? 'Proses Verifikasi';
+                return $creditMap[$creditStatus] ?? "Proses Verifikasi";
             }
         }
 
         // 3. Fallback to standard transaction statuses
         $statusMap = [
-            'new_order' => 'Pesanan Masuk',
-            'waiting_payment' => 'Menunggu Pembayaran',
-            'pembayaran_dikonfirmasi' => 'Pembayaran Dikonfirmasi',
-            'unit_preparation' => 'Motor Disiapkan',
-            'ready_for_delivery' => 'Motor Siap Dikirim/Ambil',
-            'dalam_pengiriman' => 'Dalam Pengiriman',
-            'waiting_credit_approval' => 'Menunggu Persetujuan Kredit',
+            "new_order" => "Pesanan Masuk",
+            "waiting_payment" => "Menunggu Pembayaran",
+            "pembayaran_dikonfirmasi" => "Pembayaran Dikonfirmasi",
+            "unit_preparation" => "Motor Disiapkan",
+            "ready_for_delivery" => "Motor Siap Dikirim/Ambil",
+            "dalam_pengiriman" => "Dalam Pengiriman",
+            "waiting_credit_approval" => "Menunggu Persetujuan Kredit",
         ];
 
         return $statusMap[$this->status] ?? $this->status;
@@ -210,22 +225,22 @@ class Transaction extends Model
      */
     public function getCustomerNameAttribute()
     {
-        return $this->name ?? $this->user->name ?? '';
+        return $this->name ?? ($this->user->name ?? "");
     }
 
     public function getCustomerPhoneAttribute()
     {
-        return $this->phone ?? $this->user->phone ?? '';
+        return $this->phone ?? ($this->user->phone ?? "");
     }
 
     public function getCustomerOccupationAttribute()
     {
-        return $this->occupation ?: ($this->user->occupation ?? '');
+        return $this->occupation ?: $this->user->occupation ?? "";
     }
 
     public function getCustomerAddressAttribute()
     {
-        return $this->address ?? '';
+        return $this->address ?? "";
     }
 
     /**
@@ -233,12 +248,47 @@ class Transaction extends Model
      */
     public function getTotalAmountAttribute()
     {
-        if ($this->status === 'cancelled') {
+        if ($this->status === "cancelled") {
             return 0.0;
         }
         // For CASH, it's the final price minus paid installments
         // For CREDIT, it depends on what we want to show (usually remaining balance)
         // Given the UI shows it as "Sisa Kewajiban", we calculate unpaid installments
-        return (float) $this->installments()->where('status', '!=', 'paid')->sum(\Illuminate\Support\Facades\DB::raw('amount + penalty_amount'));
+        return (float) $this->installments()
+            ->where("status", "!=", "paid")
+            ->sum(
+                \Illuminate\Support\Facades\DB::raw("amount + penalty_amount"),
+            );
+    }
+
+    /**
+     * Accessor for branch information
+     */
+    public function getBranchInfoAttribute()
+    {
+        if (!$this->branch_code) {
+            return null;
+        }
+
+        $branchService = app(\App\Services\BranchService::class);
+        $branch = $branchService->getBranchByCode($this->branch_code);
+
+        if (!$branch) {
+            return [
+                "code" => $this->branch_code,
+                "name" => $this->branch_code,
+                "address" => null,
+                "phone" => null,
+            ];
+        }
+
+        return [
+            "code" => $branch["code"],
+            "name" => $branch["name"],
+            "address" => $branch["address"] ?? null,
+            "phone" => $branch["phone"] ?? null,
+            "whatsapp" => $branch["whatsapp"] ?? null,
+            "city" => $branch["city"] ?? null,
+        ];
     }
 }

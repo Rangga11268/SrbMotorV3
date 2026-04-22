@@ -84,6 +84,10 @@ class MotorRepository implements MotorRepositoryInterface
             $query->where('price', '<=', $filters['max_price']);
         }
 
+        if (isset($filters['branch']) && !empty($filters['branch'])) {
+            $query->where('branch', $filters['branch']);
+        }
+
         if (isset($filters['tersedia']) && $filters['tersedia'] !== null) {
             $query->where('tersedia', $filters['tersedia'] == 1);
         }

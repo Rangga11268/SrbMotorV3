@@ -18,10 +18,14 @@ import {
     X,
     ToggleRight,
     Trash2,
-    AlertTriangle
+    AlertTriangle,
+    MapPin,
+    Info,
+    RefreshCw,
+    Check
 } from "lucide-react";
 
-export default function Edit({ motor, promotions, brands }) {
+export default function Edit({ motor, promotions, brands, branches }) {
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
         name: motor.name || "",
@@ -36,6 +40,8 @@ export default function Edit({ motor, promotions, brands }) {
         promotion_ids: motor.promotions ? motor.promotions.map((p) => p.id) : [],
         tersedia: motor.tersedia === true || motor.tersedia === 1,
         colors: motor.colors || [],
+        branch: motor.branch || "",
+        sync_all_branches: false,
     });
 
     const [colorInput, setColorInput] = useState("");
@@ -273,6 +279,30 @@ export default function Edit({ motor, promotions, brands }) {
                                     </div>
                                 </div>
 
+                                {/* Lokasi Cabang */}
+                                <div className="pt-2">
+                                    <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2 flex items-center gap-1">
+                                        <MapPin size={11}/> Penempatan Cabang <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 ${errors.branch ? 'border-red-400' : 'border-gray-300'}`}
+                                        value={data.branch}
+                                        onChange={(e) => setData("branch", e.target.value)}
+                                        required
+                                    >
+                                        <option value="">Pilih Cabang Pengambilan</option>
+                                        {branches && branches.map((b) => (
+                                            <option key={b.code} value={b.code}>
+                                                {b.name} ({b.code})
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.branch && <p className="text-red-500 text-xs mt-1 font-medium">{errors.branch}</p>}
+                                    <p className="text-[10px] text-gray-500 mt-1.5 flex items-center gap-1">
+                                        <Info size={10} /> Unit motor ini akan ditampilkan eksklusif sebagai inventaris di cabang yang dipilih.
+                                    </p>
+                                </div>
+
                                 {/* Status Toggle */}
                                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                                     <div className="flex items-center gap-3">
@@ -293,6 +323,30 @@ export default function Edit({ motor, promotions, brands }) {
                                         />
                                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                                     </label>
+                                </div>
+
+                                {/* Bulk Sync Selection */}
+                                <div className="mt-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex items-start gap-3">
+                                    <div className="flex-shrink-0 mt-1">
+                                        <RefreshCw size={18} className={`text-blue-500 ${data.sync_all_branches ? "animate-spin-slow" : ""}`} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <div className="text-sm font-bold text-gray-800">Sinkronkan ke Semua Cabang?</div>
+                                            <label className="relative inline-flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    className="sr-only peer"
+                                                    checked={data.sync_all_branches}
+                                                    onChange={(e) => setData("sync_all_branches", e.target.checked)}
+                                                />
+                                                <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                                            </label>
+                                        </div>
+                                        <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">
+                                            Jika aktif, perubahan pada **Harga, Deskripsi, Warna, dan Gambar** akan otomatis diterapkan ke seluruh unit "{data.name}" di cabang dealer lainnya.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -17,10 +17,12 @@ import {
     Plus,
     X,
     ToggleRight,
-    Info
+    Info,
+    MapPin,
+    Check
 } from "lucide-react";
 
-export default function Create({ promotions, brands }) {
+export default function Create({ promotions, brands, branches }) {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         brand: "Yamaha",
@@ -34,6 +36,7 @@ export default function Create({ promotions, brands }) {
         promotion_ids: [],
         tersedia: true,
         colors: [],
+        branches: [],
     });
 
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -248,6 +251,74 @@ export default function Create({ promotions, brands }) {
                                             ))
                                         )}
                                     </div>
+                                </div>
+
+                                {/* Penempatan Cabang (Multi-Select) */}
+                                <div className="pt-2">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest flex items-center gap-1">
+                                            <MapPin size={11}/> Penempatan Cabang <span className="text-red-500">*</span>
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (data.branches.length === branches.length) {
+                                                    setData("branches", []);
+                                                } else {
+                                                    setData("branches", branches.map(b => b.code));
+                                                }
+                                            }}
+                                            className="text-[10px] font-bold text-blue-600 hover:text-blue-800 uppercase tracking-tight"
+                                        >
+                                            {data.branches.length === branches.length ? 'Hapus Semua' : 'Pilih Semua'}
+                                        </button>
+                                    </div>
+ 
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[250px] overflow-y-auto p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                        {branches && branches.map((b) => {
+                                            const isSelected = data.branches.includes(b.code);
+                                            return (
+                                                <label 
+                                                    key={b.code}
+                                                    className={`relative flex items-center p-3 rounded-lg border cursor-pointer transition-all ${
+                                                        isSelected 
+                                                        ? 'bg-blue-50 border-blue-400 ring-1 ring-blue-400' 
+                                                        : 'bg-white border-gray-200 hover:border-gray-300'
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        className="hidden"
+                                                        checked={isSelected}
+                                                        onChange={() => {
+                                                            const newBranches = isSelected
+                                                                ? data.branches.filter(code => code !== b.code)
+                                                                : [...data.branches, b.code];
+                                                            setData("branches", newBranches);
+                                                        }}
+                                                    />
+                                                    <div className="flex-1">
+                                                        <div className={`text-xs font-bold tracking-tight ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
+                                                            {b.name}
+                                                        </div>
+                                                        <div className="text-[9px] text-gray-400 font-medium mt-0.5 line-clamp-1">
+                                                            {b.code}
+                                                        </div>
+                                                    </div>
+                                                    {isSelected && (
+                                                        <div className="bg-blue-600 rounded-full p-0.5 ml-2">
+                                                            <Check size={10} className="text-white" />
+                                                        </div>
+                                                    )}
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+ 
+                                    {errors.branches && <p className="text-red-500 text-xs mt-1 font-medium">{errors.branches}</p>}
+                                    <p className="text-[10px] text-gray-500 mt-2.5 flex items-center gap-1">
+                                        <Info size={10} /> Data unit ini akan diduplikasi secara otomatis ke setiap cabang yang Anda pilih di atas.
+                                    </p>
                                 </div>
 
                                 {/* Status Toggle */}

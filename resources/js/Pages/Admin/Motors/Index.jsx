@@ -16,14 +16,16 @@ import {
     Trash2,
     RefreshCw,
     Tag,
-    Archive
+    Archive,
+    MapPin
 } from "lucide-react";
 
-export default function Index({ motors: initialMotors, filters, brands }) {
+export default function Index({ motors: initialMotors, filters, brands, branches }) {
     const [localMotors, setLocalMotors] = useState(initialMotors);
     const [search, setSearch] = useState(filters.search || "");
     const [brand, setBrand] = useState(filters.brand || "");
     const [status, setStatus] = useState(filters.status || "");
+    const [branch, setBranch] = useState(filters.branch || "");
     const [isFirstRender, setIsFirstRender] = useState(true);
     const [loading, setLoading] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -59,6 +61,7 @@ export default function Index({ motors: initialMotors, filters, brands }) {
         if (search) params.search = search;
         if (brand) params.brand = brand;
         if (status) params.status = status;
+        if (branch) params.branch = branch;
 
         const delayDebounceFn = setTimeout(() => {
             const url = new URL(window.location.href);
@@ -69,7 +72,7 @@ export default function Index({ motors: initialMotors, filters, brands }) {
         }, 500);
 
         return () => clearTimeout(delayDebounceFn);
-    }, [search, brand, status]);
+    }, [search, brand, status, branch]);
 
     const handleSearch = (e) => e.preventDefault();
 
@@ -77,6 +80,7 @@ export default function Index({ motors: initialMotors, filters, brands }) {
         setSearch("");
         setBrand("");
         setStatus("");
+        setBranch("");
     };
 
     const confirmDelete = (motor) => {
@@ -162,7 +166,22 @@ export default function Index({ motors: initialMotors, filters, brands }) {
                             <option value="0">Kosong / Habis</option>
                         </select>
                     </div>
-                    {(search || brand || status) && (
+                    <div className="w-full md:w-64 relative">
+                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-1.5 ml-1 flex items-center gap-1">
+                            <MapPin size={12}/> Cabang
+                        </label>
+                        <select
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            value={branch}
+                            onChange={(e) => setBranch(e.target.value)}
+                        >
+                            <option value="">Semua Cabang</option>
+                            {branches && branches.map((b) => (
+                                <option key={b.code} value={b.code}>{b.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    {(search || brand || status || branch) && (
                         <div className="w-full md:w-auto">
                             <button
                                 type="button"
@@ -191,7 +210,8 @@ export default function Index({ motors: initialMotors, filters, brands }) {
                             <tr className="bg-gray-50 border-b border-gray-100 text-xs font-bold uppercase tracking-widest text-gray-500">
                                 <th className="px-6 py-4">Informasi Unit</th>
                                 <th className="px-6 py-4 hidden md:table-cell">Merk & Spesifikasi</th>
-                                <th className="px-6 py-4">Harga On The Road</th>
+                                <th className="px-6 py-4">Harga OTR</th>
+                                <th className="px-6 py-4">Lokasi Unit</th>
                                 <th className="px-6 py-4 text-center">Status</th>
                                 <th className="px-6 py-4 text-right">Aksi</th>
                             </tr>
@@ -249,16 +269,27 @@ export default function Index({ motors: initialMotors, filters, brands }) {
                                                     {motor.year}
                                                 </div>
                                             </div>
-                                        </td>
-
-                                        {/* Price */}
+                                        </td>                                        {/* Price */}
                                         <td className="px-6 py-4">
                                             <div className="font-black text-gray-800">
                                                 <span className="text-gray-400 font-bold mr-1">Rp</span>
                                                 {new Intl.NumberFormat("id-ID").format(motor.price)}
                                             </div>
                                         </td>
-
+ 
+                                        {/* Branch Location */}
+                                        <td className="px-6 py-4">
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-1.5 text-gray-700 font-bold text-xs uppercase tracking-tight">
+                                                    <MapPin size={12} className="text-blue-500" />
+                                                    {motor.branch_info?.name || motor.branch || '-'}
+                                                </div>
+                                                {motor.branch_info?.code && (
+                                                    <span className="text-[10px] text-gray-400 font-medium ml-4">{motor.branch_info.code}</span>
+                                                )}
+                                            </div>
+                                        </td>
+ 
                                         {/* Status */}
                                         <td className="px-6 py-4 text-center">
                                             {(motor.tersedia || motor.tersedia === 1) ? (
