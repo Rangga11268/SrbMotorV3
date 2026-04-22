@@ -17,6 +17,7 @@ import {
     X,
     Menu,
     ChevronLeft,
+    MapPin,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import NotificationBell from "../Components/Notification/NotificationBell";
@@ -84,6 +85,7 @@ export default function MetronicAdminLayout({ children, title }) {
             { name: "Laporan", href: route("admin.reports.index"), icon: BarChart3, active: route().current("admin.reports.*") },
         ] : []),
         { name: "Manajemen Servis", href: "/admin/services", icon: Wrench, active: route().current("admin.services.*") },
+        { name: "Manajemen Cabang", href: route("admin.branches.index"), icon: MapPin, active: route().current("admin.branches.*") },
     ];
 
     const settingItems = [

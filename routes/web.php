@@ -582,6 +582,9 @@ Route::prefix("admin")
             "upload",
         ])->name("settings.upload");
 
+        // Branch Management
+        Route::resource("branches", \App\Http\Controllers\Admin\BranchController::class);
+
         Route::get("/profile", [AdminProfileController::class, "show"])->name(
             "profile.show",
         );
