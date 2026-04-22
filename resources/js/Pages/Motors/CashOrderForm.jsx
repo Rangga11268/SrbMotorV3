@@ -741,7 +741,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                             setBranchInfo(null);
                                                             setData("branch_code", "");
                                                         }}
-                                                        className="absolute top-2 right-2 text-[9px] font-bold text-gray-400 hover:text-red-600 transition-colors uppercase tracking-widest opacity-0 group-hover:opacity-100"
+                                                        className="absolute top-2 right-2 text-[9px] font-bold text-blue-600 hover:text-red-600 transition-colors uppercase tracking-widest"
                                                     >
                                                         [ UBAH LOKASI ]
                                                     </button>
