@@ -116,7 +116,7 @@ class ServiceAppointmentController extends Controller
         
         $queueNumber = 'A-' . str_pad($dateCount + 1, 2, '0', STR_PAD_LEFT);
 
-        // 3. Create Scheduled Digital Ticket
+        // 3. Create Confirmed Digital Ticket
         $appointment = ServiceAppointment::create([
             'user_id' => Auth::id(),
             'branch' => $request->branch,
@@ -129,31 +129,31 @@ class ServiceAppointmentController extends Controller
             'service_time' => $serviceTime,
             'service_type' => $request->service_type ?? 'Servis Berkala',
             'complaint_notes' => $request->complaint_notes,
-            'status' => 'pending',
+            'status' => 'confirmed',
         ]);
 
         // 4. Notify Admin via WhatsApp
         $adminPhone = config('services.fonnte.admin_phone');
         if ($adminPhone) {
-            $message = "*[ANTRIAN TERJADWAL] Bengkel {$appointment->branch}*\n\n" .
+            $message = "*[ANTRIAN BARU TERKONFIRMASI] Bengkel {$appointment->branch}*\n\n" .
                 "Nomor: *{$appointment->queue_number}*\n" .
                 "Waktu: " . Carbon::parse($appointment->service_date)->format('d/m/y') . " @ {$appointment->service_time} WIB\n" .
                 "Plat: {$appointment->plate_number}\n" .
                 "User: {$appointment->customer_name}\n\n" .
-                "Segera tinjau di dashboard admin.";
+                "Data sudah masuk sebagai antrean tetap.";
             WhatsAppService::sendMessage($adminPhone, $message);
         }
 
         // 5. Notify User via WhatsApp (Ticket Style)
         $userMsg = "Halo {$appointment->customer_name},\n\n" .
-            "Ini adalah *TIKET ANTRIAN TERJADWAL* Anda untuk di *{$appointment->branch}*:\n\n" .
+            "Ini adalah *TIKET ANTRIAN TERKONFIRMASI* Anda untuk di *{$appointment->branch}*:\n\n" .
             "NO. ANTRIAN: *{$appointment->queue_number}*\n" .
             "JADWAL: " . Carbon::parse($appointment->service_date)->format('d M Y') . " Pukul *{$appointment->service_time}* WIB\n" .
             "PLAT NOMOR: *{$appointment->plate_number}*\n\n" .
             "Harap datang 10 menit lebih awal dari jadwal yang dipilih. Tunjukkan tiket ini kepada petugas bengkel. — Dealer SRB Motor (SSM Network)";
         WhatsAppService::sendMessage($appointment->customer_phone, $userMsg);
 
-        return redirect()->route('services.index')->with('success', "Antrian Terjadwal {$queueNumber} untuk tanggal " . Carbon::parse($serviceDate)->format('d/m/Y') . " berhasil diterbitkan.");
+        return redirect()->route('services.index')->with('success', "Antrian Terkonfirmasi {$queueNumber} untuk tanggal " . Carbon::parse($serviceDate)->format('d/m/Y') . " berhasil diterbitkan.");
     }
 
     /**
@@ -166,7 +166,7 @@ class ServiceAppointmentController extends Controller
         }
 
         $validated = $request->validate([
-            'status' => 'required|in:pending,confirmed,in_progress,completed,cancelled',
+            'status' => 'required|in:confirmed,in_progress,completed,cancelled',
             'admin_notes' => 'nullable|string|max:2000',
             'service_notes' => 'nullable|string|max:2000',
         ]);

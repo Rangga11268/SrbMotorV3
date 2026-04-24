@@ -17,7 +17,7 @@ export default function Show({ appointment }) {
     const getStatusStyle = (status) => {
         switch (status) {
             case 'pending': return { bg: 'bg-[#1c69d4]/10', border: 'border-[#1c69d4]', text: 'text-[#1c69d4]', label: 'MENUNGGU KONFIRMASI', icon: Clock };
-            case 'confirmed': return { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-700', label: 'DIKONFIRMASI', icon: CheckCircle2 };
+            case 'confirmed': return { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-700', label: 'TERKONFIRMASI (SLOT AMAN)', icon: CheckCircle2 };
             case 'in_progress': return { bg: 'bg-amber-50', border: 'border-amber-500', text: 'text-amber-700', label: 'PENGERJAAN MEKANIK', icon: Wrench };
             case 'completed': return { bg: 'bg-black', border: 'border-black', text: 'text-white', label: 'SELESAI & SIAP AMBIL', icon: ShieldCheck };
             case 'cancelled': return { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-700', label: 'DIBATALKAN', icon: X };

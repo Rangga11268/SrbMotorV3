@@ -278,8 +278,7 @@ export default function ServicesIndex({ appointments }) {
                                             onChange={e => setData('status', e.target.value)}
                                             className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm font-medium"
                                         >
-                                            <option value="pending">Menunggu Konfirmasi (Pending)</option>
-                                            <option value="confirmed">Disetujui / Terjadwal (Confirmed)</option>
+                                            <option value="confirmed">Terkonfirmasi / Terjadwal (Confirmed)</option>
                                             <option value="in_progress">Sedang Dikerjakan (In Progress)</option>
                                             <option value="completed">Selesai (Completed)</option>
                                             <option value="cancelled">Dibatalkan (Cancelled / Ditolak)</option>

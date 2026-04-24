@@ -15,7 +15,7 @@ export default function History({ appointments }) {
     const getStatusStyle = (status) => {
         switch (status) {
             case 'pending': return { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700', label: 'MENUNGGU KONFIRMASI' };
-            case 'confirmed': return { bg: 'bg-[#1c69d4]/5', border: 'border-[#1c69d4]/20', text: 'text-[#1c69d4]', label: 'DIKONFIRMASI' };
+            case 'confirmed': return { bg: 'bg-[#1c69d4]/5', border: 'border-[#1c69d4]/20', text: 'text-[#1c69d4]', label: 'TERKONFIRMASI (SLOT AMAN)' };
             case 'in_progress': return { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', label: 'DALAM PENGERJAAN' };
             case 'completed': return { bg: 'bg-black', border: 'border-black', text: 'text-white', label: 'SELESAI' };
             case 'cancelled': return { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', label: 'DIBATALKAN' };
