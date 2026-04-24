@@ -32,9 +32,7 @@ Route::get("/syarat-ketentuan", [PageController::class, "terms"])->name(
 Route::get("/kebijakan-privasi", [PageController::class, "privacy"])->name(
     "privacy",
 );
-Route::get("/motors/compare", [MotorGalleryController::class, "compare"])->name(
-    "motors.compare",
-);
+
 Route::get("/motors", [MotorGalleryController::class, "index"])->name(
     "motors.index",
 );

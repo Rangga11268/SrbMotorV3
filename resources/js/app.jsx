@@ -1,7 +1,7 @@
 import React from "react";
 import "./bootstrap";
 import "../css/app.css";
-import { ComparisonProvider } from "./Contexts/ComparisonContext";
+
 import { route } from "ziggy-js";
 
 window.route = route;
@@ -42,11 +42,8 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(
-            <ComparisonProvider>
-                <App {...props} />
-            </ComparisonProvider>,
-        );
+        root.render(<App {...props} />);
+
     },
     progress: {
         color: "#4B5563",
