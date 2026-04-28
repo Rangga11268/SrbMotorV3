@@ -137,10 +137,18 @@ class MotorGalleryController extends Controller
             "motor_color" => "required|string",
             "delivery_method" => "required|string",
             "notes" => "nullable|string",
-            "branch_code" => "nullable|string|exists:branches,code",
+            "branch_code" => "nullable|string",
             "booking_fee" => "nullable|numeric|min:0",
             "payment_method" => "required|string",
         ]);
+
+        // Validasi branch code melalui service
+        if ($request->branch_code) {
+            $branchService = app(\App\Services\BranchService::class);
+            if (!$branchService->isValidBranchCode($request->branch_code)) {
+                return back()->withErrors(['branch_code' => 'Cabang yang dipilih tidak valid.'])->withInput();
+            }
+        }
 
         if ($request->booking_fee && $request->booking_fee >= $motor->price) {
             return back()
@@ -302,9 +310,17 @@ class MotorGalleryController extends Controller
             "motor_color" => "required|string",
             "delivery_method" => "required|string",
             "notes" => "nullable|string",
-            "branch_code" => "nullable|string|exists:branches,code",
+            "branch_code" => "nullable|string",
             "payment_method" => "required|string",
         ]);
+
+        // Validasi branch code melalui service
+        if ($request->branch_code) {
+            $branchService = app(\App\Services\BranchService::class);
+            if (!$branchService->isValidBranchCode($request->branch_code)) {
+                return back()->withErrors(['branch_code' => 'Cabang yang dipilih tidak valid.'])->withInput();
+            }
+        }
 
         // Validasi DP minimum dari data motor
         $minDownPayment = $motor->min_dp_amount ?? $motor->price * 0.2;

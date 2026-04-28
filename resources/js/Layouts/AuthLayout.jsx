@@ -1,6 +1,7 @@
 import React from "react";
 import { Head } from "@inertiajs/react";
 import { Toaster } from "react-hot-toast";
+import FloatingWA from "@/Components/Public/FloatingWA";
 
 export default function AuthLayout({ children, title }) {
     return (
@@ -8,6 +9,7 @@ export default function AuthLayout({ children, title }) {
             <Head title={title} />
             <div className="min-h-screen font-sans text-gray-900 bg-gray-50 selection:bg-blue-600 selection:text-white overflow-x-hidden">
                 <main>{children}</main>
+                <FloatingWA />
                 <Toaster
                     position="top-center"
                     toastOptions={{

@@ -16,6 +16,7 @@ import {
     Wallet,
     Download,
     AlertCircle,
+    MapPin,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
