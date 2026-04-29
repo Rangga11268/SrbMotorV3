@@ -97,11 +97,31 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route('services.store'), {
-            onSuccess: () => {
+            onSuccess: (page) => {
+                if (page.props.flash && page.props.flash.error) {
+                    Swal.fire({
+                        title: 'Gagal Booking!',
+                        text: page.props.flash.error,
+                        icon: 'error',
+                        confirmButtonColor: '#1c69d4',
+                        borderRadius: '0px'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Antrian Terbit!',
+                        text: 'Nomor antrian terjadwal Anda telah berhasil dibuat. Cek WhatsApp Anda.',
+                        icon: 'success',
+                        confirmButtonColor: '#1c69d4',
+                        borderRadius: '0px'
+                    });
+                }
+            },
+            onError: (errors) => {
+                const errorMessage = Object.values(errors).join('\n');
                 Swal.fire({
-                    title: 'Antrian Terbit!',
-                    text: 'Nomor antrian terjadwal Anda telah berhasil dibuat. Cek WhatsApp Anda.',
-                    icon: 'success',
+                    title: 'Data Tidak Valid',
+                    text: errorMessage || 'Mohon periksa kembali data isian Anda.',
+                    icon: 'error',
                     confirmButtonColor: '#1c69d4',
                     borderRadius: '0px'
                 });

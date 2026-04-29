@@ -141,6 +141,26 @@ export default function History({ appointments }) {
                                                                 <Bike size={22} />
                                                             </div>
                                                         </div>
+
+                                                        {/* Payment Info */}
+                                                        {item.status === 'completed' && (
+                                                            <div className="pt-4 border-t border-gray-100 flex items-center justify-between">
+                                                                <div>
+                                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">TOTAL TAGIHAN</p>
+                                                                    <p className="text-sm font-black text-black">Rp {Number(item.total_cost || 0).toLocaleString('id-ID')}</p>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">PEMBAYARAN</p>
+                                                                    <p className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded inline-block ${
+                                                                        item.payment_status === 'paid' ? 'bg-green-100 text-green-700' :
+                                                                        item.payment_status === 'waived' ? 'bg-blue-100 text-blue-700' :
+                                                                        'bg-red-100 text-red-700'
+                                                                    }`}>
+                                                                        {item.payment_status === 'paid' ? 'LUNAS' : item.payment_status === 'waived' ? 'DIGRATISKAN' : 'BELUM LUNAS'}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </div>
 
                                                     {/* Footer / CTA */}

@@ -248,10 +248,8 @@ Route::middleware(["auth"])->group(function () {
         ServiceAppointmentController::class,
         "show",
     ])->name("services.show");
-    Route::post("/services/{appointment}/cancel", [
-        ServiceAppointmentController::class,
-        "cancelUser",
-    ])->name("services.cancel");
+    Route::post('/services/{appointment}/cancel', [ServiceAppointmentController::class, 'cancelUser'])->name('services.cancel');
+    Route::post('/services/{appointment}/pay', [ServiceAppointmentController::class, 'getSnapToken'])->name('services.pay');
 });
 // API for checking available slots (Can be accessed by guests too)
 Route::get("/api/services/available-slots", [

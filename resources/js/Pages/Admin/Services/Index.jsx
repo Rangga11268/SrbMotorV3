@@ -22,15 +22,33 @@ export default function ServicesIndex({ appointments }) {
     
     const { data, setData, put, processing, reset } = useForm({
         status: "",
+        total_cost: "",
+        payment_status: "unpaid",
+        payment_method: "",
         admin_notes: "",
         service_notes: ""
     });
+
+    // Format number to Rupiah display string (e.g. 150000 -> "150.000")
+    const formatRupiah = (value) => {
+        if (!value && value !== 0) return "";
+        const num = parseFloat(String(value).replace(/\./g, "").replace(/,/g, "")) || 0;
+        return new Intl.NumberFormat('id-ID').format(num);
+    };
+
+    // Parse formatted display string back to raw number string
+    const parseRupiah = (display) => {
+        return display.replace(/\./g, "").replace(/[^0-9]/g, "");
+    };
 
     const openModal = (app) => {
         setDropdownOpen(null);
         setSelectedService(app);
         setData({
             status: app.status,
+            total_cost: app.total_cost ? String(Math.round(Number(app.total_cost))) : "",
+            payment_status: app.payment_status || "unpaid",
+            payment_method: app.payment_method || "",
             admin_notes: app.admin_notes || "",
             service_notes: app.service_notes || ""
         });
@@ -283,6 +301,54 @@ export default function ServicesIndex({ appointments }) {
                                             <option value="completed">Selesai (Completed)</option>
                                             <option value="cancelled">Dibatalkan (Cancelled / Ditolak)</option>
                                         </select>
+                                    </div>
+
+                                    {/* Payment Information */}
+                                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4">
+                                        <h4 className="text-xs font-bold text-gray-700 uppercase tracking-widest border-b border-gray-200 pb-2 mb-2">Informasi Pembayaran</h4>
+                                        
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Total Tagihan</label>
+                                                <div className="flex items-center bg-white border border-gray-300 rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
+                                                    <span className="flex-shrink-0 bg-gray-100 border-r border-gray-300 px-3 py-2.5 text-sm font-black text-gray-500 select-none">
+                                                        Rp
+                                                    </span>
+                                                    <input 
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        placeholder="0"
+                                                        className="flex-1 bg-transparent text-gray-900 text-sm p-2.5 outline-none font-semibold"
+                                                        value={formatRupiah(data.total_cost)}
+                                                        onChange={e => setData('total_cost', parseRupiah(e.target.value))}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Status Pembayaran</label>
+                                                <select 
+                                                    value={data.payment_status} 
+                                                    onChange={e => setData('payment_status', e.target.value)}
+                                                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm"
+                                                >
+                                                    <option value="unpaid">Belum Lunas (Unpaid)</option>
+                                                    <option value="pending">Menunggu (Pending)</option>
+                                                    <option value="paid">Lunas (Paid)</option>
+                                                    <option value="waived">Digratiskan / Garansi (Waived)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Metode Bayar / Keterangan</label>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Contoh: Cash, QRIS, Midtrans, atau Kupon KPB-1"
+                                                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm"
+                                                value={data.payment_method} 
+                                                onChange={e => setData('payment_method', e.target.value)}
+                                            />
+                                        </div>
                                     </div>
 
                                     {/* Notes to User */}

@@ -46,5 +46,16 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
             ]
         );
+
+        // Create owner user
+        User::firstOrCreate(
+            ['email' => 'owner@srbmotors.com'],
+            [
+                'name' => 'Owner SRB Motor',
+                'password' => Hash::make('password'),
+                'role' => 'owner',
+                'email_verified_at' => Carbon::now(),
+            ]
+        );
     }
 }

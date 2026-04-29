@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class ServiceAppointmentController extends Controller
 {
@@ -167,6 +170,9 @@ class ServiceAppointmentController extends Controller
 
         $validated = $request->validate([
             'status' => 'required|in:confirmed,in_progress,completed,cancelled',
+            'total_cost' => 'nullable|numeric|min:0',
+            'payment_status' => 'nullable|in:unpaid,pending,paid,waived',
+            'payment_method' => 'nullable|string|max:50',
             'admin_notes' => 'nullable|string|max:2000',
             'service_notes' => 'nullable|string|max:2000',
         ]);
@@ -195,6 +201,21 @@ class ServiceAppointmentController extends Controller
             
             if ($service->service_notes) {
                 $msg .= "Catatan Layanan: *{$service->service_notes}*\n";
+            }
+
+            if ($service->status === 'completed' && $service->total_cost > 0 && $service->payment_status !== 'paid' && $service->payment_status !== 'waived') {
+                $msg .= "Total Tagihan: *Rp " . number_format($service->total_cost, 0, ',', '.') . "*\n";
+                $msg .= "Status Pembayaran: *Belum Lunas*\n";
+                $msg .= "Silakan lakukan pelunasan di kasir bengkel.\n";
+            } elseif ($service->status === 'completed' && $service->payment_status === 'paid') {
+                $msg .= "Total Tagihan: *Rp " . number_format($service->total_cost, 0, ',', '.') . "*\n";
+                $msg .= "Status Pembayaran: *LUNAS*\n";
+                $msg .= "Terima kasih atas kepercayaan Anda.\n";
+            } elseif ($service->status === 'completed' && $service->payment_status === 'waived') {
+                $msg .= "Status Pembayaran: *DIGRATISKAN (Waived)*\n";
+                if ($service->payment_method) {
+                    $msg .= "Keterangan: {$service->payment_method}\n";
+                }
             }
 
             if ($service->admin_notes) {
@@ -321,7 +342,7 @@ class ServiceAppointmentController extends Controller
 
         // Must be at least H-1 or earlier (e.g. not same day cancellation depending on requirement).
         // Let's allow same day but before service_time, or simply allow if date >= today.
-        $serviceDateTime = Carbon::parse($appointment->service_date . ' ' . $appointment->service_time);
+        $serviceDateTime = Carbon::parse($appointment->service_date->format('Y-m-d') . ' ' . $appointment->service_time);
         if ($serviceDateTime->isPast()) {
             return back()->with('error', 'Waktu servis sudah terlewat, tidak dapat dibatalkan.');
         }
@@ -333,5 +354,61 @@ class ServiceAppointmentController extends Controller
         ]);
 
         return back()->with('success', 'Reservasi servis berhasil dibatalkan.');
+    }
+
+    /**
+     * Get Midtrans Snap Token for online payment
+     */
+    public function getSnapToken(ServiceAppointment $appointment)
+    {
+        // Security check
+        if ($appointment->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Akses ditolak.'], 403);
+        }
+
+        // Must be completed and unpaid
+        if ($appointment->status !== 'completed' || $appointment->payment_status !== 'unpaid' || !$appointment->total_cost) {
+            return response()->json(['error' => 'Transaksi tidak valid untuk pembayaran.'], 400);
+        }
+
+        // Return existing token if we already have it
+        if ($appointment->snap_token) {
+            return response()->json(['token' => $appointment->snap_token]);
+        }
+
+        // Configure Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.is_3ds');
+
+        $transactionDetails = [
+            'order_id' => 'TRX-SRB-' . $appointment->id . '-' . time(),
+            'gross_amount' => (int) $appointment->total_cost,
+        ];
+
+        $customerDetails = [
+            'first_name'    => $appointment->customer_name,
+            'phone'         => $appointment->customer_phone,
+            'email'         => Auth::user()->email,
+        ];
+
+        $params = [
+            'transaction_details' => $transactionDetails,
+            'customer_details' => $customerDetails,
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            
+            // Save token to DB
+            $appointment->update([
+                'snap_token' => $snapToken
+            ]);
+
+            return response()->json(['token' => $snapToken]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

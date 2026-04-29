@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     X, Calendar, MapPin, Hash, CheckCircle2, AlertCircle, FileText, ChevronLeft, 
     Phone, Wrench, Settings, Activity, ArrowRight, Wallet, Receipt, 
-    ShieldCheck, Printer, Clock, ArrowLeft 
+    ShieldCheck, Printer, Clock, ArrowLeft, CreditCard 
 } from 'lucide-react';
+import axios from 'axios';
 import { Link, usePage, router } from '@inertiajs/react';
 import PublicLayout from "@/Layouts/PublicLayout";
 import Swal from 'sweetalert2';
@@ -24,6 +25,22 @@ export default function Show({ appointment }) {
             default: return { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700', label: 'STATUS', icon: AlertCircle };
         }
     };
+
+    // Load Midtrans Snap Script
+    useEffect(() => {
+        const scriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
+        const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY || 'SB-Mid-client-XXXXX';
+        
+        let scriptTag = document.createElement('script');
+        scriptTag.src = scriptUrl;
+        scriptTag.setAttribute('data-client-key', clientKey);
+        
+        document.body.appendChild(scriptTag);
+        
+        return () => {
+            document.body.removeChild(scriptTag);
+        }
+    }, []);
 
     const handleCancel = () => {
         Swal.fire({
@@ -64,6 +81,37 @@ export default function Show({ appointment }) {
                 });
             }
         });
+    };
+
+    const handlePayment = async () => {
+        try {
+            const response = await axios.post(route('services.pay', appointment.id));
+            const data = response.data;
+            
+            if (data.token) {
+                window.snap.pay(data.token, {
+                    onSuccess: function(result){
+                        Swal.fire('Berhasil', 'Pembayaran Anda berhasil diproses.', 'success')
+                            .then(() => window.location.reload());
+                    },
+                    onPending: function(result){
+                        Swal.fire('Menunggu Pembayaran', 'Silakan selesaikan pembayaran Anda.', 'info')
+                            .then(() => window.location.reload());
+                    },
+                    onError: function(result){
+                        Swal.fire('Gagal', 'Terjadi kesalahan pada pembayaran.', 'error');
+                    },
+                    onClose: function(){
+                        // closed pop up without finishing
+                    }
+                });
+            } else {
+                Swal.fire('Error', data.error || 'Gagal memproses pembayaran.', 'error');
+            }
+        } catch (err) {
+            const errMsg = err.response?.data?.error || 'Gagal menghubungi server pembayaran.';
+            Swal.fire('Error', errMsg, 'error');
+        }
     };
 
     const statusStyle = getStatusStyle(appointment.status);
@@ -212,6 +260,59 @@ export default function Show({ appointment }) {
                                         "{appointment.complaint_notes || 'Tidak ada catatan keluhan tambahan.'}"
                                     </div>
                                 </div>
+
+                                {/* PAYMENT/BILLING SECTION */}
+                                {appointment.status === 'completed' && (
+                                    <div className="pt-10 border-t border-gray-100">
+                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-1.5">
+                                            <Wallet size={12} className="text-[#1c69d4]" /> RINCIAN TAGIHAN & PEMBAYARAN
+                                        </p>
+                                        <div className="bg-white p-6 md:p-8 border border-gray-200">
+                                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                                <div>
+                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">TOTAL BIAYA SERVIS</p>
+                                                    <p className="text-3xl font-black text-black">Rp {Number(appointment.total_cost || 0).toLocaleString('id-ID')}</p>
+                                                </div>
+                                                
+                                                <div className="text-left md:text-right">
+                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">STATUS PEMBAYARAN</p>
+                                                    <div className={`inline-flex items-center gap-2 px-4 py-2 border font-black text-[10px] uppercase tracking-widest ${
+                                                        appointment.payment_status === 'paid' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                        appointment.payment_status === 'waived' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                                        'bg-red-50 text-red-700 border-red-200'
+                                                    }`}>
+                                                        {appointment.payment_status === 'paid' ? (
+                                                            <><CheckCircle2 size={14} /> LUNAS</>
+                                                        ) : appointment.payment_status === 'waived' ? (
+                                                            <><ShieldCheck size={14} /> DIGRATISKAN</>
+                                                        ) : (
+                                                            <><AlertCircle size={14} /> BELUM LUNAS</>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {appointment.payment_method && (
+                                                <div className="mt-6 pt-6 border-t border-dashed border-gray-200">
+                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">METODE BAYAR / KETERANGAN</p>
+                                                    <p className="text-sm font-black text-black uppercase tracking-wider">{appointment.payment_method}</p>
+                                                </div>
+                                            )}
+
+                                            {/* PAY NOW BUTTON */}
+                                            {appointment.payment_status === 'unpaid' && Number(appointment.total_cost || 0) > 0 && (
+                                                <div className="mt-8">
+                                                    <button 
+                                                        onClick={handlePayment}
+                                                        className="w-full bg-black text-white p-4 font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-[#1c69d4] transition-colors shadow-lg"
+                                                    >
+                                                        <CreditCard size={18} /> BAYAR ONLINE SEKARANG
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

@@ -12,10 +12,7 @@ class Phase6Seeder extends Seeder
      */
     public function run(): void
     {
-        // 2. Create Leasing Providers
-        $baf = \App\Models\LeasingProvider::updateOrCreate(['name' => 'BAF (Bussan Auto Finance)']);
-        $adira = \App\Models\LeasingProvider::updateOrCreate(['name' => 'Adira Finance']);
-
+        // Leasing providers have been removed in V2 architecture
         // 3. Create Motors
         $motors = [
             [
