@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 export default function Edit({ motor, promotions, brands, branches }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, transform, processing, errors } = useForm({
         _method: "PUT",
         name: motor.name || "",
         brand: motor.brand || "Yamaha",
@@ -96,16 +96,24 @@ export default function Edit({ motor, promotions, brands, branches }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
         const finalColors = [...data.colors];
         if (colorInput.trim() !== '' && !finalColors.includes(colorInput.trim())) {
             finalColors.push(colorInput.trim());
         }
-        router.post(route("admin.motors.update", motor.id), {
-            ...data,
-            colors: finalColors,
-        }, {
+
+        const submitData = { ...data, colors: finalColors, _method: "PUT" };
+        if (!submitData.image) {
+            delete submitData.image;
+        }
+
+        router.post(route("admin.motors.update", motor.id), submitData, {
             forceFormData: true,
             onSuccess: () => toast.success("Data motor berhasil diperbarui"),
+            onError: (err) => {
+                console.error("Update Validation Error:", err);
+                toast.error("Gagal memperbarui data. Periksa kembali form Anda.");
+            },
         });
     };
 

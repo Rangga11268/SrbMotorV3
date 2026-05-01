@@ -23,14 +23,30 @@ class ImageService
         $filename = Str::random(40) . '.webp';
         $path = $directory . '/' . $filename;
 
-        // Read and process the image
-        $image = Image::read($file);
-        
-        // Encode as WebP with 80% quality
-        $encoded = $image->toWebp(80);
+        // Read and process the image (Robust version checking)
+        $manager = Image::getFacadeRoot();
+        \Log::info('Image Manager Diagnostic:', [
+            'class' => get_class($manager),
+            'methods' => get_class_methods($manager),
+        ]);
 
-        // Store the file
-        Storage::disk($disk)->put($path, (string) $encoded);
+        try {
+            // Attempt v3 style (read & toWebp)
+            $image = Image::read($file);
+            $encoded = $image->toWebp(80);
+            Storage::disk($disk)->put($path, (string) $encoded);
+        } catch (\Throwable $e3) {
+            try {
+                // Attempt v2 style (make & encode)
+                $image = Image::make($file);
+                $encoded = $image->encode('webp', 80);
+                Storage::disk($disk)->put($path, (string) $encoded);
+            } catch (\Throwable $e2) {
+                // Final fallback: Store original file without conversion
+                \Log::warning('Image processing failed, storing original:', ['error' => $e2->getMessage()]);
+                return $file->store($directory, $disk);
+            }
+        }
 
         return $path;
     }

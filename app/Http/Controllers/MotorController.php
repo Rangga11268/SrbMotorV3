@@ -78,7 +78,7 @@ class MotorController extends Controller
             'type' => 'nullable|string|max:255',
             'tersedia' => 'required|boolean',
             'min_dp_amount' => 'required|numeric|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'description' => 'nullable|string',
             'branches' => 'required|array|min:1',
             'branches.*' => 'string|max:255',
@@ -133,72 +133,112 @@ class MotorController extends Controller
 
     public function update(Request $request, Motor $motor): RedirectResponse
     {
-        $request->validate([
+        // LOG SEMUA REQUEST UNTUK DEBUGGING
+        \Log::info('Update Motor Request Reached Controller:', [
+            'id' => $motor->id,
+            'method' => $request->method(),
+            'all_data' => $request->all(),
+            'has_file' => $request->hasFile('image')
+        ]);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            \Log::info('Uploaded File Info:', [
+                'name' => $file->getClientOriginalName(),
+                'mime' => $file->getClientMimeType(),
+                'size' => $file->getSize(),
+                'is_valid' => $file->isValid(),
+            ]);
+        }
+
+        $validator = \Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'model' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
             'year' => 'nullable|integer|min:1900|max:2100',
             'type' => 'nullable|string|max:255',
-            'tersedia' => 'required|boolean',
+            'tersedia' => 'required',
             'min_dp_amount' => 'required|numeric|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'description' => 'nullable|string',
             'branch' => 'nullable|string|max:255',
-            'sync_all_branches' => 'nullable|boolean',
+            'sync_all_branches' => 'nullable',
 
-            'colors' => 'nullable|array',
+            'colors' => 'nullable',
             'colors.*' => 'string|max:100',
+        ], [
+            'image.mimes' => 'DEBUG: File must be jpeg, png, jpg, gif, svg, or webp. You uploaded: ' . ($request->hasFile('image') ? $request->file('image')->getClientMimeType() : 'no file'),
         ]);
+        
+        // Log explicitly for confirmation
+        \Log::info('Validator initialized with WebP support');
+
+        if ($validator->fails()) {
+            \Log::error('Update Motor Validation Failed:', $validator->errors()->toArray());
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $colors = is_string($request->colors) ? json_decode($request->colors, true) : ($request->colors ?? []);
 
-        $data = [
-            'name' => $request->name,
-            'brand' => $request->brand,
-            'model' => $request->model,
-            'price' => $request->price,
-            'year' => $request->year,
-            'type' => $request->type,
-            'tersedia' => $request->boolean('tersedia'),
-            'min_dp_amount' => $request->min_dp_amount,
-            'description' => $request->description,
-            'branch' => $request->branch,
-            'colors' => $colors,
-        ];
-
-        if ($request->hasFile('image')) {
-            $data['image_path'] = ImageService::uploadAndConvert($request->file('image'), 'motors');
-        }
-
-        $motor->update($data);
-
-        // Bulk synchronization logic
-        if ($request->boolean('sync_all_branches')) {
-            $syncData = [
-                'price' => $data['price'],
-                'min_dp_amount' => $data['min_dp_amount'],
-                'description' => $data['description'],
-                'colors' => $data['colors'],
-                'brand' => $data['brand'],
-                'model' => $data['model'],
-                'year' => $data['year'],
-                'type' => $data['type'],
+        try {
+            $data = [
+                'name' => $request->name,
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'price' => $request->price,
+                'year' => $request->year,
+                'type' => $request->type,
+                'tersedia' => $request->boolean('tersedia'),
+                'min_dp_amount' => $request->min_dp_amount,
+                'description' => $request->description,
+                'branch' => $request->branch,
+                'colors' => $colors,
             ];
 
-            if (isset($data['image_path'])) {
-                $syncData['image_path'] = $data['image_path'];
+            if ($request->hasFile('image')) {
+                $data['image_path'] = ImageService::uploadAndConvert($request->file('image'), 'motors');
             }
 
-            Motor::where('name', $motor->name)
-                ->where('brand', $motor->brand)
-                ->where('id', '!=', $motor->id)
-                ->update($syncData);
+            // Perform the update
+            $motor->update($data);
+
+            // Bulk synchronization logic
+            if ($request->boolean('sync_all_branches')) {
+                $syncData = [
+                    'price' => $data['price'],
+                    'min_dp_amount' => $data['min_dp_amount'],
+                    'description' => $data['description'],
+                    'colors' => is_array($data['colors']) ? json_encode($data['colors']) : $data['colors'],
+                    'brand' => $data['brand'],
+                    'model' => $data['model'],
+                    'year' => $data['year'],
+                    'type' => $data['type'],
+                ];
+
+                if (isset($data['image_path'])) {
+                    $syncData['image_path'] = $data['image_path'];
+                }
+
+                Motor::where('name', $motor->name)
+                    ->where('brand', $motor->brand)
+                    ->where('id', '!=', $motor->id)
+                    ->update($syncData);
+            }
+
+            $this->motorRepository->clearCache();
+            
+            \Log::info('Motor updated successfully:', ['id' => $motor->id]);
+            return redirect()->route('admin.motors.index')->with('success', 'Data motor berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            \Log::error('Motor Update Exception:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage())->withInput();
         }
-
-        $this->motorRepository->clearCache();
-
-        return redirect()->route('admin.motors.index')->with('success', 'Data motor berhasil diperbarui.');
     }
 
 

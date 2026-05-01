@@ -154,105 +154,138 @@ export default function Index({
                         <div className="grid lg:grid-cols-4 gap-12">
                             {/* SIDEBAR FILTERS (Desktop) */}
                             <aside className="hidden lg:block space-y-8">
-                                <div className="bg-white p-8 rounded-none border border-gray-200 sticky top-28">
-                                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
-                                        <h3 className="font-black text-black uppercase tracking-tighter text-2xl">
-                                            FILTER
-                                        </h3>
-                                        <button
-                                            onClick={resetFilters}
-                                            className="text-[10px] font-bold text-[#1c69d4] hover:text-black uppercase tracking-widest transition-colors"
-                                        >
-                                            RESET DATA
-                                        </button>
+                                <div className="bg-white p-8 rounded-none border border-gray-200 sticky top-28 shadow-[10px_10px_0px_rgba(0,0,0,0.05)]">
+                                    <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-black">
+                                        <div className="flex items-center gap-2">
+                                            <Filter className="w-5 h-5 text-[#1c69d4]" />
+                                            <h3 className="font-black text-black uppercase tracking-tighter text-2xl">
+                                                FILTER
+                                            </h3>
+                                        </div>
+                                        {Object.values(values).filter(Boolean).length > 0 && (
+                                            <button
+                                                onClick={resetFilters}
+                                                className="group flex items-center gap-1 text-[9px] font-black text-red-500 hover:text-black uppercase tracking-[0.2em] transition-colors"
+                                            >
+                                                <RotateCcw className="w-3 h-3 group-hover:rotate-[-45deg] transition-transform" />
+                                                RESET
+                                            </button>
+                                        )}
                                     </div>
 
-                                    <div className="space-y-6">
+                                    <div className="space-y-8">
                                         {/* Search */}
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                                CARI MODEL
-                                            </label>
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                                    PENCARIAN
+                                                </label>
+                                                {values.search && (
+                                                    <button onClick={() => setValues({...values, search: ""})} className="text-[9px] font-bold text-gray-400 hover:text-red-500">CLEAR</button>
+                                                )}
+                                            </div>
                                             <div className="relative group">
                                                 <input
                                                     type="text"
                                                     name="search"
                                                     value={values.search}
                                                     onChange={handleChange}
-                                                    placeholder="NAMA UNIT..."
-                                                    className="w-full bg-transparent border border-gray-300 rounded-none pl-4 pr-10 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-black text-black uppercase placeholder-gray-400"
+                                                    placeholder="CARI MODEL..."
+                                                    className="w-full bg-gray-50 border-2 border-gray-100 rounded-none pl-4 pr-10 py-3.5 focus:border-black focus:bg-white focus:ring-0 outline-none transition-all text-sm font-black text-black uppercase placeholder-gray-300"
                                                 />
-                                                <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-[#1c69d4] transition-colors" />
+                                                <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 w-4 h-4 group-focus-within:text-black transition-colors" />
                                             </div>
                                         </div>
 
-                                        {/* Brand */}
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                                MEREK KENDARAAN
-                                            </label>
-                                            <select
-                                                name="brand"
-                                                value={values.brand}
-                                                onChange={handleChange}
-                                                className="w-full bg-transparent border border-gray-300 rounded-none px-4 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-bold uppercase text-black"
-                                            >
-                                                <option value="">
-                                                    SEMUA MEREK
-                                                </option>
+                                        {/* Brand Chips */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                                    MEREK
+                                                </label>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <button
+                                                    onClick={() => setValues({...values, brand: ""})}
+                                                    className={`px-3 py-2.5 text-[10px] font-black border-2 transition-all text-center tracking-widest ${values.brand === "" ? 'bg-black text-white border-black' : 'bg-white text-gray-400 border-gray-100 hover:border-black hover:text-black'}`}
+                                                >
+                                                    SEMUA
+                                                </button>
                                                 {brands.map((b) => (
-                                                    <option key={b} value={b}>
-                                                        {b}
-                                                    </option>
+                                                    <button
+                                                        key={b}
+                                                        onClick={() => setValues({...values, brand: b})}
+                                                        className={`px-3 py-2.5 text-[10px] font-black border-2 transition-all text-center tracking-widest truncate ${values.brand === b ? 'bg-[#1c69d4] text-white border-[#1c69d4]' : 'bg-white text-gray-400 border-gray-100 hover:border-black hover:text-black'}`}
+                                                    >
+                                                        {b.toUpperCase()}
+                                                    </button>
                                                 ))}
-                                            </select>
+                                            </div>
                                         </div>
 
-                                        {/* Type */}
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                                TIPE KENDARAAN
-                                            </label>
-                                            <select
-                                                name="type"
-                                                value={values.type}
-                                                onChange={handleChange}
-                                                className="w-full bg-transparent border border-gray-300 rounded-none px-4 py-3 focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors text-sm font-bold uppercase text-black"
-                                            >
-                                                <option value="">
-                                                    SEMUA TIPE
-                                                </option>
+                                        {/* Type Chips */}
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                                    KATEGORI
+                                                </label>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                <button
+                                                    onClick={() => setValues({...values, type: ""})}
+                                                    className={`px-4 py-2 text-[9px] font-black border-2 transition-all tracking-widest rounded-full ${values.type === "" ? 'bg-black text-white border-black' : 'bg-white text-gray-400 border-gray-100 hover:border-black hover:text-black'}`}
+                                                >
+                                                    SEMUA
+                                                </button>
                                                 {types.map((t) => (
-                                                    <option key={t} value={t}>
-                                                        {t}
-                                                    </option>
+                                                    <button
+                                                        key={t}
+                                                        onClick={() => setValues({...values, type: t})}
+                                                        className={`px-4 py-2 text-[9px] font-black border-2 transition-all tracking-widest rounded-full ${values.type === t ? 'bg-[#1c69d4] text-white border-[#1c69d4]' : 'bg-white text-gray-400 border-gray-100 hover:border-black hover:text-black'}`}
+                                                    >
+                                                        {t.toUpperCase()}
+                                                    </button>
                                                 ))}
-                                            </select>
+                                            </div>
                                         </div>
 
                                         {/* Price Range */}
-                                        <div className="space-y-3">
-                                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                                RENTANG HARGA (IDR)
+                                        <div className="space-y-4 pt-4 border-t border-gray-100">
+                                            <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                                RENTANG HARGA
                                             </label>
-                                            <div className="grid grid-cols-2 gap-px border border-gray-300 bg-gray-300">
-                                                <input
-                                                    type="number"
-                                                    name="min_price"
-                                                    value={values.min_price}
-                                                    onChange={handleChange}
-                                                    placeholder="MINIMAL"
-                                                    className="w-full bg-white border-none rounded-none px-4 py-3 focus:ring-inset focus:ring-2 focus:ring-[#1c69d4] outline-none transition-colors text-xs font-bold uppercase text-black"
-                                                />
-                                                <input
-                                                    type="number"
-                                                    name="max_price"
-                                                    value={values.max_price}
-                                                    onChange={handleChange}
-                                                    placeholder="MAKSIMAL"
-                                                    className="w-full bg-white border-none rounded-none px-4 py-3 focus:ring-inset focus:ring-2 focus:ring-[#1c69d4] outline-none transition-colors text-xs font-bold uppercase text-black"
-                                                />
+                                            <div className="space-y-4">
+                                                <div className="relative group">
+                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-gray-300 group-focus-within:text-[#1c69d4]">RP</span>
+                                                    <input
+                                                        type="number"
+                                                        name="min_price"
+                                                        value={values.min_price}
+                                                        onChange={handleChange}
+                                                        placeholder="MINIMAL"
+                                                        className="w-full bg-gray-50 border-2 border-gray-100 rounded-none pl-10 pr-4 py-3 focus:border-[#1c69d4] focus:bg-white focus:ring-0 outline-none transition-all text-xs font-black text-black uppercase placeholder-gray-300"
+                                                    />
+                                                </div>
+                                                <div className="relative group">
+                                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-gray-300 group-focus-within:text-[#1c69d4]">RP</span>
+                                                    <input
+                                                        type="number"
+                                                        name="max_price"
+                                                        value={values.max_price}
+                                                        onChange={handleChange}
+                                                        placeholder="MAKSIMAL"
+                                                        className="w-full bg-gray-50 border-2 border-gray-100 rounded-none pl-10 pr-4 py-3 focus:border-[#1c69d4] focus:bg-white focus:ring-0 outline-none transition-all text-xs font-black text-black uppercase placeholder-gray-300"
+                                                    />
+                                                </div>
                                             </div>
+                                            {(values.min_price || values.max_price) && (
+                                                <button 
+                                                    onClick={() => setValues({...values, min_price: "", max_price: ""})}
+                                                    className="w-full py-2 text-[9px] font-bold text-gray-400 hover:text-red-500 uppercase tracking-widest border border-dashed border-gray-200 hover:border-red-200 transition-all"
+                                                >
+                                                    RESET HARGA
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -286,6 +319,37 @@ export default function Index({
 
                             {/* GRID PRODUCT */}
                             <div className="lg:col-span-3">
+                                {/* RESULTS HEADER */}
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-1.5 h-8 bg-black"></div>
+                                        <div>
+                                            <h2 className="text-2xl font-black text-black uppercase tracking-tighter leading-none">
+                                                HASIL PENCARIAN
+                                            </h2>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                                MENAMPILKAN {motors.total} UNIT TERBAIK
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    {Object.values(values).filter(Boolean).length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {Object.entries(values).map(([key, value]) => {
+                                                if (!value || key === 'min_price' || key === 'max_price') return null;
+                                                return (
+                                                    <div key={key} className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 text-[9px] font-black uppercase tracking-widest text-gray-600 shadow-[2px_2px_0px_rgba(0,0,0,0.05)]">
+                                                        <span className="opacity-50">{key}:</span> {value}
+                                                        <button onClick={() => setValues({...values, [key]: ""})} className="hover:text-red-500 transition-colors ml-1 border-l border-gray-200 pl-1">
+                                                            <X size={10} />
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+
                                 <AnimatePresence mode="wait">
                                     {isLoading ? (
                                         <motion.div
@@ -507,68 +571,105 @@ export default function Index({
                                     </button>
                                 </div>
 
-                                <div className="space-y-8 flex-grow overflow-y-auto">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                            CARI
+                                <div className="space-y-8 flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                            PENCARIAN
                                         </label>
-                                        <input
-                                            type="text"
-                                            name="search"
-                                            value={values.search}
-                                            onChange={handleChange}
-                                            className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
-                                            placeholder="NAMA UNIT..."
-                                        />
+                                        <div className="relative group">
+                                            <input
+                                                type="text"
+                                                name="search"
+                                                value={values.search}
+                                                onChange={handleChange}
+                                                className="w-full bg-gray-50 border-2 border-gray-100 rounded-none px-4 py-4 outline-none text-black focus:border-black font-black uppercase text-[12px] transition-all"
+                                                placeholder="NAMA UNIT..."
+                                            />
+                                            <Search className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 w-4 h-4" />
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
                                             MEREK
                                         </label>
-                                        <select
-                                            name="brand"
-                                            value={values.brand}
-                                            onChange={handleChange}
-                                            className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
-                                        >
-                                            <option value="">SEMUA</option>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button
+                                                onClick={() => setValues({...values, brand: ""})}
+                                                className={`px-3 py-3 text-[10px] font-black border-2 transition-all tracking-widest ${values.brand === "" ? 'bg-black text-white border-black' : 'bg-white text-gray-400 border-gray-100'}`}
+                                            >
+                                                SEMUA
+                                            </button>
                                             {brands.map((b) => (
-                                                <option key={b} value={b}>
-                                                    {b}
-                                                </option>
+                                                <button
+                                                    key={b}
+                                                    onClick={() => setValues({...values, brand: b})}
+                                                    className={`px-3 py-3 text-[10px] font-black border-2 transition-all tracking-widest truncate ${values.brand === b ? 'bg-[#1c69d4] text-white border-[#1c69d4]' : 'bg-white text-gray-400 border-gray-100'}`}
+                                                >
+                                                    {b.toUpperCase()}
+                                                </button>
                                             ))}
-                                        </select>
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                                            TIPE
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                            KATEGORI
                                         </label>
-                                        <select
-                                            name="type"
-                                            value={values.type}
-                                            onChange={handleChange}
-                                            className="w-full bg-white border border-gray-300 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-bold uppercase text-[11px]"
-                                        >
-                                            <option value="">SEMUA</option>
+                                        <div className="flex flex-wrap gap-2">
+                                            <button
+                                                onClick={() => setValues({...values, type: ""})}
+                                                className={`px-4 py-2.5 text-[9px] font-black border-2 transition-all tracking-widest rounded-full ${values.type === "" ? 'bg-black text-white border-black' : 'bg-white text-gray-400 border-gray-100'}`}
+                                            >
+                                                SEMUA
+                                            </button>
                                             {types.map((t) => (
-                                                <option key={t} value={t}>
-                                                    {t}
-                                                </option>
+                                                <button
+                                                    key={t}
+                                                    onClick={() => setValues({...values, type: t})}
+                                                    className={`px-4 py-2.5 text-[9px] font-black border-2 transition-all tracking-widest rounded-full ${values.type === t ? 'bg-[#1c69d4] text-white border-[#1c69d4]' : 'bg-white text-gray-400 border-gray-100'}`}
+                                                >
+                                                    {t.toUpperCase()}
+                                                </button>
                                             ))}
-                                        </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-black uppercase tracking-[0.2em]">
+                                            RENTANG HARGA
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <input
+                                                type="number"
+                                                name="min_price"
+                                                value={values.min_price}
+                                                onChange={handleChange}
+                                                placeholder="MIN"
+                                                className="w-full bg-gray-50 border-2 border-gray-100 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-black text-[11px]"
+                                            />
+                                            <input
+                                                type="number"
+                                                name="max_price"
+                                                value={values.max_price}
+                                                onChange={handleChange}
+                                                placeholder="MAX"
+                                                className="w-full bg-gray-50 border-2 border-gray-100 rounded-none px-4 py-3 outline-none text-black focus:border-[#1c69d4] font-black text-[11px]"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="pt-6 grid grid-cols-2 gap-px bg-gray-300 border border-gray-300 mt-auto">
+                                <div className="pt-6 grid grid-cols-2 gap-px bg-gray-200 border-t border-gray-200 mt-auto -mx-8 -mb-8">
                                     <button
                                         onClick={resetFilters}
-                                        className="py-4 bg-white text-black font-bold text-[11px] uppercase tracking-widest hover:bg-gray-50"
+                                        className="py-5 bg-white text-black font-black text-[11px] uppercase tracking-[0.2em] hover:bg-gray-50 active:bg-gray-100 transition-colors"
                                     >
                                         RESET
                                     </button>
                                     <button
                                         onClick={() => setIsFiltersOpen(false)}
-                                        className="py-4 bg-black text-white font-bold text-[11px] uppercase tracking-widest hover:bg-gray-900"
+                                        className="py-5 bg-black text-white font-black text-[11px] uppercase tracking-[0.2em] hover:bg-gray-900 active:bg-black transition-colors"
                                     >
                                         TERAPKAN
                                     </button>
