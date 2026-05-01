@@ -85,6 +85,7 @@ Route::middleware("auth:sanctum")->group(function () {
 
     Route::get("/orders", [OrderController::class, "index"]);
     Route::post("/orders/cash", [OrderController::class, "storeCashOrder"]);
+    Route::post("/orders/credit", [OrderController::class, "storeCreditOrder"]);
     Route::get("/orders/{id}", [OrderController::class, "show"]);
     Route::get("/orders/{id}/get-invoice-url", [
         OrderController::class,
@@ -115,4 +116,12 @@ Route::middleware("auth:sanctum")->group(function () {
         App\Http\Controllers\Api\NotificationController::class,
         "markAllAsRead",
     ]);
+
+    // Service Booking
+    Route::get("/services", [App\Http\Controllers\Api\ServiceAppointmentController::class, "index"]);
+    Route::post("/services/book", [App\Http\Controllers\Api\ServiceAppointmentController::class, "store"]);
+    Route::get("/services/available-slots", [App\Http\Controllers\ServiceAppointmentController::class, "getAvailableTimeSlots"]);
+    Route::get("/services/unavailable-dates", [App\Http\Controllers\ServiceAppointmentController::class, "getUnavailableDates"]);
+    Route::get("/services/{id}", [App\Http\Controllers\Api\ServiceAppointmentController::class, "show"]);
+    Route::post("/services/{id}/cancel", [App\Http\Controllers\Api\ServiceAppointmentController::class, "cancel"]);
 });

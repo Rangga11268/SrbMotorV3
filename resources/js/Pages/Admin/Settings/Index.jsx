@@ -14,10 +14,34 @@ import {
 import {
     getFieldLabel,
     getFieldHelper,
+    settingsConfig,
 } from "@/Config/SettingsConfig";
 
 export default function SettingsIndex({ settings }) {
     const [activeTab, setActiveTab] = useState("general");
+
+    const getSettingsByCategory = (category) => {
+        const dbSettings = settings[category] || [];
+        const configFields = settingsConfig[category]?.fields || {};
+        
+        // Merge config keys with database settings
+        const merged = Object.keys(configFields).map(key => {
+            const dbSetting = dbSettings.find(s => s.key === key);
+            return dbSetting || {
+                key: key,
+                value: null,
+                type: configFields[key].type,
+                description: configFields[key].helper
+            };
+        });
+
+        // Add any DB settings not in config
+        dbSettings.forEach(s => {
+            if (!configFields[s.key]) merged.push(s);
+        });
+
+        return merged;
+    };
 
     const categories = {
         general: {
@@ -48,17 +72,6 @@ export default function SettingsIndex({ settings }) {
             color: "text-amber-500 bg-amber-50",
             activeColor: "bg-amber-600 text-white"
         },
-        service: {
-            label: "Layanan Servis",
-            icon: Wrench,
-            description: "Operasional bengkel khusus",
-            color: "text-cyan-500 bg-cyan-50",
-            activeColor: "bg-cyan-600 text-white"
-        },
-    };
-
-    const getSettingsByCategory = (category) => {
-        return settings[category] || [];
     };
 
     return (
@@ -145,30 +158,20 @@ export default function SettingsIndex({ settings }) {
                                                         );
                                                     }
                                                     
-                                                    if (setting.key === "business_hours" || setting.key === "service_business_hours") {
+                                                    if (setting.key === "business_hours") {
                                                         try {
-                                                            const hours = JSON.parse(setting.value);
+                                                            if (!setting.value) return <span className="text-xs text-gray-400 italic">Belum diatur</span>;
+                                                            const hours = typeof setting.value === 'string' ? JSON.parse(setting.value) : setting.value;
+                                                            if (!hours) return <span className="text-xs text-gray-400 italic">Belum diatur</span>;
                                                             return (
                                                                 <div className="text-xs text-gray-600 flex flex-col gap-1">
-                                                                    <div className="flex justify-between"><span className="font-semibold">Senin - Sabtu:</span> <span>{hours.monday}</span></div>
-                                                                    <div className="flex justify-between"><span className="font-semibold text-rose-500">Minggu:</span> <span>{hours.sunday}</span></div>
+                                                                    <div className="flex justify-between"><span className="font-semibold">Senin - Sabtu:</span> <span>{hours.monday || '-'}</span></div>
+                                                                    <div className="flex justify-between"><span className="font-semibold text-rose-500">Minggu:</span> <span>{hours.sunday || '-'}</span></div>
                                                                 </div>
                                                             );
                                                         } catch(e) { return <span className="text-xs text-red-500 font-medium">Format Error</span>; }
                                                     }
 
-                                                    if (setting.key === "service_branches") {
-                                                        try {
-                                                            const branches = JSON.parse(setting.value);
-                                                            return (
-                                                                <div className="text-xs text-gray-600 flex flex-wrap gap-1">
-                                                                    {branches.map((b, i) => (
-                                                                        <span key={i} className="px-2 py-1 bg-gray-100 rounded text-gray-700 font-medium border border-gray-200">{b}</span>
-                                                                    ))}
-                                                                </div>
-                                                            );
-                                                        } catch(e) { return <span className="text-xs text-red-500 font-medium">Format Error</span>; }
-                                                    }
 
                                                     // Default simple text
                                                     return (

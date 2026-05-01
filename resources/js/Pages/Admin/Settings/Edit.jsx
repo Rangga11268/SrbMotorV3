@@ -18,16 +18,39 @@ import {
 import {
     getSettingFieldConfig,
     getCategoryConfig,
+    settingsConfig,
 } from "@/Config/SettingsConfig";
 
 export default function SettingsEdit({ category, settings }) {
+    // Get all expected fields for this category from config
+    const categoryConfig = getCategoryConfig(category);
+    const configFields = categoryConfig?.fields || {};
+    
+    // Create initial data set by merging config with database settings
+    const initialSettings = Object.keys(configFields).map(key => {
+        const dbSetting = settings.find(s => s.key === key);
+        return {
+            key: key,
+            value: dbSetting ? dbSetting.value : "",
+            type: dbSetting ? dbSetting.type : configFields[key].type,
+            description: dbSetting ? dbSetting.description : configFields[key].helper,
+        };
+    });
+
+    // Add any database settings that might NOT be in config (legacy or custom)
+    settings.forEach(s => {
+        if (!configFields[s.key]) {
+            initialSettings.push({
+                key: s.key,
+                value: s.value,
+                type: s.type,
+                description: s.description
+            });
+        }
+    });
+
     const { data, setData, put, processing } = useForm({
-        settings: settings.map((setting) => ({
-            key: setting.key,
-            value: setting.value,
-            type: setting.type,
-            description: setting.description,
-        })),
+        settings: initialSettings,
     });
 
     const [filePreview, setFilePreview] = useState({});
@@ -140,8 +163,6 @@ export default function SettingsEdit({ category, settings }) {
         put(route("admin.settings.update", category));
     };
 
-    const categoryConfig = getCategoryConfig(category);
-
     const handleJsonArrayChange = (index, arrayIndex, value, action = 'edit') => {
         const updatedSettings = [...data.settings];
         try {
@@ -194,7 +215,7 @@ export default function SettingsEdit({ category, settings }) {
         );
 
         // 1. Business Hours
-        if (setting.key === "business_hours" || setting.key === "service_business_hours") {
+        if (setting.key === "business_hours") {
             let hours = {};
             try {
                 hours = typeof setting.value === "string" ? JSON.parse(setting.value || "{}") : setting.value || {};
@@ -221,64 +242,6 @@ export default function SettingsEdit({ category, settings }) {
         }
 
         // 2. Service Branches (Array)
-        if (setting.key === "service_branches") {
-            let branches = [];
-            try {
-                branches = typeof setting.value === "string" ? JSON.parse(setting.value || "[]") : setting.value;
-                if (!Array.isArray(branches)) branches = [];
-            } catch (e) { branches = []; }
-
-            return (
-                <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-4">
-                    <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
-                        <div className="flex items-start gap-3">
-                            <PenTool className="text-blue-500 shrink-0 mt-0.5" size={20} />
-                            <div>
-                                <h4 className="font-bold text-gray-800 text-sm">{titleLabel}</h4>
-                                <p className="text-xs text-gray-500 mt-0.5">{helperText}</p>
-                            </div>
-                        </div>
-                        <button 
-                            type="button" 
-                            onClick={() => handleJsonArrayChange(index, null, null, 'add')}
-                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-1.5 text-xs font-bold flex items-center gap-1.5 shadow-sm"
-                        >
-                            <Plus size={14} /> Cabang Baru
-                        </button>
-                    </div>
-                    <div className="p-6">
-                        <div className="space-y-3">
-                            {branches.map((branch, bIndex) => (
-                                <div key={bIndex} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center relative">
-                                    <div className="w-8 h-10shrink-0 flex items-center justify-center bg-gray-100 text-gray-500 rounded-lg text-xs font-bold border border-gray-200 h-10 w-10">
-                                        {bIndex + 1}
-                                    </div>
-                                    <input
-                                        type="text"
-                                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-10"
-                                        placeholder="Nama Cabang (Contoh: SSM BEKASI)"
-                                        value={branch}
-                                        onChange={(e) => handleJsonArrayChange(index, bIndex, e.target.value, 'edit')}
-                                    />
-                                    <button 
-                                        type="button"
-                                        onClick={() => handleJsonArrayChange(index, bIndex, null, 'delete')}
-                                        className="h-10 px-3 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-lg shrink-0 transition-colors"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            ))}
-                            {branches.length === 0 && (
-                                <div className="text-center py-6 text-gray-400 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
-                                    Belum ada cabang terdaftar. Klik "Cabang Baru".
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        }
 
         // 3. Color Picker
         if (setting.key.includes("color") && setting.type === "string") {

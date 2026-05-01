@@ -54,10 +54,16 @@ class ServiceAppointmentController extends Controller
      */
     public function create()
     {
-        $branches = Setting::get('service_branches', [
-            "SSM JATIASIH (BEKASI)",
-            "SSM MEKAR SARI (BEKASI)",
-        ]);
+        $branches = Setting::where('category', 'branches')
+            ->get()
+            ->map(function($setting) {
+                return json_decode($setting->value, true);
+            })
+            ->filter(function($branch) {
+                return ($branch['can_service'] ?? false) == true && ($branch['is_active'] ?? true) == true;
+            })
+            ->values()
+            ->toArray();
 
         // Robust check: if data is still a string (due to type mismatch in DB), try to decode it
         if (is_string($branches)) {
@@ -278,11 +284,16 @@ class ServiceAppointmentController extends Controller
             return response()->json(['error' => 'Missing date or branch'], 400);
         }
 
-        // Get quota setting
-        $quotaPerSlot = (int) (Setting::where('key', 'service_slot_quota')->get()->first()->value ?? 5);
+        // Get branch-specific quota and hours
+        $branchSetting = Setting::where('category', 'branches')
+            ->where('key', 'LIKE', '%' . strtoupper(str_replace(' ', '_', $branch)) . '%')
+            ->first();
+
+        $branchData = $branchSetting ? json_decode($branchSetting->value, true) : null;
         
-        // Parse business hours specifically for SERVICE
-        $businessHoursRaw = Setting::where('key', 'service_business_hours')->get()->first()?->value;
+        $quotaPerSlot = (int) ($branchData['service_slot_quota'] ?? Setting::where('key', 'service_slot_quota')->first()?->value ?? 5);
+        
+        $businessHoursRaw = $branchData['operational_hours'] ?? Setting::where('key', 'service_business_hours')->first()?->value;
         $standardSlots = ['08:00', '10:00', '12:00', '14:00']; // default fallback
 
         if ($businessHoursRaw) {
@@ -290,17 +301,21 @@ class ServiceAppointmentController extends Controller
             $dayName = strtolower(Carbon::parse($date)->englishDayOfWeek);
             
             if (isset($bh[$dayName]) && str_contains($bh[$dayName], '-')) {
-                list($start, $end) = array_map('trim', explode('-', $bh[$dayName]));
-                $startHour = (int) substr($start, 0, 2);
-                $endHour = (int) substr($end, 0, 2);
-                
-                $dynamicSlots = [];
-                // Generate a slot every 2 hours
-                for ($h = $startHour; $h <= $endHour - 1; $h += 2) {
-                    $dynamicSlots[] = sprintf('%02d:00', $h);
-                }
-                if (count($dynamicSlots) > 0) {
-                    $standardSlots = $dynamicSlots;
+                // Remove spaces and split
+                $cleanHours = str_replace(' ', '', $bh[$dayName]);
+                if (str_contains($cleanHours, '-')) {
+                    list($start, $end) = explode('-', $cleanHours);
+                    $startHour = (int) substr($start, 0, 2);
+                    $endHour = (int) substr($end, 0, 2);
+                    
+                    $dynamicSlots = [];
+                    // Generate a slot every 2 hours
+                    for ($h = $startHour; $h <= $endHour - 1; $h += 2) {
+                        $dynamicSlots[] = sprintf('%02d:00', $h);
+                    }
+                    if (count($dynamicSlots) > 0) {
+                        $standardSlots = $dynamicSlots;
+                    }
                 }
             }
         }

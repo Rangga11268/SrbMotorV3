@@ -36,6 +36,8 @@ class OrderController extends Controller
             'delivery_method' => 'required|string',
             'payment_method' => 'required|string',
             'booking_fee' => 'nullable|numeric|min:0',
+            'branch' => 'nullable|string',
+            'branch_code' => 'nullable|string',
         ]);
 
         $motor = Motor::findOrFail($request->motor_id);
@@ -61,6 +63,7 @@ class OrderController extends Controller
             'booking_fee' => $request->booking_fee ?? 0,
             'notes' => $request->notes,
             'transaction_type' => 'CASH',
+            'branch_code' => $request->branch_code ?? $request->branch,
             'status' => 'new_order',
             'motor_price' => $motor->price,
             'total_price' => $motor->price,
@@ -148,6 +151,109 @@ class OrderController extends Controller
             'snap_token' => $snapToken,
             'redirect_url' => $redirectUrl,
         ], 201);
+    }
+
+    public function storeCreditOrder(Request $request)
+    {
+        $request->validate([
+            'motor_id' => 'required|exists:motors,id',
+            'customer_name' => 'required|string',
+            'customer_phone' => 'required|string',
+            'customer_email' => 'nullable|email',
+            'customer_nik' => 'required|string',
+            'customer_address' => 'required|string',
+            'motor_color' => 'required|string',
+            'delivery_method' => 'required|string',
+            'payment_method' => 'required|string',
+            'occupation' => 'required|string',
+            'monthly_income' => 'required|numeric',
+            'employment_duration' => 'required|string',
+            'dp_amount' => 'required|numeric',
+            'tenor' => 'required|integer',
+            'branch' => 'nullable|string',
+        ]);
+
+        $motor = Motor::findOrFail($request->motor_id);
+        $minDP = $motor->min_dp_amount ?? ($motor->price * 0.2);
+
+        if ($request->dp_amount < $minDP) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'DP minimal adalah Rp ' . number_format($minDP, 0, ',', '.')
+            ], 422);
+        }
+
+        if ($request->dp_amount >= $motor->price) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'DP tidak boleh melebihi atau sama dengan harga motor'
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $order = Transaction::create([
+                'user_id' => $request->user()->id,
+                'motor_id' => $request->motor_id,
+                'name' => $request->customer_name,
+                'phone' => $request->customer_phone,
+                'email' => $request->customer_email,
+                'nik' => $request->customer_nik,
+                'address' => $request->customer_address,
+                'motor_color' => $request->motor_color,
+                'delivery_method' => $request->delivery_method,
+                'payment_method' => $request->payment_method,
+                'branch_code' => $request->branch,
+                'occupation' => $request->occupation,
+                'monthly_income' => $request->monthly_income,
+                'employment_duration' => $request->employment_duration,
+                'transaction_type' => 'CREDIT',
+                'status' => 'menunggu_persetujuan',
+                'motor_price' => $motor->price,
+                'total_price' => $motor->price,
+                'final_price' => $motor->price,
+                'reference_number' => 'CRD-' . strtoupper(uniqid()),
+            ]);
+
+            $loanAmount = $motor->price - $request->dp_amount;
+            $interestRate = 0.015; // 1.5% flat
+            $totalInterest = $loanAmount * $interestRate * $request->tenor;
+            $monthlyInstallment = ($loanAmount + $totalInterest) / $request->tenor;
+
+            \App\Models\CreditDetail::create([
+                'transaction_id' => $order->id,
+                'dp_amount' => $request->dp_amount,
+                'tenor' => $request->tenor,
+                'monthly_installment' => $monthlyInstallment,
+                'interest_rate' => $interestRate,
+                'status' => 'pengajuan_masuk',
+                'reference_number' => 'REF-' . strtoupper(uniqid()),
+            ]);
+
+            // Installment #0 is DP
+            Installment::create([
+                'transaction_id' => $order->id,
+                'installment_number' => 0,
+                'amount' => $request->dp_amount,
+                'due_date' => now(),
+                'status' => 'pending',
+                'payment_method' => $request->payment_method,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pengajuan kredit berhasil dibuat',
+                'order_id' => $order->id,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id, Request $request)

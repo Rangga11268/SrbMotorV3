@@ -187,34 +187,6 @@ export const settingsConfig = {
             },
         },
     },
-    service: {
-        label: "Layanan Servis (SSM)",
-        icon: "cilBurn",
-        description: "Konfigurasi operasional bengkel (Sinarsurya Motor)",
-        fields: {
-            service_business_hours: {
-                label: "Jam Operasional Bengkel",
-                type: "json",
-                placeholder: '{"monday": "08:00 - 16:00"}',
-                helper: "Jadwal buka/tutup bengkel SSM per hari (mempengaruhi slot booking)",
-                category: "Operasional",
-            },
-            service_slot_quota: {
-                label: "Kapasitas per Slot",
-                type: "number",
-                placeholder: "5",
-                helper: "Jumlah maksimum motor yang bisa dibooking dalam satu jam servis (slot)",
-                category: "Kapasitas",
-            },
-            service_branches: {
-                label: "Daftar Cabang Bengkel",
-                type: "json",
-                placeholder: '["SSM JATIASIH", "SSM DEPOK"]',
-                helper: "Daftar cabang bengkel yang tersedia di form booking (format JSON array)",
-                category: "Lokasi",
-            },
-        },
-    },
 };
 
 /**

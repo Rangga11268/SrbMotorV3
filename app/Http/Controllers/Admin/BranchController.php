@@ -45,6 +45,7 @@ class BranchController extends Controller
             'operational_hours' => 'required|array',
             'facilities' => 'nullable|array',
             'can_service' => 'boolean',
+            'service_slot_quota' => 'nullable|integer|min:1',
             'is_main_branch' => 'boolean',
             'is_active' => 'boolean',
         ]);
@@ -93,6 +94,7 @@ class BranchController extends Controller
             'operational_hours' => 'required|array',
             'facilities' => 'nullable|array',
             'can_service' => 'boolean',
+            'service_slot_quota' => 'nullable|integer|min:1',
             'is_main_branch' => 'boolean',
             'is_active' => 'boolean',
         ]);

@@ -14,6 +14,7 @@ import {
     Layout,
     Store
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function BranchForm({ branch = null }) {
     const isEdit = !!branch;
@@ -39,6 +40,7 @@ export default function BranchForm({ branch = null }) {
         },
         facilities: branch?.facilities || [],
         can_service: branch?.can_service ?? false,
+        service_slot_quota: branch?.service_slot_quota || 5,
         is_main_branch: branch?.is_main_branch ?? false,
         is_active: branch?.is_active ?? true,
     });
@@ -300,6 +302,35 @@ export default function BranchForm({ branch = null }) {
                                     onChange={(e) => setData("can_service", e.target.checked)}
                                 />
                             </label>
+
+                            {data.can_service && (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="p-4 bg-gray-50 border border-gray-100 rounded-xl space-y-3"
+                                >
+                                    <div className="flex items-center gap-2 text-cyan-600 mb-1">
+                                        <Wrench size={14} />
+                                        <span className="text-[10px] font-black uppercase tracking-widest">Kapasitas Bengkel</span>
+                                    </div>
+                                    <div>
+                                        <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Kuota per Slot (Jam)</label>
+                                        <div className="relative">
+                                            <input
+                                                type="number"
+                                                className="w-full bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-bold focus:ring-2 focus:ring-cyan-100 focus:border-cyan-500 transition-all"
+                                                value={data.service_slot_quota}
+                                                onChange={(e) => setData("service_slot_quota", e.target.value)}
+                                                placeholder="Contoh: 5"
+                                            />
+                                            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-black text-gray-400 uppercase tracking-tighter">Motor</div>
+                                        </div>
+                                        <p className="text-[9px] text-gray-400 mt-1.5 leading-tight italic">
+                                            Jumlah maksimum motor yang bisa dibooking pelanggan dalam satu jam servis (slot).
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
 
                         <div className="mt-4 p-4 border border-blue-100 bg-blue-50 rounded-xl">
