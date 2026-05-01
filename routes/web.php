@@ -596,3 +596,4 @@ Route::prefix("admin")
             "updatePassword",
         ])->name("profile.password.update");
     });
+

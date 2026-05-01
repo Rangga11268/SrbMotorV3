@@ -72,24 +72,39 @@ export default function MetronicAdminLayout({ children, title }) {
     }, [flash]);
 
     const isOwner = auth.user.role === 'owner';
-    const roleLabel = isOwner ? 'Pemilik (Owner)' : 'Administrator';
-    const roleBadgeColor = isOwner ? 'from-amber-500 to-orange-600' : 'from-[#3699FF] to-[#0070e3]';
+    const isMontir = auth.user.role === 'montir';
+    
+    let roleLabel = 'Administrator';
+    if (isOwner) roleLabel = 'Pemilik (Owner)';
+    if (isMontir) roleLabel = 'Mekanik (Montir)';
+
+    const roleBadgeColor = isOwner 
+        ? 'from-amber-500 to-orange-600' 
+        : isMontir 
+            ? 'from-emerald-500 to-teal-600' 
+            : 'from-[#3699FF] to-[#0070e3]';
 
     const navItems = [
         { name: "Dashboard", href: route("admin.dashboard"), icon: LayoutDashboard, active: route().current("admin.dashboard") },
-        { name: "Motor", href: route("admin.motors.index"), icon: Bike, active: route().current("admin.motors.*") },
-        { name: "Pengajuan Kredit", href: route("admin.credits.index"), icon: CreditCard, active: route().current("admin.credits.*") },
-        { name: "Transaksi Tunai", href: route("admin.transactions.index"), icon: ShoppingCart, active: route().current("admin.transactions.*") },
+        ...(!isMontir ? [
+            { name: "Motor", href: route("admin.motors.index"), icon: Bike, active: route().current("admin.motors.*") },
+            { name: "Pengajuan Kredit", href: route("admin.credits.index"), icon: CreditCard, active: route().current("admin.credits.*") },
+            { name: "Transaksi Tunai", href: route("admin.transactions.index"), icon: ShoppingCart, active: route().current("admin.transactions.*") },
+        ] : []),
         ...(isOwner ? [
             { name: "Pengguna", href: route("admin.users.index"), icon: Users, active: route().current("admin.users.*") },
             { name: "Laporan", href: route("admin.reports.index"), icon: BarChart3, active: route().current("admin.reports.*") },
         ] : []),
         { name: "Manajemen Servis", href: "/admin/services", icon: Wrench, active: route().current("admin.services.*") },
-        { name: "Manajemen Cabang", href: route("admin.branches.index"), icon: MapPin, active: route().current("admin.branches.*") },
+        ...(!isMontir ? [
+            { name: "Manajemen Cabang", href: route("admin.branches.index"), icon: MapPin, active: route().current("admin.branches.*") },
+        ] : []),
     ];
 
     const settingItems = [
-        { name: "Pengaturan Website", href: route("admin.settings.index"), icon: Settings, active: route().current("admin.settings.*") },
+        ...(!isMontir ? [
+            { name: "Pengaturan Website", href: route("admin.settings.index"), icon: Settings, active: route().current("admin.settings.*") },
+        ] : []),
         { name: "Profil Saya", href: route("admin.profile.show"), icon: UserCircle, active: route().current("admin.profile.*") },
         { name: "Lihat Website", href: "/", icon: Globe, active: false },
     ];

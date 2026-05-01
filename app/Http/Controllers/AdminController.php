@@ -15,8 +15,12 @@ use Carbon\Carbon;
 class AdminController extends Controller
 {
 
-    public function index(): Response
+    public function index(): Response|\Illuminate\Http\RedirectResponse
     {
+        if (auth()->user()->isMontir()) {
+            return redirect()->route('admin.services.index');
+        }
+
         $motorsCount = Motor::count();
         $usersCount = \App\Models\User::count();
         $transactionsCount = Transaction::count();

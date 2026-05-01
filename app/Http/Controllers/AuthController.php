@@ -24,8 +24,9 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
 
-            if (Auth::user()->isAdmin()) {
+            if ($user->isAdmin() || $user->isMontir()) {
                 return \Inertia\Inertia::location(route('admin.dashboard'));
             }
 
@@ -87,7 +88,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user', // Default role
+            'role' => 'customer', // Default role
         ]);
 
         Auth::login($user);

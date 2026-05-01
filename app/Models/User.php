@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin(): bool
     {
-        return in_array($this->role, ['admin', 'owner']);
+        return in_array($this->role, ['admin', 'owner', 'montir']);
     }
 
     /**
@@ -69,5 +69,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isOwner(): bool
     {
         return $this->role === 'owner';
+    }
+
+    /**
+     * Check if the user is a Montir (mechanic)
+     */
+    public function isMontir(): bool
+    {
+        return $this->role === 'montir';
+    }
+
+    /**
+     * Check if the user has access to admin OR montir area
+     */
+    public function hasStaffAccess(): bool
+    {
+        return in_array($this->role, ['admin', 'owner', 'montir']);
     }
 }

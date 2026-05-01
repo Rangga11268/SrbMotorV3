@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Regular User',
                 'password' => Hash::make('password'),
-                'role' => 'user',
+                'role' => 'customer',
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Test Customer',
                 'password' => Hash::make('password'),
-                'role' => 'user',
+                'role' => 'customer',
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -54,6 +54,17 @@ class UserSeeder extends Seeder
                 'name' => 'Owner SRB Motor',
                 'password' => Hash::make('password'),
                 'role' => 'owner',
+                'email_verified_at' => Carbon::now(),
+            ]
+        );
+
+        // Create montir user
+        User::firstOrCreate(
+            ['email' => 'montir@srbmotors.com'],
+            [
+                'name' => 'Montir Bengkel',
+                'password' => Hash::make('password'),
+                'role' => 'montir',
                 'email_verified_at' => Carbon::now(),
             ]
         );
