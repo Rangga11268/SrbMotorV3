@@ -79,7 +79,7 @@ Route::post("/midtrans/notification", [
 // Protected routes
 Route::middleware("auth:sanctum")->group(function () {
     Route::get("/user", [AuthController::class, "me"]);
-    Route::put("/profile", [AuthController::class, "updateProfile"]);
+    Route::post("/profile", [AuthController::class, "updateProfile"]);
     Route::put("/password", [AuthController::class, "updatePassword"]);
     Route::post("/logout", [AuthController::class, "logout"]);
 

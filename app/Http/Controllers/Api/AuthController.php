@@ -111,6 +111,7 @@ class AuthController extends Controller
             'nik' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:500',
             'occupation' => 'nullable|string|max:255',
+            'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
             'name.required' => 'Nama wajib diisi.',
             'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
@@ -124,13 +125,28 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user->update([
+        $data = [
             'name' => $request->name,
             'phone' => $request->phone,
             'nik' => $request->nik,
             'alamat' => $request->alamat,
             'occupation' => $request->occupation,
-        ]);
+        ];
+
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo_path) {
+                $oldPath = str_replace(url('storage/'), '', $user->profile_photo_path);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldPath);
+            }
+
+            $file = $request->file('profile_photo');
+            $filename = time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('profile-photos', $filename, 'public');
+            $data['profile_photo_path'] = url('storage/' . $path);
+        }
+
+        $user->update($data);
 
         return response()->json([
             'status' => 'success',
