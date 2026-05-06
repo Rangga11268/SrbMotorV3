@@ -523,6 +523,10 @@ Route::prefix("admin")
             AdminTransactionController::class,
             "updateStatus",
         ])->name("transactions.updateStatus");
+        Route::post("/transactions/{transaction}/notify-document", [
+            AdminTransactionController::class,
+            "notifyDocument",
+        ])->name("transactions.notifyDocument");
 
         // Admin Service Management Routes
         Route::get("/services", [

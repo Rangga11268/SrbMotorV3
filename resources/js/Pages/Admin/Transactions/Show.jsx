@@ -310,7 +310,47 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                         </div>
                     )}
 
+                    {/* Dokumen Kendaraan */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
+                            <FileCheck size={16} className="text-emerald-500" />
+                            <h3 className="font-bold text-gray-800 text-sm">Dokumen Kendaraan</h3>
+                        </div>
+                        <div className="p-4 space-y-3">
+                            <p className="text-xs text-gray-500 leading-relaxed mb-1">Beritahu pelanggan jika dokumen sudah selesai diproses.</p>
+                            <button onClick={() => {
+                                Swal.fire({
+                                    title: `Beritahu Pelanggan?`,
+                                    text: `Sistem akan mengirimkan pesan WhatsApp dan Notifikasi App bahwa STNK sudah siap diambil.`,
+                                    icon: "info",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Kirim Sekarang",
+                                    cancelButtonText: "Batal"
+                                }).then((result) => {
+                                    if (result.isConfirmed) router.post(route("admin.transactions.notifyDocument", transaction.id), { document_type: 'STNK' });
+                                });
+                            }} className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-black transition-colors">
+                                <FileCheck size={14} /> Notifikasi STNK Siap
+                            </button>
+                            <button onClick={() => {
+                                Swal.fire({
+                                    title: `Beritahu Pelanggan?`,
+                                    text: `Sistem akan mengirimkan pesan WhatsApp dan Notifikasi App bahwa BPKB sudah siap diambil.`,
+                                    icon: "info",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Kirim Sekarang",
+                                    cancelButtonText: "Batal"
+                                }).then((result) => {
+                                    if (result.isConfirmed) router.post(route("admin.transactions.notifyDocument", transaction.id), { document_type: 'BPKB' });
+                                });
+                            }} className="w-full inline-flex items-center justify-center gap-2 py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-black transition-colors">
+                                <FileCheck size={14} /> Notifikasi BPKB Siap
+                            </button>
+                        </div>
+                    </div>
+
                     {/* Danger Zone */}
+
                     <div className="bg-white rounded-2xl shadow-sm border border-red-200 overflow-hidden">
                         <div className="px-5 py-4 border-b border-red-100 bg-red-50/50">
                             <h3 className="font-bold text-red-700 text-sm flex items-center gap-2"><AlertTriangle size={14} /> Zona Bahaya</h3>

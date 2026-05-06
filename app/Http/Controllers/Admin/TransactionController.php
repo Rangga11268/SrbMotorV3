@@ -321,4 +321,47 @@ class TransactionController extends Controller
 
         return back()->with('success', 'Status transaksi berhasil diperbarui' . ($oldStatus === $newStatus ? ' (tidak ada perubahan)' : ' dan notifikasi dikirim ke customer'));
     }
+
+    /**
+     * Notify user that their document (STNK or BPKB) is ready
+     */
+    public function notifyDocument(Request $request, Transaction $transaction)
+    {
+        $validated = $request->validate([
+            'document_type' => 'required|string|in:STNK,BPKB',
+        ]);
+
+        $docType = $validated['document_type'];
+        $phone = $transaction->phone ?? $transaction->user->phone;
+
+        if (!$phone) {
+            return back()->with('error', 'Gagal mengirim notifikasi: Nomor HP pelanggan tidak ditemukan.');
+        }
+
+        try {
+            $msg = "Halo *{$transaction->name}*,\n\nKabar gembira! *{$docType}* untuk motor *{$transaction->motor->name}* Anda telah selesai dan siap untuk diambil di dealer SRB Motor.\n\nSilakan bawa bukti transaksi dan identitas diri (KTP) asli saat pengambilan.\n\nTerima kasih,\n- SRB Motor";
+            \App\Services\WhatsAppService::sendMessage($phone, $msg);
+
+            // Send in-app notification
+            if ($transaction->user) {
+                $transaction->user->notify(new \App\Notifications\DocumentReadyNotification($transaction, $docType));
+            }
+
+            // Log action to transaction history
+            $transaction->logs()->create([
+                'status_from' => $transaction->status,
+                'status_to' => $transaction->status, // Status remains the same
+                'status' => $transaction->status,
+                'actor_id' => auth()->id(),
+                'actor_type' => \App\Models\User::class,
+                'notes' => "Notifikasi $docType selesai dikirim ke pelanggan via WA & In-App",
+                'description' => "Admin mengirimkan notifikasi bahwa $docType sudah siap diambil.",
+            ]);
+
+            return back()->with('success', "Notifikasi {$docType} berhasil dikirim ke WhatsApp dan sistem pelanggan.");
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Document Notification Error ($docType): " . $e->getMessage());
+            return back()->with('error', "Gagal mengirim notifikasi WhatsApp: " . $e->getMessage());
+        }
+    }
 }
