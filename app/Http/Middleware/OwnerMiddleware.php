@@ -20,8 +20,8 @@ class OwnerMiddleware
             return redirect()->route('login');
         }
 
-        if (!Auth::user()->isOwner()) {
-            abort(403, 'Akses ditolak. Fitur eksekutif Laporan dan Pengaturan Akun hanya dapat diakses oleh Pemilik (Owner).');
+        if (!Auth::user()->isOwner() && Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Fitur eksekutif Laporan dan Pengaturan Akun hanya dapat diakses oleh Pemilik atau Admin.');
         }
 
         return $next($request);

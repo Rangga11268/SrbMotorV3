@@ -72,7 +72,9 @@ export default function MetronicAdminLayout({ children, title }) {
     }, [flash]);
 
     const isOwner = auth.user.role === 'owner';
+    const isAdmin = auth.user.role === 'admin';
     const isMontir = auth.user.role === 'montir';
+    const hasExecutiveAccess = isOwner || isAdmin;
     
     let roleLabel = 'Administrator';
     if (isOwner) roleLabel = 'Pemilik (Owner)';
@@ -91,7 +93,7 @@ export default function MetronicAdminLayout({ children, title }) {
             { name: "Pengajuan Kredit", href: route("admin.credits.index"), icon: CreditCard, active: route().current("admin.credits.*") },
             { name: "Transaksi Tunai", href: route("admin.transactions.index"), icon: ShoppingCart, active: route().current("admin.transactions.*") },
         ] : []),
-        ...(isOwner ? [
+        ...(hasExecutiveAccess ? [
             { name: "Pengguna", href: route("admin.users.index"), icon: Users, active: route().current("admin.users.*") },
             { name: "Laporan", href: route("admin.reports.index"), icon: BarChart3, active: route().current("admin.reports.*") },
         ] : []),
