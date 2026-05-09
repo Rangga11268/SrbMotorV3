@@ -107,7 +107,7 @@ class TransactionController extends Controller
     {
         $transaction->load(['user', 'motor', 'creditDetail', 'creditDetail.documents', 'creditDetail.surveySchedules', 'installments' => function ($q) {
             $q->orderBy('installment_number', 'asc');
-        }, 'logs.actor']);
+        }, 'logs.actor', 'documents']);
 
         $transaction->documents_complete = $transaction->transaction_type === 'CREDIT' && $transaction->creditDetail
             ? $transaction->creditDetail->hasRequiredDocuments()
@@ -178,36 +178,41 @@ class TransactionController extends Controller
         ]);
 
 
-        if (!$transaction->creditDetail) {
-            $creditDetail = CreditDetail::create([
-                'transaction_id' => $transaction->id,
-                'dp_amount' => 0,
-                'tenor' => 12,
-                'monthly_installment' => 0,
-                'status' => 'menunggu_persetujuan',
-            ]);
-        } else {
-            $creditDetail = $transaction->creditDetail;
-        }
-
-
         $file = $request->file('document_file');
         $originalName = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
 
-
         $filename = time() . '_' . uniqid() . '.' . $extension;
-
 
         $path = $file->storeAs('documents', $filename, 'public');
 
+        if ($transaction->transaction_type === 'CASH') {
+            Document::create([
+                'transaction_id' => $transaction->id,
+                'document_type' => $request->document_type,
+                'file_path' => $path,
+                'original_name' => $originalName,
+            ]);
+        } else {
+            if (!$transaction->creditDetail) {
+                $creditDetail = CreditDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'dp_amount' => 0,
+                    'tenor' => 12,
+                    'monthly_installment' => 0,
+                    'status' => 'menunggu_persetujuan',
+                ]);
+            } else {
+                $creditDetail = $transaction->creditDetail;
+            }
 
-        Document::create([
-            'credit_detail_id' => $creditDetail->id,
-            'document_type' => $request->document_type,
-            'file_path' => $path,
-            'original_name' => $originalName,
-        ]);
+            Document::create([
+                'credit_detail_id' => $creditDetail->id,
+                'document_type' => $request->document_type,
+                'file_path' => $path,
+                'original_name' => $originalName,
+            ]);
+        }
 
         return redirect()->back()
             ->with('success', 'Dokumen berhasil diunggah.');

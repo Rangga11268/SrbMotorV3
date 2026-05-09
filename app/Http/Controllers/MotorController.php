@@ -123,8 +123,14 @@ class MotorController extends Controller
 
     public function edit(Motor $motor): \Inertia\Response
     {
+        $currentBranches = Motor::where('name', $motor->name)
+                                ->where('brand', $motor->brand)
+                                ->pluck('branch')
+                                ->toArray();
+
         return \Inertia\Inertia::render('Admin/Motors/Edit', [
             'motor' => $motor,
+            'currentBranches' => $currentBranches,
             'brands' => $this->motorRepository->getDistinctBrands(),
             'branches' => $this->branchService->getAllBranches(),
         ]);
@@ -162,8 +168,8 @@ class MotorController extends Controller
             'min_dp_amount' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'description' => 'nullable|string',
-            'branch' => 'nullable|string|max:255',
-            'sync_all_branches' => 'nullable',
+            'branches' => 'required|array|min:1',
+            'branches.*' => 'string|max:255',
 
             'colors' => 'nullable',
             'colors.*' => 'string|max:100',
@@ -192,7 +198,6 @@ class MotorController extends Controller
                 'tersedia' => $request->boolean('tersedia'),
                 'min_dp_amount' => $request->min_dp_amount,
                 'description' => $request->description,
-                'branch' => $request->branch,
                 'colors' => $colors,
             ];
 
@@ -200,36 +205,45 @@ class MotorController extends Controller
                 $data['image_path'] = ImageService::uploadAndConvert($request->file('image'), 'motors');
             }
 
-            // Perform the update
-            $motor->update($data);
-
-            // Bulk synchronization logic
-            if ($request->boolean('sync_all_branches')) {
-                $syncData = [
-                    'price' => $data['price'],
-                    'min_dp_amount' => $data['min_dp_amount'],
-                    'description' => $data['description'],
-                    'colors' => is_array($data['colors']) ? json_encode($data['colors']) : $data['colors'],
-                    'brand' => $data['brand'],
-                    'model' => $data['model'],
-                    'year' => $data['year'],
-                    'type' => $data['type'],
-                ];
-
-                if (isset($data['image_path'])) {
-                    $syncData['image_path'] = $data['image_path'];
-                }
-
+            $newBranches = $request->branches;
+            $currentBranches = Motor::where('name', $motor->name)
+                                    ->where('brand', $motor->brand)
+                                    ->pluck('branch')
+                                    ->toArray();
+            
+            // Delete branches that are no longer selected
+            $branchesToDelete = array_diff($currentBranches, $newBranches);
+            if (!empty($branchesToDelete)) {
                 Motor::where('name', $motor->name)
-                    ->where('brand', $motor->brand)
-                    ->where('id', '!=', $motor->id)
-                    ->update($syncData);
+                     ->where('brand', $motor->brand)
+                     ->whereIn('branch', $branchesToDelete)
+                     ->delete();
+            }
+
+            // Update or create branches
+            foreach ($newBranches as $bCode) {
+                $existing = Motor::where('name', $motor->name)
+                                 ->where('brand', $motor->brand)
+                                 ->where('branch', $bCode)
+                                 ->first();
+                
+                if ($existing) {
+                    $existing->update($data);
+                } else {
+                    $newData = $data;
+                    $newData['branch'] = $bCode;
+                    // Copy existing image path if no new image was uploaded and we have one
+                    if (!isset($newData['image_path']) && $motor->image_path) {
+                        $newData['image_path'] = $motor->image_path;
+                    }
+                    Motor::create($newData);
+                }
             }
 
             $this->motorRepository->clearCache();
             
-            \Log::info('Motor updated successfully:', ['id' => $motor->id]);
-            return redirect()->route('admin.motors.index')->with('success', 'Data motor berhasil diperbarui.');
+            \Log::info('Motor updated successfully for multiple branches:', ['id' => $motor->id, 'branches' => $newBranches]);
+            return redirect()->route('admin.motors.index')->with('success', 'Data motor berhasil diperbarui di cabang terpilih.');
 
         } catch (\Exception $e) {
             \Log::error('Motor Update Exception:', [

@@ -118,6 +118,14 @@ class Transaction extends Model
     }
 
     /**
+     * Get the documents for the transaction directly (for Cash orders).
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    /**
      * Accessor to get the human-readable status text
      */
     public function getStatusTextAttribute()

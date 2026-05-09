@@ -17,6 +17,7 @@ class Document extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'transaction_id',
         'credit_detail_id',
         'document_type',
         'file_path',
@@ -32,6 +33,14 @@ class Document extends Model
     public function creditDetail(): BelongsTo
     {
         return $this->belongsTo(CreditDetail::class);
+    }
+
+    /**
+     * Get the transaction that owns the document directly (for Cash orders).
+     */
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(Transaction::class);
     }
 
     /**

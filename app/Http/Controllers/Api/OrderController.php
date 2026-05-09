@@ -38,6 +38,8 @@ class OrderController extends Controller
             'booking_fee' => 'nullable|numeric|min:0',
             'branch' => 'nullable|string',
             'branch_code' => 'nullable|string',
+            'ktp_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'kk_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         $motor = Motor::findOrFail($request->motor_id);
@@ -70,6 +72,28 @@ class OrderController extends Controller
             'final_price' => $motor->price,
             'reference_number' => 'ORD-' . strtoupper(uniqid()),
         ]);
+
+        if ($request->hasFile('ktp_image')) {
+            $ktpFile = $request->file('ktp_image');
+            $ktpPath = $ktpFile->store('documents', 'public');
+            \App\Models\Document::create([
+                'transaction_id' => $order->id,
+                'document_type' => 'KTP',
+                'file_path' => $ktpPath,
+                'original_name' => $ktpFile->getClientOriginalName(),
+            ]);
+        }
+
+        if ($request->hasFile('kk_image')) {
+            $kkFile = $request->file('kk_image');
+            $kkPath = $kkFile->store('documents', 'public');
+            \App\Models\Document::create([
+                'transaction_id' => $order->id,
+                'document_type' => 'KK',
+                'file_path' => $kkPath,
+                'original_name' => $kkFile->getClientOriginalName(),
+            ]);
+        }
 
         $motor->update(['tersedia' => false]);
         app(\App\Repositories\MotorRepositoryInterface::class)->clearCache();

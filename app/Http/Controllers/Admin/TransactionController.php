@@ -72,7 +72,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        $transaction->load(['user', 'motor', 'installments', 'creditDetail.documents', 'creditDetail.surveySchedules', 'logs.actor']);
+        $transaction->load(['user', 'motor', 'installments', 'creditDetail.documents', 'creditDetail.surveySchedules', 'logs.actor', 'documents']);
 
         $motors = Motor::all();
         $users = User::where('role', 'user')->get();

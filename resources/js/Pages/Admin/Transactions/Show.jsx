@@ -216,6 +216,41 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                         </div>
                     </div>
 
+                    {/* Card: Dokumen KTP & KK */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
+                            <FileText size={16} className="text-blue-500" />
+                            <h3 className="font-bold text-gray-800 text-sm">Dokumen Persyaratan (KTP & KK)</h3>
+                        </div>
+                        <div className="p-6">
+                            {transaction.documents && transaction.documents.length > 0 ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {transaction.documents.map((doc, idx) => (
+                                        <div key={idx} className="border border-gray-200 rounded-lg overflow-hidden">
+                                            <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
+                                                <p className="text-xs font-bold text-gray-700">{doc.document_type} - <span className="font-normal text-gray-500">{doc.original_name}</span></p>
+                                            </div>
+                                            <div className="p-2 flex justify-center bg-gray-50/30">
+                                                <a href={`/storage/${doc.file_path}`} target="_blank" rel="noreferrer" className="block relative group">
+                                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
+                                                        <span className="text-white text-xs font-bold">Lihat Penuh</span>
+                                                    </div>
+                                                    {doc.file_path.toLowerCase().endsWith('.pdf') ? (
+                                                        <div className="h-32 flex items-center justify-center bg-gray-100 w-full text-gray-400 font-bold">PDF FILE</div>
+                                                    ) : (
+                                                        <img src={`/storage/${doc.file_path}`} alt={doc.document_type} className="h-32 object-contain max-w-full rounded" />
+                                                    )}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-sm text-gray-400 text-center py-4">Belum ada dokumen yang diunggah.</p>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Card: Riwayat Log */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
