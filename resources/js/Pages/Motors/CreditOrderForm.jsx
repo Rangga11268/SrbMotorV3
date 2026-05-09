@@ -71,30 +71,30 @@ export default function CreditOrderForm({ motor, auth }) {
                 .finally(() => setLoadingBranch(false));
         }
 
-        // Always fetch options for the dropdown
-        fetch("/api/branches/options")
+        // Always fetch options for the dropdown (only branches with stock)
+        fetch(`/api/motors/${motor.id}/nearest-branches`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
-                    setBranchOptions(data.options);
+                    setBranchOptions(Array.isArray(data.branches) ? data.branches : (Object.values(data.branches || {})));
                 }
             })
             .catch((err) => console.error("Error fetching branch options:", err));
 
-        // Detect nearest branch
+        // Detect nearest branch WITH stock check
         if (!branchFromUrl && "geolocation" in navigator) {
             setIsLocating(true);
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    fetch(`/api/branches/nearest?latitude=${latitude}&longitude=${longitude}`)
+                    fetch(`/api/motors/${motor.id}/nearest-branches?latitude=${latitude}&longitude=${longitude}`)
                         .then((res) => res.json())
                         .then((d) => {
-                            if (d.success) {
-                                setDetectedNearestBranch(d.branch);
-                                // Auto-select if nothing selected yet
+                            if (d.success && d.branches && d.branches.length > 0) {
+                                const nearest = Array.isArray(d.branches) ? d.branches[0] : Object.values(d.branches)[0];
+                                setDetectedNearestBranch(nearest);
                                 if (!data.branch_code) {
-                                    handleBranchChange(d.branch.code);
+                                    handleBranchChange(nearest.code);
                                 }
                             }
                         })

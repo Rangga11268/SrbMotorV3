@@ -273,7 +273,7 @@ class BranchService
             });
 
         if (!$userLat || !$userLon) {
-            return $branches->take($limit);
+            return $branches->take($limit)->values();
         }
 
         return $branches->map(function ($branch) use ($userLat, $userLon) {
