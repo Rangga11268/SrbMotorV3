@@ -112,7 +112,7 @@ export default function Dashboard({
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-300 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-sm border border-white/5">
                             <Award size={14} /> SRB Admin Gateway
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-black mb-3 tracking-tight">Performa Sistem Aktual</h2>
+                        <h2 className="text-2xl md:text-3xl font-black mb-3 tracking-tight">Performa Sistem Aktual</h2>
                         <p className="text-gray-400 text-sm md:text-base leading-relaxed">
                             Pantau secara real-time performa penjualan unit motor, ketersediaan inventaris, dan anomali transaksi. Semua metrik disajikan secara langsung untuk pengambilan keputusan yang cepat.
                         </p>
@@ -154,7 +154,7 @@ export default function Dashboard({
                             
                             <div>
                                 <h3 className="text-white/80 text-sm font-bold uppercase tracking-widest mb-1">{stat.title}</h3>
-                                <div className="text-3xl font-black tracking-tight">{stat.value}</div>
+                                <div className="text-2xl font-black tracking-tight">{stat.value}</div>
                                 {stat.subtext && (
                                     <div className="mt-2 text-xs font-medium text-white/70 bg-black/10 inline-block px-2 py-1 rounded-md">{stat.subtext}</div>
                                 )}
@@ -170,7 +170,7 @@ export default function Dashboard({
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 lg:col-span-2 flex flex-col overflow-hidden">
                     <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
                         <div>
-                            <h3 className="font-bold text-gray-800 text-lg">Tren Pendapatan Bulanan</h3>
+                            <h3 className="font-bold text-gray-800">Tren Pendapatan Bulanan</h3>
                             <p className="text-xs text-gray-500 mt-1">Grafik akumulasi penjualan bersih (Tunai + DP Kredit)</p>
                         </div>
                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
@@ -203,7 +203,7 @@ export default function Dashboard({
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 lg:col-span-2 overflow-hidden flex flex-col">
                     <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white">
                         <div>
-                            <h3 className="font-bold text-gray-800 text-lg">Log Transaksi Terbaru</h3>
+                            <h3 className="font-bold text-gray-800">Log Transaksi Terbaru</h3>
                             <p className="text-xs text-gray-500 mt-1">Status 5 transaksi masuk terakhir</p>
                         </div>
                         <Link href={route("admin.transactions.index")} className="px-4 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function Dashboard({
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
                     <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-white">
                         <div>
-                            <h3 className="font-bold text-gray-800 text-lg">Unit Terbaru</h3>
+                            <h3 className="font-bold text-gray-800">Unit Terbaru</h3>
                             <p className="text-xs text-gray-500 mt-1">Ditambahkan ke inventaris</p>
                         </div>
                     </div>

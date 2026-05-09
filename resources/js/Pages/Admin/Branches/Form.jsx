@@ -89,7 +89,7 @@ export default function BranchForm({ branch = null }) {
 
             <div className="mb-8 flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800 tracking-tight">
+                    <h2 className="text-lg font-bold text-gray-800 tracking-tight">
                         {isEdit ? "Perbarui Informasi Cabang" : "Konfigurasi Cabang Baru"}
                     </h2>
                     <p className="text-sm text-gray-500 mt-1">Lengkapi data operasional dan lokasi dealer secara presisi.</p>

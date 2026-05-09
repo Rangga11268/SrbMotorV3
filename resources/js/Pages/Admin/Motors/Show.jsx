@@ -124,7 +124,7 @@ export default function Show({ motor }) {
                         <p className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-1">
                             <Tag size={12}/> Net Price (OTR)
                         </p>
-                        <h3 className="text-3xl font-black tracking-tight drop-shadow-sm flex items-end gap-1">
+                        <h3 className="text-xl font-black tracking-tight drop-shadow-sm flex items-end gap-1">
                             <span className="text-xl text-blue-200 block mb-0.5 font-bold">Rp</span>
                             {new Intl.NumberFormat("id-ID").format(motor.price)}
                         </h3>
@@ -145,7 +145,7 @@ export default function Show({ motor }) {
                         </div>
 
                         <div className="p-6">
-                            <h1 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">{motor.name}</h1>
+                            <h1 className="text-xl font-black text-gray-900 mb-4 tracking-tight">{motor.name}</h1>
                             
                             {/* Key Value Metadata Ribbon */}
                             <div className="flex flex-wrap items-center gap-3 mb-6">

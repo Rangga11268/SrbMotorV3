@@ -108,7 +108,7 @@ export default function Index({ transactions: initialTransactions, filters, stat
             {/* Header */}
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-black text-gray-800 tracking-tight">Transaksi Tunai</h2>
+                    <h2 className="text-lg font-black text-gray-800 tracking-tight">Transaksi Tunai</h2>
                     <p className="text-sm text-gray-500 mt-1">Kelola dan pantau semua transaksi pembayaran tunai pelanggan.</p>
                 </div>
                 <Link

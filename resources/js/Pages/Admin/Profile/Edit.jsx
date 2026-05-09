@@ -44,7 +44,7 @@ export default function Edit({ user }) {
                 {/* Header */}
                 <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-black text-gray-800 tracking-tight">Profil Saya</h2>
+                        <h2 className="text-lg font-black text-gray-800 tracking-tight">Profil Saya</h2>
                         <p className="text-sm text-gray-500 mt-1">Kelola informasi identitas dan keamanan akun administrator Anda.</p>
                     </div>
                 </div>

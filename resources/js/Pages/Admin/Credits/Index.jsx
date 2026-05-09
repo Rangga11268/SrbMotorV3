@@ -91,7 +91,7 @@ export default function Index({ credits: initialCredits, statuses: statusList, f
             {/* Header */}
             <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-black text-gray-800 tracking-tight">Pengajuan Kredit</h2>
+                    <h2 className="text-lg font-black text-gray-800 tracking-tight">Pengajuan Kredit</h2>
                     <p className="text-sm text-gray-500 mt-1">Monitor dan proses semua aplikasi kredit pembelian kendaraan.</p>
                 </div>
             </div>

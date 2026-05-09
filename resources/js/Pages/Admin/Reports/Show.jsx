@@ -121,7 +121,7 @@ export default function Show({
                             <ArrowLeft size={20} />
                         </Link>
                         <div>
-                            <h2 className="text-2xl font-black text-gray-800 tracking-tight">{title}</h2>
+                            <h2 className="text-lg font-black text-gray-800 tracking-tight">{title}</h2>
                             <p className="text-sm text-gray-500 mt-1 font-medium">{description}</p>
                             <div className="inline-flex mt-2 items-center px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-xs font-bold font-mono shadow-sm">
                                 {startDate} — {endDate}
@@ -147,7 +147,7 @@ export default function Show({
 
                 {/* Print Title (Visible only when printing) */}
                 <div className="hidden d-print-block mb-6 text-center border-b border-gray-300 pb-4">
-                    <h1 className="text-2xl font-black">{title}</h1>
+                    <h1 className="text-lg font-black">{title}</h1>
                     <p className="text-sm text-gray-600">Periode: {startDate} - {endDate}</p>
                 </div>
 
