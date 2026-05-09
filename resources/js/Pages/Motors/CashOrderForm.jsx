@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useForm, Link } from "@inertiajs/react";
+import React, { useState, useEffect, useRef } from "react";
+import { useForm, Link, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import Button from "@/Components/UI/Button";
 import Card, { CardBody } from "@/Components/UI/Card";
@@ -26,6 +26,9 @@ import {
     Palette,
     Truck,
     Store,
+    Upload,
+    ImageIcon,
+    X,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -53,6 +56,34 @@ export default function CashOrderForm({ motor, auth }) {
     const [branchOptions, setBranchOptions] = useState([]);
     const [detectedNearestBranch, setDetectedNearestBranch] = useState(null);
     const [isLocating, setIsLocating] = useState(false);
+    const [ktpFile, setKtpFile] = useState(null);
+    const [kkFile, setKkFile] = useState(null);
+    const [ktpPreview, setKtpPreview] = useState(null);
+    const [kkPreview, setKkPreview] = useState(null);
+    const ktpInputRef = useRef(null);
+    const kkInputRef = useRef(null);
+
+    const handleFileSelect = (file, type) => {
+        if (!file) return;
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Format file harus JPG, JPEG, PNG, atau PDF');
+            return;
+        }
+        if (file.size > maxSize) {
+            alert('Ukuran file maksimal 2MB');
+            return;
+        }
+        const preview = file.type.startsWith('image/') ? URL.createObjectURL(file) : null;
+        if (type === 'ktp') {
+            setKtpFile(file);
+            setKtpPreview(preview);
+        } else {
+            setKkFile(file);
+            setKkPreview(preview);
+        }
+    };
 
     useEffect(() => {
         // Fetch specific branch if from URL
@@ -203,6 +234,12 @@ export default function CashOrderForm({ motor, auth }) {
         if (!data.address.trim()) {
             validationErrors.push("Alamat lengkap harus diisi");
         }
+        if (!ktpFile) {
+            validationErrors.push("Foto KTP wajib diunggah");
+        }
+        if (!kkFile) {
+            validationErrors.push("Foto KK wajib diunggah");
+        }
         if (bookingFee < 0 || bookingFee >= motor.price) {
             validationErrors.push(
                 `Biaya bookingnya harus antara 0 dan kurang dari Rp ${formatCurrency(motor.price)}`,
@@ -219,7 +256,20 @@ export default function CashOrderForm({ motor, auth }) {
         }
 
         setHasValidationErrors(false);
-        post(route("motors.process-cash-order", motor.id));
+
+        // Use FormData to send files
+        const formData = new FormData();
+        Object.keys(data).forEach((key) => {
+            if (data[key] !== null && data[key] !== undefined) {
+                formData.append(key, data[key]);
+            }
+        });
+        formData.append('ktp_file', ktpFile);
+        formData.append('kk_file', kkFile);
+
+        router.post(route("motors.process-cash-order", motor.id), formData, {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -835,6 +885,72 @@ export default function CashOrderForm({ motor, auth }) {
                                                     </p>
                                                 </div>
                                             )}
+
+                                            {/* Upload Dokumen KTP & KK */}
+                                            <div className="mb-6">
+                                                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Dokumen Persyaratan (STNK & BPKB)</p>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {/* KTP Upload */}
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                                                            <FileText className="w-3 h-3" /> Foto KTP <span className="text-red-500">*</span>
+                                                        </p>
+                                                        <input type="file" ref={ktpInputRef} accept="image/jpeg,image/png,image/jpg,application/pdf" className="hidden" onChange={(e) => handleFileSelect(e.target.files[0], 'ktp')} />
+                                                        {ktpFile ? (
+                                                            <div className="relative border-2 border-black bg-white p-2 group">
+                                                                {ktpPreview ? (
+                                                                    <img src={ktpPreview} alt="KTP Preview" className="w-full h-32 object-contain" />
+                                                                ) : (
+                                                                    <div className="w-full h-32 flex items-center justify-center bg-gray-100">
+                                                                        <p className="text-xs font-bold text-gray-500">PDF: {ktpFile.name}</p>
+                                                                    </div>
+                                                                )}
+                                                                <button type="button" onClick={() => { setKtpFile(null); setKtpPreview(null); if(ktpInputRef.current) ktpInputRef.current.value=''; }} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white flex items-center justify-center hover:bg-red-700 transition-colors">
+                                                                    <X className="w-3 h-3" />
+                                                                </button>
+                                                                <p className="text-[9px] font-bold text-black uppercase tracking-widest mt-1 text-center truncate">{ktpFile.name}</p>
+                                                            </div>
+                                                        ) : (
+                                                            <button type="button" onClick={() => ktpInputRef.current?.click()} className="w-full h-36 border-2 border-dashed border-gray-300 hover:border-black bg-gray-50 hover:bg-white transition-all flex flex-col items-center justify-center gap-2 group">
+                                                                <Upload className="w-6 h-6 text-gray-400 group-hover:text-black transition-colors" />
+                                                                <p className="text-[10px] font-bold text-gray-400 group-hover:text-black uppercase tracking-widest transition-colors">Upload KTP</p>
+                                                                <p className="text-[9px] text-gray-400">JPG, PNG, PDF — Max 2MB</p>
+                                                            </button>
+                                                        )}
+                                                        {errors.ktp_file && <p className="text-[10px] text-red-500 font-bold mt-1">{errors.ktp_file}</p>}
+                                                    </div>
+
+                                                    {/* KK Upload */}
+                                                    <div>
+                                                        <p className="text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                                                            <FileText className="w-3 h-3" /> Foto KK <span className="text-red-500">*</span>
+                                                        </p>
+                                                        <input type="file" ref={kkInputRef} accept="image/jpeg,image/png,image/jpg,application/pdf" className="hidden" onChange={(e) => handleFileSelect(e.target.files[0], 'kk')} />
+                                                        {kkFile ? (
+                                                            <div className="relative border-2 border-black bg-white p-2 group">
+                                                                {kkPreview ? (
+                                                                    <img src={kkPreview} alt="KK Preview" className="w-full h-32 object-contain" />
+                                                                ) : (
+                                                                    <div className="w-full h-32 flex items-center justify-center bg-gray-100">
+                                                                        <p className="text-xs font-bold text-gray-500">PDF: {kkFile.name}</p>
+                                                                    </div>
+                                                                )}
+                                                                <button type="button" onClick={() => { setKkFile(null); setKkPreview(null); if(kkInputRef.current) kkInputRef.current.value=''; }} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white flex items-center justify-center hover:bg-red-700 transition-colors">
+                                                                    <X className="w-3 h-3" />
+                                                                </button>
+                                                                <p className="text-[9px] font-bold text-black uppercase tracking-widest mt-1 text-center truncate">{kkFile.name}</p>
+                                                            </div>
+                                                        ) : (
+                                                            <button type="button" onClick={() => kkInputRef.current?.click()} className="w-full h-36 border-2 border-dashed border-gray-300 hover:border-black bg-gray-50 hover:bg-white transition-all flex flex-col items-center justify-center gap-2 group">
+                                                                <Upload className="w-6 h-6 text-gray-400 group-hover:text-black transition-colors" />
+                                                                <p className="text-[10px] font-bold text-gray-400 group-hover:text-black uppercase tracking-widest transition-colors">Upload KK</p>
+                                                                <p className="text-[9px] text-gray-400">JPG, PNG, PDF — Max 2MB</p>
+                                                            </button>
+                                                        )}
+                                                        {errors.kk_file && <p className="text-[10px] text-red-500 font-bold mt-1">{errors.kk_file}</p>}
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <textarea
                                                 id="notes"

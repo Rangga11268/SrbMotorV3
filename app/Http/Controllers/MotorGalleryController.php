@@ -140,6 +140,8 @@ class MotorGalleryController extends Controller
             "branch_code" => "nullable|string",
             "booking_fee" => "nullable|numeric|min:0",
             "payment_method" => "required|string",
+            "ktp_file" => "required|file|mimes:jpg,jpeg,png,pdf|max:2048",
+            "kk_file" => "required|file|mimes:jpg,jpeg,png,pdf|max:2048",
         ]);
 
         // Validasi branch code melalui service
@@ -206,6 +208,33 @@ class MotorGalleryController extends Controller
             "delivery_method" => $request->delivery_method,
             "branch_code" => $request->branch_code,
         ]);
+
+        // Simpan dokumen KTP & KK
+        if ($request->hasFile('ktp_file')) {
+            $ktpPath = $request->file('ktp_file')->store(
+                'cash-documents/' . $transaction->id,
+                'public'
+            );
+            Document::create([
+                'transaction_id' => $transaction->id,
+                'document_type' => 'KTP',
+                'file_path' => $ktpPath,
+                'original_name' => $request->file('ktp_file')->getClientOriginalName(),
+            ]);
+        }
+
+        if ($request->hasFile('kk_file')) {
+            $kkPath = $request->file('kk_file')->store(
+                'cash-documents/' . $transaction->id,
+                'public'
+            );
+            Document::create([
+                'transaction_id' => $transaction->id,
+                'document_type' => 'KK',
+                'file_path' => $kkPath,
+                'original_name' => $request->file('kk_file')->getClientOriginalName(),
+            ]);
+        }
 
         $transaction->logs()->create([
             "status_from" => null,
