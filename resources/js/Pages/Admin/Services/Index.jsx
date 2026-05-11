@@ -12,8 +12,14 @@ import {
     CheckCircle2,
     AlertCircle,
     Bike,
-    MoreVertical
+    MoreVertical,
+    Plus,
+    Trash2,
+    Printer,
+    FileSpreadsheet,
+    Info
 } from "lucide-react";
+
 
 export default function ServicesIndex({ appointments }) {
     const [selectedService, setSelectedService] = useState(null);
@@ -26,8 +32,13 @@ export default function ServicesIndex({ appointments }) {
         payment_status: "unpaid",
         payment_method: "",
         admin_notes: "",
-        service_notes: ""
+        service_notes: "",
+        service_items: []
     });
+
+    const [items, setItems] = useState([]);
+    const [activeTab, setActiveTab] = useState('status');
+
 
     // Format number to Rupiah display string (e.g. 150000 -> "150.000")
     const formatRupiah = (value) => {
@@ -44,16 +55,60 @@ export default function ServicesIndex({ appointments }) {
     const openModal = (app) => {
         setDropdownOpen(null);
         setSelectedService(app);
+        setActiveTab('status');
+        
+        // Check if service_notes is JSON (meaning it contains items)
+        let displayNotes = app.service_notes || "";
+        try {
+            const parsed = JSON.parse(displayNotes);
+            if (Array.isArray(parsed)) {
+                displayNotes = ""; // Clear notes if it's just the items JSON
+            }
+        } catch (e) {
+            // Not JSON, keep as is
+        }
+
         setData({
             status: app.status,
             total_cost: app.total_cost ? String(Math.round(Number(app.total_cost))) : "",
             payment_status: app.payment_status || "unpaid",
             payment_method: app.payment_method || "",
             admin_notes: app.admin_notes || "",
-            service_notes: app.service_notes || ""
+            service_notes: displayNotes,
+            service_items: app.items || []
         });
+        setItems(app.items || []);
         setVisible(true);
     };
+
+    const addItem = () => {
+        const newItems = [...items, { description: "", qty: 1, price: 0 }];
+        setItems(newItems);
+        setData('service_items', newItems);
+    };
+
+    const removeItem = (index) => {
+        const newItems = items.filter((_, i) => i !== index);
+        setItems(newItems);
+        setData('service_items', newItems);
+        updateTotalCost(newItems);
+    };
+
+    const updateItem = (index, field, value) => {
+        const newItems = [...items];
+        newItems[index][field] = value;
+        setItems(newItems);
+        setData('service_items', newItems);
+        if (field !== 'description') {
+            updateTotalCost(newItems);
+        }
+    };
+
+    const updateTotalCost = (itemList) => {
+        const total = itemList.reduce((sum, item) => sum + (parseFloat(item.price || 0) * parseInt(item.qty || 1)), 0);
+        setData('total_cost', String(total));
+    };
+
 
     const handleUpdate = (e) => {
         e.preventDefault();
@@ -287,119 +342,283 @@ export default function ServicesIndex({ appointments }) {
                                     </div>
                                 </div>
 
-                                <form id="serviceUpdateForm" onSubmit={handleUpdate} className="space-y-4">
-                                    {/* Status Picker */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-1.5">Ubah Status Pengerjaan</label>
-                                        <select 
-                                            value={data.status} 
-                                            onChange={e => setData('status', e.target.value)}
-                                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm font-medium"
-                                        >
-                                            <option value="confirmed">Terkonfirmasi / Terjadwal (Confirmed)</option>
-                                            <option value="in_progress">Sedang Dikerjakan (In Progress)</option>
-                                            <option value="completed">Selesai (Completed)</option>
-                                            <option value="cancelled">Dibatalkan (Cancelled / Ditolak)</option>
-                                        </select>
-                                    </div>
+                                <div className="flex border-b border-gray-100 mb-6 bg-gray-50/50 p-1 rounded-xl">
+                                    <button 
+                                        onClick={() => setActiveTab('status')}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${activeTab === 'status' ? 'bg-white text-blue-600 shadow-sm border border-gray-100' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <Settings2 size={16} /> Status & Catatan
+                                    </button>
+                                    <button 
+                                        onClick={() => setActiveTab('billing')}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-black uppercase tracking-widest rounded-lg transition-all ${activeTab === 'billing' ? 'bg-white text-blue-600 shadow-sm border border-gray-100' : 'text-gray-400 hover:text-gray-600'}`}
+                                    >
+                                        <FileSpreadsheet size={16} /> Rincian Penagihan
+                                    </button>
+                                </div>
 
-                                    {/* Payment Information */}
-                                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4">
-                                        <h4 className="text-xs font-bold text-gray-700 uppercase tracking-widest border-b border-gray-200 pb-2 mb-2">Informasi Pembayaran</h4>
-                                        
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <form id="serviceUpdateForm" onSubmit={handleUpdate} className="space-y-5">
+                                    {activeTab === 'status' && (
+                                        <motion.div 
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            className="space-y-5"
+                                        >
+                                            {/* Status Picker */}
                                             <div>
-                                                <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Total Tagihan</label>
-                                                <div className="flex items-center bg-white border border-gray-300 rounded-lg shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 overflow-hidden">
-                                                    <span className="flex-shrink-0 bg-gray-100 border-r border-gray-300 px-3 py-2.5 text-sm font-black text-gray-500 select-none">
-                                                        Rp
-                                                    </span>
+                                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Tahap Pengerjaan</label>
+                                                <div className="relative group">
+                                                    <select 
+                                                        value={data.status} 
+                                                        onChange={e => setData('status', e.target.value)}
+                                                        className="bg-white border-2 border-gray-100 text-gray-900 text-sm rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 block w-full p-3 font-bold transition-all appearance-none cursor-pointer"
+                                                    >
+                                                        <option value="confirmed">Terkonfirmasi / Terjadwal (Confirmed)</option>
+                                                        <option value="in_progress">Sedang Dikerjakan (In Progress)</option>
+                                                        <option value="completed">Selesai (Completed)</option>
+                                                        <option value="cancelled">Dibatalkan (Cancelled / Ditolak)</option>
+                                                    </select>
+                                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                                        <MoreVertical size={16} />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Notes Section */}
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <label className="block text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">Catatan Layanan (Tampil di User)</label>
+                                                        {items.length > 0 && (
+                                                            <span className="text-[9px] font-bold text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-100 flex items-center gap-1">
+                                                                <Info size={10} /> Rincian Jasa Aktif
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    {items.length > 0 ? (
+                                                        <div className="bg-gray-50 border-2 border-gray-100 p-4 rounded-xl text-center">
+                                                            <p className="text-[11px] text-gray-500 font-medium leading-relaxed italic">
+                                                                "Detail rincian di tab sebelah akan otomatis menjadi catatan untuk pelanggan."
+                                                            </p>
+                                                        </div>
+                                                    ) : (
+                                                        <textarea 
+                                                            rows="3" 
+                                                            placeholder="Contoh: Voucher diskon 20% / Silakan ambil unit jam 3 sore" 
+                                                            className="bg-blue-50/30 border-2 border-blue-100 text-gray-900 text-sm rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 block w-full p-4 font-medium resize-none shadow-inner"
+                                                            value={data.service_notes} 
+                                                            onChange={e => setData('service_notes', e.target.value)}
+                                                        ></textarea>
+                                                    )}
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Log Masalah / Internal Admin</label>
+                                                    <textarea 
+                                                        rows="3" 
+                                                        placeholder="Kerusakan ekstra pada rem / Ganti sparepart busi" 
+                                                        className="bg-gray-50 border-2 border-gray-100 text-gray-900 text-sm rounded-xl focus:ring-4 focus:ring-gray-200 focus:border-gray-400 block w-full p-4 font-medium shadow-inner resize-none"
+                                                        value={data.admin_notes} 
+                                                        onChange={e => setData('admin_notes', e.target.value)}
+                                                    ></textarea>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+
+                                    {activeTab === 'billing' && (
+                                        <motion.div 
+                                            initial={{ opacity: 0, x: 10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            className="space-y-6"
+                                        >
+                                            {/* Payment Information Summary */}
+                                            <div className="bg-gradient-to-br from-gray-50 to-white p-5 rounded-2xl border-2 border-gray-100 space-y-5 shadow-sm">
+                                                <div className="flex items-center gap-2 border-b border-gray-100 pb-3 mb-1">
+                                                    <div className="p-1.5 bg-blue-100 rounded-lg text-blue-600">
+                                                        <Printer size={16} />
+                                                    </div>
+                                                    <h4 className="text-[10px] font-black text-gray-700 uppercase tracking-[0.2em]">Ringkasan Pembayaran</h4>
+                                                </div>
+                                                
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                                    <div>
+                                                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Total Tagihan</label>
+                                                        <div className="flex items-center bg-white border-2 border-gray-100 rounded-xl shadow-inner focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-500 transition-all overflow-hidden">
+                                                            <span className="flex-shrink-0 bg-gray-50 border-r-2 border-gray-100 px-4 py-3 text-sm font-black text-gray-400 select-none">
+                                                                Rp
+                                                            </span>
+                                                            <input 
+                                                                type="text"
+                                                                className="flex-1 bg-transparent text-gray-900 text-sm p-3 outline-none font-black"
+                                                                value={formatRupiah(data.total_cost)}
+                                                                onChange={e => setData('total_cost', parseRupiah(e.target.value))}
+                                                                readOnly={items.length > 0}
+                                                            />
+                                                        </div>
+                                                        {items.length > 0 && (
+                                                            <p className="text-[10px] text-blue-500 font-black mt-2 uppercase tracking-tight flex items-center gap-1">
+                                                                <CheckCircle2 size={10} /> Dihitung dari rincian
+                                                            </p>
+                                                        )}
+                                                    </div>
+
+                                                    <div>
+                                                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Status Bayar</label>
+                                                        <select 
+                                                            value={data.payment_status} 
+                                                            onChange={e => setData('payment_status', e.target.value)}
+                                                            className="bg-white border-2 border-gray-100 text-gray-900 text-sm rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 block w-full p-3 font-bold transition-all"
+                                                        >
+                                                            <option value="unpaid">Belum Lunas (Unpaid)</option>
+                                                            <option value="pending">Menunggu (Pending)</option>
+                                                            <option value="paid">Lunas (Paid)</option>
+                                                            <option value="waived">Digratiskan / Garansi (Waived)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Metode / Keterangan Bayar</label>
                                                     <input 
-                                                        type="text"
-                                                        inputMode="numeric"
-                                                        placeholder="0"
-                                                        className="flex-1 bg-transparent text-gray-900 text-sm p-2.5 outline-none font-semibold"
-                                                        value={formatRupiah(data.total_cost)}
-                                                        onChange={e => setData('total_cost', parseRupiah(e.target.value))}
+                                                        type="text" 
+                                                        placeholder="Cash, QRIS, Midtrans, atau Kupon KPB"
+                                                        className="bg-white border-2 border-gray-100 text-gray-900 text-sm rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 block w-full p-3 font-bold transition-all shadow-inner"
+                                                        value={data.payment_method} 
+                                                        onChange={e => setData('payment_method', e.target.value)}
                                                     />
                                                 </div>
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Status Pembayaran</label>
-                                                <select 
-                                                    value={data.payment_status} 
-                                                    onChange={e => setData('payment_status', e.target.value)}
-                                                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm"
-                                                >
-                                                    <option value="unpaid">Belum Lunas (Unpaid)</option>
-                                                    <option value="pending">Menunggu (Pending)</option>
-                                                    <option value="paid">Lunas (Paid)</option>
-                                                    <option value="waived">Digratiskan / Garansi (Waived)</option>
-                                                </select>
+
+                                            {/* Itemized Billing Section */}
+                                            <div className="bg-gray-50/50 rounded-2xl p-5 border-2 border-gray-100 shadow-sm overflow-hidden relative">
+                                                <div className="flex items-center justify-between mb-5 relative z-10">
+                                                    <div className="flex flex-col">
+                                                        <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                            <FileSpreadsheet size={14} className="text-blue-500" /> Rincian Jasa & Part
+                                                        </h4>
+                                                        <p className="text-[9px] text-gray-400 font-bold uppercase mt-1">Detail pengerjaan & penggantian</p>
+                                                    </div>
+                                                    <button 
+                                                        type="button" 
+                                                        onClick={addItem}
+                                                        className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-600/20"
+                                                    >
+                                                        <Plus size={14} strokeWidth={3} /> Tambah Item
+                                                    </button>
+                                                </div>
+
+                                                <div className="space-y-3 relative z-10">
+                                                    {items.length > 0 && (
+                                                        <div className="hidden md:grid grid-cols-12 gap-2 px-4 mb-2">
+                                                            <div className="col-span-5 text-[9px] font-black text-gray-400 uppercase tracking-widest">Deskripsi Item</div>
+                                                            <div className="col-span-2 text-[9px] font-black text-gray-400 uppercase tracking-widest text-center">Jumlah</div>
+                                                            <div className="col-span-2 text-[9px] font-black text-gray-400 uppercase tracking-widest text-center">Harga Satuan</div>
+                                                            <div className="col-span-2 text-[9px] font-black text-gray-400 uppercase tracking-widest text-right">Subtotal</div>
+                                                            <div className="col-span-1"></div>
+                                                        </div>
+                                                    )}
+
+                                                    {items.length === 0 ? (
+                                                        <div className="py-10 text-center border-2 border-dashed border-gray-200 rounded-2xl bg-white/50">
+                                                            <p className="text-xs text-gray-400 font-bold italic uppercase tracking-wider">Belum ada item rincian.</p>
+                                                            <p className="text-[10px] text-gray-400 mt-2">Gunakan tombol di atas untuk menambah jasa atau part.</p>
+                                                        </div>
+                                                    ) : (
+                                                        items.map((item, idx) => (
+                                                            <div key={idx} className="grid grid-cols-12 gap-2 items-center bg-white p-4 rounded-2xl border-2 border-gray-100 group hover:border-blue-100 transition-all shadow-sm">
+                                                                <div className="col-span-12 md:col-span-5">
+                                                                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1 md:hidden">Deskripsi</label>
+                                                                    <input 
+                                                                        type="text" 
+                                                                        placeholder="Contoh: Ganti Oli Mesin"
+                                                                        className="w-full bg-gray-50 border-2 border-gray-100 text-gray-900 text-xs rounded-lg p-2.5 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold shadow-inner"
+                                                                        value={item.description}
+                                                                        onChange={e => updateItem(idx, 'description', e.target.value)}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-span-4 md:col-span-2">
+                                                                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1 md:hidden">Qty</label>
+                                                                    <input 
+                                                                        type="number" 
+                                                                        className="w-full bg-gray-50 border-2 border-gray-100 text-gray-900 text-xs rounded-lg p-2.5 outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-center font-black shadow-inner"
+                                                                        value={item.qty}
+                                                                        onChange={e => updateItem(idx, 'qty', e.target.value)}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-span-6 md:col-span-2">
+                                                                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1 md:hidden">Harga</label>
+                                                                    <input 
+                                                                        type="text" 
+                                                                        className="w-full bg-gray-50 border-2 border-gray-100 text-gray-900 text-xs rounded-lg p-2.5 text-center outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-black shadow-inner"
+                                                                        value={formatRupiah(item.price)}
+                                                                        onChange={e => updateItem(idx, 'price', parseRupiah(e.target.value))}
+                                                                    />
+                                                                </div>
+                                                                <div className="col-span-6 md:col-span-2 text-right">
+                                                                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1 md:hidden">Subtotal</label>
+                                                                    <div className="text-[11px] font-black text-blue-600 px-2 py-1 bg-blue-50 rounded-lg border border-blue-100 inline-block min-w-[80px]">
+                                                                        Rp {formatRupiah(parseFloat(item.price || 0) * parseInt(item.qty || 0))}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-span-2 md:col-span-1 flex justify-center">
+                                                                    <button 
+                                                                        type="button" 
+                                                                        onClick={() => removeItem(idx)}
+                                                                        className="text-gray-300 hover:text-rose-500 transition-all p-2 bg-gray-50 rounded-lg hover:bg-rose-500/10"
+                                                                    >
+                                                                        <Trash2 size={16} />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1.5">Metode Bayar / Keterangan</label>
-                                            <input 
-                                                type="text" 
-                                                placeholder="Contoh: Cash, QRIS, Midtrans, atau Kupon KPB-1"
-                                                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm"
-                                                value={data.payment_method} 
-                                                onChange={e => setData('payment_method', e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Notes to User */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-1.5 text-blue-600">Catatan Layanan (Tampil di Aplikasi User)</label>
-                                        <textarea 
-                                            rows="2" 
-                                            placeholder="Contoh: Voucher Diskon Jasa 20% / Silakan ambil unit jam 3" 
-                                            className="bg-white border border-blue-200 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 shadow-sm resize-none"
-                                            value={data.service_notes} 
-                                            onChange={e => setData('service_notes', e.target.value)}
-                                        ></textarea>
-                                    </div>
-
-                                    {/* Internal Notes */}
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-1.5">Log Masalah / Internal Admin</label>
-                                        <textarea 
-                                            rows="2" 
-                                            placeholder="Kerusakan ekstra pada rem / Ganti sparepart busi" 
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-gray-400 block w-full p-2.5 shadow-inner resize-none"
-                                            value={data.admin_notes} 
-                                            onChange={e => setData('admin_notes', e.target.value)}
-                                        ></textarea>
-                                    </div>
+                                        </motion.div>
+                                    )}
                                 </form>
                             </div>
 
-                            {/* Footer */}
-                            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3 bg-gray-50 flex-shrink-0">
-                                <button 
-                                    type="button" 
-                                    onClick={() => setVisible(false)}
-                                    className="px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-200 bg-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
-                                    disabled={processing}
-                                >
-                                    Batal
-                                </button>
-                                <button 
-                                    form="serviceUpdateForm"
-                                    type="submit" 
-                                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-colors disabled:opacity-70 shadow-md shadow-blue-500/20"
-                                    disabled={processing}
-                                >
-                                    {processing ? 'Menyimpan...' : (
-                                        <>
-                                            <CheckCircle2 size={16} /> Update Status
-                                        </>
+
+                             {/* Footer */}
+                            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50 flex-shrink-0">
+                                <div className="flex items-center gap-2">
+                                    {selectedService.status === 'completed' && (
+                                        <a 
+                                            href={route('admin.services.receipt', selectedService.id)}
+                                            target="_blank"
+                                            className="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-900/10"
+                                        >
+                                            <Printer size={14} /> CETAK STRUK
+                                        </a>
                                     )}
-                                </button>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setVisible(false)}
+                                        className="px-4 py-2 border border-gray-200 text-gray-600 hover:bg-gray-200 bg-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+                                        disabled={processing}
+                                    >
+                                        Batal
+                                    </button>
+                                    <button 
+                                        form="serviceUpdateForm"
+                                        type="submit" 
+                                        className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-colors disabled:opacity-70 shadow-md shadow-blue-500/20"
+                                        disabled={processing}
+                                    >
+                                        {processing ? 'Menyimpan...' : (
+                                            <>
+                                                <CheckCircle2 size={16} /> Update Status
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
+
                         </motion.div>
                     </div>
                 )}

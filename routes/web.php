@@ -537,6 +537,11 @@ Route::prefix("admin")
             ServiceAppointmentController::class,
             "updateStatus",
         ])->name("services.update-status");
+        Route::get("/services/{service}/receipt", [
+            ServiceAppointmentController::class,
+            "printReceipt",
+        ])->name("services.receipt");
+
 
         Route::post("/installments/{installment}/approve", [
             \App\Http\Controllers\InstallmentController::class,
@@ -555,6 +560,11 @@ Route::prefix("admin")
             InvoiceController::class,
             "generate",
         ])->name("transactions.invoice.download");
+        Route::get("/transactions/{transaction}/web-invoice", [
+            InvoiceController::class,
+            "show",
+        ])->name("transactions.invoice.web");
+
 
         // Settings Management
         Route::get("/settings", [

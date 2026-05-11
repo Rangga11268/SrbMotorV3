@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ServiceAppointment extends Model
 {
     use HasFactory;
+    
+    protected $appends = ['items'];
 
     protected $casts = [
+
         'service_date' => 'date',
         'total_cost' => 'decimal:2',
         'paid_at' => 'datetime',
+        'service_notes' => 'string',
     ];
+
 
     protected $fillable = [
         'user_id',
@@ -46,4 +51,23 @@ class ServiceAppointment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get items from service_notes if it's JSON
+     */
+    public function getItemsAttribute()
+    {
+        $data = json_decode($this->service_notes, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($data)) {
+            return $data;
+        }
+        
+        // Fallback for plain text or empty
+        if (!$this->service_notes) return [];
+        
+        return [
+            ['description' => $this->service_notes, 'price' => (float)$this->total_cost, 'qty' => 1]
+        ];
+    }
+
 }

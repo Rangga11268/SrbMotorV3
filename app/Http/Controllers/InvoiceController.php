@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Setting;
+use Inertia\Inertia;
+
 
 class InvoiceController extends Controller
 {
@@ -41,4 +44,30 @@ class InvoiceController extends Controller
             'isPdf' => false
         ]);
     }
+
+    /**
+     * Show interactive web invoice
+     */
+    public function show(Transaction $transaction)
+    {
+        $transaction->load([
+            'user', 
+            'motor', 
+            'creditDetail', 
+            'installments' => function($q) {
+                $q->orderBy('due_date', 'asc');
+            }, 
+            'documents'
+        ]);
+
+        return Inertia::render('Transactions/WebInvoice', [
+            'transaction' => $transaction,
+            'bankSettings' => [
+                'name' => Setting::get('bank_name', 'Bank Central Asia (BCA)'),
+                'account_number' => Setting::get('bank_account_number', '1234567890'),
+                'account_name' => Setting::get('bank_account_name', 'PT SRB MOTOR INDONESIA'),
+            ]
+        ]);
+    }
 }
+

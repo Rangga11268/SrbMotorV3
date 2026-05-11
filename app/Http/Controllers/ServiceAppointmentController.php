@@ -181,7 +181,23 @@ class ServiceAppointmentController extends Controller
             'payment_method' => 'nullable|string|max:50',
             'admin_notes' => 'nullable|string|max:2000',
             'service_notes' => 'nullable|string|max:2000',
+            'service_items' => 'nullable|array',
         ]);
+
+        // Handle itemized billing if service_items is provided
+        if ($request->has('service_items') && is_array($request->service_items)) {
+            $items = $request->service_items;
+            $totalCost = 0;
+            foreach ($items as $item) {
+                $price = (float) ($item['price'] ?? 0);
+                $qty = (int) ($item['qty'] ?? 1);
+                $totalCost += ($price * $qty);
+            }
+            
+            $validated['total_cost'] = $totalCost;
+            $validated['service_notes'] = json_encode($items);
+        }
+
 
         if ($validated['status'] === 'cancelled' && $service->status !== 'cancelled') {
             $validated['cancelled_by'] = 'admin';
@@ -426,4 +442,27 @@ class ServiceAppointmentController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Admin: Print service receipt
+     */
+    public function printReceipt(ServiceAppointment $service)
+    {
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pages.admin.services.receipt', [
+            'service' => $service,
+            'items' => $service->items,
+            'company' => [
+                'name' => Setting::get('company_name', 'SRB MOTOR'),
+                'address' => Setting::get('company_address', 'Jl. Raya No. 123, Jakarta'),
+                'phone' => Setting::get('company_phone', '021-12345678'),
+            ]
+        ]);
+
+        return $pdf->stream("receipt-service-{$service->queue_number}.pdf");
+    }
 }
+

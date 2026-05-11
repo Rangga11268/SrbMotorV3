@@ -368,15 +368,19 @@ export default function Navbar({ auth }) {
                                                     >
                                                         Profil Saya
                                                     </Link>
-                                                    {auth.user.role ===
-                                                        "admin" && (
+                                                    {["admin", "owner", "montir"].includes(
+                                                        auth.user.role,
+                                                    ) && (
                                                         <a
                                                             href={route(
                                                                 "admin.dashboard",
                                                             )}
                                                             className="flex items-center gap-4 px-6 py-3 bg-[#111111] text-white hover:bg-white hover:text-[#111111] border border-[#111111] transition-colors text-xs font-bold uppercase tracking-widest"
                                                         >
-                                                            Dashboard Admin
+                                                            {auth.user.role ===
+                                                            "montir"
+                                                                ? "Dashboard Montir"
+                                                                : "Dashboard Admin"}
                                                         </a>
                                                     )}
                                                     <Link
