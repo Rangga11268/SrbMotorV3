@@ -166,3 +166,64 @@ export function StatusPieChart({ data }) {
     </div>
   );
 }
+export function ServiceVolumeChart({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center text-gray-400 text-sm">
+        Data volume servis belum tersedia.
+      </div>
+    );
+  }
+
+  const chartData = data.map((d) => ({
+    name: d.name || "",
+    total: Number(d.count || 0),
+  }));
+
+  return (
+    <div style={{ width: "100%", height: "100%", minHeight: "320px" }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
+          data={chartData}
+          margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="colorService" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+          <XAxis 
+            dataKey="name" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+            dy={10}
+          />
+          <YAxis 
+            axisLine={false} 
+            tickLine={false}
+            tick={{ fill: "#64748b", fontSize: 12, fontWeight: 500 }}
+            dx={-10}
+          />
+          <Tooltip 
+             contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+             itemStyle={{ fontWeight: 'bold', color: '#8b5cf6' }}
+             labelStyle={{ fontWeight: 'bold' }}
+             formatter={(value) => [`${value} Unit`, 'Total Servis']}
+          />
+          <Area
+            type="monotone"
+            dataKey="total"
+            stroke="#7c3aed"
+            strokeWidth={3}
+            fillOpacity={1}
+            fill="url(#colorService)"
+            activeDot={{ r: 6, strokeWidth: 0, fill: "#7c3aed" }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}

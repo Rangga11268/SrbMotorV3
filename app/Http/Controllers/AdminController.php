@@ -17,13 +17,17 @@ class AdminController extends Controller
 
     public function index(): Response|\Illuminate\Http\RedirectResponse
     {
-        if (auth()->user()->isMontir()) {
-            return redirect()->route('admin.services.index');
-        }
-
         $motorsCount = Motor::count();
         $usersCount = \App\Models\User::count();
         $transactionsCount = Transaction::count();
+
+        // Additional stats for Montir/Staff
+        $totalServicesToday = \App\Models\ServiceAppointment::whereDate('service_date', Carbon::today())->count();
+        $pendingServices = \App\Models\ServiceAppointment::where('status', 'pending')->count();
+        $completedServicesToday = \App\Models\ServiceAppointment::whereDate('service_date', Carbon::today())
+            ->where('status', 'completed')
+            ->count();
+
 
         $cashTransactionsCount = Transaction::where('transaction_type', 'CASH')->count();
         $creditTransactionsCount = Transaction::where('transaction_type', 'CREDIT')->count();
@@ -74,7 +78,38 @@ class AdminController extends Controller
                 ];
             });
         
+        // Service Chart Data for Montir
+        $serviceStatusStats = \App\Models\ServiceAppointment::select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => strtoupper(str_replace('_', ' ', $item->status)),
+                    'value' => $item->count
+                ];
+            });
+
+        $serviceTypeStats = \App\Models\ServiceAppointment::select('service_type', DB::raw('count(*) as count'))
+            ->groupBy('service_type')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'name' => $item->service_type,
+                    'value' => $item->count
+                ];
+            });
+
+        $serviceHistoryStats = collect(range(6, 0))->map(function($days) {
+            $date = Carbon::today()->subDays($days);
+            $count = \App\Models\ServiceAppointment::whereDate('service_date', $date)->count();
+            return [
+                'name' => $date->format('d M'),
+                'count' => $count,
+            ];
+        });
+
         return Inertia::render('Admin/Dashboard', [
+
             'motorsCount' => $motorsCount, 
             'usersCount' => $usersCount,
             'transactionsCount' => $transactionsCount,
@@ -86,6 +121,12 @@ class AdminController extends Controller
             'statusStats' => $statusStats,
             'brandStats' => $brandStats,
             'totalRevenue' => $totalRevenue,
+            'totalServicesToday' => $totalServicesToday,
+            'pendingServices' => $pendingServices,
+            'completedServicesToday' => $completedServicesToday,
+            'serviceStatusStats' => $serviceStatusStats,
+            'serviceTypeStats' => $serviceTypeStats,
+            'serviceHistoryStats' => $serviceHistoryStats,
         ]);
     }
 }

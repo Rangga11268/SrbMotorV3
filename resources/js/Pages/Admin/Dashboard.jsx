@@ -1,6 +1,7 @@
 import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import MetronicAdminLayout from "@/Layouts/MetronicAdminLayout";
+import { usePage } from "@inertiajs/react";
 import {
     Bike,
     Users,
@@ -13,11 +14,13 @@ import {
     TrendingDown,
     Activity,
     Award,
-    ChevronLeft
+    ChevronLeft,
+    Wrench
 } from "lucide-react";
 import {
     RevenueChart,
     StatusPieChart,
+    ServiceVolumeChart,
 } from "@/Components/Admin/DashboardCharts";
 
 export default function Dashboard({
@@ -32,15 +35,35 @@ export default function Dashboard({
     statusStats,
     brandStats,
     totalRevenue,
+    totalServicesToday,
+    pendingServices,
+    completedServicesToday,
+    serviceStatusStats,
+    serviceTypeStats,
+    serviceHistoryStats,
 }) {
+    const { auth } = usePage().props;
+
     const formatCurrency = (val) => new Intl.NumberFormat("id-ID").format(val || 0);
 
+    const isMontir = auth.user.role === 'montir';
+
     const stats = [
+        {
+            title: "Antrean Servis",
+            value: totalServicesToday,
+            icon: Wrench,
+            trend: "Hari Ini",
+            trendUp: true,
+            bgColor: "bg-gradient-to-br from-[#1E1E2D] to-blue-900",
+            shadow: "shadow-blue-500/20",
+            subtext: `${pendingServices} Menunggu • ${completedServicesToday} Selesai`,
+        },
         {
             title: "Total Inventory",
             value: motorsCount,
             icon: Bike,
-            trend: "+3.5%",
+            trend: "Unit",
             trendUp: true,
             bgColor: "bg-gradient-to-br from-blue-500 to-blue-700",
             shadow: "shadow-blue-500/30",
@@ -49,30 +72,33 @@ export default function Dashboard({
             title: "Pengguna Aktif",
             value: usersCount,
             icon: Users,
-            trend: "+12.1%",
+            trend: "Total",
             trendUp: true,
             bgColor: "bg-gradient-to-br from-indigo-500 to-purple-600",
             shadow: "shadow-indigo-500/30",
         },
-        {
-            title: "Total Transaksi",
-            value: transactionsCount,
-            icon: ShoppingCart,
-            trend: "+2.4%",
-            trendUp: true,
-            bgColor: "bg-gradient-to-br from-emerald-400 to-teal-600",
-            shadow: "shadow-emerald-500/30",
-            subtext: `${cashTransactionsCount} Tunai • ${creditTransactionsCount} Kredit`,
-        },
-        {
-            title: "Total Pendapatan",
-            value: `Rp ${formatCurrency(totalRevenue)}`,
-            icon: TrendingUp,
-            trend: "+8.2%",
-            trendUp: true,
-            bgColor: "bg-gradient-to-br from-amber-400 to-orange-500",
-            shadow: "shadow-orange-500/30",
-        },
+        ...(!isMontir ? [
+            {
+                title: "Total Pendapatan",
+                value: `Rp ${formatCurrency(totalRevenue)}`,
+                icon: TrendingUp,
+                trend: "Bulan Ini",
+                trendUp: true,
+                bgColor: "bg-gradient-to-br from-amber-400 to-orange-500",
+                shadow: "shadow-orange-500/30",
+            },
+        ] : [
+            {
+                title: "Total Transaksi",
+                value: transactionsCount,
+                icon: ShoppingCart,
+                trend: "Penjualan",
+                trendUp: true,
+                bgColor: "bg-gradient-to-br from-emerald-400 to-teal-600",
+                shadow: "shadow-emerald-500/30",
+                subtext: `${cashTransactionsCount} Tunai • ${creditTransactionsCount} Kredit`,
+            }
+        ]),
     ];
 
     const getStatusBadge = (status) => {
@@ -110,26 +136,38 @@ export default function Dashboard({
                 <div className="relative p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="max-w-2xl">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-300 text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-sm border border-white/5">
-                            <Award size={14} /> SRB Admin Gateway
+                            <Award size={14} /> {isMontir ? 'Staff Mekanik Gateway' : 'SRB Admin Gateway'}
                         </div>
-                        <h2 className="text-2xl md:text-3xl font-black mb-3 tracking-tight">Performa Sistem Aktual</h2>
+                        <h2 className="text-2xl md:text-3xl font-black mb-3 tracking-tight">
+                            {isMontir ? 'Monitor Antrean & Servis' : 'Performa Sistem Aktual'}
+                        </h2>
                         <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-                            Pantau secara real-time performa penjualan unit motor, ketersediaan inventaris, dan anomali transaksi. Semua metrik disajikan secara langsung untuk pengambilan keputusan yang cepat.
+                            {isMontir 
+                                ? 'Pantau antrean servis hari ini, kelola status pengerjaan unit pelanggan, dan pastikan setiap servis selesai tepat waktu sesuai jadwal.'
+                                : 'Pantau secara real-time performa penjualan unit motor, ketersediaan inventaris, dan anomali transaksi. Semua metrik disajikan secara langsung.'}
                         </p>
                     </div>
                     
                     <div className="flex flex-col gap-3 shrink-0">
-                        <Link href={route("admin.motors.create")} className="flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/30">
-                            <Plus size={18} /> Daftarkan Unit Baru
-                        </Link>
-                        <div className="grid grid-cols-2 gap-3 mt-2">
-                            <Link href={route("admin.credits.index")} className="flex items-center justify-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-sm font-semibold transition-all">
-                                <CreditCard size={16} className="text-gray-400" /> Kredit
+                        {isMontir ? (
+                            <Link href="/admin/services" className="flex items-center justify-center gap-2 px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-600/30">
+                                <Wrench size={18} /> Kelola Antrean Servis
                             </Link>
-                            <Link href={route("admin.transactions.index")} className="flex items-center justify-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-sm font-semibold transition-all">
-                                <ShoppingCart size={16} className="text-gray-400" /> Tunai
-                            </Link>
-                        </div>
+                        ) : (
+                            <>
+                                <Link href={route("admin.motors.create")} className="flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/30">
+                                    <Plus size={18} /> Daftarkan Unit Baru
+                                </Link>
+                                <div className="grid grid-cols-2 gap-3 mt-2">
+                                    <Link href={route("admin.credits.index")} className="flex items-center justify-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-sm font-semibold transition-all">
+                                        <CreditCard size={16} className="text-gray-400" /> Kredit
+                                    </Link>
+                                    <Link href={route("admin.transactions.index")} className="flex items-center justify-center gap-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl text-sm font-semibold transition-all">
+                                        <ShoppingCart size={16} className="text-gray-400" /> Tunai
+                                    </Link>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -170,15 +208,25 @@ export default function Dashboard({
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 lg:col-span-2 flex flex-col overflow-hidden">
                     <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
                         <div>
-                            <h3 className="font-bold text-gray-800">Tren Pendapatan Bulanan</h3>
-                            <p className="text-xs text-gray-500 mt-1">Grafik akumulasi penjualan bersih (Tunai + DP Kredit)</p>
+                            <h3 className="font-bold text-gray-800">
+                                {isMontir ? "Volume Servis (7 Hari Terakhir)" : "Tren Pendapatan Bulanan"}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {isMontir 
+                                    ? "Statistik jumlah pengerjaan servis dalam satu minggu terakhir"
+                                    : "Grafik akumulasi penjualan bersih (Tunai + DP Kredit)"}
+                            </p>
                         </div>
-                        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-                            <Activity size={20} />
+                        <div className={`p-2 ${isMontir ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'} rounded-lg`}>
+                            {isMontir ? <Wrench size={20} /> : <Activity size={20} />}
                         </div>
                     </div>
                     <div className="p-6 flex-1 min-h-[340px] bg-gray-50/30">
-                        <RevenueChart data={monthlyStats} />
+                        {isMontir ? (
+                            <ServiceVolumeChart data={serviceHistoryStats} />
+                        ) : (
+                            <RevenueChart data={monthlyStats} />
+                        )}
                     </div>
                 </div>
 
@@ -186,13 +234,28 @@ export default function Dashboard({
                 <div className="flex flex-col gap-6">
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col flex-1 overflow-hidden">
                         <div className="px-6 py-5 border-b border-gray-100 bg-white">
-                            <h3 className="font-bold text-gray-800">Distribusi Merek (Brand)</h3>
-                            <p className="text-xs text-gray-500 mt-1">Proporsi inventaris berdasarkan pabrikan</p>
+                            <h3 className="font-bold text-gray-800">
+                                {isMontir ? "Status Antrean Servis" : "Distribusi Merek (Brand)"}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                                {isMontir ? "Proporsi status pengerjaan unit saat ini" : "Proporsi inventaris berdasarkan pabrikan"}
+                            </p>
                         </div>
                         <div className="p-6 flex-1 flex items-center justify-center min-h-[250px] bg-gray-50/30">
-                            <StatusPieChart data={brandStats?.map(b => ({ label: b.name, total: b.value }))} />
+                            <StatusPieChart data={isMontir ? serviceStatusStats : brandStats?.map(b => ({ label: b.name, total: b.value }))} />
                         </div>
                     </div>
+                    {isMontir && (
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col flex-1 overflow-hidden">
+                            <div className="px-6 py-5 border-b border-gray-100 bg-white">
+                                <h3 className="font-bold text-gray-800">Tipe Servis Terpopuler</h3>
+                                <p className="text-xs text-gray-500 mt-1">Distribusi berdasarkan kategori layanan</p>
+                            </div>
+                            <div className="p-6 flex-1 flex items-center justify-center min-h-[250px] bg-gray-50/30">
+                                <StatusPieChart data={serviceTypeStats} />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
