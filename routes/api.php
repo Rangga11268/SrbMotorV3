@@ -124,4 +124,6 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::get("/services/unavailable-dates", [App\Http\Controllers\ServiceAppointmentController::class, "getUnavailableDates"]);
     Route::get("/services/{id}", [App\Http\Controllers\Api\ServiceAppointmentController::class, "show"]);
     Route::post("/services/{id}/cancel", [App\Http\Controllers\Api\ServiceAppointmentController::class, "cancel"]);
+    Route::post("/services/{appointment}/pay", [App\Http\Controllers\ServiceAppointmentController::class, "getSnapToken"]);
+    Route::post("/services/{appointment}/check-status", [App\Http\Controllers\ServiceAppointmentController::class, "checkPaymentStatus"]);
 });

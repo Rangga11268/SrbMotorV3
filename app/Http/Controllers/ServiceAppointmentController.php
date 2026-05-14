@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Midtrans\Transaction;
 
 class ServiceAppointmentController extends Controller
 {
@@ -402,19 +403,17 @@ class ServiceAppointmentController extends Controller
             return response()->json(['error' => 'Transaksi tidak valid untuk pembayaran.'], 400);
         }
 
-        // Return existing token if we already have it
-        if ($appointment->snap_token) {
-            return response()->json(['token' => $appointment->snap_token]);
-        }
-
         // Configure Midtrans
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = config('midtrans.is_sanitized');
         Config::$is3ds = config('midtrans.is_3ds');
 
+        // Always generate a new unique order ID for each attempt to avoid duplicate order ID errors and handle expiry
+        $orderId = 'TRX-SRB-' . $appointment->id . '-' . time();
+
         $transactionDetails = [
-            'order_id' => 'TRX-SRB-' . $appointment->id . '-' . time(),
+            'order_id' => $orderId,
             'gross_amount' => (int) $appointment->total_cost,
         ];
 
@@ -427,20 +426,68 @@ class ServiceAppointmentController extends Controller
         $params = [
             'transaction_details' => $transactionDetails,
             'customer_details' => $customerDetails,
+            'expiry' => [
+                'start_time' => date("Y-m-d H:i:s O"),
+                'unit' => 'hour',
+                'duration' => 24
+            ]
         ];
 
         try {
             $snapToken = Snap::getSnapToken($params);
             
-            // Save token to DB
+            // Save token and orderId to DB (overwrite old one if exists)
+            // Using | as separator to avoid adding new columns as requested by user
             $appointment->update([
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken . '|' . $orderId
             ]);
 
             return response()->json(['token' => $snapToken]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * API: Check payment status for mobile
+     */
+    public function checkPaymentStatus(ServiceAppointment $appointment)
+    {
+        if ($appointment->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Akses ditolak.'], 403);
+        }
+
+        // Manual check fallback if not paid but has snap token
+        if ($appointment->payment_status !== 'paid' && $appointment->snap_token) {
+            $parts = explode('|', $appointment->snap_token);
+            $orderId = count($parts) > 1 ? $parts[1] : null;
+
+            if ($orderId) {
+                try {
+                    Config::$serverKey = config('midtrans.server_key');
+                    Config::$isProduction = config('midtrans.is_production');
+                    
+                    $status = Transaction::status($orderId);
+                    
+                    if ($status->transaction_status == 'settlement' || $status->transaction_status == 'capture') {
+                        $appointment->update([
+                            'payment_status' => 'paid',
+                            'paid_at' => now(),
+                            'payment_method' => 'Midtrans: ' . ($status->payment_type ?? 'online'),
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    // Ignore errors during manual check, fallback to current DB status
+                    \Log::warning("Manual Midtrans check failed for Order ID {$orderId}: " . $e->getMessage());
+                }
+            }
+        }
+
+        return response()->json([
+            'paid' => $appointment->payment_status === 'paid',
+            'status' => $appointment->status,
+            'payment_status' => $appointment->payment_status
+        ]);
     }
 
     /**

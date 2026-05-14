@@ -46,10 +46,27 @@ class PaymentCallbackController extends Controller
                 $appointmentId = $parts[2];
                 $appointment = ServiceAppointment::find($appointmentId);
 
+                \Log::info('Service Payment Callback Processing', [
+                    'appointment_id' => $appointmentId,
+                    'found' => (bool)$appointment,
+                    'status' => $notification->transaction_status
+                ]);
+
                 if ($appointment) {
                     $transactionStatus = $notification->transaction_status;
                     $paymentType = $notification->payment_type;
                     $fraudStatus = $notification->fraud_status;
+
+                    // Security: Verify amount if possible (optional but good)
+                    // Note: gross_amount from Midtrans might be float/string
+                    $amountMatched = (int)$notification->gross_amount == (int)$appointment->total_cost;
+                    
+                    if (!$amountMatched) {
+                        \Log::warning('Service Payment Amount Mismatch', [
+                            'expected' => $appointment->total_cost,
+                            'received' => $notification->gross_amount
+                        ]);
+                    }
 
                     if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
                         if ($fraudStatus == 'challenge') {
@@ -60,12 +77,14 @@ class PaymentCallbackController extends Controller
                                 'paid_at' => \Carbon\Carbon::now(),
                                 'payment_method' => 'Midtrans: ' . $paymentType,
                             ]);
+                            \Log::info('Service Payment Success', ['id' => $appointment->id]);
                         }
                     } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
                         $appointment->update([
                             'snap_token' => null, 
                             'payment_status' => 'unpaid'
                         ]);
+                        \Log::info('Service Payment Failed/Expired', ['id' => $appointment->id, 'status' => $transactionStatus]);
                     }
                     return response()->json(['message' => 'Service payment status updated']);
                 }
