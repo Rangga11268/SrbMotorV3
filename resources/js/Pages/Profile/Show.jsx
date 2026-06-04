@@ -267,9 +267,19 @@ export default function Show({ user, dashboard }) {
                                                     TERVERIFIKASI
                                                 </div>
                                             ) : (
-                                                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-amber-600 rounded-none text-[9px] font-bold border border-amber-600 uppercase tracking-widest">
-                                                    <AlertTriangle className="w-3 h-3" />{" "}
-                                                    BELUM TERVERIFIKASI
+                                                <div className="flex flex-col items-start gap-2">
+                                                    <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-amber-600 rounded-none text-[9px] font-bold border border-amber-600 uppercase tracking-widest">
+                                                        <AlertTriangle className="w-3 h-3" />{" "}
+                                                        BELUM TERVERIFIKASI
+                                                    </div>
+                                                    {isCurrentUser && (
+                                                        <Link
+                                                            href="/email/verify"
+                                                            className="text-[9px] font-black text-blue-600 hover:text-black uppercase tracking-wider underline transition-colors"
+                                                        >
+                                                            Verifikasi Sekarang
+                                                        </Link>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>

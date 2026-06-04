@@ -62,11 +62,21 @@ class CreditController extends Controller
             return response()->json($credits);
         }
 
-        // Get unique statuses from the table for filters
-        $statuses = CreditDetail::select('status')
-            ->distinct()
-            ->pluck('status')
-            ->toArray();
+        // Fix BUG-001: Definisikan semua status secara statis agar opsi seperti 'ditarik_leasing' selalu muncul meskipun belum ada datanya di database
+        $statuses = [
+            'pengajuan_masuk',
+            'menunggu_persetujuan',
+            'verifikasi_dokumen',
+            'dikirim_ke_leasing',
+            'survey_dijadwalkan',
+            'survey_berjalan',
+            'menunggu_keputusan_leasing',
+            'disetujui',
+            'ditolak',
+            'dp_dibayar',
+            'ditarik_leasing',
+            'selesai'
+        ];
 
         return Inertia::render('Admin/Credits/Index', [
             'credits' => $credits,

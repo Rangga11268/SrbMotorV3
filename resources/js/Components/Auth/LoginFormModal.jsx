@@ -64,12 +64,12 @@ export default function LoginFormModal({ onSwitch }) {
                         <label className="block text-[9px] font-black text-[#262626] uppercase tracking-[0.2em]">
                             Kata Sandi
                         </label>
-                        <a
-                            href="#"
+                        <Link
+                            href={route("password.request")}
                             className="text-[8px] font-bold text-[#bbbbbb] hover:text-[#1c69d4] uppercase tracking-widest transition-colors"
                         >
                             Lupa?
-                        </a>
+                        </Link>
                     </div>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

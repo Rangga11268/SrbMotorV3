@@ -186,100 +186,104 @@ class MotorGalleryController extends Controller
 
         $bookingFee = (float) ($request->booking_fee ?? 0);
 
-        $transaction = Transaction::create([
-            "user_id" => Auth::id(),
-            "motor_id" => $motor->id,
-            "reference_number" => "TRX-" . strtoupper(uniqid()),
-            "transaction_type" => "CASH",
-            "status" => "new_order",
-            "notes" => $request->notes ?? "",
-            "motor_price" => $motor->price,
-            "booking_fee" => $bookingFee,
-            "total_price" => $motor->price,
-            "discount_amount" => 0,
-            "final_price" => $motor->price,
-            "payment_method" => $request->payment_method,
-            "phone" => $request->phone,
-            "email" => $request->email,
-            "address" => $request->address,
-            "name" => $request->name,
-            "nik" => $request->nik,
-            "motor_color" => $request->motor_color,
-            "delivery_method" => $request->delivery_method,
-            "branch_code" => $request->branch_code,
-        ]);
-
-        // Simpan dokumen KTP & KK
-        if ($request->hasFile('ktp_file')) {
-            $ktpPath = $request->file('ktp_file')->store(
-                'cash-documents/' . $transaction->id,
-                'public'
-            );
-            Document::create([
-                'transaction_id' => $transaction->id,
-                'document_type' => 'KTP',
-                'file_path' => $ktpPath,
-                'original_name' => $request->file('ktp_file')->getClientOriginalName(),
+        $transaction = \Illuminate\Support\Facades\DB::transaction(function () use ($motor, $request, $bookingFee) {
+            $transaction = Transaction::create([
+                "user_id" => Auth::id(),
+                "motor_id" => $motor->id,
+                "reference_number" => "TRX-" . strtoupper(uniqid()),
+                "transaction_type" => "CASH",
+                "status" => "new_order",
+                "notes" => $request->notes ?? "",
+                "motor_price" => $motor->price,
+                "booking_fee" => $bookingFee,
+                "total_price" => $motor->price,
+                "discount_amount" => 0,
+                "final_price" => $motor->price,
+                "payment_method" => $request->payment_method,
+                "phone" => $request->phone,
+                "email" => $request->email,
+                "address" => $request->address,
+                "name" => $request->name,
+                "nik" => $request->nik,
+                "motor_color" => $request->motor_color,
+                "delivery_method" => $request->delivery_method,
+                "branch_code" => $request->branch_code,
             ]);
-        }
 
-        if ($request->hasFile('kk_file')) {
-            $kkPath = $request->file('kk_file')->store(
-                'cash-documents/' . $transaction->id,
-                'public'
-            );
-            Document::create([
-                'transaction_id' => $transaction->id,
-                'document_type' => 'KK',
-                'file_path' => $kkPath,
-                'original_name' => $request->file('kk_file')->getClientOriginalName(),
-            ]);
-        }
+            // Simpan dokumen KTP & KK
+            if ($request->hasFile('ktp_file')) {
+                $ktpPath = $request->file('ktp_file')->store(
+                    'cash-documents/' . $transaction->id,
+                    'public'
+                );
+                Document::create([
+                    'transaction_id' => $transaction->id,
+                    'document_type' => 'KTP',
+                    'file_path' => $ktpPath,
+                    'original_name' => $request->file('ktp_file')->getClientOriginalName(),
+                ]);
+            }
 
-        $transaction->logs()->create([
-            "status_from" => null,
-            "status_to" => "new_order",
-            "status" => "new_order",
-            "actor_id" => Auth::id(),
-            "actor_type" => \App\Models\User::class,
-            "notes" => "Pesanan tunai baru dibuat oleh pelanggan",
-            "description" => "Pesanan tunai baru dibuat",
-        ]);
-
-        if ($bookingFee > 0) {
-            $transaction->update(["status" => "waiting_payment"]);
-            \App\Models\Installment::create([
-                "transaction_id" => $transaction->id,
-                "installment_number" => 0,
-                "amount" => $bookingFee,
-                "due_date" => now()->addDays(1),
-                "status" => "pending",
-            ]);
+            if ($request->hasFile('kk_file')) {
+                $kkPath = $request->file('kk_file')->store(
+                    'cash-documents/' . $transaction->id,
+                    'public'
+                );
+                Document::create([
+                    'transaction_id' => $transaction->id,
+                    'document_type' => 'KK',
+                    'file_path' => $kkPath,
+                    'original_name' => $request->file('kk_file')->getClientOriginalName(),
+                ]);
+            }
 
             $transaction->logs()->create([
-                "status_from" => "new_order",
-                "status_to" => "waiting_payment",
-                "status" => "waiting_payment",
+                "status_from" => null,
+                "status_to" => "new_order",
+                "status" => "new_order",
                 "actor_id" => Auth::id(),
                 "actor_type" => \App\Models\User::class,
-                "notes" =>
-                    "Menunggu pembayaran awal (Booking Fee) sebesar Rp " .
-                    number_format($bookingFee, 0, ",", "."),
-                "description" => "Tagihan booking fee dibuat",
+                "notes" => "Pesanan tunai baru dibuat oleh pelanggan",
+                "description" => "Pesanan tunai baru dibuat",
             ]);
-        }
 
-        $remainingAmount = $motor->price - $bookingFee;
+            if ($bookingFee > 0) {
+                $transaction->update(["status" => "waiting_payment"]);
+                \App\Models\Installment::create([
+                    "transaction_id" => $transaction->id,
+                    "installment_number" => 0,
+                    "amount" => $bookingFee,
+                    "due_date" => now()->addDays(1),
+                    "status" => "pending",
+                ]);
 
-        if ($remainingAmount > 0) {
-            \App\Models\Installment::create([
-                "transaction_id" => $transaction->id,
-                "installment_number" => 1,
-                "amount" => $remainingAmount,
-                "due_date" => now()->addDays(7),
-                "status" => "pending",
-            ]);
-        }
+                $transaction->logs()->create([
+                    "status_from" => "new_order",
+                    "status_to" => "waiting_payment",
+                    "status" => "waiting_payment",
+                    "actor_id" => Auth::id(),
+                    "actor_type" => \App\Models\User::class,
+                    "notes" =>
+                        "Menunggu pembayaran awal (Booking Fee) sebesar Rp " .
+                        number_format($bookingFee, 0, ",", "."),
+                    "description" => "Tagihan booking fee dibuat",
+                ]);
+            }
+
+            $remainingAmount = $motor->price - $bookingFee;
+
+            if ($remainingAmount > 0) {
+                \App\Models\Installment::create([
+                    "transaction_id" => $transaction->id,
+                    "installment_number" => 1,
+                    "amount" => $remainingAmount,
+                    "due_date" => now()->addDays(7),
+                    "status" => "pending",
+                ]);
+            }
+
+            return $transaction;
+        });
 
         try {
             if ($request->phone) {
@@ -396,63 +400,73 @@ class MotorGalleryController extends Controller
                 ->withInput();
         }
 
-        $transaction = Transaction::create([
-            "user_id" => Auth::id(),
-            "motor_id" => $motor->id,
-            "reference_number" => "TRX-" . strtoupper(uniqid()),
-            "transaction_type" => "CREDIT",
-            "status" => "menunggu_persetujuan",
-            "notes" => $request->notes ?? "",
-            "motor_price" => $motor->price,
-            "total_price" => $motor->price,
-            "discount_amount" => 0,
-            "final_price" => $motor->price,
-            "payment_method" => $request->payment_method,
-            "phone" => $request->phone,
-            "address" => $request->address,
-            "name" => $request->name,
-            "nik" => $request->nik,
-            "motor_color" => $request->motor_color,
-            "delivery_method" => $request->delivery_method,
-            "branch_code" => $request->branch_code,
-            "occupation" => $request->occupation,
-            "monthly_income" => $request->monthly_income,
-            "employment_duration" => $request->employment_duration,
-        ]);
+        $transaction = \Illuminate\Support\Facades\DB::transaction(function () use ($motor, $request) {
+            $transaction = Transaction::create([
+                "user_id" => Auth::id(),
+                "motor_id" => $motor->id,
+                "reference_number" => "TRX-" . strtoupper(uniqid()),
+                "transaction_type" => "CREDIT",
+                "status" => "menunggu_persetujuan",
+                "notes" => $request->notes ?? "",
+                "motor_price" => $motor->price,
+                "total_price" => $motor->price,
+                "discount_amount" => 0,
+                "final_price" => $motor->price,
+                "payment_method" => $request->payment_method,
+                "phone" => $request->phone,
+                "email" => $request->email,
+                "address" => $request->address,
+                "name" => $request->name,
+                "nik" => $request->nik,
+                "motor_color" => $request->motor_color,
+                "delivery_method" => $request->delivery_method,
+                "branch_code" => $request->branch_code,
+                "occupation" => $request->occupation,
+                "monthly_income" => $request->monthly_income,
+                "employment_duration" => $request->employment_duration,
+            ]);
 
-        $transaction->logs()->create([
-            "status_from" => null,
-            "status_to" => "menunggu_persetujuan",
-            "status" => "menunggu_persetujuan",
-            "actor_id" => Auth::id(),
-            "actor_type" => \App\Models\User::class,
-            "notes" => "Pengajuan kredit baru dibuat oleh pelanggan",
-            "description" => "Pengajuan kredit baru dibuat",
-        ]);
+            $transaction->logs()->create([
+                "status_from" => null,
+                "status_to" => "menunggu_persetujuan",
+                "status" => "menunggu_persetujuan",
+                "actor_id" => Auth::id(),
+                "actor_type" => \App\Models\User::class,
+                "notes" => "Pengajuan kredit baru dibuat oleh pelanggan",
+                "description" => "Pengajuan kredit baru dibuat",
+            ]);
+
+            $loanAmount = $motor->price - $request->dp_amount;
+            $interestRate = 0.015; // 1.5% bunga flat per bulan
+            $totalInterest = $loanAmount * $interestRate * $request->tenor;
+            $monthlyInstallment = ($loanAmount + $totalInterest) / $request->tenor;
+
+            CreditDetail::create([
+                "transaction_id" => $transaction->id,
+                "dp_amount" => $request->dp_amount,
+                "tenor" => $request->tenor,
+                "monthly_installment" => $monthlyInstallment,
+                "interest_rate" => $interestRate,
+                "status" => "pengajuan_masuk",
+                "reference_number" => "REF-" . strtoupper(uniqid()),
+            ]);
+
+            // Create DP Installment (#0)
+            \App\Models\Installment::create([
+                "transaction_id" => $transaction->id,
+                "installment_number" => 0,
+                "amount" => $request->dp_amount,
+                "due_date" => now()->addDays(1),
+                "status" => "pending",
+            ]);
+
+            return $transaction;
+        });
 
         $loanAmount = $motor->price - $request->dp_amount;
-        $interestRate = 0.015; // 1.5% bunga flat per bulan
+        $interestRate = 0.015;
         $totalInterest = $loanAmount * $interestRate * $request->tenor;
         $monthlyInstallment = ($loanAmount + $totalInterest) / $request->tenor;
-
-        CreditDetail::create([
-            "transaction_id" => $transaction->id,
-            "dp_amount" => $request->dp_amount,
-            "tenor" => $request->tenor,
-            "monthly_installment" => $monthlyInstallment,
-            "interest_rate" => $interestRate,
-            "status" => "pengajuan_masuk",
-            "reference_number" => "REF-" . strtoupper(uniqid()),
-        ]);
-
-        // Create DP Installment (#0)
-        \App\Models\Installment::create([
-            "transaction_id" => $transaction->id,
-            "installment_number" => 0,
-            "amount" => $request->dp_amount,
-            "due_date" => now()->addDays(1),
-            "status" => "pending",
-        ]);
 
         try {
             if ($request->phone) {

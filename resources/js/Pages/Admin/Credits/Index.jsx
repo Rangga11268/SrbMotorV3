@@ -19,6 +19,7 @@ const STATUS_MAP = {
     disetujui:                 { label: "Disetujui",              cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
     ditolak:                   { label: "Ditolak",                cls: "bg-red-100 text-red-600 border-red-200" },
     dp_dibayar:                { label: "DP Dibayar",             cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+    ditarik_leasing:           { label: "Ditarik Leasing",        cls: "bg-rose-100 text-rose-700 border-rose-200" },
     selesai:                   { label: "Selesai",                cls: "bg-emerald-100 text-emerald-700 border-emerald-200" },
 };
 
@@ -121,17 +122,14 @@ export default function Index({ credits: initialCredits, statuses: statusList, f
                         onChange={(e) => setStatus(e.target.value)}
                     >
                         <option value="">Semua Status</option>
-                        <option value="pengajuan_masuk">Pengajuan Masuk</option>
-                        <option value="menunggu_persetujuan">Menunggu Persetujuan</option>
-                        <option value="verifikasi_dokumen">Verifikasi Dokumen</option>
-                        <option value="dikirim_ke_leasing">Dikirim ke Leasing</option>
-                        <option value="survey_dijadwalkan">Survey Dijadwalkan</option>
-                        <option value="survey_berjalan">Survey Berjalan</option>
-                        <option value="menunggu_keputusan_leasing">Menunggu Keputusan</option>
-                        <option value="disetujui">Disetujui</option>
-                        <option value="ditolak">Ditolak</option>
-                        <option value="dp_dibayar">DP Dibayar</option>
-                        <option value="selesai">Selesai</option>
+                        {statusList && statusList.map((st) => {
+                            const mapObj = STATUS_MAP[st] || { label: st };
+                            return (
+                                <option key={st} value={st}>
+                                    {mapObj.label}
+                                </option>
+                            );
+                        })}
                     </select>
                 </div>
                 {(search || status) && (

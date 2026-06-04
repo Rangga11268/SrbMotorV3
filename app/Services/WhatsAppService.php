@@ -16,10 +16,30 @@ class WhatsAppService
      */
     public static function sendMessage($target, $message)
     {
-        $token = config('services.fonnte.token'); // We will add this to config later
+        $token = config('services.fonnte.token');
 
         if (!$token) {
             Log::warning('WhatsApp Notification skipped: FONNTE_TOKEN is missing in .env');
+            return false;
+        }
+
+        // Clean and normalize targets (Fonnte supports comma-separated targets)
+        $targets = explode(',', $target);
+        $cleanedTargets = [];
+        foreach ($targets as $t) {
+            $cleaned = preg_replace('/[^0-9]/', '', $t);
+            // Convert leading 08 to 628
+            if (strpos($cleaned, '08') === 0) {
+                $cleaned = '62' . substr($cleaned, 1);
+            }
+            if ($cleaned) {
+                $cleanedTargets[] = $cleaned;
+            }
+        }
+        $target = implode(',', $cleanedTargets);
+
+        if (empty($target)) {
+            Log::warning('WhatsApp Notification skipped: Target phone number is empty after cleaning');
             return false;
         }
 

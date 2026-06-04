@@ -68,6 +68,8 @@ class ReportController extends Controller
             'description' => 'Laporan dibuat pada ' . now()->format('d M Y H:i'),
             'startDate' => $startDate->format('d M Y'),
             'endDate' => $endDate->format('d M Y'),
+            'rawStartDate' => $request->start_date,
+            'rawEndDate' => $request->end_date,
             'data' => $reportData
         ]);
     }

@@ -142,6 +142,16 @@ export default function Show({
                         >
                             <DownloadCloud size={16} /> Export PDF
                         </button>
+                        <a
+                            href={route("admin.reports.export-excel", {
+                                type,
+                                start_date: rawStartDate,
+                                end_date: rawEndDate,
+                            })}
+                            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-700 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm"
+                        >
+                            <DownloadCloud size={16} /> Export Excel
+                        </a>
                     </div>
                 </div>
 

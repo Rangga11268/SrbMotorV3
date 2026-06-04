@@ -40,22 +40,37 @@ class AdminController extends Controller
 
 
 
-        $monthlyStats = Transaction::select(
+        $monthlyStatsMap = Transaction::select(
             DB::raw('count(id) as count'),
             DB::raw('SUM(final_price) as revenue'),
             DB::raw("DATE_FORMAT(created_at, '%Y-%m') as date")
         )
-        ->where('created_at', '>=', Carbon::now()->subMonths(6))
+        ->where('created_at', '>=', Carbon::now()->subMonths(5)->startOfMonth())
         ->groupBy('date')
-        ->orderBy('date', 'ASC')
         ->get()
-        ->map(function ($item) {
-            return [
-                'name' => Carbon::createFromFormat('Y-m', $item->date)->format('M Y'),
-                'sales' => $item->count,
-                'revenue' => (float) $item->revenue
-            ];
-        });
+        ->keyBy('date');
+
+        $monthlyStats = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $monthDate = Carbon::now()->subMonths($i);
+            $key = $monthDate->format('Y-m');
+            $name = $monthDate->format('M Y');
+            
+            if ($monthlyStatsMap->has($key)) {
+                $item = $monthlyStatsMap->get($key);
+                $monthlyStats->push([
+                    'name' => $name,
+                    'sales' => $item->count,
+                    'revenue' => (float) $item->revenue
+                ]);
+            } else {
+                $monthlyStats->push([
+                    'name' => $name,
+                    'sales' => 0,
+                    'revenue' => 0.0
+                ]);
+            }
+        }
 
 
         $statusStats = Transaction::select('status', DB::raw('count(*) as count'))

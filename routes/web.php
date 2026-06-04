@@ -269,6 +269,16 @@ Route::middleware(["guest", "throttle:5,1"])->group(function () {
     Route::post("/register", [AuthController::class, "register"])->name(
         "register",
     );
+
+    // Password Reset Routes
+    Route::get("/forgot-password", [\App\Http\Controllers\PasswordResetController::class, "showForgotPasswordForm"])
+        ->name("password.request");
+    Route::post("/forgot-password", [\App\Http\Controllers\PasswordResetController::class, "sendResetLinkEmail"])
+        ->name("password.email");
+    Route::get("/reset-password/{token}", [\App\Http\Controllers\PasswordResetController::class, "showResetPasswordForm"])
+        ->name("password.reset");
+    Route::post("/reset-password", [\App\Http\Controllers\PasswordResetController::class, "resetPassword"])
+        ->name("password.update");
 });
 
 // Email Verification Routes
