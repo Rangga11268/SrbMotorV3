@@ -9,7 +9,6 @@ import {
     Eye,
     EyeOff,
 } from "lucide-react";
-import Button from "@/Components/UI/Button";
 import axios from "axios";
 
 export default function VerifyEmail() {
@@ -65,24 +64,20 @@ export default function VerifyEmail() {
         <>
             <Head title="Verifikasi Email" />
 
-            <div className="min-h-screen bg-gradient-to-br from-primary/5 via-white to-secondary/5 flex items-center justify-center p-4 md:p-6">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 md:p-6">
                 <div className="w-full max-w-md sm:max-w-lg">
                     {/* Main Card */}
-                    <div className="bg-white rounded-3xl shadow-2xl shadow-primary/15 border border-primary/5 overflow-hidden">
+                    <div className="bg-white rounded-none border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                         {/* Icon Section */}
-                        <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-8 md:p-12 flex flex-col items-center justify-center">
-                            <div className="w-24 h-24 bg-white rounded-full shadow-lg shadow-primary/10 flex items-center justify-center mb-4 relative">
-                                <Mail
-                                    className="w-12 h-12 text-primary animate-bounce"
-                                    style={{ animationDuration: "2s" }}
-                                />
-                                <div className="absolute inset-0 rounded-full bg-primary/5 animate-pulse" />
+                        <div className="relative bg-gray-50 border-b-2 border-black p-8 md:p-12 flex flex-col items-center justify-center">
+                            <div className="w-20 h-20 bg-white border-2 border-black flex items-center justify-center mb-4">
+                                <Mail className="w-10 h-10 text-black animate-bounce" style={{ animationDuration: "2s" }} />
                             </div>
                             <div className="text-center space-y-3">
-                                <h1 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-none uppercase tracking-tight">
                                     Verifikasi Email
                                 </h1>
-                                <p className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wide">
+                                <p className="text-gray-400 text-[9px] font-bold uppercase tracking-widest">
                                     Langkah terakhir sebelum Anda siap
                                 </p>
                             </div>
@@ -91,35 +86,31 @@ export default function VerifyEmail() {
                         {/* Content Section */}
                         <div className="p-8 md:p-10 space-y-6">
                             {/* Email Info */}
-                            <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-6 border border-primary/10">
-                                <p className="text-xs text-gray-500 font-black uppercase tracking-widest mb-2">
+                            <div className="bg-gray-50 border-2 border-black p-6 rounded-none">
+                                <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-2">
                                     Email Terdaftar
                                 </p>
-                                <p className="text-lg md:text-xl font-black text-gray-900 break-all">
+                                <p className="text-lg md:text-xl font-black text-gray-900 break-all select-all">
                                     {user?.email}
                                 </p>
                             </div>
 
                             {/* Description */}
                             <div className="space-y-3">
-                                <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-                                    Link verifikasi telah dikirimkan ke email
-                                    Anda. Cek inbox dan klik link untuk
-                                    mengaktifkan akun Anda.
+                                <p className="text-gray-600 text-xs font-bold uppercase tracking-wide leading-relaxed">
+                                    Link verifikasi telah dikirimkan ke email Anda. Cek inbox dan klik link untuk mengaktifkan akun Anda.
                                 </p>
-                                <ul className="space-y-2 text-sm text-gray-600">
+                                <ul className="space-y-2 text-[10px] text-gray-600 font-bold uppercase tracking-wider">
                                     <li className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                        Periksa folder <strong>Spam</strong>{" "}
-                                        atau <strong>Promosi</strong>
+                                        <span className="w-2 h-2 bg-black shrink-0" />
+                                        Periksa folder <strong>Spam</strong> atau <strong>Promosi</strong>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                        Link berlaku selama{" "}
-                                        <strong>24 jam</strong>
+                                        <span className="w-2 h-2 bg-black shrink-0" />
+                                        Link berlaku selama <strong>24 jam</strong>
                                     </li>
                                     <li className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                        <span className="w-2 h-2 bg-black shrink-0" />
                                         Periksa koneksi internet Anda
                                     </li>
                                 </ul>
@@ -127,13 +118,13 @@ export default function VerifyEmail() {
 
                             {/* Status Messages */}
                             {status && (
-                                <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-4 flex items-start gap-3 animate-in slide-in-from-top">
-                                    <CheckCircle className="w-6 h-6 text-green-600 shrink-0 mt-0.5" />
+                                <div className="bg-white border-2 border-emerald-600 p-4 flex items-start gap-3 rounded-none animate-in slide-in-from-top">
+                                    <CheckCircle className="w-6 h-6 text-emerald-600 shrink-0 mt-0.5" />
                                     <div>
-                                        <p className="text-green-800 text-sm font-bold">
+                                        <p className="text-emerald-600 text-[10px] font-black uppercase tracking-widest">
                                             Sukses!
                                         </p>
-                                        <p className="text-green-700 text-sm">
+                                        <p className="text-gray-800 text-xs font-bold mt-1">
                                             {status}
                                         </p>
                                     </div>
@@ -141,13 +132,13 @@ export default function VerifyEmail() {
                             )}
 
                             {error && (
-                                <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 flex items-start gap-3 animate-in slide-in-from-top">
+                                <div className="bg-white border-2 border-red-600 p-4 flex items-start gap-3 rounded-none animate-in slide-in-from-top">
                                     <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-0.5" />
                                     <div>
-                                        <p className="text-red-800 text-sm font-bold">
+                                        <p className="text-red-600 text-[10px] font-black uppercase tracking-widest">
                                             Oops!
                                         </p>
-                                        <p className="text-red-700 text-sm">
+                                        <p className="text-gray-800 text-xs font-bold mt-1">
                                             {error}
                                         </p>
                                     </div>
@@ -155,43 +146,41 @@ export default function VerifyEmail() {
                             )}
 
                             {/* Resend Button */}
-                            <Button
-                                fullWidth
-                                size="lg"
+                            <button
                                 onClick={handleResendEmail}
                                 disabled={loading}
-                                className="h-14 rounded-2xl font-black text-base md:text-lg flex items-center justify-center gap-3 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                                className="w-full flex items-center justify-center gap-3 bg-black hover:bg-transparent text-white hover:text-black border-2 border-black py-4 font-black uppercase text-[10px] tracking-widest transition-colors rounded-none"
                             >
                                 {loading && (
-                                    <Loader className="w-5 h-5 animate-spin" />
+                                    <Loader className="w-4 h-4 animate-spin" />
                                 )}
                                 <span>
                                     {loading
-                                        ? "Mengirim..."
-                                        : "Kirim Ulang Email"}
+                                        ? "MENGIRIM..."
+                                        : "KIRIM ULANG EMAIL"}
                                 </span>
-                            </Button>
+                            </button>
 
                             {/* Debug Mode Section */}
                             {isDebugMode() && (
-                                <div className="border-t-2 border-gray-100 pt-6 space-y-4">
-                                    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-2xl p-5">
+                                <div className="border-t-2 border-black pt-6 space-y-4">
+                                    <div className="bg-white border-2 border-yellow-500 p-5 rounded-none shadow-[4px_4px_0px_0px_rgba(234,179,8,1)]">
                                         <div className="flex items-center gap-2 mb-4">
                                             <span className="text-xl">🔧</span>
-                                            <p className="text-xs font-black text-yellow-900 uppercase tracking-widest">
+                                            <p className="text-[10px] font-black text-yellow-600 uppercase tracking-widest">
                                                 Debug Verification
                                             </p>
                                         </div>
 
-                                        <div className="space-y-3">
+                                        <div className="space-y-4">
                                             {/* Verification Link Display */}
-                                            <div className="relative bg-white rounded-xl border border-yellow-200 p-3 overflow-hidden">
+                                            <div className="bg-white border-2 border-black p-3 rounded-none">
                                                 <div className="flex items-start justify-between gap-2 mb-2">
                                                     <div className="flex-1 min-w-0">
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">
                                                             Verification Link
                                                         </p>
-                                                        <p className="text-xs font-mono text-gray-700 break-all line-clamp-2 select-all">
+                                                        <p className="text-[10px] font-mono text-gray-700 break-all select-all font-bold">
                                                             {route(
                                                                 "verification.verify",
                                                                 {
@@ -217,13 +206,13 @@ export default function VerifyEmail() {
                                                                 ),
                                                             )
                                                         }
-                                                        className="shrink-0 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                                        className="shrink-0 p-2 hover:bg-gray-100 border border-transparent hover:border-black rounded-none transition-all"
                                                         title="Copy to clipboard"
                                                     >
                                                         {copied ? (
-                                                            <CheckCircle className="w-4 h-4 text-green-600" />
+                                                            <CheckCircle className="w-4 h-4 text-emerald-600" />
                                                         ) : (
-                                                            <Copy className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+                                                            <Copy className="w-4 h-4 text-gray-400 hover:text-black" />
                                                         )}
                                                     </button>
                                                 </div>
@@ -237,17 +226,17 @@ export default function VerifyEmail() {
                                                             )
                                                         }
                                                         disabled={loading}
-                                                        className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-3 rounded-lg text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                                        className="flex-1 bg-yellow-500 hover:bg-transparent text-black hover:text-yellow-600 border-2 border-yellow-500 font-black py-2.5 px-3 rounded-none text-[10px] uppercase tracking-wider transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                                                     >
                                                         {loading ? (
                                                             <>
                                                                 <Loader className="w-3.5 h-3.5 animate-spin" />
-                                                                Verifying...
+                                                                VERIFYING...
                                                             </>
                                                         ) : (
                                                             <>
                                                                 <CheckCircle className="w-3.5 h-3.5" />
-                                                                Verify Now
+                                                                VERIFY NOW
                                                             </>
                                                         )}
                                                     </button>
@@ -257,7 +246,7 @@ export default function VerifyEmail() {
                                                                 !showDebugCode,
                                                             )
                                                         }
-                                                        className="p-2 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 rounded-lg transition-colors"
+                                                        className="p-2.5 bg-gray-100 hover:bg-black text-gray-700 hover:text-white border-2 border-black rounded-none transition-colors"
                                                         title="Toggle code view"
                                                     >
                                                         {showDebugCode ? (
@@ -270,13 +259,13 @@ export default function VerifyEmail() {
                                             </div>
 
                                             {/* Debug Instructions */}
-                                            <div className="bg-white rounded-xl border border-yellow-200 p-3">
-                                                <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-2">
+                                            <div className="bg-white border-2 border-black p-3 rounded-none">
+                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">
                                                     How to test:
                                                 </p>
-                                                <ol className="space-y-1.5 text-xs text-gray-600">
+                                                <ol className="space-y-1.5 text-[10px] font-bold text-gray-600 uppercase tracking-wider">
                                                     <li className="flex gap-2">
-                                                        <span className="font-bold shrink-0">
+                                                        <span className="shrink-0">
                                                             1.
                                                         </span>
                                                         <span>
@@ -285,7 +274,7 @@ export default function VerifyEmail() {
                                                         </span>
                                                     </li>
                                                     <li className="flex gap-2">
-                                                        <span className="font-bold shrink-0">
+                                                        <span className="shrink-0">
                                                             2.
                                                         </span>
                                                         <span>
@@ -295,7 +284,7 @@ export default function VerifyEmail() {
                                                         </span>
                                                     </li>
                                                     <li className="flex gap-2">
-                                                        <span className="font-bold shrink-0">
+                                                        <span className="shrink-0">
                                                             3.
                                                         </span>
                                                         <span>
@@ -312,16 +301,16 @@ export default function VerifyEmail() {
                         </div>
 
                         {/* Footer */}
-                        <div className="border-t border-gray-100 px-8 md:px-10 py-6 bg-gray-50 flex flex-col md:flex-row items-center justify-between gap-4">
-                            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider text-center md:text-left">
-                                SRB Motor © 2026
-                            </p>
+                        <div className="border-t-2 border-black px-8 md:px-10 py-6 bg-gray-50 flex items-center justify-between">
                             <Link
                                 href="/"
-                                className="text-xs font-bold text-primary hover:text-primary-dark transition-colors uppercase tracking-wider"
+                                className="inline-flex items-center gap-2 text-xs font-bold text-[#bbbbbb] hover:text-black transition-colors uppercase tracking-wider"
                             >
-                                Kembali ke Beranda
+                                KEMBALI KE BERANDA
                             </Link>
+                            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">
+                                SRB Motor © 2026
+                            </p>
                         </div>
                     </div>
                 </div>
