@@ -196,8 +196,26 @@ class CreditController extends Controller
             $validated
         );
 
+        // WhatsApp Notification
+        try {
+            $user = $credit->transaction->user;
+            $phone = $credit->transaction->phone ?? $user->phone;
+            $name = $credit->transaction->name ?? $user->name;
+            if ($phone) {
+                $date = \Carbon\Carbon::parse($validated['survey_scheduled_date'])->format('d M Y');
+                $time = $validated['survey_scheduled_time'];
+                $surveyor = $validated['surveyor_name'];
+                $surveyorPhone = $validated['surveyor_phone'];
+                
+                $msg = "Halo *{$name}*,\n\nPengajuan kredit motor Anda sedang diproses. Tim surveyor kami akan melakukan kunjungan pada:\n\n📅 Tanggal: {$date}\n⏰ Waktu: {$time} WIB\nSurveyor: {$surveyor} ({$surveyorPhone})\n\nMohon siapkan dokumen asli (KTP, KK, dan Slip Gaji) untuk pencocokan data. Terima kasih.\n- SRB Motor";
+                \App\Services\WhatsAppService::sendMessage($phone, $msg);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('WA Survey Schedule Error: ' . $e->getMessage());
+        }
+
         return redirect()->route('admin.credits.show', $credit)
-            ->with('success', 'Survey scheduled successfully');
+            ->with('success', 'Survey scheduled successfully and notification sent');
     }
 
     /**

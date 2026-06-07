@@ -134,8 +134,8 @@ class CreditService
             'status' => 'survey_dijadwalkan',
             'actor_id' => auth()->id(),
             'actor_type' => 'App\Models\User',
-            'notes' => 'Dijadwalkan: ' . $surveyData['survey_scheduled_date'],
-            'description' => 'Survey dijadwalkan pada ' . $surveyData['survey_scheduled_date'],
+            'notes' => 'Dijadwalkan: ' . $surveyData['survey_scheduled_date'] . ' jam ' . $surveyData['survey_scheduled_time'],
+            'description' => 'Survey dijadwalkan pada ' . $surveyData['survey_scheduled_date'] . ' jam ' . $surveyData['survey_scheduled_time'],
         ]);
 
         return $res;
