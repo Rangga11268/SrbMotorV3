@@ -49,6 +49,8 @@ export default function CashOrderForm({ motor, auth }) {
         booking_fee: 0,
         payment_method: "Transfer Bank",
         branch_code: branchFromUrl || "",
+        ktp_file: null,
+        kk_file: null,
     });
 
     const [branchInfo, setBranchInfo] = useState(null);
@@ -79,9 +81,11 @@ export default function CashOrderForm({ motor, auth }) {
         if (type === 'ktp') {
             setKtpFile(file);
             setKtpPreview(preview);
+            setData('ktp_file', file);
         } else {
             setKkFile(file);
             setKkPreview(preview);
+            setData('kk_file', file);
         }
     };
 
@@ -257,18 +261,9 @@ export default function CashOrderForm({ motor, auth }) {
 
         setHasValidationErrors(false);
 
-        // Use FormData to send files
-        const formData = new FormData();
-        Object.keys(data).forEach((key) => {
-            if (data[key] !== null && data[key] !== undefined) {
-                formData.append(key, data[key]);
-            }
-        });
-        formData.append('ktp_file', ktpFile);
-        formData.append('kk_file', kkFile);
-
-        router.post(route("motors.process-cash-order", motor.id), formData, {
+        post(route("motors.process-cash-order", motor.id), {
             forceFormData: true,
+            preserveScroll: true,
         });
     };
 
@@ -905,7 +900,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                                         <p className="text-xs font-bold text-gray-500">PDF: {ktpFile.name}</p>
                                                                     </div>
                                                                 )}
-                                                                <button type="button" onClick={() => { setKtpFile(null); setKtpPreview(null); if(ktpInputRef.current) ktpInputRef.current.value=''; }} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white flex items-center justify-center hover:bg-red-700 transition-colors">
+                                                                <button type="button" onClick={() => { setKtpFile(null); setKtpPreview(null); setData('ktp_file', null); if(ktpInputRef.current) ktpInputRef.current.value=''; }} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white flex items-center justify-center hover:bg-red-700 transition-colors">
                                                                     <X className="w-3 h-3" />
                                                                 </button>
                                                                 <p className="text-[9px] font-bold text-black uppercase tracking-widest mt-1 text-center truncate">{ktpFile.name}</p>
@@ -935,7 +930,7 @@ export default function CashOrderForm({ motor, auth }) {
                                                                         <p className="text-xs font-bold text-gray-500">PDF: {kkFile.name}</p>
                                                                     </div>
                                                                 )}
-                                                                <button type="button" onClick={() => { setKkFile(null); setKkPreview(null); if(kkInputRef.current) kkInputRef.current.value=''; }} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white flex items-center justify-center hover:bg-red-700 transition-colors">
+                                                                <button type="button" onClick={() => { setKkFile(null); setKkPreview(null); setData('kk_file', null); if(kkInputRef.current) kkInputRef.current.value=''; }} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white flex items-center justify-center hover:bg-red-700 transition-colors">
                                                                     <X className="w-3 h-3" />
                                                                 </button>
                                                                 <p className="text-[9px] font-bold text-black uppercase tracking-widest mt-1 text-center truncate">{kkFile.name}</p>
