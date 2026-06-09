@@ -37,6 +37,7 @@ export default function Create({ promotions, brands, branches }) {
         tersedia: true,
         colors: [],
         branches: [],
+        branch_stocks: {},
     });
 
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -274,43 +275,68 @@ export default function Create({ promotions, brands, branches }) {
                                         </button>
                                     </div>
  
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[250px] overflow-y-auto p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[350px] overflow-y-auto p-4 bg-gray-50 rounded-xl border border-gray-200">
                                         {branches && branches.map((b) => {
                                             const isSelected = data.branches.includes(b.code);
+                                            const currentStock = data.branch_stocks[b.code] !== undefined ? data.branch_stocks[b.code] : 1;
                                             return (
-                                                <label 
+                                                <div 
                                                     key={b.code}
-                                                    className={`relative flex items-center p-3 rounded-lg border cursor-pointer transition-all ${
+                                                    className={`relative flex flex-col p-3 rounded-lg border transition-all ${
                                                         isSelected 
-                                                        ? 'bg-blue-50 border-blue-400 ring-1 ring-blue-400' 
+                                                        ? 'bg-blue-50 border-blue-400 ring-1 ring-blue-400 shadow-sm' 
                                                         : 'bg-white border-gray-200 hover:border-gray-300'
                                                     }`}
                                                 >
-                                                    <input
-                                                        type="checkbox"
-                                                        className="hidden"
-                                                        checked={isSelected}
-                                                        onChange={() => {
-                                                            const newBranches = isSelected
-                                                                ? data.branches.filter(code => code !== b.code)
-                                                                : [...data.branches, b.code];
-                                                            setData("branches", newBranches);
-                                                        }}
-                                                    />
-                                                    <div className="flex-1">
-                                                        <div className={`text-xs font-bold tracking-tight ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
-                                                            {b.name}
+                                                    <label className="flex items-center cursor-pointer mb-2 select-none">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 mr-2.5 h-4 w-4"
+                                                            checked={isSelected}
+                                                            onChange={() => {
+                                                                const newBranches = isSelected
+                                                                    ? data.branches.filter(code => code !== b.code)
+                                                                    : [...data.branches, b.code];
+                                                                
+                                                                const newStocks = { ...data.branch_stocks };
+                                                                if (!isSelected && newStocks[b.code] === undefined) {
+                                                                    newStocks[b.code] = 1; // default to 1 when checked
+                                                                }
+                                                                setData((prev) => ({
+                                                                    ...prev,
+                                                                    branches: newBranches,
+                                                                    branch_stocks: newStocks,
+                                                                }));
+                                                            }}
+                                                        />
+                                                        <div className="flex-1">
+                                                            <div className={`text-xs font-bold tracking-tight ${isSelected ? 'text-blue-700' : 'text-gray-700'}`}>
+                                                                {b.name}
+                                                            </div>
+                                                            <div className="text-[9px] text-gray-400 font-medium">
+                                                                {b.code}
+                                                            </div>
                                                         </div>
-                                                        <div className="text-[9px] text-gray-400 font-medium mt-0.5 line-clamp-1">
-                                                            {b.code}
-                                                        </div>
-                                                    </div>
+                                                    </label>
                                                     {isSelected && (
-                                                        <div className="bg-blue-600 rounded-full p-0.5 ml-2">
-                                                            <Check size={10} className="text-white" />
+                                                        <div className="flex items-center justify-between mt-1 pt-2 border-t border-blue-100/75">
+                                                            <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Jumlah Stok:</span>
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                className="w-20 bg-white border border-gray-300 text-gray-900 text-xs rounded p-1 focus:ring-blue-500 focus:border-blue-500 font-bold text-center"
+                                                                value={currentStock}
+                                                                onChange={(e) => {
+                                                                    const val = Math.max(0, parseInt(e.target.value) || 0);
+                                                                    setData("branch_stocks", {
+                                                                        ...data.branch_stocks,
+                                                                        [b.code]: val
+                                                                    });
+                                                                }}
+                                                            />
                                                         </div>
                                                     )}
-                                                </label>
+                                                </div>
                                             );
                                         })}
                                     </div>

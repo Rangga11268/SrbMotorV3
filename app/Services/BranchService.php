@@ -196,8 +196,7 @@ class BranchService
         // Optimize: Get all counts in one query using groupBy
         $counts = Motor::where('name', $motor->name)
             ->where('model', $motor->model)
-            ->where('tersedia', true)
-            ->selectRaw('branch, count(*) as count')
+            ->selectRaw('branch, sum(stock) as count')
             ->groupBy('branch')
             ->pluck('count', 'branch');
 

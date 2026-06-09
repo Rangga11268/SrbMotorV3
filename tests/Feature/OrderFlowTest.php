@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Motor;
 use App\Models\Transaction;
 use App\Models\CreditDetail;
+use Illuminate\Http\UploadedFile;
 
 class OrderFlowTest extends TestCase
 {
@@ -35,8 +36,10 @@ class OrderFlowTest extends TestCase
                 'motor_color' => 'Hitam',
                 'delivery_method' => 'pickup',
                 'notes' => 'Test cash order',
-                'booking_fee' => 2000000, // 2 million
+                'booking_fee' => 0,
                 'payment_method' => 'transfer',
+                'ktp_file' => UploadedFile::fake()->image('ktp.jpg'),
+                'kk_file' => UploadedFile::fake()->image('kk.jpg'),
             ]);
             
         // Check that the transaction was created
@@ -55,7 +58,6 @@ class OrderFlowTest extends TestCase
             'total_price' => 25000000,
             'final_price' => 25000000,
             'payment_method' => 'transfer',
-            'payment_status' => 'pending',
         ]);
         
         // Verify redirect to confirmation page
@@ -106,7 +108,6 @@ class OrderFlowTest extends TestCase
             'notes' => 'Test credit order',
             'final_price' => 50000000,
             'payment_method' => 'leasing',
-            'payment_status' => 'pending',
         ]);
         
         // Check that the credit details were created

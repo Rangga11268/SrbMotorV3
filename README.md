@@ -21,6 +21,28 @@
 
 ---
 
+## 📢 Tampilan Showroom Digital Baru
+
+![SRB Motor Mockups](public/assets/promotion/promotionPoster.webp)
+
+---
+
+## ⚡ Perbedaan Versi: Full-Stack vs Frontend-Only
+
+Proyek ini adalah versi **Full-Stack (Laravel-Inertia)** dari SRB Motor. Berikut adalah perbedaan utamanya dengan versi **Frontend-Only (Next.js)**:
+
+| Fitur | Versi Full-Stack (Laravel-Inertia) 💻 | Versi Frontend-Only (Next.js) 🌐 |
+| --- | --- | --- |
+| **Teknologi Utama** | Laravel, Inertia.js, React, MySQL | Next.js (App Router), React, TypeScript |
+| **Manajemen Data** | Dinamis menggunakan Database MySQL (CRUD via Admin Panel) | Data Motor lokal statis (`lib/motor-data.ts`) |
+| **Transaksi Pembelian** | Pemrosesan terintegrasi di sistem dengan unggah dokumen | Pengajuan Cash/Kredit diarahkan langsung ke **WhatsApp** |
+| **Pembayaran Booking Fee** | Otomatis terintegrasi payment gateway (Midtrans) | Diarahkan ke WhatsApp sales |
+| **Pemesanan Servis** | Booking terjadwal dan disimpan di database | Formulir Booking mengirimkan tiket pendaftaran langsung ke WhatsApp |
+| **Autentikasi & Akun** | Login, Register, Manajemen Profil, & Riwayat Transaksi | Tanpa Login (seluruh fitur publik instan tanpa akun) |
+| **Dashboard Admin** | CRUD Motor, approval kredit, ekspor laporan PDF/Excel, dll. | Tidak ada |
+
+---
+
 ## Gambaran Umum
 
 SRB Motor adalah sistem informasi dealer independen yang bekerja sama dengan pihak induk (SSM) dalam distribusi dan pembiayaan kendaraan, dibangun secara komprehensif untuk menampilkan inventaris, mengelola transaksi, dan memberikan pelanggan pengalaman online yang intuitif. Dibangun dengan framework Laravel untuk backend yang kuat dan React/Inertia untuk antarmuka pengguna yang modern.

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class MotorOrderTest extends TestCase
@@ -67,6 +68,8 @@ class MotorOrderTest extends TestCase
             'payment_method' => 'transfer',
             'motor_color' => 'Hitam',
             'delivery_method' => 'pickup',
+            'ktp_file' => UploadedFile::fake()->image('ktp.jpg'),
+            'kk_file' => UploadedFile::fake()->image('kk.jpg'),
         ]);
 
         if (session('errors')) {

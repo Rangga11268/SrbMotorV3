@@ -669,11 +669,28 @@ export default function Home({
                             </p>
                         </motion.div>
 
+                        {/* Mockup Poster Showcase */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.3, duration: 0.8 }}
+                            className="relative w-full max-w-5xl aspect-[16/10] overflow-hidden border border-zinc-800 bg-zinc-950/50 p-2 md:p-4 shadow-[0_0_80px_rgba(28,105,212,0.15)] group/poster"
+                        >
+                            <div className="relative w-full h-full overflow-hidden">
+                                <img
+                                    src="/assets/promotion/promotionPoster.webp"
+                                    alt="SRB Motor Digital Showroom Mockup"
+                                    className="w-full h-full object-cover opacity-85 group-hover/poster:opacity-100 group-hover/poster:scale-[1.02] transition-all duration-700 ease-out"
+                                />
+                            </div>
+                        </motion.div>
+
                         <motion.div
                             initial={{ scale: 0.9, opacity: 0 }}
                             whileInView={{ scale: 1, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
+                            transition={{ delay: 0.4 }}
                         >
                             <Link
                                 href="/motors"

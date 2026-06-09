@@ -24,6 +24,7 @@ class Motor extends Model
         "min_dp_amount",
         "colors",
         "branch",
+        "stock",
     ];
 
     protected $casts = [
@@ -31,6 +32,7 @@ class Motor extends Model
         "tersedia" => "boolean",
         "min_dp_amount" => "decimal:2",
         "colors" => "array",
+        "stock" => "integer",
     ];
 
     // Appended computed attributes — 'image' returns the full URL for the motor image
@@ -108,6 +110,27 @@ class Motor extends Model
 
     protected static function booted()
     {
+        static::saving(function ($motor) {
+            // If stock is modified directly, sync tersedia status
+            if ($motor->isDirty('stock')) {
+                $motor->tersedia = $motor->stock > 0;
+            }
+            // If tersedia is modified directly but stock is not, sync stock value (backward compatibility)
+            elseif ($motor->isDirty('tersedia')) {
+                if ($motor->tersedia) {
+                    if ($motor->stock <= 0) {
+                        $motor->stock = 1;
+                    }
+                } else {
+                    if ($motor->stock > 0) {
+                        $motor->stock = $motor->stock - 1;
+                    }
+                }
+                // Force sync tersedia to match the new stock value
+                $motor->tersedia = $motor->stock > 0;
+            }
+        });
+
         static::deleting(function ($motor) {
             if ($motor->image_path) {
                 if (str_starts_with($motor->image_path, "storage/")) {

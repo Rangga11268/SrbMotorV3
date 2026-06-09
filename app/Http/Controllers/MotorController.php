@@ -82,6 +82,7 @@ class MotorController extends Controller
             'description' => 'nullable|string',
             'branches' => 'required|array|min:1',
             'branches.*' => 'string|max:255',
+            'branch_stocks' => 'nullable|array',
 
             'colors' => 'nullable|array',
             'colors.*' => 'string|max:100',
@@ -89,8 +90,10 @@ class MotorController extends Controller
 
         $imagePath = ImageService::uploadAndConvert($request->file('image'), 'motors');
         $colors = is_string($request->colors) ? json_decode($request->colors, true) : ($request->colors ?? []);
+        $branchStocks = $request->input('branch_stocks', []);
 
         foreach ($request->branches as $branchCode) {
+            $stock = (int) ($branchStocks[$branchCode] ?? ($request->boolean('tersedia') ? 1 : 0));
             Motor::create([
                 'name' => $request->name,
                 'brand' => $request->brand,
@@ -98,7 +101,8 @@ class MotorController extends Controller
                 'price' => $request->price,
                 'year' => $request->year,
                 'type' => $request->type,
-                'tersedia' => $request->boolean('tersedia'),
+                'stock' => $stock,
+                'tersedia' => $stock > 0,
                 'min_dp_amount' => $request->min_dp_amount,
                 'image_path' => $imagePath,
                 'description' => $request->description,
@@ -128,9 +132,15 @@ class MotorController extends Controller
                                 ->pluck('branch')
                                 ->toArray();
 
+        $currentBranchStocks = Motor::where('name', $motor->name)
+                                    ->where('brand', $motor->brand)
+                                    ->pluck('stock', 'branch')
+                                    ->toArray();
+
         return \Inertia\Inertia::render('Admin/Motors/Edit', [
             'motor' => $motor,
             'currentBranches' => $currentBranches,
+            'currentBranchStocks' => $currentBranchStocks,
             'brands' => $this->motorRepository->getDistinctBrands(),
             'branches' => $this->branchService->getAllBranches(),
         ]);
@@ -170,6 +180,7 @@ class MotorController extends Controller
             'description' => 'nullable|string',
             'branches' => 'required|array|min:1',
             'branches.*' => 'string|max:255',
+            'branch_stocks' => 'nullable|array',
 
             'colors' => 'nullable',
             'colors.*' => 'string|max:100',
@@ -195,7 +206,6 @@ class MotorController extends Controller
                 'price' => $request->price,
                 'year' => $request->year,
                 'type' => $request->type,
-                'tersedia' => $request->boolean('tersedia'),
                 'min_dp_amount' => $request->min_dp_amount,
                 'description' => $request->description,
                 'colors' => $colors,
@@ -206,6 +216,7 @@ class MotorController extends Controller
             }
 
             $newBranches = $request->branches;
+            $branchStocks = $request->input('branch_stocks', []);
             $currentBranches = Motor::where('name', $motor->name)
                                     ->where('brand', $motor->brand)
                                     ->pluck('branch')
@@ -227,10 +238,14 @@ class MotorController extends Controller
                                  ->where('branch', $bCode)
                                  ->first();
                 
+                $stock = (int) ($branchStocks[$bCode] ?? ($request->boolean('tersedia') ? 1 : 0));
+                $newData = $data;
+                $newData['stock'] = $stock;
+                $newData['tersedia'] = $stock > 0;
+
                 if ($existing) {
-                    $existing->update($data);
+                    $existing->update($newData);
                 } else {
-                    $newData = $data;
                     $newData['branch'] = $bCode;
                     // Copy existing image path if no new image was uploaded and we have one
                     if (!isset($newData['image_path']) && $motor->image_path) {
