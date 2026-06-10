@@ -119,6 +119,18 @@ class PaymentService
                 } elseif ($installment->installment_number === 0) {
                     // Stage: Booking Fee / DP paid
                     $newStatus = 'unit_preparation';
+
+                    // SINKRONISASI CREDIT DETAIL (Jika tipe kredit dan installment adalah DP #0)
+                    if ($transaction->transaction_type === 'CREDIT') {
+                        $creditDetail = $transaction->creditDetail;
+                        if ($creditDetail && $creditDetail->status !== 'dp_dibayar') {
+                            $creditDetail->update([
+                                'status' => 'dp_dibayar',
+                                'dp_paid_at' => now(),
+                                'dp_payment_method' => $method,
+                            ]);
+                        }
+                    }
                 }
 
                 // CASE: CASH Transaction, Booking Fee (0) Paid, but no Installment 1 exists

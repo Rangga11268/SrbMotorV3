@@ -77,9 +77,15 @@ class ServiceAppointmentController extends Controller
             }
         }
 
+        $motorModels = \App\Models\Motor::distinct()->pluck('name')->filter()->values()->toArray();
+        if (empty($motorModels)) {
+            $motorModels = ['VARIO 160', 'NMAX 155', 'AEROX 155', 'PCX 160', 'BEAT', 'SCOOPY', 'LEXI LX 155', 'MIO M3', 'YZF-R15', 'CBR150R'];
+        }
+
         return Inertia::render('Services/Booking', [
             'user' => Auth::user(),
             'branches' => $branches,
+            'motorModels' => $motorModels,
             'serviceHours' => Setting::get('service_business_hours', [
                 'monday' => '08:00 - 16:00',
                 'tuesday' => '08:00 - 16:00',
@@ -301,10 +307,13 @@ class ServiceAppointmentController extends Controller
             return response()->json(['error' => 'Missing date or branch'], 400);
         }
 
-        // Get branch-specific quota and hours
+        // Get branch-specific quota and hours by decoding JSON name
         $branchSetting = Setting::where('category', 'branches')
-            ->where('key', 'LIKE', '%' . strtoupper(str_replace(' ', '_', $branch)) . '%')
-            ->first();
+            ->get()
+            ->first(function($setting) use ($branch) {
+                $data = json_decode($setting->value, true);
+                return isset($data['name']) && strtoupper($data['name']) === strtoupper($branch);
+            });
 
         $branchData = $branchSetting ? json_decode($branchSetting->value, true) : null;
         

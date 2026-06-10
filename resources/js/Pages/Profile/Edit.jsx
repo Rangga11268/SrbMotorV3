@@ -10,6 +10,7 @@ import {
     AlertCircle,
     CheckCircle,
     Settings,
+    Briefcase,
     Key,
     Camera,
     Trash2,
@@ -374,16 +375,25 @@ function UpdateProfileForm({ user }) {
                         Pekerjaan
                     </label>
                     <div className="relative">
-                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                             <CheckCircle size={18} />
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1c69d4]">
+                             <Briefcase size={18} />
                         </div>
-                        <input
-                            type="text"
+                        <select
                             value={data.pekerjaan}
                             onChange={(e) => setData("pekerjaan", e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-3 pl-10 pr-4 text-black font-bold placeholder-gray-400 focus:outline-none focus:border-black focus:ring-0 transition-all font-mono"
-                            placeholder="NAMA PEKERJAAN"
-                        />
+                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-3.5 pl-10 pr-10 text-black font-bold focus:outline-none focus:border-black focus:ring-0 transition-all uppercase appearance-none"
+                        >
+                            <option value="">PILIH PEKERJAAN</option>
+                            <option value="PNS / ASN">PNS / ASN</option>
+                            <option value="Karyawan Swasta">Karyawan Swasta</option>
+                            <option value="Karyawan BUMN">Karyawan BUMN</option>
+                            <option value="Wirausaha / Pengusaha">Wirausaha / Pengusaha</option>
+                            <option value="Profesional">Profesional (Dokter, Pengacara, dll)</option>
+                            <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                            <option value="Mahasiswa / Pelajar">Mahasiswa / Pelajar</option>
+                            <option value="Buruh / Pekerja Lepas">Buruh / Pekerja Lepas</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
                     </div>
                 </div>
             </div>

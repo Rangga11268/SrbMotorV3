@@ -290,6 +290,16 @@ class CreditService
         ]);
 
         if ($res) {
+            // SINKRONISASI DENGAN INSTALLMENT #0 (DP)
+            $dpInstallment = $credit->transaction->installments()->where('installment_number', 0)->first();
+            if ($dpInstallment) {
+                $dpInstallment->update([
+                    'status' => 'paid',
+                    'paid_at' => now(),
+                    'payment_method' => $paymentMethod,
+                ]);
+            }
+
             $credit->transaction->update(['status' => 'pembayaran_dikonfirmasi']);
             $credit->transaction->logs()->create([
                 'status_from' => $oldStatus,

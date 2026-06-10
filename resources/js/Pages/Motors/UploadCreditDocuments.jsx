@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import Swal from "sweetalert2";
 import {
     Upload,
     FileText,
@@ -49,6 +50,24 @@ export default function UploadCreditDocuments({ transaction }) {
 
     const submit = (e) => {
         e.preventDefault();
+
+        // Programmatic validation for required fields
+        const missing = [];
+        if (data.documents.KTP.length === 0) missing.push("Kartu Identitas (KTP)");
+        if (data.documents.KK.length === 0) missing.push("Kartu Keluarga (KK)");
+        if (data.documents.SLIP_GAJI.length === 0) missing.push("Bukti Penghasilan (Slip Gaji)");
+
+        if (missing.length > 0) {
+            Swal.fire({
+                title: "Dokumen Belum Lengkap",
+                text: `Mohon unggah dokumen berikut yang wajib diisi: ${missing.join(", ")}`,
+                icon: "warning",
+                confirmButtonColor: "#1c69d4",
+                borderRadius: "0px"
+            });
+            return;
+        }
+
         post(route("motors.upload-credit-documents.post", transaction.id));
     };
 
@@ -231,9 +250,8 @@ export default function UploadCreditDocuments({ transaction }) {
                                                 )
                                             }
                                             error={
-                                                errors[
-                                                    `documents.${docType.key}`
-                                                ]
+                                                errors[`documents.${docType.key}`] ||
+                                                errors[Object.keys(errors).find(k => k.startsWith(`documents.${docType.key}.`))]
                                             }
                                             files={data.documents[docType.key]}
                                             required={docType.required}
@@ -263,6 +281,20 @@ export default function UploadCreditDocuments({ transaction }) {
                                                     }}
                                                 />
                                             </div>
+                                        </div>
+                                    )}
+
+                                    {/* Global Error Message */}
+                                    {Object.keys(errors).length > 0 && (
+                                        <div className="p-4 bg-red-50 border border-red-200 rounded-none mb-6">
+                                            <p className="text-[10px] font-bold text-red-700 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                                <AlertCircle size={14} /> Terjadi kesalahan saat mengunggah berkas:
+                                            </p>
+                                            <ul className="list-disc list-inside text-[10px] font-bold text-red-600 uppercase tracking-widest space-y-1">
+                                                {Object.entries(errors).map(([key, msg]) => (
+                                                    <li key={key}>{msg}</li>
+                                                ))}
+                                            </ul>
                                         </div>
                                     )}
 
@@ -335,7 +367,6 @@ function FileUploadField({
                         accept={accept}
                         multiple
                         onChange={onChange}
-                        required={files.length === 0 && required}
                     />
                     <div
                         className={`w-full p-8 border border-dashed transition-all flex flex-col items-center justify-center text-center ${

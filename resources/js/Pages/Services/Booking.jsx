@@ -10,7 +10,7 @@ import {
     Clock, CheckCircle2, ChevronLeft, Phone 
 } from "lucide-react";
 
-export default function Booking({ user, branches = [], serviceHours = {} }) {
+export default function Booking({ user, branches = [], motorModels = [], serviceHours = {} }) {
     const { auth } = usePage().props;
     const [step, setStep] = useState(1);
     const [unavailableDates, setUnavailableDates] = useState([]);
@@ -195,20 +195,23 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                     <h2 className="text-2xl font-black uppercase tracking-tight text-black">LOKASI BENGKEL</h2>
                                                 </div>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {Array.isArray(branches) && branches.map((b) => (
-                                                        <button 
-                                                            key={b}
-                                                            type="button"
-                                                            onClick={() => setData('branch', b)}
-                                                            className={`p-6 border-2 text-left transition-all ${data.branch === b ? 'border-[#1c69d4] bg-[#1c69d4]/5' : 'border-gray-100 hover:border-gray-300'}`}
-                                                        >
-                                                            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">CABANG</p>
-                                                            <p className="text-xs font-black uppercase">{typeof b === 'object' ? b.name : b}</p>
-                                                        </button>
-                                                    ))}
+                                                    {Array.isArray(branches) && branches.map((b) => {
+                                                        const branchName = typeof b === 'object' ? b.name : b;
+                                                        return (
+                                                            <button 
+                                                                key={branchName}
+                                                                type="button"
+                                                                onClick={() => setData('branch', branchName)}
+                                                                className={`p-6 border-2 text-left transition-all ${data.branch === branchName ? 'border-[#1c69d4] bg-[#1c69d4]/5' : 'border-gray-100 hover:border-gray-300'}`}
+                                                            >
+                                                                <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">CABANG</p>
+                                                                <p className="text-xs font-black uppercase">{branchName}</p>
+                                                            </button>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
-
+ 
                                             <div>
                                                 <div className="flex items-center gap-3 mb-8 text-[#1c69d4]">
                                                     <Hash size={24} />
@@ -232,17 +235,42 @@ export default function Booking({ user, branches = [], serviceHours = {} }) {
                                                         <Bike size={24} />
                                                         <h2 className="text-xl font-black uppercase tracking-tight text-black">MODEL MOTOR</h2>
                                                     </div>
-                                                    <div className="relative">
-                                                        <input 
-                                                            type="text" 
-                                                            value={data.motor_model}
-                                                            onChange={e => setData('motor_model', e.target.value.toUpperCase())}
-                                                            placeholder="CONTOH: VARIO 160 / NMAX"
-                                                            className="w-full bg-gray-50 border-2 border-gray-100 p-6 text-xl font-black outline-none focus:border-black transition-all uppercase placeholder:text-gray-200"
-                                                        />
+                                                    <div className="relative space-y-3">
+                                                        <select 
+                                                            value={data.motor_model && motorModels.map(m => m.toUpperCase()).includes(data.motor_model.toUpperCase()) ? data.motor_model.toUpperCase() : (data.motor_model ? "LAINNYA" : "")}
+                                                            onChange={e => {
+                                                                const val = e.target.value;
+                                                                if (val === "LAINNYA") {
+                                                                    setData('motor_model', 'LAINNYA_TEXT');
+                                                                } else {
+                                                                    setData('motor_model', val.toUpperCase());
+                                                                }
+                                                            }}
+                                                            className="w-full bg-gray-50 border-2 border-gray-100 p-6 text-xl font-black outline-none focus:border-black transition-all uppercase appearance-none"
+                                                            required
+                                                        >
+                                                            <option value="">PILIH MODEL MOTOR</option>
+                                                            {motorModels.map((model) => (
+                                                                <option key={model} value={model.toUpperCase()}>
+                                                                    {model.toUpperCase()}
+                                                                </option>
+                                                            ))}
+                                                            <option value="LAINNYA">LAINNYA (KETIK SENDIRI)</option>
+                                                        </select>
+                                                        
+                                                        {(data.motor_model === "LAINNYA_TEXT" || (data.motor_model !== "" && !motorModels.map(m => m.toUpperCase()).includes(data.motor_model.toUpperCase()))) && (
+                                                            <input 
+                                                                type="text" 
+                                                                value={data.motor_model === "LAINNYA_TEXT" ? "" : data.motor_model}
+                                                                onChange={e => setData('motor_model', e.target.value.toUpperCase())}
+                                                                placeholder="MASUKKAN MODEL MOTOR"
+                                                                className="w-full bg-gray-50 border-2 border-gray-100 p-6 text-xl font-black outline-none focus:border-black transition-all uppercase placeholder:text-gray-200"
+                                                                required
+                                                            />
+                                                        )}
                                                     </div>
                                                 </div>
-
+ 
                                                 <div>
                                                     <div className="flex items-center gap-3 mb-6 text-[#1c69d4]">
                                                         <Phone size={24} />

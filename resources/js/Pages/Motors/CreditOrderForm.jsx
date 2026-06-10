@@ -190,6 +190,19 @@ export default function CreditOrderForm({ motor, auth }) {
         setData("monthly_income", cleaned);
     };
 
+    const getColorHex = (colorName) => {
+        if (!colorName || colorName.toLowerCase() === "beragam") return "#1c69d4";
+        const name = colorName.toLowerCase();
+        if (name.includes("merah") || name.includes("red")) return "#ef4444";
+        if (name.includes("hitam") || name.includes("black") || name.includes("cyber")) return "#111827";
+        if (name.includes("biru") || name.includes("blue")) return "#3b82f6";
+        if (name.includes("putih") || name.includes("white")) return "#d1d5db";
+        if (name.includes("abu") || name.includes("gray") || name.includes("grey") || name.includes("silver")) return "#9ca3af";
+        if (name.includes("emas") || name.includes("gold") || name.includes("yellow") || name.includes("kuning")) return "#eab308";
+        if (name.includes("hijau") || name.includes("green")) return "#22c55e";
+        return "#1c69d4";
+    };
+
     useEffect(() => {
         const dp = parseFloat(data.dp_amount) || 0;
         const tenor = parseInt(data.tenor) || 0;
@@ -243,6 +256,9 @@ export default function CreditOrderForm({ motor, auth }) {
         }
         if (!data.tenor) {
             validationErrors.push("Tenor harus dipilih");
+        }
+        if (data.delivery_method === "Ambil di Dealer" && !data.branch_code) {
+            validationErrors.push("Cabang pengambilan harus dipilih");
         }
 
         if (validationErrors.length > 0) {
@@ -351,7 +367,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     Nama Lengkap
                                                 </Label>
                                                 <div className="relative">
-                                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
                                                     <input
                                                         id="customer_name"
                                                         type="text"
@@ -373,13 +389,13 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     />
                                                 )}
                                             </div>
-
+ 
                                             <div className="space-y-2">
                                                 <Label htmlFor="customer_phone" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Nomor WhatsApp
                                                 </Label>
                                                 <div className="relative">
-                                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
                                                     <input
                                                         id="customer_phone"
                                                         type="tel"
@@ -402,14 +418,14 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 )}
                                             </div>
                                         </div>
-
+ 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-2">
                                                 <Label htmlFor="customer_nik" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     NIK (16 Digit)
                                                 </Label>
                                                 <div className="relative">
-                                                    <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
                                                     <input
                                                         id="customer_nik"
                                                         type="text"
@@ -435,18 +451,16 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     />
                                                 )}
                                             </div>
-
+ 
                                             <div className="space-y-2">
                                                 <Label htmlFor="customer_occupation" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Pekerjaan
                                                 </Label>
                                                 <div className="relative">
-                                                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                    <input
+                                                    <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
+                                                    <select
                                                         id="customer_occupation"
-                                                        type="text"
-                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900"
-                                                        placeholder="KARYAWAN SWASTA/WNS"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
                                                         required
                                                         value={data.occupation}
                                                         onChange={(e) =>
@@ -455,7 +469,18 @@ export default function CreditOrderForm({ motor, auth }) {
                                                                 e.target.value,
                                                             )
                                                         }
-                                                    />
+                                                    >
+                                                        <option value="">PILIH PEKERJAAN</option>
+                                                        <option value="PNS / ASN">PNS / ASN</option>
+                                                        <option value="Karyawan Swasta">Karyawan Swasta</option>
+                                                        <option value="Karyawan BUMN">Karyawan BUMN</option>
+                                                        <option value="Wirausaha / Pengusaha">Wirausaha / Pengusaha</option>
+                                                        <option value="Profesional">Profesional (Dokter, Pengacara, dll)</option>
+                                                        <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
+                                                        <option value="Mahasiswa / Pelajar">Mahasiswa / Pelajar</option>
+                                                        <option value="Buruh / Pekerja Lepas">Buruh / Pekerja Lepas</option>
+                                                        <option value="Lainnya">Lainnya</option>
+                                                    </select>
                                                 </div>
                                                 {errors.occupation && (
                                                     <ErrorMessage
@@ -473,22 +498,23 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     Penghasilan Bulanan
                                                 </Label>
                                                 <div className="relative">
-                                                    <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                    <input
+                                                    <Wallet className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
+                                                    <select
                                                         id="customer_monthly_income"
-                                                        type="text"
-                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900"
-                                                        placeholder="NOMINAL PENGHASILAN"
+                                                        className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 appearance-none"
                                                         required
-                                                        value={formatNumberDisplay(
-                                                            data.monthly_income,
-                                                        )}
+                                                        value={data.monthly_income}
                                                         onChange={(e) =>
-                                                            handleMonthlyIncomeChange(
-                                                                e.target.value,
-                                                            )
+                                                            setData("monthly_income", e.target.value)
                                                         }
-                                                    />
+                                                    >
+                                                        <option value="">PILIH RENTANG PENGHASILAN</option>
+                                                        <option value="2500000">&lt; Rp 3.000.000</option>
+                                                        <option value="4000000">Rp 3.000.000 - Rp 5.000.000</option>
+                                                        <option value="7500000">Rp 5.000.000 - Rp 10.000.000</option>
+                                                        <option value="15000000">Rp 10.000.000 - Rp 20.000.000</option>
+                                                        <option value="25000000">&gt; Rp 20.000.000</option>
+                                                    </select>
                                                 </div>
                                                 {errors.monthly_income && (
                                                     <ErrorMessage
@@ -498,13 +524,13 @@ export default function CreditOrderForm({ motor, auth }) {
                                                     />
                                                 )}
                                             </div>
-
+ 
                                             <div className="space-y-2">
                                                 <Label htmlFor="customer_employment_duration" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                     Lama Bekerja
                                                 </Label>
                                                 <div className="relative">
-                                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
                                                     <input
                                                         id="customer_employment_duration"
                                                         type="text"
@@ -531,13 +557,13 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 )}
                                             </div>
                                         </div>
-
+ 
                                         <div className="space-y-2">
                                             <Label htmlFor="customer_address" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Alamat Lengkap
                                             </Label>
                                             <div className="relative">
-                                                <MapPin className="absolute left-3 top-4 w-5 h-5 text-gray-400" />
+                                                <MapPin className="absolute left-3 top-4 w-5 h-5 text-[#1c69d4]" />
                                                 <textarea
                                                     id="customer_address"
                                                     className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold text-gray-900 uppercase min-h-[100px]"
@@ -570,7 +596,7 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 </Label>
                                                 <div className="space-y-3">
                                                     <div className="relative">
-                                                        <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                                        <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1c69d4]" />
                                                         <input
                                                             id="down_payment"
                                                             type="text"
@@ -853,12 +879,14 @@ export default function CreditOrderForm({ motor, auth }) {
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    onClick={() =>
-                                                        setData(
-                                                            "delivery_method",
-                                                            "Kirim ke Rumah",
-                                                        )
-                                                    }
+                                                    onClick={() => {
+                                                        setData((prev) => ({
+                                                            ...prev,
+                                                            delivery_method: "Kirim ke Rumah",
+                                                            branch_code: ""
+                                                        }));
+                                                        setBranchInfo(null);
+                                                    }}
                                                     className={`flex-1 flex items-center justify-center gap-2 p-3.5 border rounded-none uppercase text-[10px] font-bold tracking-widest transition-all ${data.delivery_method === "Kirim ke Rumah" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 text-gray-500 hover:border-black hover:text-black"}`}
                                                 >
                                                     <Truck className="w-5 h-5" />
@@ -868,69 +896,119 @@ export default function CreditOrderForm({ motor, auth }) {
                                         </div>
 
                                         <div className="space-y-2">
-                                            <Label htmlFor="motor_color" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-1">
                                                 Pilihan Warna
                                             </Label>
-                                            <div className="relative">
-                                                <Palette className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                <select
-                                                    id="motor_color"
-                                                    className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
-                                                    required
-                                                    value={data.motor_color}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "motor_color",
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                >
-                                                    <option value="">
-                                                        PILIH WARNA
-                                                    </option>
-                                                    {motor.colors && motor.colors.length > 0 ? (
-                                                        motor.colors.map((color, idx) => (
-                                                            <option key={idx} value={color} className="uppercase">
-                                                                {color}
-                                                            </option>
-                                                        ))
-                                                    ) : (
-                                                        <option value="Beragam" className="uppercase">
-                                                            BERAGAM / SESUAI STOK
-                                                        </option>
-                                                    )}
-                                                </select>
+                                            <div className="flex flex-wrap gap-2.5 items-center py-1.5">
+                                                {motor.colors && motor.colors.length > 0 ? (
+                                                    motor.colors.map((color, idx) => {
+                                                        const hex = getColorHex(color);
+                                                        const isSelected = data.motor_color === color;
+                                                        return (
+                                                            <button
+                                                                key={idx}
+                                                                type="button"
+                                                                onClick={() => setData("motor_color", color)}
+                                                                className={`w-9 h-9 rounded-full border transition-all flex items-center justify-center relative ${
+                                                                    isSelected 
+                                                                        ? "border-black scale-110 shadow-md ring-2 ring-offset-2 ring-[#1c69d4]" 
+                                                                        : "border-gray-200 hover:border-gray-400 hover:scale-105 bg-gray-50"
+                                                                }`}
+                                                                title={color.toUpperCase()}
+                                                            >
+                                                                <span 
+                                                                    className="w-6.5 h-6.5 rounded-full block border border-black/5" 
+                                                                    style={{ backgroundColor: hex, width: '24px', height: '24px' }}
+                                                                />
+                                                                {isSelected && (
+                                                                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-black text-white rounded-full flex items-center justify-center text-[8px] font-black">
+                                                                        ✓
+                                                                    </span>
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setData("motor_color", "Beragam")}
+                                                        className={`px-4 py-2 text-xs font-bold border uppercase transition-all ${
+                                                            data.motor_color === "Beragam"
+                                                                ? "border-black bg-black text-white"
+                                                                : "border-gray-200 bg-gray-50 text-gray-500 hover:border-black hover:text-black"
+                                                        }`}
+                                                    >
+                                                        Beragam / Sesuai Stok
+                                                    </button>
+                                                )}
+                                                {data.motor_color && (
+                                                    <span className="text-[10px] font-black uppercase text-[#1c69d4] tracking-wider ml-2 bg-blue-50 px-2.5 py-1 border border-blue-100 font-mono">
+                                                        {data.motor_color}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <Label htmlFor="payment_method" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                                        <div className="space-y-4">
+                                            <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
                                                 Metode Pembayaran DP
                                             </Label>
-                                            <div className="relative">
-                                                <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                                <select
-                                                    id="payment_method"
-                                                    className="w-full bg-gray-50 border border-gray-200 rounded-none px-10 py-3.5 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none"
-                                                    required
-                                                    value={data.payment_method}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "payment_method",
-                                                            e.target.value,
-                                                        )
-                                                    }
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <label
+                                                    className={`relative flex items-center p-4 border rounded-none cursor-pointer transition-all ${data.payment_method === "Transfer Bank" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 hover:border-black"}`}
                                                 >
-                                                    <option value="Transfer Bank">
-                                                        TRANSFER BANK (BCA, MANDIRI, BNI)
-                                                    </option>
-                                                    <option value="E-Wallet">
-                                                        E-WALLET (OVO, GOPAY, DANA)
-                                                    </option>
-                                                    <option value="Virtual Account">
-                                                        VIRTUAL ACCOUNT
-                                                    </option>
-                                                </select>
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        className="sr-only"
+                                                        value="Transfer Bank"
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "payment_method",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                    <div className={`w-8 h-8 rounded-none flex items-center justify-center mr-4 border ${data.payment_method === "Transfer Bank" ? "bg-white text-black border-white" : "bg-white text-gray-400 border-gray-200"}`}>
+                                                        <CreditCard className="w-4 h-4" />
+                                                    </div>
+                                                    <div className="flex-grow">
+                                                        <p className={`font-black uppercase tracking-tight ${data.payment_method === "Transfer Bank" ? "text-white" : "text-gray-900"}`}>
+                                                            BAYAR ONLINE
+                                                        </p>
+                                                        <p className={`text-[10px] uppercase font-bold ${data.payment_method === "Transfer Bank" ? "text-gray-400" : "text-gray-500"}`}>
+                                                            VA, E-Wallet, CC (Midtrans)
+                                                        </p>
+                                                    </div>
+                                                </label>
+
+                                                <label
+                                                    className={`relative flex items-center p-4 border rounded-none cursor-pointer transition-all ${data.payment_method === "Tunai di Toko" ? "border-black bg-black text-white" : "border-gray-200 bg-gray-50 hover:border-black"}`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="payment_method"
+                                                        className="sr-only"
+                                                        value="Tunai di Toko"
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "payment_method",
+                                                                e.target.value,
+                                                            )
+                                                        }
+                                                    />
+                                                    <div className={`w-8 h-8 rounded-none flex items-center justify-center mr-4 border ${data.payment_method === "Tunai di Toko" ? "bg-white text-black border-white" : "bg-white text-gray-400 border-gray-200"}`}>
+                                                        <Wallet className="w-4 h-4" />
+                                                    </div>
+                                                    <div className="flex-grow">
+                                                        <p className={`font-black uppercase tracking-tight ${data.payment_method === "Tunai di Toko" ? "text-white" : "text-gray-900"}`}>
+                                                            BAYAR DI DEALER
+                                                        </p>
+                                                        <p className={`text-[10px] uppercase font-bold ${data.payment_method === "Tunai di Toko" ? "text-gray-400" : "text-gray-500"}`}>
+                                                            TUNAI / DEBIT DI DEALER
+                                                        </p>
+                                                    </div>
+                                                </label>
                                             </div>
                                             {errors.payment_method && (
                                                 <ErrorMessage
@@ -947,111 +1025,113 @@ export default function CreditOrderForm({ motor, auth }) {
                                             <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Catatan Tambahan (Opsional)</Label>
                                             
                                             {/* Pickup Branch Selection/Display */}
-                                            {branchInfo ? (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    className="p-5 border-2 border-black bg-white rounded-none relative group"
-                                                >
-                                                    <button 
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setBranchInfo(null);
-                                                            setData("branch_code", "");
-                                                        }}
-                                                        className="absolute top-2 right-2 text-[9px] font-bold text-blue-600 hover:text-red-600 transition-colors uppercase tracking-widest"
+                                            {data.delivery_method === "Ambil di Dealer" && (
+                                                branchInfo ? (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        className="p-5 border-2 border-black bg-white rounded-none relative group"
                                                     >
-                                                        [ UBAH LOKASI ]
-                                                    </button>
-                                                    <div className="flex items-start gap-4">
-                                                        <div className="w-10 h-10 bg-black flex items-center justify-center text-white shrink-0">
-                                                            <MapPin className="w-5 h-5" />
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <p className="text-[10px] font-bold text-[#1c69d4] uppercase tracking-[0.2em] mb-1">
-                                                                LOKASI PENGAMBILAN UNIT
-                                                            </p>
-                                                            <h4 className="text-sm font-black text-black uppercase tracking-tight mb-2">
-                                                                {branchInfo.name}
-                                                            </h4>
-                                                            <div className="space-y-1">
-                                                                <p className="text-[11px] font-bold text-gray-600 uppercase flex items-start gap-2">
-                                                                    <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
-                                                                    {branchInfo.address}
+                                                        <button 
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setBranchInfo(null);
+                                                                setData("branch_code", "");
+                                                            }}
+                                                            className="absolute top-2 right-2 text-[9px] font-bold text-blue-600 hover:text-red-600 transition-colors uppercase tracking-widest"
+                                                        >
+                                                            [ UBAH LOKASI ]
+                                                        </button>
+                                                        <div className="flex items-start gap-4">
+                                                            <div className="w-10 h-10 bg-black flex items-center justify-center text-white shrink-0">
+                                                                <MapPin className="w-5 h-5" />
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="text-[10px] font-bold text-[#1c69d4] uppercase tracking-[0.2em] mb-1">
+                                                                    LOKASI PENGAMBILAN UNIT
                                                                 </p>
-                                                                {branchInfo.phone && (
-                                                                    <p className="text-[11px] font-bold text-gray-600 uppercase flex items-center gap-2">
-                                                                        <Phone className="w-3 h-3 shrink-0" />
-                                                                        {branchInfo.phone}
+                                                                <h4 className="text-sm font-black text-black uppercase tracking-tight mb-2">
+                                                                    {branchInfo.name}
+                                                                </h4>
+                                                                <div className="space-y-1">
+                                                                    <p className="text-[11px] font-bold text-gray-600 uppercase flex items-start gap-2">
+                                                                        <MapPin className="w-3 h-3 mt-0.5 shrink-0" />
+                                                                        {branchInfo.address}
                                                                     </p>
-                                                                )}
+                                                                    {branchInfo.phone && (
+                                                                        <p className="text-[11px] font-bold text-gray-600 uppercase flex items-center gap-2">
+                                                                            <Phone className="w-3 h-3 shrink-0" />
+                                                                            {branchInfo.phone}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                    </motion.div>
+                                                ) : branchFromUrl && loadingBranch ? (
+                                                    <div className="p-5 border border-gray-200 bg-gray-50 flex items-center justify-center gap-3">
+                                                        <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin"></div>
+                                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">MEMUAT DATA LOKASI...</p>
                                                     </div>
-                                                </motion.div>
-                                            ) : branchFromUrl && loadingBranch ? (
-                                                <div className="p-5 border border-gray-200 bg-gray-50 flex items-center justify-center gap-3">
-                                                    <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin"></div>
-                                                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">MEMUAT DATA LOKASI...</p>
-                                                </div>
-                                            ) : (
-                                                <div className="bg-gray-50 border border-gray-200 p-5 space-y-3">
-                                                    <Label htmlFor="branch_code" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">
-                                                        Pilih Cabang Pengambilan
-                                                    </Label>
-                                                    <div className="relative">
-                                                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                                        <select
-                                                            id="branch_code"
-                                                            className="w-full bg-white border border-gray-200 rounded-none pl-10 pr-4 py-3 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none text-xs"
-                                                            value={data.branch_code}
-                                                            onChange={(e) => handleBranchChange(e.target.value)}
-                                                            required
-                                                        >
-                                                            <option value="">-- PILIH CABANG TERDEKAT --</option>
-                                                            {branchOptions.map((branch) => (
-                                                                <option key={branch.code} value={branch.code}>{branch.name}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-
-                                                    {detectedNearestBranch ? (
-                                                        data.branch_code !== detectedNearestBranch.code && (
-                                                            <motion.button
-                                                                initial={{ opacity: 0, y: -5 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                type="button"
-                                                                onClick={() => handleBranchChange(detectedNearestBranch.code)}
-                                                                className="flex items-center gap-2 text-[9px] font-black text-[#1c69d4] hover:text-black transition-colors uppercase tracking-widest pl-1 mt-2 group"
+                                                ) : (
+                                                    <div className="bg-gray-50 border border-gray-200 p-5 space-y-3">
+                                                        <Label htmlFor="branch_code" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 block">
+                                                            Pilih Cabang Pengambilan
+                                                        </Label>
+                                                        <div className="relative">
+                                                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1c69d4]" />
+                                                            <select
+                                                                id="branch_code"
+                                                                className="w-full bg-white border border-gray-200 rounded-none pl-10 pr-4 py-3 focus:ring-1 focus:ring-black focus:border-black transition-all font-bold uppercase text-gray-900 appearance-none text-xs"
+                                                                value={data.branch_code}
+                                                                onChange={(e) => handleBranchChange(e.target.value)}
+                                                                required
                                                             >
-                                                                <MapPin className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-                                                                Gunakan Cabang Terdekat ({detectedNearestBranch.name})
-                                                            </motion.button>
-                                                        )
-                                                    ) : (
-                                                        <button
-                                                            type="button"
-                                                            onClick={findNearestBranch}
-                                                            disabled={isLocating}
-                                                            className="flex items-center gap-2 text-[9px] font-black text-gray-400 hover:text-[#1c69d4] transition-colors uppercase tracking-widest pl-1 mt-2 disabled:opacity-50"
-                                                        >
-                                                            {isLocating ? (
-                                                                <>
-                                                                    <div className="w-2.5 h-2.5 border border-gray-400 border-t-transparent animate-spin rounded-full"></div>
-                                                                    Mencari Lokasi...
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <MapPin className="w-3.5 h-3.5" />
-                                                                    Cari Cabang Terdekat Saya
-                                                                </>
-                                                            )}
-                                                        </button>
-                                                    )}
-                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
-                                                        *Pilih cabang di mana Anda akan mengambil unit motor.
-                                                    </p>
-                                                </div>
+                                                                <option value="">-- PILIH CABANG TERDEKAT --</option>
+                                                                {branchOptions.map((branch) => (
+                                                                    <option key={branch.code} value={branch.code}>{branch.name}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+
+                                                        {detectedNearestBranch ? (
+                                                            data.branch_code !== detectedNearestBranch.code && (
+                                                                <motion.button
+                                                                    initial={{ opacity: 0, y: -5 }}
+                                                                    animate={{ opacity: 1, y: 0 }}
+                                                                    type="button"
+                                                                    onClick={() => handleBranchChange(detectedNearestBranch.code)}
+                                                                    className="flex items-center gap-2 text-[9px] font-black text-[#1c69d4] hover:text-black transition-colors uppercase tracking-widest pl-1 mt-2 group"
+                                                                >
+                                                                    <MapPin className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+                                                                    Gunakan Cabang Terdekat ({detectedNearestBranch.name})
+                                                                </motion.button>
+                                                            )
+                                                        ) : (
+                                                            <button
+                                                                type="button"
+                                                                onClick={findNearestBranch}
+                                                                disabled={isLocating}
+                                                                className="flex items-center gap-2 text-[9px] font-black text-gray-400 hover:text-[#1c69d4] transition-colors uppercase tracking-widest pl-1 mt-2 disabled:opacity-50"
+                                                            >
+                                                                {isLocating ? (
+                                                                    <>
+                                                                        <div className="w-2.5 h-2.5 border border-gray-400 border-t-transparent animate-spin rounded-full"></div>
+                                                                        Mencari Lokasi...
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <MapPin className="w-3.5 h-3.5" />
+                                                                        Cari Cabang Terdekat Saya
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        )}
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                                                            *Pilih cabang di mana Anda akan mengambil unit motor.
+                                                        </p>
+                                                    </div>
+                                                )
                                             )}
 
                                             <textarea

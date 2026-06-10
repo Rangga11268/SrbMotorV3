@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import Swal from "sweetalert2";
 import {
     Upload,
     FileText,
@@ -46,6 +47,24 @@ export default function DocumentManagement({ transaction }) {
 
     const submit = (e) => {
         e.preventDefault();
+
+        // Programmatic validation for required fields (considering both uploaded and newly selected files)
+        const missing = [];
+        if (!hasExisting("KTP") && data.documents.KTP.length === 0) missing.push("Kartu Identitas (KTP)");
+        if (!hasExisting("KK") && data.documents.KK.length === 0) missing.push("Kartu Keluarga (KK)");
+        if (!hasExisting("SLIP_GAJI") && data.documents.SLIP_GAJI.length === 0) missing.push("Bukti Penghasilan (Slip Gaji)");
+
+        if (missing.length > 0) {
+            Swal.fire({
+                title: "Dokumen Belum Lengkap",
+                text: `Mohon unggah dokumen berikut yang wajib diisi: ${missing.join(", ")}`,
+                icon: "warning",
+                confirmButtonColor: "#1c69d4",
+                borderRadius: "0px"
+            });
+            return;
+        }
+
         post(route("motors.update-documents", transaction.id));
     };
 
@@ -325,7 +344,10 @@ export default function DocumentManagement({ transaction }) {
                                         accept="image/*,application/pdf"
                                         onChange={(e) => handleFileChange(e, docType.key)}
                                         onRemove={(idx) => handleRemoveFile(docType.key, idx)}
-                                        error={errors[`documents.${docType.key}`]}
+                                        error={
+                                            errors[`documents.${docType.key}`] ||
+                                            errors[Object.keys(errors).find(k => k.startsWith(`documents.${docType.key}.`))]
+                                        }
                                         files={data.documents[docType.key]}
                                         required={docType.required}
                                         isLocked={isLocked}
@@ -348,6 +370,20 @@ export default function DocumentManagement({ transaction }) {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Global Error Message */}
+                                {Object.keys(errors).length > 0 && (
+                                     <div className="p-4 bg-red-50 border border-red-200 rounded-none mb-6">
+                                         <p className="text-[10px] font-bold text-red-700 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                             <AlertCircle size={14} /> Terjadi kesalahan saat mengunggah berkas:
+                                         </p>
+                                         <ul className="list-disc list-inside text-[10px] font-bold text-red-600 uppercase tracking-widest space-y-1">
+                                             {Object.entries(errors).map(([key, msg]) => (
+                                                 <li key={key}>{msg}</li>
+                                             ))}
+                                         </ul>
+                                     </div>
+                                 )}
 
                                 <div className="flex flex-col-reverse sm:flex-row gap-6 pt-12 border-t border-gray-200">
                                     <Link
@@ -419,7 +455,6 @@ function FileUploadField({
                         accept={accept}
                         multiple
                         onChange={onChange}
-                        required={files.length === 0 && required && !hasExisting}
                         disabled={isLocked}
                     />
                     <div
