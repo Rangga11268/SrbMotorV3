@@ -37,7 +37,7 @@ Proyek ini adalah versi **Full-Stack (Laravel-Inertia)** dari SRB Motor. Berikut
 | **Manajemen Data** | Dinamis menggunakan Database MySQL (CRUD via Admin Panel) | Data Motor lokal statis (`lib/motor-data.ts`) |
 | **Transaksi Pembelian** | Pemrosesan terintegrasi di sistem dengan unggah dokumen | Pengajuan Cash/Kredit diarahkan langsung ke **WhatsApp** |
 | **Pembayaran Booking Fee** | Otomatis terintegrasi payment gateway (Midtrans) | Diarahkan ke WhatsApp sales |
-| **Pemesanan Servis** | Booking terjadwal dan disimpan di database | Formulir Booking mengirimkan tiket pendaftaran langsung ke WhatsApp |
+| **Pemesanan Servis** | Booking terjadwal dan disimpan di database | Dihapus (Diarahkan langsung via WhatsApp Customer Service) |
 | **Autentikasi & Akun** | Login, Register, Manajemen Profil, & Riwayat Transaksi | Tanpa Login (seluruh fitur publik instan tanpa akun) |
 | **Dashboard Admin** | CRUD Motor, approval kredit, ekspor laporan PDF/Excel, dll. | Tidak ada |
 
