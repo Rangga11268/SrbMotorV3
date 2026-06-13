@@ -210,7 +210,6 @@ class CreditService
             'dp_amount' => $dpAmount,
             'interest_rate' => $interestRateDecimal,
             'monthly_installment' => $monthlyInstallment,
-            'total_interest' => $totalInterest,
         ]);
 
         // Create or Update DP Installment (#0)

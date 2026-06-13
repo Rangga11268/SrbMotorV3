@@ -25,7 +25,6 @@ class CreditDetail extends Model
         'tenor',
         'interest_rate',
         'monthly_installment',
-        'total_interest',
         'verification_notes',
         'verified_at',
         'ready_for_delivery_at',
@@ -47,6 +46,7 @@ class CreditDetail extends Model
     protected $appends = [
         'credit_status_text',
         'down_payment',
+        'total_interest',
     ];
 
     /**
@@ -57,7 +57,6 @@ class CreditDetail extends Model
     protected $casts = [
         'interest_rate' => 'decimal:2',
         'monthly_installment' => 'decimal:2',
-        'total_interest' => 'decimal:2',
         'verified_at' => 'datetime',
         'ready_for_delivery_at' => 'datetime',
         'delivered_at' => 'datetime',
@@ -200,5 +199,26 @@ class CreditDetail extends Model
     public function getDpPaidDateAttribute()
     {
         return $this->dp_paid_at;
+    }
+
+    /**
+     * Accessor for total_interest (loan_amount * interest_rate * tenor)
+     */
+    public function getTotalInterestAttribute()
+    {
+        $tenor = $this->tenor ?: 0;
+        $interestRate = $this->interest_rate ?: 0;
+
+        if (!$this->relationLoaded('transaction') || !$this->transaction) {
+            $this->loadMissing('transaction.motor');
+        } else if (!$this->transaction->relationLoaded('motor')) {
+            $this->transaction->loadMissing('motor');
+        }
+
+        $motorPrice = $this->transaction?->motor?->price ?: 0;
+        $dpAmount = $this->dp_amount ?: 0;
+        $approvedAmount = $motorPrice - $dpAmount;
+
+        return $approvedAmount * $interestRate * $tenor;
     }
 }

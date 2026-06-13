@@ -26,6 +26,64 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export default function InstallmentIndex({ transactions }) {
+    const isCreditDpNotApproved = (inst, transaction) => {
+        const isDp = inst.installment_number === 0;
+        const isCredit = transaction.transaction_type === 'CREDIT';
+        const creditStatus = transaction.credit_detail?.status || transaction.creditDetail?.status;
+        const isApproved = creditStatus === 'disetujui';
+        return isDp && isCredit && !isApproved;
+    };
+
+    const getCreditDpStatusBadge = (transaction) => {
+        const creditStatus = transaction.credit_detail?.status || transaction.creditDetail?.status || 'menunggu_persetujuan';
+        
+        switch (creditStatus) {
+            case 'ditolak':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 text-red-600 rounded text-[9px] font-black uppercase tracking-widest">
+                        PENGAJUAN DITOLAK LEASING
+                    </span>
+                );
+            case 'data_tidak_valid':
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-200 text-rose-600 rounded text-[9px] font-black uppercase tracking-widest">
+                        DOKUMEN TIDAK VALID
+                    </span>
+                );
+            default:
+                return (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-600 rounded text-[9px] font-black uppercase tracking-widest">
+                        MENUNGGU PERSETUJUAN LEASING
+                    </span>
+                );
+        }
+    };
+
+    const getCreditDpStatusBadgeMobile = (transaction) => {
+        const creditStatus = transaction.credit_detail?.status || transaction.creditDetail?.status || 'menunggu_persetujuan';
+        
+        switch (creditStatus) {
+            case 'ditolak':
+                return (
+                    <div className="col-span-2 py-3 px-4 bg-red-50 border border-red-200 text-red-600 text-center rounded text-[9px] font-black uppercase tracking-widest">
+                        PENGAJUAN DITOLAK LEASING
+                    </div>
+                );
+            case 'data_tidak_valid':
+                return (
+                    <div className="col-span-2 py-3 px-4 bg-rose-50 border border-rose-200 text-rose-600 text-center rounded text-[9px] font-black uppercase tracking-widest">
+                        DOKUMEN TIDAK VALID
+                    </div>
+                );
+            default:
+                return (
+                    <div className="col-span-2 py-3 px-4 bg-amber-50 border border-amber-200 text-amber-600 text-center rounded text-[9px] font-black uppercase tracking-widest">
+                        MENUNGGU PERSETUJUAN LEASING
+                    </div>
+                );
+        }
+    };
+
     const [selectedInstallment, setSelectedInstallment] = useState(null);
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
@@ -118,9 +176,10 @@ export default function InstallmentIndex({ transactions }) {
             });
         } catch (error) {
             console.error(error);
+            const errorMessage = error.response?.data?.error || error.response?.data?.message || "Gateway tidak dapat dijangkau.";
             Swal.fire({
                 title: "KESALAHAN SISTEM",
-                text: "Gateway tidak dapat dijangkau.",
+                text: errorMessage,
                 icon: "error",
                 background: "#fff",
                 color: "#1a1a1a",
@@ -598,10 +657,14 @@ export default function InstallmentIndex({ transactions }) {
                                                                 }`}
                                                             >
                                                                 <td className="px-4 py-3">
-                                                                    {inst.status ===
+                                                                    {(inst.status ===
                                                                         "pending" ||
                                                                     inst.status ===
-                                                                        "overdue" ? (
+                                                                        "overdue") &&
+                                                                    !isCreditDpNotApproved(
+                                                                        inst,
+                                                                        transaction,
+                                                                    ) ? (
                                                                         <input
                                                                             type="checkbox"
                                                                             className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
@@ -698,10 +761,9 @@ export default function InstallmentIndex({ transactions }) {
                                                                 </td>
                                                                 <td className="px-6 py-6">
                                                                     <div className="flex items-center justify-center gap-2">
-                                                                        {inst.status ===
-                                                                            "pending" ||
-                                                                        inst.status ===
-                                                                            "overdue" ? (
+                                                                        {isCreditDpNotApproved(inst, transaction) ? (
+                                                                            getCreditDpStatusBadge(transaction)
+                                                                        ) : inst.status === "pending" || inst.status === "overdue" ? (
                                                                             <>
                                                                                 <button
                                                                                     onClick={() =>
@@ -817,8 +879,12 @@ export default function InstallmentIndex({ transactions }) {
                                                             <div className="flex gap-4">
                                                                 {(inst.status ===
                                                                     "pending" ||
-                                                                    inst.status ===
-                                                                        "overdue") && (
+                                                                inst.status ===
+                                                                    "overdue") &&
+                                                                !isCreditDpNotApproved(
+                                                                    inst,
+                                                                    transaction,
+                                                                ) && (
                                                                     <input
                                                                         type="checkbox"
                                                                         className="w-5 h-5 mt-1 border-2 border-black text-black focus:ring-0 cursor-pointer"
@@ -893,10 +959,9 @@ export default function InstallmentIndex({ transactions }) {
                                                             </div>
 
                                                             <div className="grid grid-cols-2 gap-2 mt-2">
-                                                                {inst.status ===
-                                                                    "pending" ||
-                                                                inst.status ===
-                                                                    "overdue" ? (
+                                                                {isCreditDpNotApproved(inst, transaction) ? (
+                                                                    getCreditDpStatusBadgeMobile(transaction)
+                                                                ) : inst.status === "pending" || inst.status === "overdue" ? (
                                                                     <>
                                                                         <button
                                                                             onClick={() =>

@@ -401,3 +401,13 @@ select:disabled {
 .article-content hr {
     @apply border-t border-slate-200 dark:border-slate-700 my-10;
 }
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+

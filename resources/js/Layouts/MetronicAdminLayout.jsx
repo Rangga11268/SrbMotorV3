@@ -175,7 +175,7 @@ export default function MetronicAdminLayout({ children, title }) {
                 </div>
 
                 {/* Sidebar Navigation */}
-                <div className="flex-1 overflow-y-auto py-5 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto py-5 custom-scrollbar no-scrollbar">
                     <div className="px-6 mb-2">
                         <span className="text-[#6D6D80] text-[10px] font-bold uppercase tracking-widest uppercase block">Menu Utama</span>
                     </div>
