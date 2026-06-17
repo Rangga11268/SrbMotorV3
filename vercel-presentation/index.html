@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Presentasi 15 Menit: Arsitektur &amp; MVC — SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
+        
+        :root {
+            --bg: #090D1A;
+            --surface: #121829;
+            --surface-hover: #1B233A;
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #6366F1;
+            --primary-light: #818CF8;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --text-main: #E2E8F0;
+            --text-muted: #94A3B8;
+            --text-dark: #0F172A;
+            --glass-bg: rgba(18, 24, 41, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 24px;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFF 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .header-left .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #FFF;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--text-muted);
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            font-size: 12px;
+            text-transform: none;
+            font-weight: 600;
+            letter-spacing: 0;
+            border-radius: var(--radius-sm);
+        }
+
+        /* PRESENTER TEAM DASHBOARD */
+        .team-board {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(18, 24, 41, 0.5) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .team-board-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-light);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .team-member-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .team-member-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--primary-light);
+        }
+
+        .team-member-card.leader {
+            border-color: var(--accent);
+            background: rgba(245, 158, 11, 0.03);
+        }
+
+        .team-member-name {
+            font-size: 14px;
+            font-weight: 750;
+            color: #FFF;
+        }
+
+        .team-member-role {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .team-member-card.leader .team-member-role {
+            color: var(--accent);
+        }
+
+        .team-member-slides {
+            font-size: 10px;
+            font-family: 'Fira Code', monospace;
+            color: var(--primary-light);
+            margin-top: 4px;
+        }
+
+        /* METADATA BAR */
+        .meta-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .meta-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: var(--shadow);
+        }
+
+        .meta-card .label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .meta-card .value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #FFF;
+        }
+
+        .meta-card .value span {
+            color: var(--primary-light);
+        }
+
+        /* TIMELINE VISUALIZER */
+        .time-visualizer {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .time-visualizer-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        @media (min-width: 600px) {
+            .time-visualizer-title {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .time-bar {
+            display: flex;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .time-segment {
+            height: 100%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .time-segment:hover {
+            filter: brightness(1.2);
+        }
+
+        .time-tooltip {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: 'Fira Code', monospace;
+            white-space: nowrap;
+            display: none;
+            z-index: 10;
+        }
+
+        .time-segment:hover .time-tooltip {
+            display: block;
+        }
+
+        /* WORKSPACE LAYOUT */
+        .workspace {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .slide-nav-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .slide-nav-item:hover {
+            background: var(--surface-hover);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .slide-nav-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+        }
+
+        .slide-nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+        }
+
+        .slide-nav-item .slide-num {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-nav-item .slide-duration {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #FFF;
+            font-size: 10px;
+        }
+
+        .slide-nav-item.active .slide-duration {
+            background: var(--primary);
+        }
+
+        .slide-nav-item .slide-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFF;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .slide-nav-item .slide-summary {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* MAIN PRESENTATION SHEET */
+        .presentation-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            min-height: 600px;
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 12px;
+            gap: 16px;
+        }
+
+        .slide-header-left .slide-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .slide-header-left h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #FFF;
+        }
+
+        .slide-header-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .slide-header-right .time-range {
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            display: inline-block;
+        }
+
+        .slide-header-right .duration-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* PRESENTER BADGE */
+        .presenter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--accent);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .presenter-badge.leader {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+
+        /* FILE TO SHOW CALLOUT */
+        .show-file-callout {
+            background: rgba(245, 158, 11, 0.03);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .show-file-icon {
+            font-size: 24px;
+        }
+
+        .show-file-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .show-file-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .show-file-name {
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FFF;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+
+        .show-file-name a {
+            color: var(--primary-light);
+            text-decoration: none;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+
+        .show-file-name a:hover {
+            text-decoration: underline;
+        }
+
+        /* SLIDE PREVIEW BOX */
+        .slide-preview-box {
+            background: #0D1117;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            position: relative;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .slide-preview-box::before {
+            content: 'TAMPILAN PROYEKSI SLIDE';
+            position: absolute;
+            top: -9px;
+            left: 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 2px 8px;
+            font-size: 9px;
+            font-weight: 800;
+            font-family: 'Fira Code', monospace;
+            border-radius: 4px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .slide-preview-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFF;
+            margin-bottom: 16px;
+            text-align: center;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .slide-preview-content {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 20px;
+        }
+
+        .slide-preview-left ul {
+            list-style-position: inside;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .slide-preview-left ul li {
+            color: var(--text-main);
+        }
+
+        .slide-preview-left ul li strong {
+            color: #FFF;
+        }
+
+        .slide-preview-right {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--primary-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-preview-right .diagram-node {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin: 4px 0;
+            text-align: center;
+            color: #FFF;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        .slide-preview-right .diagram-arrow {
+            text-align: center;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* PRESENTER CUE BOX */
+        .cue-box {
+            background: rgba(99, 102, 241, 0.03);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .cue-box-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cue-box-content {
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        /* VOICE SCRIPT (NASKAH SUARA) */
+        .script-box {
+            background: rgba(245, 158, 11, 0.03);
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .script-box-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .script-box-content {
+            font-size: 14px;
+            color: var(--text-main);
+            line-height: 1.8;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .script-box-content mark {
+            background: rgba(245, 158, 11, 0.25);
+            color: #FFF;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* TECHNICAL CODE DIRECTORY */
+        .code-box {
+            background: #0A0D16;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .code-box-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--success);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .code-files {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .code-file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            background: rgba(255,255,255,0.02);
+            padding: 10px 14px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        @media (min-width: 768px) {
+            .code-file-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
+            }
+        }
+
+        .code-file-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: color 0.2s;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+        }
+
+        .code-file-link:hover {
+            color: #FFF;
+            text-decoration: underline;
+        }
+
+        .code-file-desc {
+            color: var(--text-muted);
+            font-size: 11px;
+            word-break: break-word;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: 50px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            gap: 15px;
+        }
+
+        /* RESPONSIVE DESIGN - MEDIA QUERIES */
+        @media (max-width: 1024px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .header-right {
+                width: 100%;
+            }
+            .header-right .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .workspace {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .sidebar {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 10px;
+                scroll-snap-type: x mandatory;
+            }
+            .sidebar::-webkit-scrollbar {
+                height: 6px;
+            }
+            .sidebar::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 3px;
+            }
+            .sidebar::-webkit-scrollbar-thumb {
+                background: var(--primary);
+                border-radius: 3px;
+            }
+            .slide-nav-item {
+                min-width: 260px;
+                max-width: 85vw;
+                flex-shrink: 0;
+                scroll-snap-align: start;
+            }
+        }
+
+        @media (max-width: 1150px) {
+            .slide-preview-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            .presentation-panel {
+                padding: 24px;
+            }
+            .slide-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .slide-header-right {
+                text-align: left;
+                width: 100%;
+            }
+            .show-file-callout {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px 8px;
+            }
+            .presentation-panel {
+                padding: 16px;
+                gap: 16px;
+                min-height: auto;
+            }
+            .slide-preview-box {
+                padding: 16px;
+            }
+            .slide-preview-title {
+                font-size: 16px;
+            }
+            .cue-box, .script-box, .code-box {
+                padding: 16px;
+            }
+            .team-board {
+                padding: 16px;
+            }
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-nav {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* PRINT MODE (SEQUENTIAL SHEET FOR ALL SLIDES) */
+        .print-layout {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background: #FFF !important;
+                color: #000 !important;
+                padding: 0 !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+            }
+
+            header, .team-board, .meta-bar, .time-visualizer, .workspace, footer, .btn {
+                display: none !important;
+            }
+
+            .print-layout {
+                display: block !important;
+            }
+
+            .print-page {
+                page-break-after: always;
+                border-bottom: 2px solid #000;
+                padding: 40px 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .print-page:last-child {
+                page-break-after: avoid;
+                border-bottom: none;
+            }
+
+            .print-header {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 2px solid #000;
+                padding-bottom: 10px;
+            }
+
+            .print-header h2 {
+                font-size: 18px;
+                font-weight: 800;
+                color: #000;
+            }
+
+            .print-header .print-time {
+                font-family: 'Fira Code', monospace;
+                font-size: 12px;
+                font-weight: 700;
+                color: #000;
+            }
+
+            .print-file-callout {
+                border: 2px solid #000;
+                padding: 10px;
+                font-family: monospace;
+                font-size: 12px;
+                background: #FFF9E6;
+                margin: 5px 0;
+            }
+
+            .print-preview-box {
+                border: 2px solid #000;
+                padding: 15px;
+                background: #F9FAFB;
+            }
+
+            .print-preview-title {
+                font-weight: 800;
+                font-size: 13px;
+                border-bottom: 1px solid #000;
+                padding-bottom: 5px;
+                margin-bottom: 10px;
+                color: #000;
+                text-align: center;
+            }
+
+            .print-cue-box {
+                border-left: 4px solid #000;
+                padding-left: 15px;
+                margin: 10px 0;
+            }
+
+            .print-cue-title {
+                font-weight: 800;
+                font-size: 11px;
+                text-transform: uppercase;
+            }
+
+            .print-script-box {
+                border: 1px solid #000;
+                background: #FFFDF0;
+                padding: 20px;
+                margin: 15px 0;
+            }
+
+            .print-script-title {
+                font-weight: 800;
+                font-size: 11px;
+                text-transform: uppercase;
+                margin-bottom: 8px;
+            }
+
+            .print-script-content {
+                font-style: italic;
+                font-size: 12px;
+                line-height: 1.6;
+            }
+
+            .print-code-box {
+                border: 1px solid #000;
+                padding: 12px;
+                font-family: 'Fira Code', monospace;
+                font-size: 10px;
+                background: #F3F4F6;
+            }
+
+            .print-code-title {
+                font-weight: 800;
+                margin-bottom: 6px;
+                border-bottom: 1px solid #000;
+                padding-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-left">
+            <h1>Panduan Presentasi 15 Menit: Alur MVC &amp; Request Lifecycle</h1>
+            <div class="subtitle">Platform Dealer Kendaraan &amp; Layanan Servis Bengkel — SRB Motor</div>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-outline" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+                Cetak / Simpan PDF
+            </button>
+        </div>
+    </header>
+
+    <!-- TEAM BOARD FOR PRESENTER ROLES -->
+    <div class="team-board">
+        <div class="team-board-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Pembagian Pembicara Kelompok (Presenter Team)
+        </div>
+        <div class="team-grid">
+            <div class="team-member-card leader">
+                <span class="team-member-name">Darell</span>
+                <span class="team-member-role">Ketua Kelompok</span>
+                <span class="team-member-slides">Slide: 1, 2, 11, 12</span>
+            </div>
+            <div class="team-member-card">
+                <span class="team-member-name">Nasivira</span>
+                <span class="team-member-role">Anggota</span>
+                <span class="team-member-slides">Slide: 3, 4</span>
+            </div>
+            <div class="team-member-card">
+                <span class="team-member-name">Iman</span>
+                <span class="team-member-role">Anggota</span>
+                <span class="team-member-slides">Slide: 5, 6</span>
+            </div>
+            <div class="team-member-card">
+                <span class="team-member-name">Chesa</span>
+                <span class="team-member-role">Anggota</span>
+                <span class="team-member-slides">Slide: 7, 8</span>
+            </div>
+            <div class="team-member-card">
+                <span class="team-member-name">Kathrine</span>
+                <span class="team-member-role">Anggota</span>
+                <span class="team-member-slides">Slide: 9, 10</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- METADATA BAR -->
+    <div class="meta-bar">
+        <div class="meta-card">
+            <span class="label">Total Durasi</span>
+            <span class="value"><span>15 Menit</span> (Tepat)</span>
+        </div>
+        <div class="meta-card">
+            <span class="label">Total Slide</span>
+            <span class="value">12 Slide Utama</span>
+        </div>
+        <div class="meta-card">
+            <span class="label">Fokus Bahasan</span>
+            <span class="value">Skema MVC &amp; Data Lifecycle</span>
+        </div>
+        <div class="meta-card">
+            <span class="label">Jumlah Presenter</span>
+            <span class="value">5 Orang (Kolaboratif)</span>
+        </div>
+    </div>
+
+    <!-- TIMELINE VISUALIZER -->
+    <div class="time-visualizer">
+        <div class="time-visualizer-title">
+            <span>Visualisasi Pembagian Waktu &amp; Alokasi Pembicara</span>
+            <span id="current-timeline-tag">Slide 1: 00:00 - 01:15</span>
+        </div>
+        <div class="time-bar" id="time-bar-container">
+            <!-- Rendered via JS -->
+        </div>
+    </div>
+
+    <!-- WORKSPACE -->
+    <div class="workspace">
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar-nav">
+            <!-- Rendered via JS -->
+        </div>
+
+        <!-- MAIN PANEL -->
+        <div class="presentation-panel" id="presentation-panel">
+            <!-- Rendered via JS -->
+        </div>
+    </div>
+
+    <footer>
+        <span>Dokumentasi SRB Motor &copy; 2026 — Semua Hak Dilindungi.</span>
+        <span>Dikembangkan untuk Kebutuhan Presentasi Tugas Web Programming 3.</span>
+    </footer>
+</div>
+
+<!-- PRINT LAYOUT (SEQUENTIAL PRINT FOR ALL SLIDES) -->
+<div class="print-layout" id="print-layout-container">
+    <!-- Rendered via JS -->
+</div>
+
+<script>
+    // Complete slide database with presenter mapping and sequential spoken texts
+    const slides = [
+        {
+            num: 1,
+            title: "[OVERVIEW] Pembukaan & Gambaran Umum",
+            duration: "1.25 Menit",
+            timeRange: "00:00 - 01:15",
+            percentage: 8.3,
+            summary: "Pendahuluan, rumusan masalah dealer, dan arsitektur modular stack Laravel 12 + React 19.",
+            presenter: "Darell",
+            presenterRole: "Ketua Kelompok",
+            isLeader: true,
+            displayFile: "BROSUR / SLIDE UTAMA PRESENTASI (Landing Page Proyek)",
+            displayFileLink: "",
+            preview: {
+                title: "SRB MOTOR: PLATFORM LAYANAN INTEGRASI DEALER & BENGKEL",
+                bullets: [
+                    "<strong>Latar Belakang:</strong> Digitalisasi transaksi cash/kredit dan antrean servis purnajual.",
+                    "<strong>Solusi Sistem:</strong> Integrasi pemrosesan kredit 8 tahapan, billing otomatis, dan notifikasi real-time.",
+                    "<strong>Teknologi:</strong> Laravel 12 (Core Backend), React 19 (Interactive Frontend), Inertia.js (Decoupled Engine)."
+                ],
+                diagram: [
+                    {type: "node", text: "React 19 View"},
+                    {type: "arrow", text: "Inertia.js Link"},
+                    {type: "node", text: "Laravel 12 Kernel"},
+                    {type: "arrow", text: "Eloquent ORM"},
+                    {type: "node", text: "MySQL Database"}
+                ]
+            },
+            cue: "Presenter berdiri di depan, membuka slide judul pertama dan memulai presentasi. Pembawaan santai tapi tetap menguasai materi.",
+            script: "Di presentasi Web Programming 3 kali ini, kelompok kami mau demoin proyek web <mark>SRB Motor</mark>. Intinya, web ini tuh dibikin buat mempermudah transaksi di dealer motor, mulai dari pilih-pilih katalog, pengajuan kredit motor yang status leasing-nya ke-update real-time, sampai booking servis bengkel secara online biar gak perlu ngantre lama di dealer. Stack yang kita pakai di sini ada <mark>Laravel 12</mark> buat backend-nya, terus kita pasangkan sama <mark>React</mark> untuk frontend-nya, dan biar nyambung tanpa ribet bikin API terpisah, kita jembatani pakai <mark>Inertia.js</mark>. Nah, biar makin kebayang alur request-nya dari awal sampai akhir, yuk kita mulai bahas dari bagian konfigurasi environment-nya dulu!",
+            code: [
+                {path: "package.json", desc: "Mendefinisikan library React 19, Inertia React, TailwindCSS, dan Vite."},
+                {path: "composer.json", desc: "Konfigurasi dependency PHP, Laravel 12, Midtrans SDK, dan vendor pendukung."}
+            ]
+        },
+        {
+            num: 2,
+            title: "[BOOTSTRAP] Konfigurasi Server & Environment (.env)",
+            duration: "1.25 Menit",
+            timeRange: "01:15 - 02:30",
+            percentage: 8.3,
+            summary: "Proses inisialisasi konfigurasi server dari file .env untuk database dan API pihak ketiga.",
+            presenter: "Darell",
+            presenterRole: "Ketua Kelompok",
+            isLeader: true,
+            displayFile: ".env (Berkas Konfigurasi Server Utama)",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/.env",
+            preview: {
+                title: "FOUNDATION LAYER: SECURE ENVIRONMENT CONFIGURATION",
+                bullets: [
+                    "<strong>Enkripsi & Keamanan:</strong> APP_KEY untuk enkripsi cookie dan session pengguna.",
+                    "<strong>Koneksi Database:</strong> Konfigurasi database MySQL yang terisolasi aman.",
+                    "<strong>Kredensial API Eksternal:</strong> Midtrans Server Key (pembayaran) dan Fonnte Token (WhatsApp Notification)."
+                ],
+                diagram: [
+                    {type: "node", text: "File .env (Terbaca di Server)"},
+                    {type: "arrow", text: "Config Service Loader"},
+                    {type: "node", text: "Application Core Environment"},
+                    {type: "arrow", text: "Bootstrapping Instance"},
+                    {type: "node", text: "Services & Database Ready"}
+                ]
+            },
+            cue: "Presenter membuka file .env di code editor. Tunjukkan bagian DB_CONNECTION, MIDTRANS_SERVER_KEY, dan FONNTE_TOKEN untuk memperlihatkan bagaimana settingan rahasia disimpan.",
+            script: "Jadi, setiap request di Laravel itu bermula dari konfigurasi di file <mark>.env</mark>. Nah, di proyek web kami, file \`.env\` ini krusial banget karena isinya info penting dan rahasia, kayak setingan database MySQL kita. Terus, karena web kita terintegrasi sama layanan luar, kita juga taruh token API di sini. Contohnya ada token <mark>Midtrans Server Key</mark> buat gateway pembayaran cicilan, sama token <mark>Fonnte</mark> buat otomatis ngirim notifikasi WA ke pembeli. Dengan naruh setingan ini di \`.env\`, kredensial kita aman dan gak bakal bocor kalau kodenya di-push ke GitHub. Oke, setelah konfigurasi server siap, database kita tentunya butuh diisi skema dan data awal, kan? Nah, bagian selanjutnya bakal langsung ngebahas soal database migrations dan seeders.",
+            code: [
+                {path: ".env", desc: "File konfigurasi environment lokal: DB_CONNECTION, MIDTRANS_SERVER_KEY, FONNTE_TOKEN."},
+                {path: "config/database.php", desc: "Membaca DB_HOST dan DB_DATABASE dari environment .env secara dinamis."},
+                {path: "config/services.php", desc: "Penyimpanan konfigurasi driver eksternal untuk API Midtrans dan Fonnte."}
+            ]
+        },
+        {
+            num: 3,
+            title: "[DATABASE] Database Migration & Seeder (Struktur & Inisialisasi)",
+            duration: "1.25 Menit",
+            timeRange: "02:30 - 03:45",
+            percentage: 8.3,
+            summary: "Pembuatan skema tabel basis data dengan Database Migration dan pengisian data awal menggunakan Database Seeder.",
+            presenter: "Nasivira",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "database/migrations/2025_11_04_000000_consolidate_users_table.php",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/database/migrations/2025_11_04_000000_consolidate_users_table.php",
+            preview: {
+                title: "INITIALIZATION LAYER: DATABASE MIGRATION & SEEDER FLOW",
+                bullets: [
+                    "<strong>Database Migration:</strong> Menyusun skema tabel MySQL secara terstruktur tanpa raw SQL query (DDL).",
+                    "<strong>Database Seeder:</strong> Mengisi tabel dengan data default katalog motor, dealer, dan akun Admin/Montir.",
+                    "<strong>10 Tabel Utama Terbentuk:</strong> users (user & role), motors (katalog), transactions, credit_details, installments, documents, survey_schedules, transaction_logs (tunai & kredit), service_appointments (servis), dan settings (config).",
+                    "<strong>Prinsip Idempotensi:</strong> Sinkronisasi struktur database antar developer secara konsisten (`migrate --seed`)."
+                ],
+                diagram: [
+                    {type: "node", text: "Migration (Skema Tabel Users & Motors)"},
+                    {type: "arrow", text: "php artisan migrate --seed"},
+                    {type: "node", text: "MySQL Database Tables Created"},
+                    {type: "arrow", text: "Execute DatabaseSeeder::run()"},
+                    {type: "node", text: "Data Populated & Ready"}
+                ]
+            },
+            cue: "Presenter membuka berkas migration consolidate_users_table.php dan DatabaseSeeder.php di editor. Tunjukkan fungsi schema definition di migration dan pemanggilan seeder.",
+            script: "Untuk urusan database di web kami, kita pakai **Database Migration** dan **Seeder** di Laravel. Daripada repot-repot bikin tabel secara manual lewat phpMyAdmin, kami pakai Migration biar skema tabelnya tertulis rapi sebagai kode PHP. Contohnya di file \`consolidate_users_table\`, kita tinggal tulis field role, nama, dan email di situ. Total ada 10 tabel inti yang kami buat, mulai dari tabel \`users\` buat akun, \`motors\` buat katalog, tabel-tabel transaksi tunai/kredit, sampai tabel \`service_appointments\` buat antrean servis. Biar gak kosong pas baru di-install, kita juga pakai **Database Seeder** lewat \`DatabaseSeeder.php\`. Jadi tinggal ketik perintah \`migrate --seed\`, database langsung keisi otomatis sama akun dummy Admin/Montir dari \`UserSeeder\`, katalog motor dari \`MotorColorSeeder\`, dan konfigurasi web dari \`SettingSeeder\`. Praktis banget dan datanya pasti sama di komputer semua anggota kelompok. Nah, setelah databasenya siap, rute request dari browser bakal masuk ke sistem routing Laravel. Yuk kita lihat!",
+            code: [
+                {path: "database/migrations/2025_11_04_000000_consolidate_users_table.php", desc: "Mendefinisikan skema tabel pengguna (users), tipe data, foreign key, dan index."},
+                {path: "database/seeders/DatabaseSeeder.php", desc: "Pusat orchestrator eksekusi seeder: memanggil UserSeeder, MotorColorSeeder, dll."},
+                {path: "database/seeders/UserSeeder.php", desc: "Mengisi data awal pengguna bawaan sistem untuk pengujian otentikasi."}
+            ]
+        },
+        {
+            num: 4,
+            title: "[ROUTING] Request Entry Point & Rute URL (web.php)",
+            duration: "1.25 Menit",
+            timeRange: "03:45 - 05:00",
+            percentage: 8.3,
+            summary: "HTTP Request masuk melalui public/index.php and dicocokkan oleh routing system (web.php).",
+            presenter: "Nasivira",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "routes/web.php (Pencocokan Rute URL)",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/routes/web.php",
+            preview: {
+                title: "GATEWAY LAYER: REQUEST ENTRY & ROUTING SYSTEM",
+                bullets: [
+                    "<strong>HTTP Entry Point:</strong> Menangkap request URL dari peramban client (Vite bundled React SPA).",
+                    "<strong>Laravel Routing (web.php):</strong> Mencocokkan URL pattern dengan controller method target.",
+                    "<strong>Modular Routes:</strong> Pengelompokan rute publik, rute khusus customer, dan rute panel backend admin/montir."
+                ],
+                diagram: [
+                    {type: "node", text: "Client Browser (HTTP GET/POST)"},
+                    {type: "arrow", text: "Web Server Hit"},
+                    {type: "node", text: "public/index.php"},
+                    {type: "arrow", text: "routes/web.php"},
+                    {type: "node", text: "Matched Controller Action"}
+                ]
+            },
+            cue: "Presenter membuka routes/web.php di editor. Tunjukkan grup rute pemesanan kredit: Route::post('/motors/{motor}/process-credit-order') untuk memperlihatkan pemetaan URL ke Controller.",
+            script: "Sekarang kita masuk ke bagian **Routing**. Pas user ngeklik menu di browser, request-nya bakal dikirim ke server Laravel. Pintu masuk pertamanya ada di file \`public/index.php\` buat nge-load Laravel Kernel, terus request-nya langsung dioper ke sistem routing di \`routes/web.php\`. Di file \`web.php\` ini, kita mencocokkan URL yang diketik sama fungsi yang mau dijalankan. Contohnya, kalau ada rute POST ke \`/motors/{motor}/process-credit-order\`, Laravel langsung tahu kalau request ini harus dikirim ke controller transaksi kredit. Tapi, sebelum request itu dikasih ke controller, ada satpam keamanan yang harus dilewati dulu, namanya **Middleware**.",
+            code: [
+                {path: "public/index.php", desc: "Pintu masuk awal (bootstrap) memuat composer autoloader dan inisiasi aplikasi."},
+                {path: "routes/web.php", desc: "Daftar rute URL aplikasi, pemetaan middleware, dan controller (GET/POST/PUT/DELETE)."}
+            ]
+        },
+        {
+            num: 5,
+            title: "[SECURITY] Middleware Stack & Filter Akses",
+            duration: "1.25 Menit",
+            timeRange: "05:00 - 06:15",
+            percentage: 8.3,
+            summary: "Validasi token CSRF, pemeriksaan otentikasi session, dan otorisasi role (Admin/Montir).",
+            presenter: "Iman",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "routes/web.php (Rute Berkelompok Middleware)",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/routes/web.php",
+            preview: {
+                title: "SECURITY LAYER: MIDDLEWARE STACK PIPELINE",
+                bullets: [
+                    "<strong>CSRF Verification:</strong> Menolak request post-submission yang tidak memiliki token CSRF valid.",
+                    "<strong>Authentication Check:</strong> Memastikan session user terdaftar di server.",
+                    "<strong>Otorisasi Multi-Role:</strong> Mengamankan area admin/montir dan menerapkan API throttle limit."
+                ],
+                diagram: [
+                    {type: "node", text: "Incoming Request"},
+                    {type: "arrow", text: "Verify CSRF Token"},
+                    {type: "node", text: "Auth Check (Session/Token)"},
+                    {type: "arrow", text: "Role Authorization Guard"},
+                    {type: "node", text: "Safe & Cleared Request"}
+                ]
+            },
+            cue: "Presenter menunjukkan kelompok middleware 'auth' dan batasan throttle rate-limit 'throttle:15,1' di routes/web.php.",
+            script: "Nah, **Middleware** bertindak sebagai lapis keamanan atau 'satpam' rute di web kami. Sebelum request nyampe ke controller, middleware bakal menyaring request-nya. Pertama, ada pengecekan **CSRF** biar aman dari serangan hacker yang coba submit form palsu dari luar web. Kedua, ada middleware **auth** buat mastiin kalau user emang sudah login. Ketiga, buat halaman backend Admin atau Montir, kita kasih filter khusus; kalau rolenya gak pas, sistem bakal langsung nolak dengan error 403 Forbidden. Terus, biar server kita gak jebol dibombardir spam, kita pasang pembatas request lewat middleware **throttle**, jadi user cuma bisa submit form maksimal 15 kali semenit. Kalau semua filter ini lolos dan aman, barulah request-nya meluncur ke Controller!",
+            code: [
+                {path: "app/Http/Middleware/RedirectIfAuthenticated.php", desc: "Mengatur rute pengalihan otomatis bagi pengguna yang sudah memiliki session aktif."},
+                {path: "routes/web.php", desc: "Penerapan grup middleware 'auth' dan pembatas request rate-limiting (throttle)."}
+            ]
+        },
+        {
+            num: 6,
+            title: "[CONTROLLER - C] Controller & Validasi Form Request",
+            duration: "1.25 Menit",
+            timeRange: "06:15 - 07:30",
+            percentage: 8.3,
+            summary: "Pengendali alur kerja (C pada MVC) dan validasi input formulir secara ketat di sisi server.",
+            presenter: "Iman",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "app/Http/Controllers/MotorGalleryController.php",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/app/Http/Controllers/MotorGalleryController.php",
+            preview: {
+                title: "CONTROLLER LAYER: LOGIC DISPATCH & DATA VALIDATION",
+                bullets: [
+                    "<strong>Controller Routing:</strong> Menangkap input parameter URL, request data payload, dan file berkas.",
+                    "<strong>Validasi Berkas Kredit:</strong> Memeriksa keabsahan format KTP, KK, & Slip Gaji (Format PDF/JPG, maks 2MB).",
+                    "<strong>Error Dispatcher:</strong> Mengirimkan nested validation error kembali ke React jika format tidak valid."
+                ],
+                diagram: [
+                    {type: "node", text: "Request Payload (Form & Files)"},
+                    {type: "arrow", text: "Validator::make()"},
+                    {type: "node", text: "Validation Passed?"},
+                    {type: "arrow", text: "Jika Gagal: redirect back dengan errors"},
+                    {type: "node", text: "Jika Lolos: Controller Method Process"}
+                ]
+            },
+            cue: "Presenter membuka MotorGalleryController.php di editor. Tunjukkan method 'processCreditOrder' atau 'uploadCreditDocuments' untuk memperlihatkan baris validasi berkas.",
+            script: "Setelah lolos dari middleware, request masuk ke **Controller** yang bertindak sebagai pengatur alur kerja aplikasi (C pada MVC). Tugas pertama controller di sini adalah melakukan validasi input data dari user. Contohnya, saat user upload dokumen pengajuan kredit di \`MotorGalleryController\`, method \`processCreditOrder\` langsung ngecek apakah berkas wajib kayak KTP, KK, dan Slip Gaji sudah diunggah dengan format yang benar (harus PDF/JPG) dan ukurannya gak lebih dari 2MB biar disk server gak penuh. Kalau ada berkas yang gak sesuai, controller bakal langsung ngirim respon error kembali ke tampilan web biar user tahu apa yang salah. Tapi, kalau datanya valid, controller gak bakal ngelakuin kalkulasi rumit di sini. Logika bisnis itu bakal dioper ke **Service Layer** biar kodenya bersih dan rapi.",
+            code: [
+                {path: "app/Http/Controllers/MotorGalleryController.php", desc: "Berisi method processCreditOrder & uploadCreditDocuments dengan struktur validasi file nested."},
+                {path: "app/Http/Controllers/ServiceAppointmentController.php", desc: "Validasi kuota slot antrean harian bengkel sebelum menyimpan booking."}
+            ]
+        },
+        {
+            num: 7,
+            title: "[BUSINESS LOGIC] Service Layer (Logika Bisnis)",
+            duration: "1.25 Menit",
+            timeRange: "07:30 - 08:45",
+            percentage: 8.3,
+            summary: "Penerapan Service Layer untuk memisahkan logika kalkulasi keuangan dari controller (SOLID).",
+            presenter: "Chesa",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "app/Services/TransactionService.php",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/app/Services/TransactionService.php",
+            preview: {
+                title: "SERVICE LAYER: ENCAPSULATED BUSINESS LOGIC",
+                bullets: [
+                    "<strong>Pemisahan Tanggung Jawab:</strong> Mencegah penulisan logika bisnis yang gemuk di controller.",
+                    "<strong>Kalkulator Finansial:</strong> Perhitungan Down Payment (DP), total bunga kredit leasing, dan nominal tenor.",
+                    "<strong>Skema Pembayaran:</strong> Inisiasi data cicilan angsuran ke-0 (DP) dan histori log transaksi."
+                ],
+                diagram: [
+                    {type: "node", text: "Controller Data Dispatch"},
+                    {type: "arrow", text: "Service Class Call"},
+                    {type: "node", text: "TransactionService / CreditService"},
+                    {type: "arrow", text: "Execute Business Calculations"},
+                    {type: "node", text: "Formed Models ready to persist"}
+                ]
+            },
+            cue: "Presenter membuka TransactionService.php di editor. Tunjukkan method yang mengolah inisiasi pemesanan kendaraan untuk menunjukkan pemisahan logika dari controller.",
+            script: "Untuk memisahkan logika bisnis dari Controller, kita menerapkan **Service Layer**. Jadi, controller kita tetap ramping karena tugas hitung-hitungan dioper ke class service seperti \`TransactionService\` atau \`CreditService\`. Di sinilah perhitungan Down Payment, nominal cicilan, bunga kredit leasing, dan jadwal tenor dikalkulasi secara matang. Setelah semua hitungan selesai, Service Layer baru manggil Eloquent Model buat menyimpan datanya ke database. Cara ini bikin kode kita modular, rapi, dan gampang dikembangkan kalau nanti kita mau tambah fitur baru. Selanjutnya, mari kita bahas tentang **Model** dan bagaimana cara kita menghubungkan tabel-tabel di database lewat Eloquent ORM.",
+            code: [
+                {path: "app/Services/TransactionService.php", desc: "Mengelola logika kalkulasi pemesanan tunai dan inisiasi struktur transaksi awal."},
+                {path: "app/Services/CreditService.php", desc: "Memproses perhitungan bunga, tenor kredit motor, dan pencatatan riwayat DP manual."},
+                {path: "app/Services/PaymentService.php", desc: "Mengatur verifikasi status pembayaran, sinkronisasi tagihan, dan validasi Midtrans."}
+            ]
+        },
+        {
+            num: 8,
+            title: "[MODEL - M] Model & Eloquent ORM",
+            duration: "1.25 Menit",
+            timeRange: "08:45 - 10:00",
+            percentage: 8.3,
+            summary: "Abstraksi database dengan Eloquent ORM, relasi antar entitas, dan casting data otomatis.",
+            presenter: "Chesa",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "app/Models/Transaction.php",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/app/Models/Transaction.php",
+            preview: {
+                title: "MODEL LAYER: ELOQUENT ORM & DATA RELATIONSHIPS",
+                bullets: [
+                    "<strong>Abstraksi Skema MySQL:</strong> Pemetaan tabel transaksi, motor, cicilan, dan user tanpa raw SQL query.",
+                    "<strong>Relasi Relasional:</strong> Transaction belongsTo User, hasOne CreditDetail, hasMany Installment.",
+                    "<strong>Keamanan Query:</strong> Parameter binding otomatis untuk mencegah serangan SQL Injection."
+                ],
+                diagram: [
+                    {type: "node", text: "Service Database Call"},
+                    {type: "arrow", text: "Eloquent Model Instance"},
+                    {type: "node", text: "Transaction.php / CreditDetail.php"},
+                    {type: "arrow", text: "Query Builder (PDO Binding)"},
+                    {type: "node", text: "MySQL Database Tables"}
+                ]
+            },
+            cue: "Presenter membuka file Transaction.php di editor. Tunjukkan bagian relasi: public function creditDetail() dan public function installments().",
+            script: "Sekrawang kita bahas **Model** (M pada MVC) yang merepresentasikan tabel database kita di MySQL. Di Laravel, kita pakai Eloquent ORM yang memudahkan kita mendefinisikan hubungan atau relasi antar tabel secara gampang. Misalnya di model \`Transaction\`, kita buat relasi *hasOne* ke \`CreditDetail\` buat nyimpan data kreditnya, dan relasi *hasMany* ke \`Installment\` buat memetakan tabel angsuran cicilannya. Karena pakai Eloquent, semua query SQL di belakang layar otomatis pakai PDO parameter binding, jadi web kita aman dari bahaya SQL Injection. Tapi, gimana kalau kita nginput data ke banyak tabel sekaligus terus salah satunya error? Biar databasenya gak berantakan, kita pakai **DB Transaction** dan **Observer**.",
+            code: [
+                {path: "app/Models/Transaction.php", desc: "Model transaksi yang merepresentasikan tabel transactions dan relasi data keuangan cicilan."},
+                {path: "app/Models/CreditDetail.php", desc: "Menyimpan data tenor, nominal bunga, detail leasing, dan status verifikasi berkas."},
+                {path: "app/Models/Installment.php", desc: "Menangani catatan tagihan bulanan pelanggan dari cicilan ke-0 hingga lunas."}
+            ]
+        },
+        {
+            num: 9,
+            title: "[DATA INTEGRITY] Database Transactions & Event Observers",
+            duration: "1.25 Menit",
+            timeRange: "10:00 - 11:15",
+            percentage: 8.3,
+            summary: "Menjaga integritas data (Atomicity) dengan DB Transaction dan memisahkan event via Observers.",
+            presenter: "Kathrine",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "app/Observers/TransactionObserver.php",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/app/Observers/TransactionObserver.php",
+            preview: {
+                title: "INTEGRITY LAYER: DB TRANSACTIONS & MODEL OBSERVERS",
+                bullets: [
+                    "<strong>Atomicity (DB Transactions):</strong> Menjamin sekumpulan operasi database sukses seluruhnya atau dibatalkan total.",
+                    "<strong>Model Events:</strong> Menangkap siklus event penulisan database (created, updated, deleted).",
+                    "<strong>Transaction Observer:</strong> Menangani pengiriman notifikasi otomatis tanpa mengganggu core thread utama."
+                ],
+                diagram: [
+                    {type: "node", text: "DB::beginTransaction()"},
+                    {type: "arrow", text: "Save Transaction & Credit Detail"},
+                    {type: "node", text: "Commit / Rollback Check"},
+                    {type: "arrow", text: "Trigger Created Event"},
+                    {type: "node", text: "TransactionObserver::created()"}
+                ]
+            },
+            cue: "Presenter membuka berkas TransactionObserver.php di editor. Tunjukkan bagian method created() yang otomatis terpicu untuk ngirim WA pas data tersimpan.",
+            script: "Nah, di bagian ini kita akan membahas **Database Transaction** dan **Observer**. Ini penting banget di transaksi keuangan. Bayangkan kalau data transaksi berhasil disimpan tapi data cicilannya gagal kesave karena error, kan databasenya jadi gak sinkron. Makanya, kita bungkus pakai \`DB::beginTransaction\`. Jadi, semua data di tabel transaksi dan cicilan harus tersimpan sukses bareng-bareng. Kalau ada satu aja yang gagal di tengah jalan, sistem bakal langsung ngelakuin \`DB::rollBack\` buat membatalkan semua penyimpanan data setengah jadi itu biar database tetap konsisten dan bersih. Kalau sukses semua, baru di-\`DB::commit\`. Nah, begitu data sukses tersimpan, \`TransactionObserver\` secara otomatis menangkap event tersebut untuk langsung ngirim notifikasi WhatsApp ke HP customer. Keren kan? Selanjutnya, mari kita lihat bagaimana data ini dikirim ke tampilan React pakai Inertia.js.",
+            code: [
+                {path: "app/Services/TransactionService.php", desc: "Penggunaan blok penanganan transaksi DB::beginTransaction(), DB::commit(), dan DB::rollBack()."},
+                {path: "app/Observers/TransactionObserver.php", desc: "Menangkap event 'created' & 'updated' pada model Transaction untuk dispatch notifikasi sistem."}
+            ]
+        },
+        {
+            num: 10,
+            title: "[VIEW BRIDGE] Inertia.js & Rendering Client React (View Bridge)",
+            duration: "1.25 Menit",
+            timeRange: "11:15 - 12:30",
+            percentage: 8.3,
+            summary: "Pengiriman data JSON Props melalui Inertia.js dan rendering component UI di browser client.",
+            presenter: "Kathrine",
+            presenterRole: "Anggota",
+            isLeader: false,
+            displayFile: "app/Http/Controllers/MotorGalleryController.php (Kembalian Inertia::render)",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/app/Http/Controllers/MotorGalleryController.php",
+            preview: {
+                title: "VIEW LAYER: INERTIA BRIDGING & REACT RENDERING",
+                bullets: [
+                    "<strong>Inertia::render():</strong> Pengiriman data dari controller ke frontend dalam bentuk JSON props murni.",
+                    "<strong>Vite Asset Bundler:</strong> Melakukan kompilasi component React secara dinamis.",
+                    "<strong>SPA User Experience:</strong> Pergantian halaman secara instan tanpa reload browser penuh."
+                ],
+                diagram: [
+                    {type: "node", text: "Laravel Controller Response"},
+                    {type: "arrow", text: "Inertia::render('Page', $props)"},
+                    {type: "node", text: "Browser client-side router"},
+                    {type: "arrow", text: "React Virtual DOM Mount"},
+                    {type: "node", text: "Dynamic Page Render (SPA)"}
+                ]
+            },
+            cue: "Presenter menunjukkan baris return Inertia::render('Motors/Show', [...]) di file MotorGalleryController.php untuk menunjukkan bagaimana data dilempar ke React.",
+            script: "Sekarang kita masuk ke bagian **Inertia.js**, jembatan yang menghubungkan backend Laravel dengan frontend React. Biasanya kan Laravel pakai Blade buat nampilin web, tapi di sini kita mau web-nya super interaktif, makanya pakai React. Jadi, controller Laravel tinggal ngirim data dalam bentuk JSON Props lewat \`Inertia::render\`, terus frontend React bakal nangkap data itu dan me-render halamannya di browser secara instan. Hasilnya, user bisa pindah-pindah halaman secara instan tanpa perlu loading muter-muter reload halaman lagi, mirip aplikasi mobile. Nah, biar makin asyik dan kelihatan bentuk aslinya, mari kita lihat demo interaktif UI-nya langsung di browser.",
+            code: [
+                {path: "resources/js/Pages/Motors/CreditOrderForm.jsx", desc: "Formulir interaktif React untuk pemesanan kredit dengan input bulatan warna dinamis."},
+                {path: "resources/js/Pages/Installments/Index.jsx", desc: "Halaman riwayat angsuran lengkap dengan integrasi tombol bayar online Midtrans Snap."}
+            ]
+        },
+        {
+            num: 11,
+            title: "[VIEW - V] Arsitektur View React & Fitur UI Interaktif",
+            duration: "2 Menit",
+            timeRange: "12:30 - 14:30",
+            percentage: 13,
+            summary: "Penjelasan arsitektur view berbasis React SPA dan demonstrasi fitur-fitur UI interaktif.",
+            presenter: "Darell",
+            presenterRole: "Ketua Kelompok",
+            isLeader: true,
+            displayFile: "Direktori resources/js/Pages/ (Komponen View React)",
+            displayFileLink: "file:///d:/laragon/www/SrbMotor/resources/js/Pages",
+            preview: {
+                title: "VIEW LAYER: DYNAMIC SPA & REACT COMPONENT ARCHITECTURE",
+                bullets: [
+                    "<strong>React SPA:</strong> Seluruh tampilan antarmuka dibangun menggunakan komponen React yang dirender di sisi client.",
+                    "<strong>Props-Based Data Flow:</strong> Komponen React menerima data bersih dari Laravel Controller dalam bentuk JSON Props via Inertia.js.",
+                    "<strong>State Management & Hooks:</strong> Memanfaatkan React Hooks (useState, useForm) untuk interaktivitas form yang dinamis.",
+                    "<strong>Modular Component:</strong> Kode antarmuka dipecah menjadi komponen reusable (Formulir, Alert Box, Modal Snap, dsb.)."
+                ],
+                diagram: [
+                    {type: "node", text: "Laravel Controller JSON Response"},
+                    {type: "arrow", text: "Inertia.js Router mapping"},
+                    {type: "node", text: "React Page Components Mount"},
+                    {type: "arrow", text: "Local Hooks & State Update"},
+                    {type: "node", text: "Interactive Dynamic SPA UI"}
+                ]
+            },
+            cue: "Presenter membuka folder resources/js/Pages di editor untuk memperlihatkan struktur komponen React. Tunjukkan beberapa file utama secara umum seperti katalog, form pemesanan, dan dashboard, kemudian demokan fiturnya di browser.",
+            script: "Nah, sekarang kita bahas bagian **View**-nya. Di proyek ini, seluruh tampilan web dibangun menggunakan **React** sebagai Single Page Application. Jadi, kita tidak memakai template engine Blade biasa. Hubungan antara backend Laravel dengan frontend React dijembatani secara instan oleh **Inertia.js**, di mana controller mengirimkan data langsung sebagai JSON Props ke komponen React kita. Di sisi frontend, di dalam folder \`resources/js/Pages\`, kita menyusun komponen-komponen React secara modular. Kita menggunakan React Hooks seperti \`useState\` dan \`useForm\` dari Inertia untuk mengelola data form secara reaktif. Tampilan kita menjadi sangat responsif karena perubahan input atau interaksi pengguna—seperti milih warna motor, menyembunyikan opsi pengiriman, atau menampilkan pop-up pembayaran online Midtrans Snap—semuanya ditangani di sisi client tanpa perlu memuat ulang halaman. Ini membuat pengalaman pengguna menjadi lebih mulus dan modern.",
+            code: [
+                {path: "resources/js/Pages/Motors/CashOrderForm.jsx", desc: "Mengimplementasikan color swatches dinamis dan logika penyembunyian cabang dealer."},
+                {path: "resources/js/Pages/Motors/UploadCreditDocuments.jsx", desc: "Merespon error server nested dan menampilkan Global Alert Box merah."},
+                {path: "resources/js/Pages/Installments/Index.jsx", desc: "Memicu modal overlay pembayaran Midtrans Snap secara dinamis berdasarkan respons token dari backend."}
+            ]
+        },
+        {
+            num: 12,
+            title: "[KESIMPULAN] Penutup & Ringkasan Presentasi",
+            duration: "0.5 Menit",
+            timeRange: "14:30 - 15:00",
+            percentage: 3.3,
+            summary: "Rangkuman keunggulan arsitektur modular stack SRB Motor dan pembukaan sesi tanya jawab.",
+            presenter: "Darell",
+            presenterRole: "Ketua Kelompok",
+            isLeader: true,
+            displayFile: "BROSUR / SLIDE PENUTUP PRESENTASI (Tanya Jawab)",
+            displayFileLink: "",
+            preview: {
+                title: "SUMMARY: ARSITEKTUR TANGGUH, SECURE, & TERINTEGRASI",
+                bullets: [
+                    "<strong>Modularitas Penuh:</strong> Pembagian kerja yang bersih antara Model, View, Controller, dan Service Layer.",
+                    "<strong>Integritas Data Tinggi:</strong> Penggunaan database transaction menjamin akurasi billing keuangan.",
+                    "<strong>Sesi Tanya Jawab:</strong> Membuka kesempatan bagi dewan penguji memberikan masukan konstruktif."
+                ],
+                diagram: [
+                    {type: "node", text: "Clean MVC Pattern"},
+                    {type: "arrow", text: "Integrated with"},
+                    {type: "node", text: "Third-party APIs"},
+                    {type: "arrow", text: "Results in"},
+                    {type: "node", text: "Scalable Enterprise System"}
+                ]
+            },
+            cue: "Presenter menutup presentasi. Tampilkan slide penutup dengan tulisan 'Terima Kasih'. Mempersilakan dosen dan teman-teman untuk memberikan pertanyaan, tanggapan, atau masukan.",
+            script: "Sebagai kesimpulan, proyek web SRB Motor ini menerapkan arsitektur MVC yang modular dan terstruktur dengan rapi. Dengan memisahkan tugas dari file \`.env\`, seeder database, routing rute, middleware penyaring, service logika bisnis, hingga tampilan interaktif React via Inertia, kodenya jadi gampang dipahami dan dikembangkan bersama. Sekian presentasi tugas Web Programming 3 dari kelompok kami. Terima kasih atas perhatian dosen dan teman-teman. Jika ada pertanyaan, masukan, atau saran, silakan disampaikan.",
+            code: [
+                {path: "docs/README.md", desc: "Halaman portal indeks dokumentasi utama proyek SRB Motor."}
+            ]
+        }
+    ];
+
+    // Current state tracker
+    let activeSlideIndex = 0;
+
+    // Elements
+    const timeBarContainer = document.getElementById('time-bar-container');
+    const sidebarNav = document.getElementById('sidebar-nav');
+    const presentationPanel = document.getElementById('presentation-panel');
+    const currentTimelineTag = document.getElementById('current-timeline-tag');
+    const printLayoutContainer = document.getElementById('print-layout-container');
+
+    // Initialize Page
+    function init() {
+        renderTimelineBar();
+        renderSidebar();
+        setActiveSlide(0);
+        renderPrintLayout();
+
+        // Add Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Right') {
+                if (activeSlideIndex < slides.length - 1) {
+                    setActiveSlide(activeSlideIndex + 1);
+                }
+            } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
+                if (activeSlideIndex > 0) {
+                    setActiveSlide(activeSlideIndex - 1);
+                }
+            }
+        });
+    }
+
+    // Render Progress Bar Timeline
+    function renderTimelineBar() {
+        timeBarContainer.innerHTML = '';
+        const colors = ['#6366F1', '#4F46E5', '#4338CA', '#3730A3', '#312E81', '#10B981', '#059669', '#D97706', '#B45309', '#BE185D', '#9D174D', '#A21CAF'];
+        
+        slides.forEach((slide, idx) => {
+            const segment = document.createElement('div');
+            segment.className = 'time-segment';
+            segment.style.width = `${slide.percentage}%`;
+            segment.style.backgroundColor = colors[idx % colors.length];
+            if(idx === activeSlideIndex) {
+                segment.style.boxShadow = '0 0 10px #FFF';
+                segment.style.zIndex = '5';
+            }
+            
+            const tooltip = document.createElement('span');
+            tooltip.className = 'time-tooltip';
+            tooltip.innerText = `${slide.title} (${slide.timeRange}) - ${slide.presenter}`;
+            segment.appendChild(tooltip);
+            
+            segment.onclick = () => {
+                setActiveSlide(idx);
+            };
+            
+            timeBarContainer.appendChild(segment);
+        });
+    }
+
+    // Render Left Sidebar Navigation (Once during init)
+    function renderSidebar() {
+        sidebarNav.innerHTML = '';
+        slides.forEach((slide, idx) => {
+            const navItem = document.createElement('button');
+            navItem.className = 'slide-nav-item';
+            
+            navItem.innerHTML = `
+                <div class="slide-num">
+                    <span>SLIDE ${slide.num}</span>
+                    <span class="slide-duration">${slide.duration}</span>
+                </div>
+                <div class="slide-title">${slide.title}</div>
+                <div class="slide-summary">${slide.presenter} - ${slide.summary}</div>
+            `;
+            
+            navItem.onclick = () => {
+                setActiveSlide(idx);
+            };
+            
+            sidebarNav.appendChild(navItem);
+        });
+    }
+
+    // Set Active Slide
+    function setActiveSlide(index) {
+        activeSlideIndex = index;
+        
+        // Update active class on sidebar buttons without rebuilding DOM
+        const navItems = sidebarNav.children;
+        for (let i = 0; i < navItems.length; i++) {
+            if (i === index) {
+                navItems[i].classList.add('active');
+                // Smoothly scroll active item to be centered in horizontal/vertical scrolling list
+                navItems[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } else {
+                navItems[i].classList.remove('active');
+            }
+        }
+
+        renderActiveSlide();
+        
+        // Update bar highlights
+        const segments = timeBarContainer.children;
+        for(let i=0; i<segments.length; i++) {
+            if(i === index) {
+                segments[i].style.boxShadow = '0 0 10px #FFF';
+                segments[i].style.zIndex = '5';
+            } else {
+                segments[i].style.boxShadow = 'none';
+                segments[i].style.zIndex = '1';
+            }
+        }
+        
+        // Update current timeline tag text
+        currentTimelineTag.innerText = `Slide ${slides[index].num}: ${slides[index].timeRange} (${slides[index].duration}) - Pembicara: ${slides[index].presenter}`;
+    }
+
+    // Render Active Slide Data inside Main Panel
+    function renderActiveSlide() {
+        const slide = slides[activeSlideIndex];
+        
+        // Render bullet points list
+        const bulletsHtml = slide.preview.bullets.map(b => `<li>${b}</li>`).join('');
+        
+        // Render diagram nodes
+        const diagramHtml = slide.preview.diagram.map(node => {
+            if(node.type === 'node') {
+                return `<div class="diagram-node">${node.text}</div>`;
+            } else {
+                return `<div class="diagram-arrow">${node.text}</div>`;
+            }
+        }).join('');
+
+        // Render code files list
+        const codeHtml = slide.code.map(c => `
+            <div class="code-file-item">
+                <a class="code-file-link" href="file:///d:/laragon/www/SrbMotor/${c.path}" target="_blank">${c.path}</a>
+                <span class="code-file-desc">${c.desc}</span>
+            </div>
+        `).join('');
+
+        // Form file display content
+        let fileDisplayHtml = '';
+        if(slide.displayFileLink) {
+            fileDisplayHtml = `<a href="${slide.displayFileLink}" target="_blank">${slide.displayFile}</a>`;
+        } else {
+            fileDisplayHtml = slide.displayFile;
+        }
+
+        presentationPanel.innerHTML = `
+            <div class="slide-header">
+                <div class="slide-header-left">
+                    <span class="slide-badge">SLIDE ${slide.num} DARI 12</span>
+                    <h2>${slide.title}</h2>
+                </div>
+                <div class="slide-header-right">
+                    <div class="presenter-badge ${slide.isLeader ? 'leader' : ''}">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Presenter: ${slide.presenter} (${slide.presenterRole})
+                    </div>
+                    <div style="margin-top: 6px;">
+                        <span class="time-range">${slide.timeRange}</span>
+                        <span class="duration-tag">Durasi: ${slide.duration}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE CONTROLS (TOP NAVIGATION) -->
+            <div class="slide-controls" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--border); gap: 12px; margin-bottom: 20px; width: 100%;">
+                <button class="btn btn-outline btn-nav" onclick="prevSlide()" ${activeSlideIndex === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; display: inline-block; vertical-align: middle;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Sebelumnya
+                </button>
+                <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: 'Fira Code', monospace; white-space: nowrap;">
+                    Slide ${slide.num} / 12
+                </span>
+                <button class="btn btn-primary btn-nav" onclick="nextSlide()" ${activeSlideIndex === slides.length - 1 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                    Selanjutnya
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 5px; display: inline-block; vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            </div>
+
+            <!-- FILE TO SHOW CALLOUT -->
+            <div class="show-file-callout">
+                <span class="show-file-icon" style="display: flex; align-items: center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </span>
+                <div class="show-file-details">
+                    <span class="show-file-label">BERKAS / LAYAR YANG DITAMPILKAN</span>
+                    <span class="show-file-name">${fileDisplayHtml}</span>
+                </div>
+            </div>
+
+            <!-- SLIDE PREVIEW BOX -->
+            <div class="slide-preview-box">
+                <div class="slide-preview-title">${slide.preview.title}</div>
+                <div class="slide-preview-content">
+                    <div class="slide-preview-left">
+                        <ul>
+                            ${bulletsHtml}
+                        </ul>
+                    </div>
+                    <div class="slide-preview-right">
+                        ${diagramHtml}
+                    </div>
+                </div>
+            </div>
+
+            <!-- CUE BOX -->
+            <div class="cue-box">
+                <div class="cue-box-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    Instruksi Demo Visual &amp; Petunjuk Layar (Visual Cue)
+                </div>
+                <div class="cue-box-content">
+                    ${slide.cue}
+                </div>
+            </div>
+
+            <!-- VOICE SCRIPT -->
+            <div class="script-box">
+                <div class="script-box-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    Naskah Bicara Presentasi (Spoken Script)
+                </div>
+                <div class="script-box-content">
+                    "${slide.script}"
+                </div>
+            </div>
+
+            <!-- CODE DIRECTORY -->
+            <div class="code-box">
+                <div class="code-box-title">
+                    <span>Referensi Berkas Kode &amp; Hubungan Arsitektur</span>
+                    <span>LARAVEL / REACT MVC</span>
+                </div>
+                <div class="code-files">
+                    ${codeHtml}
+                </div>
+            </div>
+        `;
+    }
+
+    // Navigation Helper Actions
+    window.prevSlide = function() {
+        if (activeSlideIndex > 0) {
+            setActiveSlide(activeSlideIndex - 1);
+        }
+    };
+
+    window.nextSlide = function() {
+        if (activeSlideIndex < slides.length - 1) {
+            setActiveSlide(activeSlideIndex + 1);
+        }
+    };
+
+    // Render Print Layout (All slides in sequential printing format)
+    function renderPrintLayout() {
+        printLayoutContainer.innerHTML = '';
+        slides.forEach(slide => {
+            const bulletsHtml = slide.preview.bullets.map(b => `<li>${b}</li>`).join('');
+            const diagramHtml = slide.preview.diagram.map(node => {
+                if(node.type === 'node') {
+                    return `<div style="border: 1px solid #000; padding: 4px; text-align: center; margin: 2px 0;">[ ${node.text} ]</div>`;
+                } else {
+                    return `<div style="text-align: center; font-weight: bold; font-size: 10px;">&darr; ${node.text} &darr;</div>`;
+                }
+            }).join('');
+            
+            const codeHtml = slide.code.map(c => `
+                <div style="margin: 4px 0; font-size: 10px;">
+                    <strong>[ ${c.path} ]</strong> - ${c.desc}
+                </div>
+            `).join('');
+
+            const printPage = document.createElement('div');
+            printPage.className = 'print-page';
+            printPage.innerHTML = `
+                <div class="print-header">
+                    <h2>Slide ${slide.num}: ${slide.title}</h2>
+                    <span class="print-time">Presenter: ${slide.presenter} (${slide.presenterRole}) | ${slide.timeRange}</span>
+                </div>
+                <div class="print-file-callout">
+                    <strong>[ BERKAS / LAYAR YANG DITAMPILKAN ]:</strong> ${slide.displayFile}
+                </div>
+                <div class="print-preview-box">
+                    <div class="print-preview-title">${slide.preview.title}</div>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                        <ul style="padding-left: 20px; font-size: 11px;">
+                            ${bulletsHtml}
+                        </ul>
+                        <div style="font-family: monospace; font-size: 9px;">
+                            ${diagramHtml}
+                        </div>
+                    </div>
+                </div>
+                <div class="print-cue-box">
+                    <div class="print-cue-title">Petunjuk Visual &amp; Demo Layar:</div>
+                    <p style="font-size: 11px;">${slide.cue}</p>
+                </div>
+                <div class="print-script-box">
+                    <div class="print-script-title">Naskah Bicara Presentasi (${slide.presenter}):</div>
+                    <p class="print-script-content">"${slide.script.replace(/<mark>/g, '').replace(/<\/mark>/g, '')}"</p>
+                </div>
+                <div class="print-code-box">
+                    <div class="print-code-title">Referensi Berkas Kode Proyek:</div>
+                    ${codeHtml}
+                </div>
+            `;
+            printLayoutContainer.appendChild(printPage);
+        });
+    }
+
+    // Run Initialization
+    window.onload = init;
+</script>
+</body>
+</html>
