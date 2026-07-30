@@ -235,9 +235,9 @@ export default function Index({ motors: initialMotors, filters, brands, branches
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center shrink-0">
-                                                    {motor.image_path ? (
+                                                    {motor.image ? (
                                                         <img 
-                                                            src={motor.image_path.startsWith("http") ? motor.image_path : `/storage/${motor.image_path}`} 
+                                                            src={motor.image} 
                                                             alt={motor.name} 
                                                             className="w-full h-full object-cover"
                                                         />

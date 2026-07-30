@@ -109,7 +109,7 @@ class PaymentCallbackController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Midtrans Webhook Processing Error: ' . $e->getMessage());
-            return response()->json(['message' => 'Error processing notification', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Error processing notification'], 500);
         }
     }
 }

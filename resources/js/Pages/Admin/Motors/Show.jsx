@@ -101,9 +101,9 @@ export default function Show({ motor }) {
                         </div>
 
                         <div className="bg-gray-50 rounded-xl aspect-[4/3] flex items-center justify-center overflow-hidden border border-gray-100 relative group">
-                            {motor.image_path ? (
+                            {motor.image ? (
                                 <img
-                                    src={motor.image_path.startsWith("http") ? motor.image_path : `/storage/${motor.image_path}`}
+                                    src={motor.image}
                                     alt={motor.name}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 />

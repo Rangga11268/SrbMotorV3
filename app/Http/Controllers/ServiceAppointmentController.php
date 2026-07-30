@@ -55,15 +55,9 @@ class ServiceAppointmentController extends Controller
      */
     public function create()
     {
-        $branches = Setting::where('category', 'branches')
+        $branches = \App\Models\Branch::where('can_service', true)
+            ->where('is_active', true)
             ->get()
-            ->map(function($setting) {
-                return json_decode($setting->value, true);
-            })
-            ->filter(function($branch) {
-                return ($branch['can_service'] ?? false) == true && ($branch['is_active'] ?? true) == true;
-            })
-            ->values()
             ->toArray();
 
         // Robust check: if data is still a string (due to type mismatch in DB), try to decode it
@@ -307,19 +301,13 @@ class ServiceAppointmentController extends Controller
             return response()->json(['error' => 'Missing date or branch'], 400);
         }
 
-        // Get branch-specific quota and hours by decoding JSON name
-        $branchSetting = Setting::where('category', 'branches')
-            ->get()
-            ->first(function($setting) use ($branch) {
-                $data = json_decode($setting->value, true);
-                return isset($data['name']) && strtoupper($data['name']) === strtoupper($branch);
-            });
+        $branchModel = \App\Models\Branch::where('name', 'like', $branch)
+            ->orWhere('code', 'like', $branch)
+            ->first();
 
-        $branchData = $branchSetting ? json_decode($branchSetting->value, true) : null;
+        $quotaPerSlot = (int) ($branchModel?->service_slot_quota ?? Setting::where('key', 'service_slot_quota')->first()?->value ?? 5);
         
-        $quotaPerSlot = (int) ($branchData['service_slot_quota'] ?? Setting::where('key', 'service_slot_quota')->first()?->value ?? 5);
-        
-        $businessHoursRaw = $branchData['operational_hours'] ?? Setting::where('key', 'service_business_hours')->first()?->value;
+        $businessHoursRaw = $branchModel?->operational_hours ?? Setting::where('key', 'service_business_hours')->first()?->value;
         $standardSlots = ['08:00', '10:00', '12:00', '14:00']; // default fallback
 
         if ($businessHoursRaw) {

@@ -34,6 +34,8 @@ export default function Edit({ motor, promotions, brands, branches, currentBranc
         price: motor.price || "",
         year: motor.year || new Date().getFullYear(),
         type: motor.type || "",
+        no_rangka: motor.no_rangka || "",
+        no_mesin: motor.no_mesin || "",
         image: null,
         description: motor.description || "",
         min_dp_amount: motor.min_dp_amount || 0,
@@ -46,11 +48,7 @@ export default function Edit({ motor, promotions, brands, branches, currentBranc
 
     const [colorInput, setColorInput] = useState("");
     const [previewUrl, setPreviewUrl] = useState(
-        motor.image_path
-            ? motor.image_path.startsWith("http")
-                ? motor.image_path
-                : `/storage/${motor.image_path}`
-            : null
+        motor.image || null
     );
 
     const formatNumberDisplay = (numStr) => {
@@ -214,6 +212,32 @@ export default function Edit({ motor, promotions, brands, branches, currentBranc
                                             value={data.year}
                                             onChange={(e) => setData("year", e.target.value)}
                                         />
+                                    </div>
+                                </div>
+
+                                {/* No. Rangka & No. Mesin */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2">No. Rangka</label>
+                                        <input
+                                            type="text"
+                                            className={`w-full bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-3 ${errors.no_rangka ? 'border-red-400' : 'border-gray-300'}`}
+                                            placeholder="Nomor rangka / chassis"
+                                            value={data.no_rangka}
+                                            onChange={(e) => setData("no_rangka", e.target.value)}
+                                        />
+                                        {errors.no_rangka && <p className="text-red-500 text-xs mt-1">{errors.no_rangka}</p>}
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-600 uppercase tracking-widest mb-2">No. Mesin</label>
+                                        <input
+                                            type="text"
+                                            className={`w-full bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-3 ${errors.no_mesin ? 'border-red-400' : 'border-gray-300'}`}
+                                            placeholder="Nomor mesin kendaraan"
+                                            value={data.no_mesin}
+                                            onChange={(e) => setData("no_mesin", e.target.value)}
+                                        />
+                                        {errors.no_mesin && <p className="text-red-500 text-xs mt-1">{errors.no_mesin}</p>}
                                     </div>
                                 </div>
 

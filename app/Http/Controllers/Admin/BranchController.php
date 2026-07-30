@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
+use App\Models\Branch;
+use App\Services\BranchService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -12,11 +13,7 @@ class BranchController extends Controller
 {
     public function index()
     {
-        $branches = Setting::where('category', 'branches')->get()->map(function($setting) {
-            $data = json_decode($setting->value, true);
-            $data['id'] = $setting->id; // Using setting ID for React keys
-            return $data;
-        });
+        $branches = Branch::all();
 
         return Inertia::render('Admin/Branches/Index', [
             'branches' => $branches,
@@ -33,7 +30,7 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'required|string|regex:/^[A-Z0-9_]+$/',
+            'code' => 'required|string|regex:/^[A-Z0-9_]+$/|unique:branches,code',
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'city' => 'required|string',
@@ -50,17 +47,12 @@ class BranchController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $key = strtoupper(Str::slug($validated['code'], '_'));
+        $validated['code'] = strtoupper($validated['code']);
         
-        Setting::updateOrCreate(
-            ['category' => 'branches', 'key' => $key],
-            [
-                'value' => json_encode($validated),
-                'type' => 'json'
-            ]
-        );
+        Branch::create($validated);
 
-        Setting::clearCache();
+        // Clear cache
+        (new BranchService())->clearCache();
 
         return redirect()->route('admin.branches.index')
             ->with('success', 'Cabang baru berhasil ditambahkan.');
@@ -68,9 +60,7 @@ class BranchController extends Controller
 
     public function edit($id)
     {
-        $setting = Setting::findOrFail($id);
-        $branch = json_decode($setting->value, true);
-        $branch['id'] = $setting->id;
+        $branch = Branch::findOrFail($id);
 
         return Inertia::render('Admin/Branches/Form', [
             'branch' => $branch
@@ -79,10 +69,10 @@ class BranchController extends Controller
 
     public function update(Request $request, $id)
     {
-        $setting = Setting::findOrFail($id);
+        $branch = Branch::findOrFail($id);
         
         $validated = $request->validate([
-            'code' => 'required|string|regex:/^[A-Z0-9_]+$/',
+            'code' => 'required|string|regex:/^[A-Z0-9_]+$/|unique:branches,code,' . $id,
             'name' => 'required|string|max:255',
             'address' => 'required|string',
             'city' => 'required|string',
@@ -99,12 +89,12 @@ class BranchController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        $setting->update([
-            'key' => strtoupper(Str::slug($validated['code'], '_')),
-            'value' => json_encode($validated)
-        ]);
+        $validated['code'] = strtoupper($validated['code']);
+        
+        $branch->update($validated);
 
-        Setting::clearCache();
+        // Clear cache
+        (new BranchService())->clearCache();
 
         return redirect()->route('admin.branches.index')
             ->with('success', 'Data cabang berhasil diperbarui.');
@@ -112,10 +102,11 @@ class BranchController extends Controller
 
     public function destroy($id)
     {
-        $setting = Setting::findOrFail($id);
-        $setting->delete();
+        $branch = Branch::findOrFail($id);
+        $branch->delete();
 
-        Setting::clearCache();
+        // Clear cache
+        (new BranchService())->clearCache();
 
         return redirect()->route('admin.branches.index')
             ->with('success', 'Cabang berhasil dihapus.');

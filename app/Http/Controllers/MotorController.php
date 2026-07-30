@@ -86,7 +86,34 @@ class MotorController extends Controller
 
             'colors' => 'nullable|array',
             'colors.*' => 'string|max:100',
+
+            'no_rangka' => 'nullable|string|max:50',
+            'no_mesin'  => 'nullable|string|max:50',
         ]);
+
+        // Cek duplikat no_rangka & no_mesin secara manual
+        // (skip motor dengan nama+brand yang sama karena disimpan multi-baris per cabang)
+        if ($request->no_rangka) {
+            $dupRangka = Motor::where('no_rangka', $request->no_rangka)
+                ->where(function ($q) use ($request) {
+                    $q->where('name', '!=', $request->name)
+                      ->orWhere('brand', '!=', $request->brand);
+                })->exists();
+            if ($dupRangka) {
+                return back()->withErrors(['no_rangka' => 'Nomor rangka sudah digunakan oleh motor lain.'])->withInput();
+            }
+        }
+
+        if ($request->no_mesin) {
+            $dupMesin = Motor::where('no_mesin', $request->no_mesin)
+                ->where(function ($q) use ($request) {
+                    $q->where('name', '!=', $request->name)
+                      ->orWhere('brand', '!=', $request->brand);
+                })->exists();
+            if ($dupMesin) {
+                return back()->withErrors(['no_mesin' => 'Nomor mesin sudah digunakan oleh motor lain.'])->withInput();
+            }
+        }
 
         $imagePath = ImageService::uploadAndConvert($request->file('image'), 'motors');
         $colors = is_string($request->colors) ? json_decode($request->colors, true) : ($request->colors ?? []);
@@ -108,6 +135,8 @@ class MotorController extends Controller
                 'description' => $request->description,
                 'branch' => $branchCode,
                 'colors' => $colors,
+                'no_rangka' => $request->no_rangka ?: null,
+                'no_mesin'  => $request->no_mesin  ?: null,
             ]);
         }
 
@@ -184,6 +213,9 @@ class MotorController extends Controller
 
             'colors' => 'nullable',
             'colors.*' => 'string|max:100',
+
+            'no_rangka' => 'nullable|string|max:50',
+            'no_mesin'  => 'nullable|string|max:50',
         ], [
             'image.mimes' => 'DEBUG: File must be jpeg, png, jpg, gif, svg, or webp. You uploaded: ' . ($request->hasFile('image') ? $request->file('image')->getClientMimeType() : 'no file'),
         ]);
@@ -194,6 +226,30 @@ class MotorController extends Controller
         if ($validator->fails()) {
             \Log::error('Update Motor Validation Failed:', $validator->errors()->toArray());
             return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Cek duplikat no_rangka & no_mesin secara manual
+        // (skip motor dengan nama+brand yang sama karena disimpan multi-baris per cabang)
+        if ($request->no_rangka) {
+            $dupRangka = Motor::where('no_rangka', $request->no_rangka)
+                ->where(function ($q) use ($motor) {
+                    $q->where('name', '!=', $motor->name)
+                      ->orWhere('brand', '!=', $motor->brand);
+                })->exists();
+            if ($dupRangka) {
+                return back()->withErrors(['no_rangka' => 'Nomor rangka sudah digunakan oleh motor lain.'])->withInput();
+            }
+        }
+
+        if ($request->no_mesin) {
+            $dupMesin = Motor::where('no_mesin', $request->no_mesin)
+                ->where(function ($q) use ($motor) {
+                    $q->where('name', '!=', $motor->name)
+                      ->orWhere('brand', '!=', $motor->brand);
+                })->exists();
+            if ($dupMesin) {
+                return back()->withErrors(['no_mesin' => 'Nomor mesin sudah digunakan oleh motor lain.'])->withInput();
+            }
         }
 
         $colors = is_string($request->colors) ? json_decode($request->colors, true) : ($request->colors ?? []);
@@ -207,8 +263,10 @@ class MotorController extends Controller
                 'year' => $request->year,
                 'type' => $request->type,
                 'min_dp_amount' => $request->min_dp_amount,
-                'description' => $request->description,
-                'colors' => $colors,
+                'description'   => $request->description,
+                'colors'        => $colors,
+                'no_rangka'     => $request->no_rangka ?: null,
+                'no_mesin'      => $request->no_mesin  ?: null,
             ];
 
             if ($request->hasFile('image')) {

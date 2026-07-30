@@ -184,7 +184,7 @@ class TransactionController extends Controller
 
         $filename = time() . '_' . uniqid() . '.' . $extension;
 
-        $path = $file->storeAs('documents', $filename, 'public');
+        $path = $file->storeAs('documents', $filename, 'local');
 
         if ($transaction->transaction_type === 'CASH') {
             Document::create([
@@ -221,11 +221,13 @@ class TransactionController extends Controller
 
     public function deleteDocument(Document $document): RedirectResponse
     {
-
-        if ($document->file_path && Storage::disk('public')->exists($document->file_path)) {
-            Storage::disk('public')->delete($document->file_path);
+        if ($document->file_path) {
+            if (Storage::disk('local')->exists($document->file_path)) {
+                Storage::disk('local')->delete($document->file_path);
+            } elseif (Storage::disk('public')->exists($document->file_path)) {
+                Storage::disk('public')->delete($document->file_path);
+            }
         }
-
 
         $document->delete();
 

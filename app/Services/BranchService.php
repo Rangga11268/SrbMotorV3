@@ -3,30 +3,25 @@
 namespace App\Services;
 
 use App\Models\Motor;
-use App\Models\Setting;
+use App\Models\Branch;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class BranchService
 {
     /**
-     * Get all active branches from settings
+     * Get all active branches
      *
      * @return Collection
      */
     public function getAllBranches(): Collection
     {
         return Cache::remember('branches:all', 3600, function () {
-            $branches = Setting::where('category', 'branches')
-                ->get()
-                ->map(function ($setting) {
-                    $data = json_decode($setting->value, true);
-                    return $data['is_active'] ?? false ? $data : null;
-                })
-                ->filter()
-                ->values();
-
-            return $branches;
+            return collect(
+                Branch::where('is_active', true)
+                    ->get()
+                    ->toArray()
+            );
         });
     }
 

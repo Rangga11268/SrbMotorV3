@@ -75,7 +75,7 @@ class OrderController extends Controller
 
         if ($request->hasFile('ktp_image')) {
             $ktpFile = $request->file('ktp_image');
-            $ktpPath = $ktpFile->store('documents', 'public');
+            $ktpPath = $ktpFile->store('documents', 'local');
             \App\Models\Document::create([
                 'transaction_id' => $order->id,
                 'document_type' => 'KTP',
@@ -86,7 +86,7 @@ class OrderController extends Controller
 
         if ($request->hasFile('kk_image')) {
             $kkFile = $request->file('kk_image');
-            $kkPath = $kkFile->store('documents', 'public');
+            $kkPath = $kkFile->store('documents', 'local');
             \App\Models\Document::create([
                 'transaction_id' => $order->id,
                 'document_type' => 'KK',

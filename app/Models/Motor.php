@@ -17,6 +17,8 @@ class Motor extends Model
         "price",
         "year",
         "type",
+        "no_rangka",
+        "no_mesin",
         "image_path",
         "details",
         "description",
