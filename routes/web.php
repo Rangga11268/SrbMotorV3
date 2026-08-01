@@ -24,6 +24,10 @@ Route::get("/api-docs", function () {
     return view("api.docs");
 })->name("api.docs");
 
+Route::get("/swagger", function () {
+    return view("api.swagger");
+})->name("api.swagger");
+
 Route::get("/", [HomeController::class, "__invoke"])->name("home");
 Route::get("/about", [PageController::class, "about"])->name("about");
 Route::get("/bantuan", [PageController::class, "help"])->name("help");
