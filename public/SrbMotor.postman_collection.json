@@ -1,0 +1,1085 @@
+{
+  "info": {
+    "_postman_id": "8b51d0ab-cc9d-4fa0-b3b3-827d0434b9ef",
+    "name": "SRB Motor API Collection",
+    "description": "Koleksi API SRB Motor lengkap dengan folder rute terproteksi dan variabel dinamis.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "PASTE_YOUR_SANCTUM_TOKEN_HERE",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
+              ],
+              "variable": []
+            },
+            "description": "Pendaftaran pengguna baru. Hasil response berisi Sanctum Access Token.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"081234567890\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ],
+              "variable": []
+            },
+            "description": "Login pengguna menggunakan email dan password.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Google OAuth",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login/google",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login",
+                "google"
+              ],
+              "variable": []
+            },
+            "description": "Login via Google Sign-In dari aplikasi mobile. Kirim ID Token JWT dari SDK Google.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_token\": \"PASTE_GOOGLE_ID_TOKEN_HERE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan detail biodata user yang sedang login."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile"
+              ],
+              "variable": []
+            },
+            "description": "Ubah nama, telepon, nik, alamat, pekerjaan, dan pasang foto profil baru.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "type": "text",
+                  "value": "John Doe Updated"
+                },
+                {
+                  "key": "phone",
+                  "type": "text",
+                  "value": "081299998888"
+                },
+                {
+                  "key": "nik",
+                  "type": "text",
+                  "value": "3201234567890002"
+                },
+                {
+                  "key": "alamat",
+                  "type": "text",
+                  "value": "Jl. Keadilan Baru No. 10"
+                },
+                {
+                  "key": "occupation",
+                  "type": "text",
+                  "value": "Karyawan Swasta"
+                },
+                {
+                  "key": "profile_photo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "password"
+              ],
+              "variable": []
+            },
+            "description": "Ubah password akun pengguna saat ini.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"password123\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logout"
+              ],
+              "variable": []
+            },
+            "description": "Hapus token aktif dan keluar sesi."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Motor Catalog",
+      "item": [
+        {
+          "name": "Get Motors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motors",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motors"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan semua unit motor, bisa difilter ?brand=Honda&category=Matic&search=Vario"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Brands",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motors/brands",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motors",
+                "brands"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan daftar semua merek (brand) motor unik."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Motor Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motors/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motors",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "12",
+                  "description": "ID or reference code of the id"
+                }
+              ]
+            },
+            "description": "Detail motor berdasarkan ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan list kategori motor."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Branches",
+      "item": [
+        {
+          "name": "Get Branches List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/branches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "branches"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan list kantor cabang dealer."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Branch Options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/branches/options",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "branches",
+                "options"
+              ],
+              "variable": []
+            },
+            "description": "Opsi list nama cabang, kirim query ?type=service untuk daftar cabang servis."
+          },
+          "response": []
+        },
+        {
+          "name": "Find Nearest Branch",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/branches/nearest",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "branches",
+                "nearest"
+              ],
+              "variable": []
+            },
+            "description": "Cari cabang terdekat dengan query ?latitude=-6.9175&longitude=107.6191"
+          },
+          "response": []
+        },
+        {
+          "name": "Nearest Branches with Distance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/branches/with-distance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "branches",
+                "with-distance"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan cabang berurutan dari terdekat beserta km jaraknya."
+          },
+          "response": []
+        },
+        {
+          "name": "Calculate Distance between coordinates",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/calculate-distance",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calculate-distance"
+              ],
+              "variable": []
+            },
+            "description": "Hitung jarak garis lurus antara dua titik koordinat.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": -6.9175,\n  \"longitude\": 107.6191,\n  \"branch_latitude\": -6.9431,\n  \"branch_longitude\": 107.6324\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find Nearest Branches with Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motors/{motorId}/nearest-branches",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motors",
+                ":motorId",
+                "nearest-branches"
+              ],
+              "variable": [
+                {
+                  "key": "motorId",
+                  "value": "1",
+                  "description": "ID or reference code of the motorId"
+                }
+              ]
+            },
+            "description": "Dapatkan cabang yang memiliki stok motor spesifik beserta jaraknya."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders & Transactions",
+      "item": [
+        {
+          "name": "Get User Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan list seluruh transaksi pembelian milik user."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Cash Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/cash",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "cash"
+              ],
+              "variable": []
+            },
+            "description": "Pemesanan motor baru secara tunai/cash. Kirim data via multipart form data beserta file KTP dan KK.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "motor_id",
+                  "type": "text",
+                  "value": "1"
+                },
+                {
+                  "key": "customer_name",
+                  "type": "text",
+                  "value": "John Doe"
+                },
+                {
+                  "key": "customer_phone",
+                  "type": "text",
+                  "value": "081234567890"
+                },
+                {
+                  "key": "customer_email",
+                  "type": "text",
+                  "value": "john@example.com"
+                },
+                {
+                  "key": "customer_nik",
+                  "type": "text",
+                  "value": "3201234567890001"
+                },
+                {
+                  "key": "customer_address",
+                  "type": "text",
+                  "value": "Jl. Raya Motor No. 123"
+                },
+                {
+                  "key": "motor_color",
+                  "type": "text",
+                  "value": "Hitam Matte"
+                },
+                {
+                  "key": "delivery_method",
+                  "type": "text",
+                  "value": "Kirim ke Rumah"
+                },
+                {
+                  "key": "payment_method",
+                  "type": "text",
+                  "value": "Transfer Bank"
+                },
+                {
+                  "key": "booking_fee",
+                  "type": "text",
+                  "value": "500000"
+                },
+                {
+                  "key": "branch_code",
+                  "type": "text",
+                  "value": "SSM_BDG"
+                },
+                {
+                  "key": "notes",
+                  "type": "text",
+                  "value": "Kirim jam 10 pagi"
+                },
+                {
+                  "key": "ktp_image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "kk_image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Credit Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/credit",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "credit"
+              ],
+              "variable": []
+            },
+            "description": "Pemesanan motor baru dengan opsi pengajuan kredit.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motor_id\": 1,\n  \"customer_name\": \"John Doe\",\n  \"customer_phone\": \"081234567890\",\n  \"customer_email\": \"john@example.com\",\n  \"customer_nik\": \"3201234567890001\",\n  \"customer_address\": \"Jl. Raya Motor No. 123\",\n  \"motor_color\": \"Hitam Matte\",\n  \"delivery_method\": \"Kirim ke Rumah\",\n  \"payment_method\": \"Transfer Bank\",\n  \"occupation\": \"Karyawan Swasta\",\n  \"monthly_income\": 6000000,\n  \"employment_duration\": \"2 Tahun\",\n  \"dp_amount\": 6000000,\n  \"tenor\": 24,\n  \"branch\": \"SSM_BDG\",\n  \"notes\": \"Kirim sore\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{id}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "12",
+                  "description": "ID or reference code of the id"
+                }
+              ]
+            },
+            "description": "Dapatkan rincian pesanan dan status cicilan pembayaran."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{id}/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                ":id",
+                "cancel"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "12",
+                  "description": "ID or reference code of the id"
+                }
+              ]
+            },
+            "description": "Batalkan pesanan motor sebelum diproses lebih lanjut.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Pembatalan oleh pelanggan\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Installments & Midtrans",
+      "item": [
+        {
+          "name": "Request Online Payment Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/installments/{installment}/pay-online",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "installments",
+                ":installment",
+                "pay-online"
+              ],
+              "variable": [
+                {
+                  "key": "installment",
+                  "value": "1",
+                  "description": "ID or reference code of the installment"
+                }
+              ]
+            },
+            "description": "Membuat Snap token pembayaran Midtrans untuk angsuran atau DP."
+          },
+          "response": []
+        },
+        {
+          "name": "Sync Midtrans Payment Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/installments/{installment}/check-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "installments",
+                ":installment",
+                "check-status"
+              ],
+              "variable": [
+                {
+                  "key": "installment",
+                  "value": "1",
+                  "description": "ID or reference code of the installment"
+                }
+              ]
+            },
+            "description": "Sync status transaksi dari Midtrans ke database lokal."
+          },
+          "response": []
+        },
+        {
+          "name": "Midtrans Notification Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/midtrans/notification",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "midtrans",
+                "notification"
+              ],
+              "variable": []
+            },
+            "description": "Simulasi webhook notifikasi yang dikirimkan oleh Midtrans saat status bayar berubah.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"INST-45-1779532000\",\n  \"transaction_status\": \"settlement\",\n  \"payment_type\": \"bank_transfer\",\n  \"gross_amount\": \"500000.00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Service Booking",
+      "item": [
+        {
+          "name": "Get Appointments List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/services",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan daftar antrian booking service milik user."
+          },
+          "response": []
+        },
+        {
+          "name": "Book a Service Queue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/services/book",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "book"
+              ],
+              "variable": []
+            },
+            "description": "Ambil nomor antrian booking service bengkel.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branch\": \"SRB Motor Bandung\",\n  \"plate_number\": \"D 1234 ABC\",\n  \"service_date\": \"2026-08-05\",\n  \"service_time\": \"09:00 - 10:00\",\n  \"motor_model\": \"Honda Vario 160\",\n  \"service_type\": \"Servis Berkala\",\n  \"complaint_notes\": \"Ganti oli gardan\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Time Slots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/services/available-slots",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "available-slots"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan slot jam servis yang masih kosong pada cabang tersebut. Contoh params: ?date=2026-08-05&branch=SRB Motor Bandung"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Full Booked Dates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/services/unavailable-dates",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "services",
+                "unavailable-dates"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan daftar tanggal yang slot antriannya sudah habis. Params: ?branch=SRB Motor Bandung"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get Notifications List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ],
+              "variable": []
+            },
+            "description": "Dapatkan semua notifikasi masuk."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notification Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/{id}/read",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                ":id",
+                "read"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "12",
+                  "description": "ID or reference code of the id"
+                }
+              ]
+            },
+            "description": "Tandai satu notifikasi tertentu sudah dibaca."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark All Notifications Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "read-all"
+              ],
+              "variable": []
+            },
+            "description": "Tandai seluruh notifikasi sekaligus sudah dibaca."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

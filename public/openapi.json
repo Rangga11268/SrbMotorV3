@@ -1,0 +1,2231 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SRB Motor API",
+    "description": "Dokumentasi API lengkap untuk aplikasi SRB Motor (Mobile & Integrasi). Menggunakan Laravel Sanctum untuk keamanan rute terproteksi.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Local Development Server (artisan serve)"
+    },
+    {
+      "url": "http://srbmotor.test/api",
+      "description": "Local Laragon Host"
+    }
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Registrasi Pengguna Baru",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "john@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "081234567890"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registrasi Berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Registrasi berhasil"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "access_token": {
+                      "type": "string",
+                      "example": "1|abcdefg..."
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "example": "Bearer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi Gagal (e.g. Email sudah terdaftar, password kurang dari 8 karakter)"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login Tradisional (Email & Password)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "john@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login Berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login berhasil"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "access_token": {
+                      "type": "string",
+                      "example": "2|hijklmn..."
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "example": "Bearer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Password Salah"
+          },
+          "404": {
+            "description": "Email Tidak Terdaftar"
+          }
+        }
+      }
+    },
+    "/login/google": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login via Google OAuth (Aplikasi Mobile)",
+        "description": "Memverifikasi ID Token Google yang didapat dari Firebase/Google SDK di aplikasi mobile.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id_token"
+                ],
+                "properties": {
+                  "id_token": {
+                    "type": "string",
+                    "description": "ID Token dari Google Sign-In SDK"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login / Register via Google Berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login successful"
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "3|opqrst..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ID Token Google tidak valid"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Dapatkan Data Profil User Aktif",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          }
+        }
+      }
+    },
+    "/profile": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Perbarui Profil Pengguna",
+        "description": "Gunakan Content-Type multipart/form-data untuk menyertakan file foto profil.",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe Updated"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "081299998888"
+                  },
+                  "nik": {
+                    "type": "string",
+                    "example": "3201234567890002"
+                  },
+                  "alamat": {
+                    "type": "string",
+                    "example": "Jl. Keadilan Baru No. 10"
+                  },
+                  "occupation": {
+                    "type": "string",
+                    "example": "Wirausaha"
+                  },
+                  "profile_photo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profil Berhasil Diperbarui",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Profil berhasil diperbarui"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi Gagal"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          }
+        }
+      }
+    },
+    "/password": {
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Perbarui Password Pengguna",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "current_password",
+                  "password",
+                  "password_confirmation"
+                ],
+                "properties": {
+                  "current_password": {
+                    "type": "string",
+                    "example": "oldpassword123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "newpassword123"
+                  },
+                  "password_confirmation": {
+                    "type": "string",
+                    "example": "newpassword123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password Berhasil Diubah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password berhasil diperbarui."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Password saat ini tidak cocok"
+          },
+          "422": {
+            "description": "Validasi Gagal"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Logout / Hapus Token Aktif",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout Berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Logout berhasil"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          }
+        }
+      }
+    },
+    "/motors": {
+      "get": {
+        "tags": [
+          "Motor Catalog"
+        ],
+        "summary": "Dapatkan Daftar Semua Motor",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Cari nama motor",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "description": "Filter merek motor (contoh: Honda, Yamaha)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter tipe motor (contoh: Matic, Manual)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Motor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/motors/brands": {
+      "get": {
+        "tags": [
+          "Motor Catalog"
+        ],
+        "summary": "Dapatkan Daftar Brand Motor Unik",
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "Honda"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/motors/{id}": {
+      "get": {
+        "tags": [
+          "Motor Catalog"
+        ],
+        "summary": "Detail Motor Spesifik",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID Motor",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Motor"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Motor Tidak Ditemukan"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Motor Catalog"
+        ],
+        "summary": "Dapatkan Daftar Kategori Tipe Motor",
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Matic"
+                      },
+                      "slug": {
+                        "type": "string",
+                        "example": "matic"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/branches": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "summary": "Dapatkan Semua Cabang Dealer Aktif",
+        "parameters": [
+          {
+            "name": "motor_id",
+            "in": "query",
+            "description": "Jika dikirim, akan menyertakan data stok motor ini di setiap cabang",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "branches": {
+                      "type": "array",
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/Branch"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "stock": {
+                                "type": "integer",
+                                "nullable": true,
+                                "example": 5
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/branches/options": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "summary": "Dapatkan Opsi Nama & Kode Cabang (Untuk Dropdown Form)",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Kirim 'service' untuk memfilter cabang yang menyediakan servis",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "options": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "example": {
+                        "SSM_BDG": "SRB Motor Bandung",
+                        "SSM_JKT": "SRB Motor Jakarta"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/branches/nearest": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "summary": "Cari Cabang Terdekat Berdasarkan Koordinat",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "example": -6.9175
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "example": 107.6191
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cabang Terdekat Ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "branch": {
+                      "$ref": "#/components/schemas/Branch"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Cabang terdekat: SRB Motor Bandung (2.5 km)"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tidak ada cabang ditemukan"
+          }
+        }
+      }
+    },
+    "/branches/with-distance": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "summary": "Dapatkan Semua Cabang beserta Jaraknya dari Koordinat",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "example": -6.9175
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "example": 107.6191
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/Branch"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "distance": {
+                                "type": "number",
+                                "example": 4.2
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calculate-distance": {
+      "post": {
+        "tags": [
+          "Branches"
+        ],
+        "summary": "Hitung Jarak Antara Dua Koordinat (User & Cabang)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "latitude",
+                  "longitude",
+                  "branch_latitude",
+                  "branch_longitude"
+                ],
+                "properties": {
+                  "latitude": {
+                    "type": "number",
+                    "example": -6.9175
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "example": 107.6191
+                  },
+                  "branch_latitude": {
+                    "type": "number",
+                    "example": -6.9431
+                  },
+                  "branch_longitude": {
+                    "type": "number",
+                    "example": 107.6324
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "distance_km": {
+                      "type": "number",
+                      "example": 3.2
+                    },
+                    "formatted": {
+                      "type": "string",
+                      "example": "3.20 km"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/motors/{motorId}/nearest-branches": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "summary": "Dapatkan Cabang Terdekat yang Memiliki Stok Motor Spesifik",
+        "parameters": [
+          {
+            "name": "motorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "branches": {
+                      "type": "array",
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/Branch"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "stock": {
+                                "type": "integer",
+                                "example": 3
+                              },
+                              "distance": {
+                                "type": "number",
+                                "example": 5.1
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "motor_id": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Dapatkan Semua Riwayat Pesanan Pengguna",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/Transaction"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "motor": {
+                            "$ref": "#/components/schemas/Motor"
+                          },
+                          "installments": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/Installment"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          }
+        }
+      }
+    },
+    "/orders/cash": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Pemesanan Motor Tunai (CASH)",
+        "description": "Membuat order cash baru. Memerlukan dokumen KTP dan KK sebagai file unggahan.",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "motor_id",
+                  "customer_name",
+                  "customer_phone",
+                  "customer_nik",
+                  "customer_address",
+                  "motor_color",
+                  "delivery_method",
+                  "payment_method",
+                  "ktp_image",
+                  "kk_image"
+                ],
+                "properties": {
+                  "motor_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "customer_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "customer_phone": {
+                    "type": "string",
+                    "example": "081234567890"
+                  },
+                  "customer_email": {
+                    "type": "string",
+                    "example": "john@example.com"
+                  },
+                  "customer_nik": {
+                    "type": "string",
+                    "example": "3201234567890001"
+                  },
+                  "customer_address": {
+                    "type": "string",
+                    "example": "Jl. Raya Motor No. 123"
+                  },
+                  "motor_color": {
+                    "type": "string",
+                    "example": "Hitam Matte"
+                  },
+                  "delivery_method": {
+                    "type": "string",
+                    "example": "Kirim ke Rumah"
+                  },
+                  "payment_method": {
+                    "type": "string",
+                    "example": "Transfer Bank",
+                    "description": "Contoh: Transfer Bank, Cash"
+                  },
+                  "booking_fee": {
+                    "type": "number",
+                    "example": 500000,
+                    "description": "Jumlah Booking Fee (opsional)"
+                  },
+                  "branch_code": {
+                    "type": "string",
+                    "example": "SSM_BDG"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "example": "Kirim sore hari"
+                  },
+                  "ktp_image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "kk_image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order Cash Berhasil Dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Pesanan berhasil dibuat"
+                    },
+                    "order_id": {
+                      "type": "integer",
+                      "example": 12
+                    },
+                    "snap_token": {
+                      "type": "string",
+                      "example": "c8a41762-d27a-40a2-9721-396a80df3655",
+                      "description": "Hanya diisi jika Payment Method adalah 'Transfer Bank'"
+                    },
+                    "redirect_url": {
+                      "type": "string",
+                      "example": "https://app.sandbox.midtrans.com/snap/v2/vtweb/c8a41762..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi Gagal / Booking Fee melebihi harga motor"
+          }
+        }
+      }
+    },
+    "/orders/credit": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Pengajuan Pemesanan Kredit (CREDIT)",
+        "description": "Membuat pengajuan kredit motor. Memerlukan isian profil finansial.",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "motor_id",
+                  "customer_name",
+                  "customer_phone",
+                  "customer_nik",
+                  "customer_address",
+                  "motor_color",
+                  "delivery_method",
+                  "payment_method",
+                  "occupation",
+                  "monthly_income",
+                  "employment_duration",
+                  "dp_amount",
+                  "tenor"
+                ],
+                "properties": {
+                  "motor_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "customer_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "customer_phone": {
+                    "type": "string",
+                    "example": "081234567890"
+                  },
+                  "customer_email": {
+                    "type": "string",
+                    "example": "john@example.com"
+                  },
+                  "customer_nik": {
+                    "type": "string",
+                    "example": "3201234567890001"
+                  },
+                  "customer_address": {
+                    "type": "string",
+                    "example": "Jl. Raya Motor No. 123"
+                  },
+                  "motor_color": {
+                    "type": "string",
+                    "example": "Hitam Matte"
+                  },
+                  "delivery_method": {
+                    "type": "string",
+                    "example": "Kirim ke Rumah"
+                  },
+                  "payment_method": {
+                    "type": "string",
+                    "example": "Transfer Bank"
+                  },
+                  "occupation": {
+                    "type": "string",
+                    "example": "Karyawan Swasta"
+                  },
+                  "monthly_income": {
+                    "type": "number",
+                    "example": 6000000
+                  },
+                  "employment_duration": {
+                    "type": "string",
+                    "example": "2 Tahun"
+                  },
+                  "dp_amount": {
+                    "type": "number",
+                    "example": 6000000,
+                    "description": "Minimal 20% dari harga motor"
+                  },
+                  "tenor": {
+                    "type": "integer",
+                    "example": 24,
+                    "description": "Pilihan tenor dalam bulan (misal: 12, 24, 36)"
+                  },
+                  "branch": {
+                    "type": "string",
+                    "example": "SSM_BDG"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "example": "Silakan hubungi lewat WA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pengajuan Kredit Berhasil Dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Pengajuan kredit berhasil dibuat"
+                    },
+                    "order_id": {
+                      "type": "integer",
+                      "example": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validasi Gagal (e.g. DP kurang dari batas minimal)"
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Dapatkan Detail Order & Pembayaran Cicilannya",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Transaction"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "motor": {
+                          "$ref": "#/components/schemas/Motor"
+                        },
+                        "installments": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Installment"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order Tidak Ditemukan"
+          }
+        }
+      }
+    },
+    "/orders/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Batalkan Order (Sebelum Diproses)",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "example": "Ingin mengganti warna motor"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sukses Batalkan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Pesanan berhasil dibatalkan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Tidak dapat membatalkan pesanan yang sudah berjalan"
+          }
+        }
+      }
+    },
+    "/installments/{installment}/pay-online": {
+      "post": {
+        "tags": [
+          "Installments & Midtrans"
+        ],
+        "summary": "Buat Token Pembayaran Midtrans (Online)",
+        "description": "Membuat Snap Token untuk melakukan pembayaran online via Midtrans (DP maupun angsuran bulanan).",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "installment",
+            "in": "path",
+            "required": true,
+            "description": "ID Cicilan",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snap Token Terbuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "snap_token": {
+                      "type": "string",
+                      "example": "c8a41762-d27a-40a2-9721-396a80df3655"
+                    },
+                    "redirect_url": {
+                      "type": "string",
+                      "example": "https://app.sandbox.midtrans.com/snap/v2/vtweb/c8a41762..."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Pembayaran DP Ditolak karena pengajuan kredit belum disetujui leasing"
+          }
+        }
+      }
+    },
+    "/installments/{installment}/check-status": {
+      "post": {
+        "tags": [
+          "Installments & Midtrans"
+        ],
+        "summary": "Cek & Perbarui Status Transaksi Midtrans",
+        "description": "Memanggil status transaksi ke server Midtrans secara realtime untuk meresync status cicilan local.",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "installment",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status Terkini",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "settlement"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Status pembayaran diperbarui: settlement"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/midtrans/notification": {
+      "post": {
+        "tags": [
+          "Installments & Midtrans"
+        ],
+        "summary": "Webhook Midtrans Notification Callback",
+        "description": "Endpoint publik callback webhook yang dipanggil otomatis oleh server Midtrans untuk sinkronisasi pembayaran.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "string",
+                    "example": "INST-45-1779532000"
+                  },
+                  "transaction_status": {
+                    "type": "string",
+                    "example": "settlement"
+                  },
+                  "payment_type": {
+                    "type": "string",
+                    "example": "bank_transfer"
+                  },
+                  "gross_amount": {
+                    "type": "string",
+                    "example": "500000.00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Berhasil diproses"
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "tags": [
+          "Service Booking"
+        ],
+        "summary": "Dapatkan Semua Riwayat Booking Service Pengguna",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceAppointment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/book": {
+      "post": {
+        "tags": [
+          "Service Booking"
+        ],
+        "summary": "Buat Reservasi Booking Service Baru",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "branch",
+                  "plate_number",
+                  "service_date",
+                  "service_time"
+                ],
+                "properties": {
+                  "branch": {
+                    "type": "string",
+                    "example": "SRB Motor Bandung"
+                  },
+                  "plate_number": {
+                    "type": "string",
+                    "example": "D 1234 ABC"
+                  },
+                  "service_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-08-05"
+                  },
+                  "service_time": {
+                    "type": "string",
+                    "example": "09:00 - 10:00",
+                    "description": "Format slot waktu"
+                  },
+                  "motor_model": {
+                    "type": "string",
+                    "example": "Honda Vario 160"
+                  },
+                  "service_type": {
+                    "type": "string",
+                    "example": "Servis Berkala"
+                  },
+                  "complaint_notes": {
+                    "type": "string",
+                    "example": "Ganti oli mesin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking Berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Antrian Berhasil Dibuat"
+                    },
+                    "appointment": {
+                      "$ref": "#/components/schemas/ServiceAppointment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Double booking pada tanggal yang sama untuk plat ini di cabang tersebut"
+          }
+        }
+      }
+    },
+    "/services/available-slots": {
+      "get": {
+        "tags": [
+          "Service Booking"
+        ],
+        "summary": "Dapatkan Slot Waktu Tersedia",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "09:00 - 10:00"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services/unavailable-dates": {
+      "get": {
+        "tags": [
+          "Service Booking"
+        ],
+        "summary": "Dapatkan Tanggal yang Sudah Penuh (Kuota Habis)",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "branch",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "example": "2026-08-17"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Dapatkan Notifikasi Masuk User",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "82f8a45b-7c4d-45db-b27b-e1c6861214a1"
+                              },
+                              "type": {
+                                "type": "string",
+                                "example": "App\\Notifications\\StatusUpdateNotification"
+                              },
+                              "data": {
+                                "type": "object",
+                                "properties": {
+                                  "title": {
+                                    "type": "string",
+                                    "example": "Pengajuan Kredit Disetujui"
+                                  },
+                                  "message": {
+                                    "type": "string",
+                                    "example": "Pengajuan kredit Anda telah disetujui leasing BAF."
+                                  }
+                                }
+                              },
+                              "read_at": {
+                                "type": "string",
+                                "nullable": true,
+                                "example": null
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "unread_count": {
+                      "type": "integer",
+                      "example": 2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{id}/read": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Tandai Satu Notifikasi Sudah Dibaca",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Notification marked as read"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/read-all": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Tandai Semua Notifikasi Sudah Dibaca",
+        "security": [
+          {
+            "sanctum": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "All notifications marked as read"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": "081234567890"
+          },
+          "nik": {
+            "type": "string",
+            "example": "3201234567890001"
+          },
+          "alamat": {
+            "type": "string",
+            "example": "Jl. Raya Motor No. 123"
+          },
+          "occupation": {
+            "type": "string",
+            "example": "Karyawan Swasta"
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          },
+          "profile_photo_path": {
+            "type": "string",
+            "example": "http://localhost:8000/storage/profile-photos/123.jpg"
+          }
+        }
+      },
+      "Motor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Honda Vario 160"
+          },
+          "brand": {
+            "type": "string",
+            "example": "Honda"
+          },
+          "type": {
+            "type": "string",
+            "example": "Matic"
+          },
+          "price": {
+            "type": "number",
+            "example": 26500000
+          },
+          "min_dp_amount": {
+            "type": "number",
+            "example": 5300000
+          },
+          "tersedia": {
+            "type": "boolean",
+            "example": true
+          },
+          "description": {
+            "type": "string",
+            "example": "Motor matic premium bertenaga 160cc."
+          },
+          "spec_mesin": {
+            "type": "string",
+            "example": "4-Langkah, 4-Valve, eSP+"
+          },
+          "spec_rangka": {
+            "type": "string",
+            "example": "Underbone - eSAF"
+          },
+          "spec_dimensi": {
+            "type": "string",
+            "example": "1.929 x 679 x 1.088 mm"
+          },
+          "spec_kelistrikan": {
+            "type": "string",
+            "example": "Full Transisterized, Battery 12V"
+          }
+        }
+      },
+      "Branch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "code": {
+            "type": "string",
+            "example": "SSM_BDG"
+          },
+          "name": {
+            "type": "string",
+            "example": "SRB Motor Bandung"
+          },
+          "address": {
+            "type": "string",
+            "example": "Jl. Soekarno Hatta No. 456"
+          },
+          "latitude": {
+            "type": "number",
+            "example": -6.9431
+          },
+          "longitude": {
+            "type": "number",
+            "example": 107.6324
+          },
+          "phone": {
+            "type": "string",
+            "example": "62811223344"
+          },
+          "can_service": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 12
+          },
+          "reference_number": {
+            "type": "string",
+            "example": "ORD-667A5E9F8B2C1"
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "motor_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "phone": {
+            "type": "string",
+            "example": "081234567890"
+          },
+          "email": {
+            "type": "string",
+            "example": "john@example.com"
+          },
+          "nik": {
+            "type": "string",
+            "example": "3201234567890001"
+          },
+          "address": {
+            "type": "string",
+            "example": "Jl. Raya Motor No. 123"
+          },
+          "motor_color": {
+            "type": "string",
+            "example": "Hitam Matte"
+          },
+          "delivery_method": {
+            "type": "string",
+            "example": "Kirim ke Rumah"
+          },
+          "payment_method": {
+            "type": "string",
+            "example": "Transfer Bank"
+          },
+          "booking_fee": {
+            "type": "number",
+            "example": 500000
+          },
+          "transaction_type": {
+            "type": "string",
+            "example": "CASH"
+          },
+          "status": {
+            "type": "string",
+            "example": "new_order"
+          },
+          "motor_price": {
+            "type": "number",
+            "example": 26500000
+          },
+          "total_price": {
+            "type": "number",
+            "example": 26500000
+          },
+          "final_price": {
+            "type": "number",
+            "example": 26500000
+          },
+          "branch_code": {
+            "type": "string",
+            "example": "SSM_BDG"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2026-08-01T12:00:00.000000Z"
+          }
+        }
+      },
+      "Installment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 45
+          },
+          "transaction_id": {
+            "type": "integer",
+            "example": 12
+          },
+          "installment_number": {
+            "type": "integer",
+            "example": 0
+          },
+          "amount": {
+            "type": "number",
+            "example": 500000
+          },
+          "penalty_amount": {
+            "type": "number",
+            "example": 0
+          },
+          "due_date": {
+            "type": "string",
+            "example": "2026-08-01"
+          },
+          "status": {
+            "type": "string",
+            "example": "pending"
+          },
+          "payment_method": {
+            "type": "string",
+            "example": "Transfer Bank"
+          },
+          "snap_token": {
+            "type": "string",
+            "example": "c8a41762-d27a-40a2-9721-396a80df3655"
+          },
+          "midtrans_booking_code": {
+            "type": "string",
+            "example": "INST-45-1779532000"
+          }
+        }
+      },
+      "ServiceAppointment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 3
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "branch": {
+            "type": "string",
+            "example": "SRB Motor Bandung"
+          },
+          "customer_name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "customer_phone": {
+            "type": "string",
+            "example": "081234567890"
+          },
+          "plate_number": {
+            "type": "string",
+            "example": "D 1234 ABC"
+          },
+          "queue_number": {
+            "type": "string",
+            "example": "A-01"
+          },
+          "motor_model": {
+            "type": "string",
+            "example": "Honda Vario 160"
+          },
+          "service_date": {
+            "type": "string",
+            "example": "2026-08-05"
+          },
+          "service_time": {
+            "type": "string",
+            "example": "09:00 - 10:00"
+          },
+          "service_type": {
+            "type": "string",
+            "example": "Servis Berkala"
+          },
+          "complaint_notes": {
+            "type": "string",
+            "example": "Rem belakang kurang pakem"
+          },
+          "status": {
+            "type": "string",
+            "example": "confirmed"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "sanctum": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Masukkan Token Sanctum Bearer di sini."
+      }
+    }
+  }
+}
