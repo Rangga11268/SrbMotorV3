@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCE Class Diagram (Opsi A - Terpusat) - SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #0f1117;
+            --surface: #171b24;
+            --surface2: #1e2330;
+            --border: #2a3045;
+            --text: #e2e8f0;
+            --text-muted: #7a89a8;
+            --amber: #f0a84f;
+            --teal: #3ecfb0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: var(--teal);
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--teal);
+            border: 1px solid var(--teal);
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .section-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .desc-box {
+            background: var(--surface2);
+            border-left: 4px solid var(--amber);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .desc-box h3 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            color: var(--amber);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .diagram-frame {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            background: #11141c;
+            overflow-x: auto;
+            display: block;
+            text-align: center;
+        }
+
+        .mermaid svg {
+            min-width: 1400px;
+            width: 100%;
+            height: auto;
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--teal);
+            color: var(--bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 8px 20px rgba(62, 207, 176, 0.3);
+            z-index: 100;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media print {
+            .btn-print, header, .back-link { display: none !important; }
+            body { padding: 0; background: white; color: black; }
+            .section-box { border: none; box-shadow: none; padding: 0; background: white; }
+            .diagram-frame { background: white; border: 1px solid #ccc; }
+            .desc-box { background: #f9f9f9; border-color: #333; color: #333; }
+            .mermaid svg {
+                min-width: 100% !important;
+                width: 100% !important;
+                height: auto !important;
+                color: black !important;
+            }
+        }
+
+        .relation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 28px;
+            font-size: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .relation-table th, .relation-table td {
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .relation-table th {
+            background: #11141c;
+            color: var(--teal);
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .relation-table td strong {
+            color: var(--text);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11.5px;
+        }
+        .relation-table td em {
+            color: var(--amber);
+            font-style: normal;
+            font-weight: 600;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            themeVariables: {
+                background: "#11141c",
+                primaryColor: "#1e2d48",
+                primaryTextColor: "#e2e8f0",
+                primaryBorderColor: "#3a4560",
+                lineColor: "#7a89a8",
+                fontFamily: "IBM Plex Sans, sans-serif",
+                fontSize: "16px"
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <a href="classDiagram.html" class="back-link">&larr; Kembali ke Pemilihan Opsi</a>
+
+    <header>
+        <div class="badge">UML · CLASS DIAGRAM (OPSI A)</div>
+        <h1>Class Diagram — Opsi A (Terpusat)</h1>
+        <p class="subtitle">Desain Arsitektur Autentikasi Terpusat/Reusable (Menggunakan Pewarisan Kelas User)</p>
+    </header>
+
+    <div class="content-container" style="display: flex; flex-direction: column; gap: 40px;">
+        
+        <!-- FRONTEND PORTAL CLASS DIAGRAM -->
+        <div class="section-box">
+            <div class="desc-box">
+                <h3>1. Frontend Class Diagram (Guest &amp; Customer Portal — BCE)</h3>
+                <strong>Deskripsi:</strong> Halaman UI (Boundary) untuk Guest dan Customer. Menampilkan hubungan pewarisan antara Guest dan Customer terhadap base class User, serta relasi pemanggilan logika controller untuk Registrasi, Login, Katalog, Simulasi, Booking Cash/Kredit, dan Pembayaran.
+            </div>
+            
+            <div class="diagram-frame">
+                <pre class="mermaid">
+classDiagram
+    direction LR
+    %% Boundary (UI Pages)
+    class HalamanUtama {
+        +tampilkanHeader() : void
+        +tampilkanFooter() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanUtama
+
+    class HalamanRegistrasi {
+        +tampilkanFormRegistrasi() : void
+        +submitRegistrasi() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanRegistrasi
+
+    class HalamanLogin {
+        +tampilkanFormLogin() : void
+        +submitLogin() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanLogin
+
+    class HalamanKatalog {
+        +tampilkanKatalog() : void
+        +pilihKategori() : void
+        +tampilkanDetailMotor() : void
+        +hitungSimulasi() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanKatalog
+
+    class HalamanBookingCash {
+        +tampilkanFormBookingCash() : void
+        +submitBookingCash() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanBookingCash
+
+    class HalamanBookingKredit {
+        +tampilkanFormBookingKredit() : void
+        +submitBookingKredit() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanBookingKredit
+
+    class HalamanPembayaran {
+        +tampilkanInvoice() : void
+        +pilihMetodeBayar() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanPembayaran
+
+    %% Control
+    class AuthControllerClient {
+        +register(data) : Promise
+        +login(credentials) : Promise
+    }
+    &lt;&lt;control&gt;&gt; AuthControllerClient
+
+    class KatalogControllerClient {
+        +getKatalog() : list
+        +hitungCicilan(dp, tenor) : list
+    }
+    &lt;&lt;control&gt;&gt; KatalogControllerClient
+
+    class BookingControllerClient {
+        +buatJadwal() : void
+    }
+    &lt;&lt;control&gt;&gt; BookingControllerClient
+
+    class PembayaranControllerClient {
+        +prosesBayar() : void
+    }
+    &lt;&lt;control&gt;&gt; PembayaranControllerClient
+
+    %% Entity (Data Models)
+    class User {
+        -id : BigInt
+        -email : Varchar
+        -name : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; User
+
+    class Guest {
+        -sessionId : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; Guest
+
+    class Customer {
+        -phone : Varchar
+        -address : Text
+    }
+    &lt;&lt;entity&gt;&gt; Customer
+
+    class Motors {
+        -id : BigInt
+        -name : Varchar
+        -brand : Varchar
+        -price : Decimal
+    }
+    &lt;&lt;entity&gt;&gt; Motors
+
+    class KategoriMotor {
+        -id : BigInt
+        -nama : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; KategoriMotor
+
+    class JadwalServis {
+        -id : BigInt
+        -service_date : Date
+    }
+    &lt;&lt;entity&gt;&gt; JadwalServis
+
+    class PembayaranServis {
+        -id : BigInt
+        -total_cost : Decimal
+    }
+    &lt;&lt;entity&gt;&gt; PembayaranServis
+
+    %% Generalization (Inheritance)
+    Guest --|> User
+    Customer --|> User
+    HalamanRegistrasi --|> HalamanUtama
+    HalamanLogin --|> HalamanUtama
+    HalamanKatalog --|> HalamanUtama
+    HalamanBookingCash --|> HalamanUtama
+    HalamanBookingKredit --|> HalamanUtama
+    HalamanPembayaran --|> HalamanUtama
+
+    %% Dependency (Boundary ..> Control)
+    HalamanRegistrasi ..> AuthControllerClient : menggunakan
+    HalamanLogin ..> AuthControllerClient : menggunakan
+    HalamanKatalog ..> KatalogControllerClient : menggunakan
+    HalamanBookingCash ..> BookingControllerClient : menggunakan
+    HalamanBookingKredit ..> BookingControllerClient : menggunakan
+    HalamanPembayaran ..> PembayaranControllerClient : menggunakan
+
+    %% Association (Control --> Entity)
+    AuthControllerClient --> User : registrasi/validasi
+    KatalogControllerClient --> Motors : query
+    BookingControllerClient --> JadwalServis : set
+    PembayaranControllerClient --> PembayaranServis : update
+
+    %% Structural Relationships (Entity to Entity)
+    KategoriMotor "1" o-- "*" Motors : "mengelompokkan (Aggregation)"
+    Customer "1" *-- "*" JadwalServis : "melakukan (Composition)"
+    JadwalServis "1" *-- "1" PembayaranServis : "mencakup (Composition)"
+                </pre>
+            </div>
+
+            <!-- Frontend Explanations -->
+            <table class="relation-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Relasi Sistem</th>
+                        <th style="width: 25%;">Notasi UML &amp; Jenis</th>
+                        <th>Keterangan Bisnis &amp; Sistem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Halaman UI &rarr; HalamanUtama</strong></td>
+                        <td><em>Halaman --|&gt; HalamanUtama</em><br>Generalization (Inheritance)</td>
+                        <td>Halaman login, registrasi, katalog, dll. mewarisi layout dasar, header, dan footer dari parent boundary HalamanUtama. Halaman utama ini sendiri tidak berdiri mandiri.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Guest / Customer &rarr; User</strong></td>
+                        <td><em>Guest/Customer --|&gt; User</em><br>Generalization (Inheritance)</td>
+                        <td>Atribut dasar user seperti nama dan email diwariskan langsung ke kelas Guest (yang memiliki session) dan Customer.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Halaman UI &rarr; Controller</strong></td>
+                        <td><em>Boundary ..&gt; Control</em><br>Dependency (Ketergantungan)</td>
+                        <td>Halaman frontend bergantung searah kepada Controller terkait untuk memproses logika data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Controller &rarr; Model Entity</strong></td>
+                        <td><em>Control --&gt; Entity</em><br>Association (Asosiasi)</td>
+                        <td>Controller bertindak sebagai pengolah logika yang memproses data database.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BACKEND PORTAL CLASS DIAGRAM - OPSI A -->
+        <div class="section-box">
+            <div class="desc-box">
+                <h3>2. Backend Class Diagram — Opsi A (Arsitektur Terpusat)</h3>
+                <strong>Deskripsi:</strong> Halaman UI Dashboard (Boundary) untuk Admin dan Montir dengan controller bisnis. **Opsi A menggunakan satu AuthController terpusat di Backend (tidak diduplikasi di diagram backend)** dan memanfaatkan pewarisan <code>Admin/Montir --|> User</code> untuk autentikasi. Halaman Dashboard diproteksi langsung di level routing (middleware).
+            </div>
+            
+            <div class="diagram-frame">
+                <pre class="mermaid">
+classDiagram
+    direction LR
+    %% Boundary (UI Dashboards)
+    class HalamanLoginBackend {
+        +tampilkanFormLogin() : void
+        +submitLogin() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanLoginBackend
+
+    class HalamanDashboard {
+        +tampilkanSidebar() : void
+        +tampilkanHeader() : void
+    }
+    &lt;&lt;boundary&gt;&gt; HalamanDashboard
+
+    class DashboardAdmin {
+        +tampilkanLaporan() : void
+        +verifikasiBooking() : void
+    }
+    &lt;&lt;boundary&gt;&gt; DashboardAdmin
+
+    class DashboardMontir {
+        +tampilkanDaftarKerja() : void
+        +updateStatusServis() : void
+    }
+    &lt;&lt;boundary&gt;&gt; DashboardMontir
+
+    %% Control
+    class AuthControllerBackend {
+        +login(credentials) : Promise
+        +logout() : void
+    }
+    &lt;&lt;control&gt;&gt; AuthControllerBackend
+
+    class BookingController {
+        +buatJadwal() : void
+    }
+    &lt;&lt;control&gt;&gt; BookingController
+
+    class PembayaranController {
+        +prosesBayar() : void
+    }
+    &lt;&lt;control&gt;&gt; PembayaranController
+
+    class MontirController {
+        +catatPengerjaan() : void
+        +selesaikan() : void
+    }
+    &lt;&lt;control&gt;&gt; MontirController
+
+    class LaporanController {
+        +generateLaporanServis() : JSON
+        +generateLaporanKeuangan() : JSON
+    }
+    &lt;&lt;control&gt;&gt; LaporanController
+
+    %% Entity
+    class User {
+        -id : BigInt
+        -email : Varchar
+        -name : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; User
+
+    class Admin {
+        -level : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; Admin
+
+    class Montir {
+        -keahlian : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; Montir
+
+    class JadwalServis {
+        -id : BigInt
+        -status : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; JadwalServis
+
+    class Servis {
+        -id : BigInt
+        -service_notes : Text
+    }
+    &lt;&lt;entity&gt;&gt; Servis
+
+    class PembayaranServis {
+        -id : BigInt
+        -payment_status : Varchar
+    }
+    &lt;&lt;entity&gt;&gt; PembayaranServis
+
+    %% Generalization (Inheritance)
+    Admin --|> User
+    Montir --|> User
+    DashboardAdmin --|> HalamanDashboard
+    DashboardMontir --|> HalamanDashboard
+
+    %% Dependency (Boundary ..> Control)
+    HalamanLoginBackend ..> AuthControllerBackend : menggunakan
+    HalamanDashboard ..> AuthControllerBackend : divalidasi (via middleware)
+    DashboardAdmin ..> BookingController : mengelola
+    DashboardAdmin ..> PembayaranController : memantau
+    DashboardAdmin ..> LaporanController : request laporan
+    DashboardMontir ..> MontirController : menggunakan
+
+    %% Association (Control --> Entity)
+    AuthControllerBackend --> User : validasi/autentikasi
+    BookingController --> JadwalServis : update
+    PembayaranController --> PembayaranServis : query
+    LaporanController --> PembayaranServis : rekap
+    MontirController --> Servis : update
+    MontirController --> JadwalServis : update
+
+    %% Structural Relationships (Entity to Entity)
+    JadwalServis "1" *-- "1" Servis : "merekam (Composition)"
+    Servis "1" *-- "1" PembayaranServis : "mencatat (Composition)"
+                </pre>
+            </div>
+
+            <!-- Backend Explanations A -->
+            <table class="relation-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Relasi Sistem</th>
+                        <th style="width: 25%;">Notasi UML &amp; Jenis</th>
+                        <th>Keterangan Bisnis &amp; Sistem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dashboard UI &rarr; HalamanDashboard</strong></td>
+                        <td><em>Dashboard --|&gt; HalamanDashboard</em><br>Generalization (Inheritance)</td>
+                        <td>Dashboard Admin dan Montir mewarisi sidebar, header, dan layout dasar dari parent HalamanDashboard. Halaman dashboard ini tidak dapat diakses langsung tanpa peran spesifik.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Admin / Montir &rarr; User</strong></td>
+                        <td><em>Admin/Montir --|&gt; User</em><br>Generalization (Inheritance)</td>
+                        <td>Admin dan Montir mendapatkan pewarisan langsung seluruh kredensial dari kelas induk User di database back-office.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HalamanLoginBackend &rarr; AuthControllerBackend</strong></td>
+                        <td><em>Boundary ..&gt; Control</em><br>Dependency (Ketergantungan)</td>
+                        <td>Halaman login backend bergantung pada AuthControllerBackend untuk memproses validasi data masuk admin/montir.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dashboard UI &rarr; Controller</strong></td>
+                        <td><em>Boundary ..&gt; Control</em><br>Dependency (Ketergantungan)</td>
+                        <td>Dashboard back-office terhubung dengan controller untuk memanggil logika bisnis masing-masing.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>JadwalServis &rarr; Servis</strong></td>
+                        <td><em>JadwalServis "1" *-- "1" Servis</em><br>Composition (Komposisi)</td>
+                        <td>Record pengerjaan Servis fisik terikat mati dengan booking JadwalServis.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+
+</body>
+</html>

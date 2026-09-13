@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML Deployment Diagram (Versi 2 - Layered) - SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #0f1117;
+            --surface: #171b24;
+            --surface2: #1e2330;
+            --border: #2a3045;
+            --text: #e2e8f0;
+            --text-muted: #7a89a8;
+            --amber: #f0a84f;
+            --teal: #3ecfb0;
+            --pink-node: #e6a8a8;
+            --pink-art: #f5e6e6;
+            --text-dark: #333333;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: var(--teal);
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--teal);
+            border: 1px solid var(--teal);
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .diagram-frame {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            background: #ffffff;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--teal);
+            color: var(--bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 8px 20px rgba(62, 207, 176, 0.3);
+            z-index: 100;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            themeVariables: {
+                background: "#ffffff",
+                primaryColor: "#e6a8a8",
+                primaryTextColor: "#000000",
+                primaryBorderColor: "#cc8585",
+                lineColor: "#000000",
+                fontFamily: "IBM Plex Sans, sans-serif",
+                fontSize: "16px"
+            },
+            flowchart: {
+                curve: 'linear',
+                nodeSpacing: 100,
+                rankSpacing: 150
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <header>
+        <div class="badge">UML · DEPLOYMENT DIAGRAM</div>
+        <h1>Deployment Diagram — Versi 2 (OOAD Layering - Refined)</h1>
+        <p class="subtitle">Diagram Deployment khusus arsitektur Layered (HCI, PD, dan Artifact) yang dipetakan ke Node Fisik, disederhanakan agar 100% sesuai dengan referensi Pak Romi dan BSI.</p>
+    </header>
+
+    <div class="content-container">
+        
+        <div class="section-box">
+            <div class="diagram-frame">
+                <pre class="mermaid">
+flowchart LR
+
+    %% Custom Styles to match the BSI/Romi style
+    classDef nodeBox fill:#dfa4a4,stroke:#c48282,stroke-width:2px,color:#000
+    classDef layerBox fill:#f9ecec,stroke:#000,stroke-width:2px,color:#000
+
+    %% ----------------------------------------------------
+    %% NODE 1: CUSTOMER
+    %% ----------------------------------------------------
+    subgraph Client1 ["«Client Workstation»<br/>Customer Device"]
+        direction TB
+        HCI1["«HCI Layer»<br/>PortalPelanggan"]:::layerBox
+    end
+    
+    %% ----------------------------------------------------
+    %% NODE 2a: ADMIN
+    %% ----------------------------------------------------
+    subgraph Client2 ["«Client Workstation»<br/>Admin PC"]
+        direction TB
+        HCI2["«HCI Layer»<br/>DashboardAdmin"]:::layerBox
+    end
+
+    %% ----------------------------------------------------
+    %% NODE 2b: MONTIR
+    %% ----------------------------------------------------
+    subgraph Client3 ["«Client Workstation»<br/>Montir PC"]
+        direction TB
+        HCI3["«HCI Layer»<br/>PanelMontir"]:::layerBox
+    end
+
+    %% ----------------------------------------------------
+    %% NODE 3: MAIN APPLICATION SERVER
+    %% ----------------------------------------------------
+    subgraph ServerNode ["«Application Server»<br/>Web Server SRB Motor"]
+        direction TB
+        PD["«PD Layer»<br/>SRBMotorSystem"]:::layerBox
+    end
+
+    %% ----------------------------------------------------
+    %% NODE 4: EXTERNAL PAYMENT GATEWAY
+    %% ----------------------------------------------------
+    subgraph MidtransNode ["«External Server»<br/>Midtrans"]
+        direction TB
+        MidtransAPI["«artifact»<br/>MidtransAPI"]:::layerBox
+    end
+
+    %% ----------------------------------------------------
+    %% NODE 5: EXTERNAL NOTIFICATION GATEWAY
+    %% ----------------------------------------------------
+    subgraph NotifNode ["«External Server»<br/>Notification Gateway"]
+        direction TB
+        NotifAPI["«artifact»<br/>NotificationAPI"]:::layerBox
+    end
+
+    %% ----------------------------------------------------
+    %% NODE 6: DATABASE SERVER
+    %% ----------------------------------------------------
+    subgraph DBNode ["«Database Server»<br/>SRB Database Server"]
+        direction TB
+        DatabaseSRBMotor["«artifact»<br/>SRBMotorDB"]:::layerBox
+    end
+
+    %% ----------------------------------------------------
+    %% COMMUNICATION LINES
+    %% ----------------------------------------------------
+    Client1 ---|"«Internet / HTTPS»"| ServerNode
+    Client2 ---|"«LAN / Intranet»"| ServerNode
+    Client3 ---|"«LAN / Intranet»"| ServerNode
+    ServerNode ---|"«REST API (JSON)»"| MidtransNode
+    ServerNode ---|"«REST API / SMTP»"| NotifNode
+    ServerNode ---|"«TCP/IP (Port 3306)»"| DBNode
+
+    %% Apply Styles to Subgraphs
+    class Client1,Client2,Client3,ServerNode,MidtransNode,NotifNode,DBNode nodeBox
+                </pre>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let attempts = 0;
+            const checkInterval = setInterval(() => {
+                attempts++;
+                if (attempts > 30) {
+                    clearInterval(checkInterval);
+                    return;
+                }
+
+                const svgs = document.querySelectorAll('svg[id^="mermaid-"]');
+                if (svgs.length === 0) return;
+
+                let success = false;
+                svgs.forEach((svg) => {
+                    const textNodes = svg.querySelectorAll("text, div");
+                    if (textNodes.length > 0) success = true;
+
+                    svg.querySelectorAll("rect").forEach(rect => {
+                        // Buat siku kotak menjadi kaku
+                        rect.setAttribute("rx", "0");
+                        rect.setAttribute("ry", "0");
+                        
+                        // Cek apakah rect ini adalah bagian dari layerBox dengan melihat class parent-nya
+                        const parentG = rect.parentNode;
+                        if (parentG && parentG.classList && parentG.classList.contains("layerBox")) {
+                            
+                            // Hindari duplikasi jika interval berjalan lebih dari sekali
+                            if (rect.dataset.iconDrawn) return;
+                            rect.dataset.iconDrawn = "true";
+
+                            const rW = parseFloat(rect.getAttribute('width'));
+                            const rX = parseFloat(rect.getAttribute('x'));
+                            const rY = parseFloat(rect.getAttribute('y'));
+
+                            // Dimensi dan letak Icon Artifact
+                            const iconW = 14;
+                            const iconH = 18;
+                            const fold = 5;
+                            const pad = 6; 
+
+                            const iX = rX + rW - iconW - pad;
+                            const iY = rY + pad;
+
+                            // Gambar path ikon dokumen terlipat
+                            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                            const d = `M ${iX} ${iY} L ${iX+iconW-fold} ${iY} L ${iX+iconW} ${iY+fold} L ${iX+iconW} ${iY+iconH} L ${iX} ${iY+iconH} Z M ${iX+iconW-fold} ${iY} L ${iX+iconW-fold} ${iY+fold} L ${iX+iconW} ${iY+fold}`;
+                            
+                            path.setAttribute("d", d);
+                            path.setAttribute("fill", "#dfa4a4"); // Warna icon merah muda pudar sesuai slide
+                            path.setAttribute("stroke", "#c48282");
+                            path.setAttribute("stroke-width", "1.5");
+                            parentG.appendChild(path);
+                        }
+                    });
+                });
+
+                if (success) clearInterval(checkInterval);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

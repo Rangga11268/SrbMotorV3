@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case Diagram – Sea Level (User Goals)</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: #ffffff;
+        font-family: "Crimson Pro", Georgia, serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 24px;
+        color: #1a1a2e;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-header h1 {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+      }
+
+      .page-header p {
+        font-size: 14px;
+        color: #64748b;
+        margin-top: 5px;
+        font-style: italic;
+      }
+
+      .diagram-container {
+        background: #fff;
+        padding: 60px;
+        border: 1.5px solid #0f172a;
+        position: relative;
+      }
+
+      /* UML Elements */
+      .system-boundary { fill: none; stroke: #0f172a; stroke-width: 2.5; }
+      .system-name { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 800; fill: #0f172a; }
+      
+      .actor-path { stroke: #0f172a; stroke-width: 2.2; fill: none; }
+      .actor-head { fill: #fff; stroke: #0f172a; stroke-width: 2.2; }
+      .actor-name { font-size: 14px; font-weight: 800; text-anchor: middle; fill: #0f172a; }
+      
+      .uc-ellipse { fill: #fff; stroke: #0f172a; stroke-width: 1.8; transition: 0.2s; }
+      .uc-ellipse:hover { fill: #f8fafc; stroke: #2563eb; }
+      .uc-text { font-size: 11.5px; font-weight: 700; text-anchor: middle; fill: #0f172a; }
+      
+      .assoc-line { stroke: #0f172a; stroke-width: 1.1; fill: none; }
+      
+      .label-box { fill: #0f172a; }
+      .label-text { fill: #fff; font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 700; }
+
+      .legend {
+        margin-top: 40px;
+        display: flex;
+        gap: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Sea Level Use Case: User Strategic Goals</h1>
+      <p>Fokus pada tujuan utama pengguna (Primary Business Value)</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg width="1100" height="900" viewBox="0 0 1100 900">
+        <!-- System Boundary -->
+        <rect x="250" y="50" width="600" height="800" class="system-boundary" />
+        <text x="265" y="75" class="system-name">SRB MOTOR v2 – CORE ENGINE</text>
+
+        <!-- Actors -->
+        <g transform="translate(100, 350)">
+          <circle cx="0" cy="0" r="20" class="actor-head" /><line x1="0" y1="20" x2="0" y2="80" class="actor-path" /><line x1="-35" y1="40" x2="35" y2="40" class="actor-path" /><line x1="0" y1="80" x2="-25" y2="120" class="actor-path" /><line x1="0" y1="80" x2="25" y2="120" class="actor-path" /><text x="0" y="155" class="actor-name">Pelanggan</text>
+          <rect x="-40" y="-60" width="80" height="18" rx="4" class="label-box" /><text x="0" y="-48" class="label-text" text-anchor="middle">PRIMARY</text>
+        </g>
+
+        <g transform="translate(1000, 350)">
+          <circle cx="0" cy="0" r="20" class="actor-head" /><line x1="0" y1="20" x2="0" y2="80" class="actor-path" /><line x1="-35" y1="40" x2="35" y2="40" class="actor-path" /><line x1="0" y1="80" x2="-25" y2="120" class="actor-path" /><line x1="0" y1="80" x2="25" y2="120" class="actor-path" /><text x="0" y="155" class="actor-name">Admin</text>
+          <rect x="-40" y="-60" width="80" height="18" rx="4" class="label-box" style="fill:#64748b;" /><text x="0" y="-48" class="label-text" text-anchor="middle">STAFF</text>
+        </g>
+
+        <!-- Sea Level Use Cases (Clean & Minimal) -->
+        <!-- Customer Side -->
+        <g transform="translate(550, 150)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Mencari & Memilih Unit Motor</text>
+        </g>
+        <g transform="translate(550, 260)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Melakukan Transaksi (Cash/Credit)</text>
+        </g>
+        <g transform="translate(550, 370)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Mengelola Dokumen & Pengajuan</text>
+        </g>
+        <g transform="translate(550, 480)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Membayar Cicilan Bulanan</text>
+        </g>
+        <g transform="translate(550, 590)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Reservasi Servis (Instant Ticket)</text>
+        </g>
+
+        <!-- Admin Side -->
+        <g transform="translate(550, 720)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Verifikasi & Approve Transaksi</text>
+        </g>
+        <g transform="translate(550, 810)">
+          <ellipse cx="0" cy="0" rx="150" ry="35" class="uc-ellipse" />
+          <text y="5" class="uc-text">Mengelola Inventaris & Stok</text>
+        </g>
+
+        <!-- Associations (Crisp Lines) -->
+        <g id="associations">
+          <!-- Pelanggan to Goals -->
+          <line x1="140" y1="330" x2="400" y2="150" class="assoc-line" />
+          <line x1="140" y1="350" x2="400" y2="260" class="assoc-line" />
+          <line x1="140" y1="370" x2="400" y2="370" class="assoc-line" />
+          <line x1="140" y1="390" x2="400" y2="480" class="assoc-line" />
+          <line x1="140" y1="410" x2="400" y2="590" class="assoc-line" />
+
+          <!-- Admin to Goals -->
+          <line x1="960" y1="350" x2="700" y2="720" class="assoc-line" />
+          <line x1="960" y1="370" x2="700" y2="810" class="assoc-line" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <span>Cockburn Level: SEA LEVEL</span>
+      <span style="color:#64748b;">|</span>
+      <span>Fokus: User Goals</span>
+      <span style="color:#64748b;">|</span>
+      <span>Project: SRB Motor v2</span>
+    </div>
+  </body>
+</html>

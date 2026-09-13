@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Activity Diagram – Proses Penjualan Kredit</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #fdfcf9;
+                font-family: "Crimson Pro", Georgia, serif;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 40px 24px;
+            }
+
+            .page-header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+                font-weight: 700;
+                color: #1a1a2e;
+                letter-spacing: -0.5px;
+                margin-bottom: 8px;
+            }
+
+            .page-header p {
+                font-size: 16px;
+                color: #64748b;
+                font-style: italic;
+            }
+
+            .diagram-container {
+                background: #ffffff;
+                padding: 40px;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05);
+                position: relative;
+            }
+
+            /* UML Styles */
+            .swimlane-border {
+                fill: none;
+                stroke: #cbd5e1;
+                stroke-width: 1;
+            }
+
+            .swimlane-header-bg {
+                fill: #f8fafc;
+                stroke: #cbd5e1;
+                stroke-width: 1;
+            }
+
+            .swimlane-label {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 13px;
+                font-weight: 700;
+                fill: #475569;
+                text-anchor: middle;
+            }
+
+            .node-start {
+                fill: #1e293b;
+            }
+
+            .node-end-outer {
+                fill: none;
+                stroke: #1e293b;
+                stroke-width: 1.5;
+            }
+
+            .node-end-inner {
+                fill: #1e293b;
+            }
+
+            .activity-rect {
+                fill: #ffffff;
+                stroke: #1e293b;
+                stroke-width: 1.5;
+                rx: 10;
+                ry: 10;
+            }
+
+            .activity-text {
+                font-size: 12px;
+                font-weight: 600;
+                text-anchor: middle;
+                fill: #1e293b;
+            }
+
+            .activity-note {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 9px;
+                fill: #64748b;
+                text-anchor: middle;
+            }
+
+            .decision-diamond {
+                fill: #ffffff;
+                stroke: #1e293b;
+                stroke-width: 1.5;
+            }
+
+            .flow-line {
+                stroke: #1e293b;
+                stroke-width: 1.2;
+                fill: none;
+            }
+
+            .sync-bar {
+                fill: #1e293b;
+            }
+
+            .condition-text {
+                font-size: 11px;
+                font-style: italic;
+                font-weight: 700;
+                fill: #2563eb;
+            }
+
+            .btn-print {
+                margin-top: 30px;
+                padding: 10px 20px;
+                background: #1e293b;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-family: "JetBrains Mono", monospace;
+                font-size: 12px;
+                transition: background 0.2s;
+            }
+
+            .btn-print:hover {
+                background: #334155;
+            }
+
+            @media print {
+                .btn-print {
+                    display: none;
+                }
+                body {
+                    padding: 0;
+                    background: white;
+                }
+                .diagram-container {
+                    box-shadow: none;
+                    border: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Activity Diagram: Proses Penjualan Kredit</h1>
+            <p>Standar Akademik UML 2.5 – SRB Motor Project</p>
+        </div>
+
+        <div class="diagram-container">
+            <svg width="1000" height="1250" viewBox="0 0 1000 1250">
+                <defs>
+                    <marker
+                        id="arrowhead"
+                        markerWidth="10"
+                        markerHeight="7"
+                        refX="9"
+                        refY="3.5"
+                        orient="auto"
+                    >
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                </defs>
+
+                <!-- Swimlanes Background -->
+                <rect x="0" y="0" width="250" height="1200" class="swimlane-border" />
+                <rect x="250" y="0" width="250" height="1200" class="swimlane-border" />
+                <rect x="500" y="0" width="250" height="1200" class="swimlane-border" />
+                <rect x="750" y="0" width="250" height="1200" class="swimlane-border" />
+
+                <!-- Swimlanes Headers -->
+                <rect x="0" y="0" width="250" height="40" class="swimlane-header-bg" />
+                <rect x="250" y="0" width="250" height="40" class="swimlane-header-bg" />
+                <rect x="500" y="0" width="250" height="40" class="swimlane-header-bg" />
+                <rect x="750" y="0" width="250" height="40" class="swimlane-header-bg" />
+
+                <text x="125" y="25" class="swimlane-label">PELANGGAN</text>
+                <text x="375" y="25" class="swimlane-label">ADMIN</text>
+                <text x="625" y="25" class="swimlane-label">LEASING</text>
+                <text x="875" y="25" class="swimlane-label">SURVEYOR</text>
+
+                <!-- Start Node -->
+                <circle cx="125" cy="80" r="10" class="node-start" />
+                <line x1="125" y1="90" x2="125" y2="120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 1: Datang / WA -->
+                <rect x="40" y="120" width="170" height="45" class="activity-rect" />
+                <text x="125" y="142" class="activity-text">Datang ke Dealer /</text>
+                <text x="125" y="156" class="activity-text">Hubungi via WhatsApp</text>
+                <line x1="125" y1="165" x2="125" y2="200" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 2: Tentukan Unit/DP/Tenor -->
+                <rect x="40" y="200" width="170" height="45" class="activity-rect" />
+                <text x="125" y="222" class="activity-text">Menentukan Unit, DP,</text>
+                <text x="125" y="236" class="activity-text">dan Tenor Cicilan</text>
+                <line x1="125" y1="245" x2="125" y2="280" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 3: Kirim Berkas -->
+                <rect x="40" y="280" width="170" height="50" class="activity-rect" />
+                <text x="125" y="300" class="activity-text">Mengirimkan Dokumen</text>
+                <text x="125" y="314" class="activity-text">Persyaratan via WA</text>
+                <text x="125" y="325" class="activity-note">(KTP, KK, slip gaji, dll.)</text>
+                
+                <!-- Connector to Admin -->
+                <path d="M210,305 L375,305 L375,340" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 4: Admin Periksa Berkas -->
+                <rect x="290" y="340" width="170" height="45" class="activity-rect" />
+                <text x="375" y="362" class="activity-text">Memeriksa Kelengkapan</text>
+                <text x="375" y="376" class="activity-text">Berkas Dokumen (Manual)</text>
+                <line x1="375" y1="385" x2="375" y2="420" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 5: Pooling Berkas -->
+                <rect x="290" y="420" width="170" height="45" class="activity-rect" />
+                <text x="375" y="442" class="activity-text">Meneruskan (Pooling)</text>
+                <text x="375" y="456" class="activity-text">Berkas ke Leasing/Surveyor</text>
+
+                <!-- Fork -->
+                <rect x="300" y="490" width="575" height="6" class="sync-bar" />
+                <line x1="375" y1="465" x2="375" y2="490" class="flow-line" marker-end="url(#arrowhead)" />
+                
+                <line x1="625" y1="496" x2="625" y2="530" class="flow-line" marker-end="url(#arrowhead)" />
+                <line x1="875" y1="496" x2="875" y2="530" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Parallel Steps -->
+                <!-- Leasing: Verifikasi -->
+                <rect x="540" y="530" width="170" height="50" class="activity-rect" />
+                <text x="625" y="552" class="activity-text">Verifikasi Data &</text>
+                <text x="625" y="566" class="activity-text">Riwayat Kredit Pelanggan</text>
+
+                <!-- Surveyor: Kunjungan -->
+                <rect x="790" y="530" width="170" height="50" class="activity-rect" />
+                <text x="875" y="552" class="activity-text">Melakukan Kunjungan</text>
+                <text x="875" y="566" class="activity-text">Survei Fisik ke Lokasi</text>
+
+                <!-- Join -->
+                <rect x="500" y="610" width="450" height="6" class="sync-bar" />
+                <line x1="625" y1="580" x2="625" y2="610" class="flow-line" marker-end="url(#arrowhead)" />
+                <line x1="875" y1="580" x2="875" y2="610" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <line x1="625" y1="616" x2="625" y2="650" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 8: Keputusan Leasing -->
+                <polygon points="625,650 675,680 625,710 575,680" class="decision-diamond" />
+                <text x="625" y="684" class="activity-text" style="font-size: 9px">Keputusan?</text>
+
+                <!-- Decision Flow: Reject -->
+                <path d="M575,680 L350,680 L350,730" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="475" y="675" class="condition-text">[Reject]</text>
+
+                <!-- Decision Flow: Approve -->
+                <path d="M625,710 L625,730 L400,730" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="635" y="730" class="condition-text">[Approve]</text>
+
+                <!-- Step 9: Admin Informasikan Hasil -->
+                <rect x="290" y="730" width="170" height="50" class="activity-rect" />
+                <text x="375" y="755" class="activity-text">Informasikan Hasil</text>
+                <text x="375" y="770" class="activity-text">Keputusan via WA</text>
+
+                <!-- Path from Informasikan for Reject (End) -->
+                <path d="M350,780 L350,1160 L145,1160" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Path from Informasikan for Approve (Continue to PO) -->
+                <path d="M400,780 L400,800 L625,800 L625,810" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="475" y="795" class="condition-text" style="font-size: 9px">Jika Disetujui</text>
+
+                <!-- Step 10: Leasing Terbitkan PO -->
+                <rect x="540" y="810" width="170" height="45" class="activity-rect" />
+                <text x="625" y="832" class="activity-text">Menerbitkan</text>
+                <text x="625" y="846" class="activity-text">Purchase Order (PO)</text>
+                
+                <!-- Step 11: Pelanggan Bayar DP -->
+                <path d="M625,855 L625,880 L125,880 L125,900" class="flow-line" marker-end="url(#arrowhead)" />
+                
+                <rect x="40" y="900" width="170" height="45" class="activity-rect" />
+                <text x="125" y="927" class="activity-text">Melakukan Pembayaran DP</text>
+
+                <!-- Step 12: Admin Proses Pengiriman -->
+                <path d="M210,922 L375,922 L375,960" class="flow-line" marker-end="url(#arrowhead)" />
+                
+                <rect x="290" y="960" width="170" height="45" class="activity-rect" />
+                <text x="375" y="982" class="activity-text">Memproses</text>
+                <text x="375" y="996" class="activity-text">Pengiriman Unit Motor</text>
+
+                <!-- Step 13: Pelanggan Terima Unit -->
+                <path d="M375,1005 L375,1040 L210,1040" class="flow-line" marker-end="url(#arrowhead)" />
+                
+                <rect x="40" y="1040" width="170" height="45" class="activity-rect" />
+                <text x="125" y="1062" class="activity-text">Menerima Unit Motor &</text>
+                <text x="125" y="1076" class="activity-text">Cicilan Berjalan (Selesai)</text>
+
+                <!-- End Node -->
+                <line x1="125" y1="1085" x2="125" y2="1145" class="flow-line" marker-end="url(#arrowhead)" />
+                <circle cx="125" cy="1160" r="15" class="node-end-outer" />
+                <circle cx="125" cy="1160" r="10" class="node-end-inner" />
+
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+    </body>
+</html>

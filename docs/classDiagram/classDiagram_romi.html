@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML Class Diagram (BCE Pak Romi - Clean Architecture) - SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #0f1117;
+            --surface: #171b24;
+            --surface2: #1e2330;
+            --border: #2a3045;
+            --text: #e2e8f0;
+            --text-muted: #7a89a8;
+            --amber: #f0a84f;
+            --teal: #3ecfb0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: var(--teal);
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--teal);
+            border: 1px solid var(--teal);
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .desc-box {
+            background: var(--surface2);
+            border-left: 4px solid var(--amber);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .diagram-frame {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            background: #11141c;
+            overflow-x: auto;
+            display: block;
+            text-align: center;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--teal);
+            color: var(--bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 8px 20px rgba(62, 207, 176, 0.3);
+            z-index: 100;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            font-size: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 0px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            themeVariables: {
+                background: "#11141c",
+                primaryColor: "#1e2d48",
+                primaryTextColor: "#e2e8f0",
+                primaryBorderColor: "#3a4560",
+                lineColor: "#7a89a8",
+                fontFamily: "IBM Plex Sans, sans-serif",
+                fontSize: "14px"
+            },
+            class: {
+                curve: 'step' 
+            },
+            flowchart: {
+                curve: 'step'
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <a href="classDiagram.html" class="back-link">&larr; Kembali ke Pemilihan Opsi</a>
+
+    <header>
+        <div class="badge">UML · CLASS DIAGRAM (GAYA PAK ROMI)</div>
+        <h1>Class Diagram — Opsi C (Fokus Relasi Arsitektur)</h1>
+        <p class="subtitle">Sesuai dengan referensi materi, isi metode pada Boundary dan Entity disembunyikan (<i>suppressed</i>) agar diagram terlihat bersih, tidak memakan tempat, dan terfokus pada topologi garis/relasi antar kelas BCE.</p>
+    </header>
+
+    <div class="content-container">
+        
+        <!-- 1. FRONTEND PORTAL -->
+        <div class="section-box">
+            <div class="desc-box">
+                <strong>1. Frontend Class Diagram (Guest &amp; Customer)</strong>
+            </div>
+            
+            <div class="diagram-frame">
+                <pre class="mermaid">
+classDiagram
+    direction TB
+
+    %% ==========================================
+    %% COLUMN 1: KATALOG & PEMESANAN (Motor)
+    %% ==========================================
+    class HalamanUtama
+    class HalamanKatalog
+    class FormPemesanan
+    class KatalogController {
+        +getSemuaMotor() void
+        +validasiInput(query, filter) void
+        +getDetailMotor(id) void
+    }
+    class PemesananController {
+        +cekStok(idMotor) void
+        +redirectPembayaran() void
+    }
+    class KategoriMotor
+    class Motor
+
+    &lt;&lt;boundary&gt;&gt; HalamanUtama
+    &lt;&lt;boundary&gt;&gt; HalamanKatalog
+    &lt;&lt;boundary&gt;&gt; FormPemesanan
+    &lt;&lt;control&gt;&gt; KatalogController
+    &lt;&lt;control&gt;&gt; PemesananController
+    &lt;&lt;entity&gt;&gt; KategoriMotor
+    &lt;&lt;entity&gt;&gt; Motor
+
+    HalamanKatalog --> KatalogController : dikelola oleh
+    FormPemesanan --> PemesananController : dikelola oleh
+    KatalogController --> Motor : mengakses
+    PemesananController --> Motor : mengakses
+    KategoriMotor o-- Motor : memiliki
+
+    %% ==========================================
+    %% COLUMN 2: PEMBAYARAN & NOTIFIKASI
+    %% ==========================================
+    class FormPembayaran
+    class PembayaranController {
+        +prosesWebhook(payload) void
+        +getOpsiBayar(id) void
+        +bayarMidtrans(id) void
+    }
+    class Pembayaran
+    class NotifService {
+        +kirimNotifPersetujuan() void
+        +kirimNotifPenolakan() void
+        +kirimInvoice() void
+    }
+
+    &lt;&lt;boundary&gt;&gt; FormPembayaran
+    &lt;&lt;control&gt;&gt; PembayaranController
+    &lt;&lt;control&gt;&gt; NotifService
+    &lt;&lt;entity&gt;&gt; Pembayaran
+
+    FormPembayaran --> PembayaranController : dikelola oleh
+    PembayaranController --> Pembayaran : mengakses
+    PembayaranController --> NotifService : mengakses
+
+    %% ==========================================
+    %% COLUMN 3: SERVIS & KREDIT
+    %% ==========================================
+    class FormServis
+    class FormKredit
+    class ServisController {
+        +validasiBooking(idCustomer, tanggal, cabang, keluhan) void
+        +batalkanBooking(bookingId) void
+    }
+    class KreditController {
+        +validasiKredit() void
+        +hitungKredit() void
+        +cekKelengkapan(data) void
+    }
+    class JadwalServis
+    class Penjualan
+
+    &lt;&lt;boundary&gt;&gt; FormServis
+    &lt;&lt;boundary&gt;&gt; FormKredit
+    &lt;&lt;control&gt;&gt; ServisController
+    &lt;&lt;control&gt;&gt; KreditController
+    &lt;&lt;entity&gt;&gt; JadwalServis
+    &lt;&lt;entity&gt;&gt; Penjualan
+
+    FormServis --> ServisController : dikelola oleh
+    FormKredit --> KreditController : dikelola oleh
+    ServisController --> JadwalServis : mengakses
+    KreditController --> Penjualan : mengakses
+    
+    JadwalServis o-- Pembayaran : memiliki
+    Penjualan o-- Pembayaran : memiliki
+    
+    ServisController --> NotifService : mengakses
+    KreditController --> NotifService : mengakses
+
+    %% ==========================================
+    %% COLUMN 4: AUTH & USER
+    %% ==========================================
+    class FormRegistrasi
+    class FormLogin
+    class AuthController {
+        +register(nama, email, pass) void
+        +login(email, pass) void
+        +validasiFormat(data) void
+    }
+    class User
+    class Guest
+    class Customer
+    class Admin
+    class Montir
+
+    &lt;&lt;boundary&gt;&gt; FormRegistrasi
+    &lt;&lt;boundary&gt;&gt; FormLogin
+    &lt;&lt;control&gt;&gt; AuthController
+    &lt;&lt;entity&gt;&gt; User
+    &lt;&lt;entity&gt;&gt; Guest
+    &lt;&lt;entity&gt;&gt; Customer
+    &lt;&lt;entity&gt;&gt; Admin
+    &lt;&lt;entity&gt;&gt; Montir
+
+    FormRegistrasi --> AuthController : dikelola oleh
+    FormLogin --> AuthController : dikelola oleh
+    AuthController --> User : mengakses
+
+    Guest --|> User : mewarisi
+    Customer --|> User : mewarisi
+    Admin --|> User : mewarisi
+    Montir --|> User : mewarisi
+    
+    FormRegistrasi --|> HalamanUtama : mewarisi
+    FormLogin --|> HalamanUtama : mewarisi
+    HalamanKatalog --|> HalamanUtama : mewarisi
+    FormPemesanan --|> HalamanUtama : mewarisi
+    FormPembayaran --|> HalamanUtama : mewarisi
+    FormServis --|> HalamanUtama : mewarisi
+    FormKredit --|> HalamanUtama : mewarisi
+
+    KreditController --> Customer : mengakses
+    Customer --> JadwalServis : mengakses
+    Customer --> Penjualan : mengakses
+                </pre>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="color-box" style="background: #1a2c42; border: 2px solid #4f9cf0;"></div> Boundary</div>
+                <div class="legend-item"><div class="color-box" style="background: #271d3b; border: 2px solid #a07ff0;"></div> Control</div>
+                <div class="legend-item"><div class="color-box" style="background: #362716; border: 2px solid #f0a84f;"></div> Entity</div>
+            </div>
+        </div>
+
+        <!-- 2. BACKEND PORTAL -->
+        <div class="section-box">
+            <div class="desc-box">
+                <strong>2. Backend Class Diagram (Admin &amp; Montir)</strong>
+            </div>
+            
+            <div class="diagram-frame">
+                <pre class="mermaid">
+classDiagram
+    direction TB
+
+    %% ==========================================
+    %% COLUMN 1: STOK MOTOR
+    %% ==========================================
+
+    class HalamanStokMotor
+    class FormTambahMotor
+    class FormUbahMotor
+    class StokController {
+        +validasiData(dataMotor) void
+        +simpanMotor() void
+        +updateMotor() void
+    }
+    class Motor
+
+    &lt;&lt;boundary&gt;&gt; HalamanStokMotor
+    &lt;&lt;boundary&gt;&gt; FormTambahMotor
+    &lt;&lt;boundary&gt;&gt; FormUbahMotor
+    &lt;&lt;control&gt;&gt; StokController
+    &lt;&lt;entity&gt;&gt; Motor
+    HalamanStokMotor --> StokController : dikelola oleh
+    FormTambahMotor --> StokController : dikelola oleh
+    FormUbahMotor --> StokController : dikelola oleh
+    StokController --> Motor : mengakses
+
+    %% ==========================================
+    %% COLUMN 2: LAPORAN & TRANSAKSI
+    %% ==========================================
+    class HalamanLaporan
+    class LaporanController {
+        +filterLaporan(periode, cabang) void
+        +siapkanFileExcel(dataLaporan) void
+    }
+    class HalamanDashboard
+    class TransaksiController {
+        +tampilkanDaftarTransaksi() void
+        +verifikasiDataPelanggan() void
+        +ubahStatus(status) void
+    }
+    class Laporan
+    class Pembayaran
+
+    &lt;&lt;boundary&gt;&gt; HalamanLaporan
+    &lt;&lt;boundary&gt;&gt; HalamanDashboard
+    &lt;&lt;control&gt;&gt; LaporanController
+    &lt;&lt;control&gt;&gt; TransaksiController
+    &lt;&lt;entity&gt;&gt; Laporan
+    &lt;&lt;entity&gt;&gt; Pembayaran
+
+    HalamanLaporan --> LaporanController : dikelola oleh
+    LaporanController --> Laporan : mengakses
+
+    HalamanDashboard --> TransaksiController : dikelola oleh
+    TransaksiController --> Laporan : mengakses
+    TransaksiController --> Pembayaran : mengakses
+
+    %% ==========================================
+    %% COLUMN 3: SERVIS
+    %% ==========================================
+    class HalamanMontir
+    class ServisController {
+        +validasiBooking(tanggal, keluhan) void
+        +getKetersediaan(tanggal) void
+        +konfirmasiBooking(bookingId) void
+        +batalkanBooking(bookingId) void
+        +updateStatus(id, status) void
+        +validasiTagihan(id, rincianBiaya) void
+        +prosesPembayaranCash(id) void
+    }
+    class JadwalServis
+    class Servis
+
+    &lt;&lt;boundary&gt;&gt; HalamanMontir
+    &lt;&lt;control&gt;&gt; ServisController
+    &lt;&lt;entity&gt;&gt; JadwalServis
+    &lt;&lt;entity&gt;&gt; Servis
+
+    HalamanMontir --> ServisController : dikelola oleh
+    ServisController --> JadwalServis : mengakses
+    
+    JadwalServis o-- Servis : memiliki
+    Servis o-- Pembayaran : memiliki
+
+    %% ==========================================
+    %% COLUMN 4: ADMIN, KREDIT, AUTH & USER
+    %% ==========================================
+    class FormAdmin
+    class KreditControllerAdmin {
+        +setJadwalSurvey(id, tanggal) void
+        +updateKeputusan(id, keputusan) void
+        +selesaikanPenjualan(id) void
+    }
+    class NotifServiceAdmin {
+        +kirimNotifJadwal(tanggal) void
+        +kirimNotifMulaiServis() void
+        +kirimInvoiceDigital() void
+    }
+    class HalamanLoginBackend
+    class AuthControllerBackend {
+        +login(email, pass) void
+        +logout() void
+    }
+    class User
+    class Admin
+    class Montir
+
+    &lt;&lt;boundary&gt;&gt; FormAdmin
+    &lt;&lt;boundary&gt;&gt; HalamanLoginBackend
+    &lt;&lt;control&gt;&gt; KreditControllerAdmin
+    &lt;&lt;control&gt;&gt; NotifServiceAdmin
+    &lt;&lt;control&gt;&gt; AuthControllerBackend
+    &lt;&lt;entity&gt;&gt; User
+    &lt;&lt;entity&gt;&gt; Admin
+    &lt;&lt;entity&gt;&gt; Montir
+
+    FormAdmin --> KreditControllerAdmin : dikelola oleh
+    FormAdmin --> ServisController : dikelola oleh
+    
+    KreditControllerAdmin --> NotifServiceAdmin : mengakses
+    ServisController --> NotifServiceAdmin : mengakses
+
+    HalamanLoginBackend --> AuthControllerBackend : dikelola oleh
+    AuthControllerBackend --> User : mengakses
+    Admin --|> User : mewarisi
+    Montir --|> User : mewarisi
+
+    HalamanStokMotor --|> HalamanDashboard : mewarisi
+    HalamanLaporan --|> HalamanDashboard : mewarisi
+    HalamanMontir --|> HalamanDashboard : mewarisi
+    FormAdmin --|> HalamanDashboard : mewarisi
+                </pre>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="color-box" style="background: #1a2c42; border: 2px solid #4f9cf0;"></div> Boundary</div>
+                <div class="legend-item"><div class="color-box" style="background: #271d3b; border: 2px solid #a07ff0;"></div> Control</div>
+                <div class="legend-item"><div class="color-box" style="background: #362716; border: 2px solid #f0a84f;"></div> Entity</div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let attempts = 0;
+            const checkInterval = setInterval(() => {
+                attempts++;
+                if (attempts > 30) {
+                    clearInterval(checkInterval);
+                    return;
+                }
+
+                const svgs = document.querySelectorAll('svg[id^="mermaid-"]');
+                if (svgs.length === 0) return;
+
+                let success = false;
+                svgs.forEach((svg) => {
+                    const textNodes = svg.querySelectorAll("text, div");
+                    if (textNodes.length > 0) success = true;
+
+                    // Ganti curve 'C' menjadi 'L' untuk memastikan lurus jika mermaid bandel
+                    svg.querySelectorAll("path.edge-pattern-solid, path.relation").forEach(path => {
+                        let d = path.getAttribute("d");
+                        if(d && d.includes("C")) {
+                            d = d.replace(/C/g, "L");
+                            path.setAttribute("d", d);
+                        }
+
+                        // HAPUS MATA PANAH (ARROWHEAD) KHUSUS UNTUK ASSOSIASI STANDAR
+                        // Ini adalah trik agar layout tetap vertikal hierarkis (Boundary di atas Entity)
+                        // namun secara visual panahnya tidak terlihat, persis seperti teori Pak Romi!
+                        let markerEnd = path.getAttribute("marker-end");
+                        if (markerEnd && markerEnd.includes("arrowEnd")) {
+                            path.removeAttribute("marker-end");
+                        }
+                    });
+
+                    textNodes.forEach((textNode) => {
+                        if (textNode.dataset.bceDone) return;
+
+                        const text = textNode.textContent.trim();
+                        let type = "";
+                        if (text.includes("<<boundary>>") || text.includes("&lt;&lt;boundary&gt;&gt;") || text.includes("Halaman") || text.includes("Form")) type = "boundary";
+                        else if (text.includes("<<control>>") || text.includes("&lt;&lt;control&gt;&gt;") || text.includes("Controller") || text.includes("Service") || text.includes("Manajer")) type = "control";
+                        else if (text.includes("<<entity>>") || text.includes("&lt;&lt;entity&gt;&gt;") || text === "User" || text === "Customer" || text === "Motor" || text === "Penjualan" || text === "Pembayaran" || text === "Servis" || text === "Laporan" || text === "Admin" || text === "Montir" || text === "Guest" || text === "JadwalServis" || text === "KategoriMotor") type = "entity";
+
+                        if (type) {
+                            textNode.dataset.bceDone = "true";
+                            
+                            let targetElem = textNode.tagName.toLowerCase() === "div" ? textNode.closest("foreignObject") : textNode;
+                            if (targetElem) {
+                                let rect = targetElem.previousElementSibling;
+                                if(rect && rect.tagName.toLowerCase() === 'rect') {
+                                    let fill = "#1e2d48";
+                                    let stroke = "#3a4560";
+                                    if (type === "boundary") { fill = "#1a2c42"; stroke = "#4f9cf0"; }
+                                    if (type === "control") { fill = "#271d3b"; stroke = "#a07ff0"; }
+                                    if (type === "entity") { fill = "#362716"; stroke = "#f0a84f"; }
+                                    
+                                    rect.setAttribute("fill", fill);
+                                    rect.setAttribute("stroke", stroke);
+                                    rect.setAttribute("stroke-width", "2");
+                                    
+                                    // Kaku
+                                    rect.setAttribute("rx", "0");
+                                    rect.setAttribute("ry", "0");
+                                }
+                            }
+                        }
+                    });
+                });
+
+                if (success) clearInterval(checkInterval);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

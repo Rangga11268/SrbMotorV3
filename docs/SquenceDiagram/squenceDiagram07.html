@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sequence Diagram SD-007 – SRB Motor</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap");
+
+            :root {
+                --bg: #0f1117;
+                --surface: #171b24;
+                --surface2: #1e2330;
+                --border: #2a3045;
+                --border2: #3a4560;
+                --text: #e2e8f0;
+                --text-muted: #7a89a8;
+                --text-dim: #4a5570;
+                --blue: #4f9cf0;
+                --teal: #3ecfb0;
+                --amber: #f0a84f;
+                --red: #f06060;
+                --purple: #a07ff0;
+                --green: #5ecf7a;
+                --ll: #2a3550;
+                --act: #1e2d48;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "IBM Plex Sans", sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                min-height: 100vh;
+                padding: 28px 16px 56px;
+            }
+
+            .page-header {
+                text-align: center;
+                margin-bottom: 44px;
+            }
+            .badge {
+                display: inline-block;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                letter-spacing: 2px;
+                color: var(--teal);
+                border: 1px solid var(--teal);
+                padding: 3px 10px;
+                border-radius: 2px;
+                margin-bottom: 10px;
+                opacity: 0.85;
+            }
+            .page-header h1 {
+                font-size: 21px;
+                font-weight: 600;
+            }
+            .page-header p {
+                font-size: 13px;
+                color: var(--text-muted);
+                margin-top: 4px;
+            }
+
+            .ds {
+                margin-bottom: 64px;
+            }
+            .dl {
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+                color: var(--blue);
+                letter-spacing: 1px;
+                margin-bottom: 4px;
+            }
+            .dt {
+                font-size: 15px;
+                font-weight: 600;
+                margin-bottom: 16px;
+            }
+
+            /* Use case scenario table */
+            .uc-box {
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 14px 18px;
+                margin-bottom: 20px;
+                font-size: 12px;
+            }
+            .uc-box h3 {
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--amber);
+                font-family: "IBM Plex Mono", monospace;
+                letter-spacing: 0.5px;
+                margin-bottom: 8px;
+            }
+            .uc-box table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .uc-box td {
+                padding: 3px 8px 3px 0;
+                color: var(--text-muted);
+                vertical-align: top;
+            }
+            .uc-box td:first-child {
+                color: var(--text-dim);
+                white-space: nowrap;
+                min-width: 130px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 11px;
+            }
+            .uc-box td strong {
+                color: var(--text);
+            }
+
+            .sd-frame {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow-x: auto;
+                padding: 28px 16px 32px;
+                position: relative;
+            }
+            .sd-fl {
+                position: absolute;
+                top: 8px;
+                left: 10px;
+                font-family: "IBM Plex Mono", monospace;
+                font-size: 10px;
+                color: var(--text-dim);
+                background: var(--surface);
+                padding: 1px 6px;
+                border: 1px solid var(--border);
+                border-radius: 3px;
+            }
+
+            .mermaid {
+                display: flex;
+                justify-content: center;
+            }
+        </style>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"
+            integrity="sha512-5TKaYvhenABhlGIKSxAWLFJBZCSQw7HTV7aL1dJcBokM/+3PNtfgJFlv8E6Us/B1VMlQ4u8sPzjudL9TEQ06ww=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <script>
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: "base",
+                themeVariables: {
+                    background: "#171b24",
+                    primaryColor: "#1e2d48",
+                    primaryTextColor: "#e2e8f0",
+                    primaryBorderColor: "#3a4560",
+                    lineColor: "#7a89a8",
+                    secondaryColor: "#1e2330",
+                    tertiaryColor: "#0f1117",
+                    fontFamily: "IBM Plex Sans, sans-serif",
+                    actorBkg: "#171b24",
+                    actorBorder: "#3ecfb0",
+                    actorTextColor: "#e2e8f0",
+                    actorLineColor: "#7a89a8",
+                    signalColor: "#e2e8f0",
+                    signalTextColor: "#e2e8f0",
+                    labelBoxBkgColor: "#1e2d48",
+                    labelBoxBorderColor: "#3a4560",
+                    labelTextColor: "#e2e8f0",
+                    loopTextColor: "#f0a84f",
+                    activationBorderColor: "#3a4560",
+                    activationBkgColor: "#1e2d48",
+                    sequenceNumberColor: "#4f9cf0",
+                },
+                sequence: {
+                    actorMargin: 50,
+                    messageMargin: 40,
+                    boxMargin: 15,
+                    boxTextMargin: 15,
+                    noteMargin: 10,
+                    messageAlign: "center",
+                    mirrorActors: true,
+                    forceMenus: false,
+                },
+                securityLevel: "loose",
+                htmlLabels: false,
+            });
+
+            // Script untuk menambahkan simbol BCE klasik (Boundary, Control, Entity) ke kotak Mermaid
+            document.addEventListener("DOMContentLoaded", () => {
+                let attempts = 0;
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    if (attempts > 30) {
+                        clearInterval(checkInterval);
+                        return;
+                    }
+
+                    const svgs = document.querySelectorAll(
+                        'svg[id^="mermaid-"]',
+                    );
+                    if (svgs.length === 0) return;
+
+                    let success = false;
+                    svgs.forEach((svg) => {
+                        const textNodes = svg.querySelectorAll("text, div");
+                        if (textNodes.length > 0) success = true;
+
+                        textNodes.forEach((textNode) => {
+                            if (textNode.dataset.bceDone) return;
+
+                            const text = textNode.textContent.trim();
+                            const textLower = text.toLowerCase();
+                            let type = "";
+                            if (
+                                textLower.includes("halaman") ||
+                                textLower.includes("leasing_ui") ||
+                                textLower.includes("form") ||
+                                textLower.includes("hlm")
+                            )
+                                type = "boundary";
+                            else if (
+                                textLower.includes("controller") ||
+                                textLower.includes("service") ||
+                                textLower.includes("ctrl")
+                            )
+                                type = "control";
+                            else if (
+                                textLower.includes("repo") ||
+                                textLower.includes("db") ||
+                                textLower.includes("database")
+                            )
+                                type = "entity";
+
+                            if (type) {
+                                let rect = null;
+
+                                // Cari rect sebagai sibling sebelumnya
+                                let targetElem =
+                                    textNode.tagName.toLowerCase() === "div"
+                                        ? textNode.closest("foreignObject")
+                                        : textNode;
+                                if (targetElem) {
+                                    let prev =
+                                        targetElem.previousElementSibling;
+                                    while (prev) {
+                                        if (
+                                            prev.tagName.toLowerCase() ===
+                                            "rect"
+                                        ) {
+                                            rect = prev;
+                                            break;
+                                        } else if (
+                                            prev.tagName.toLowerCase() ===
+                                                "g" &&
+                                            prev.querySelector("rect")
+                                        ) {
+                                            rect = prev.querySelector("rect");
+                                            break;
+                                        }
+                                        prev = prev.previousElementSibling;
+                                    }
+
+                                    // Jika masih tidak ketemu, cari di parent level
+                                    if (
+                                        !rect &&
+                                        targetElem.parentElement &&
+                                        targetElem.parentElement.tagName.toLowerCase() ===
+                                            "g"
+                                    ) {
+                                        const siblingRects =
+                                            targetElem.parentElement.querySelectorAll(
+                                                "rect",
+                                            );
+                                        if (siblingRects.length === 1) {
+                                            rect = siblingRects[0];
+                                        } else if (siblingRects.length > 0) {
+                                            rect = Array.from(
+                                                siblingRects,
+                                            ).find(
+                                                (r) =>
+                                                    parseFloat(
+                                                        r.getAttribute("width"),
+                                                    ) > 40,
+                                            );
+                                        }
+                                    }
+                                }
+
+                                if (!rect) return;
+
+                                const w = parseFloat(
+                                    rect.getAttribute("width"),
+                                );
+                                const x = parseFloat(rect.getAttribute("x"));
+                                const y = parseFloat(rect.getAttribute("y"));
+
+                                if (isNaN(w) || isNaN(x) || isNaN(y)) return;
+                                if (w < 40) return;
+
+                                textNode.dataset.bceDone = "true";
+
+                                const cx = x + w / 2;
+                                const cy = y + 25;
+
+                                rect.setAttribute("fill", "transparent");
+                                rect.setAttribute("stroke", "transparent");
+
+                                // Sembunyikan bayangan rect
+                                if (
+                                    rect.previousElementSibling &&
+                                    rect.previousElementSibling.tagName ===
+                                        "rect"
+                                ) {
+                                    rect.previousElementSibling.setAttribute(
+                                        "fill",
+                                        "transparent",
+                                    );
+                                    rect.previousElementSibling.setAttribute(
+                                        "stroke",
+                                        "transparent",
+                                    );
+                                }
+
+                                // Geser teks
+                                if (textNode.tagName.toLowerCase() === "text") {
+                                    const tspans =
+                                        textNode.querySelectorAll("tspan");
+                                    if (tspans.length > 0) {
+                                        tspans.forEach((tspan) => {
+                                            const dy =
+                                                parseFloat(
+                                                    tspan.getAttribute("dy"),
+                                                ) || 0;
+                                            tspan.setAttribute("dy", dy + 28);
+                                        });
+                                    } else {
+                                        const ty =
+                                            parseFloat(
+                                                textNode.getAttribute("y"),
+                                            ) || 0;
+                                        textNode.setAttribute("y", ty + 28);
+                                    }
+                                } else if (
+                                    textNode.tagName.toLowerCase() === "div"
+                                ) {
+                                    textNode.style.marginTop = "28px";
+                                    if (
+                                        targetElem &&
+                                        targetElem.tagName.toLowerCase() ===
+                                            "foreignobject"
+                                    ) {
+                                        const fh =
+                                            parseFloat(
+                                                targetElem.getAttribute(
+                                                    "height",
+                                                ),
+                                            ) || 0;
+                                        targetElem.setAttribute(
+                                            "height",
+                                            fh + 30,
+                                        );
+                                    }
+                                }
+
+                                const svgNS = "http://www.w3.org/2000/svg";
+                                const group = document.createElementNS(
+                                    svgNS,
+                                    "g",
+                                );
+                                group.setAttribute("class", "bce-symbol");
+
+                                const circle = document.createElementNS(
+                                    svgNS,
+                                    "circle",
+                                );
+                                circle.setAttribute("cx", cx);
+                                circle.setAttribute("cy", cy);
+                                circle.setAttribute("r", "18");
+                                circle.setAttribute("fill", "#171b24");
+
+                                let color = "#e2e8f0";
+                                if (type === "boundary") color = "#4f9cf0";
+                                if (type === "control") color = "#a07ff0";
+                                if (type === "entity") color = "#f0a84f";
+
+                                circle.setAttribute("stroke", color);
+                                circle.setAttribute("stroke-width", "1.5");
+                                group.appendChild(circle);
+
+                                if (type === "boundary") {
+                                    const line1 = document.createElementNS(
+                                        svgNS,
+                                        "line",
+                                    );
+                                    line1.setAttribute("x1", cx - 18);
+                                    line1.setAttribute("y1", cy);
+                                    line1.setAttribute("x2", cx - 26);
+                                    line1.setAttribute("y2", cy);
+                                    line1.setAttribute("stroke", color);
+                                    line1.setAttribute("stroke-width", "1.5");
+                                    group.appendChild(line1);
+
+                                    const line2 = document.createElementNS(
+                                        svgNS,
+                                        "line",
+                                    );
+                                    line2.setAttribute("x1", cx - 26);
+                                    line2.setAttribute("y1", cy - 10);
+                                    line2.setAttribute("x2", cx - 26);
+                                    line2.setAttribute("y2", cy + 10);
+                                    line2.setAttribute("stroke", color);
+                                    line2.setAttribute("stroke-width", "1.5");
+                                    group.appendChild(line2);
+                                } else if (type === "control") {
+                                    const path = document.createElementNS(
+                                        svgNS,
+                                        "path",
+                                    );
+                                    path.setAttribute(
+                                        "d",
+                                        "M" +
+                                            cx +
+                                            " " +
+                                            (cy - 18) +
+                                            " Q " +
+                                            (cx + 18) +
+                                            " " +
+                                            (cy - 26) +
+                                            " " +
+                                            (cx + 14) +
+                                            " " +
+                                            (cy - 14),
+                                    );
+                                    path.setAttribute("fill", "none");
+                                    path.setAttribute("stroke", color);
+                                    path.setAttribute("stroke-width", "1.8");
+                                    group.appendChild(path);
+
+                                    const poly = document.createElementNS(
+                                        svgNS,
+                                        "polygon",
+                                    );
+                                    poly.setAttribute(
+                                        "points",
+                                        cx +
+                                            14 +
+                                            "," +
+                                            (cy - 14) +
+                                            " " +
+                                            (cx + 7) +
+                                            "," +
+                                            (cy - 18) +
+                                            " " +
+                                            (cx + 10) +
+                                            "," +
+                                            (cy - 11),
+                                    );
+                                    poly.setAttribute("fill", color);
+                                    group.appendChild(poly);
+                                } else if (type === "entity") {
+                                    const line = document.createElementNS(
+                                        svgNS,
+                                        "line",
+                                    );
+                                    line.setAttribute("x1", cx - 20);
+                                    line.setAttribute("y1", cy + 18);
+                                    line.setAttribute("x2", cx + 20);
+                                    line.setAttribute("y2", cy + 18);
+                                    line.setAttribute("stroke", color);
+                                    line.setAttribute("stroke-width", "1.5");
+                                    group.appendChild(line);
+                                }
+
+                                if (targetElem && targetElem.parentElement) {
+                                    targetElem.parentElement.appendChild(group);
+                                } else {
+                                    svg.appendChild(group);
+                                }
+                            }
+                        });
+                    });
+
+                    if (success) clearInterval(checkInterval);
+                }, 500);
+            });
+        </script>
+    </head>
+    <body>
+        <div class="page-header">
+            <div class="badge">UML · SEQUENCE DIAGRAM</div>
+            <h1>Sistem Informasi Dealer Motor — SRB Motor</h1>
+            <p>SD-007 Pengelolaan Transaksi Motor</p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════
+         SD-007  TRANSAKSI MOTOR
+    ═══════════════════════════════════════════════════════ -->
+        <div class="ds">
+            <div class="dl">SD-007</div>
+            <div class="dt">Pengelolaan Transaksi Motor</div>
+
+            <!-- Use Case Scenario -->
+            <div class="uc-box">
+                <h3>USE CASE SKENARIO — Transaksi Motor</h3>
+                <table>
+                    <tr>
+                        <td>Use Case ID</td>
+                        <td><strong>UC-07</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nama Use Case</td>
+                        <td><strong>Mengelola Transaksi Motor</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Aktor</td>
+                        <td>
+                            <strong>Admin, Customer, Sistem</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Deskripsi</td>
+                        <td>
+                            Admin memverifikasi dokumen transaksi pelanggan, memperbarui status pengerjaan motor (Konfirmasi, Proses, Selesai), serta mengirimkan notifikasi pengambilan STNK &amp; BPKB secara otomatis atau manual.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Precondition</td>
+                        <td>Admin sudah login dan terdapat data transaksi yang masuk dari UC-04 (Pesan Motor Tunai) atau UC-05 (Ajukan Kredit Motor).</td>
+                    </tr>
+                    <tr>
+                        <td>Postcondition</td>
+                        <td>Status transaksi berhasil diperbarui. Jika status = Selesai, sistem secara otomatis menjadwalkan pengiriman notifikasi STNK &amp; BPKB kepada Customer.</td>
+                    </tr>
+                    <tr>
+                        <td>Skenario Utama</td>
+                        <td>
+                            1. Admin membuka menu 'Transaksi Motor' → 2. Sistem menampilkan daftar seluruh transaksi → 3. Admin memilih transaksi → 4. Admin memverifikasi data dan dokumen → 5. Admin memperbarui status transaksi (Konfirmasi → Proses → Selesai) → 6. Sistem mencatat perubahan status di log → 7. Sistem mengirim notifikasi status → 8. Sistem menjadwalkan notifikasi STNK (7 hari) dan BPKB (30-60 hari) setelah status selesai → 9. Customer menerima notifikasi pengingat pengambilan.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Skenario Alternatif</td>
+                        <td>
+                            A1: Admin batalkan transaksi → sistem update status dibatalkan dan notif customer<br />
+                            A2: Notifikasi otomatis gagal → admin dapat alert di dashboard dan mengirim notifikasi secara manual dari halaman detail transaksi.
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="sd-frame">
+                <div class="sd-fl">sd Pengelolaan Transaksi Motor</div>
+                <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor Customer as Customer
+    participant HlmNotif as HlmNotifCustomer
+    actor Admin as Admin
+    participant FormDaftar as Halaman DaftarTransaksi
+    participant FormDetail as Halaman DetailTransaksi
+    participant Ctrl as Transaksi Controller
+    participant DB as Transaksi DataBase
+
+    %% Alur Awal
+    Admin->>FormDaftar: bukaDashboardMenu()
+    activate Admin
+    activate FormDaftar
+    FormDaftar->>Ctrl: getDaftarTransaksi()
+    activate Ctrl
+    Ctrl->>DB: getAll()
+    activate DB
+    DB-->>Ctrl: return: listTransaksi
+    deactivate DB
+    Ctrl-->>FormDaftar: return: tampilDaftarTransaksi(data)
+    deactivate Ctrl
+    FormDaftar-->>Admin: render: DaftarTransaksi
+    deactivate FormDaftar
+    deactivate Admin
+
+    Admin->>FormDaftar: TextpilihTransaksi(id)
+    activate Admin
+    activate FormDaftar
+    FormDaftar->>Ctrl: requestDetailTransaksi(id)
+    activate Ctrl
+    Ctrl->>Ctrl: validasiIdTransaksi(id)
+    Ctrl->>DB: getById(id)
+    activate DB
+    DB-->>Ctrl: return: dataTransaksi
+    deactivate DB
+    Ctrl-->>FormDetail: tampilkanDetailTransaksi()
+    activate FormDetail
+    deactivate Ctrl
+    deactivate FormDaftar
+    deactivate Admin
+
+    %% Alt Validasi
+    alt [Tidak Valid]
+        Ctrl-->>FormDetail: tampilFormAlasan()
+        activate FormDetail
+        FormDetail-->>Admin: render: FormAlasan
+        deactivate FormDetail
+        Admin->>FormDetail: isiAlasan(alasan)
+        activate Admin
+        activate FormDetail
+        FormDetail->>Ctrl: submitAlasan(alasan)
+        activate Ctrl
+        Ctrl->>DB: updateStatus ("Dibatalkan",alasan)
+        activate DB
+        DB-->>Ctrl: return: statusUpdated
+        deactivate DB
+        Ctrl->>HlmNotif: kirimNotifikasiPembatalan(idCustomer)
+        activate HlmNotif
+        HlmNotif->>Customer: bukaNotifikasi()
+        activate Customer
+        Customer-->>HlmNotif: return: notifikasiDiterima
+        deactivate Customer
+        HlmNotif-->>Ctrl: return: notifikasiDiterima
+        deactivate HlmNotif
+        Ctrl-->>FormDetail: return: statusUpdated
+        deactivate Ctrl
+        FormDetail-->>Admin: render: DetailTransaksi
+        deactivate FormDetail
+        deactivate Admin
+    else [ Valid]
+        Ctrl-->>FormDetail: tampilDetail Pembatasan(data)
+        activate FormDetail
+        FormDetail-->>Admin: render: DetailTransaksi
+        deactivate FormDetail
+        Ctrl-->>FormDetail: tampilFormPerbaruiStatus()
+        activate FormDetail
+        FormDetail-->>Admin: render: FormPerbaruiStatus
+        deactivate FormDetail
+        Admin->>FormDetail: konfirmasiProsesTransaksi(data)
+        activate Admin
+        activate FormDetail
+        FormDetail->>Ctrl: submitProsesTransaksi(data)
+        activate Ctrl
+        Ctrl->>Ctrl: validasiDataTransaksi(data)
+        Ctrl->>DB: setLogStatus(data)
+        activate DB
+        DB-->>Ctrl: return: logTercatat
+        deactivate DB
+        Ctrl->>HlmNotif: kirimNotifikasiStatus(idCustomer)
+        activate HlmNotif
+        HlmNotif->>Customer: bukaNotifikasiStatus()
+        activate Customer
+        Customer-->>HlmNotif: return: statusDibuka
+        deactivate Customer
+        HlmNotif-->>Ctrl: return: statusDibuka
+        deactivate HlmNotif
+        Ctrl-->>FormDetail: tampilDetailStatusTransaksi(data)
+        activate FormDetail
+        FormDetail-->>Admin: render: DetailStatusTransaksi
+        deactivate Ctrl
+        deactivate FormDetail
+        deactivate Admin
+
+        %% Loop Belum Selesai
+        loop [Belum Selesai]
+            Admin->>FormDetail: konfirmasiProsesTransaksi(data)
+            activate Admin
+            activate FormDetail
+            FormDetail->>Ctrl: submitProses Transaksi(data)
+            activate Ctrl
+            Ctrl->>DB: updateStatus Transaksi(id,status)
+            activate DB
+            DB-->>Ctrl: return: statusDiperbarui
+            deactivate DB
+            Ctrl-->>FormDetail: return: statusDiperbarui
+            deactivate Ctrl
+            FormDetail-->>Admin: render: DetailStatusTransaksi
+            deactivate FormDetail
+            deactivate Admin
+        end
+
+        %% Notifikasi STNK/BPKB Flow
+        Ctrl->>DB: getNotifSTNKBPKB(id)
+        activate Ctrl
+        activate DB
+        DB-->>Ctrl: return: dataNotif
+        deactivate DB
+        Ctrl->>Ctrl: validasiNotifDokumen(data)
+        Ctrl-->>FormDetail: return: hasilPemeriksaan
+        activate FormDetail
+        deactivate Ctrl
+        deactivate FormDetail
+
+        alt [Notif Gagal]
+            Ctrl-->>FormDetail: tampilAlert Dashboard(pesan)
+            activate FormDetail
+            FormDetail-->>Admin: render: AlertDashboard
+            deactivate FormDetail
+            Admin->>FormDetail: kirimNotifikasi Manual(pesan)
+            activate Admin
+            activate FormDetail
+            FormDetail->>Ctrl: submitNotifikasi Manual(pesan)
+            activate Ctrl
+            Ctrl->>HlmNotif: setNotifikasiManual(idCustomer,pesan)
+            activate HlmNotif
+            HlmNotif->>Customer: bukaNotifikasi()
+            activate Customer
+            Customer-->>HlmNotif: return: notifikasiDiterima
+            deactivate Customer
+            HlmNotif-->>Ctrl: return: notifikasiDiterima
+            deactivate HlmNotif
+            Ctrl-->>FormDetail: return: notifikasiDiterima
+            deactivate Ctrl
+            deactivate FormDetail
+            deactivate Admin
+        else [Notif Berhasil]
+            Ctrl->>DB: setPengingatPengambilan(id)
+            activate Ctrl
+            activate DB
+            DB-->>Ctrl: return: pengingatDiset
+            deactivate DB
+            Ctrl->>HlmNotif: setPengingatPengambilan(id)
+            activate HlmNotif
+            HlmNotif->>Customer: bukaPengingat()
+            activate Customer
+            Customer-->>HlmNotif: return: pengingatDiterima
+            deactivate Customer
+            HlmNotif-->>Ctrl: return: pengingatDiterima
+            deactivate HlmNotif
+            Ctrl-->>FormDetail: tampilInfo Pengambilan(data)
+            activate FormDetail
+            FormDetail-->>Admin: render: InfoPengambilanDokumen
+            deactivate FormDetail
+            deactivate Ctrl
+        end
+
+        Admin->>FormDetail: prosesSelesai()
+        activate Admin
+        activate FormDetail
+        FormDetail->>Ctrl: prosesSelesai()
+        activate Ctrl
+        Ctrl->>DB: updateStatus(id, "Selesai")
+        activate DB
+        DB-->>Ctrl: return: success
+        deactivate DB
+        Ctrl-->>FormDetail: return: success
+        deactivate Ctrl
+        FormDetail-->>Admin: render: InfoPengambilanDokumen
+        deactivate FormDetail
+        deactivate Admin
+    end
+</pre>
+            </div>
+        </div>
+    </body>
+</html>

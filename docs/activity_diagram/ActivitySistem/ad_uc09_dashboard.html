@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Activity Diagram – UC-09 Dashboard</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { background: #fdfcf9; font-family: "Crimson Pro", Georgia, serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+            .page-header { text-align: center; margin-bottom: 30px; }
+            .page-header h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; letter-spacing: -0.5px; margin-bottom: 8px; }
+            .page-header p { font-size: 16px; color: #64748b; font-style: italic; }
+            
+            .diagram-container { background: #ffffff; padding: 40px; border: 1px solid #e2e8f0; box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05); position: relative; }
+
+            /* UML Styles */
+            .swimlane-border { fill: none; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-header-bg { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-label { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; fill: #475569; text-anchor: middle; }
+            .node-start { fill: #1e293b; }
+            .node-end-outer { fill: none; stroke: #1e293b; stroke-width: 1.5; }
+            .node-end-inner { fill: #1e293b; }
+            
+            .activity-rect { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; rx: 10; ry: 10; }
+            .activity-text { font-size: 12px; font-weight: 600; text-anchor: middle; fill: #1e293b; }
+            .decision-diamond { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+            .flow-line { stroke: #1e293b; stroke-width: 1.2; fill: none; }
+            .condition-text { font-size: 11px; font-style: italic; font-weight: 700; fill: #2563eb; }
+
+            .btn-print { margin-top: 30px; padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: "JetBrains Mono", monospace; font-size: 12px; transition: background 0.2s; }
+            .btn-print:hover { background: #334155; }
+            
+            @media print {
+                .btn-print { display: none; }
+                body { padding: 0; background: white; }
+                .diagram-container { box-shadow: none; border: none; padding: 0; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Activity Diagram: UC-09 Dashboard & Laporan</h1>
+            <p>Filter Statistik & Proses Ekspor Laporan Excel</p>
+        </div>
+
+        <div class="diagram-container">
+            <svg width="600" height="800" viewBox="0 0 600 800">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                </defs>
+
+                <!-- Swimlanes Background -->
+                <rect x="0" y="0" width="300" height="750" class="swimlane-border" />
+                <rect x="300" y="0" width="300" height="750" class="swimlane-border" />
+
+                <!-- Swimlanes Headers -->
+                <rect x="0" y="0" width="300" height="40" class="swimlane-header-bg" />
+                <rect x="300" y="0" width="300" height="40" class="swimlane-header-bg" />
+
+                <text x="150" y="25" class="swimlane-label">ADMIN</text>
+                <text x="450" y="25" class="swimlane-label">SISTEM</text>
+
+                <!-- Start Node -->
+                <circle cx="150" cy="80" r="10" class="node-start" />
+                <line x1="150" y1="90" x2="150" y2="120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="65" y="120" width="170" height="40" class="activity-rect" />
+                <text x="150" y="145" class="activity-text">Buka Dashboard</text>
+                <path d="M 235,140 L 365,140" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="365" y="120" width="170" height="40" class="activity-rect" />
+                <text x="450" y="145" class="activity-text">Tampil ringkasan</text>
+                <path d="M 450,160 L 450,190 L 150,190 L 150,220" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="65" y="220" width="170" height="40" class="activity-rect" />
+                <text x="150" y="245" class="activity-text">Filter data (Opsional)</text>
+                <path d="M 235,240 L 365,240" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="365" y="220" width="170" height="40" class="activity-rect" />
+                <text x="450" y="245" class="activity-text">Update tampilan</text>
+                <path d="M 450,260 L 450,290 L 150,290 L 150,320" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="65" y="320" width="170" height="40" class="activity-rect" />
+                <text x="150" y="345" class="activity-text">Tekan 'Ekspor Excel'</text>
+                <path d="M 235,340 L 365,340" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <polygon points="450,325 480,355 450,385 420,355" class="decision-diamond" />
+                <text x="490" y="345" class="activity-text" style="font-size:10px">Ada Data?</text>
+
+                <!-- Tidak -->
+                <path d="M 420,355 L 370,355 L 370,410" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="385" y="345" class="condition-text">[Kosong]</text>
+                <rect x="330" y="410" width="100" height="40" class="activity-rect" stroke-dasharray="4 2" />
+                <text x="380" y="430" class="activity-text" style="font-size:10px">Pesan: Kosong</text>
+                <path d="M 330,430 L 150,430 L 150,360" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Ya -->
+                <line x1="450" y1="385" x2="450" y2="440" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="460" y="420" class="condition-text">[Ada]</text>
+
+                <rect x="365" y="440" width="170" height="40" class="activity-rect" />
+                <text x="450" y="465" class="activity-text">Hasilkan file Excel</text>
+                <path d="M 450,480 L 450,510 L 150,510 L 150,540" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- End Node -->
+                <circle cx="150" cy="555" r="15" class="node-end-outer" />
+                <circle cx="150" cy="555" r="10" class="node-end-inner" />
+
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+    </body>
+</html>

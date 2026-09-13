@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Diagram – UC-07 Transaksi Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fdfcf9;
+            font-family: "Crimson Pro", Georgia, serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 24px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-size: 16px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .diagram-container {
+            background: #ffffff;
+            padding: 40px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .swimlane-border {
+            fill: none;
+            stroke: #cbd5e1;
+            stroke-width: 1;
+        }
+
+        .swimlane-header-bg {
+            fill: #f8fafc;
+            stroke: #cbd5e1;
+            stroke-width: 1;
+        }
+
+        .swimlane-label {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 13px;
+            font-weight: 700;
+            fill: #475569;
+            text-anchor: middle;
+        }
+
+        .node-start {
+            fill: #1e293b;
+        }
+
+        .node-end-outer {
+            fill: none;
+            stroke: #1e293b;
+            stroke-width: 2;
+        }
+
+        .node-end-inner {
+            fill: #1e293b;
+        }
+
+        .activity-rect {
+            fill: #ffffff;
+            stroke: #1e293b;
+            stroke-width: 1.5;
+        }
+
+        .activity-text {
+            font-size: 12px;
+            font-weight: 600;
+            text-anchor: middle;
+            fill: #1e293b;
+        }
+
+        .decision-diamond {
+            fill: #ffffff;
+            stroke: #1e293b;
+            stroke-width: 1.5;
+        }
+
+        .flow-line {
+            stroke: #1e293b;
+            stroke-width: 1.2;
+            fill: none;
+        }
+
+        .condition-text {
+            font-size: 13px;
+            font-style: italic;
+            font-weight: 700;
+            fill: #2563eb;
+        }
+
+        .condition-text.error {
+            fill: #dc2626;
+        }
+
+        .sync-bar {
+            fill: #1e293b;
+        }
+
+        .btn-print {
+            margin-top: 30px;
+            padding: 10px 24px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.2);
+        }
+
+        .btn-print:hover {
+            background: #334155;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3);
+        }
+
+        @media print {
+            .btn-print { display: none; }
+            body { padding: 0; background: white; }
+            .diagram-container { box-shadow: none; border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1>Activity Diagram: UC-07 Transaksi Motor</h1>
+        <p>Pengelolaan Status Transaksi & Penjadwalan Dokumen Otomatis</p>
+    </div>
+
+    <div class="diagram-container">
+        <!-- 
+        VIEWBOX: 0 0 1000 1250
+        COLUMNS: Admin(0-333.3), Sistem(333.3-666.6), Customer(666.6-1000)
+        CENTERS: Admin=166.6, Sistem=500, Customer=833.3
+        -->
+        <svg width="950" height="1200" viewBox="0 0 1000 1200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                </marker>
+                <marker id="arr-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#dc2626" />
+                </marker>
+            </defs>
+
+            <!-- Swimlane backgrounds -->
+            <rect x="0" y="0" width="333.3" height="1160" class="swimlane-border" />
+            <rect x="333.3" y="0" width="333.3" height="1160" class="swimlane-border" />
+            <rect x="666.6" y="0" width="333.4" height="1160" class="swimlane-border" />
+
+            <!-- Headers -->
+            <rect x="0" y="0" width="333.3" height="45" class="swimlane-header-bg" />
+            <rect x="333.3" y="0" width="333.3" height="45" class="swimlane-header-bg" />
+            <rect x="666.6" y="0" width="333.4" height="45" class="swimlane-header-bg" />
+
+            <text x="166.6" y="28" class="swimlane-label">ADMIN</text>
+            <text x="500" y="28" class="swimlane-label">SISTEM</text>
+            <text x="833.3" y="28" class="swimlane-label">CUSTOMER</text>
+
+            <!-- INITIAL NODE -->
+            <circle cx="166.6" cy="85" r="10" class="node-start" />
+            <line x1="166.6" y1="95" x2="166.6" y2="125" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- STEP 1: Membuka menu Transaksi -->
+            <rect x="79.6" y="125" width="174" height="44" rx="22" class="activity-rect" />
+            <text x="166.6" y="151" class="activity-text">Membuka menu 'Transaksi'</text>
+            
+            <path d="M 253.6,147 L 397,147" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- STEP 2: Sistem menampilkan daftar -->
+            <rect x="397" y="125" width="206" height="44" rx="22" class="activity-rect" />
+            <text x="500" y="151" class="activity-text">Menampilkan daftar transaksi</text>
+            
+            <path d="M 500,169 L 500,190 L 166.6,190 L 166.6,215" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- STEP 3-4: Pilih & Verifikasi -->
+            <rect x="69.6" y="215" width="194" height="50" rx="10" ry="10" class="activity-rect" />
+            <text x="166.6" y="238" class="activity-text">Memilih transaksi &</text>
+            <text x="166.6" y="254" class="activity-text">memverifikasi data</text>
+            
+            <line x1="166.6" y1="265" x2="166.6" y2="300" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- DECISION: Data Valid? -->
+            <polygon points="166.6,300 212.6,325 166.6,350 120.6,325" class="decision-diamond" />
+            <text x="166.6" y="329" class="activity-text" style="font-size: 10px">Valid?</text>
+
+            <!-- [Alt 1] Tidak Valid -> Batalkan -->
+            <path d="M 212.6,325 L 397,325" class="flow-line" style="stroke: #dc2626" marker-end="url(#arr-red)" />
+            <text x="280" y="318" class="condition-text error">Tidak (Batal)</text>
+
+            <!-- STEP: Status = Dibatalkan -->
+            <rect x="397" y="305" width="180" height="40" rx="10" ry="10" class="activity-rect" style="stroke: #dc2626; fill: #fff5f5" />
+            <text x="487" y="330" class="activity-text" style="fill: #991b1b">Status = Dibatalkan</text>
+            
+            <!-- Long pipe to Terminal for Cancellation -->
+            <path d="M 577,325 L 970,325 L 970,1080 L 166.6,1080 L 166.6,1110" class="flow-line" style="stroke: #dc2626" marker-end="url(#arr-red)" />
+
+            <!-- [Ya] -> Update Status -->
+            <line x1="166.6" y1="350" x2="166.6" y2="385" class="flow-line" marker-end="url(#arr)" />
+            <text x="174.6" y="370" class="condition-text">Ya</text>
+
+            <!-- STEP: Update Status Flow -->
+            <rect x="69.6" y="385" width="194" height="54" rx="10" ry="10" class="activity-rect" />
+            <text x="166.6" y="408" class="activity-text">Perbarui status:</text>
+            <text x="166.6" y="424" class="activity-text" style="font-weight: 700; fill: #1d4ed8">Konfirmasi → Proses → Selesai</text>
+            
+            <path d="M 263.6,412 L 397,412" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- STEP: Sistem Log & Notif -->
+            <rect x="397" y="385" width="206" height="54" rx="10" ry="10" class="activity-rect" />
+            <text x="500" y="408" class="activity-text">Mencatat log status &</text>
+            <text x="500" y="424" class="activity-text">kirim notifikasi ke Customer</text>
+            
+            <path d="M 603,412 L 730,412" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- Customer receives status update -->
+            <rect x="730" y="390" width="206" height="44" rx="22" class="activity-rect" />
+            <text x="833.3" y="416" class="activity-text">Menerima notifikasi status</text>
+            
+            <!-- Decision triggered by Status = Selesai -->
+            <path d="M 833.3,434 L 833.3,475 L 560,475" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- DECISION: Selesai? -->
+            <polygon points="500,450 560,475 500,500 440,475" class="decision-diamond" />
+            <text x="500" y="479" class="activity-text" style="font-size: 10px">Selesai?</text>
+
+            <!-- [Tidak] -> End -->
+            <path d="M 440,475 L 350,475 L 350,1080 L 166.6,1080 L 166.6,1110" class="flow-line" marker-end="url(#arr)" style="stroke: #64748b" />
+            <text x="380" y="468" class="condition-text" style="fill: #64748b">Tidak</text>
+
+            <!-- [Ya] -> Schedule Docs (<<extend>>) -->
+            <line x1="500" y1="500" x2="500" y2="540" class="flow-line" marker-end="url(#arr)" />
+            <text x="508" y="525" class="condition-text">Ya</text>
+
+            <!-- STEP: Jadwalkan Notif -->
+            <rect x="397" y="540" width="206" height="54" rx="10" ry="10" class="activity-rect" />
+            <text x="500" y="563" class="activity-text">Menjadwalkan notifikasi</text>
+            <text x="500" y="579" class="activity-text" style="fill: #059669; font-weight: 700">STNK (7 hr) & BPKB (60 hr)</text>
+            
+            <line x1="500" y1="594" x2="500" y2="630" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- DECISION: Gagal Notif Otomatis? (Alt 2) -->
+            <polygon points="500,630 546,655 500,680 454,655" class="decision-diamond" />
+            <text x="500" y="659" class="activity-text" style="font-size: 10px">Gagal?</text>
+
+            <!-- [Ya] -> Alt 2 Alert & Manual -->
+            <path d="M 454,655 L 340,655" class="flow-line" style="stroke: #dc2626" marker-end="url(#arr-red)" />
+            <text x="380" y="648" class="condition-text error">Ya</text>
+
+            <!-- Alert on Admin Dashboard -->
+            <rect x="180" y="635" width="160" height="40" rx="4" class="activity-rect" style="stroke: #dc2626; fill: #fff5f5" />
+            <text x="260" y="660" class="activity-text" style="fill: #991b1b">Alert Dashboard Admin</text>
+            
+            <path d="M 260,675 L 260,720" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- STEP: Kirim Notif Manual (<<extend>>) -->
+            <rect x="76.6" y="720" width="180" height="54" rx="10" ry="10" class="activity-rect" style="stroke-dasharray: 6 3; stroke: #64748b; fill: #fffbeb" />
+            <text x="166.6" y="740" class="activity-text" style="font-size: 9px; font-style: italic; fill: #92400e">«extend» — opsional</text>
+            <text x="166.6" y="756" class="activity-text" style="font-weight: 700">Kirim Notifikasi Manual</text>
+            
+            <!-- Jalur dari manual ke Merge Point -->
+            <path d="M 256.6,747 L 475,747" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- [Tidak Gagal] -> Menuju Merge Point -->
+            <path d="M 500,680 L 500,760" class="flow-line" marker-end="url(#arr)" />
+            <text x="508" y="710" class="condition-text">Tidak</text>
+
+            <!-- MERGE NODE (Titik Temu alur Otomatis & Manual) -->
+            <polygon points="500,760 525,785 500,810 475,785" class="decision-diamond" />
+
+            <!-- Alur gabungan menuju Customer -->
+            <path d="M 525,785 L 730,785" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- Customer receives document reminder -->
+            <rect x="730" y="760" width="206" height="50" rx="10" ry="10" class="activity-rect" />
+            <text x="833.3" y="785" class="activity-text">Menerima pengingat</text>
+            <text x="833.3" y="799" class="activity-text">pengambilan dokumen</text>
+            
+            <!-- FINAL PATH -->
+            <path d="M 833.3,810 L 833.3,1080 L 166.6,1080 L 166.6,1110" class="flow-line" marker-end="url(#arr)" />
+
+            <!-- TERMINAL NODE -->
+            <circle cx="166.6" cy="1135" r="16" class="node-end-outer" />
+            <circle cx="166.6" cy="1135" r="10" class="node-end-inner" />
+
+        </svg>
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+
+</body>
+</html>

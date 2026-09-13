@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modul 6: Booking & Pembayaran Servis</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap");
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f8fafc; font-family: "Crimson Pro", Georgia, serif; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { font-size: 26px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+        .page-header p { color: #64748b; font-family: sans-serif; font-size: 13px; }
+        .diagram-container { background: #ffffff; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .system-boundary { fill: #fafafa; stroke: #cbd5e1; stroke-width: 2; }
+        .system-title { font-family: sans-serif; font-size: 12px; font-weight: 800; fill: #64748b; letter-spacing: 2px; }
+        .actor-line { stroke: #1e293b; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .actor-head { fill: #fff; stroke: #1e293b; stroke-width: 2.5; }
+        .actor-name { font-family: sans-serif; font-size: 13px; font-weight: 800; text-anchor: middle; }
+        .actor-desc { font-family: sans-serif; font-size: 10px; text-anchor: middle; fill: #64748b; }
+        .uc-box { fill: #ffffff; stroke: #3b82f6; stroke-width: 2; }
+        .uc-text { font-size: 12px; font-weight: 700; text-anchor: middle; fill: #1e293b; }
+        .uc-id { font-family: "JetBrains Mono", monospace; font-size: 10px; fill: #3b82f6; font-weight: 600; }
+        .assoc-line { stroke-width: 1.5; fill: none; }
+        .dep-line { stroke-width: 1.5; stroke-dasharray: 5, 4; fill: none; }
+        path.include-color { stroke: #059669; fill: none; }
+        text.include-color { fill: #059669; }
+        path.extend-color { stroke: #d97706; fill: none; }
+        text.extend-color { fill: #d97706; }
+        .stereo-text { font-family: sans-serif; font-size: 11px; font-style: italic; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; }
+        .new-badge rect { fill: #dcfce7; stroke: #86efac; stroke-width: 1; }
+        .new-badge text { font-family: sans-serif; font-size: 8px; font-weight: 800; fill: #15803d; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Modul 6: Booking &amp; Pembayaran Servis</h1>
+        <p>Pendaftaran jadwal, pengerjaan, tagihan, dan pembayaran servis. Aktor: <strong>Customer</strong>, <strong>Admin</strong>, <strong>Montir</strong> (baru).</p>
+    </div>
+    <div class="diagram-container">
+        <svg width="1050" height="960" viewBox="0 0 1050 960">
+            <defs>
+                <marker id="arrow-include" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#059669" stroke-width="1.5" /></marker>
+                <marker id="arrow-extend" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#d97706" stroke-width="1.5" /></marker>
+            </defs>
+
+            <rect x="325" y="40" width="400" height="880" class="system-boundary" />
+            <text x="525" y="68" class="system-title" text-anchor="middle">SISTEM SRB MOTOR (MODUL 6)</text>
+
+            <!-- Customer -->
+            <g transform="translate(150, 380)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="122" class="actor-name" fill="#059669">Customer</text>
+                <text x="0" y="136" class="actor-desc">Pelanggan terdaftar</text>
+            </g>
+
+            <!-- Admin -->
+            <g transform="translate(920, 400)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="122" class="actor-name" fill="#2563eb">Admin</text>
+                <text x="0" y="136" class="actor-desc">Staf dealer</text>
+            </g>
+
+            <!-- Montir -->
+            <g transform="translate(920, 680)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="122" class="actor-name" fill="#7c3aed">Montir</text>
+                <text x="0" y="136" class="actor-desc">Mekanik bengkel</text>
+            </g>
+
+            <!-- UC-04 Login -->
+            <g transform="translate(525, 130)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box" stroke="#0f172a" stroke-width="2"/><text y="-6" class="uc-id">UC-04</text><text y="10" class="uc-text">Login</text></g>
+
+            <!-- UC-09 Booking Servis (Customer) -->
+            <g transform="translate(525, 260)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-09</text><text y="10" class="uc-text">Booking Servis</text></g>
+
+            <!-- UC-09a Pilih Cabang & Jadwal -->
+            <g transform="translate(525, 380)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-09a</text><text y="10" class="uc-text">Pilih Cabang &amp; Jadwal</text></g>
+
+            <!-- UC-11 Batalkan Booking Servis -->
+            <g transform="translate(525, 500)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-11</text><text y="10" class="uc-text">Batalkan Booking Servis</text></g>
+
+            <!-- UC-10 Bayar Tagihan Servis (Customer - NEW) -->
+            <g transform="translate(525, 620)">
+                <ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box" stroke="#059669" stroke-width="2.5"/>
+                <text y="-6" class="uc-id" fill="#059669">UC-10</text>
+                <text y="10" class="uc-text" fill="#059669">Bayar Tagihan Servis</text>
+            </g>
+            <!-- NEW badge -->
+            <rect x="682" y="608" width="55" height="14" rx="3" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+            <text x="709" y="619" font-family="sans-serif" font-size="8" font-weight="800" text-anchor="middle" fill="#15803d">FITUR BARU</text>
+
+            <!-- UC-16 Kelola Jadwal Servis (Montir - NEW) -->
+            <g transform="translate(525, 730)">
+                <ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box" stroke="#7c3aed" stroke-width="2.5"/>
+                <text y="-6" class="uc-id" fill="#7c3aed">UC-16</text>
+                <text y="10" class="uc-text" fill="#7c3aed">Kelola Jadwal Servis</text>
+            </g>
+            <rect x="682" y="718" width="55" height="14" rx="3" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+            <text x="709" y="729" font-family="sans-serif" font-size="8" font-weight="800" text-anchor="middle" fill="#6d28d9">FITUR BARU</text>
+
+            <!-- UC-17 Input Tagihan Servis (Montir - NEW) -->
+            <g transform="translate(525, 840)">
+                <ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box" stroke="#7c3aed" stroke-width="2.5"/>
+                <text y="-6" class="uc-id" fill="#7c3aed">UC-17</text>
+                <text y="10" class="uc-text" fill="#7c3aed">Input Tagihan Servis</text>
+            </g>
+            <rect x="682" y="828" width="55" height="14" rx="3" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+            <text x="709" y="839" font-family="sans-serif" font-size="8" font-weight="800" text-anchor="middle" fill="#6d28d9">FITUR BARU</text>
+
+            <!-- Associations -->
+            <!-- Customer → Login -->
+            <path d="M 166,380 C 270,380 270,130 375,130" class="assoc-line" stroke="#059669" />
+            <!-- Customer → UC-09 -->
+            <path d="M 166,380 C 270,380 270,260 375,260" class="assoc-line" stroke="#059669" />
+            <!-- Customer → UC-11 -->
+            <path d="M 166,380 C 270,400 270,500 375,500" class="assoc-line" stroke="#059669" />
+            <!-- Customer → UC-10 -->
+            <path d="M 166,380 C 270,420 270,620 375,620" class="assoc-line" stroke="#059669" />
+
+            <!-- Admin → UC-16 (Kelola Jadwal) -->
+            <path d="M 905,400 C 820,400 820,730 725,730" class="assoc-line" stroke="#2563eb" />
+            <!-- Admin → UC-17 (Input Tagihan) -->
+            <path d="M 905,400 C 820,420 820,840 725,840" class="assoc-line" stroke="#2563eb" />
+
+            <!-- Montir → Login -->
+            <path d="M 905,680 C 820,680 820,130 725,130" class="assoc-line" stroke="#7c3aed" />
+            <!-- Montir → UC-16 -->
+            <path d="M 905,680 C 820,680 820,730 725,730" class="assoc-line" stroke="#7c3aed" />
+            <!-- Montir → UC-17 -->
+            <path d="M 905,680 C 820,700 820,840 725,840" class="assoc-line" stroke="#7c3aed" />
+
+            <!-- UC-09 «include» Login -->
+            <path d="M 525,230 L 525,163" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="573" y="200" class="stereo-text include-color">«include»</text>
+
+            <!-- UC-09 «include» Pilih Cabang -->
+            <path d="M 525,292 L 525,348" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="573" y="325" class="stereo-text include-color">«include»</text>
+
+            <!-- UC-11 «extend» UC-09 -->
+            <path d="M 475,472 C 420,430 420,290 470,292" class="dep-line extend-color" marker-end="url(#arrow-extend)" />
+            <text x="415" y="380" class="stereo-text extend-color">«extend»</text>
+
+            <!-- UC-10 «include» Login -->
+            <path d="M 480,592 C 440,480 440,160 480,160" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="435" y="380" class="stereo-text include-color">«include»</text>
+
+            <!-- UC-17 «include» UC-16 -->
+            <path d="M 525,810 L 525,762" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="573" y="789" class="stereo-text include-color">«include»</text>
+        </svg>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1494 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>UC-06 Servis – Activity Diagram (Payment Logic Refined)</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                font-family: "Inter", sans-serif;
+                background: #f8fafc;
+                padding: 40px 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            h1 {
+                font-size: 22px;
+                font-weight: 800;
+                color: #0f172a;
+                margin-bottom: 4px;
+            }
+            .subtitle {
+                font-size: 13px;
+                color: #64748b;
+                margin-bottom: 25px;
+                text-align: center;
+                max-width: 800px;
+            }
+            .diagram-container {
+                background: white;
+                padding: 40px;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                border: 1px solid #e2e8f0;
+            }
+            svg {
+                display: block;
+            }
+            svg text {
+                font-family: "Inter", sans-serif;
+            }
+
+            @media print {
+                body {
+                    padding: 0;
+                    background: #fff;
+                }
+                .btn-print {
+                    display: none;
+                }
+            }
+            .btn-print {
+                margin-top: 20px;
+                padding: 10px 20px;
+                background: #0f172a;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 600;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Activity Diagram: UC-06 Servis (Final Payment Logic)</h1>
+        <p class="subtitle">
+            Integrasi Webhook, Validasi Berlapis, dan Prosedur "Update Status
+            Jadi Paid" Sebelum Pengiriman Invoice.
+        </p>
+
+        <div class="diagram-container">
+            <svg
+                width="1000"
+                height="4600"
+                viewBox="0 0 1000 4600"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <defs>
+                    <marker
+                        id="arrow"
+                        viewBox="0 0 10 10"
+                        refX="9"
+                        refY="5"
+                        markerWidth="6"
+                        markerHeight="6"
+                        orient="auto"
+                    >
+                        <path
+                            d="M1 1L9 5L1 9"
+                            fill="none"
+                            stroke="#334155"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </marker>
+                    <marker
+                        id="arrow-green"
+                        viewBox="0 0 10 10"
+                        refX="9"
+                        refY="5"
+                        markerWidth="6"
+                        markerHeight="6"
+                        orient="auto"
+                    >
+                        <path
+                            d="M1 1L9 5L1 9"
+                            fill="none"
+                            stroke="#16a34a"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </marker>
+                    <marker
+                        id="arrow-red"
+                        viewBox="0 0 10 10"
+                        refX="9"
+                        refY="5"
+                        markerWidth="6"
+                        markerHeight="6"
+                        orient="auto"
+                    >
+                        <path
+                            d="M1 1L9 5L1 9"
+                            fill="none"
+                            stroke="#dc2626"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </marker>
+                </defs>
+
+                <!-- SWIMLANES -->
+                <rect x="0" y="0" width="250" height="40" fill="#3b82f6" />
+                <rect x="250" y="0" width="250" height="40" fill="#10b981" />
+                <rect x="500" y="0" width="250" height="40" fill="#8b5cf6" />
+                <rect x="750" y="0" width="250" height="40" fill="#f59e0b" />
+
+                <text
+                    x="125"
+                    y="20"
+                    font-size="12"
+                    font-weight="700"
+                    fill="#fff"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                >
+                    CUSTOMER
+                </text>
+                <text
+                    x="375"
+                    y="20"
+                    font-size="12"
+                    font-weight="700"
+                    fill="#fff"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                >
+                    ADMIN
+                </text>
+                <text
+                    x="625"
+                    y="20"
+                    font-size="12"
+                    font-weight="700"
+                    fill="#fff"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                >
+                    MONTIR
+                </text>
+                <text
+                    x="875"
+                    y="20"
+                    font-size="12"
+                    font-weight="700"
+                    fill="#fff"
+                    text-anchor="middle"
+                    dominant-baseline="central"
+                >
+                    SISTEM
+                </text>
+
+                <line
+                    x1="250"
+                    y1="0"
+                    x2="250"
+                    y2="4550"
+                    stroke="#cbd5e1"
+                    stroke-width="1"
+                />
+                <line
+                    x1="500"
+                    y1="0"
+                    x2="500"
+                    y2="4550"
+                    stroke="#cbd5e1"
+                    stroke-width="1"
+                />
+                <line
+                    x1="750"
+                    y1="0"
+                    x2="750"
+                    y2="4550"
+                    stroke="#cbd5e1"
+                    stroke-width="1"
+                />
+                <rect
+                    x="0"
+                    y="0"
+                    width="1000"
+                    height="4550"
+                    fill="none"
+                    stroke="#0f172a"
+                    stroke-width="2"
+                />
+
+                <!-- START -->
+                <circle cx="125" cy="70" r="10" fill="#000" />
+                <line
+                    x1="125"
+                    y1="80"
+                    x2="125"
+                    y2="110"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <!-- BAGIAN 1: BOOKING -->
+                <rect
+                    x="40"
+                    y="110"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="125"
+                    y="135"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Isi Data Booking
+                </text>
+                <line
+                    x1="125"
+                    y1="150"
+                    x2="125"
+                    y2="180"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="40"
+                    y="180"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="125"
+                    y="205"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Kirim Data Booking
+                </text>
+                <path
+                    d="M210 200 H875 V240"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <polygon
+                    points="875,240 925,270 875,300 825,270"
+                    fill="#fffbeb"
+                    stroke="#d97706"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="270"
+                    font-size="9"
+                    font-weight="700"
+                    fill="#92400e"
+                    text-anchor="middle"
+                >
+                    Slot Ada?
+                </text>
+
+                <!-- TIDAK -->
+                <path
+                    d="M925 270 H970 V320 H875 V350"
+                    fill="none"
+                    stroke="#dc2626"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-red)"
+                />
+                <text
+                    x="945"
+                    y="262"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#dc2626"
+                >
+                    TIDAK
+                </text>
+                <rect
+                    x="790"
+                    y="350"
+                    width="170"
+                    height="35"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text x="875" y="372" font-size="9" text-anchor="middle">
+                    Msg: Jadwal Penuh
+                </text>
+                <path
+                    d="M790 367 H15 V130 H40"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <!-- YES -->
+                <line
+                    x1="875"
+                    y1="300"
+                    x2="875"
+                    y2="400"
+                    stroke="#16a34a"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-green)"
+                />
+                <text
+                    x="885"
+                    y="325"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#16a34a"
+                >
+                    YA
+                </text>
+                <rect
+                    x="790"
+                    y="400"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="425"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Simpan &amp; Notif Admin
+                </text>
+                <path
+                    d="M790 420 H375 V470"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="290"
+                    y="470"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#ecfdf5"
+                    stroke="#10b981"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="375"
+                    y="495"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Konfirmasi Jadwal
+                </text>
+                <path
+                    d="M375 510 V550 H875 V590"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="790"
+                    y="590"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="615"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Kirim Tiket Digital
+                </text>
+                <path
+                    d="M790 610 H125 V660"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="40"
+                    y="660"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="125"
+                    y="685"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Terima Tiket Digital
+                </text>
+
+                <!-- FORK 1 -->
+                <line
+                    x1="80"
+                    y1="720"
+                    x2="170"
+                    y2="720"
+                    stroke="#000"
+                    stroke-width="6"
+                />
+                <line
+                    x1="125"
+                    y1="685"
+                    x2="125"
+                    y2="720"
+                    stroke="#334155"
+                    stroke-width="2"
+                />
+
+                <path
+                    d="M100 720 V1050 H780"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <text x="35" y="755" font-size="8" font-weight="700">
+                    OPSI: HADIR
+                </text>
+
+                <path
+                    d="M150 720 V780"
+                    fill="none"
+                    stroke="#dc2626"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-red)"
+                />
+                <text
+                    x="155"
+                    y="755"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#dc2626"
+                >
+                    OPSI: BATAL
+                </text>
+                <rect
+                    x="100"
+                    y="780"
+                    width="120"
+                    height="40"
+                    rx="6"
+                    fill="#fff1f2"
+                    stroke="#fb7185"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="160"
+                    y="805"
+                    font-size="9"
+                    font-weight="700"
+                    fill="#9f1239"
+                    text-anchor="middle"
+                >
+                    Klik Batal Servis
+                </text>
+                <path
+                    d="M220 800 H875 V840"
+                    fill="none"
+                    stroke="#dc2626"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-red)"
+                />
+
+                <polygon
+                    points="875,840 925,870 875,900 825,870"
+                    fill="#fffbeb"
+                    stroke="#d97706"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="870"
+                    font-size="9"
+                    font-weight="700"
+                    fill="#92400e"
+                    text-anchor="middle"
+                >
+                    Sdg Kerja?
+                </text>
+
+                <path
+                    d="M825 870 H780 V930 H875 V960"
+                    fill="none"
+                    stroke="#dc2626"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-red)"
+                />
+                <text
+                    x="795"
+                    y="862"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#dc2626"
+                >
+                    YA
+                </text>
+                <rect
+                    x="790"
+                    y="960"
+                    width="170"
+                    height="30"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text x="875" y="980" font-size="9" text-anchor="middle">
+                    Msg: Tidak Bisa Batal
+                </text>
+                <line
+                    x1="875"
+                    y1="990"
+                    x2="875"
+                    y2="1050"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <path
+                    d="M925 870 H975 V4400 H875"
+                    fill="none"
+                    stroke="#16a34a"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-green)"
+                />
+                <text
+                    x="945"
+                    y="862"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#16a34a"
+                >
+                    TIDAK
+                </text>
+
+                <!-- JOIN 1 -->
+                <line
+                    x1="780"
+                    y1="1050"
+                    x2="970"
+                    y2="1050"
+                    stroke="#000"
+                    stroke-width="6"
+                />
+
+                <path
+                    d="M875 1050 V1080 H625 V1110"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="2"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="540"
+                    y="1110"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#faf5ff"
+                    stroke="#8b5cf6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="625"
+                    y="1135"
+                    font-size="9"
+                    font-weight="700"
+                    text-anchor="middle"
+                >
+                    Buka Hal. Jadwal Pengerjaan
+                </text>
+
+                <path
+                    d="M710 1130 H875 V1160"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="790"
+                    y="1160"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="1185"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Tampilkan Daftar Booking
+                </text>
+
+                <path
+                    d="M875 1200 V1230 H625 V1260"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="540"
+                    y="1260"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#faf5ff"
+                    stroke="#8b5cf6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="625"
+                    y="1285"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Ubah Status: Sdg Dikerjakan
+                </text>
+
+                <path
+                    d="M710 1280 H875 V1320"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="790"
+                    y="1320"
+                    width="170"
+                    height="45"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="1338"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Memperbarui Status &amp;
+                </text>
+                <text
+                    x="875"
+                    y="1350"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Mencatat Waktu Mulai
+                </text>
+
+                <path
+                    d="M875 1365 V1410 H625 V1440"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="540"
+                    y="1440"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#faf5ff"
+                    stroke="#8b5cf6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="625"
+                    y="1465"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Ubah Status: Selesai
+                </text>
+
+                <path
+                    d="M710 1460 H875 V1500"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="790"
+                    y="1500"
+                    width="170"
+                    height="45"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="1518"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Memperbarui Status &amp;
+                </text>
+                <text
+                    x="875"
+                    y="1530"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Mencatat Waktu Selesai
+                </text>
+
+                <!-- TAGIHAN -->
+                <path
+                    d="M875 1545 V1580 H625 V1610"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="540"
+                    y="1610"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#faf5ff"
+                    stroke="#8b5cf6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="625"
+                    y="1635"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Input Rincian Biaya
+                </text>
+
+                <line
+                    x1="625"
+                    y1="1650"
+                    x2="625"
+                    y2="1690"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="540"
+                    y="1690"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#faf5ff"
+                    stroke="#8b5cf6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="625"
+                    y="1715"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Simpan Tagihan
+                </text>
+
+                <path
+                    d="M710 1710 H875 V1750"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="790"
+                    y="1750"
+                    width="170"
+                    height="35"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="1772"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Memvalidasi Total Biaya
+                </text>
+                <line
+                    x1="875"
+                    y1="1785"
+                    x2="875"
+                    y2="1820"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <polygon
+                    points="875,1820 925,1850 875,1880 825,1850"
+                    fill="#fffbeb"
+                    stroke="#d97706"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="1850"
+                    font-size="9"
+                    font-weight="700"
+                    fill="#92400e"
+                    text-anchor="middle"
+                >
+                    Total > 0?
+                </text>
+
+                <path
+                    d="M825 1850 H770 V1900 H875 V1930"
+                    fill="none"
+                    stroke="#dc2626"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-red)"
+                />
+                <text
+                    x="790"
+                    y="1842"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#dc2626"
+                >
+                    TIDAK
+                </text>
+                <rect
+                    x="790"
+                    y="1930"
+                    width="170"
+                    height="30"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text x="875" y="1950" font-size="9" text-anchor="middle">
+                    Msg: Tagihan tidak boleh 0
+                </text>
+                <path
+                    d="M790 1948 H520 V1632 H540"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <line
+                    x1="875"
+                    y1="1880"
+                    x2="875"
+                    y2="1990"
+                    stroke="#16a34a"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-green)"
+                />
+                <text
+                    x="885"
+                    y="1905"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#16a34a"
+                >
+                    YA
+                </text>
+                <rect
+                    x="790"
+                    y="1990"
+                    width="170"
+                    height="45"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="2008"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Update Total Biaya &amp;
+                </text>
+                <text
+                    x="875"
+                    y="2020"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Status Menjadi Unpaid
+                </text>
+
+                <line
+                    x1="875"
+                    y1="2035"
+                    x2="875"
+                    y2="2090"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <rect
+                    x="790"
+                    y="2090"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="2115"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Kirim Notif Tagihan
+                </text>
+                <path
+                    d="M790 2110 H125 V2170"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <!-- PEMBAYARAN -->
+                <rect
+                    x="40"
+                    y="2170"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="125"
+                    y="2195"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Klik Bayar
+                </text>
+                <path
+                    d="M210 2190 H875 V2240"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="790"
+                    y="2240"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="2265"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Tampilkan Opsi Bayar
+                </text>
+                <path
+                    d="M790 2260 H125 V2320"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <!-- FORK 2 -->
+                <line
+                    x1="80"
+                    y1="2360"
+                    x2="170"
+                    y2="2360"
+                    stroke="#000"
+                    stroke-width="6"
+                />
+                <line
+                    x1="125"
+                    y1="2320"
+                    x2="125"
+                    y2="2360"
+                    stroke="#334155"
+                    stroke-width="2"
+                />
+
+                <!-- Non-Cash -->
+                <path
+                    d="M100 2360 V2430"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <text x="35" y="2400" font-size="8" font-weight="700">
+                    NON-CASH
+                </text>
+
+                <rect
+                    x="40"
+                    y="2430"
+                    width="120"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="100"
+                    y="2455"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Bayar via Midtrans
+                </text>
+
+                <!-- Revisi 2: Menerima Webhook Midtrans (Sistem) -->
+                <path
+                    d="M160 2450 H875 V2500"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="790"
+                    y="2500"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="2525"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Menerima Webhook Midtrans
+                </text>
+
+                <line
+                    x1="875"
+                    y1="2540"
+                    x2="875"
+                    y2="2580"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <polygon
+                    points="875,2580 925,2610 875,2640 825,2610"
+                    fill="#fffbeb"
+                    stroke="#d97706"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="875"
+                    y="2610"
+                    font-size="9"
+                    font-weight="700"
+                    fill="#92400e"
+                    text-anchor="middle"
+                >
+                    Lunas?
+                </text>
+
+                <!-- GAGAL -->
+                <path
+                    d="M925 2610 H970 V2670 H875 V2700"
+                    fill="none"
+                    stroke="#dc2626"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow-red)"
+                />
+                <text
+                    x="945"
+                    y="2602"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#dc2626"
+                >
+                    GAGAL
+                </text>
+                <rect
+                    x="790"
+                    y="2700"
+                    width="170"
+                    height="30"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text x="875" y="2720" font-size="9" text-anchor="middle">
+                    Msg: Bayar Gagal
+                </text>
+                <path
+                    d="M790 2718 H15 V2320 H125"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <!-- BERHASIL (Label YA Hijau) -->
+                <line
+                    x1="875"
+                    y1="2640"
+                    x2="875"
+                    y2="2800"
+                    stroke="#16a34a"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="885"
+                    y="2665"
+                    font-size="8"
+                    font-weight="700"
+                    fill="#16a34a"
+                >
+                    BERHASIL
+                </text>
+
+                <!-- Cash -->
+                <path
+                    d="M150 2360 V2430"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+                <text x="155" y="2400" font-size="8" font-weight="700">
+                    CASH
+                </text>
+
+                <rect
+                    x="140"
+                    y="2430"
+                    width="100"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="190"
+                    y="2455"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Bayar di Kasir
+                </text>
+
+                <path
+                    d="M190 2470 V2510 H375 V2550"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="290"
+                    y="2550"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#ecfdf5"
+                    stroke="#10b981"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="375"
+                    y="2575"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Konfirmasi Bayar Cash
+                </text>
+
+                <path
+                    d="M375 2590 V2800 H850"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                />
+
+                <!-- JOIN 2 -->
+                <line
+                    x1="850"
+                    y1="2800"
+                    x2="970"
+                    y2="2800"
+                    stroke="#000"
+                    stroke-width="6"
+                />
+
+                <!-- Revisi 1: Ubah Status & Catat Waktu (Sistem) -->
+                <path
+                    d="M910 2800 V2860"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="2"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="825"
+                    y="2860"
+                    width="170"
+                    height="45"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="910"
+                    y="2878"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Ubah Status Jadi Paid &amp;
+                </text>
+                <text
+                    x="910"
+                    y="2890"
+                    font-size="9"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Catat Waktu Lunas
+                </text>
+
+                <line
+                    x1="910"
+                    y1="2905"
+                    x2="910"
+                    y2="2960"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="825"
+                    y="2960"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="910"
+                    y="2985"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Kirim Invoice Digital
+                </text>
+
+                <path
+                    d="M825 2982 H125 V3040"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="40"
+                    y="3040"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#eff6ff"
+                    stroke="#3b82f6"
+                    stroke-width="1.5"
+                />
+                <text
+                    x="125"
+                    y="3065"
+                    font-size="10"
+                    font-weight="600"
+                    text-anchor="middle"
+                >
+                    Terima Invoice
+                </text>
+
+                <path
+                    d="M125 3080 V3130 H875 V3180"
+                    fill="none"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <rect
+                    x="790"
+                    y="3180"
+                    width="170"
+                    height="40"
+                    rx="6"
+                    fill="#fff7ed"
+                    stroke="#f59e0b"
+                    stroke-width="2"
+                />
+                <text
+                    x="875"
+                    y="3205"
+                    font-size="10"
+                    font-weight="700"
+                    fill="#78350f"
+                    text-anchor="middle"
+                >
+                    Arsip Data Servis
+                </text>
+
+                <line
+                    x1="875"
+                    y1="3220"
+                    x2="875"
+                    y2="4500"
+                    stroke="#334155"
+                    stroke-width="1.5"
+                    marker-end="url(#arrow)"
+                />
+
+                <!-- END NODE -->
+                <circle
+                    cx="875"
+                    cy="4550"
+                    r="18"
+                    fill="none"
+                    stroke="#0f172a"
+                    stroke-width="2.5"
+                />
+                <circle cx="875" cy="4550" r="9" fill="#0f172a" />
+                <text
+                    x="875"
+                    y="4590"
+                    font-size="14"
+                    font-weight="800"
+                    fill="#0f172a"
+                    text-anchor="middle"
+                >
+                    SELESAI
+                </text>
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">
+            Cetak Diagram
+        </button>
+    </body>
+</html>

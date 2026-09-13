@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deployment Diagram SRB Motor (Versi 1 - 4)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #0f1117;
+            --surface: #171b24;
+            --surface2: #1e2330;
+            --border: #2a3045;
+            --text: #e2e8f0;
+            --text-muted: #7a89a8;
+            --blue: #4f9cf0;
+            --teal: #3ecfb0;
+            --amber: #f0a84f;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--teal);
+            border: 1px solid var(--teal);
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* CONTENT CONTAINER */
+        .content-container {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            page-break-after: always;
+        }
+
+        .desc-box {
+            background: var(--surface2);
+            border-left: 4px solid var(--amber);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .desc-box h3 {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            color: var(--amber);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .diagram-frame {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            background: #11141c;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--teal);
+            color: var(--bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 8px 20px rgba(62, 207, 176, 0.3);
+            z-index: 100;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media print {
+            .btn-print, header { display: none !important; }
+            body { padding: 0; background: white; color: black; }
+            .section-box { border: none; box-shadow: none; padding: 0; margin-bottom: 50px; background: white; }
+            .diagram-frame { background: white; border: 1px solid #ccc; }
+            .desc-box { background: #f9f9f9; border-color: #333; color: #333; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            themeVariables: {
+                background: "#11141c",
+                primaryColor: "#1e2d48",
+                primaryTextColor: "#e2e8f0",
+                primaryBorderColor: "#3a4560",
+                lineColor: "#7a89a8",
+                fontFamily: "IBM Plex Sans, sans-serif"
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <header>
+        <div class="badge">UML · DEPLOYMENT DIAGRAM</div>
+        <h1>Deployment Diagram — SRB Motor Project</h1>
+        <p class="subtitle">Visualisasi Infrastruktur Fisik &amp; Distribusi Aplikasi (Berdasarkan Modul 0684-P10)</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content-container">
+
+        <!-- VERSI 1 -->
+        <div class="section-box">
+            <div class="desc-box">
+                <h3>Versi 1: Spesifikasi Node Fisik (Physical Nodes)</h3>
+                <strong>Deskripsi:</strong> Menggambarkan rancangan fisik paling mendasar. Aktor <i>Customer</i> menggunakan perangkat pribadinya (Customer Device) untuk mengakses <i>Office Server</i> yang berada di kantor utama SRB Motor melalui jalur komunikasi internet umum menggunakan protokol HTTP/HTTPS.
+            </div>
+            <div class="diagram-frame">
+                <pre class="mermaid">
+flowchart LR
+    client["«device»<br/>Customer Device"] ---|«Internet» HTTP/HTTPS| server["«server»<br/>Office Server"]
+    classDef nodeStyle fill:#171b24,stroke:#3ecfb0,color:#e2e8f0,stroke-width:1.5px;
+    class client,server nodeStyle;
+                </pre>
+            </div>
+        </div>
+
+        <!-- VERSI 2: CONFIGURATION WITH ARTIFACTS (BSI SLIDE STYLE) -->
+        <div class="section-box">
+            <div class="desc-box">
+                <h3>Versi 2: Konfigurasi dengan Komponen/Artifacts</h3>
+                <strong>Deskripsi:</strong> Mendetailkan komponen perangkat lunak (Artifacts) yang dideploy di dalam masing-masing node fisik. Menunjukkan lapisan antarmuka pengguna (HCI Layer) pada sisi klien, serta logika pemrosesan data (PD Layer) dan pengelolaan data (DM Layer) pada sisi server menggunakan nama sistem riil (SRB Motor System).
+            </div>
+            <div class="diagram-frame">
+                <pre class="mermaid">
+flowchart LR
+    subgraph ClientNode ["«Client Workstation» <br/> Front Office PC"]
+        hci["«HCI Layer» <br/> SRB Motor System"]
+    end
+
+    subgraph ServerNode ["«Server» <br/> Office Server"]
+        pd["«PD Layer» <br/> SRB Motor System"]
+        dm["«DM Layer» <br/> SRB Motor System"]
+    end
+
+    ClientNode ---|«LAN»| ServerNode
+
+    classDef nodeStyle fill:#1e2d48,stroke:#3a4560,color:#e2e8f0,stroke-width:1px;
+    class hci,pd,dm nodeStyle;
+    classDef subStyle fill:#171b24,stroke:#3ecfb0,color:#e2e8f0,stroke-width:1.5px;
+    class ClientNode,ServerNode subStyle;
+                </pre>
+            </div>
+        </div>
+
+        <!-- VERSI 3: SEPARATED DATABASE (BSI SLIDE STYLE) -->
+        <div class="section-box">
+            <div class="desc-box">
+                <h3>Versi 3: Distribusi Terpisah (Separated Server &amp; Database)</h3>
+                <strong>Deskripsi:</strong> Menggambarkan arsitektur fisik di mana data disimpan terpisah dari server utama. PC Klien (Front Office PC) terhubung ke server utama (Office Server) melalui jaringan lokal (LAN), dan server terhubung langsung ke basis data terpisah (Data Base).
+            </div>
+            <div class="diagram-frame">
+                <pre class="mermaid">
+flowchart LR
+    client["«Client Workstation» <br/> Front Office PC"]
+    server["«Server» <br/> Office Server"]
+    db[("«Database» <br/> Data Base")]
+
+    client ---|«LAN»| server
+    server --- db
+
+    classDef centerStyle fill:#1e2d48,stroke:#f0a84f,color:#e2e8f0,stroke-width:1.5px;
+    classDef branchStyle fill:#171b24,stroke:#3ecfb0,color:#e2e8f0,stroke-width:1.2px;
+    classDef netStyle fill:#11141c,stroke:#7a89a8,color:#7a89a8,stroke-width:1.5px;
+    
+    class server centerStyle;
+    class client branchStyle;
+    class db netStyle;
+                </pre>
+            </div>
+        </div>
+
+        <!-- VERSI 4: TOP LEVEL NETWORK MODEL (UML SEMANTIC SUBNETS) -->
+        <div class="section-box">
+            <div class="desc-box">
+                <h3>Versi 4: Top-Level Network Model (Jaringan Internal Gedung SRB Motor)</h3>
+                Menggambarkan topologi jaringan tingkat tinggi (Top-Level Network Model) sesuai standar UML akademik. Node pusat didefinisikan sebagai <b>«network»</b> yang menghubungkan seluruh <b>«subnetwork»</b> divisi kerja melalui jalur komunikasi (communication paths) dengan stereotip <b>«intranet»</b>.
+            </div>
+            <div class="diagram-frame">
+                <pre class="mermaid">
+flowchart TD
+    %% Top: Central Local Network Backbone
+    backbone["«network» <br/> SRB Motor Internal LAN"]
+
+    %% Nodes (Subnetworks)
+    server["«subnetwork» <br/> Server Room LAN"]
+    frontoffice["«subnetwork» <br/> Front Office LAN"]
+    workshop["«subnetwork» <br/> Workshop LAN"]
+    showroom["«subnetwork» <br/> Showroom LAN"]
+
+    %% Connections with «intranet» stereotype on communication paths
+    backbone ---|«intranet»| server
+    backbone ---|«intranet»| frontoffice
+    backbone ---|«intranet»| workshop
+    backbone ---|«intranet»| showroom
+
+    classDef centerStyle fill:#1e2d48,stroke:#f0a84f,color:#e2e8f0,stroke-width:1.5px;
+    classDef branchStyle fill:#171b24,stroke:#3ecfb0,color:#e2e8f0,stroke-width:1.2px;
+    classDef netStyle fill:#11141c,stroke:#7a89a8,color:#7a89a8,stroke-width:1.5px;
+    
+    class server centerStyle;
+    class frontoffice,workshop,showroom branchStyle;
+    class backbone netStyle;
+                </pre>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup Notifikasi WhatsApp SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #e5ddd5;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            /* Seamless WA Web Background Pattern */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h10v10H10V10zm20 20h10v10H30V30zm20 20h10v10H50V50z' fill='%23d0c9c3' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #e5ddd5;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            position: relative;
+            border: 8px solid #2c3e50;
+        }
+
+        .wa-header {
+            background-color: #008069;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #008069;
+        }
+
+        .header-info {
+            flex-grow: 1;
+        }
+
+        .header-name {
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .verified-badge {
+            width: 14px;
+            height: 14px;
+            background-color: #00a884;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .verified-badge::after {
+            content: '✓';
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .header-status {
+            font-size: 12px;
+            color: #b2d9d2;
+            margin-top: 2px;
+        }
+
+        .chat-container {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .date-badge {
+            background-color: #ffffff;
+            color: #54656f;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            align-self: center;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+            margin-bottom: 8px;
+        }
+
+        .message-bubble {
+            background-color: #ffffff;
+            padding: 8px 10px 8px 12px;
+            border-radius: 0 8px 8px 8px;
+            max-width: 85%;
+            align-self: flex-start;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            position: relative;
+            line-height: 1.5;
+            font-size: 14.5px;
+            color: #111b21;
+        }
+
+        /* Tailing effect for incoming message */
+        .message-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-top: 0 solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 12px solid #ffffff;
+        }
+
+        .msg-text strong {
+            font-weight: 600;
+        }
+
+        .msg-time {
+            font-size: 11px;
+            color: #667781;
+            float: right;
+            margin-top: 4px;
+            margin-left: 10px;
+            position: relative;
+            top: 2px;
+        }
+
+        .link {
+            color: #027eb5;
+            text-decoration: none;
+        }
+
+        .instruction {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #54656f;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <div class="instruction">
+            <strong>Cara Penggunaan:</strong><br>
+            Anda bisa melakukan <i>Screenshot</i> (SS) secara terpisah pada setiap gelembung percakapan (chat bubble) di bawah ini untuk dilampirkan pada laporan Anda. Saya sudah mendesainnya agar persis seperti antarmuka WhatsApp asli (Akun Bisnis Resmi SRB Motor).
+        </div>
+
+        <div class="phone-container">
+            <!-- WA Header -->
+            <div class="wa-header">
+                <div class="back-btn">&larr;</div>
+                <div class="profile-pic">🏍️</div>
+                <div class="header-info">
+                    <div class="header-name">
+                        SRB Motor Official
+                        <div class="verified-badge"></div>
+                    </div>
+                    <div class="header-status">Official Business Account</div>
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="date-badge">Hari Ini</div>
+
+                <!-- Notif 1: Booking Fee -->
+                <div class="message-bubble">
+                    <div class="msg-text">
+                        Halo Budi! 👋<br><br>
+                        Terima kasih, pembayaran <strong>Booking Fee</strong> Anda sebesar <strong>Rp 500.000</strong> untuk unit <strong>Honda Vario 160 CBS</strong> telah berhasil kami terima.<br><br>
+                        Pesanan Anda saat ini sedang kami proses. Invoice digital Anda dapat diunduh melalui tautan berikut:<br>
+                        <a href="#" class="link">https://srbmotor.com/invoice/INV-20260607</a><br><br>
+                        Terima kasih telah mempercayakan pembelian motor Anda pada SRB Motor!
+                    </div>
+                    <div class="msg-time">09:12</div>
+                </div>
+
+                <!-- Notif 2: Jadwal Survei -->
+                <div class="message-bubble">
+                    <div class="msg-text">
+                        Halo Budi! 📝<br><br>
+                        Pengajuan kredit Anda untuk unit <strong>Honda Scoopy Stylish</strong> sedang diproses.<br><br>
+                        Tim surveyor dari pihak Leasing akan melakukan kunjungan ke alamat Anda pada:<br>
+                        📅 <strong>Tanggal:</strong> Besok, 08 Juni 2026<br>
+                        ⏰ <strong>Waktu:</strong> 10:00 WIB<br><br>
+                        Mohon mempersiapkan dokumen asli (KTP, KK, dan Slip Gaji) untuk keperluan pencocokan data. Terima kasih!
+                    </div>
+                    <div class="msg-time">10:45</div>
+                </div>
+
+                <!-- Notif 3: Pengingat Servis -->
+                <div class="message-bubble">
+                    <div class="msg-text">
+                        Halo Budi! 🔧<br><br>
+                        Sekadar mengingatkan, Anda memiliki jadwal <strong>Booking Servis</strong> di bengkel resmi SRB Motor pada:<br><br>
+                        📅 <strong>Tanggal:</strong> 15 Juni 2026<br>
+                        ⏰ <strong>Waktu:</strong> 09:00 WIB<br>
+                        🛠️ <strong>Keluhan:</strong> Servis Rutin & Ganti Oli<br><br>
+                        Silakan datang tepat waktu dan tunjukkan pesan ini kepada mekanik kami di lokasi. Jika ada perubahan jadwal, mohon segera hubungi kami. Sampai jumpa!
+                    </div>
+                    <div class="msg-time">13:00</div>
+                </div>
+
+                <!-- Notif 4: STNK & BPKB -->
+                <div class="message-bubble">
+                    <div class="msg-text">
+                        Halo Budi! 🎉<br><br>
+                        Kabar gembira! Proses pengurusan surat kendaraan Anda telah selesai diproses oleh Samsat.<br><br>
+                        <strong>STNK</strong> dan <strong>Plat Nomor</strong> kendaraan Anda sudah siap dan dapat diambil di Dealer SRB Motor mulai hari ini selama jam operasional (08:00 - 17:00).<br><br>
+                        Untuk <strong>BPKB</strong>, kami akan mengirimkan pesan pemberitahuan kembali setelah dokumen tersebut dicetak oleh pusat (estimasi 45 hari kerja).<br><br>
+                        Mohon membawa KTP asli Anda sebagai bukti saat pengambilan dokumen. Hati-hati di jalan!
+                    </div>
+                    <div class="msg-time">15:30</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

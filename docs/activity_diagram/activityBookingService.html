@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Activity Diagram – Proses Booking Service</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+
+            body {
+                background: #fdfcf9;
+                font-family: "Crimson Pro", Georgia, serif;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 40px 24px;
+            }
+
+            .page-header { text-align: center; margin-bottom: 30px; }
+            .page-header h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+            .page-header p { font-size: 16px; color: #64748b; font-style: italic; }
+
+            .diagram-container {
+                background: #ffffff;
+                padding: 40px;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05);
+            }
+
+            /* UML Styles */
+            .swimlane-border { fill: none; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-header-bg { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-label { font-family: "JetBrains Mono", monospace; font-size: 14px; font-weight: 700; fill: #475569; text-anchor: middle; }
+            
+            .node-start { fill: #1e293b; }
+            .node-end-outer { fill: none; stroke: #1e293b; stroke-width: 1.5; }
+            .node-end-inner { fill: #1e293b; }
+
+            .activity-rect { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; rx: 10; ry: 10; }
+            .decision-diamond { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+
+            .activity-text { font-size: 12px; font-weight: 600; text-anchor: middle; fill: #1e293b; }
+            .activity-note { font-family: "JetBrains Mono", monospace; font-size: 9px; fill: #64748b; text-anchor: middle; }
+            .condition-text { font-size: 10px; font-style: italic; font-weight: 700; fill: #2563eb; }
+            .flow-line { stroke: #1e293b; stroke-width: 1.2; fill: none; }
+
+            .btn-print {
+                margin-top: 30px; padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer;
+                font-family: "JetBrains Mono", monospace; font-size: 12px;
+            }
+
+            @media print { .btn-print { display: none; } body { padding: 0; } .diagram-container { box-shadow: none; border: none; } }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Activity Diagram: Proses Booking Service</h1>
+            <p>Standar Akademik UML 2.5 – SRB Motor Project</p>
+        </div>
+
+        <div class="diagram-container">
+            <svg width="900" height="1300" viewBox="0 0 900 1300">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                </defs>
+
+                <!-- Swimlanes -->
+                <rect x="0" y="0" width="300" height="1250" class="swimlane-border" />
+                <rect x="300" y="0" width="300" height="1250" class="swimlane-border" />
+                <rect x="600" y="0" width="300" height="1250" class="swimlane-border" />
+
+                <rect x="0" y="0" width="300" height="50" class="swimlane-header-bg" />
+                <rect x="300" y="0" width="300" height="50" class="swimlane-header-bg" />
+                <rect x="600" y="0" width="300" height="50" class="swimlane-header-bg" />
+                <text x="150" y="32" class="swimlane-label">PELANGGAN</text>
+                <text x="450" y="32" class="swimlane-label">ADMIN</text>
+                <text x="750" y="32" class="swimlane-label">MONTIR</text>
+
+                <!-- Start -->
+                <circle cx="150" cy="80" r="10" class="node-start" />
+                <line x1="150" y1="90" x2="150" y2="120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- 1. Hubungi -->
+                <rect x="50" y="120" width="200" height="55" class="activity-rect" />
+                <text x="150" y="143" class="activity-text">Menghubungi Bengkel via</text>
+                <text x="150" y="158" class="activity-text">Telepon / WhatsApp</text>
+                
+                <path d="M250,147 L450,147 L450,200" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- 2. Cek -->
+                <rect x="350" y="200" width="200" height="55" class="activity-rect" />
+                <text x="450" y="223" class="activity-text">Mengecek Ketersediaan</text>
+                <text x="450" y="238" class="activity-text">Montir dan Slot Jadwal</text>
+                <line x1="450" y1="255" x2="450" y2="280" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Diamond: Tersedia? -->
+                <polygon points="450,280 510,315 450,350 390,315" class="decision-diamond" />
+                <text x="450" y="319" class="activity-text" style="font-size: 10px">Tersedia?</text>
+
+                <!-- [Tidak Tersedia] Branch -->
+                <path d="M390,315 L320,315 L320,380" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="330" y="310" class="condition-text">[Tidak Tersedia]</text>
+
+                <rect x="320" y="380" width="160" height="55" class="activity-rect" />
+                <text x="400" y="403" class="activity-text">Informasikan Slot Penuh &</text>
+                <text x="400" y="418" class="activity-text">Minta Hubungi Ulang</text>
+
+                <path d="M320,407 L150,407 L150,460" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="50" y="460" width="200" height="55" class="activity-rect" />
+                <text x="150" y="483" class="activity-text">Memilih Hari Lain /</text>
+                <text x="150" y="498" class="activity-text">Tidak Jadi Booking</text>
+                
+                <!-- Diamond for choice -->
+                <polygon points="150,540 190,570 150,600 110,570" class="decision-diamond" />
+                
+                <line x1="150" y1="515" x2="150" y2="540" class="flow-line" marker-end="url(#arrowhead)" />
+                
+                <!-- Choice: Hari Lain (Loop) -->
+                <path d="M190,570 L270,570 L270,227 L350,227" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="210" y="565" class="condition-text">[Hari Lain]</text>
+
+                <!-- Choice: Tidak Jadi (End) -->
+                <path d="M110,570 L30,570 L30,1180 L135,1180" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="40" y="565" class="condition-text">[Tidak Jadi]</text>
+
+                <!-- [Tersedia] Branch -->
+                <path d="M450,350 L450,650" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="460" y="380" class="condition-text">[Tersedia]</text>
+
+                <rect x="350" y="650" width="200" height="55" class="activity-rect" />
+                <text x="450" y="673" class="activity-text">Mencatat Jadwal Servis &</text>
+                <text x="450" y="688" class="activity-text">Konfirmasi Pelanggan</text>
+                
+                <path d="M450,705 L450,740 L150,740 L150,770" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="50" y="770" width="200" height="50" class="activity-rect" />
+                <text x="150" y="798" class="activity-text">Datang ke Bengkel</text>
+                
+                <path d="M150,820 L150,860 L750,860 L750,900" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="650" y="900" width="200" height="55" class="activity-rect" />
+                <text x="750" y="923" class="activity-text">Pengerjaan Servis</text>
+                
+                <path d="M650,927 L450,927 L450,1000" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="350" y="1000" width="200" height="55" class="activity-rect" />
+                <text x="450" y="1023" class="activity-text">Menginformasikan Total</text>
+                <text x="450" y="1038" class="activity-text">Biaya Servis</text>
+                
+                <path d="M350,1027 L150,1027 L150,1080" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="50" y="1080" width="200" height="55" class="activity-rect" />
+                <text x="150" y="1103" class="activity-text">Melakukan Pembayaran</text>
+                
+                <line x1="150" y1="1135" x2="150" y2="1170" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <rect x="50" y="1170" width="200" height="40" class="activity-rect" />
+                <text x="150" y="1195" class="activity-text">Mengambil Kendaraan</text>
+
+                <!-- End -->
+                <line x1="150" y1="1210" x2="150" y2="1255" class="flow-line" marker-end="url(#arrowhead)" />
+                <circle cx="150" cy="1280" r="18" class="node-end-outer" />
+                <circle cx="150" cy="1280" r="12" class="node-end-inner" />
+
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+    </body>
+</html>

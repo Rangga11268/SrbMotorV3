@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Use Case Diagram — SRB Motor (Zero Spaghetti)</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #ffffff; 
+            font-family: "Inter", sans-serif; 
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { font-size: 20px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #2563eb; display: inline-block; padding-bottom: 5px; }
+        .header p { color: #64748b; font-size: 12px; margin-top: 5px; }
+
+        .diagram-wrapper { 
+            background: #fff; 
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        .boundary { fill: #fcfdfe; stroke: #94a3b8; stroke-width: 2.5; }
+        .boundary-label { font-size: 11px; font-weight: 800; fill: #475569; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .actor-line { stroke: #0f172a; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+        .actor-head { fill: #fff; stroke: #0f172a; stroke-width: 2.5; }
+        .actor-name { font-size: 14px; font-weight: 800; text-anchor: middle; fill: #0f172a; }
+        
+        .uc-oval { fill: #ffffff; stroke: #2563eb; stroke-width: 2; }
+        .uc-text { font-size: 11px; font-weight: 700; text-anchor: middle; fill: #1e293b; }
+        .uc-id { font-size: 9px; fill: #2563eb; font-weight: 800; text-anchor: middle; }
+
+        .sub-uc { fill: #ffffff; stroke: #64748b; stroke-width: 1.2; stroke-dasharray: 5 3; }
+        .sub-text { font-size: 9px; font-weight: 600; fill: #475569; font-style: italic; text-anchor: middle; }
+
+        .line-assoc { fill: none; stroke: #1e293b; stroke-width: 1.5; stroke-linecap: round; }
+        .line-rel { fill: none; stroke: #94a3b8; stroke-width: 1.2; stroke-dasharray: 6 3; }
+        .rel-label { font-size: 9px; font-weight: 700; fill: #475569; font-style: italic; text-anchor: middle; }
+        .arrowhead { fill: #94a3b8; }
+        
+        .gen-arrow { stroke: #0f172a; stroke-width: 2; fill: none; }
+        .gen-head { fill: #fff; stroke: #0f172a; stroke-width: 2; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>USE CASE DIAGRAM — SRB MOTOR</h1>
+    <p>Professional UML Architecture: Organized Vertical Flow</p>
+</div>
+
+<div class="diagram-wrapper">
+    <svg width="1200" height="1150" viewBox="0 0 1200 1150">
+        <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" class="arrowhead" />
+            </marker>
+        </defs>
+
+        <!-- System Boundary -->
+        <rect x="250" y="40" width="700" height="1070" rx="20" class="boundary" />
+        <text x="600" y="75" class="boundary-label" text-anchor="middle">Sistem Informasi Dealer &amp; Bengkel SRB Motor</text>
+
+        <!-- ===== ACTORS ===== -->
+        <!-- Guest (Top Left) -->
+        <g transform="translate(100, 120)">
+            <circle cx="0" cy="0" r="14" class="actor-head" />
+            <line x1="0" y1="14" x2="0" y2="50" class="actor-line" />
+            <line x1="-20" y1="25" x2="20" y2="25" class="actor-line" />
+            <line x1="0" y1="50" x2="-15" y2="85" class="actor-line" />
+            <line x1="0" y1="50" x2="15" y2="85" class="actor-line" />
+            <text y="105" class="actor-name">Guest</text>
+        </g>
+        
+        <!-- Generalization (Guest to Customer) -->
+        <line x1="100" y1="230" x2="100" y2="400" class="gen-arrow" />
+        <polygon points="100,400 90,420 110,420" class="gen-head" />
+
+        <!-- Customer (Middle Left) -->
+        <g transform="translate(100, 520)">
+            <circle cx="0" cy="0" r="14" class="actor-head" />
+            <line x1="0" y1="14" x2="0" y2="50" class="actor-line" />
+            <line x1="-20" y1="25" x2="20" y2="25" class="actor-line" />
+            <line x1="0" y1="50" x2="-15" y2="85" class="actor-line" />
+            <line x1="0" y1="50" x2="15" y2="85" class="actor-line" />
+            <text y="105" class="actor-name">Customer</text>
+        </g>
+
+        <!-- Admin (Middle Right) -->
+        <g transform="translate(1100, 520)">
+            <circle cx="0" cy="0" r="14" class="actor-head" />
+            <line x1="0" y1="14" x2="0" y2="50" class="actor-line" />
+            <line x1="-20" y1="25" x2="20" y2="25" class="actor-line" />
+            <line x1="0" y1="50" x2="-15" y2="85" class="actor-line" />
+            <line x1="0" y1="50" x2="15" y2="85" class="actor-line" />
+            <text y="105" class="actor-name">Admin</text>
+        </g>
+
+        <!-- Montir (Bottom Right) -->
+        <g transform="translate(1100, 920)">
+            <circle cx="0" cy="0" r="14" class="actor-head" />
+            <line x1="0" y1="14" x2="0" y2="50" class="actor-line" />
+            <line x1="-20" y1="25" x2="20" y2="25" class="actor-line" />
+            <line x1="0" y1="50" x2="-15" y2="85" class="actor-line" />
+            <line x1="0" y1="50" x2="15" y2="85" class="actor-line" />
+            <text y="105" class="actor-name">Montir</text>
+        </g>
+
+        <!-- ===== USE CASES (Aligned Vertically) ===== -->
+        
+        <!-- Top: Public (Guest/Cust) -->
+        <g transform="translate(420, 150)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-01</text><text y="10" class="uc-text">Lihat Katalog Motor</text></g>
+        <g transform="translate(420, 260)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-02</text><text y="10" class="uc-text">Simulasi Kredit</text></g>
+        <g transform="translate(420, 370)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-03</text><text y="10" class="uc-text">Registrasi Akun</text></g>
+
+        <!-- Middle-Top: Shared Infrastructure -->
+        <g transform="translate(730, 260)"><ellipse rx="95" ry="30" class="uc-oval" stroke="#0f172a" stroke-width="2.5" /><text y="-4" class="uc-id">UC-04</text><text y="10" class="uc-text">Login Sistem</text></g>
+
+        <!-- Middle: Transactions (Customer Focused) -->
+        <g transform="translate(420, 520)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-05</text><text y="10" class="uc-text">Pesan Motor Tunai</text></g>
+        <g transform="translate(420, 630)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-06</text><text y="10" class="uc-text">Ajukan Kredit Motor</text></g>
+
+        <!-- Middle-Bottom: Notifications & Sub-UCs -->
+        <g transform="translate(730, 480)"><ellipse rx="100" ry="22" class="sub-uc" stroke="#f59e0b" stroke-dasharray="0" /><text y="4" class="sub-text" style="fill:#d97706; font-weight:800">Notifikasi Unit</text></g>
+        <g transform="translate(730, 580)"><ellipse rx="75" ry="16" class="sub-uc" /><text y="3" class="sub-text">Verifikasi Dokumen</text></g>
+        <g transform="translate(730, 630)"><ellipse rx="75" ry="16" class="sub-uc" /><text y="3" class="sub-text">Jadwal Survey</text></g>
+        <g transform="translate(730, 680)"><ellipse rx="75" ry="16" class="sub-uc" /><text y="3" class="sub-text">Bayar Angsuran</text></g>
+
+        <!-- Bottom: Service & Management -->
+        <g transform="translate(420, 920)"><ellipse rx="110" ry="35" class="uc-oval" stroke="#059669" /><text y="-6" class="uc-id" style="fill:#059669">UC-07</text><text y="10" class="uc-text">Servis (Booking-Pay)</text></g>
+        <g transform="translate(750, 810)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-08</text><text y="10" class="uc-text">Transaksi Motor</text></g>
+        <g transform="translate(750, 920)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-09</text><text y="10" class="uc-text">Stok Motor</text></g>
+        <g transform="translate(750, 1030)"><ellipse rx="100" ry="28" class="uc-oval" /><text y="-4" class="uc-id">UC-10</text><text y="10" class="uc-text">Dashboard &amp; Laporan</text></g>
+
+        <!-- Satellite (Cancel) -->
+        <g transform="translate(420, 810)"><ellipse rx="85" ry="20" class="sub-uc" /><text y="3" class="sub-text">Batalkan Servis</text></g>
+
+        <!-- ===== ASSOCIATION LINES (Bus Routing Strategy) ===== -->
+        
+        <!-- Guest (Straight) -->
+        <line x1="130" y1="120" x2="320" y2="150" class="line-assoc" />
+        <line x1="130" y1="120" x2="320" y2="260" class="line-assoc" />
+        <line x1="130" y1="120" x2="320" y2="370" class="line-assoc" />
+
+        <!-- Customer (Straight + Under/Over Routes) -->
+        <line x1="130" y1="520" x2="320" y2="520" class="line-assoc" /> <!-- To UC-05 -->
+        <line x1="130" y1="520" x2="320" y2="630" class="line-assoc" /> <!-- To UC-06 -->
+        <path d="M 130,520 Q 280,750 310,920" class="line-assoc" /> <!-- To Servis -->
+        <path d="M 130,520 Q 280,260 635,260" class="line-assoc" /> <!-- To Login (Top Route) -->
+
+        <!-- Admin (Straight Horizontal) -->
+        <line x1="1070" y1="520" x2="850" y2="810" class="line-assoc" /> <!-- To UC-08 -->
+        <line x1="1070" y1="520" x2="850" y2="920" class="line-assoc" /> <!-- To UC-09 -->
+        <line x1="1070" y1="520" x2="850" y2="1030" class="line-assoc" /> <!-- To UC-10 -->
+        <path d="M 1070,520 Q 950,260 825,260" class="line-assoc" /> <!-- To Login (Top Route) -->
+        <path d="M 1070,520 Q 900,920 530,920" class="line-assoc" /> <!-- To Servis -->
+        <path d="M 1070,520 Q 850,520 520,630" class="line-assoc" /> <!-- To Kredit (Center Route) -->
+
+        <!-- Montir (Border Routing) -->
+        <path d="M 1070,920 L 530,920" class="line-assoc" /> <!-- To Servis -->
+        <path d="M 1070,920 Q 1180,260 825,260" class="line-assoc" /> <!-- To Login (Far Border Route) -->
+
+        <!-- ===== RELATIONSHIP ARROWS ===== -->
+        <!-- UC-02 -> UC-01 (Extend) -->
+        <path d="M 420,232 L 420,178" class="line-rel" marker-end="url(#arrow)" /><text x="455" y="210" class="rel-label">&lt;&lt;extend&gt;&gt;</text>
+        
+        <!-- UC-03 -> UC-04 (Include) -->
+        <path d="M 520,370 Q 650,370 700,290" class="line-rel" marker-end="url(#arrow)" /><text x="650" y="350" class="rel-label" transform="rotate(-30, 650, 350)">&lt;&lt;include&gt;&gt;</text>
+        
+        <!-- UC-08 -> Notif (Extend) -->
+        <path d="M 750,782 Q 730,650 730,502" class="line-rel" marker-end="url(#arrow)" /><text x="755" y="650" class="rel-label">&lt;&lt;extend&gt;&gt;</text>
+        
+        <!-- Notif to UC-05/06 (Extend) -->
+        <path d="M 630,480 L 520,520" class="line-rel" marker-end="url(#arrow)" />
+        <path d="M 630,480 L 520,630" class="line-rel" marker-end="url(#arrow)" />
+        <text x="560" y="475" class="rel-label" style="fill:#d97706">&lt;&lt;extend&gt;&gt;</text>
+
+        <!-- UC-06 Includes -->
+        <path d="M 520,630 L 655,580" class="line-rel" marker-end="url(#arrow)" />
+        <path d="M 520,630 L 655,630" class="line-rel" marker-end="url(#arrow)" />
+        <path d="M 520,630 L 655,680" class="line-rel" marker-end="url(#arrow)" />
+        <text x="600" y="615" class="rel-label" transform="rotate(10, 600, 615)">&lt;&lt;include&gt;&gt;</text>
+
+        <!-- Servis -> Login (Include) -->
+        <path d="M 530,920 Q 950,1100 950,260 L 825,260" class="line-rel" marker-end="url(#arrow)" />
+        <text x="960" y="800" class="rel-label" transform="rotate(-90, 960, 800)">&lt;&lt;include&gt;&gt;</text>
+
+        <!-- Cancel -> Servis (Extend) -->
+        <path d="M 420,830 L 420,885" class="line-rel" marker-end="url(#arrow)" /><text x="455" y="855" class="rel-label">&lt;&lt;extend&gt;&gt;</text>
+
+    </svg>
+</div>
+
+</body>
+</html>

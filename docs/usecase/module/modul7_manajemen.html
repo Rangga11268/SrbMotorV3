@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modul 7: Dashboard & Manajemen</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap");
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f8fafc; font-family: "Crimson Pro", Georgia, serif; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { font-size: 26px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+        .page-header p { color: #64748b; font-family: sans-serif; font-size: 13px; }
+        .diagram-container { background: #ffffff; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .system-boundary { fill: #fafafa; stroke: #cbd5e1; stroke-width: 2; }
+        .system-title { font-family: sans-serif; font-size: 12px; font-weight: 800; fill: #64748b; letter-spacing: 2px; }
+        .actor-line { stroke: #1e293b; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .actor-head { fill: #fff; stroke: #1e293b; stroke-width: 2.5; }
+        .actor-name { font-family: sans-serif; font-size: 13px; font-weight: 800; text-anchor: middle; }
+        .actor-desc { font-family: sans-serif; font-size: 10px; text-anchor: middle; fill: #64748b; }
+        .uc-box { fill: #ffffff; stroke: #3b82f6; stroke-width: 2; }
+        .uc-text { font-size: 12px; font-weight: 700; text-anchor: middle; fill: #1e293b; }
+        .uc-id { font-family: "JetBrains Mono", monospace; font-size: 10px; fill: #3b82f6; font-weight: 600; }
+        .assoc-line { stroke-width: 1.5; fill: none; }
+        .dep-line { stroke-width: 1.5; stroke-dasharray: 5, 4; fill: none; }
+        path.include-color { stroke: #059669; fill: none; }
+        text.include-color { fill: #059669; }
+        path.extend-color { stroke: #d97706; fill: none; }
+        text.extend-color { fill: #d97706; }
+        .stereo-text { font-family: sans-serif; font-size: 11px; font-style: italic; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Modul 7: Dashboard &amp; Manajemen</h1>
+        <p>Laporan Penjualan, Kelola Pengguna, Kelola Stok, dan Pengaturan Sistem. Aktor: <strong>Admin</strong> (merangkap Owner).</p>
+    </div>
+    <div class="diagram-container">
+        <svg width="1000" height="800" viewBox="0 0 1000 800">
+            <defs>
+                <marker id="arrow-include" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#059669" stroke-width="1.5" /></marker>
+                <marker id="arrow-extend" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#d97706" stroke-width="1.5" /></marker>
+            </defs>
+            <rect x="300" y="40" width="400" height="720" class="system-boundary" />
+            <text x="500" y="68" class="system-title" text-anchor="middle">SISTEM SRB MOTOR (MODUL 7)</text>
+
+            <!-- Admin (merangkap Owner) — satu aktor di kanan -->
+            <g transform="translate(870, 400)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="122" class="actor-name" fill="#2563eb">Admin</text>
+                <text x="0" y="136" class="actor-desc">Staf dealer</text>
+                <text x="0" y="150" class="actor-desc">(merangkap fungsi owner)</text>
+            </g>
+
+            <!-- UC-04 Login -->
+            <g transform="translate(500, 120)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box" stroke="#0f172a" stroke-width="2"/><text y="-6" class="uc-id">UC-04</text><text y="10" class="uc-text">Login</text></g>
+
+            <!-- UC-19 Dashboard & Laporan -->
+            <g transform="translate(500, 240)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-19</text><text y="10" class="uc-text">Lihat Dashboard &amp; Laporan</text></g>
+
+            <!-- UC-15 Kelola Stok Motor -->
+            <g transform="translate(500, 360)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-15</text><text y="10" class="uc-text">Kelola Stok Motor</text></g>
+
+            <!-- UC-20 Kelola Pengguna -->
+            <g transform="translate(500, 480)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-20</text><text y="10" class="uc-text">Kelola Pengguna</text></g>
+
+            <!-- UC-21 Kelola Pengaturan Sistem -->
+            <g transform="translate(500, 600)"><ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box"/><text y="-6" class="uc-id">UC-21</text><text y="10" class="uc-text">Kelola Pengaturan Sistem</text></g>
+
+            <!-- UC-18 Konfirmasi Pembayaran Servis -->
+            <g transform="translate(500, 720)">
+                <ellipse cx="0" cy="0" rx="150" ry="28" class="uc-box" stroke="#7c3aed" stroke-width="2"/>
+                <text y="-6" class="uc-id" fill="#7c3aed">UC-18</text>
+                <text y="10" class="uc-text" fill="#7c3aed">Konfirmasi Pembayaran Servis</text>
+            </g>
+            <rect x="657" y="708" width="55" height="14" rx="3" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+            <text x="684" y="719" font-family="sans-serif" font-size="8" font-weight="800" text-anchor="middle" fill="#6d28d9">FITUR BARU</text>
+
+            <!-- Admin → semua UC -->
+            <path d="M 855,400 C 760,400 760,120 700,120" class="assoc-line" stroke="#2563eb" />
+            <path d="M 855,400 C 760,400 760,240 700,240" class="assoc-line" stroke="#2563eb" />
+            <path d="M 855,400 C 760,400 760,360 700,360" class="assoc-line" stroke="#2563eb" />
+            <path d="M 855,400 C 760,400 760,480 700,480" class="assoc-line" stroke="#2563eb" />
+            <path d="M 855,400 C 760,400 760,600 700,600" class="assoc-line" stroke="#2563eb" />
+            <path d="M 855,400 C 760,420 760,720 700,720" class="assoc-line" stroke="#2563eb" />
+
+            <!-- UC-19 «include» Login -->
+            <path d="M 500,210 L 500,152" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="548" y="185" class="stereo-text include-color">«include»</text>
+
+            <!-- UC-19 «extend» Laporan Stok -->
+            <path d="M 500,270 L 500,328" class="dep-line extend-color" marker-end="url(#arrow-extend)" />
+            <text x="548" y="305" class="stereo-text extend-color">«extend»</text>
+
+            <!-- UC-20 «include» UC-21 -->
+            <path d="M 500,510 L 500,568" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="548" y="545" class="stereo-text include-color">«include»</text>
+        </svg>
+    </div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global Use Case (Hanya Include Login)</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap");
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f8fafc; font-family: "Crimson Pro", Georgia, serif; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+        .page-header p { color: #64748b; font-family: sans-serif; font-size: 14px; max-width: 600px; margin: 0 auto; line-height: 1.5; }
+        
+        .diagram-container { background: #ffffff; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); overflow-x: auto; }
+
+        /* SVG Styles */
+        .system-boundary { fill: #fafafa; stroke: #cbd5e1; stroke-width: 2; rx: 16px; }
+        .system-title { font-family: sans-serif; font-size: 12px; font-weight: 800; fill: #64748b; letter-spacing: 2px; }
+        
+        .actor-line { stroke: #1e293b; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .actor-head { fill: #fff; stroke: #1e293b; stroke-width: 2.5; }
+        .actor-name { font-family: sans-serif; font-size: 14px; font-weight: 800; text-anchor: middle; fill: #0f172a; }
+        
+        .uc-box { fill: #ffffff; stroke: #1e293b; stroke-width: 2; transition: all 0.3s; cursor: pointer; }
+        
+        .uc-text { font-size: 13.5px; font-weight: 700; text-anchor: middle; fill: #1e293b; }
+        .uc-id { font-family: "JetBrains Mono", monospace; font-size: 9px; fill: #3b82f6; font-weight: 600; }
+        
+        .assoc-line { stroke: #334155; stroke-width: 1.5; fill: none; }
+        .dep-line { stroke-width: 1.5; stroke-dasharray: 5, 4; fill: none; }
+        .include-color { stroke: #059669; }
+        
+        .stereo-text { font-family: sans-serif; font-size: 11px; font-style: italic; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; stroke-linecap: round; stroke-linejoin: round; fill: #059669; }
+        
+        .legend { margin-top: 30px; display: flex; gap: 30px; font-family: sans-serif; font-size: 13px; background: #fff; padding: 12px 24px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .leg-item { display: flex; align-items: center; gap: 8px; }
+        .leg-line { width: 25px; height: 0; border-top: 1.5px dashed; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Global Use Case Diagram (Clean Sea-Level)</h1>
+        <p>Hanya menyertakan relasi «include» menuju proses Autentikasi (Login). Ekstensi langkah operasional disederhanakan.</p>
+    </div>
+
+    <div class="diagram-container">
+        <svg width="1250" height="1050" viewBox="0 0 1250 1050">
+            <defs>
+                <marker id="arrow-include" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#059669" stroke-width="1.5" /></marker>
+            </defs>
+
+            <!-- System Boundary -->
+            <rect x="250" y="40" width="750" height="970" class="system-boundary" />
+            <text x="625" y="70" class="system-title" text-anchor="middle">SISTEM INFORMASI SRB MOTOR v2</text>
+
+            <!-- ================= ACTORS ================= -->
+            
+            <g transform="translate(100, 150)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="125" class="actor-name">Guest</text>
+            </g>
+
+            <g transform="translate(100, 450)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="125" class="actor-name">Customer</text>
+            </g>
+
+            <g transform="translate(1150, 500)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="125" class="actor-name">Admin</text>
+            </g>
+
+            <g transform="translate(1150, 900)">
+                <circle cx="0" cy="0" r="16" class="actor-head" />
+                <line x1="0" y1="16" x2="0" y2="60" class="actor-line" />
+                <line x1="-25" y1="30" x2="25" y2="30" class="actor-line" />
+                <line x1="0" y1="60" x2="-20" y2="95" class="actor-line" />
+                <line x1="0" y1="60" x2="20" y2="95" class="actor-line" />
+                <text x="0" y="125" class="actor-name">Owner</text>
+            </g>
+
+            <!-- ================= MAIN USE CASES ================= -->
+            
+            <!-- UC-01 -->
+            <g transform="translate(450, 150)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" />
+                <text y="-6" class="uc-id">UC-01</text>
+                <text y="10" class="uc-text">Melihat Katalog Info</text>
+            </g>
+
+            <!-- UC-02 (Autentikasi - Top Right) -->
+            <g transform="translate(800, 200)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" stroke-width="3" stroke="#059669" />
+                <text y="-6" class="uc-id">UC-02</text>
+                <text y="10" class="uc-text">Melakukan Autentikasi</text>
+            </g>
+
+            <!-- UC-03 -->
+            <g transform="translate(450, 300)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" />
+                <text y="-6" class="uc-id">UC-03</text>
+                <text y="10" class="uc-text">Mengelola Pesanan Motor</text>
+            </g>
+
+            <!-- UC-04 -->
+            <g transform="translate(450, 450)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" />
+                <text y="-6" class="uc-id">UC-04</text>
+                <text y="10" class="uc-text">Mengelola Angsuran</text>
+            </g>
+
+            <!-- UC-05 -->
+            <g transform="translate(450, 600)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" />
+                <text y="-6" class="uc-id">UC-05</text>
+                <text y="10" class="uc-text">Mengelola Servis Kendaraan</text>
+            </g>
+
+            <!-- UC-06 -->
+            <g transform="translate(450, 750)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" />
+                <text y="-6" class="uc-id">UC-06</text>
+                <text y="10" class="uc-text">Mengelola Data Master</text>
+            </g>
+
+            <!-- UC-07 -->
+            <g transform="translate(450, 900)">
+                <ellipse cx="0" cy="0" rx="120" ry="32" class="uc-box" />
+                <text y="-6" class="uc-id">UC-07</text>
+                <text y="10" class="uc-text">Mencetak Laporan Bisnis</text>
+            </g>
+
+
+            <!-- ================= ASSOCIATIONS ================= -->
+            
+            <!-- Guest Connections -->
+            <path d="M130,150 L330,150" class="assoc-line" /> <!-- to UC-01 -->
+            <path d="M130,150 L680,200" class="assoc-line" /> <!-- to UC-02 (Login) -->
+
+            <!-- Customer Connections -->
+            <path d="M130,450 L330,300" class="assoc-line" /> <!-- to UC-03 -->
+            <path d="M130,450 L330,450" class="assoc-line" /> <!-- to UC-04 -->
+            <path d="M130,450 L330,600" class="assoc-line" /> <!-- to UC-05 -->
+
+            <!-- Admin Connections -->
+            <path d="M1120,500 L570,300" class="assoc-line" /> <!-- to UC-03 -->
+            <path d="M1120,500 L570,450" class="assoc-line" /> <!-- to UC-04 -->
+            <path d="M1120,500 L570,600" class="assoc-line" /> <!-- to UC-05 -->
+            <path d="M1120,500 L570,750" class="assoc-line" /> <!-- to UC-06 -->
+
+            <!-- Owner Connections -->
+            <path d="M1120,900 L570,900" class="assoc-line" /> <!-- to UC-07 -->
+
+
+            <!-- ================= INCLUDE DEPENDENCIES ================= -->
+
+            <!-- UC-03 to UC-02 -->
+            <path d="M560,280 L710,215" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="635" y="240" class="stereo-text">«include»</text>
+
+            <!-- UC-04 to UC-02 -->
+            <path d="M560,430 L730,230" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="645" y="325" class="stereo-text">«include»</text>
+
+            <!-- UC-05 to UC-02 -->
+            <path d="M560,580 L750,230" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="655" y="405" class="stereo-text">«include»</text>
+
+            <!-- UC-06 to UC-02 -->
+            <path d="M560,730 L770,230" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="665" y="480" class="stereo-text">«include»</text>
+
+            <!-- UC-07 to UC-02 -->
+            <path d="M560,880 L790,230" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="675" y="555" class="stereo-text">«include»</text>
+
+        </svg>
+    </div>
+
+    <div class="legend">
+        <div class="leg-item"><div class="leg-line include-color"></div><span style="color: #059669; font-weight: 600;">«include»</span><span>(Mengindikasikan bahwa proses tersebut mewajibkan Aktor untuk Login / Autentikasi terlebih dahulu).</span></div>
+    </div>
+</body>
+</html>

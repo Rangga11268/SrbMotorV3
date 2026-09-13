@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modul 5: Pembayaran Angsuran</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap");
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f8fafc; font-family: "Crimson Pro", Georgia, serif; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+        .diagram-container { background: #ffffff; padding: 40px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); }
+        .system-boundary { fill: #fafafa; stroke: #cbd5e1; stroke-width: 2; rx: 16px; }
+        .system-title { font-family: sans-serif; font-size: 12px; font-weight: 800; fill: #64748b; letter-spacing: 2px; }
+        .actor-line { stroke: #1e293b; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .actor-head { fill: #fff; stroke: #1e293b; stroke-width: 2.5; }
+        .actor-name { font-family: sans-serif; font-size: 14px; font-weight: 800; text-anchor: middle; fill: #0f172a; }
+        .uc-box { fill: #ffffff; stroke: #3b82f6; stroke-width: 2; }
+        .uc-text { font-size: 14px; font-weight: 700; text-anchor: middle; fill: #1e293b; }
+        .uc-id { font-family: "JetBrains Mono", monospace; font-size: 10px; fill: #3b82f6; font-weight: 600; }
+        .assoc-line { stroke: #475569; stroke-width: 1.5; fill: none; }
+        .dep-line { stroke-width: 1.5; stroke-dasharray: 5, 4; fill: none; }
+        path.include-color { stroke: #059669; fill: none; }
+        text.include-color { fill: #059669; }
+        path.extend-color { stroke: #d97706; fill: none; }
+        text.extend-color { fill: #d97706; }
+        .stereo-text { font-family: sans-serif; font-size: 11px; font-style: italic; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 4px; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Modul 5: Pembayaran Angsuran</h1>
+        <p>Lihat Jadwal, Bayar Angsuran, Konfirmasi, Cek Denda.</p>
+    </div>
+    <div class="diagram-container">
+        <svg width="1000" height="900" viewBox="0 0 1000 900">
+            <defs>
+                <marker id="arrow-include" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#059669" stroke-width="1.5" /></marker>
+                <marker id="arrow-extend" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#d97706" stroke-width="1.5" /></marker>
+            </defs>
+            <rect x="325" y="40" width="350" height="820" class="system-boundary" />
+            <text x="500" y="70" class="system-title" text-anchor="middle">SISTEM SRB MOTOR (MODUL 5)</text>
+
+            <g transform="translate(150, 400)"><circle cx="0" cy="0" r="16" class="actor-head" /><line x1="0" y1="16" x2="0" y2="60" class="actor-line" /><line x1="-25" y1="30" x2="25" y2="30" class="actor-line" /><line x1="0" y1="60" x2="-20" y2="95" class="actor-line" /><line x1="0" y1="60" x2="20" y2="95" class="actor-line" /><text x="0" y="125" class="actor-name">Customer</text></g>
+            <g transform="translate(850, 600)"><circle cx="0" cy="0" r="16" class="actor-head" /><line x1="0" y1="16" x2="0" y2="60" class="actor-line" /><line x1="-25" y1="30" x2="25" y2="30" class="actor-line" /><line x1="0" y1="60" x2="-20" y2="95" class="actor-line" /><line x1="0" y1="60" x2="20" y2="95" class="actor-line" /><text x="0" y="125" class="actor-name">Admin</text></g>
+            
+            <g transform="translate(500, 150)"><ellipse cx="0" cy="0" rx="140" ry="30" class="uc-box" /><text y="-6" class="uc-id">UC-02</text><text y="12" class="uc-text">Login</text></g>
+            <g transform="translate(500, 300)"><ellipse cx="0" cy="0" rx="140" ry="30" class="uc-box" /><text y="-6" class="uc-id">UC-17</text><text y="12" class="uc-text">Lihat Jadwal Angsuran</text></g>
+            <g transform="translate(500, 450)"><ellipse cx="0" cy="0" rx="140" ry="30" class="uc-box" /><text y="-6" class="uc-id">UC-18</text><text y="12" class="uc-text">Bayar Angsuran</text></g>
+            <g transform="translate(500, 600)"><ellipse cx="0" cy="0" rx="140" ry="30" class="uc-box" /><text y="-6" class="uc-id">UC-19</text><text y="12" class="uc-text">Konfirmasi Pembayaran</text></g>
+            <g transform="translate(500, 750)"><ellipse cx="0" cy="0" rx="140" ry="30" class="uc-box" /><text y="-6" class="uc-id">UC-20</text><text y="12" class="uc-text">Cek Denda Keterlambatan</text></g>
+
+            <path d="M 180,400 C 270,400 270,300 360,300" class="assoc-line" /> <!-- Cust to UC17 -->
+            <path d="M 820,600 C 730,600 730,600 640,600" class="assoc-line" /> <!-- Admin to UC19 -->
+
+            <path d="M 500,270 L 500,185" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="545" y="235" class="stereo-text include-color">«include»</text>
+
+            <path d="M 500,420 L 500,335" class="dep-line include-color" marker-end="url(#arrow-include)" />
+            <text x="545" y="380" class="stereo-text include-color">«include»</text>
+
+            <path d="M 500,480 L 500,565" class="dep-line extend-color" marker-end="url(#arrow-extend)" />
+            <text x="545" y="530" class="stereo-text extend-color">«extend»</text>
+
+            <path d="M 550,480 C 620,550 620,650 550,725" class="dep-line extend-color" marker-end="url(#arrow-extend)" />
+            <text x="630" y="600" class="stereo-text extend-color">«extend»</text>
+
+        </svg>
+    </div>
+</body>
+</html>

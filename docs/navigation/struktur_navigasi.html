@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portal Struktur Navigasi — SRB Motor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --root:      #0F172A;
+    --fe-bg:     #0284C7;
+    --be-bg:     #059669;
+    --fe-light:  #F0F9FF;
+    --be-light:  #ECFDF5;
+    --bg:        #F8FAFC;
+    --border:    #E2E8F0;
+    --text:      #334155;
+    --text-dark: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+    max-width: 800px;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+  }
+
+  header p {
+    color: #64748B;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* PORTAL GRID */
+  .portal-grid {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    max-width: 960px;
+    margin-top: 20px;
+  }
+
+  .portal-card {
+    flex: 1;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portal-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+  }
+
+  .portal-card.frontend::before { background: var(--fe-bg); }
+  .portal-card.backend::before { background: var(--be-bg); }
+
+  .portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .portal-card.frontend:hover { border-color: var(--fe-bg); }
+  .portal-card.backend:hover { border-color: var(--be-bg); }
+
+  .space-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+  .frontend .space-tag { color: var(--fe-bg); }
+  .backend .space-tag { color: var(--be-bg); }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+  }
+
+  .card-description {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #475569;
+    margin-bottom: 25px;
+    flex-grow: 1;
+  }
+
+  .card-features {
+    list-style: none;
+    margin-bottom: 35px;
+    border-top: 1px solid #F1F5F9;
+    padding-top: 20px;
+  }
+
+  .card-features li {
+    font-size: 12.5px;
+    color: #64748B;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-features li::before {
+    content: '✓';
+    font-weight: bold;
+  }
+  .frontend .card-features li::before { color: var(--fe-bg); }
+  .backend .card-features li::before { color: var(--be-bg); }
+
+  .card-btn {
+    text-align: center;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13.5px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .frontend .card-btn {
+    background: var(--fe-bg);
+    color: #FFFFFF;
+  }
+  .frontend .card-btn:hover {
+    background: #026ca3;
+  }
+
+  .backend .card-btn {
+    background: var(--be-bg);
+    color: #FFFFFF;
+  }
+  .backend .card-btn:hover {
+    background: #047857;
+  }
+
+  footer {
+    margin-top: 60px;
+    font-size: 12px;
+    color: #94A3B8;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .portal-grid {
+      flex-direction: column;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Struktur Navigasi Sistem</h1>
+  <p>Portal Dokumentasi Pemodelan Alur Navigasi untuk Dealer Motor SRB Motor. Silakan pilih ruang lingkup sistem di bawah ini untuk melihat diagram alur secara interaktif.</p>
+</header>
+
+<div class="portal-grid">
+  <!-- FRONTEND CARD -->
+  <div class="portal-card frontend">
+    <span class="space-tag">Public & Customer Area</span>
+    <h2 class="card-title">Sisi Frontend</h2>
+    <p class="card-description">Mengatur interaksi antarmuka publik untuk pengunjung/calon pembeli serta panel khusus pelanggan untuk mengelola transaksi pemesanan unit motor dan layanan purna jual.</p>
+    
+    <ul class="card-features">
+      <li><strong>Struktur Navigasi Guest</strong> (Pendaftaran, Beranda, Katalog & Detail Unit, Simulasi Kredit)</li>
+      <li><strong>Struktur Navigasi Customer</strong> (Profil Pelanggan, Detail Transaksi Tunai/Kredit, Kelola Dokumen, Booking Servis)</li>
+    </ul>
+
+    <a href="nav_frontend.html" class="card-btn">Buka Navigasi Frontend</a>
+  </div>
+
+  <!-- BACKEND CARD -->
+  <div class="portal-card backend">
+    <span class="space-tag">Staff & Operation Area</span>
+    <h2 class="card-title">Sisi Backend</h2>
+    <p class="card-description">Mengatur panel operasional internal dealer bagi pengelola utama dalam melayani transaksi, persediaan motor, pengawasan kredit, serta pengerjaan mekanik bengkel.</p>
+    
+    <ul class="card-features">
+      <li><strong>Struktur Navigasi Admin</strong> (Manajemen Transaksi Cash/Kredit, Verifikasi Dokumen Leasing, Kelola Stok & Pengguna, Laporan Penjualan)</li>
+      <li><strong>Struktur Navigasi Montir</strong> (Jadwal Kerja Harian Mekanik, Detail Diagnosis Servis, Penginputan Sparepart & Nota)</li>
+    </ul>
+
+    <a href="nav_backend.html" class="card-btn">Buka Navigasi Backend</a>
+  </div>
+</div>
+
+<footer>
+  <p>Sistem Informasi SRB Motor &copy; 2026 — UML Navigation Modeling Documentation</p>
+</footer>
+
+</body>
+</html>

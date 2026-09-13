@@ -1,29 +1,41 @@
 # SRB Motor - Platform Manajemen Penjualan Motor
 
 <div align="center">
-  <img src="public/images/icon/logo trans.png" alt="Logo SRB Motor" width="200" />
-  <p><b>Platform manajemen penjualan motor modern berbasis Laravel</b></p>
+  <img src="assets/icon/logo-trans.webp" alt="Logo SRB Motor" width="180" />
+  <p><b>Platform Ekosistem Manajemen Penjualan Dealer Motor (Web & Mobile Monorepo)</b></p>
   
   [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+  [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+  [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
   [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
   [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
-  [![License](https://img.shields.io/github/license/srbmotors/srbmotors?style=for-the-badge)](LICENSE)
 </div>
 
 <p align="center">
+  <a href="#struktur-monorepo">Struktur Monorepo</a> • 
   <a href="#gambaran-umum">Gambaran Umum</a> • 
   <a href="#fitur">Fitur</a> • 
   <a href="#instalasi">Instalasi</a> • 
-  <a href="#penggunaan">Penggunaan</a> • 
-  <a href="#teknologi-yang-digunakan">Teknologi</a> • 
-  <a href="#kontribusi">Kontribusi</a>
+  <a href="#teknologi-yang-digunakan">Teknologi</a>
 </p>
 
 ---
 
 ## 📢 Tampilan Showroom Digital Baru
 
-![SRB Motor Mockups](public/assets/promotion/promotionPoster.webp)
+![SRB Motor Mockups](assets/promotion/promotionPoster.webp)
+
+---
+
+## 📁 Struktur Monorepo
+
+```text
+SrbMotor/
+├── assets/       # 🎨 Master Aset Terpusat (Single Source of Truth untuk Web & Mobile)
+├── backend/      # 💻 Web Application (Laravel 12 + React 19 Inertia.js) & REST API
+├── mobile/       # 📱 Official Mobile Application (Flutter & Dart SDK)
+└── docs/         # 📚 Dokumentasi Arsitektur, API OpenAPI 3.0, ERD, & Diagram UML
+```
 
 ---
 

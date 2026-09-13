@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Activity Diagram – UC-02 Registrasi Akun</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { background: #fdfcf9; font-family: "Crimson Pro", Georgia, serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+            .page-header { text-align: center; margin-bottom: 30px; }
+            .page-header h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; letter-spacing: -0.5px; margin-bottom: 8px; }
+            .page-header p { font-size: 16px; color: #64748b; font-style: italic; }
+            
+            .diagram-container { background: #ffffff; padding: 40px; border: 1px solid #e2e8f0; box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05); position: relative; }
+
+            /* UML Styles */
+            .swimlane-border { fill: none; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-header-bg { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-label { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; fill: #475569; text-anchor: middle; }
+            .node-start { fill: #1e293b; }
+            .node-end-outer { fill: none; stroke: #1e293b; stroke-width: 1.5; }
+            .node-end-inner { fill: #1e293b; }
+            
+            .activity-rect { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; rx: 10; ry: 10; }
+            .activity-text { font-size: 12px; font-weight: 600; text-anchor: middle; fill: #1e293b; }
+            .activity-note { font-family: "JetBrains Mono", monospace; font-size: 9px; fill: #64748b; text-anchor: middle; }
+            .decision-diamond { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+            .flow-line { stroke: #1e293b; stroke-width: 1.2; fill: none; }
+            .sync-bar { fill: #1e293b; }
+            .condition-text { font-size: 13px; font-style: italic; font-weight: 700; fill: #2563eb; }
+
+            .btn-print { margin-top: 30px; padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: "JetBrains Mono", monospace; font-size: 12px; transition: background 0.2s; }
+            .btn-print:hover { background: #334155; }
+            
+            @media print {
+                .btn-print { display: none; }
+                body { padding: 0; background: white; }
+                .diagram-container { box-shadow: none; border: none; padding: 0; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Activity Diagram: UC-02 Registrasi Akun</h1>
+            <p>Pendaftaran Akun Baru & Validasi Data Sistem</p>
+        </div>
+
+        <div class="diagram-container">
+            <svg width="740" height="950" viewBox="0 0 740 950">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                </defs>
+
+                <!-- Swimlanes Background -->
+                <rect x="0" y="0" width="300" height="900" class="swimlane-border" />
+                <rect x="300" y="0" width="440" height="900" class="swimlane-border" />
+
+                <!-- Swimlanes Headers -->
+                <rect x="0" y="0" width="300" height="40" class="swimlane-header-bg" />
+                <rect x="300" y="0" width="440" height="40" class="swimlane-header-bg" />
+
+                <text x="150" y="25" class="swimlane-label">GUEST</text>
+                <text x="520" y="25" class="swimlane-label">SISTEM</text>
+
+                <!-- Start Node -->
+                <circle cx="150" cy="80" r="10" class="node-start" />
+                <line x1="150" y1="90" x2="150" y2="120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 1: Buka Registrasi -->
+                <rect x="65" y="120" width="170" height="40" class="activity-rect" />
+                <text x="150" y="145" class="activity-text">Membuka form Registrasi</text>
+                <line x1="150" y1="160" x2="150" y2="200" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 2: Isi Form -->
+                <rect x="65" y="200" width="170" height="40" class="activity-rect" />
+                <text x="150" y="225" class="activity-text">Mengisi data formulir</text>
+                <line x1="150" y1="240" x2="150" y2="280" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 3: Kirim Form -->
+                <rect x="65" y="280" width="170" height="40" class="activity-rect" />
+                <text x="150" y="305" class="activity-text">Mengirimkan formulir</text>
+                <path d="M 235,300 L 435,300" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 4: Validasi Sistem -->
+                <rect x="435" y="280" width="170" height="40" class="activity-rect" />
+                <text x="520" y="305" class="activity-text">Memvalidasi kelengkapan</text>
+                <line x1="520" y1="320" x2="520" y2="360" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- DECISION: Valid Data? -->
+                <polygon points="520,360 555,395 520,430 485,395" class="decision-diamond" />
+                <text x="565" y="380" class="activity-text" style="font-size:12px">Valid?</text>
+
+                <!-- BRANCH: Format Salah -->
+                <path d="M 485,395 L 400,395 L 400,450" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="445" y="385" class="condition-text" style="text-anchor:end">[Tidak Valid: Format Salah]</text>
+                
+                <rect x="350" y="450" width="100" height="40" class="activity-rect" stroke-dasharray="4 2" />
+                <text x="400" y="470" class="activity-text" style="font-size:11px">Pesan: Format</text>
+                <text x="400" y="482" class="activity-text" style="font-size:11px">tidak valid</text>
+                
+                <path d="M 350,470 L 20,470 L 20,220 L 65,220" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- BRANCH: Email Terdaftar -->
+                <path d="M 555,395 L 640,395 L 640,450" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="595" y="385" class="condition-text">[Tidak Valid: Email Terdaftar]</text>
+
+                <rect x="580" y="450" width="120" height="40" class="activity-rect" stroke-dasharray="4 2" />
+                <text x="640" y="470" class="activity-text" style="font-size:11px">Pesan: Email</text>
+                <text x="640" y="482" class="activity-text" style="font-size:11px">sudah digunakan</text>
+                
+                <!-- Explicit Loop back via top -->
+                <path d="M 640,490 L 640,530 L 720,530 L 720,60 L 150,60 L 150,200" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Valid Flow -->
+                <line x1="520" y1="430" x2="520" y2="570" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="530" y="555" class="condition-text">[Valid]</text>
+
+                <!-- Step 5: Buat Akun -->
+                <rect x="435" y="570" width="170" height="40" class="activity-rect" />
+                <text x="520" y="595" class="activity-text">Membuat akun Customer</text>
+                <line x1="520" y1="610" x2="520" y2="650" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 6: Tampil Pesan Berhasil -->
+                <rect x="435" y="650" width="170" height="40" class="activity-rect" />
+                <text x="520" y="675" class="activity-text">Tampil pesan berhasil</text>
+                <path d="M 435,670 L 235,670" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 7: Menerima Pesan & Redirect -->
+                <rect x="65" y="650" width="170" height="50" class="activity-rect" />
+                <text x="150" y="670" class="activity-text">Menerima pesan &</text>
+                <text x="150" y="685" class="activity-text">diarahkan ke halaman Login</text>
+                <line x1="150" y1="700" x2="150" y2="760" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- End Node -->
+                <circle cx="150" cy="775" r="15" class="node-end-outer" />
+                <circle cx="150" cy="775" r="10" class="node-end-inner" />
+
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+    </body>
+</html>

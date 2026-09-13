@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Diagram - Sistem Informasi Penjualan Motor SrbMotor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #f5f5f5;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    padding: 20px;
+    color: #000;
+  }
+  h1 {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  h2 {
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 20px;
+    color: #444;
+  }
+  .canvas-wrap {
+    overflow: auto;
+    background: #fff;
+    border: 2px solid #000;
+    padding: 20px;
+  }
+  svg {
+    display: block;
+  }
+  /* class box parts */
+  .cls-header { fill: #c8c8c8; stroke: #000; stroke-width: 1.5; }
+  .cls-attr   { fill: #ffffff; stroke: #000; stroke-width: 1.5; }
+  .cls-method { fill: #f0f0f0; stroke: #000; stroke-width: 1.5; }
+  .cls-divider { stroke: #000; stroke-width: 1; }
+
+  text.name  { font-family:'Courier New',monospace; font-size:12px; font-weight:bold; fill:#000; }
+  text.attr  { font-family:'Courier New',monospace; font-size:10px; fill:#000; }
+  text.meth  { font-family:'Courier New',monospace; font-size:10px; fill:#000; font-style:italic; }
+  text.sect  { font-family:'Courier New',monospace; font-size:9px; fill:#333; }
+  text.card  { font-family:'Courier New',monospace; font-size:11px; font-weight:bold; fill:#000; }
+  text.rlbl  { font-family:'Courier New',monospace; font-size:9px; fill:#333; }
+
+  .conn { stroke:#000; stroke-width:1.5; fill:none; }
+  .conn-dash { stroke:#000; stroke-width:1.5; fill:none; stroke-dasharray:6,3; }
+</style>
+</head>
+<body>
+<h1>Class Diagram — Sistem Informasi Penjualan Motor</h1>
+<h2>Database: SrbMotor &nbsp;|&nbsp; Software: MySQL &nbsp;|&nbsp; Berdasarkan Spesifikasi File BAB 3</h2>
+<div class="canvas-wrap">
+<svg width="2000" height="2000" viewBox="0 0 2000 2000">
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M1 1 L9 5 L1 9" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+    <path d="M0 0 L10 5 L0 10 Z" fill="#fff" stroke="#000" stroke-width="1.5" stroke-linejoin="round"/>
+  </marker>
+  <marker id="dia-open" viewBox="0 0 14 10" refX="1" refY="5" markerWidth="10" markerHeight="8" orient="auto-start-reverse">
+    <path d="M7 1 L13 5 L7 9 L1 5 Z" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  </marker>
+  <marker id="dia-fill" viewBox="0 0 14 10" refX="1" refY="5" markerWidth="10" markerHeight="8" orient="auto-start-reverse">
+    <path d="M7 1 L13 5 L7 9 L1 5 Z" fill="#000" stroke="#000" stroke-width="1"/>
+  </marker>
+</defs>
+
+<!-- LANE 1 (X=50): CATALOG -->
+<g id="cls-katmotor" transform="translate(50,750)">
+  <rect class="cls-header" x="0" y="0" width="210" height="26"/>
+  <text class="name" x="105" y="18" text-anchor="middle">Kategori_motor</text>
+  <rect class="cls-attr" x="0" y="26" width="210" height="70"/>
+  <line class="cls-divider" x1="0" y1="26" x2="210" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- nama : Varchar(30)</text>
+  <text class="attr" x="6" y="78">- deskripsi : Text</text>
+  <rect class="cls-method" x="0" y="96" width="210" height="53"/>
+  <line class="cls-divider" x1="0" y1="96" x2="210" y2="96"/>
+  <text class="sect" x="4" y="108">— Methods —</text>
+  <text class="meth" x="6" y="121">+ getAll() : list</text>
+  <text class="meth" x="6" y="134">+ addKategori() : void</text>
+  <text class="meth" x="6" y="147">+ deleteKategori() : void</text>
+</g>
+
+<g id="cls-motors" transform="translate(50,1050)">
+  <rect class="cls-header" x="0" y="0" width="240" height="26"/>
+  <text class="name" x="120" y="18" text-anchor="middle">Motors</text>
+  <rect class="cls-attr" x="0" y="26" width="240" height="188"/>
+  <line class="cls-divider" x1="0" y1="26" x2="240" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- kategori_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- name : Varchar(100)</text>
+  <text class="attr" x="6" y="91">- brand : Varchar(30)</text>
+  <text class="attr" x="6" y="104">- model : Varchar(50)</text>
+  <text class="attr" x="6" y="117">- price : Decimal(15,2)</text>
+  <text class="attr" x="6" y="130">- min_dp_amount : Decimal(15,2)</text>
+  <text class="attr" x="6" y="143">- colors : Text</text>
+  <text class="attr" x="6" y="156">- branch : Varchar(30)</text>
+  <text class="attr" x="6" y="169">- year : Int</text>
+  <text class="attr" x="6" y="182">- image_path : Varchar(100)</text>
+  <text class="attr" x="6" y="195">- details : Text</text>
+  <text class="attr" x="6" y="208">- tersedia : Boolean</text>
+  <rect class="cls-method" x="0" y="214" width="240" height="66"/>
+  <line class="cls-divider" x1="0" y1="214" x2="240" y2="214"/>
+  <text class="sect" x="4" y="226">— Methods —</text>
+  <text class="meth" x="6" y="239">+ getKatalog() : list</text>
+  <text class="meth" x="6" y="252">+ checkKetersediaan() : bool</text>
+  <text class="meth" x="6" y="265">+ updateHarga() : void</text>
+  <text class="meth" x="6" y="278">+ getByKategori() : list</text>
+</g>
+
+<!-- LANE 2 (X=450): SERVICE CHAIN -->
+<g id="cls-montirs" transform="translate(450,50)">
+  <rect class="cls-header" x="0" y="0" width="220" height="26"/>
+  <text class="name" x="110" y="18" text-anchor="middle">Montirs</text>
+  <rect class="cls-attr" x="0" y="26" width="220" height="96"/>
+  <line class="cls-divider" x1="0" y1="26" x2="220" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- user_id : BigInt (FK→users.id)</text>
+  <text class="attr" x="6" y="78">- name : Varchar(100)</text>
+  <text class="attr" x="6" y="91">- branch : Varchar(30)</text>
+  <text class="attr" x="6" y="104">- spesialisasi : Varchar(50)</text>
+  <text class="attr" x="6" y="117">- status_aktif : Boolean</text>
+  <rect class="cls-method" x="0" y="122" width="220" height="66"/>
+  <line class="cls-divider" x1="0" y1="122" x2="220" y2="122"/>
+  <text class="sect" x="4" y="134">— Methods —</text>
+  <text class="meth" x="6" y="147">+ updateJadwal() : void</text>
+  <text class="meth" x="6" y="160">+ catatServis() : void</text>
+  <text class="meth" x="6" y="173">+ updateStatus() : void</text>
+  <text class="meth" x="6" y="186">+ getJadwalAktif() : list</text>
+</g>
+
+<g id="cls-jadwalservis" transform="translate(450,1150)">
+  <rect class="cls-header" x="0" y="0" width="250" height="26"/>
+  <text class="name" x="125" y="18" text-anchor="middle">Jadwal_servis</text>
+  <rect class="cls-attr" x="0" y="26" width="250" height="162"/>
+  <line class="cls-divider" x1="0" y1="26" x2="250" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- customer_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- montir_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="91">- branch : Varchar(30)</text>
+  <text class="attr" x="6" y="104">- queue_number : Varchar(10)</text>
+  <text class="attr" x="6" y="117">- service_date : Date</text>
+  <text class="attr" x="6" y="130">- service_time : Time</text>
+  <text class="attr" x="6" y="143">- status : Varchar(20)</text>
+  <text class="attr" x="6" y="156">- admin_notes : Text</text>
+  <text class="attr" x="6" y="169">- cancelled_by : Varchar(20)</text>
+  <text class="attr" x="6" y="182">- cancel_reason : Text</text>
+  <rect class="cls-method" x="0" y="188" width="250" height="66"/>
+  <line class="cls-divider" x1="0" y1="188" x2="250" y2="188"/>
+  <text class="sect" x="4" y="200">— Methods —</text>
+  <text class="meth" x="6" y="213">+ buatJadwal() : JadwalServis</text>
+  <text class="meth" x="6" y="226">+ batalJadwal() : void</text>
+  <text class="meth" x="6" y="239">+ updateStatus() : void</text>
+  <text class="meth" x="6" y="252">+ getByMontir() : list</text>
+</g>
+
+<g id="cls-servis" transform="translate(450,1550)">
+  <rect class="cls-header" x="0" y="0" width="240" height="26"/>
+  <text class="name" x="120" y="18" text-anchor="middle">Servis</text>
+  <rect class="cls-attr" x="0" y="26" width="240" height="136"/>
+  <line class="cls-divider" x1="0" y1="26" x2="240" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- jadwal_servis_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- motor_model : Varchar(50)</text>
+  <text class="attr" x="6" y="91">- plate_number : Varchar(10)</text>
+  <text class="attr" x="6" y="104">- service_type : Varchar(30)</text>
+  <text class="attr" x="6" y="117">- complaint_notes : Text</text>
+  <text class="attr" x="6" y="130">- service_notes : Text</text>
+  <text class="attr" x="6" y="143">- customer_phone : Varchar(15)</text>
+  <rect class="cls-method" x="0" y="162" width="240" height="66"/>
+  <line class="cls-divider" x1="0" y1="162" x2="240" y2="162"/>
+  <text class="sect" x="4" y="174">— Methods —</text>
+  <text class="meth" x="6" y="187">+ catatPengerjaan() : void</text>
+  <text class="meth" x="6" y="200">+ updateCatatan() : void</text>
+  <text class="meth" x="6" y="213">+ getDetailServis() : Servis</text>
+  <text class="meth" x="6" y="226">+ selesaikan() : void</text>
+</g>
+
+<g id="cls-bayarservis" transform="translate(150,1550)">
+  <rect class="cls-header" x="0" y="0" width="240" height="26"/>
+  <text class="name" x="120" y="18" text-anchor="middle">Pembayaran_servis</text>
+  <rect class="cls-attr" x="0" y="26" width="240" height="122"/>
+  <line class="cls-divider" x1="0" y1="26" x2="240" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- servis_id : BigInt (FK→servis.id)</text>
+  <text class="attr" x="6" y="78">- total_cost : Decimal(15,2)</text>
+  <text class="attr" x="6" y="91">- payment_status : Varchar(10)</text>
+  <text class="attr" x="6" y="104">- payment_method : Varchar(10)</text>
+  <text class="attr" x="6" y="117">- snap_token : Varchar(100)</text>
+  <text class="attr" x="6" y="130">- paid_at : Timestamp</text>
+  <rect class="cls-method" x="0" y="148" width="240" height="66"/>
+  <line class="cls-divider" x1="0" y1="148" x2="240" y2="148"/>
+  <text class="sect" x="4" y="160">— Methods —</text>
+  <text class="meth" x="6" y="173">+ prosesBayar() : void</text>
+  <text class="meth" x="6" y="186">+ getSnapToken() : string</text>
+  <text class="meth" x="6" y="199">+ konfirmasiBayar() : void</text>
+  <text class="meth" x="6" y="212">+ getStatus() : string</text>
+</g>
+
+<!-- LANE 3 (X=850): CUSTOMER & SALES CHAIN -->
+<g id="cls-users" transform="translate(850,50)">
+  <rect class="cls-header" x="0" y="0" width="240" height="26"/>
+  <text class="name" x="120" y="18" text-anchor="middle">Users</text>
+  <rect class="cls-attr" x="0" y="26" width="240" height="162"/>
+  <line class="cls-divider" x1="0" y1="26" x2="240" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- name : Varchar(100)</text>
+  <text class="attr" x="6" y="78">- email : Varchar(100) {unique}</text>
+  <text class="attr" x="6" y="91">- password : Varchar(60)</text>
+  <text class="attr" x="6" y="104">- role : Varchar(20)</text>
+  <text class="attr" x="6" y="117">- google_id : Varchar(100)</text>
+  <text class="attr" x="6" y="130">- profile_photo_path : Varchar(100)</text>
+  <text class="attr" x="6" y="143">- phone : Varchar(15)</text>
+  <rect class="cls-method" x="0" y="188" width="240" height="66"/>
+  <line class="cls-divider" x1="0" y1="188" x2="240" y2="188"/>
+  <text class="sect" x="4" y="200">— Methods —</text>
+  <text class="meth" x="6" y="213">+ register() : bool</text>
+  <text class="meth" x="6" y="226">+ login() : token</text>
+  <text class="meth" x="6" y="239">+ logout() : void</text>
+  <text class="meth" x="6" y="252">+ updateProfile() : void</text>
+</g>
+
+<g id="cls-customers" transform="translate(850,400)">
+  <rect class="cls-header" x="0" y="0" width="260" height="26"/>
+  <text class="name" x="130" y="18" text-anchor="middle">Customers</text>
+  <rect class="cls-attr" x="0" y="26" width="260" height="136"/>
+  <line class="cls-divider" x1="0" y1="26" x2="260" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- user_id : BigInt (FK→users.id)</text>
+  <text class="attr" x="6" y="78">- nik : Varchar(16)</text>
+  <text class="attr" x="6" y="91">- alamat : Text</text>
+  <text class="attr" x="6" y="104">- latitude : Double</text>
+  <text class="attr" x="6" y="117">- longitude : Double</text>
+  <text class="attr" x="6" y="130">- preferred_branch : Varchar(30)</text>
+  <text class="attr" x="6" y="143">- occupation : Varchar(100)</text>
+  <text class="attr" x="6" y="156">- monthly_income : Decimal(15,2)</text>
+  <rect class="cls-method" x="0" y="162" width="260" height="66"/>
+  <line class="cls-divider" x1="0" y1="162" x2="260" y2="162"/>
+  <text class="sect" x="4" y="174">— Methods —</text>
+  <text class="meth" x="6" y="187">+ updateProfil() : void</text>
+  <text class="meth" x="6" y="200">+ getPenjualan() : list</text>
+  <text class="meth" x="6" y="213">+ bookingServis() : JadwalServis</text>
+  <text class="meth" x="6" y="226">+ getNotifikasi() : list</text>
+</g>
+
+<g id="cls-penjualan" transform="translate(850,750)">
+  <rect class="cls-header" x="0" y="0" width="260" height="26"/>
+  <text class="name" x="130" y="18" text-anchor="middle">Penjualan</text>
+  <rect class="cls-attr" x="0" y="26" width="260" height="214"/>
+  <line class="cls-divider" x1="0" y1="26" x2="260" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- customer_id : BigInt (FK→customers.id)</text>
+  <text class="attr" x="6" y="78">- motor_id : BigInt (FK→motors.id)</text>
+  <text class="attr" x="6" y="91">- reference_number : Varchar(20)</text>
+  <text class="attr" x="6" y="104">- transaction_type : Varchar(10)</text>
+  <text class="attr" x="6" y="117">- branch_code : Varchar(20)</text>
+  <text class="attr" x="6" y="130">- motor_color : Varchar(20)</text>
+  <text class="attr" x="6" y="143">- motor_price : Decimal(15,2)</text>
+  <text class="attr" x="6" y="156">- booking_fee : Decimal(15,2)</text>
+  <text class="attr" x="6" y="169">- status : Varchar(20)</text>
+  <text class="attr" x="6" y="182">- delivery_method : Varchar(20)</text>
+  <text class="attr" x="6" y="195">- delivery_date : DateTime</text>
+  <text class="attr" x="6" y="208">- cancellation_reason : Text</text>
+  <text class="attr" x="6" y="221">- notes : Text</text>
+  <rect class="cls-method" x="0" y="240" width="260" height="79"/>
+  <line class="cls-divider" x1="0" y1="240" x2="260" y2="240"/>
+  <text class="sect" x="4" y="252">— Methods —</text>
+  <text class="meth" x="6" y="265">+ buatTransaksi() : Penjualan</text>
+  <text class="meth" x="6" y="278">+ updateStatus() : void</text>
+  <text class="meth" x="6" y="291">+ batalTransaksi() : void</text>
+  <text class="meth" x="6" y="304">+ getByCustomer() : list</text>
+  <text class="meth" x="6" y="317">+ hitungTotal() : Decimal</text>
+</g>
+
+<g id="cls-kredit" transform="translate(850,1150)">
+  <rect class="cls-header" x="0" y="0" width="260" height="26"/>
+  <text class="name" x="130" y="18" text-anchor="middle">Kredit_detail</text>
+  <rect class="cls-attr" x="0" y="26" width="260" height="214"/>
+  <line class="cls-divider" x1="0" y1="26" x2="260" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- penjualan_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- leasing_provider : Varchar(50)</text>
+  <text class="attr" x="6" y="91">- status : Varchar(20)</text>
+  <text class="attr" x="6" y="104">- reference_number : Varchar(20)</text>
+  <text class="attr" x="6" y="117">- tenor : Int (bulan)</text>
+  <text class="attr" x="6" y="130">- interest_rate : Decimal(8,2)</text>
+  <text class="attr" x="6" y="143">- monthly_installment : Decimal(15,2)</text>
+  <text class="attr" x="6" y="156">- verification_notes : Text</text>
+  <text class="attr" x="6" y="169">- dp_amount : Decimal(15,2)</text>
+  <text class="attr" x="6" y="182">- dp_payment_method : Varchar(20)</text>
+  <text class="attr" x="6" y="195">- completion_notes : Text</text>
+  <text class="attr" x="6" y="208">- is_completed : Boolean</text>
+  <rect class="cls-method" x="0" y="240" width="260" height="66"/>
+  <line class="cls-divider" x1="0" y1="240" x2="260" y2="240"/>
+  <text class="sect" x="4" y="252">— Methods —</text>
+  <text class="meth" x="6" y="265">+ hitungCicilan() : Decimal</text>
+  <text class="meth" x="6" y="278">+ verifikasiKredit() : void</text>
+  <text class="meth" x="6" y="291">+ selesaikanKredit() : void</text>
+  <text class="meth" x="6" y="304">+ getStatus() : string</text>
+</g>
+
+<g id="cls-jadwalsurvey" transform="translate(850,1550)">
+  <rect class="cls-header" x="0" y="0" width="260" height="26"/>
+  <text class="name" x="130" y="18" text-anchor="middle">Jadwal_survey</text>
+  <rect class="cls-attr" x="0" y="26" width="260" height="215"/>
+  <line class="cls-divider" x1="0" y1="26" x2="260" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- kredit_detail_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- scheduled_date : Date</text>
+  <text class="attr" x="6" y="91">- scheduled_time : Time</text>
+  <text class="attr" x="6" y="104">- surveyor_name : Varchar(100)</text>
+  <text class="attr" x="6" y="117">- surveyor_phone : Varchar(15)</text>
+  <text class="attr" x="6" y="130">- status : Varchar(20)</text>
+  <text class="attr" x="6" y="143">- location : Text</text>
+  <text class="attr" x="6" y="156">- notes : Text</text>
+  <text class="attr" x="6" y="169">- customer_notes : Text</text>
+  <text class="attr" x="6" y="182">- customer_confirms : Boolean</text>
+  <text class="attr" x="6" y="195">- customer_confirmation_notes : Text</text>
+  <text class="attr" x="6" y="208">- survey_result : Text</text>
+  <text class="attr" x="6" y="221">- findings : Text</text>
+  <rect class="cls-method" x="0" y="241" width="260" height="66"/>
+  <line class="cls-divider" x1="0" y1="241" x2="260" y2="241"/>
+  <text class="sect" x="4" y="253">— Methods —</text>
+  <text class="meth" x="6" y="266">+ jadwalkanSurvey() : void</text>
+  <text class="meth" x="6" y="279">+ konfirmasiCustomer() : void</text>
+  <text class="meth" x="6" y="292">+ catatHasil() : void</text>
+  <text class="meth" x="6" y="305">+ updateStatus() : void</text>
+</g>
+
+<!-- LANE 4 (X=1200): ADMIN & LOGS CHAIN -->
+<g id="cls-admins" transform="translate(1200,50)">
+  <rect class="cls-header" x="0" y="0" width="220" height="26"/>
+  <text class="name" x="110" y="18" text-anchor="middle">Admins</text>
+  <rect class="cls-attr" x="0" y="26" width="220" height="82"/>
+  <line class="cls-divider" x1="0" y1="26" x2="220" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- user_id : BigInt (FK→users.id)</text>
+  <text class="attr" x="6" y="78">- name : Varchar(100)</text>
+  <text class="attr" x="6" y="91">- branch : Varchar(30)</text>
+  <rect class="cls-method" x="0" y="108" width="220" height="66"/>
+  <line class="cls-divider" x1="0" y1="108" x2="220" y2="108"/>
+  <text class="sect" x="4" y="120">— Methods —</text>
+  <text class="meth" x="6" y="133">+ approveDocument() : void</text>
+  <text class="meth" x="6" y="146">+ manageMotors() : void</text>
+  <text class="meth" x="6" y="159">+ generateReport() : void</text>
+  <text class="meth" x="6" y="172">+ confirmPayment() : void</text>
+</g>
+
+<g id="cls-notif" transform="translate(1200,400)">
+  <rect class="cls-header" x="0" y="0" width="240" height="26"/>
+  <text class="name" x="120" y="18" text-anchor="middle">Notifications</text>
+  <rect class="cls-attr" x="0" y="26" width="240" height="110"/>
+  <line class="cls-divider" x1="0" y1="26" x2="240" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : Varchar(36) PK {UUID}</text>
+  <text class="attr" x="6" y="65">- type : Varchar(50)</text>
+  <text class="attr" x="6" y="78">- notifiable_type : Varchar(30)</text>
+  <text class="attr" x="6" y="91">- notifiable_id : BigInt</text>
+  <text class="attr" x="6" y="104">- data : Text {JSON}</text>
+  <text class="attr" x="6" y="117">- read_at : Timestamp</text>
+  <rect class="cls-method" x="0" y="136" width="240" height="53"/>
+  <line class="cls-divider" x1="0" y1="136" x2="240" y2="136"/>
+  <text class="sect" x="4" y="148">— Methods —</text>
+  <text class="meth" x="6" y="161">+ markAsRead() : void</text>
+  <text class="meth" x="6" y="174">+ send() : void</text>
+  <text class="meth" x="6" y="187">+ getUnread() : list</text>
+</g>
+
+<g id="cls-txlog" transform="translate(1200,750)">
+  <rect class="cls-header" x="0" y="0" width="250" height="26"/>
+  <text class="name" x="125" y="18" text-anchor="middle">Transaction_logs</text>
+  <rect class="cls-attr" x="0" y="26" width="250" height="162"/>
+  <line class="cls-divider" x1="0" y1="26" x2="250" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- penjualan_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- status_from : Varchar(20)</text>
+  <text class="attr" x="6" y="91">- status_to : Varchar(20)</text>
+  <text class="attr" x="6" y="104">- actor_id : BigInt</text>
+  <text class="attr" x="6" y="117">- actor_type : Varchar(20)</text>
+  <text class="attr" x="6" y="130">- description : Text</text>
+  <text class="attr" x="6" y="143">- notes : Text</text>
+  <text class="attr" x="6" y="156">- payload : Text {JSON}</text>
+  <text class="attr" x="6" y="169">- status : Varchar(20)</text>
+  <rect class="cls-method" x="0" y="188" width="250" height="53"/>
+  <line class="cls-divider" x1="0" y1="188" x2="250" y2="188"/>
+  <text class="sect" x="4" y="200">— Methods —</text>
+  <text class="meth" x="6" y="213">+ catatPerubahan() : void</text>
+  <text class="meth" x="6" y="226">+ getRiwayat() : list</text>
+  <text class="meth" x="6" y="239">+ getByPenjualan() : list</text>
+</g>
+
+<g id="cls-bayarjual" transform="translate(1200,1150)">
+  <rect class="cls-header" x="0" y="0" width="260" height="26"/>
+  <text class="name" x="130" y="18" text-anchor="middle">Pembayaran_penjualan</text>
+  <rect class="cls-attr" x="0" y="26" width="260" height="188"/>
+  <line class="cls-divider" x1="0" y1="26" x2="260" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- penjualan_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- installment_number : Int(4)</text>
+  <text class="attr" x="6" y="91">- due_date : Date</text>
+  <text class="attr" x="6" y="104">- amount : Decimal(15,2)</text>
+  <text class="attr" x="6" y="117">- status : Varchar(20)</text>
+  <text class="attr" x="6" y="130">- payment_method : Varchar(20)</text>
+  <text class="attr" x="6" y="143">- payment_proof : Varchar(100)</text>
+  <text class="attr" x="6" y="156">- is_overdue : Boolean</text>
+  <text class="attr" x="6" y="169">- days_overdue : Int</text>
+  <text class="attr" x="6" y="182">- penalty_amount : Decimal(15,2)</text>
+  <text class="attr" x="6" y="195">- total_with_penalty : Decimal(15,2)</text>
+  <text class="attr" x="6" y="208">- notes : Text</text>
+  <rect class="cls-method" x="0" y="214" width="260" height="66"/>
+  <line class="cls-divider" x1="0" y1="214" x2="260" y2="214"/>
+  <text class="sect" x="4" y="226">— Methods —</text>
+  <text class="meth" x="6" y="239">+ bayar() : void</text>
+  <text class="meth" x="6" y="252">+ hitungDenda() : Decimal</text>
+  <text class="meth" x="6" y="265">+ cekOverdue() : bool</text>
+  <text class="meth" x="6" y="278">+ getTagihan() : list</text>
+</g>
+
+<g id="cls-dokumen" transform="translate(1500,1150)">
+  <rect class="cls-header" x="0" y="0" width="260" height="26"/>
+  <text class="name" x="130" y="18" text-anchor="middle">Dokumen_transaksi</text>
+  <rect class="cls-attr" x="0" y="26" width="260" height="175"/>
+  <line class="cls-divider" x1="0" y1="26" x2="260" y2="26"/>
+  <text class="sect" x="4" y="38">— Attributes —</text>
+  <text class="attr" x="6" y="52">- id : BigInt (PK)</text>
+  <text class="attr" x="6" y="65">- kredit_detail_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="78">- penjualan_id : BigInt (FK)</text>
+  <text class="attr" x="6" y="91">- document_type : Varchar(20)</text>
+  <text class="attr" x="6" y="104">- description : Text</text>
+  <text class="attr" x="6" y="117">- file_path : Varchar(100)</text>
+  <text class="attr" x="6" y="130">- original_name : Varchar(100)</text>
+  <text class="attr" x="6" y="143">- file_size : Int (bytes)</text>
+  <text class="attr" x="6" y="156">- status : Varchar(20)</text>
+  <text class="attr" x="6" y="169">- approval_status : Varchar(20)</text>
+  <text class="attr" x="6" y="182">- rejection_reason : Text</text>
+  <rect class="cls-method" x="0" y="201" width="260" height="66"/>
+  <line class="cls-divider" x1="0" y1="201" x2="260" y2="201"/>
+  <text class="sect" x="4" y="213">— Methods —</text>
+  <text class="meth" x="6" y="226">+ uploadDokumen() : void</text>
+  <text class="meth" x="6" y="239">+ approveDokumen() : void</text>
+  <text class="meth" x="6" y="252">+ rejectDokumen() : void</text>
+  <text class="meth" x="6" y="265">+ getDokumenByTipe() : list</text>
+</g>
+
+<!-- RELATIONS (RECALCULATED FOR NO COLLISION) -->
+<!-- Users -- Admins -->
+<line class="conn" x1="1090" y1="100" x2="1200" y2="100" marker-end="url(#tri)"/>
+<text class="card" x="1100" y="94">1</text>
+<text class="card" x="1180" y="94">1</text>
+<text class="rlbl" x="1135" y="112">adalah</text>
+
+<!-- Users -- Montirs -->
+<line class="conn" x1="850" y1="100" x2="670" y2="100" marker-end="url(#tri)"/>
+<text class="card" x="830" y="94">1</text>
+<text class="card" x="680" y="94">1</text>
+<text class="rlbl" x="750" y="112">adalah</text>
+
+<!-- Users -- Customers -->
+<line class="conn" x1="980" y1="304" x2="980" y2="400" marker-end="url(#tri)"/>
+<text class="card" x="986" y="325">1</text>
+<text class="card" x="986" y="385">1</text>
+<text class="rlbl" x="988" y="350">adalah</text>
+
+<!-- Users -- Notif -->
+<line class="conn" x1="1090" y1="180" x2="1200" y2="400" marker-end="url(#arr)"/>
+<text class="card" x="1100" y="200">1</text>
+<text class="card" x="1190" y="380">*</text>
+
+<!-- Montirs -- JadwalServis (Vertical Straight - NO COLLISION) -->
+<line class="conn" x1="560" y1="238" x2="560" y2="1150" marker-end="url(#arr)"/>
+<text class="card" x="566" y="255">1</text>
+<text class="card" x="566" y="1135">*</text>
+<text class="rlbl" x="568" y="700">mengatur jadwal</text>
+
+<!-- Customers -- Penjualan (Vertical Straight) -->
+<line class="conn" x1="980" y1="628" x2="980" y2="750" marker-end="url(#arr)"/>
+<text class="card" x="986" y="645">1</text>
+<text class="card" x="986" y="735">*</text>
+
+<!-- Customers -- JadwalServis (Diagonal - Passes through empty space) -->
+<line class="conn" x1="850" y1="500" x2="700" y2="1150" marker-end="url(#arr)"/>
+<text class="card" x="830" y="525">1</text>
+<text class="card" x="705" y="1135">*</text>
+<text class="rlbl" x="730" y="800">booking servis</text>
+
+<!-- Kategori -- Motors (Vertical Chain) -->
+<line class="conn" x1="155" y1="899" x2="155" y2="1050" marker-end="url(#arr)"/>
+<text class="card" x="162" y="920">1</text>
+<text class="card" x="162" y="1035">*</text>
+
+<!-- Motors -- Penjualan (Diagonal - Crossing empty space Lane 2) -->
+<line class="conn" x1="290" y1="1100" x2="850" y2="950" marker-end="url(#arr)"/>
+<text class="card" x="300" y="1080">1</text>
+<text class="card" x="830" y="940">*</text>
+<text class="rlbl" x="500" y="1000">dijual</text>
+
+<!-- Penjualan -- Logs -->
+<line class="conn" x1="1110" y1="900" x2="1200" y2="900" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+<text class="card" x="1120" y="894">1</text>
+<text class="card" x="1185" y="894">*</text>
+
+<!-- Penjualan -- PaymentSales -->
+<line class="conn" x1="1110" y1="1069" x2="1200" y2="1150" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+<text class="card" x="1120" y="1085">1</text>
+<text class="card" x="1190" y="1135">*</text>
+
+<!-- Penjualan -- Kredit -->
+<line class="conn" x1="980" y1="1069" x2="980" y2="1150" marker-start="url(#dia-open)" marker-end="url(#arr)"/>
+<text class="card" x="986" y="1085">1</text>
+<text class="card" x="986" y="1135">0..1</text>
+
+<!-- Penjualan -- Dokumen -->
+<line class="conn" x1="1110" y1="1040" x2="1500" y2="1150" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+<text class="card" x="1125" y="1045">1</text>
+<text class="card" x="1485" y="1135">*</text>
+
+<!-- Kredit -- Dokumen -->
+<line class="conn" x1="1110" y1="1300" x2="1500" y2="1300" marker-end="url(#arr)"/>
+<text class="card" x="1120" y="1292">1</text>
+<text class="card" x="1480" y="1292">*</text>
+
+<!-- Kredit -- Survey -->
+<line class="conn" x1="980" y1="1456" x2="980" y2="1550" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+<text class="card" x="986" y="1475">1</text>
+<text class="card" x="986" y="1535">*</text>
+
+<!-- JadwalServis -- Servis -->
+<line class="conn" x1="575" y1="1404" x2="575" y2="1550" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+<text class="card" x="582" y="1425">1</text>
+<text class="card" x="582" y="1535">1</text>
+
+<!-- Servis -- PaymentServis -->
+<line class="conn" x1="450" y1="1664" x2="390" y2="1664" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+<text class="card" x="435" y="1655">1</text>
+<text class="card" x="400" y="1655">1</text>
+
+<!-- LEGEND -->
+<g transform="translate(1500,50)">
+  <rect x="0" y="0" width="270" height="210" fill="#fafafa" stroke="#000" stroke-width="1.5"/>
+  <line x1="0" y1="26" x2="270" y2="26" stroke="#000" stroke-width="1"/>
+  <text class="name" x="135" y="18" text-anchor="middle">LEGENDA NOTASI UML</text>
+  <line x1="14" y1="50" x2="80" y2="50" class="conn" marker-end="url(#arr)"/>
+  <text class="attr" x="90" y="54">Association (1 arah)</text>
+  <line x1="14" y1="78" x2="80" y2="78" class="conn" marker-end="url(#tri)"/>
+  <text class="attr" x="90" y="82">Generalization (is-a)</text>
+  <line x1="14" y1="106" x2="80" y2="106" class="conn" marker-start="url(#dia-fill)" marker-end="url(#arr)"/>
+  <text class="attr" x="90" y="110">Composition (miliki)</text>
+  <line x1="14" y1="134" x2="80" y2="134" class="conn" marker-start="url(#dia-open)" marker-end="url(#arr)"/>
+  <text class="attr" x="90" y="138">Aggregation (bagian)</text>
+</g>
+
+</svg>
+</div>
+</body>
+</html>

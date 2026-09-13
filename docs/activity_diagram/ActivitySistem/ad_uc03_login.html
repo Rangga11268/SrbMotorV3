@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Activity Diagram – UC-03 Login</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { background: #fdfcf9; font-family: "Crimson Pro", Georgia, serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+            .page-header { text-align: center; margin-bottom: 30px; }
+            .page-header h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; letter-spacing: -0.5px; margin-bottom: 8px; }
+            .page-header p { font-size: 16px; color: #64748b; font-style: italic; }
+            
+            .diagram-container { background: #ffffff; padding: 40px; border: 1px solid #e2e8f0; box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05); position: relative; }
+
+            /* UML Styles */
+            .swimlane-border { fill: none; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-header-bg { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-label { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; fill: #475569; text-anchor: middle; }
+            .node-start { fill: #1e293b; }
+            .node-end-outer { fill: none; stroke: #1e293b; stroke-width: 1.5; }
+            .node-end-inner { fill: #1e293b; }
+            
+            .activity-rect { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; rx: 10; ry: 10; }
+            .activity-text { font-size: 12px; font-weight: 600; text-anchor: middle; fill: #1e293b; }
+            .activity-note { font-family: "JetBrains Mono", monospace; font-size: 9px; fill: #64748b; text-anchor: middle; }
+            .decision-diamond { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+            .flow-line { stroke: #1e293b; stroke-width: 1.2; fill: none; }
+            .sync-bar { fill: #1e293b; }
+            .condition-text { font-size: 13px; font-style: italic; font-weight: 700; fill: #2563eb; }
+
+            .btn-print { margin-top: 30px; padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: "JetBrains Mono", monospace; font-size: 12px; transition: background 0.2s; }
+            .btn-print:hover { background: #334155; }
+            
+            @media print {
+                .btn-print { display: none; }
+                body { padding: 0; background: white; }
+                .diagram-container { box-shadow: none; border: none; padding: 0; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Activity Diagram: UC-03 Login</h1>
+            <p>Sistem Autentikasi dan Redirect Multi-Role</p>
+        </div>
+
+        <div class="diagram-container">
+            <svg width="700" height="900" viewBox="0 0 700 900">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                </defs>
+
+                <!-- Swimlanes Background -->
+                <rect x="0" y="0" width="300" height="850" class="swimlane-border" />
+                <rect x="300" y="0" width="400" height="850" class="swimlane-border" />
+
+                <!-- Swimlanes Headers -->
+                <rect x="0" y="0" width="300" height="40" class="swimlane-header-bg" />
+                <rect x="300" y="0" width="400" height="40" class="swimlane-header-bg" />
+
+                <text x="150" y="25" class="swimlane-label">PENGGUNA (ALL ROLE)</text>
+                <text x="500" y="25" class="swimlane-label">SISTEM</text>
+
+                <!-- Start Node -->
+                <circle cx="150" cy="80" r="10" class="node-start" />
+                <line x1="150" y1="90" x2="150" y2="120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 1: Buka Login -->
+                <rect x="65" y="120" width="170" height="40" class="activity-rect" />
+                <text x="150" y="145" class="activity-text">Membuka halaman Login</text>
+                <line x1="150" y1="160" x2="150" y2="200" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 2: Masukkan Kredensial -->
+                <rect x="65" y="200" width="170" height="40" class="activity-rect" />
+                <text x="150" y="225" class="activity-text">Input Email & Password</text>
+                <line x1="150" y1="240" x2="150" y2="280" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 3: Tekan Login -->
+                <rect x="65" y="280" width="170" height="40" class="activity-rect" />
+                <text x="150" y="305" class="activity-text">Menekan tombol Login</text>
+                <path d="M 235,300 L 415,300" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Step 4: Verifikasi Sistem -->
+                <rect x="415" y="280" width="170" height="40" class="activity-rect" />
+                <text x="500" y="305" class="activity-text">Verifikasi kredensial</text>
+                <line x1="500" y1="320" x2="500" y2="360" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- DECISION: Berhasil? -->
+                <polygon points="500,360 530,390 500,420 470,390" class="decision-diamond" />
+                <text x="545" y="380" class="activity-text" style="font-size:11px">Sesuai?</text>
+
+                <!-- Invalid -->
+                <path d="M 470,390 L 410,390 L 410,450" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="440" y="440" class="condition-text" style="text-anchor:end">[Gagal]</text>
+                
+                <rect x="360" y="450" width="100" height="40" class="activity-rect" stroke-dasharray="4 2" />
+                <text x="410" y="470" class="activity-text" style="font-size:11px">Pesan: Data</text>
+                <text x="410" y="482" class="activity-text" style="font-size:11px">tidak valid</text>
+                
+                <path d="M 360,470 L 20,470 L 20,220 L 65,220" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Valid Flow -->
+                <line x1="500" y1="420" x2="500" y2="480" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="510" y="460" class="condition-text">[Berhasil]</text>
+
+                <!-- Role DECISION -->
+                <polygon points="500,480 530,510 500,540 470,510" class="decision-diamond" />
+                <text x="545" y="500" class="activity-text" style="font-size:11px">Cek Role</text>
+
+                <!-- Role: Customer -->
+                <path d="M 470,510 L 380,510 L 380,580" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="390" y="560" class="condition-text" style="text-anchor:end">[Customer]</text>
+                <rect x="315" y="580" width="130" height="40" class="activity-rect" />
+                <text x="380" y="605" class="activity-text" style="font-size:11px">Dashboard Customer</text>
+
+                <!-- Role: Admin -->
+                <line x1="500" y1="540" x2="500" y2="580" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="505" y="560" class="condition-text">[Admin]</text>
+                <rect x="435" y="580" width="130" height="40" class="activity-rect" />
+                <text x="500" y="605" class="activity-text" style="font-size:11px">Dashboard Admin</text>
+
+                <!-- Role: Montir -->
+                <path d="M 530,510 L 620,510 L 620,580" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="610" y="560" class="condition-text">[Montir]</text>
+                <rect x="555" y="580" width="130" height="40" class="activity-rect" />
+                <text x="620" y="605" class="activity-text" style="font-size:11px">Dashboard Montir</text>
+
+                <!-- Merge Node -->
+                <polygon points="500,680 530,710 500,740 470,710" class="decision-diamond" />
+                
+                <path d="M 380,620 L 380,710 L 470,710" class="flow-line" />
+                <path d="M 500,620 L 500,680" class="flow-line" />
+                <path d="M 620,620 L 620,710 L 530,710" class="flow-line" />
+
+                <line x1="500" y1="740" x2="500" y2="780" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- End Node -->
+                <circle cx="500" cy="805" r="15" class="node-end-outer" />
+                <circle cx="500" cy="805" r="10" class="node-end-inner" />
+
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+    </body>
+</html>

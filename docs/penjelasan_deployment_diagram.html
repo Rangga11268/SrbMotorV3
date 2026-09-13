@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penjelasan Deployment Diagram SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --primary: #2b3a4a;
+            --muted: #666666;
+            --border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fafafa;
+            page-break-inside: avoid;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-top: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        blockquote {
+            margin: 0;
+            padding: 12px 20px;
+            background: #f1f3f5;
+            border-left: 4px solid var(--primary);
+            font-style: italic;
+            color: #333;
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 100;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media print {
+            .btn-print { display: none !important; }
+            body { padding: 0; }
+            .section { border: none; background: transparent; padding: 0; margin-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Panduan Presentasi Deployment Diagram</h1>
+        <div class="subtitle">Sistem Informasi Penjualan &amp; Booking Service SRB Motor</div>
+    </header>
+
+    <!-- PENGANTAR -->
+    <div class="section">
+        <h2>Pengantar Presentasi</h2>
+        <blockquote>
+            "Selamat pagi/siang. Kami mempresentasikan rancangan arsitektur fisik dan model distribusi sistem <strong>SRB Motor</strong> dalam 4 versi evolusi. Rancangan ini bertujuan menunjukkan kesiapan dan skalabilitas infrastruktur dari skala lokal sederhana hingga segmentasi jaringan divisi internal yang aman."
+        </blockquote>
+    </div>
+
+    <!-- VERSI 1 -->
+    <div class="section">
+        <h2>Versi 1: Spesifikasi Node Fisik (Physical Nodes)</h2>
+        <div class="meta">Fokus: Pemetaan perangkat keras dasar.</div>
+        <blockquote>
+            "Menghubungkan secara fisik perangkat pengguna (<strong>Customer Device</strong>) dengan <strong>Office Server</strong> di kantor utama SRB Motor. Hubungan fisik ini berjalan secara langsung melewati internet menggunakan protokol komunikasi standar <strong>HTTP/HTTPS</strong>."
+        </blockquote>
+    </div>
+
+    <!-- VERSI 2 -->
+    <div class="section">
+        <h2>Versi 2: Konfigurasi dengan Komponen/Artifacts</h2>
+        <div class="meta">Fokus: Pembagian software layer di dalam node menggunakan nama sistem riil.</div>
+        <blockquote>
+            "Masuk ke <strong>Versi 2</strong>, kami mendetailkan komponen perangkat lunak (Artifacts) yang berjalan. Di sisi klien (<strong>Front Office PC</strong>), berjalan antarmuka pengguna <strong>&laquo;HCI Layer&raquo; SRB Motor System</strong>. Sedangkan di sisi <strong>Office Server</strong>, dideploy komponen logika program <strong>&laquo;PD Layer&raquo; SRB Motor System</strong> dan basis data <strong>&laquo;DM Layer&raquo; SRB Motor System</strong>."
+        </blockquote>
+    </div>
+
+    <!-- VERSI 3 -->
+    <div class="section">
+        <h2>Versi 3: Distribusi Terpisah (Separated Server &amp; Database)</h2>
+        <div class="meta">Fokus: Pemisahan database fisik dari server utama.</div>
+        <blockquote>
+            "Pada <strong>Versi 3</strong>, arsitektur dikembangkan dengan memisahkan basis data secara fisik. Perangkat kasir/admin (<strong>Front Office PC</strong>) terhubung melalui jaringan <strong>&laquo;LAN&raquo;</strong> ke <strong>Office Server</strong> utama, dan server utama tersebut terhubung langsung ke tempat penyimpanan data terpisah (<strong>Data Base</strong>)."
+        </blockquote>
+    </div>
+
+    <!-- VERSI 4 -->
+    <div class="section">
+        <h2>Versi 4: Top-Level Network Model (Jaringan Internal Gedung)</h2>
+        <div class="meta">Fokus: Segmentasi jaringan lokal (LAN) internal.</div>
+        <blockquote>
+            "Menggambarkan segmentasi jaringan internal gedung operasional SRB Motor secara logis sesuai modul kuliah. Node pusat bertipe <strong>&laquo;network&raquo; LAN</strong> membagikan koneksi komunikasi <strong>&laquo;intranet&raquo;</strong> ke empat divisi kerja utama bertipe <strong>&laquo;subnetwork&raquo;</strong> (*Server Room*, *Front Office*, *Workshop*, dan *Showroom*)."
+        </blockquote>
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak / Simpan PDF</button>
+
+</body>
+</html>

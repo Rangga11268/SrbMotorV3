@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@inertiajs/react": "^2.2.19",
+        "@vitejs/plugin-react": "^5.1.2",
+        "autoprefixer": "^10.4.27",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^2.0.0",
+        "postcss": "^8.5.8",
+        "react": "^19.2.1",
+        "react-dom": "^19.2.1",
+        "tailwindcss": "^3.4.19",
+        "vite": "^7.0.7"
+    },
+    "dependencies": {
+        "@heroicons/react": "^2.2.0",
+        "@tiptap/extension-bold": "^3.31.3",
+        "@tiptap/extension-image": "^3.20.1",
+        "@tiptap/extension-link": "^3.20.1",
+        "@tiptap/pm": "^3.20.1",
+        "@tiptap/react": "^3.20.1",
+        "@tiptap/starter-kit": "^3.20.1",
+        "chart.js": "^4.5.1",
+        "date-fns": "^4.1.0",
+        "framer-motion": "^12.23.25",
+        "jsdom": "^29.1.1",
+        "lucide-react": "^0.556.0",
+        "mermaid": "^11.15.0",
+        "playwright": "^1.60.0",
+        "react-hot-toast": "^2.6.0",
+        "react-to-print": "^3.2.0",
+        "recharts": "^3.5.1",
+        "sweetalert2": "^11.26.4",
+        "swiper": "^12.0.3",
+        "ziggy-js": "^2.6.0"
+    }
+}

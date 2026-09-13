@@ -1,0 +1,1462 @@
+--- PAGE 1 ---
+  
+--- PAGE 2 ---
+ii 
+ 
+PROFIL ANGGOTA 
+ 
+No NIM Nama Posisi Peran Dalam Tim 
+1 19241009 Darell rangga 
+putra rachman Ketua Ketua QA & Eksekutor utama 
+Black Box Testing. 
+2 19240732 Iman syahrudin 
+Susanto Anggota Penyusun Pendahuluan & 
+Metodologi Pengujian (Bab I). 
+3 19240259 
+Katherine Julian 
+Anastasia 
+Manurung 
+Anggota Analis Kebutuhan & Penyusun Test 
+Summary Report (Bab II). 
+4 19240078 Nasvira Melani 
+Putri Anggota Perancang Test Case & Penulis 
+Defect Report (Bab II). 
+5 19240247 Chesa Awalia 
+Refana Anggota Penyusun Evaluasi, Kesimpulan, 
+dan Saran (Bab III). 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ --- PAGE 3 ---
+iii 
+ 
+KATA PENGANTAR 
+Puji syukur senantiasa kami panjatkan ke hadirat Allah SWT atas segala rahmat dan karunia-
+Nya, sehingga kami dapat menyelesaikan laporan proyek yang berjudul "Perancangan dan 
+Pengujian Sistem Informasi Penjualan dan Layanan Servis Motor Berbasis Web pada SRB 
+Motor". Laporan ini disusun sebagai dokumentasi komprehensif atas perangkat lunak yang 
+kami rancang dan kembangkan secara mandiri untuk menjadi solusi digital terpadu bagi pihak 
+dealer. Melalui sistem ini, kami berupaya mengotomatisasi proses bisnis konvensional, mulai 
+dari digitalisasi etalase motor, alur pengajuan pembiayaan kredit, pemrosesan pembayaran 
+digital, hingga sistem pemesanan layanan purna jual. Selain menjabarkan proses perancangan 
+sistem, laporan ini secara khusus dititikberatkan pada fase Software Quality Assurance (SQA) 
+dan implementasi Software Testing Life Cycle (STLC) menggunakan pendekatan Black Box 
+Testing. Seluruh siklus pengujian telah kami laksanakan secara sistematis untuk memvalidasi 
+fungsionalitas antarmuka aplikasi, mengidentifikasi celah cacat program (bug), serta 
+memastikan bahwa perangkat lunak yang kami bangun benar-benar andal dan siap untuk 
+digunakan. Keberhasilan penyelesaian proyek aplikasi beserta laporan ini tentunya tidak 
+terlepas dari dedikasi dan kolaborasi luar biasa dari seluruh anggota tim. Kami juga 
+mengucapkan terima kasih yang sebesar-besarnya kepada jajaran manajemen dan staf SRB 
+Motor atas kepercayaan, penyediaan data operasional, serta kerja sama yang sangat baik selama 
+fase observasi lapangan dan uji coba kelayakan sistem. Kami menyadari sepenuhnya bahwa 
+aplikasi yang dikembangkan maupun laporan ini masih senantiasa membutuhkan 
+penyempurnaan. Oleh karena itu, kami sangat mengharapkan kritik serta saran yang 
+membangun dari para pembaca. Akhir kata, kami berharap sistem informasi yang kami bangun 
+ini dapat memberikan dampak positif bagi operasional SRB Motor dan bermanfaat bagi 
+perkembangan rekayasa perangkat lunak. 
+Bekasi, 16 April 2026 
+Penulis --- PAGE 4 ---
+iv 
+ 
+DAFTAR ISI 
+ 
+PROFIL ANGGOTA .................................................................................................................. ii 
+KATA PENGANTAR ................................................................................................................ iii 
+DAFTAR ISI ............................................................................................................................. iv 
+BAB I PENDAHULUAN .......................................................................................................... 1 
+A. Latar Belakang ............................................................................................................... 1 
+B. Tujuan ............................................................................................................................. 3 
+C. Ruang Lingkup ............................................................................................................... 3 
+BAB II  SOFTWARE TESTING LIFE CYCLE ........................................................................ 6 
+A. Requirement Gathering .................................................................................................. 6 
+B. Test Planning ................................................................................................................ 10 
+C. Test Case Development and Execution ........................................................................ 13 
+D. Set Up Test Environment ............................................................................................. 20 
+E. Test Cycle Closure ....................................................................................................... 20 
+BAB III  PENUTUP ................................................................................................................. 27 
+A. Kesimpulan ................................................................................................................... 27 
+B. Saran ............................................................................................................................. 27 
+DAFTAR PUSTAKA ............................................................................................................... 29
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ --- PAGE 5 ---
+1 
+ 
+BAB I 
+PENDAHULUAN 
+A. Latar Belakang 
+Perkembangan sistem perdagangan elektronik (e-commerce) dan digitalisasi layanan telah 
+melalui evolusi yang signifikan sebagai solusi untuk efisiensi dan modernisasi proses bisnis. 
+Seiring waktu, teknologi ini semakin masif diadopsi oleh industri otomotif dan dealer 
+kendaraan, bertransformasi dari sekadar sistem pencatatan internal menjadi platform online 
+terintegrasi. Implementasi sistem informasi e-commerce terbukti secara signifikan mampu 
+mendukung proses penjualan, memfasilitasi transaksi yang lebih efisien, dan memperluas 
+jangkauan pasar bagi perusahaan (Putra & Hartono, 2024). Dalam lanskap bisnis yang 
+menuntut transparansi, ketergantungan pada perangkat lunak yang andal bukan lagi sekadar 
+pilihan, melainkan kebutuhan krusial untuk menjaga daya saing. 
+Namun demikian, laju transformasi digital ini belum merata di seluruh lini industri 
+otomotif, terutama pada dealer independen. Dalam observasi lapangan, SRB Motor yang 
+beroperasi sebagai mitra independen di bawah naungan prinsipal pembiayaan induk (SSM), 
+diketahui masih mengandalkan proses operasional yang konvensional atau semi-digital. 
+Kondisi ini melahirkan serangkaian tantangan operasional yang kompleks. Saat ini, SRB Motor 
+menghadapi kendala dalam sinkronisasi tiga pilar utamanya: pertama, minimnya media 
+informasi real-time mengenai ketersediaan unit di etalase; kedua, proses pengajuan kredit yang 
+berbelit akibat keharusan pengumpulan berkas fisik sehingga sering memicu drop-off calon 
+pembeli; serta ketiga, ketiadaan pemetaan jadwal mekanik secara presisi yang berujung pada 
+antrean panjang dan tumpang tindih jadwal di bengkel. 
+Studi-studi kasus pada industri sejenis menunjukkan bahwa ketergantungan pada proses 
+manual dalam mengelola inventaris dan transaksi sangat rentan terhadap inefisiensi dan 
+kesalahan fatal (Albalkhi & Komalasari, 2024). Sebagai solusi atas berbagai kendala --- PAGE 6 ---
+2 
+ 
+operasional tersebut, telah dikembangkan sebuah Sistem Informasi terpadu bernama "Sistem 
+SRB Motor", yakni Aplikasi Penjualan dan Service Motor Berbasis Web. Sistem ini dirancang 
+menggunakan kerangka kerja modern untuk mengotomatisasi operasional dealer secara 
+komprehensif (Wulandari et al., 2022). Fungsionalitas utamanya mencakup modul katalog 
+digital yang dilengkapi simulasi kredit, manajemen pembiayaan bersyarat, integrasi 
+pembayaran digital otomatis (payment gateway), hingga fitur reservasi layanan servis 
+algoritmik. 
+Mengingat besarnya peran dan kompleksitas alur transaksi pada aplikasi yang telah 
+dibangun ini, kualitas fungsional perangkat lunak harus dipastikan berjalan sempurna sebelum 
+diimplementasikan secara penuh. Cacat fungsional (bug) pada sistem tidak hanya akan 
+menurunkan tingkat kepercayaan pengguna, tetapi juga berpotensi menimbulkan kerugian 
+operasional, seperti kegagalan sinkronisasi pembayaran atau tumpang tindih jadwal servis 
+(overbooking). Oleh karena itu, penerapan Software Quality Assurance (SQA) mutlak 
+diperlukan sebagai langkah mitigasi untuk meminimalisir risiko kegagalan sistem (Suderajat et 
+al., 2025). Proyek ini difokuskan pada pengujian fungsional aplikasi Sistem SRB Motor secara 
+manual maupun otomatis menggunakan pendekatan Black Box Testing. Melalui metode ini, 
+sistem dievaluasi berdasarkan kesesuaian respons antarmuka tanpa perlu membedah struktur 
+internal kode (Suderajat et al., 2025), guna memastikan seluruh fungsi beroperasi dengan lancar 
+dan sistem benar-benar siap memberikan efisiensi yang optimal bagi operasional SRB Motor. 
+ 
+ 
+ 
+ --- PAGE 7 ---
+3 
+ 
+B. Tujuan  
+Berdasarkan latar belakang permasalahan yang telah diuraikan, maka tujuan dari penelitian 
+ini adalah sebagai berikut: 
+1. Menerapkan metode Black Box Testing dalam pengujian fungsional pada Sistem SRB 
+Motor berbasis web.  
+2. Mengevaluasi apakah seluruh fitur dalam Sistem SRB Motor telah berjalan sesuai 
+dengan kebutuhan dan spesifikasi yang dirancang.  
+3. Mengidentifikasi kemungkinan kesalahan atau bug pada sistem sebelum digunakan oleh 
+pengguna.  
+4. Memastikan sistem penjualan dan layanan servis motor dapat beroperasi dengan baik 
+untuk mendukung operasional SRB Motor. 
+C. Ruang Lingkup 
+Ruang lingkup proyek ini difokuskan pada pengujian fungsional aplikasi SRB Motor yang 
+dilakukan secara manual menggunakan metode Black Box Testing. Pengujian dilakukan untuk 
+memastikan bahwa setiap fitur dalam sistem dapat berjalan sesuai dengan kebutuhan yang telah 
+ditentukan. 
+Fitur yang diuji dari sisi pelanggan meliputi katalog etalase motor, pengajuan kredit, proses 
+pembayaran digital, dan reservasi layanan servis. Sementara dari sisi administrator, fitur yang 
+diuji mencakup proses verifikasi persetujuan kredit, pemantauan dan pemfilteran status 
+transaksi, serta manajemen stok inventaris motor.Pengujian pada proyek ini hanya terbatas pada 
+pengujian fungsional, sehingga tidak mencakup pengujian performa, keamanan, maupun 
+pengujian otomatisasi sistem. 
+ 
+ 
+ 
+ --- PAGE 8 ---
+4 
+ 
+D. Metodologi 
+Metodologi yang digunakan dalam proyek ini adalah Software Testing Life Cycle 
+(STLC) dengan pendekatan Black Box Testing. Pengujian dilakukan secara sistematis 
+melalui enam tahapan berikut: 
+1. Requirement Analysis Tahap awal ini dilakukan untuk mengidentifikasi serta 
+menganalisis kebutuhan fungsional aplikasi berdasarkan hak akses masing-masing 
+pengguna utama pada Sistem SRB Motor, yaitu Pelanggan dan Administrator. Proses 
+analisis memfokuskan pendekatan Black Box Testing, di mana sistem dinilai murni 
+berdasarkan interaksi antarmuka (input-output) tanpa perlu membedah struktur kode 
+program di baliknya. 
+2. Test Planning Pada tahap ini dilakukan penyusunan rencana pengujian (Test Plan) 
+yang mencakup penentuan cakupan fitur kritikal, jadwal, alat uji, hingga strategi 
+eksekusi. Perencanaan ini bertujuan agar seluruh skenario pengujian berjalan secara 
+terarah, terstruktur, dan efektif dalam memvalidasi alur transaksi operasional SRB 
+Motor. 
+3. Test Case Development Merupakan tahap penyusunan skenario kasus uji (test case) 
+berdasarkan kebutuhan fungsional yang telah diidentifikasi. Struktur penyusunan kasus 
+uji dirancang mencakup prasyarat uji (preconditions), langkah-langkah pengujian, data 
+masukan (input data), serta hasil yang diharapkan (expected result). Skenario yang 
+dibuat mencakup pengujian positif (validasi berhasil) maupun pengujian negatif 
+(validasi penolakan sistem saat terjadi error). 
+4. Test Environment Setup Tahap ini mencakup persiapan lingkungan simulasi 
+pengujian yang mereplikasi kondisi sebenarnya untuk menjalankan aplikasi. Pengujian 
+dilakukan pada lingkungan server lokal (localhost) menggunakan sistem operasi 
+Windows 11 dan peramban web (web browser) Google Chrome. --- PAGE 9 ---
+5 
+ 
+5. Test Execution Pada tahap eksekusi, seluruh skenario test case yang telah disusun 
+akan dijalankan secara langsung pada aplikasi SRB Motor. Pengujian dilakukan secara 
+manual dengan memposisikan penguji sebagai pengguna akhir. Hasil pengujian 
+kemudian dicatat ke dalam dokumen pelaporan dengan indikator status evaluasi, yaitu 
+"PASS" apabila fungsionalitas berjalan sesuai rancangan, dan "FAIL" apabila 
+ditemukan cacat aplikasi (bug). 
+6. Test Cycle Closure Tahap akhir yang merupakan proses evaluasi dan penutupan 
+seluruh siklus pengujian. Kegiatan pada tahap ini mencakup rekapitulasi jumlah 
+pengujian yang berhasil dan gagal, pelaporan cacat aplikasi (Defect Report), serta 
+peninjauan pencapaian exit criteria. Hasil evaluasi ini akan dirangkum sebagai dasar 
+rekomendasi perbaikan bagi pihak pengembang (Developer) Sistem SRB Motor di masa 
+mendatang. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ --- PAGE 10 ---
+6 
+ 
+BAB II  
+SOFTWARE TESTING LIFE CYCLE 
+A. Requirement Gathering 
+Tahap Requirement Gathering bertujuan untuk mengidentifikasi, menganalisis, dan 
+mendokumentasikan spesifikasi kebutuhan dari Sistem SRB Motor. Kebutuhan fungsional yang 
+dikumpulkan pada tahap ini akan menjadi acuan utama (baseline) dalam merancang skenario 
+pengujian (test case). 
+1. Deskripsi Umum Sistem Sistem SRB Motor adalah platform Web-Based Enterprise & 
+E-Commerce terpadu yang dirancang untuk mendigitalisasi operasional dealer otomotif 
+independen. Sistem ini mengotomatisasi siklus transaksi pelanggan dari hulu ke hilir, 
+mencakup etalase ketersediaan unit motor, manajemen alur pengajuan kredit, integrasi 
+pembayaran digital otomatis, hingga pengelolaan reservasi layanan purna jual 
+(bengkel). 
+a. Identifikasi Aktor (Pengguna) Sistem ini dirancang untuk memfasilitasi interaksi 
+antara dua pengguna utama, yaitu: 
+a. Pelanggan (Customer): Pengguna eksternal yang menggunakan sistem untuk 
+memfilter katalog motor, membayar angsuran via payment gateway, serta 
+memesan jadwal servis bengkel. 
+b. Administrator: Pengelola dealer yang bertugas memverifikasi dokumen kredit 
+yang masuk, memantau dan memfilter status riwayat transaksi (termasuk unit 
+bermasalah), serta mengelola ketersediaan stok inventaris secara langsung. 
+2. Spesifikasi Kebutuhan Fungsional (Ruang Lingkup Pengujian) Berdasarkan hasil 
+analisis antarmuka dan proses bisnis aplikasi, pengujian akan difokuskan pada dua 
+puluh critical business path (jalur fungsional kritis) berikut: 
+ --- PAGE 11 ---
+7 
+ 
+a. Filter Katalog Motor (Positive Testing) Sistem wajib menyediakan fungsi filtrasi pada 
+halaman galeri yang mampu menampilkan unit motor secara akurat berdasarkan input 
+merk (misal: Yamaha, Honda, Suzuki) sesuai dengan data pada database. 
+b. Filter Status Kredit Dinamis (Negative/Bug Path) Sistem harus menyediakan fitur filter 
+status kredit pada dasbor admin (seperti status ditarik_leasing) yang mampu menarik 
+data secara tepat meskipun data tersebut baru saja diperbarui atau bersifat dinamis. 
+c. Manajemen Kuota Reservasi Servis Sistem harus memiliki logika validasi stok kuota 
+mekanik harian; jika jumlah reservasi mencapai batas maksimal, sistem wajib mengunci 
+(disable) tanggal tersebut agar tidak dapat dipilih oleh pengguna lain. 
+d. Sinkronisasi Transaksi Real-Time Sistem harus terintegrasi dengan callback Midtrans 
+untuk mengubah status transaksi secara otomatis dari pending menjadi settlement 
+(lunas) tanpa perlu intervensi manual dari admin. 
+e. Integrasi Notifikasi Gateway (WhatsApp) Sistem harus memicu pengiriman pesan 
+WhatsApp secara otomatis ke nomor pelanggan segera setelah admin menekan tombol 
+persetujuan (Approve) atau penolakan (Reject) pada modul pengajuan kredit. 
+f. Automasi Status Inventaris Sistem wajib menjalankan fungsi update otomatis pada UI 
+galeri; jika jumlah stok unit mencapai angka 0, sistem harus menampilkan badge 
+"TERJUAL" dan menonaktifkan fungsi tombol pemesanan. 
+g. Autentikasi Pihak Ketiga (Google SSO) Sistem harus mampu menjalankan prosedur 
+OAuth 2.0 yang memungkinkan pengguna melakukan pendaftaran dan masuk ke sistem 
+menggunakan akun Google secara instan. 
+h. Kalkulasi Angsuran Dinamis Sistem harus memiliki mesin penghitung simulasi kredit 
+yang mampu menampilkan angka angsuran secara presisi sesuai dengan perubahan 
+input nominal Uang Muka (DP) dan durasi tenor. --- PAGE 12 ---
+8 
+ 
+i. Validasi Ekstensi Berkas Dokumen Sistem wajib menerapkan filter keamanan pada 
+unggahan berkas (KTP/KK) yang hanya mengizinkan format dokumen resmi (.jpg, 
+.png, .pdf), serta menolak format yang berpotensi berbahaya (.exe, .php). 
+j. Pemrosesan Tagihan Masif (Bulk Payment) Sistem harus mampu menjumlahkan 
+beberapa tagihan tunggakan cicilan ke dalam satu Order ID untuk diproses dalam satu 
+kali transaksi pembayaran melalui payment gateway. 
+k. Mekanisme Pemulihan Akun (Lupa Password) Sistem harus menyediakan alur 
+pemulihan mandiri yang mampu mengirimkan tautan unik ke alamat email pengguna 
+untuk keperluan pengaturan ulang kata sandi. 
+l. Generasi Kwitansi Digital (Output PDF) Sistem harus mampu mengonversi data 
+transaksi yang telah lunas ke dalam format dokumen PDF yang siap diunduh oleh 
+pengguna sebagai bukti bayar yang sah. 
+m. Pengaturan Hak Akses (RBAC) Sistem wajib membatasi akses URL dan fitur 
+antarmuka berdasarkan peran pengguna, memastikan Staff Admin tidak dapat 
+mengakses menu yang dikhususkan bagi Super Admin. 
+n. Ekspor Laporan Strategis (Excel) Sistem harus mampu mengonversi data tabel 
+pengajuan kredit dan riwayat servis ke dalam format file berektensi .xlsx dengan 
+susunan kolom yang rapi. 
+o. Manajemen Keamanan Sesi (Session Timeout) Sistem harus memiliki lapisan 
+pengaman yang akan memutuskan sesi login secara otomatis jika terdeteksi ketiadaan 
+aktivitas pengguna dalam durasi waktu tertentu. 
+p. Pengelolaan Konten Dinamis (CMS) Sistem wajib menyediakan modul bagi admin 
+untuk memperbarui data banner, harga promo, dan teks pengumuman pada halaman 
+depan secara langsung dari dasbor. --- PAGE 13 ---
+9 
+ 
+q. Manajemen Profil dan Data Diri Sistem harus memungkinkan pengguna untuk 
+melakukan pembaruan data profil, alamat pengiriman, dan sinkronisasi kontak melalui 
+halaman dasbor akun pelanggan. 
+r. Pencarian Unit Motor Berbasis Teks Sistem wajib menyediakan bilah pencarian cerdas 
+yang responsif terhadap input teks untuk menampilkan unit motor spesifik berdasarkan 
+nama model atau tipe. 
+s. Sistem Ulasan dan Rating Layanan Sistem harus menyediakan formulir pemberian 
+ulasan tertulis dan penilaian bintang bagi pelanggan yang telah menyelesaikan transaksi 
+pembelian unit atau layanan servis. 
+t. Responsivitas Antarmuka Pengguna Sistem harus memastikan seluruh elemen 
+antarmuka, navigasi, dan tabel data dapat diakses serta berfungsi optimal pada berbagai 
+ukuran layar (Mobile, Tablet, Desktop). 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ --- PAGE 14 ---
+10 
+ 
+3. Diagram Use Case  
+ 
+Gambar 2.1 Use Case 
+B. Test Planning 
+Test Planning (Perencanaan Pengujian) merupakan tahap penyusunan dokumen yang 
+mendefinisikan strategi, jadwal, dan sumber daya yang akan digunakan. Dokumen ini bertujuan 
+untuk memastikan proses pengujian berjalan secara sistematis. Berikut adalah tabel 
+perencanaan pengujian untuk Sistem SRB Motor: 
+No Komponen Deskripsi 
+1 Pendahuluan Perencanaan ini mendefinisikan strategi 
+pengujian fungsional pada Sistem Penjualan 
+dan Service Motor Berbasis Web (SRB 
+Motor) guna memastikan aplikasi berjalan 
+dengan baik sebelum diimplementasikan 
+secara penuh. 
+--- PAGE 15 ---
+11 
+ 
+No Komponen Deskripsi 
+2 Tujuan Pengujian Memvalidasi bahwa seluruh critical business 
+path (Katalog, Pengajuan Kredit, Reservasi 
+Servis, Pembayaran, Pemantauan/Filter Status 
+Admin, Verifikasi Admin, dan Manajemen 
+Stok) beroperasi sesuai dengan spesifikasi 
+kebutuhan yang dirancang. 
+3 Ruang Lingkup Pengujian difokuskan pada pengujian 
+fungsionalitas aplikasi menggunakan metode 
+Black Box Testing secara manual. Pengujian 
+mencakup antarmuka sisi Pelanggan (Front-
+End) dan antarmuka sisi Administrator (Back-
+End). 
+4 Jadwal (Schedule) Pengujian dilaksanakan dalam estimasi waktu 
+2 minggu pelaporan.• Minggu 1: Analisis 
+kebutuhan, perancangan Test Plan, dan 
+pembuatan skenario uji.• Minggu 2: Eksekusi 
+pengujian, dokumentasi cacat (defect), dan 
+penutupan siklus pengujian. 
+5 Sumber Daya (Resources) Pengujian dieksekusi oleh tim QA internal 
+kelompok yang terdiri dari 5 personel: Darell 
+Rangga, Iman Syahrudin, Katherine Julian, 
+Nasvira Melani, dan Chesa Awalia. 
+6 Lingkungan Pengujian 
+(Environment) 
+Sistem Operasi: Windows 11.Peramban Web: 
+Google Chrome (Versi Terbaru).Server Basis 
+Data: Server lokal / Localhost (PHP & 
+MySQL). 
+7 Pengujian Fungsional (Functional 
+Testing) 
+Eksekusi 20 skenario Test Case utama yang 
+menguji respons antarmuka terhadap input 
+data pelanggan (seperti pengisian form 
+pengajuan, filter produk) serta validasi 
+pemfilteran data dan otomatisasi output di sisi 
+Admin. 
+8 Pengujian UI/UX Tidak termasuk dalam cakupan pengujian 
+siklus ini (Out of Scope). 
+9 Pengujian Kinerja (Performance 
+Testing) 
+Tidak termasuk dalam cakupan pengujian 
+siklus ini (Out of Scope). 
+10 Pengujian Keamanan (Security 
+Testing) 
+Tidak termasuk dalam cakupan pengujian 
+siklus ini (Out of Scope). 
+11 Manajemen Cacat (Defect 
+Management) 
+Apabila sistem gagal memenuhi hasil yang 
+diharapkan (Expected Result), temuan cacat 
+(bug) akan didokumentasikan beserta tingkat 
+keparahan (Severity). 
+12 Alat Pengujian (Testing Tools) Pengujian berjalan murni secara manual 
+(Manual Testing). Dokumentasi menggunakan 
+Microsoft Word/Excel. Pengecekan webhook 
+Midtrans menggunakan fitur Inspect Element 
+/ Network Tab pada browser. 
+13 Manajemen Risiko (Risk 
+Management) 
+Risiko: Data uji coba (dummy) merusak data 
+operasional.Mitigasi: Seluruh aktivitas --- PAGE 16 ---
+12 
+ 
+No Komponen Deskripsi 
+pengujian diisolasi menggunakan database 
+localhost yang terpisah dari database 
+peluncuran publik (production). 
+14 Kriteria Selesai Pengujian dinyatakan selesai jika 100% 
+skenario pengujian utama (TC-001 hingga 
+TC-020) telah dieksekusi, dan tidak 
+ditemukan bug berstatus fatal (High Priority) 
+yang dapat menggagalkan transaksi 
+pengguna. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ --- PAGE 17 ---
+13 
+ 
+C. Test Case Development and Execution 
+Test Case Development and Execution (Pengembangan dan Pelaksanaan Kasus Uji) 
+merupakan tahap penyusunan skenario pengujian secara rinci berdasarkan kebutuhan sistem 
+yang telah dirancang. Pada tahap ini, setiap fungsi dalam sistem dibuatkan test case yang berisi 
+langkah-langkah pengujian, data uji, serta hasil yang diharapkan. 
+Setelah test case disusun, dilakukan proses eksekusi pengujian untuk memastikan bahwa setiap 
+fitur dalam sistem berjalan sesuai dengan spesifikasi yang telah ditentukan. Hasil dari pengujian 
+ini kemudian dicatat untuk mengetahui apakah sistem telah memenuhi kebutuhan pengguna 
+atau masih terdapat kesalahan (bug) yang perlu diperbaiki.  
+Berikut adalah tabel pengembangan dan pelaksanaan test case untuk Sistem SRB Motor: 
+Project Name Sistem Informasi Penjualan dan 
+Service (SRB Motor) 
+Priority High 
+Description 
+Pengujian fungsional (Black Box 
+Testing) pada antarmuka 
+Pelanggan (Front-End) dan 
+Administrator (Back-End) untuk 
+Sistem SRB Motor. 
+Test Objective 
+Memvalidasi bahwa seluruh 
+critical business path (Katalog, 
+Kredit, Servis, Pembayaran, dan 
+Manajemen Admin) beroperasi 
+sesuai dengan spesifikasi 
+kebutuhan. 
+ 
+ 
+ 
+ 
+ 
+ 
+Test Case Author Darell Rangga Putra Rachman 
+(Ketua Tim QA) 
+Test Case Reviewer Henny Leidiyana 
+Test Case Version v1.0 
+Test Execution Date 11 April 2026 --- PAGE 18 ---
+14 
+ 
+Test 
+Case 
+ID 
+Preconditions Test Steps Input 
+Data 
+Expected 
+Results 
+Actual 
+Results 
+Test 
+Envir
+onme
+nt 
+Executi
+on 
+Status 
+Bug 
+Severit
+y 
+Bug 
+Priorit
+y 
+Notes  
+SQA
+-TC-
+01 
+User di 
+halaman galeri 
+motor 
+1. Klik dropdown 
+filter merk 
+2. Pilih salah satu 
+merk yaitu "Yamaha" 
+3. Tunggu sistem 
+memproses filter 
+4. Amati daftar motor 
+yang ditampilkan 
+Yamah
+a  
+Menampil motor 
+Yamaha 
+ 
+Sesuai  Local
+host 
+(Chro
+me) 
+PASS - - Filter Akurat  
+SQA
+-TC-
+02 
+Admin login & 
+berada di 
+halaman 
+Daftar 
+Pengajuan 
+Kredit 
+1. Klik dropdown 
+filter Status. 
+2. Pilih opsi "Ditarik 
+Leasing". 
+3. Amati hasil filter. 
+Filter: 
+ditarik_
+leasing 
+Dropdown 
+menampilkan 
+opsi "Ditarik 
+Leasing" dan 
+sistem berhasil 
+memfilter daftar 
+kredit terkait. 
+Opsi 
+ditarik_
+leasing 
+tidak 
+muncul 
+di 
+dropdo
+wn 
+karena 
+sistem 
+hanya 
+menga
+mbil 
+status 
+dari 
+data 
+yang 
+sudah 
+ada di 
+databas
+Local
+host 
+(Chro
+me) 
+FAIL Mediu
+m 
+Mediu
+m 
+Logika filter 
+bergantung 
+pada 
+ketersediaan 
+data awal 
+(BUG-001). --- PAGE 19 ---
+15 
+ 
+Test 
+Case 
+ID 
+Preconditions Test Steps Input 
+Data 
+Expected 
+Results 
+Actual 
+Results 
+Test 
+Envir
+onme
+nt 
+Executi
+on 
+Status 
+Bug 
+Severit
+y 
+Bug 
+Priorit
+y 
+Notes  
+e secara 
+dinamis
+. 
+SQA
+-TC-
+03 
+Kuota 
+mekanik 
+penuh 
+1.Masuk ke menu 
+Reservasi 
+2.Pilih tanggal yang 
+sudah penuh 
+3.Klik pada tanggal 
+tersebut 
+4. Amati respon 
+sistem 
+Today  Tanggal tidak 
+bisa dipilih 
+Sesuai  Local
+host 
+(Chro
+me) 
+PASS - - Auto-lock 
+aktif 
+SQA
+-TC-
+04 
+Status pending 1.Buka halaman 
+dashboard 
+pembayaran 
+2. Pilih transaksi yang 
+pending 
+3. Lakukan 
+pembayaran melalui 
+Midtrans 
+4. Klik tombol "Back 
+to Store" 
+5. Amati perubahan 
+status transaksi 
+500k Status jadi lunas Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Real-time 
+update 
+SQA
+-TC-
+05 
+Admin cek 
+kredit 
+1. Buka halaman 
+pengajuan kredit 
+2. Periksa data 
+pengajuan 
+3. Klik tombol 
+Approv
+e 
+Notifikasi 
+terkirim 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - WA berhasil --- PAGE 20 ---
+16 
+ 
+Test 
+Case 
+ID 
+Preconditions Test Steps Input 
+Data 
+Expected 
+Results 
+Actual 
+Results 
+Test 
+Envir
+onme
+nt 
+Executi
+on 
+Status 
+Bug 
+Severit
+y 
+Bug 
+Priorit
+y 
+Notes  
+"Approve" 
+4. Amati sistem 
+mengirim notifikasi 
+SQA
+-TC-
+06 
+Admin edit 
+stok 
+1. Buka form edit stok 
+motor 
+2. Ubah nilai stok 
+menjadi 0 
+3. Klik tombol simpan 
+4. Amati perubahan 
+tampilan pada sistem 
+0 Produk jadi 
+terjual 
+Sesuai  Local
+host 
+(Chro
+me) 
+PASS - - Extend & UI 
+update 
+berhasil 
+SQA
+-TC-
+07 
+Guest ingin 
+login instan 
+1. Klik "Lanjut 
+dengan Google"  
+2. Selesaikan login di 
+Google Popup 
+Google 
+SSO 
+User berhasil 
+masuk ke 
+dashboard tanpa 
+registrasi 
+manual 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - OAuth lancar  
+SQA 
+–TC-
+08 
+Guest di 
+halaman detail 
+motor 
+1. Ubah DP dan tenor 
+pada widget simulasi  
+2. Periksa angka 
+angsuran  
+DP/Ten
+or 
+Angka angsuran 
+bulanan berubah 
+secara dinamis 
+dan akurat 
+Sesuai  Local
+host 
+(Chro
+me) 
+PASS - - Validasi file 
+aktif 
+SQA 
+–TC-
+09 
+Customer 
+mengunggah 
+dokumen 
+1. Pilih file .exe untuk 
+KTP 
+2. Klik upload 
+File: 
+.exe 
+Sistem menolak 
+file dan 
+menampilkan 
+pesan error 
+validasi 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Validasi file 
+aktif 
+SQA
+-TC-
+10 
+Customer 
+punya 
+tunggakan 
+cicilan 
+1. Pilih 3 cicilan 
+sekaligus  
+2. Klik bayar 
+Multi-
+pay 
+Total tagihan di 
+Midtrans sama 
+dengan jumlah 3 
+cicilan tersebut 
+Sesuai 
+ 
+Local
+host 
+(Chro
+me) 
+PASS - - Bulk 
+payment OK --- PAGE 21 ---
+17 
+ 
+Test 
+Case 
+ID 
+Preconditions Test Steps Input 
+Data 
+Expected 
+Results 
+Actual 
+Results 
+Test 
+Envir
+onme
+nt 
+Executi
+on 
+Status 
+Bug 
+Severit
+y 
+Bug 
+Priorit
+y 
+Notes  
+SQA 
+–TC-
+11 
+Guest lupa 
+password 
+1. Klik “Lupa 
+Password”  
+2. Masukkin email & 
+klik reset 
+Email 
+Reset 
+Email instruksi 
+terkirim dan 
+password 
+berhasil diubah 
+via link 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Recovery 
+sukses 
+SQA
+-TC-
+12 
+Customer 
+setelah bayar 
+cicilan 
+1. Buka detail cicilan 
+PAID  
+2. Klik "Unduh 
+Kwitansi" 
+Receipt 
+Downlo
+ad 
+Sistem 
+mengunduh file 
+kwitansi 
+(PDF/Image) 
+dengan data 
+yang benar 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Kwitansi 
+digital OK 
+ 
+SQA 
+–TC-
+13 
+Customer 
+memiliki 
+notifikasi baru 
+1. Klik icon lonceng 
+2. Klik “Tandai Sudah 
+Dibaca 
+Notific
+ation 
+ID 
+Jumlah 
+notifikasi 
+(badge) 
+berkurang dan 
+status berubah 
+jadi read 
+Sesuai Locah
+host 
+(Chro
+me) 
+PASS - - Manaj 
+SQA
+-TC-
+14 
+Customer 
+mencoba akses 
+admin 
+1. Masukkan URL 
+admin manual saat 
+login sebagai 
+Customer 
+URL: 
+/admin 
+Sistem menolak 
+akses dan 
+redirect ke 
+/dashboard atau 
+/ 
+Sesuai Local
+host 
+(Chro
+me) 
+ 
+PASS - - Middleware 
+security 
+SQA
+-TC-
+15 
+Customer cek 
+riwayat servis 
+1. Buka menu Servis  
+2. Lihat daftar riwayat 
+Service 
+History 
+ 
+Menampilkan 
+data servis 
+lengkap (tgl, 
+deskripsi) 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Riwayat 
+servis OK --- PAGE 22 ---
+18 
+ 
+Test 
+Case 
+ID 
+Preconditions Test Steps Input 
+Data 
+Expected 
+Results 
+Actual 
+Results 
+Test 
+Envir
+onme
+nt 
+Executi
+on 
+Status 
+Bug 
+Severit
+y 
+Bug 
+Priorit
+y 
+Notes  
+ 
+SQA
+-TC-
+16 
+Owner ingin 
+melihat 
+performa 
+1. Buka Laporan 
+Strategis 2. Klik 
+"Ekspor Excel" 
+Export 
+Action 
+Sistem 
+mengunduh file 
+Excel berisi data 
+penjualan motor 
+File 
+terundu
+h, 
+namun 
+format 
+kolom 
+tanggal 
+beranta
+kan 
+(Bug-
+02) 
+Local
+host 
+(Chro
+me) 
+FAIL Low Low Export 
+terganggu 
+format 
+SQA
+-TC-
+17 
+Owner 
+mengelola 
+staff 
+1. Buka menu 
+Manajemen User 2. 
+Tambah staff baru 
+Role: 
+Staff/A
+dmin 
+Staff baru 
+berhasil dibuat 
+dan bisa login 
+ke panel admin 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - User 
+management 
+OK 
+SQA
+-TC-
+18 
+Customer 
+melakukan 
+checkout 
+1. Buka 2 tab untuk 
+motor yang sama (stok 
+tinggal 1) 2. Klik 
+bayar hampir 
+bersamaan 
+Race 
+Conditi
+on 
+Sistem hanya 
+membolehkan 
+satu orang 
+sukses, yang 
+lain mendapat 
+error "Stok 
+Habis" 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Race 
+condition 
+handled 
+SQA
+-TC-
+19 
+Admin 
+memantau log 
+aktivitas 
+1. Buka log audit 
+sistem 2. Periksa entri 
+terakhir 
+Action 
+Log 
+Menampilkan 
+aktivitas terakhir 
+(siapa 
+melakukan apa, 
+kapan) 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Auditing 
+aktif --- PAGE 23 ---
+19 
+ 
+ 
+ 
+ 
+ 
+Test 
+Case 
+ID 
+Preconditions Test Steps Input 
+Data 
+Expected 
+Results 
+Actual 
+Results 
+Test 
+Envir
+onme
+nt 
+Executi
+on 
+Status 
+Bug 
+Severit
+y 
+Bug 
+Priorit
+y 
+Notes  
+SQA
+-TC-
+20 
+User 
+melakukan 
+logout 
+1. Klik tombol Logout 
+2. Klik tombol "Back" 
+di browser 
+Session 
+Clear 
+User kembali ke 
+landing page 
+dan tidak bisa 
+mengakses 
+dashboard via 
+tombol back 
+Sesuai Local
+host 
+(Chro
+me) 
+PASS - - Session 
+destroyed --- PAGE 24 ---
+20 
+ 
+D. Set Up Test Environment 
+Set Up Test Environment (Penyiapan Lingkungan Pengujian) merupakan tahap persiapan 
+perangkat keras, perangkat lunak, dan jaringan yang digunakan dalam proses pengujian. 
+Tujuannya untuk memastikan lingkungan pengujian sesuai dengan kondisi penggunaan 
+sebenarnya sehingga hasil pengujian lebih akurat. Berikut adalah tabel penyiapan lingkungan 
+pengujian untuk Sistem SRB Motor: 
+Field Detail 
+Project Name Sistem Informasi Penjualan dan Service (SRB Motor) 
+Module / Feature Katalog Motor, Pengajuan Kredit, Reservasi Servis, Pembayaran 
+(Midtrans), dan Dashboard Admin. 
+ 
+Environment Type QA / Local Environment 
+Build V ersion  V1a.0  
+Setup Date 11 April 2026 
+Prepared By Tim QA SRB Motor (Darell Rangga dan Tim) 
+ 
+E. Test Cycle Closure 
+Test Cycle Closure merupakan tahap akhir dalam proses pengujian yang bertujuan untuk 
+mengevaluasi seluruh hasil pengujian yang telah dilakukan. Pada tahap ini dilakukan 
+peninjauan terhadap test case, hasil eksekusi, serta identifikasi bug yang ditemukan untuk 
+memastikan bahwa sistem telah memenuhi kebutuhan yang ditetapkan. 
+1. Ringkasan Pengujian 
+Tahap penutupan pengujian dilakukan setelah seluruh skenario uji dijalankan pada Sistem 
+Informasi Penjualan dan Service (SRB Motor). Proses ini bertujuan untuk mengkaji tingkat 
+keberhasilan sistem dalam memenuhi kebutuhan operasional serta menilai kesiapan 
+implementasi di lingkungan nyata. --- PAGE 25 ---
+21 
+ 
+Seluruh pengujian difokuskan pada interaksi pengguna dengan sistem, baik dari sisi 
+pelanggan maupun administrator. Aktivitas yang diuji meliputi proses transaksi, pengelolaan 
+data, serta validasi sistem terhadap berbagai input. Pendekatan yang digunakan memastikan 
+bahwa sistem dievaluasi berdasarkan perilaku aktual tanpa mempertimbangkan struktur internal 
+program. 
+Dari hasil pelaksanaan, sistem menunjukkan kemampuan yang baik dalam menjalankan 
+fungsi-fungsi utamanya, terutama pada alur transaksi dan pengelolaan layanan. Meskipun 
+demikian, masih terdapat beberapa aspek minor yang memerlukan penyempurnaan. 
+2. Hasil Pengujian 
+Berdasarkan pelaksanaan pengujian terhadap 20 skenario test case, diperoleh hasil sebagai 
+berikut: 
+a. Total Test Case: 20  
+b. Test Case Berhasil (PASS): 18  
+c. Test Case Gagal (FAIL): 2  
+d. Tingkat Keberhasilan: 90% 
+Secara keseluruhan, hasil pengujian menunjukkan bahwa sebagian besar fungsi dalam 
+sistem telah berjalan sesuai dengan yang diharapkan. Fitur-fitur utama seperti proses transaksi 
+pembayaran, reservasi layanan servis, validasi input pengguna, serta manajemen stok produk 
+berhasil dieksekusi dengan baik tanpa kendala yang berarti. Meskipun terdapat beberapa test 
+case yang gagal, kegagalan tersebut tidak bersifat kritis karena tidak mengganggu alur utama 
+sistem. Permasalahan yang ditemukan berkaitan dengan logika data yang bergantung pada 
+database serta format output yang belum sesuai, sehingga tetap memerlukan perbaikan agar 
+sistem lebih optimal. --- PAGE 26 ---
+22 
+ 
+3. Defect Summary 
+Defect yang ditemukan selama pengujian didokumentasikan sebagai berikut: 
+Bug ID Deskripsi Defect Severity Priority Status Assignee 
+BUG-001 Dropdown filter tidak 
+menampilkan opsi 
+ditarik_leasing (dynamic 
+pluck error). 
+Medium Medium Open Tim 
+Developer 
+BUG-002 Format tanggal pada file Excel 
+Laporan Penjualan tidak 
+terbaca sebagai format Date 
+(berubah jadi string mentah) 
+Low Low  Open Tim 
+Developer 
+ 
+a. BUG-001 
+Masalah ini terjadi karena sistem mengambil data status secara dinamis dari database. Jika 
+status tertentu seperti ditarik_leasing belum pernah tersimpan, maka opsi tersebut tidak 
+akan muncul di dropdown. Dampaknya, admin tidak dapat melakukan filter data secara 
+lengkap. Perlu perbaikan dengan menambahkan opsi status secara statis atau memastikan 
+data awal tersedia. 
+b. BUG-002 
+Bug ini terjadi pada fitur export laporan ke Excel, di mana format tanggal tidak dikenali 
+sebagai tipe date melainkan menjadi teks biasa. Hal ini menyebabkan data sulit dibaca atau 
+diolah lebih lanjut. Perbaikan diperlukan pada proses formatting saat export agar tanggal 
+tersimpan dalam format yang sesuai. 
+4. Evaluasi Kinerja Pengujian 
+Evaluasi dilakukan untuk menilai seberapa efektif proses pengujian dalam memastikan 
+kualitas sistem, dengan mempertimbangkan jumlah skenario uji, temuan bug, serta persentase 
+keberhasilan. Dari 20 skenario yang dijalankan, 18 berjalan sesuai harapan dan 2 tidak, --- PAGE 27 ---
+23 
+ 
+sehingga menunjukkan bahwa sistem secara umum sudah cukup andal dalam menjalankan 
+fungsinya. 
+Hal yang Berjalan Baik: 
+a. Seluruh skenario uji dapat dijalankan tanpa hambatan.  
+b. Fitur inti sistem berjalan secara konsisten dan stabil.  
+c. Proses pengujian berhasil menemukan kekurangan sebelum sistem digunakan.  
+d. Dokumentasi hasil pengujian tersusun rapi dan memudahkan evaluasi. 
+Area yang Perlu Ditingkatkan: 
+a. Mekanisme filter data pada sisi admin masih perlu diperbaiki.  
+b. Format laporan hasil export belum sesuai standar (terutama tanggal).  
+c. Perlu dilakukan pengujian ulang (retesting) setelah perbaikan bug.  
+d. Pengujian perlu diperluas ke aspek non-fungsional (performa & keamanan). 
+Secara keseluruhan, hasil evaluasi menunjukkan bahwa proses pengujian sudah cukup 
+efektif dalam mengidentifikasi masalah dan memastikan sistem dapat digunakan, namun tetap 
+diperlukan penyempurnaan agar kualitas sistem menjadi lebih maksimal. 
+5. Checklist Evaluasi Kinerja Pengujian 
+Seluruh tahapan utama dalam siklus pengujian telah dilaksanakan sesuai dengan rencana 
+yang ditetapkan. Aktivitas mulai dari perencanaan hingga evaluasi telah diselesaikan dengan 
+baik. Beberapa poin penting yang telah tercapai: 
+ 
+ 
+ --- PAGE 28 ---
+24 
+ 
+No Aktivitas Status Keterangan 
+1 Seluruh test case telah direncanakan Selesai  Total 20 test case 
+disusun sesuai 
+kebutuhan sistem 
+2 Seluruh test case telah dieksekusi Selesai  Semua skenario uji 
+berhasil dijalankan 
+3 Hasil pengujian terdokumentasi 
+dengan baik 
+Selesai  Data pass dan fail 
+dicatat secara 
+sistematis 
+4 Identifikasi dan pelaporan defect Selesai  Ditemukan 2 defect 
+5 Penyusunan laporan hasil pengujian Selesai  Ringkasan dan detail 
+telah dibuat 
+6 Perbaikan dan retestig Belum  Menunggu perbaikan 
+bug 
+7 Penentuan kesiapan sistem  Belum  Sistem dapat 
+digunakan dengan 
+catatan perbaikan 
+defect 
+ 
+6. Kesimpulan Pengujian 
+Berdasarkan keseluruhan hasil yang diperoleh, sistem dapat dinyatakan telah memenuhi 
+sebagian besar kebutuhan yang ditetapkan pada tahap awal pengembangan. Fungsi-fungsi 
+utama berjalan dengan baik dan mampu mendukung proses bisnis yang diharapkan. --- PAGE 29 ---
+25 
+ 
+Permasalahan yang ditemukan bersifat minor dan tidak menghambat penggunaan sistem secara 
+langsung. 
+Dengan mempertimbangkan hasil tersebut, sistem dinilai layak untuk diimplementasikan, 
+dengan catatan bahwa perbaikan terhadap kekurangan yang ada tetap dilakukan sebagai bagian 
+dari proses pengembangan berkelanjutan. 
+No Aktivitas Status Keterangan 
+1 Semua test case telah 
+direncanakan dan ditinjau 
+Selesai  20 test case utama 
+dibuat. 
+2 Semua test case telah dieksekusi Selesai  20 test case diuji di 
+localhost. 
+3 Ditemukan 2 defect  Selesai  Ditemukan 2 
+defect, terdiri dari 1 
+defect Tingkat 
+Medium (logika 
+filter admin) dan 1 
+defect Tingkat Low 
+(format tanggal 
+pada export Excel). 
+4 Semua defect kritis telah 
+diperbaiki 
+Selesai  Tidak ada defect 
+kritis pada sistem 
+(N/A). 
+5 Menunggu perbaikan logika 
+query pada fitur filter admin. 
+Belum  Menunggu 
+perbaikan logika --- PAGE 30 ---
+26 
+ 
+No Aktivitas Status Keterangan 
+query pada fitur 
+filter admin. 
+6 Regression testing telah 
+dilakukan 
+Belum Dilakukan setelah 
+perbaikan BUG-
+001 
+7 Laporan ringkasan pengujian 
+telah disusun 
+Selesai  Terekap dan 
+dilampirkan pada 
+Bab II. 
+8 Evaluasi kinerja pengujian telah 
+dilakukan 
+Selesai  Hasil evaluasi 
+didokumentasikan 
+dengan tingkat 
+keberhasilan 100% 
+pada fungsi utama. 
+9 Review dan retrospektif 
+pengujian telah dilakukan 
+Selesai  Tim QA telah 
+melakukan diskusi 
+evaluasi. 
+10 Keputusan final apakah aplikasi 
+siap dirilis 
+Selesai  Sistem diputuskan 
+SIAP DIRILIS. 
+ 
+ 
+ 
+ 
+ --- PAGE 31 ---
+27 
+ 
+BAB III  
+PENUTUP 
+A. Kesimpulan 
+Berdasarkan hasil pengujian yang telah dilakukan menggunakan metode Black Box Testing 
+pada Sistem Informasi Penjualan dan Service (SRB Motor), dapat disimpulkan bahwa sebagian 
+besar fungsionalitas sistem telah berjalan dengan baik sesuai dengan kebutuhan dan spesifikasi 
+yang dirancang. Dari total 20 test case yang diuji, sebanyak 18 test case berhasil (PASS) dan 2 
+test case mengalami kegagalan (FAIL), dengan tingkat keberhasilan pengujian mencapai sekitar 
+90%. 
+Fitur-fitur utama seperti katalog motor, reservasi servis, pembayaran melalui payment 
+gateway, verifikasi kredit oleh admin, serta manajemen stok terbukti berjalan stabil dan 
+mendukung proses bisnis utama (critical business path). Hal ini menunjukkan bahwa sistem 
+secara fungsional sudah siap untuk diimplementasikan dalam operasional SRB Motor. 
+Namun, masih ditemukan satu bug pada fitur filter status kredit di sisi administrator yang 
+disebabkan oleh logika pengambilan data yang bersifat dinamis. Meskipun bug tersebut tidak 
+menghambat alur utama pengguna (pelanggan), perbaikan tetap diperlukan untuk 
+meningkatkan kualitas dan kelengkapan fungsi sistem secara keseluruhan. 
+B. Saran 
+Berdasarkan hasil pengujian dan temuan yang ada, beberapa saran yang dapat diberikan 
+untuk pengembangan sistem ke depannya adalah sebagai berikut: 
+1. Perlu dilakukan perbaikan pada fitur filter status kredit dengan mengubah logika 
+pengambilan data dari dinamis menjadi statis (hardcoded) atau menambahkan data awal 
+(seeder), agar seluruh opsi status selalu tersedia.  --- PAGE 32 ---
+28 
+ 
+2. Disarankan untuk melakukan pengujian lanjutan seperti pengujian performa 
+(performance testing) dan keamanan (security testing) guna memastikan sistem tidak 
+hanya berfungsi dengan baik, tetapi juga aman dan mampu menangani beban 
+penggunaan.  
+3. Melakukan pengujian ulang (retesting) setelah perbaikan bug untuk memastikan bahwa 
+masalah yang ditemukan telah benar-benar terselesaikan tanpa menimbulkan bug baru.  
+4. Mengembangkan sistem monitoring dan logging yang lebih baik agar setiap kesalahan 
+atau aktivitas sistem dapat terdeteksi dan dianalisis dengan lebih mudah di masa 
+mendatang.  
+5. Untuk pengembangan selanjutnya, sistem dapat ditingkatkan dari segi user interface 
+(UI/UX) agar lebih user-friendly dan meningkatkan kenyamanan pengguna. 
+ 
+ 
+  --- PAGE 33 ---
+29 
+ 
+DAFTAR PUSTAKA 
+Albalkhi, A. N., & Komalasari, R. (2024). Sistem informasi penjualan (e-commerce) 
+UMKM Danisa Collection. SISINFO: Jurnal Sistem Informasi Dan Informatika, 
+6(1), 34–43. 
+Putra, R. R. S., & Hartono, B. (2024). Sistem Informasi Penjualan Berbasis Web Pada 
+Toko Buku Putra Ilmu Semarang. Jurnal Ilmiah Sistem Informasi, 3(3), 11–18. 
+Suderajat, A., Laki, A., Abimanyu, A. A., Hadikristanto, W., & Anshor, A. H. (2025). 
+Penerapan Manajemen Risiko dalam Software Quality Assurance: Studi Kasus 
+Pengujian Black Box pada Aplikasi Inventori Maintenance. Jurnal Indonesia: 
+Manajemen Informatika Dan Komunikasi, 6(1), 438–456. 
+Wulandari, C., Aviani, T. H. B., & Julianti, A. (2022). Sistem Informasi E-Commerce 
+Untuk Penjualan Barang Berbasis Mobile Web. Resolusi: Rekayasa Teknik 
+Informatika Dan Informasi, 3(2), 43–51. 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ --- PAGE 34 ---
+30 
+ 
+Penilaian TIM  
+Ketua TIM : Darell Rangga Putra Rachman 
+NIM  :19241009  
+Mata Kuliah : Software Quality Assurance  
+Keterangan : Penilaian dilaksanakan oleh ketua tim terhadap anggota tim  
+No  NIM  Nama  
+Tanggung Jawab   
+(melaksanakan tugas 
+indvidu dengan baik)  
+Kerjasama  
+(Terlibat aktif dalam 
+bekerja kelompok)  
+      Nilai: 0-100  Nilai: 0-100  
+1  19240732 Iman syahrudin Susanto  90 90  
+2  19240259 Katherine Julian Anastasia 
+Manurung 
+ 90  90 
+3  19240078 Nasvira Melani Putri  90  90 
+4  19240247 Chesa Awalia Refana  90  90 
+  
+Data anggota kelompok yang tidak hadir presentasi proyek akhir:  
+1. NIM-Nama  
+2.  
+3.  
+4.  
+Penilaian di atas dilaksanakan dengan sebenar-benarnya dan dapat dipertanggungjawabkan.  
+  
+  
+  
+Bekasi, 30 April 2026  
+Ketua TIM  
+ 
+ 
+ 
+Darell Rangga Putra Rachman 

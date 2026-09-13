@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML Sequence Diagram UC-03 - SRB Motor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #0f1117;
+            --surface: #171b24;
+            --border: #2a3045;
+            --text: #e2e8f0;
+            --text-muted: #7a89a8;
+            --teal: #3ecfb0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--teal); }
+
+        .badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--teal);
+            border: 1px solid var(--teal);
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.5; }
+
+        .content-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .diagram-frame {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            background: #11141c; /* DARK THEME */
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--teal);
+            color: var(--bg);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "base",
+            themeVariables: {
+                background: "#11141c",
+                primaryColor: "#1e2d48",
+                primaryTextColor: "#e2e8f0",
+                primaryBorderColor: "#3a4560",
+                lineColor: "#7a89a8",
+                actorBkg: "#271d3b",
+                actorTextColor: "#e2e8f0",
+                actorBorder: "#a07ff0",
+                signalColor: "#e2e8f0",
+                signalTextColor: "#e2e8f0",
+                fontFamily: "IBM Plex Sans, sans-serif",
+                fontSize: "17px"
+            },
+            sequence: {
+                messageFontSize: 17,
+                actorFontSize: 18,
+                noteFontSize: 16
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <a href="javascript:history.back()" class="back-link">&larr; Kembali</a>
+
+    <header>
+        <div class="badge">UC-03 · SEQUENCE DIAGRAM</div>
+        <h1>Login Multi-Role</h1>
+        <p class="subtitle">Skenario Customer, Admin, atau Montir melakukan login dan diarahkan ke Dashboard sesuai hak akses dengan Boundary spesifik masing-masing peran.</p>
+    </header>
+
+    <div class="content-container">
+        <div class="diagram-frame">
+            <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor U as User<br/>(Customer/Admin/Montir)
+    participant FL as &lt;&lt;boundary&gt;&gt;<br>FormLogin
+    participant AC as &lt;&lt;control&gt;&gt;<br>AuthController
+    participant E as &lt;&lt;entity&gt;&gt;<br>User
+    
+    %% Specific Boundaries as per Activity Diagram
+    participant BC as &lt;&lt;boundary&gt;&gt;<br>BerandaCustomer
+    participant DA as &lt;&lt;boundary&gt;&gt;<br>DashboardAdmin
+    participant JM as &lt;&lt;boundary&gt;&gt;<br>JadwalMontir
+
+    U->>FL: membuka halaman login()
+    activate FL
+    FL->>FL: tampilkanFormLogin()
+    deactivate FL
+    
+    U->>FL: inputKredensial(email, password)
+    activate FL
+    FL->>AC: login(email, password)
+    activate AC
+    
+    AC->>AC: validasiFormat(email, password)
+    AC->>E: cariUserByEmail(email)
+    activate E
+    E-->>AC: return dataUser
+    deactivate E
+    
+    alt Kredensial Tidak Valid / Tidak Ditemukan
+        AC-->>FL: return status(gagal, "Email/Password salah")
+        FL->>FL: tampilkanPesanError("Email/Password tidak valid")
+    else Login Berhasil
+        AC->>AC: verifikasiPassword(password, hash)
+        AC->>AC: setSession(dataUser)
+        AC-->>FL: return status(berhasil, role)
+        deactivate AC
+        
+        alt Role == Customer
+            FL->>BC: redirectKeBeranda()
+            activate BC
+            BC->>BC: tampilkanBerandaUtama()
+            deactivate BC
+        else Role == Admin
+            FL->>DA: redirectKeDashboardAdmin()
+            activate DA
+            DA->>DA: tampilkanRingkasanAdmin()
+            deactivate DA
+        else Role == Montir
+            FL->>JM: redirectKeJadwalMontir()
+            activate JM
+            JM->>JM: tampilkanJadwalPekerjaan()
+            deactivate JM
+        end
+        deactivate FL
+    end
+            </pre>
+        </div>
+    </div>
+
+    <button class="btn-print" onclick="window.print()">Cetak / PDF</button>
+
+</body>
+</html>

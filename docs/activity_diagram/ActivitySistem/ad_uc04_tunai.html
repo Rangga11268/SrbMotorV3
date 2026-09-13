@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Activity Diagram – UC-04 Pesan Motor Tunai</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { background: #fdfcf9; font-family: "Crimson Pro", Georgia, serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 24px; }
+            .page-header { text-align: center; margin-bottom: 30px; }
+            .page-header h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; letter-spacing: -0.5px; margin-bottom: 8px; }
+            .page-header p { font-size: 16px; color: #64748b; font-style: italic; }
+            
+            .diagram-container { background: #ffffff; padding: 40px; border: 1px solid #e2e8f0; box-shadow: 0 10px 50px rgba(0, 0, 0, 0.05); position: relative; }
+
+            /* UML Styles */
+            .swimlane-border { fill: none; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-header-bg { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; }
+            .swimlane-label { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; fill: #475569; text-anchor: middle; }
+            .node-start { fill: #1e293b; }
+            .node-end-outer { fill: none; stroke: #1e293b; stroke-width: 1.5; }
+            .node-end-inner { fill: #1e293b; }
+            
+            .activity-rect { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; rx: 10; ry: 10; }
+            .activity-text { font-size: 12px; font-weight: 600; text-anchor: middle; fill: #1e293b; }
+            .decision-diamond { fill: #ffffff; stroke: #1e293b; stroke-width: 1.5; }
+            .flow-line { stroke: #1e293b; stroke-width: 1.2; fill: none; }
+            .condition-text { font-size: 11px; font-style: italic; font-weight: 700; fill: #2563eb; }
+
+            .btn-print { margin-top: 30px; padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 6px; cursor: pointer; font-family: "JetBrains Mono", monospace; font-size: 12px; transition: background 0.2s; }
+            .btn-print:hover { background: #334155; }
+            
+            @media print {
+                .btn-print { display: none; }
+                body { padding: 0; background: white; }
+                .diagram-container { box-shadow: none; border: none; padding: 0; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <h1>Activity Diagram: UC-04 Pesan Motor Tunai</h1>
+            <p>Alur Pembelian Tunai, Integrasi Pembayaran & Penjadwalan Notifikasi</p>
+        </div>
+
+        <div class="diagram-container">
+            <svg width="1200" height="1550" viewBox="0 0 1200 1550">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1e293b" />
+                    </marker>
+                </defs>
+
+                <!-- Swimlanes Background -->
+                <rect x="0" y="0" width="300" height="1500" class="swimlane-border" />
+                <rect x="300" y="0" width="300" height="1500" class="swimlane-border" />
+                <rect x="600" y="0" width="300" height="1500" class="swimlane-border" />
+                <rect x="900" y="0" width="300" height="1500" class="swimlane-border" />
+
+                <!-- Swimlanes Headers -->
+                <rect x="0" y="0" width="300" height="40" class="swimlane-header-bg" />
+                <rect x="300" y="0" width="300" height="40" class="swimlane-header-bg" />
+                <rect x="600" y="0" width="300" height="40" class="swimlane-header-bg" />
+                <rect x="900" y="0" width="300" height="40" class="swimlane-header-bg" />
+
+                <text x="150" y="25" class="swimlane-label">CUSTOMER</text>
+                <text x="450" y="25" class="swimlane-label">SISTEM</text>
+                <text x="750" y="25" class="swimlane-label">ADMIN</text>
+                <text x="1050" y="25" class="swimlane-label">MIDTRANS</text>
+
+                <!-- Start Node -->
+                <circle cx="150" cy="80" r="10" class="node-start" />
+                <line x1="150" y1="90" x2="150" y2="120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Cust 1 -->
+                <rect x="65" y="120" width="170" height="45" class="activity-rect" />
+                <text x="150" y="142" class="activity-text">Memilih unit motor &</text>
+                <text x="150" y="156" class="activity-text">warna dari katalog</text>
+                
+                <path d="M 150,165 L 150,200" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Cust 2 -->
+                <rect x="65" y="200" width="170" height="45" class="activity-rect" />
+                <text x="150" y="222" class="activity-text">Menekan tombol</text>
+                <text x="150" y="236" class="activity-text">'Beli Tunai'</text>
+                
+                <path d="M 235,222 L 450,222 L 450,260" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Sist 1 -->
+                <rect x="365" y="260" width="170" height="45" class="activity-rect" />
+                <text x="450" y="282" class="activity-text">Mengecek ketersediaan</text>
+                <text x="450" y="296" class="activity-text">stok motor</text>
+                
+                <path d="M 450,305 L 450,340" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Decision: Stok? -->
+                <polygon points="450,340 480,370 450,400 420,370" class="decision-diamond" />
+                <text x="450" y="374" class="activity-text" style="font-size: 9px">Tersedia?</text>
+
+                <!-- [Habis] Loop -->
+                <path d="M 480,370 L 540,370 L 540,410" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="510" y="365" class="condition-text" style="fill: #ef4444">[Habis]</text>
+                
+                <!-- Sist 2 (Habis) -->
+                <rect x="465" y="410" width="150" height="45" class="activity-rect" />
+                <text x="540" y="432" class="activity-text">Menampilkan pesan:</text>
+                <text x="540" y="446" class="activity-text">'Stok tidak tersedia'</text>
+                
+                <!-- Loop back to Cust 1 -->
+                <path d="M 540,455 L 540,480 L 1150,480 L 1150,100 L 150,100 L 150,120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- [Tersedia] Path -->
+                <path d="M 420,370 L 380,370 L 380,410" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="390" y="365" class="condition-text">[Tersedia]</text>
+
+                <!-- Sist 3 (Tersedia) -->
+                <rect x="305" y="410" width="150" height="45" class="activity-rect" />
+                <text x="380" y="432" class="activity-text">Menampilkan formulir</text>
+                <text x="380" y="446" class="activity-text">pemesanan</text>
+                
+                <path d="M 380,455 L 380,490 L 150,490 L 150,520" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Cust 3 -->
+                <rect x="65" y="520" width="170" height="45" class="activity-rect" />
+                <text x="150" y="542" class="activity-text">Mengisi formulir &</text>
+                <text x="150" y="556" class="activity-text">mengunggah KTP & KK</text>
+                
+                <path d="M 150,565 L 150,600" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Cust 4 -->
+                <rect x="65" y="600" width="170" height="45" class="activity-rect" />
+                <text x="150" y="622" class="activity-text">Melakukan pembayaran</text>
+                <text x="150" y="636" class="activity-text">booking fee</text>
+                
+                <!-- Path to Midtrans -->
+                <path d="M 235,622 L 1050,622 L 1050,660" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Mid 1 -->
+                <rect x="965" y="660" width="170" height="45" class="activity-rect" />
+                <text x="1050" y="682" class="activity-text">Memproses pembayaran &</text>
+                <text x="1050" y="696" class="activity-text">mengembalikan status</text>
+                
+                <path d="M 1050,705 L 1050,740" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Decision: Pembayaran? -->
+                <polygon points="1050,740 1080,770 1050,800 1020,770" class="decision-diamond" />
+                <text x="1050" y="774" class="activity-text" style="font-size: 9px">Sukses?</text>
+
+                <!-- [Gagal] Loop -->
+                <path d="M 1020,770 L 540,770 L 540,810" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="700" y="765" class="condition-text" style="fill: #ef4444">[Pembayaran gagal]</text>
+
+                <!-- Sist 4 (Error) -->
+                <rect x="465" y="810" width="150" height="45" class="activity-rect" />
+                <text x="540" y="832" class="activity-text">Tampilkan error,</text>
+                <text x="540" y="846" class="activity-text">transaksi tak tersimpan</text>
+                
+                <!-- Loop back to Cust 4 via left margin -->
+                <path d="M 540,855 L 540,880 L 30,880 L 30,580 L 150,580 L 150,600" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- [Sukses] Path -->
+                <path d="M 1050,800 L 1050,917 L 535,917" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="1060" y="830" class="condition-text">[Sukses]</text>
+
+                <!-- Sist 5 (Simpan) -->
+                <rect x="365" y="895" width="170" height="45" class="activity-rect" />
+                <text x="450" y="917" class="activity-text">Simpan transaksi, status</text>
+                <text x="450" y="931" class="activity-text">= Menunggu Konfirmasi</text>
+                
+                <path d="M 450,940 L 450,980" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Sist 6 (Notif) -->
+                <rect x="365" y="980" width="170" height="45" class="activity-rect" />
+                <text x="450" y="1002" class="activity-text">Mengirim notifikasi ke</text>
+                <text x="450" y="1016" class="activity-text">Customer & Admin</text>
+                
+                <!-- Fork to Cust -->
+                <path d="M 365,1002 L 150,1002 L 150,1040" class="flow-line" marker-end="url(#arrowhead)" />
+                
+                <!-- Cust 5 -->
+                <rect x="65" y="1040" width="170" height="45" class="activity-rect" />
+                <text x="150" y="1068" class="activity-text">Menerima notifikasi</text>
+
+                <!-- Fork to Admin -->
+                <path d="M 535,1002 L 750,1002 L 750,1040" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Adm 1 -->
+                <rect x="665" y="1040" width="170" height="45" class="activity-rect" />
+                <text x="750" y="1062" class="activity-text">Menerima notif, proses</text>
+                <text x="750" y="1076" class="activity-text">transaksi via UC-07</text>
+                
+                <path d="M 750,1085 L 750,1120" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Decision: UC-07 Selesai? -->
+                <polygon points="750,1120 780,1150 750,1180 720,1150" class="decision-diamond" />
+                <text x="750" y="1154" class="activity-text" style="font-size: 8px">Status Selesai?</text>
+
+                <!-- [Tidak] Path -->
+                <path d="M 750,1180 L 750,1380 L 600,1380" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="760" y="1200" class="condition-text">[Tidak]</text>
+
+                <!-- [Ya] Path -->
+                <path d="M 720,1150 L 450,1150 L 450,1190" class="flow-line" marker-end="url(#arrowhead)" />
+                <text x="580" y="1145" class="condition-text">[<<extend>> Ya]</text>
+
+                <!-- Sist 7 (Jadwal Notif) -->
+                <rect x="365" y="1190" width="170" height="45" class="activity-rect" />
+                <text x="450" y="1212" class="activity-text">Jadwalkan notif STNK</text>
+                <text x="450" y="1226" class="activity-text">(7 hr) & BPKB (30-60 hr)</text>
+                
+                <path d="M 450,1235 L 450,1270" class="flow-line" marker-end="url(#arrowhead)" />
+
+                <!-- Sist 8 (Kirim Notif STNK/BPKB) -->
+                <rect x="365" y="1270" width="170" height="45" class="activity-rect" />
+                <text x="450" y="1292" class="activity-text">Kirim notifikasi</text>
+                <text x="450" y="1306" class="activity-text">STNK/BPKB ke Customer</text>
+
+                <!-- Final Merge -->
+                <path d="M 450,1315 L 450,1380 L 600,1380 L 600,1420" class="flow-line" marker-end="url(#arrowhead)" />
+                <path d="M 150,1085 L 150,1380 L 600,1380" class="flow-line" />
+
+                <!-- End Node -->
+                <circle cx="600" cy="1440" r="15" class="node-end-outer" />
+                <circle cx="600" cy="1440" r="10" class="node-end-inner" />
+
+            </svg>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Cetak Diagram (PDF)</button>
+    </body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Struktur Navigasi Backend — SRB Motor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --root:    #1E293B;
+    --be-bg:   #059669;
+    --admin:   #059669;
+    --montir:  #D97706;
+    --line:    #CBD5E1;
+    --bg:      #F8FAFC;
+    --white:   #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .back-link {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    font-size: 13px;
+    color: var(--admin);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--root);
+    margin-bottom: 5px;
+  }
+
+  p.subtitle { color: #64748B; font-size: 13px; font-style: italic; }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 30px;
+    padding: 12px 25px;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border: 1px solid #E2E8F0;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #475569;
+  }
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+  }
+  .legend-line {
+    width: 25px; height: 2px;
+  }
+
+  /* CANVAS CONTAINER */
+  .diagram-section {
+    width: 100%;
+    max-width: 1150px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    border: 1px solid #E2E8F0;
+    padding: 30px;
+    margin-bottom: 40px;
+  }
+
+  .diagram-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--root);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--be-bg);
+    padding-left: 10px;
+  }
+
+  .diagram-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+
+  .canvas {
+    position: relative;
+    background: #FFFFFF;
+    margin: 0 auto;
+    width: 1100px;
+    height: 460px;
+  }
+
+  svg.lines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* NODE STYLES */
+  .node {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 12px;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    border: 1.5px solid transparent;
+    transition: transform 0.2s;
+  }
+  .node:hover {
+    transform: translateY(-2px);
+  }
+
+  .node-label {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .node-role {
+    font-size: 8px;
+    margin-top: 2px;
+    opacity: 0.7;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .n-root { background: var(--be-bg); color: white; border-color: var(--be-bg); }
+  .n-admin { background: #ECFDF5; color: var(--admin); border-color: var(--admin); }
+  .n-montir { background: #FFFBEB; color: var(--montir); border-color: var(--montir); }
+  
+  /* ACTION NODE (Dashed) */
+  .n-action {
+    border-style: dashed !important;
+    background: #FFFFFF !important;
+    color: #475569 !important;
+    border-color: #94A3B8 !important;
+  }
+
+  .btn-print {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    padding: 12px 25px;
+    background: var(--root);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: background-color 0.2s;
+  }
+  .btn-print:hover {
+    background: #0F172A;
+  }
+
+  @media print {
+    .btn-print, .back-link { display: none; }
+    body { padding: 0; background: white; }
+    .diagram-section { box-shadow: none; border: none; padding: 0; margin-bottom: 60px; page-break-inside: avoid; }
+    .canvas { border: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="struktur_navigasi.html" class="back-link">← Kembali ke Portal</a>
+  <h1>Struktur Navigasi Backend (Terintegrasi)</h1>
+  <p class="subtitle">Gabungan Alur Pengelola (Admin) & Karyawan Bengkel (Montir)</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--be-bg)"></div> Backend Root</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ECFDF5; border: 1.5px solid var(--admin)"></div> Admin Halaman</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FFFBEB; border: 1.5px solid var(--montir)"></div> Montir Halaman</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FFFFFF; border: 1.5px dashed #94A3B8"></div> Aksi / Tombol</div>
+  <div class="legend-item"><div class="legend-line" style="border-top: 1.5px solid #CBD5E1"></div> Garis Navigasi</div>
+</div>
+
+<div class="diagram-section">
+  <h2>Diagram Navigasi Admin & Montir</h2>
+  <div class="diagram-wrapper">
+    <div class="canvas" id="canvas-backend">
+      <svg class="lines" id="svg-backend"></svg>
+
+      <!-- Level 0: Root -->
+      <div class="node n-root" id="b-root" style="left:500px; top:20px; width:150px; height:45px;">
+        <div class="node-label">BACKEND SPACE</div>
+        <div class="node-role">Root Utama</div>
+      </div>
+
+      <!-- Level 1 -->
+      <div class="node n-admin" id="b-admin-dash" style="left:300px; top:120px; width:150px; height:45px;">
+        <div class="node-label">Dashboard Admin</div>
+      </div>
+      <div class="node n-montir" id="b-montir-dash" style="left:700px; top:120px; width:150px; height:45px;">
+        <div class="node-label">Dashboard Montir</div>
+      </div>
+
+      <!-- Level 2 -->
+      <div class="node n-admin" id="b-trx" style="left:20px; top:210px; width:140px; height:45px;">
+        <div class="node-label">Manajemen Transaksi</div>
+      </div>
+      <div class="node n-admin" id="b-kredit" style="left:180px; top:210px; width:140px; height:45px;">
+        <div class="node-label">Manajemen Kredit</div>
+      </div>
+      <div class="node n-admin" id="b-service" style="left:340px; top:210px; width:140px; height:45px;">
+        <div class="node-label">Manajemen Service</div>
+      </div>
+      <div class="node n-admin" id="b-stok" style="left:500px; top:210px; width:120px; height:45px;">
+        <div class="node-label">Stok Motor</div>
+      </div>
+      <div class="node n-admin" id="b-laporan" style="left:640px; top:210px; width:140px; height:45px;">
+        <div class="node-label">Laporan & Pengaturan</div>
+      </div>
+      
+      <div class="node n-montir" id="b-jadwal" style="left:800px; top:210px; width:150px; height:45px;">
+        <div class="node-label">Jadwal Servis Harian</div>
+      </div>
+
+      <!-- Level 3 -->
+      <div class="node n-admin" id="b-det-trx" style="left:20px; top:300px; width:140px; height:45px;">
+        <div class="node-label">Detail Transaksi</div>
+      </div>
+      <div class="node n-admin n-action" id="b-verif-dok" style="left:140px; top:300px; width:110px; height:45px;">
+        <div class="node-label">Verifikasi Dokumen</div>
+      </div>
+      <div class="node n-admin n-action" id="b-survey" style="left:260px; top:300px; width:100px; height:45px;">
+        <div class="node-label">Jadwal Survey</div>
+      </div>
+      <div class="node n-admin n-action" id="b-konf-bk" style="left:375px; top:300px; width:110px; height:45px;">
+        <div class="node-label">Konfirmasi Booking</div>
+      </div>
+      <div class="node n-admin n-action" id="b-konf-cash" style="left:495px; top:300px; width:120px; height:45px;">
+        <div class="node-label">Konfirmasi Cash</div>
+      </div>
+      <div class="node n-admin n-action" id="b-tambah-edit" style="left:635px; top:300px; width:120px; height:45px;">
+        <div class="node-label">Tambah / Edit Motor</div>
+      </div>
+      
+      <div class="node n-montir" id="b-detail-sv" style="left:800px; top:300px; width:150px; height:45px;">
+        <div class="node-label">detail servis</div>
+      </div>
+
+      <!-- Level 4 -->
+      <div class="node n-admin n-action" id="b-upd-status" style="left:20px; top:390px; width:140px; height:45px;">
+        <div class="node-label">Update Status</div>
+      </div>
+      
+      <div class="node n-montir n-action" id="b-m-upd" style="left:680px; top:390px; width:110px; height:45px;">
+        <div class="node-label">update pengerjaan</div>
+      </div>
+      <div class="node n-montir n-action" id="b-m-tag" style="left:800px; top:390px; width:110px; height:45px;">
+        <div class="node-label">input tagihan</div>
+      </div>
+      <div class="node n-montir n-action" id="b-m-cash" style="left:920px; top:390px; width:110px; height:45px;">
+        <div class="node-label">konfirmasi cash</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<button class="btn-print" onclick="window.print()">Cetak PDF</button>
+
+<script>
+function getPos(id) {
+  const el = document.getElementById(id);
+  return {
+    x: el.offsetLeft + el.offsetWidth / 2,
+    y: el.offsetTop + el.offsetHeight / 2,
+    top: el.offsetTop,
+    bottom: el.offsetTop + el.offsetHeight,
+    left: el.offsetLeft,
+    right: el.offsetLeft + el.offsetWidth
+  };
+}
+
+function drawLine(svg, id1, id2, type = 'step_v') {
+  const p1 = getPos(id1);
+  const p2 = getPos(id2);
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  
+  let d = '';
+  if (type === 'straight_v') {
+    d = `M ${p1.x} ${p1.bottom} L ${p2.x} ${p2.top}`;
+  } else if (type === 'step_v') {
+    const midY = p1.bottom + (p2.top - p1.bottom) / 2;
+    d = `M ${p1.x} ${p1.bottom} L ${p1.x} ${midY} L ${p2.x} ${midY} L ${p2.x} ${p2.top}`;
+  }
+
+  path.setAttribute('d', d);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#CBD5E1');
+  path.setAttribute('stroke-width', '1.5');
+  svg.appendChild(path);
+}
+
+function draw() {
+  const svg = document.getElementById('svg-backend');
+  svg.innerHTML = '';
+  
+  // Root to Level 1
+  drawLine(svg, 'b-root', 'b-admin-dash', 'step_v');
+  drawLine(svg, 'b-root', 'b-montir-dash', 'step_v');
+
+  // Admin Level 1 to Level 2
+  drawLine(svg, 'b-admin-dash', 'b-trx', 'step_v');
+  drawLine(svg, 'b-admin-dash', 'b-kredit', 'step_v');
+  drawLine(svg, 'b-admin-dash', 'b-service', 'step_v');
+  drawLine(svg, 'b-admin-dash', 'b-stok', 'step_v');
+  drawLine(svg, 'b-admin-dash', 'b-laporan', 'step_v');
+
+  // Montir Level 1 to Level 2
+  drawLine(svg, 'b-montir-dash', 'b-jadwal', 'step_v');
+
+  // Admin Level 2 to Level 3
+  drawLine(svg, 'b-trx', 'b-det-trx', 'straight_v');
+  drawLine(svg, 'b-det-trx', 'b-upd-status', 'straight_v');
+
+  drawLine(svg, 'b-kredit', 'b-verif-dok', 'step_v');
+  drawLine(svg, 'b-kredit', 'b-survey', 'step_v');
+
+  drawLine(svg, 'b-service', 'b-konf-bk', 'step_v');
+  drawLine(svg, 'b-service', 'b-konf-cash', 'step_v');
+
+  drawLine(svg, 'b-stok', 'b-tambah-edit', 'straight_v');
+
+  // Montir Level 2 to Level 3
+  drawLine(svg, 'b-jadwal', 'b-detail-sv', 'straight_v');
+  drawLine(svg, 'b-detail-sv', 'b-m-upd', 'step_v');
+  drawLine(svg, 'b-detail-sv', 'b-m-tag', 'step_v');
+  drawLine(svg, 'b-detail-sv', 'b-m-cash', 'step_v');
+}
+
+window.addEventListener('load', draw);
+window.addEventListener('resize', draw);
+</script>
+</body>
+</html>

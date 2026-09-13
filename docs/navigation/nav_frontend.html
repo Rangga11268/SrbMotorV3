@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Struktur Navigasi Frontend — SRB Motor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --root:    #1E293B;
+    --fe-bg:   #0284C7;
+    --guest:   #7C3AED;
+    --cust:    #0284C7;
+    --line:    #CBD5E1;
+    --bg:      #F8FAFC;
+    --white:   #FFFFFF;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .back-link {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    font-size: 13px;
+    color: var(--cust);
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--root);
+    margin-bottom: 5px;
+  }
+
+  p.subtitle { color: #64748B; font-size: 13px; font-style: italic; }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 30px;
+    padding: 12px 25px;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border: 1px solid #E2E8F0;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #475569;
+  }
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+  }
+  .legend-line {
+    width: 25px; height: 2px;
+  }
+
+  /* CANVAS CONTAINER */
+  .diagram-section {
+    width: 100%;
+    max-width: 1150px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    border: 1px solid #E2E8F0;
+    padding: 30px;
+    margin-bottom: 40px;
+  }
+
+  .diagram-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--root);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--fe-bg);
+    padding-left: 10px;
+  }
+
+  .diagram-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+
+  .canvas {
+    position: relative;
+    background: #FFFFFF;
+    margin: 0 auto;
+    width: 1100px;
+    height: 460px;
+  }
+
+  svg.lines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* NODE STYLES */
+  .node {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 12px;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    border: 1.5px solid transparent;
+    transition: transform 0.2s;
+  }
+  .node:hover {
+    transform: translateY(-2px);
+  }
+
+  .node-label {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .node-role {
+    font-size: 8px;
+    margin-top: 2px;
+    opacity: 0.7;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .n-root { background: var(--fe-bg); color: white; border-color: var(--fe-bg); }
+  .n-guest { background: #F5F3FF; color: var(--guest); border-color: var(--guest); }
+  .n-cust { background: #F0F9FF; color: var(--cust); border-color: var(--cust); }
+  
+  /* ACTION NODE (Dashed) */
+  .n-action {
+    border-style: dashed !important;
+    background: #FFFFFF !important;
+    color: #475569 !important;
+    border-color: #94A3B8 !important;
+  }
+
+  .btn-print {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    padding: 12px 25px;
+    background: var(--root);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: background-color 0.2s;
+  }
+  .btn-print:hover {
+    background: #0F172A;
+  }
+
+  @media print {
+    .btn-print, .back-link { display: none; }
+    body { padding: 0; background: white; }
+    .diagram-section { box-shadow: none; border: none; padding: 0; margin-bottom: 60px; page-break-inside: avoid; }
+    .canvas { border: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="struktur_navigasi.html" class="back-link">← Kembali ke Portal</a>
+  <h1>Struktur Navigasi Frontend (Terintegrasi)</h1>
+  <p class="subtitle">Gabungan Alur Pengunjung (Guest) & Pelanggan Terotentikasi (Customer)</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--fe-bg)"></div> Frontend Root</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#F5F3FF; border: 1.5px solid var(--guest)"></div> Guest Halaman</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#F0F9FF; border: 1.5px solid var(--cust)"></div> Customer Halaman</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FFFFFF; border: 1.5px dashed #94A3B8"></div> Aksi / Tombol</div>
+  <div class="legend-item"><div class="legend-line" style="border-top: 1.5px solid #CBD5E1"></div> Garis Navigasi</div>
+</div>
+
+<div class="diagram-section">
+  <h2>Diagram Navigasi Publik & Customer</h2>
+  <div class="diagram-wrapper">
+    <div class="canvas" id="canvas-frontend">
+      <svg class="lines" id="svg-frontend"></svg>
+
+      <!-- Level 0: Root -->
+      <div class="node n-root" id="f-root" style="left:480px; top:20px; width:150px; height:45px;">
+        <div class="node-label">FRONTEND SPACE</div>
+        <div class="node-role">Root Utama</div>
+      </div>
+
+      <!-- Level 1 -->
+      <div class="node n-guest" id="f-login" style="left:30px; top:120px; width:130px; height:45px;">
+        <div class="node-label">Login & Registrasi</div>
+      </div>
+      <div class="node n-guest" id="f-about" style="left:200px; top:120px; width:130px; height:45px;">
+        <div class="node-label">Tentang & Bantuan</div>
+      </div>
+      <div class="node n-guest" id="f-katalog" style="left:380px; top:120px; width:140px; height:45px;">
+        <div class="node-label">Katalog Motor</div>
+      </div>
+      <div class="node n-cust" id="f-trx" style="left:580px; top:120px; width:140px; height:45px;">
+        <div class="node-label">Transaksi Saya</div>
+      </div>
+      <div class="node n-cust" id="f-booking" style="left:800px; top:120px; width:140px; height:45px;">
+        <div class="node-label">Booking Service</div>
+      </div>
+      <div class="node n-cust" id="f-profil" style="left:980px; top:120px; width:110px; height:45px;">
+        <div class="node-label">Profil & Notif</div>
+      </div>
+
+      <!-- Level 2 -->
+      <div class="node n-guest" id="f-detail" style="left:380px; top:210px; width:140px; height:45px;">
+        <div class="node-label">Detail Motor</div>
+      </div>
+      
+      <div class="node n-cust" id="f-det-tunai" style="left:540px; top:210px; width:100px; height:45px;">
+        <div class="node-label">Detail Tunai</div>
+      </div>
+      <div class="node n-cust" id="f-det-kred" style="left:660px; top:210px; width:100px; height:45px;">
+        <div class="node-label">Detail Kredit</div>
+      </div>
+
+      <div class="node n-cust" id="f-daftar-bk" style="left:800px; top:210px; width:140px; height:45px;">
+        <div class="node-label">Daftar Booking</div>
+      </div>
+
+      <div class="node n-cust" id="f-edit-profil" style="left:980px; top:210px; width:110px; height:45px;">
+        <div class="node-label">Edit Profil</div>
+      </div>
+
+      <!-- Level 3 -->
+      <div class="node n-cust n-action" id="f-pesan" style="left:320px; top:300px; width:100px; height:45px;">
+        <div class="node-label">Pesan Tunai</div>
+      </div>
+      <div class="node n-cust n-action" id="f-ajukan" style="left:440px; top:300px; width:100px; height:45px;">
+        <div class="node-label">Ajukan Kredit</div>
+      </div>
+
+      <div class="node n-cust" id="f-tagihan" style="left:570px; top:300px; width:110px; height:45px;">
+        <div class="node-label">Tagihan Angsuran</div>
+      </div>
+      <div class="node n-cust" id="f-survey" style="left:690px; top:300px; width:100px; height:45px;">
+        <div class="node-label">Jadwal Survey</div>
+      </div>
+
+      <div class="node n-cust n-action" id="f-batal" style="left:800px; top:300px; width:110px; height:45px;">
+        <div class="node-label">Batalkan Booking</div>
+      </div>
+      <div class="node n-cust" id="f-tag-sv" style="left:920px; top:300px; width:110px; height:45px;">
+        <div class="node-label">Tagihan Servis</div>
+      </div>
+
+      <!-- Level 4 -->
+      <div class="node n-cust n-action" id="f-bayar-angsuran" style="left:570px; top:390px; width:110px; height:45px;">
+        <div class="node-label">Bayar Angsuran</div>
+      </div>
+
+      <div class="node n-cust n-action" id="f-bayar-sv" style="left:920px; top:390px; width:110px; height:45px;">
+        <div class="node-label">Bayar Servis</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<button class="btn-print" onclick="window.print()">Cetak PDF</button>
+
+<script>
+function getPos(id) {
+  const el = document.getElementById(id);
+  return {
+    x: el.offsetLeft + el.offsetWidth / 2,
+    y: el.offsetTop + el.offsetHeight / 2,
+    top: el.offsetTop,
+    bottom: el.offsetTop + el.offsetHeight,
+    left: el.offsetLeft,
+    right: el.offsetLeft + el.offsetWidth
+  };
+}
+
+function drawLine(svg, id1, id2, type = 'step_v') {
+  const p1 = getPos(id1);
+  const p2 = getPos(id2);
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  
+  let d = '';
+  if (type === 'straight_v') {
+    d = `M ${p1.x} ${p1.bottom} L ${p2.x} ${p2.top}`;
+  } else if (type === 'step_v') {
+    const midY = p1.bottom + (p2.top - p1.bottom) / 2;
+    d = `M ${p1.x} ${p1.bottom} L ${p1.x} ${midY} L ${p2.x} ${midY} L ${p2.x} ${p2.top}`;
+  }
+
+  path.setAttribute('d', d);
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke', '#CBD5E1');
+  path.setAttribute('stroke-width', '1.5');
+  svg.appendChild(path);
+}
+
+function draw() {
+  const svg = document.getElementById('svg-frontend');
+  svg.innerHTML = '';
+  
+  // Root to Level 1
+  drawLine(svg, 'f-root', 'f-login', 'step_v');
+  drawLine(svg, 'f-root', 'f-about', 'step_v');
+  drawLine(svg, 'f-root', 'f-katalog', 'step_v');
+  drawLine(svg, 'f-root', 'f-trx', 'step_v');
+  drawLine(svg, 'f-root', 'f-booking', 'step_v');
+  drawLine(svg, 'f-root', 'f-profil', 'step_v');
+
+  // Katalog Branch
+  drawLine(svg, 'f-katalog', 'f-detail', 'straight_v');
+  drawLine(svg, 'f-detail', 'f-pesan', 'step_v');
+  drawLine(svg, 'f-detail', 'f-ajukan', 'step_v');
+
+  // Transaksi Branch
+  drawLine(svg, 'f-trx', 'f-det-tunai', 'step_v');
+  drawLine(svg, 'f-trx', 'f-det-kred', 'step_v');
+  drawLine(svg, 'f-det-kred', 'f-tagihan', 'step_v');
+  drawLine(svg, 'f-det-kred', 'f-survey', 'step_v');
+  drawLine(svg, 'f-tagihan', 'f-bayar-angsuran', 'straight_v');
+
+  // Booking Branch
+  drawLine(svg, 'f-booking', 'f-daftar-bk', 'straight_v');
+  drawLine(svg, 'f-daftar-bk', 'f-batal', 'step_v');
+  drawLine(svg, 'f-daftar-bk', 'f-tag-sv', 'step_v');
+  drawLine(svg, 'f-tag-sv', 'f-bayar-sv', 'straight_v');
+
+  // Profil Branch
+  drawLine(svg, 'f-profil', 'f-edit-profil', 'straight_v');
+}
+
+window.addEventListener('load', draw);
+window.addEventListener('resize', draw);
+</script>
+</body>
+</html>
