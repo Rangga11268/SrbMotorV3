@@ -16,7 +16,6 @@
   <a href="#gambaran-umum">Gambaran Umum</a> • 
   <a href="#fitur">Fitur</a> • 
   <a href="#instalasi">Instalasi</a> • 
-  <a href="#penggunaan">Penggunaan</a> • 
   <a href="#teknologi-yang-digunakan">Teknologi</a>
 </p>
 
@@ -44,15 +43,15 @@ SrbMotor/
 
 Proyek ini adalah versi **Full-Stack (Laravel-Inertia)** dari SRB Motor. Berikut adalah perbedaan utamanya dengan versi **Frontend-Only (Next.js)**:
 
-| Fitur | Versi Full-Stack (Laravel-Inertia) 💻 | Versi Frontend-Only (Next.js) 🌐 |
-| --- | --- | --- |
-| **Teknologi Utama** | Laravel, Inertia.js, React, MySQL | Next.js (App Router), React, TypeScript |
-| **Manajemen Data** | Dinamis menggunakan Database MySQL (CRUD via Admin Panel) | Data Motor lokal statis (`lib/motor-data.ts`) |
-| **Transaksi Pembelian** | Pemrosesan terintegrasi di sistem dengan unggah dokumen | Pengajuan Cash/Kredit diarahkan langsung ke **WhatsApp** |
-| **Pembayaran Booking Fee** | Otomatis terintegrasi payment gateway (Midtrans) | Diarahkan ke WhatsApp sales |
-| **Pemesanan Servis** | Booking terjadwal dan disimpan di database | Dihapus (Diarahkan langsung via WhatsApp Customer Service) |
-| **Autentikasi & Akun** | Login, Register, Manajemen Profil, & Riwayat Transaksi | Tanpa Login (seluruh fitur publik instan tanpa akun) |
-| **Dashboard Admin** | CRUD Motor, approval kredit, ekspor laporan PDF/Excel, dll. | Tidak ada |
+| Fitur                      | Versi Full-Stack (Laravel-Inertia) 💻                       | Versi Frontend-Only (Next.js) 🌐                           |
+| -------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| **Teknologi Utama**        | Laravel, Inertia.js, React, MySQL                           | Next.js (App Router), React, TypeScript                    |
+| **Manajemen Data**         | Dinamis menggunakan Database MySQL (CRUD via Admin Panel)   | Data Motor lokal statis (`lib/motor-data.ts`)              |
+| **Transaksi Pembelian**    | Pemrosesan terintegrasi di sistem dengan unggah dokumen     | Pengajuan Cash/Kredit diarahkan langsung ke **WhatsApp**   |
+| **Pembayaran Booking Fee** | Otomatis terintegrasi payment gateway (Midtrans)            | Diarahkan ke WhatsApp sales                                |
+| **Pemesanan Servis**       | Booking terjadwal dan disimpan di database                  | Dihapus (Diarahkan langsung via WhatsApp Customer Service) |
+| **Autentikasi & Akun**     | Login, Register, Manajemen Profil, & Riwayat Transaksi      | Tanpa Login (seluruh fitur publik instan tanpa akun)       |
+| **Dashboard Admin**        | CRUD Motor, approval kredit, ekspor laporan PDF/Excel, dll. | Tidak ada                                                  |
 
 ---
 
