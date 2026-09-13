@@ -16,6 +16,7 @@
   <a href="#gambaran-umum">Gambaran Umum</a> • 
   <a href="#fitur">Fitur</a> • 
   <a href="#instalasi">Instalasi</a> • 
+  <a href="#penggunaan">Penggunaan</a> • 
   <a href="#teknologi-yang-digunakan">Teknologi</a>
 </p>
 
