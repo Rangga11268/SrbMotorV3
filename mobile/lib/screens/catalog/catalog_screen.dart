@@ -9,17 +9,24 @@ class MotorFilterOptions {
   String type;
   String priceRange; // 'Semua', '<25jt', '25-35jt', '35-50jt', '>50jt'
   String sortBy; // 'rekomendasi', 'termurah', 'termahal', 'nama_asc', 'terbaru'
-  bool onlyAvailable;
-  bool onlyWishlist;
+  bool? _onlyAvailable;
+  bool? _onlyWishlist;
+
+  bool get onlyAvailable => _onlyAvailable ?? false;
+  set onlyAvailable(bool? val) => _onlyAvailable = val ?? false;
+
+  bool get onlyWishlist => _onlyWishlist ?? false;
+  set onlyWishlist(bool? val) => _onlyWishlist = val ?? false;
 
   MotorFilterOptions({
     this.brand = 'Semua',
     this.type = 'Semua',
     this.priceRange = 'Semua',
     this.sortBy = 'rekomendasi',
-    this.onlyAvailable = false,
-    this.onlyWishlist = false,
-  });
+    bool? onlyAvailable = false,
+    bool? onlyWishlist = false,
+  })  : _onlyAvailable = onlyAvailable ?? false,
+        _onlyWishlist = onlyWishlist ?? false;
 
   int get activeFilterCount {
     int count = 0;
@@ -27,8 +34,8 @@ class MotorFilterOptions {
     if (type != 'Semua') count++;
     if (priceRange != 'Semua') count++;
     if (sortBy != 'rekomendasi') count++;
-    if (onlyAvailable) count++;
-    if (onlyWishlist) count++;
+    if (onlyAvailable == true) count++;
+    if (onlyWishlist == true) count++;
     return count;
   }
 
@@ -37,8 +44,8 @@ class MotorFilterOptions {
     type = 'Semua';
     priceRange = 'Semua';
     sortBy = 'rekomendasi';
-    onlyAvailable = false;
-    onlyWishlist = false;
+    _onlyAvailable = false;
+    _onlyWishlist = false;
   }
 
   MotorFilterOptions copy() {
@@ -74,7 +81,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
   Timer? _searchDebounce;
 
   TextEditingController get searchController => _searchController ??= TextEditingController();
-  MotorFilterOptions get filter => _filter ??= MotorFilterOptions();
+  MotorFilterOptions get filter {
+    final f = _filter ??= MotorFilterOptions();
+    f._onlyAvailable ??= false;
+    f._onlyWishlist ??= false;
+    return f;
+  }
   set filter(MotorFilterOptions val) => _filter = val;
   int get visibleCount => _visibleCount ??= 6;
   set visibleCount(int val) => _visibleCount = val;
@@ -147,12 +159,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
     }
 
     // Ready Stock
-    if (opts.onlyAvailable) {
+    if (opts.onlyAvailable == true) {
       list = list.where((m) => m.isAvailable && m.stock > 0).toList();
     }
 
     // Only Wishlist
-    if (opts.onlyWishlist) {
+    if (opts.onlyWishlist == true) {
       list = list.where((m) => widget.appState.isInWishlist(m.id)).toList();
     }
 
@@ -419,7 +431,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             'Sembunyikan motor yang sedang kosong stok',
                             style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                           ),
-                          value: tempFilter.onlyAvailable,
+                          value: tempFilter.onlyAvailable == true,
                           activeThumbColor: const Color(0xFF1C69D4),
                           onChanged: (val) {
                             setSheetState(() => tempFilter.onlyAvailable = val);
@@ -440,7 +452,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             'Tampilkan ${widget.appState.wishlist.length} unit yang tersimpan di wishlist',
                             style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                           ),
-                          value: tempFilter.onlyWishlist,
+                          value: tempFilter.onlyWishlist == true,
                           activeThumbColor: const Color(0xFFEF4444),
                           onChanged: (val) {
                             setSheetState(() => tempFilter.onlyWishlist = val);
@@ -771,14 +783,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               visibleCount = 6;
                             });
                           }),
-                        if (filter.onlyAvailable)
+                        if (filter.onlyAvailable == true)
                           _buildActiveFilterChip('Ready Stock', () {
                             setState(() {
                               filter.onlyAvailable = false;
                               visibleCount = 6;
                             });
                           }),
-                        if (filter.onlyWishlist)
+                        if (filter.onlyWishlist == true)
                           _buildActiveFilterChip('Favorit Saya', () {
                             setState(() {
                               filter.onlyWishlist = false;

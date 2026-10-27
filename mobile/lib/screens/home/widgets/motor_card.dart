@@ -21,7 +21,7 @@ class MotorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isAvailable = motor.isAvailable;
+    final isAvailable = motor.isAvailable == true;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
