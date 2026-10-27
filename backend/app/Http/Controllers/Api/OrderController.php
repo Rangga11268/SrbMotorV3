@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = Transaction::where('user_id', $request->user()->id)
-            ->with(['motor', 'installments'])
+            ->with(['motor', 'installments', 'creditDetail.surveySchedules'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -283,10 +283,71 @@ class OrderController extends Controller
     public function show($id, Request $request)
     {
         $order = Transaction::where('user_id', $request->user()->id)
-            ->with(['motor', 'installments'])
+            ->with(['motor', 'installments', 'creditDetail.surveySchedules'])
             ->findOrFail($id);
 
         return response()->json($order);
+    }
+
+    public function confirmSurveyDone(Transaction $order, Request $request)
+    {
+        if ($order->user_id !== $request->user()->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $order->load(['creditDetail.surveySchedules']);
+        $credit = $order->creditDetail;
+
+        if (!$credit) {
+            return response()->json(['status' => 'error', 'message' => 'Data pengajuan kredit tidak ditemukan'], 404);
+        }
+
+        $schedule = $credit->surveySchedules()->latest()->first();
+        if ($schedule) {
+            $schedule->update([
+                'status' => 'confirmed',
+                'customer_confirmed_at' => now(),
+                'customer_notes' => 'Customer mengonfirmasi survei fisik telah selesai dilaksanakan di lapangan.',
+            ]);
+        }
+
+        $existingNotes = $order->notes ? $order->notes . "\n" : '';
+        $order->update([
+            'notes' => $existingNotes . '[' . now()->format('d/m/Y H:i') . '] Customer mengonfirmasi survei telah dilakukan. Menunggu verifikasi berkas.'
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Terima kasih! Konfirmasi Anda telah dicatat. Tim SRB Motor sedang memverifikasi berkas survei untuk keputusan pembiayaan.',
+        ]);
+    }
+
+    public function confirmSurveyDoneWeb(Transaction $order, Request $request)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Akses tidak diizinkan');
+        }
+
+        $order->load(['creditDetail.surveySchedules']);
+        $credit = $order->creditDetail;
+
+        if ($credit) {
+            $schedule = $credit->surveySchedules()->latest()->first();
+            if ($schedule) {
+                $schedule->update([
+                    'status' => 'confirmed',
+                    'customer_confirmed_at' => now(),
+                    'customer_notes' => 'Customer mengonfirmasi survei fisik telah selesai dilaksanakan di lapangan.',
+                ]);
+            }
+
+            $existingNotes = $order->notes ? $order->notes . "\n" : '';
+            $order->update([
+                'notes' => $existingNotes . '[' . now()->format('d/m/Y H:i') . '] Customer mengonfirmasi survei telah dilakukan.'
+            ]);
+        }
+
+        return back()->with('success', 'Konfirmasi survei Anda telah dicatat. Tim SRB Motor segera memproses keputusan pembiayaan.');
     }
 
     public function cancel(Transaction $order, Request $request)

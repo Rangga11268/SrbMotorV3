@@ -357,4 +357,31 @@ class ApiService {
       return ApiResponse.error('Error mengajukan kredit: $e');
     }
   }
+
+  // Order: Confirm Survey Done by Customer
+  static Future<ApiResponse<Map<String, dynamic>>> confirmSurveyDone({
+    required String token,
+    required int orderId,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConstants.confirmSurvey(orderId)),
+            headers: _headers(token),
+          )
+          .timeout(_timeout);
+
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return ApiResponse.success(body as Map<String, dynamic>);
+      } else {
+        return ApiResponse.error(
+          body['message'] ?? 'Gagal mengonfirmasi survei.',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error('Error konfirmasi survei: $e');
+    }
+  }
 }

@@ -30,6 +30,7 @@ class ApiConstants {
   static String get orders => '$baseUrl/orders';
   static String get cashOrder => '$baseUrl/orders/cash';
   static String get creditOrder => '$baseUrl/orders/credit';
+  static String confirmSurvey(int orderId) => '$baseUrl/orders/$orderId/confirm-survey-done';
   static String get branches => '$baseUrl/branches';
   static String get wishlist => '$baseUrl/wishlist';
   static String get toggleWishlist => '$baseUrl/wishlist/toggle';

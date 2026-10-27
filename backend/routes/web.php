@@ -174,6 +174,12 @@ Route::post("/survey-schedules/{surveySchedule}/confirm-attendance", [
 ])
     ->name("survey.confirm-attendance")
     ->middleware(["auth"]);
+Route::post("/orders/{order}/confirm-survey-done", [
+    \App\Http\Controllers\Api\OrderController::class,
+    "confirmSurveyDoneWeb",
+])
+    ->name("orders.confirm-survey-done")
+    ->middleware(["auth"]);
 Route::post("/survey-schedules/{surveySchedule}/request-reschedule", [
     MotorGalleryController::class,
     "requestSurveyReschedule",

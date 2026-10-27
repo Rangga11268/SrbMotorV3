@@ -92,6 +92,7 @@ Route::middleware("auth:sanctum")->group(function () {
         "getInvoiceUrl",
     ]);
     Route::post("/orders/{order}/cancel", [OrderController::class, "cancel"]);
+    Route::post("/orders/{order}/confirm-survey-done", [OrderController::class, "confirmSurveyDone"]);
 
     // Installment routes for mobile
     Route::post("/installments/{installment}/pay-online", [

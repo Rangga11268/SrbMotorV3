@@ -200,6 +200,48 @@ export default function TransactionDetail({ transaction }) {
               }
             : null);
 
+    const isSurveyOverdue =
+        (transaction.survey_info?.is_overdue ?? false) ||
+        (survey && new Date(survey.scheduled_date) < new Date() && !['completed', 'cancelled', 'disetujui'].includes(transaction.creditDetail?.status));
+
+    const isSurveyConfirmed = !!(transaction.survey_info?.customer_confirmed_at || survey?.customer_confirmed_at);
+
+    const handleConfirmSurveyDone = () => {
+        Swal.fire({
+            title: "Konfirmasi Survei Selesai?",
+            text: "Apakah petugas surveyor benar-benar sudah mendatangi lokasi Anda dan menyelesaikan survei fisik?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#1c69d4",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Ya, Sudah Disurvei",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(
+                    route("orders.confirm-survey-done", transaction.id),
+                    {},
+                    {
+                        preserveScroll: true,
+                        onSuccess: () => {
+                            Swal.fire({
+                                title: "Konfirmasi Dicatat!",
+                                text: "Terima kasih! Tim SRB Motor segera memproses evaluasi berkas untuk keputusan pembiayaan.",
+                                icon: "success",
+                                confirmButtonColor: "#1c69d4",
+                            });
+                        },
+                    }
+                );
+            }
+        });
+    };
+
+    const waMessage = encodeURIComponent(
+        `Halo Admin SRB Motor, saya ingin menanyakan pengajuan kredit #${transaction.reference_number || transaction.id} unit ${transaction.motor?.name || 'Motor'}. Jadwal survei telah lewat dan belum ada petugas yang hadir. Mohon bantuan informasi atau jadwal ulang.`
+    );
+    const waUrl = `https://wa.me/6282123456789?text=${waMessage}`;
+
     return (
         <PublicLayout title="Detail Transaksi">
             <div className="bg-slate-50 min-h-screen pt-[110px] sm:pt-32 pb-12">
@@ -581,6 +623,49 @@ export default function TransactionDetail({ transaction }) {
                                                 <p className="font-bold text-black uppercase">{survey.surveyor_name || "MENUNGGU PENUGASAN"}</p>
                                                 <p className="text-[#1c69d4] font-bold text-xs mt-1">{survey.surveyor_phone || "KONTAK BELUM TERSEDIA"}</p>
                                             </div>
+
+                                            {isSurveyOverdue && (
+                                                <div className="col-span-1 sm:col-span-2 mt-4 p-6 bg-amber-50 border border-amber-200 rounded-lg">
+                                                    <div className="flex items-start gap-4">
+                                                        <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                                                        <div className="flex-1">
+                                                            <h4 className="font-bold text-amber-900 text-sm uppercase tracking-wide">
+                                                                Jadwal Survei Telah Terlewati
+                                                            </h4>
+                                                            <p className="text-xs text-amber-700 mt-1 leading-relaxed">
+                                                                Tanggal pelaksanaan survei untuk pengajuan kredit ini telah lewat. Untuk mempercepat proses persetujuan unit Anda, mohon beri tahu kami status survei di lapangan:
+                                                            </p>
+
+                                                            {isSurveyConfirmed ? (
+                                                                <div className="mt-4 flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-200 rounded text-emerald-800 text-xs font-bold">
+                                                                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                                                                    <span>Anda telah mengonfirmasi bahwa survei fisik telah selesai. Tim kami sedang memverifikasi berkas bersama leasing.</span>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="mt-4 flex flex-wrap gap-3">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={handleConfirmSurveyDone}
+                                                                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1c69d4] hover:bg-blue-700 text-white text-xs font-black tracking-wider uppercase rounded shadow-sm transition-all"
+                                                                    >
+                                                                        <CheckCircle className="w-4 h-4" />
+                                                                        Saya Sudah Disurvei
+                                                                    </button>
+                                                                    <a
+                                                                        href={waUrl}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 text-xs font-bold tracking-wider uppercase rounded transition-all"
+                                                                    >
+                                                                        <Phone className="w-4 h-4 text-emerald-600" />
+                                                                        Belum Disurvei (Hubungi Admin / Reschedule)
+                                                                    </a>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </details>
                                 )}

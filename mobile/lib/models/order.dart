@@ -12,6 +12,11 @@ class Order {
   final double? monthlyInstallment;
   final DateTime createdAt;
   final Motor? motor;
+  final bool isSurveyOverdue;
+  final String? surveyDate;
+  final String? surveyorName;
+  final String? surveyorPhone;
+  final bool isSurveyConfirmed;
 
   Order({
     required this.id,
@@ -24,6 +29,11 @@ class Order {
     this.monthlyInstallment,
     required this.createdAt,
     this.motor,
+    this.isSurveyOverdue = false,
+    this.surveyDate,
+    this.surveyorName,
+    this.surveyorPhone,
+    this.isSurveyConfirmed = false,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -56,6 +66,22 @@ class Order {
       motorObj = Motor.fromJson(json['motor']);
     }
 
+    final surveyInfo = json['survey_info'] is Map ? json['survey_info'] : null;
+    final bool rawOverdue = surveyInfo != null ? (surveyInfo['is_overdue'] == true) : false;
+    final bool sConfirmed = (surveyInfo != null && surveyInfo['customer_confirmed_at'] != null);
+    final String? sDate = surveyInfo?['scheduled_date']?.toString();
+    final String? sName = surveyInfo?['surveyor_name']?.toString();
+    final String? sPhone = surveyInfo?['surveyor_phone']?.toString();
+
+    // Fallback: If credit transaction status mentions SURVEI / JADWAL and order was created more than 2 days ago
+    final rawStatus = (json['status']?.toString() ?? '').toUpperCase();
+    final bool isSurveyStatus = rawStatus.contains('SURVEI') || rawStatus.contains('SURVEY') || rawStatus.contains('JADWAL');
+    final bool fallbackOverdue = (json['transaction_type']?.toString().toUpperCase() == 'CREDIT') &&
+        isSurveyStatus &&
+        parsedDate.isBefore(DateTime.now().subtract(const Duration(days: 2)));
+
+    final bool isOverdue = rawOverdue || fallbackOverdue;
+
     return Order(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
       orderNumber: json['order_number']?.toString() ?? json['id']?.toString() ?? 'TRX-000',
@@ -67,6 +93,11 @@ class Order {
       monthlyInstallment: monthly,
       createdAt: parsedDate,
       motor: motorObj,
+      isSurveyOverdue: isOverdue,
+      surveyDate: sDate,
+      surveyorName: sName,
+      surveyorPhone: sPhone,
+      isSurveyConfirmed: sConfirmed,
     );
   }
 

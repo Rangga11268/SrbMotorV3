@@ -342,4 +342,16 @@ class AppState extends ChangeNotifier {
     }
     return {'success': false, 'message': res.message ?? 'Gagal membuat pengajuan kredit.'};
   }
+
+  Future<Map<String, dynamic>> confirmSurveyDone(int orderId) async {
+    if (!isAuthenticated || _token == null) {
+      return {'success': false, 'message': 'Silakan masuk ke akun Anda.'};
+    }
+    final res = await ApiService.confirmSurveyDone(token: _token!, orderId: orderId);
+    if (res.isSuccess) {
+      await fetchOrders();
+      return {'success': true, 'message': res.data?['message'] ?? 'Konfirmasi survei berhasil dicatat!'};
+    }
+    return {'success': false, 'message': res.message ?? 'Gagal mengonfirmasi survei.'};
+  }
 }

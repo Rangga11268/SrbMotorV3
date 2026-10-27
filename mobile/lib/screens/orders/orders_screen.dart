@@ -1178,13 +1178,136 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 const SizedBox(height: 16),
               ],
 
+              // Overdue Survey Notice Card
+              if (order.transactionType == 'CREDIT' && order.isSurveyOverdue) ...[
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFBEB),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFFDE68A)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.access_time_filled_rounded, size: 18, color: Color(0xFFD97706)),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Jadwal Survei Telah Terlewati',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF92400E),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Tanggal survei unit ini sudah lewat. Mohon bantu kami memperbarui proses pengajuan Anda dengan memilih status terkini:',
+                        style: TextStyle(fontSize: 11.5, color: Color(0xFF78350F), height: 1.4),
+                      ),
+                      const SizedBox(height: 12),
+                      if (order.isSurveyConfirmed) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFECFDF5),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFFA7F3D0)),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.check_circle_rounded, size: 16, color: Color(0xFF059669)),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Anda telah mengonfirmasi bahwa survei selesai. Tim SRB Motor sedang memverifikasi berkas bersama leasing.',
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF065F46)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ] else ...[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () async {
+                                  final navigator = Navigator.of(ctx);
+                                  final messenger = ScaffoldMessenger.of(context);
+                                  final res = await widget.appState.confirmSurveyDone(order.id);
+                                  navigator.pop();
+                                  messenger.showSnackBar(
+                                    SnackBar(
+                                      content: Text(res['message'] ?? 'Konfirmasi survei tercatat.'),
+                                      backgroundColor: res['success'] == true ? const Color(0xFF059669) : const Color(0xFFEF4444),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.check_circle_outline_rounded, size: 16),
+                                label: const Text('Sudah Disurvei'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF1C69D4),
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                                  elevation: 0,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: () {
+                                  Navigator.pop(ctx);
+                                  final motorName = order.motor?.name ?? 'Motor';
+                                  final waMsg = Uri.encodeComponent(
+                                    'Halo Admin SRB Motor, saya ingin menanyakan pengajuan kredit #${order.orderNumber} unit $motorName. Jadwal survei telah lewat dan belum ada petugas yang hadir. Mohon bantuan informasi atau jadwal ulang.',
+                                  );
+                                  final waUrl = 'https://wa.me/6282123456789?text=$waMsg';
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Hubungi CS WhatsApp: $waUrl'),
+                                      duration: const Duration(seconds: 4),
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.help_outline_rounded, size: 16),
+                                label: const Text('Belum Disurvei'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: const Color(0xFF92400E),
+                                  side: const BorderSide(color: Color(0xFFF59E0B)),
+                                  backgroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
               // Financial Breakdown
               if (order.transactionType == 'CREDIT') ...[
                 _buildSummaryRow('Uang Muka (DP)', order.formattedDp),
                 const SizedBox(height: 6),
                 _buildSummaryRow('Angsuran per Bulan', '${order.formattedAngsuran} / bln'),
                 const SizedBox(height: 6),
-                _buildSummaryRow('Jangka Waktu (Tenor)', '${order.tenor} Bulan'),
+                _buildSummaryRow('Jangka Waktu (Tenor)', order.tenor != null && order.tenor! > 0 ? '${order.tenor} Bulan' : '-'),
                 const Divider(height: 20, color: Color(0xFFF1F5F9)),
               ],
 

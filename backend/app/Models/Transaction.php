@@ -60,6 +60,7 @@ class Transaction extends Model
         "total_amount",
         "unified_status",
         "branch_info",
+        "survey_info",
     ];
 
     /**
@@ -254,6 +255,70 @@ class Transaction extends Model
         ];
 
         return $statusMap[$this->status] ?? $this->status;
+    }
+
+    /**
+     * Survey information & overdue detection
+     */
+    public function getSurveyInfoAttribute(): ?array
+    {
+        if ($this->transaction_type !== 'CREDIT') {
+            return null;
+        }
+
+        $credit = $this->relationLoaded('creditDetail') ? $this->creditDetail : null;
+        $schedule = null;
+        if ($credit && $credit->relationLoaded('surveySchedules')) {
+            $schedule = $credit->surveySchedules->sortByDesc('created_at')->first();
+        }
+
+        $scheduledDate = null;
+        if ($schedule && $schedule->scheduled_date) {
+            $scheduledDate = \Carbon\Carbon::parse($schedule->scheduled_date);
+        } elseif ($credit && $credit->survey_scheduled_date) {
+            $scheduledDate = \Carbon\Carbon::parse($credit->survey_scheduled_date);
+        }
+
+        $scheduledTime = $schedule?->scheduled_time ?? ($credit?->survey_scheduled_time);
+        $surveyorName = $schedule?->surveyor_name ?? ($credit?->surveyor_name);
+        $surveyorPhone = $schedule?->surveyor_phone ?? ($credit?->surveyor_phone);
+        $scheduleStatus = $schedule?->status ?? 'pending';
+        $customerConfirmedAt = $schedule?->customer_confirmed_at;
+
+        // Check if credit or order is in survey phase
+        $unified = strtolower($this->unified_status ?? '');
+        $statusStr = strtolower($this->status ?? '');
+        $creditStatus = strtolower($credit?->status ?? '');
+
+        $isSurveyPhase = str_contains($unified, 'survei') ||
+                         str_contains($unified, 'survey') ||
+                         str_contains($statusStr, 'survey') ||
+                         str_contains($statusStr, 'survei') ||
+                         str_contains($creditStatus, 'survey') ||
+                         str_contains($creditStatus, 'survei') ||
+                         $scheduledDate !== null;
+
+        $isOverdue = false;
+        if ($isSurveyPhase && !in_array($scheduleStatus, ['completed', 'cancelled']) && !in_array($statusStr, ['completed', 'cancelled', 'disetujui', 'ditolak'])) {
+            if ($scheduledDate) {
+                // If scheduled date has passed
+                $isOverdue = $scheduledDate->startOfDay()->isPast();
+            } else {
+                // Or if it has been in survey phase for >= 2 days
+                $isOverdue = $this->created_at && $this->created_at->diffInDays(now()) >= 2;
+            }
+        }
+
+        return [
+            'id' => $schedule?->id,
+            'scheduled_date' => $scheduledDate?->format('Y-m-d'),
+            'scheduled_time' => $scheduledTime,
+            'surveyor_name' => $surveyorName,
+            'surveyor_phone' => $surveyorPhone,
+            'status' => $scheduleStatus,
+            'customer_confirmed_at' => $customerConfirmedAt ? \Carbon\Carbon::parse($customerConfirmedAt)->format('d M Y H:i') : null,
+            'is_overdue' => $isOverdue,
+        ];
     }
 
     /**
