@@ -12,11 +12,14 @@ class Order {
   final double? monthlyInstallment;
   final DateTime createdAt;
   final Motor? motor;
-  final bool isSurveyOverdue;
+  final bool? _isSurveyOverdue;
   final String? surveyDate;
   final String? surveyorName;
   final String? surveyorPhone;
-  final bool isSurveyConfirmed;
+  final bool? _isSurveyConfirmed;
+
+  bool get isSurveyOverdue => _isSurveyOverdue ?? false;
+  bool get isSurveyConfirmed => _isSurveyConfirmed ?? false;
 
   Order({
     required this.id,
@@ -29,12 +32,13 @@ class Order {
     this.monthlyInstallment,
     required this.createdAt,
     this.motor,
-    this.isSurveyOverdue = false,
+    bool? isSurveyOverdue = false,
     this.surveyDate,
     this.surveyorName,
     this.surveyorPhone,
-    this.isSurveyConfirmed = false,
-  });
+    bool? isSurveyConfirmed = false,
+  })  : _isSurveyOverdue = isSurveyOverdue ?? false,
+        _isSurveyConfirmed = isSurveyConfirmed ?? false;
 
   factory Order.fromJson(Map<String, dynamic> json) {
     DateTime parsedDate = DateTime.now();

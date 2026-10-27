@@ -1179,7 +1179,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ],
 
               // Overdue Survey Notice Card
-              if (order.transactionType == 'CREDIT' && order.isSurveyOverdue) ...[
+              if (order.transactionType == 'CREDIT' && order.isSurveyOverdue == true) ...[
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
@@ -1212,7 +1212,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         style: TextStyle(fontSize: 11.5, color: Color(0xFF78350F), height: 1.4),
                       ),
                       const SizedBox(height: 12),
-                      if (order.isSurveyConfirmed) ...[
+                      if (order.isSurveyConfirmed == true) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           decoration: BoxDecoration(
