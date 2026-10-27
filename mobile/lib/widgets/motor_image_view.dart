@@ -16,6 +16,13 @@ class MotorImageView extends StatelessWidget {
     this.height,
   });
 
+  int get _calcCacheWidth {
+    if (width != null && width! > 0) {
+      return (width! * 2).toInt().clamp(100, 600);
+    }
+    return 350;
+  }
+
   @override
   Widget build(BuildContext context) {
     final validNetUrl = imageUrl != null && imageUrl!.startsWith('http');
@@ -27,12 +34,14 @@ class MotorImageView extends StatelessWidget {
         width: width,
         height: height,
         fit: fit,
+        cacheWidth: _calcCacheWidth,
+        filterQuality: FilterQuality.low,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Center(
             child: SizedBox(
-              width: 24,
-              height: 24,
+              width: 20,
+              height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 color: Theme.of(context).colorScheme.primary,
@@ -51,6 +60,8 @@ class MotorImageView extends StatelessWidget {
               width: width,
               height: height,
               fit: fit,
+              cacheWidth: _calcCacheWidth,
+              filterQuality: FilterQuality.low,
               errorBuilder: (ctx, err, stack) => _fallbackPlaceholder(),
             );
           }
@@ -65,6 +76,8 @@ class MotorImageView extends StatelessWidget {
         width: width,
         height: height,
         fit: fit,
+        cacheWidth: _calcCacheWidth,
+        filterQuality: FilterQuality.low,
         errorBuilder: (ctx, err, stack) => _fallbackPlaceholder(),
       );
     }
@@ -78,7 +91,7 @@ class MotorImageView extends StatelessWidget {
       height: height,
       color: const Color(0xFFF1F5F9),
       child: const Center(
-        child: Icon(Icons.two_wheeler, size: 40, color: Color(0xFF94A3B8)),
+        child: Icon(Icons.two_wheeler, size: 36, color: Color(0xFF94A3B8)),
       ),
     );
   }

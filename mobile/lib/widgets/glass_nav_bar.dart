@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class GlassNavBar extends StatelessWidget {
@@ -14,30 +13,31 @@ class GlassNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.88),
-        border: const Border(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
           top: BorderSide(color: Color(0xFFE2E8F0), width: 0.8),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 10,
+            offset: Offset(0, -3),
+          ),
+        ],
       ),
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-          child: SafeArea(
-            top: false,
-            child: Container(
-              height: 62,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _navItem(context, 0, Icons.home_outlined, Icons.home_rounded, 'Beranda'),
-                  _navItem(context, 1, Icons.two_wheeler_outlined, Icons.two_wheeler_rounded, 'Katalog'),
-                  _navItem(context, 2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Transaksi'),
-                  _navItem(context, 3, Icons.person_outline_rounded, Icons.person_rounded, 'Akun'),
-                ],
-              ),
-            ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 62,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(context, 0, Icons.home_outlined, Icons.home_rounded, 'Beranda'),
+              _navItem(context, 1, Icons.two_wheeler_outlined, Icons.two_wheeler_rounded, 'Katalog'),
+              _navItem(context, 2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Transaksi'),
+              _navItem(context, 3, Icons.person_outline_rounded, Icons.person_rounded, 'Akun'),
+            ],
           ),
         ),
       ),
@@ -59,8 +59,8 @@ class GlassNavBar extends StatelessWidget {
       onTap: () => onDestinationSelected(index),
       radius: 28,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFFEFF6FF) : Colors.transparent,
           borderRadius: BorderRadius.circular(16),

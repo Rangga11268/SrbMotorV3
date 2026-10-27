@@ -49,14 +49,24 @@ class MotorCard extends StatelessWidget {
                         width: 104,
                         height: 96,
                         color: const Color(0xFFF8FAFC),
-                        child: Opacity(
-                          opacity: isAvailable ? 1.0 : 0.45,
-                          child: MotorImageView(
-                            imageUrl: motor.displayImageUrl,
-                            assetPath: motor.imagePath,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
+                        child: isAvailable
+                            ? MotorImageView(
+                                imageUrl: motor.displayImageUrl,
+                                assetPath: motor.imagePath,
+                                fit: BoxFit.contain,
+                                width: 104,
+                                height: 96,
+                              )
+                            : Opacity(
+                                opacity: 0.45,
+                                child: MotorImageView(
+                                  imageUrl: motor.displayImageUrl,
+                                  assetPath: motor.imagePath,
+                                  fit: BoxFit.contain,
+                                  width: 104,
+                                  height: 96,
+                                ),
+                              ),
                       ),
                     ),
                     if (!isAvailable)

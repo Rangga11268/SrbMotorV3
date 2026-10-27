@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      extendBody: true,
+      extendBody: false,
       bottomNavigationBar: GlassNavBar(
         selectedIndex: _selectedTab,
         onDestinationSelected: (index) {
@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           _HomeDashboard(
             appState: widget.appState,
+            isActive: _selectedTab == 0,
             onTabChange: (index) => setState(() => _selectedTab = index),
             onMotorTap: _openDetail,
           ),
@@ -74,11 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class _HomeDashboard extends StatefulWidget {
   final AppState appState;
+  final bool isActive;
   final ValueChanged<int> onTabChange;
   final Function(Motor) onMotorTap;
 
   const _HomeDashboard({
     required this.appState,
+    required this.isActive,
     required this.onTabChange,
     required this.onMotorTap,
   });
@@ -102,6 +105,7 @@ class _HomeDashboardState extends State<_HomeDashboard> {
   void initState() {
     super.initState();
     _bannerTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (!mounted || !widget.isActive) return;
       if (_bannerController.hasClients) {
         int next = _currentBannerIndex + 1;
         if (next >= _bannerAssets.length) next = 0;
@@ -384,6 +388,8 @@ class _HomeDashboardState extends State<_HomeDashboard> {
                       child: Image.asset(
                         _bannerAssets[index],
                         fit: BoxFit.cover,
+                        cacheWidth: 700,
+                        filterQuality: FilterQuality.low,
                         errorBuilder: (ctx, err, stack) => const Center(child: Icon(Icons.image, color: Colors.grey)),
                       ),
                     ),

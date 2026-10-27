@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../app_state.dart';
 import '../../models/motor.dart';
@@ -65,6 +66,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
   TextEditingController? _searchController;
   MotorFilterOptions? _filter;
   int? _visibleCount;
+  Timer? _searchDebounce;
 
   TextEditingController get searchController => _searchController ??= TextEditingController();
   MotorFilterOptions get filter => _filter ??= MotorFilterOptions();
@@ -74,6 +76,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchController?.dispose();
     super.dispose();
   }
@@ -562,9 +565,16 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                         child: TextField(
                           controller: searchController,
-                          onChanged: (_) => setState(() {
-                            visibleCount = 6;
-                          }),
+                          onChanged: (_) {
+                            _searchDebounce?.cancel();
+                            _searchDebounce = Timer(const Duration(milliseconds: 180), () {
+                              if (mounted) {
+                                setState(() {
+                                  visibleCount = 6;
+                                });
+                              }
+                            });
+                          },
                           decoration: InputDecoration(
                             hintText: 'Cari NMAX, PCX, Vario, Aerox...',
                             hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
@@ -573,6 +583,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
                                 ? IconButton(
                                     icon: const Icon(Icons.clear, size: 18, color: Color(0xFF64748B)),
                                     onPressed: () {
+                                      _searchDebounce?.cancel();
                                       searchController.clear();
                                       setState(() {
                                         visibleCount = 6;

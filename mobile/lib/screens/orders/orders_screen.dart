@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../app_state.dart';
 import '../../models/order.dart';
@@ -55,6 +56,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   TextEditingController? _searchController;
   OrderFilterOptions? _filter;
   int? _visibleCount;
+  Timer? _searchDebounce;
 
   TextEditingController get searchController => _searchController ??= TextEditingController();
   OrderFilterOptions get filter => _filter ??= OrderFilterOptions();
@@ -64,6 +66,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _searchController?.dispose();
     super.dispose();
   }
@@ -575,9 +578,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         ),
                         child: TextField(
                           controller: searchController,
-                          onChanged: (_) => setState(() {
-                            visibleCount = 5;
-                          }),
+                          onChanged: (_) {
+                            _searchDebounce?.cancel();
+                            _searchDebounce = Timer(const Duration(milliseconds: 180), () {
+                              if (mounted) {
+                                setState(() {
+                                  visibleCount = 5;
+                                });
+                              }
+                            });
+                          },
                           decoration: InputDecoration(
                             hintText: 'Cari nomor order, motor, status...',
                             hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
@@ -586,6 +596,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 ? IconButton(
                                     icon: const Icon(Icons.clear, size: 18, color: Color(0xFF64748B)),
                                     onPressed: () {
+                                      _searchDebounce?.cancel();
                                       searchController.clear();
                                       setState(() {
                                         visibleCount = 5;
@@ -1137,6 +1148,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           imageUrl: order.motor?.displayImageUrl,
                           assetPath: order.motor?.imagePath,
                           fit: BoxFit.contain,
+                          width: 72,
+                          height: 64,
                         ),
                       ),
                     ),
@@ -1300,6 +1313,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           imageUrl: order.motor?.displayImageUrl,
                           assetPath: order.motor?.imagePath,
                           fit: BoxFit.contain,
+                          width: 72,
+                          height: 64,
                         ),
                       ),
                     ),

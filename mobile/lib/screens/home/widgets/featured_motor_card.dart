@@ -49,14 +49,24 @@ class FeaturedMotorCard extends StatelessWidget {
                       width: double.infinity,
                       color: const Color(0xFFF8FAFC),
                       padding: const EdgeInsets.all(12),
-                      child: Opacity(
-                        opacity: isAvailable ? 1.0 : 0.45,
-                        child: MotorImageView(
-                          imageUrl: motor.displayImageUrl,
-                          assetPath: motor.imagePath,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                      child: isAvailable
+                          ? MotorImageView(
+                              imageUrl: motor.displayImageUrl,
+                              assetPath: motor.imagePath,
+                              fit: BoxFit.contain,
+                              width: 210,
+                              height: 135,
+                            )
+                          : Opacity(
+                              opacity: 0.45,
+                              child: MotorImageView(
+                                imageUrl: motor.displayImageUrl,
+                                assetPath: motor.imagePath,
+                                fit: BoxFit.contain,
+                                width: 210,
+                                height: 135,
+                              ),
+                            ),
                     ),
                   ),
 
