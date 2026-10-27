@@ -632,3 +632,7 @@ Route::post("/documents/{document}/approve", [
         ])->name("profile.password.update");
     });
 
+
+
+Route::get("/wishlist", [\App\Http\Controllers\WishlistController::class, "index"])->name("wishlist.index");
+Route::post("/wishlist/toggle", [\App\Http\Controllers\WishlistController::class, "toggle"])->name("wishlist.toggle");

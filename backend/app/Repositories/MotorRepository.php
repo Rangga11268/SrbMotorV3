@@ -88,6 +88,10 @@ class MotorRepository implements MotorRepositoryInterface
             $query->where('branch', $filters['branch']);
         }
 
+        if (isset($filters['ids']) && is_array($filters['ids'])) {
+            $query->whereIn('id', $filters['ids']);
+        }
+
         if (isset($filters['tersedia']) && $filters['tersedia'] !== null) {
             $query->where('tersedia', $filters['tersedia'] == 1);
         }

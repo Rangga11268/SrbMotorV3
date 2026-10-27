@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'wishlist_ids' => fn() => $request->user() ? $request->user()->wishlists()->pluck('motor_id')->map(fn($id) => (int)$id)->toArray() : [],
             ],
             'flash' => [
                 'message' => fn() => $request->session()->get('message'),

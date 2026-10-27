@@ -256,4 +256,49 @@ class ApiService {
       return ApiResponse.error('Error memuat transaksi: $e');
     }
   }
+
+  // Wishlist: Get User Wishlist IDs
+  static Future<ApiResponse<List<int>>> getWishlist(String token) async {
+    try {
+      final response = await http
+          .get(Uri.parse(ApiConstants.wishlist), headers: _headers(token))
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        final list = (body['wishlist'] as List?)
+                ?.map((id) => int.tryParse(id.toString()) ?? 0)
+                .where((id) => id > 0)
+                .toList() ??
+            [];
+        return ApiResponse.success(list);
+      } else {
+        return ApiResponse.error('Gagal mengambil data wishlist.', statusCode: response.statusCode);
+      }
+    } catch (e) {
+      return ApiResponse.error('Error memuat wishlist: $e');
+    }
+  }
+
+  // Wishlist: Toggle Motor
+  static Future<ApiResponse<Map<String, dynamic>>> toggleWishlist(int motorId, String token) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConstants.toggleWishlist),
+            headers: _headers(token),
+            body: jsonEncode({'motor_id': motorId}),
+          )
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return ApiResponse.success(body as Map<String, dynamic>);
+      } else {
+        return ApiResponse.error('Gagal memperbarui wishlist.', statusCode: response.statusCode);
+      }
+    } catch (e) {
+      return ApiResponse.error('Error toggle wishlist: $e');
+    }
+  }
 }

@@ -10,6 +10,7 @@ class MotorFilterOptions {
   String priceRange; // 'Semua', '<25jt', '25-35jt', '35-50jt', '>50jt'
   String sortBy; // 'rekomendasi', 'termurah', 'termahal', 'nama_asc', 'terbaru'
   bool onlyAvailable;
+  bool onlyWishlist;
 
   MotorFilterOptions({
     this.brand = 'Semua',
@@ -17,6 +18,7 @@ class MotorFilterOptions {
     this.priceRange = 'Semua',
     this.sortBy = 'rekomendasi',
     this.onlyAvailable = false,
+    this.onlyWishlist = false,
   });
 
   int get activeFilterCount {
@@ -26,6 +28,7 @@ class MotorFilterOptions {
     if (priceRange != 'Semua') count++;
     if (sortBy != 'rekomendasi') count++;
     if (onlyAvailable) count++;
+    if (onlyWishlist) count++;
     return count;
   }
 
@@ -35,6 +38,7 @@ class MotorFilterOptions {
     priceRange = 'Semua';
     sortBy = 'rekomendasi';
     onlyAvailable = false;
+    onlyWishlist = false;
   }
 
   MotorFilterOptions copy() {
@@ -44,6 +48,7 @@ class MotorFilterOptions {
       priceRange: priceRange,
       sortBy: sortBy,
       onlyAvailable: onlyAvailable,
+      onlyWishlist: onlyWishlist,
     );
   }
 }
@@ -144,6 +149,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
     // Ready Stock
     if (opts.onlyAvailable) {
       list = list.where((m) => m.isAvailable && m.stock > 0).toList();
+    }
+
+    // Only Wishlist
+    if (opts.onlyWishlist) {
+      list = list.where((m) => widget.appState.isInWishlist(m.id)).toList();
     }
 
     // Sorting
@@ -415,6 +425,27 @@ class _CatalogScreenState extends State<CatalogScreen> {
                             setSheetState(() => tempFilter.onlyAvailable = val);
                           },
                         ),
+                        const SizedBox(height: 12),
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text(
+                            'Hanya Motor Favorit Saya',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF0F172A),
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Tampilkan ${widget.appState.wishlist.length} unit yang tersimpan di wishlist',
+                            style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+                          ),
+                          value: tempFilter.onlyWishlist,
+                          activeThumbColor: const Color(0xFFEF4444),
+                          onChanged: (val) {
+                            setSheetState(() => tempFilter.onlyWishlist = val);
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -520,10 +551,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final motors = _filteredMotors;
-    final activeFilters = filter.activeFilterCount;
+    return ListenableBuilder(
+      listenable: widget.appState,
+      builder: (context, _) {
+        final motors = _filteredMotors;
+        final activeFilters = filter.activeFilterCount;
 
-    return Scaffold(
+        return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
         title: const Text(
@@ -744,6 +778,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                               visibleCount = 6;
                             });
                           }),
+                        if (filter.onlyWishlist)
+                          _buildActiveFilterChip('Favorit Saya', () {
+                            setState(() {
+                              filter.onlyWishlist = false;
+                              visibleCount = 6;
+                            });
+                          }),
                         InkWell(
                           onTap: () => setState(() {
                             filter.reset();
@@ -866,6 +907,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
           ),
         ],
       ),
+    );
+      },
     );
   }
 

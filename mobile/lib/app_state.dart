@@ -49,12 +49,24 @@ class AppState extends ChangeNotifier {
     fetchMotors();
     if (isAuthenticated) {
       fetchOrders();
+      fetchWishlist();
     }
   }
 
   void _loadWishlist() {
     final wishlistJson = _prefs.getStringList('wishlist') ?? [];
     _wishlist = wishlistJson.map((id) => int.tryParse(id) ?? 0).where((id) => id > 0).toList();
+  }
+
+  Future<void> fetchWishlist() async {
+    if (_token == null || _token!.isEmpty) return;
+    final res = await ApiService.getWishlist(_token!);
+    if (res.isSuccess && res.data != null) {
+      final set = <int>{..._wishlist, ...res.data!};
+      _wishlist = set.toList();
+      await _prefs.setStringList('wishlist', _wishlist.map((id) => id.toString()).toList());
+      notifyListeners();
+    }
   }
 
   // Restore session from token
@@ -113,6 +125,7 @@ class AppState extends ChangeNotifier {
 
         notifyListeners();
         fetchOrders();
+        fetchWishlist();
         return {'success': true};
       }
     }
@@ -149,6 +162,7 @@ class AppState extends ChangeNotifier {
         await _saveUserToPrefs(_currentUser!);
 
         notifyListeners();
+        fetchWishlist();
         return {'success': true};
       }
       return {'success': true, 'message': 'Pendaftaran berhasil. Silakan masuk.'};
@@ -278,6 +292,20 @@ class AppState extends ChangeNotifier {
     }
     await _prefs.setStringList('wishlist', _wishlist.map((id) => id.toString()).toList());
     notifyListeners();
+
+    if (isAuthenticated && _token != null && _token!.isNotEmpty) {
+      ApiService.toggleWishlist(motorId, _token!).then((res) {
+        if (res.isSuccess && res.data != null && res.data!['wishlist'] is List) {
+          final serverList = (res.data!['wishlist'] as List)
+              .map((id) => int.tryParse(id.toString()) ?? 0)
+              .where((id) => id > 0)
+              .toList();
+          _wishlist = serverList;
+          _prefs.setStringList('wishlist', _wishlist.map((id) => id.toString()).toList());
+          notifyListeners();
+        }
+      });
+    }
   }
 
   bool isInWishlist(int motorId) => _wishlist.contains(motorId);

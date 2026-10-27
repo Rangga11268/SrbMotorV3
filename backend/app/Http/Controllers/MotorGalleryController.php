@@ -44,6 +44,18 @@ class MotorGalleryController extends Controller
         if ($request->has("max_price") && !empty($request->max_price)) {
             $filters["max_price"] = $request->max_price;
         }
+        if ($request->boolean("favorit")) {
+            $filters["favorit"] = "1";
+            if (Auth::check()) {
+                $favIds = Auth::user()->wishlists()->pluck("motor_id")->toArray();
+                $filters["ids"] = !empty($favIds) ? $favIds : [-1];
+            } elseif ($request->has("favorit_ids")) {
+                $rawIds = array_map('intval', array_filter(explode(',', (string)$request->favorit_ids)));
+                $filters["ids"] = !empty($rawIds) ? $rawIds : [-1];
+            } else {
+                $filters["ids"] = [-1];
+            }
+        }
 
         $motors = $this->motorRepository->getWithFilters($filters, true, 12);
 
@@ -69,6 +81,7 @@ class MotorGalleryController extends Controller
                     "year",
                     "min_price",
                     "max_price",
+                    "favorit",
                 ]),
                 "brands" => $brands,
                 "types" => $types,
@@ -85,6 +98,7 @@ class MotorGalleryController extends Controller
                 "year",
                 "min_price",
                 "max_price",
+                "favorit",
             ]),
             "brands" => $brands,
             "types" => $types,

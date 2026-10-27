@@ -35,6 +35,48 @@ export default function Index({
     const [types, setTypes] = useState(initialTypes);
     const [years, setYears] = useState(initialYears);
 
+    const [wishlistIds, setWishlistIds] = useState(() => {
+        if (auth?.wishlist_ids && Array.isArray(auth.wishlist_ids)) {
+            return auth.wishlist_ids;
+        }
+        try {
+            const saved = localStorage.getItem("srb_wishlist");
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            return [];
+        }
+    });
+
+    const toggleWishlist = async (motorId, e) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        const isFav = wishlistIds.includes(motorId);
+        const next = isFav
+            ? wishlistIds.filter((id) => id !== motorId)
+            : [...wishlistIds, motorId];
+
+        setWishlistIds(next);
+        try {
+            localStorage.setItem("srb_wishlist", JSON.stringify(next));
+        } catch (err) {}
+
+        if (auth?.user) {
+            try {
+                const res = await axios.post(route("wishlist.toggle"), {
+                    motor_id: motorId,
+                });
+                if (res.data?.wishlist) {
+                    setWishlistIds(res.data.wishlist);
+                }
+            } catch (err) {
+                console.error("Wishlist sync error:", err);
+            }
+        }
+    };
+
     const [values, setValues] = useState({
         search: filters.search || "",
         brand: filters.brand || "",
@@ -42,6 +84,7 @@ export default function Index({
         year: filters.year || "",
         min_price: filters.min_price || "",
         max_price: filters.max_price || "",
+        favorit: filters.favorit || "",
     });
 
     const handleChange = (e) => {
@@ -59,6 +102,11 @@ export default function Index({
                 if (searchValues[key]) acc[key] = searchValues[key];
                 return acc;
             }, {});
+
+            if (searchValues.favorit === "1") {
+                query.favorit = "1";
+                query.favorit_ids = wishlistIds.join(",");
+            }
 
             const response = await axios.get(route("motors.index"), {
                 params: query,
@@ -321,16 +369,35 @@ export default function Index({
                             <div className="lg:col-span-3">
                                 {/* RESULTS HEADER */}
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-1.5 h-8 bg-black"></div>
-                                        <div>
-                                            <h2 className="text-2xl font-black text-black uppercase tracking-tighter leading-none">
-                                                HASIL PENCARIAN
-                                            </h2>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
-                                                MENAMPILKAN {motors.total} UNIT TERBAIK
-                                            </p>
+                                    <div className="flex items-center justify-between w-full md:w-auto gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-1.5 h-8 bg-black"></div>
+                                            <div>
+                                                <h2 className="text-2xl font-black text-black uppercase tracking-tighter leading-none">
+                                                    {values.favorit === "1" ? "MOTOR FAVORIT SAYA" : "HASIL PENCARIAN"}
+                                                </h2>
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                                    MENAMPILKAN {motors.total} UNIT {values.favorit === "1" ? "TERSIMPAN" : "TERBAIK"}
+                                                </p>
+                                            </div>
                                         </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const nextFav = values.favorit === "1" ? "" : "1";
+                                                const newValues = { ...values, favorit: nextFav };
+                                                setValues(newValues);
+                                                fetchMotors(newValues);
+                                            }}
+                                            className={`flex items-center gap-2 px-3.5 py-2 text-[11px] font-bold uppercase tracking-wider transition-all border ${
+                                                values.favorit === "1"
+                                                    ? "bg-red-500 text-white border-red-500 shadow-sm"
+                                                    : "bg-white text-gray-700 border-gray-300 hover:border-red-400 hover:text-red-500"
+                                            }`}
+                                        >
+                                            <Heart size={14} className={values.favorit === "1" ? "fill-white" : "text-red-500"} />
+                                            <span>Favorit ({wishlistIds.length})</span>
+                                        </button>
                                     </div>
                                     
                                     {Object.values(values).filter(Boolean).length > 0 && (
@@ -419,6 +486,31 @@ export default function Index({
                                                                     }
                                                                 </span>
                                                             </div>
+
+                                                            {/* Favorite / Wishlist Button */}
+                                                            <button
+                                                                type="button"
+                                                                onClick={(e) => toggleWishlist(motor.id, e)}
+                                                                aria-label={
+                                                                    wishlistIds.includes(motor.id)
+                                                                        ? "Hapus dari favorit"
+                                                                        : "Tambah ke favorit"
+                                                                }
+                                                                className={`absolute top-4 right-4 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 border ${
+                                                                    wishlistIds.includes(motor.id)
+                                                                        ? "bg-red-50 border-red-200 text-red-500 shadow-sm"
+                                                                        : "bg-white/90 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-white"
+                                                                }`}
+                                                            >
+                                                                <Heart
+                                                                    size={15}
+                                                                    className={
+                                                                        wishlistIds.includes(motor.id)
+                                                                            ? "fill-red-500 text-red-500 scale-110"
+                                                                            : "text-current"
+                                                                    }
+                                                                />
+                                                            </button>
 
                                                             {/* Status Tag */}
                                                             {!motor.tersedia && (

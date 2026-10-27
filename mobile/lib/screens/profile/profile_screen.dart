@@ -302,9 +302,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = widget.appState.currentUser;
-    final isAuthenticated = widget.appState.isAuthenticated;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
@@ -334,31 +331,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(width: 8),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          children: [
-            if (!isAuthenticated)
-              _buildGuestHeader()
-            else ...[
-              _buildUserHeader(user),
-              const SizedBox(height: 16),
-              _buildQuickStats(user),
-              const SizedBox(height: 24),
-              _buildProfileEditCard(user),
-            ],
-            const SizedBox(height: 24),
-            _buildWishlistSection(),
-            const SizedBox(height: 24),
-            _buildHelpAndInfoSection(),
-            if (isAuthenticated) ...[
-              const SizedBox(height: 24),
-              _buildLogoutButton(),
-            ],
-            const SizedBox(height: 60), // Extra space for bottom nav bar
-          ],
-        ),
+      body: ListenableBuilder(
+        listenable: widget.appState,
+        builder: (context, _) {
+          final liveUser = widget.appState.currentUser;
+          final liveIsAuth = widget.appState.isAuthenticated;
+
+          return RefreshIndicator(
+            onRefresh: _refreshData,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+              children: [
+                if (!liveIsAuth)
+                  _buildGuestHeader()
+                else ...[
+                  _buildUserHeader(liveUser),
+                  const SizedBox(height: 16),
+                  _buildQuickStats(liveUser),
+                  const SizedBox(height: 24),
+                  _buildProfileEditCard(liveUser),
+                ],
+                const SizedBox(height: 24),
+                _buildWishlistSection(),
+                const SizedBox(height: 24),
+                _buildHelpAndInfoSection(),
+                if (liveIsAuth) ...[
+                  const SizedBox(height: 24),
+                  _buildLogoutButton(),
+                ],
+                const SizedBox(height: 60), // Extra space for bottom nav bar
+              ],
+            ),
+          );
+        },
       ),
     );
   }

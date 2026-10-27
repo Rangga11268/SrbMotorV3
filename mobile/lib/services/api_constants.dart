@@ -29,6 +29,8 @@ class ApiConstants {
   static String get motors => '$baseUrl/motors';
   static String get orders => '$baseUrl/orders';
   static String get branches => '$baseUrl/branches';
+  static String get wishlist => '$baseUrl/wishlist';
+  static String get toggleWishlist => '$baseUrl/wishlist/toggle';
 
   // Resolver to ensure images resolve cleanly across Emulator and Web/Desktop
   static String resolveImageUrl(String? path) {

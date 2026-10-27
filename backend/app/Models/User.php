@@ -114,4 +114,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return in_array($this->role, ['admin', 'owner', 'montir']);
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function wishlistMotors()
+    {
+        return $this->belongsToMany(Motor::class, 'wishlists', 'user_id', 'motor_id')->withTimestamps();
+    }
 }

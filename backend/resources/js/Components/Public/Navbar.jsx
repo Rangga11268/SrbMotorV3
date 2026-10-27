@@ -23,6 +23,7 @@ import {
     ShieldCheck,
     Wrench,
     CreditCard as CreditCardIcon,
+    Heart,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -293,6 +294,18 @@ export default function Navbar({ auth }) {
 
                     {/* Right Actions: Auth & CTA */}
                     <div className="flex items-center gap-4">
+                        <Link
+                            href="/motors?favorit=1"
+                            className="p-2 text-gray-700 hover:text-red-500 transition-colors relative flex items-center justify-center rounded-none"
+                            title="Motor Favorit"
+                        >
+                            <Heart size={18} className="text-current" />
+                            {auth?.wishlist_ids && auth.wishlist_ids.length > 0 && (
+                                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[9px] font-black flex items-center justify-center">
+                                    {auth.wishlist_ids.length}
+                                </span>
+                            )}
+                        </Link>
                         {auth?.user && (
                             <div className="hidden sm:block">
                                 <NotificationBell />
@@ -385,6 +398,12 @@ export default function Navbar({ auth }) {
                                                                 : "Dashboard Admin"}
                                                         </a>
                                                     )}
+                                                    <Link
+                                                        href="/motors?favorit=1"
+                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
+                                                    >
+                                                        Motor Favorit ({auth?.wishlist_ids?.length || 0})
+                                                    </Link>
                                                     <Link
                                                         href={route(
                                                             "motors.user-transactions",

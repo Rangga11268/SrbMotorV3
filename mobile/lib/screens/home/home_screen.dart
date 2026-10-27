@@ -127,18 +127,21 @@ class _HomeDashboardState extends State<_HomeDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final motors = widget.appState.motors;
-    final popular = motors.take(4).toList();
-    final latest = motors.skip(1).take(5).toList();
+    return ListenableBuilder(
+      listenable: widget.appState,
+      builder: (context, _) {
+        final motors = widget.appState.motors;
+        final popular = motors.take(4).toList();
+        final latest = motors.skip(1).take(5).toList();
 
-    return SafeArea(
-      bottom: false,
-      child: RefreshIndicator(
-        color: const Color(0xFF1C69D4),
-        onRefresh: () => widget.appState.fetchMotors(),
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-          children: [
+        return SafeArea(
+          bottom: false,
+          child: RefreshIndicator(
+            color: const Color(0xFF1C69D4),
+            onRefresh: () => widget.appState.fetchMotors(),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+              children: [
             // Top App Bar Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -489,9 +492,11 @@ class _HomeDashboardState extends State<_HomeDashboard> {
                   onWishlistToggle: () => widget.appState.toggleWishlist(m.id),
                   onTap: () => widget.onMotorTap(m),
                 )),
-          ],
-        ),
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

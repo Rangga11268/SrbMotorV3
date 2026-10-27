@@ -31,10 +31,48 @@ import {
     Sparkles,
     FileCheck,
     Activity,
+    Heart,
 } from "lucide-react";
 
 export default function Show({ motor, relatedMotors, settings = {} }) {
     const { auth } = usePage().props;
+    const [isWishlisted, setIsWishlisted] = useState(() => {
+        if (auth?.wishlist_ids && Array.isArray(auth.wishlist_ids)) {
+            return auth.wishlist_ids.includes(motor.id);
+        }
+        try {
+            const saved = localStorage.getItem("srb_wishlist");
+            const ids = saved ? JSON.parse(saved) : [];
+            return ids.includes(motor.id);
+        } catch (e) {
+            return false;
+        }
+    });
+
+    const toggleWishlist = async () => {
+        const nextState = !isWishlisted;
+        setIsWishlisted(nextState);
+
+        try {
+            const saved = localStorage.getItem("srb_wishlist");
+            let ids = saved ? JSON.parse(saved) : [];
+            if (nextState) {
+                if (!ids.includes(motor.id)) ids.push(motor.id);
+            } else {
+                ids = ids.filter((id) => id !== motor.id);
+            }
+            localStorage.setItem("srb_wishlist", JSON.stringify(ids));
+        } catch (e) {}
+
+        if (auth?.user) {
+            try {
+                await axios.post(route("wishlist.toggle"), { motor_id: motor.id });
+            } catch (err) {
+                console.error("Failed to sync wishlist", err);
+            }
+        }
+    };
+
     const [selectedTenor, setSelectedTenor] = useState(36);
     const [dpAmount, setDpAmount] = useState(
         parseFloat(motor.min_dp_amount || motor.price * 0.2),
@@ -335,6 +373,18 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                             className="w-full bg-white text-black font-bold text-[13px] uppercase tracking-[0.15em] py-4 rounded-none hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                                         >
                                             <Phone size={16} /> HUBUNGI KAMI
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={toggleWishlist}
+                                            className={`w-full font-bold text-[13px] uppercase tracking-[0.15em] py-3.5 rounded-none transition-all flex items-center justify-center gap-2 border ${
+                                                isWishlisted
+                                                    ? "bg-red-500/10 border-red-500 text-red-400 hover:bg-red-500 hover:text-white"
+                                                    : "bg-transparent border-gray-700 text-gray-300 hover:border-red-400 hover:text-red-400"
+                                            }`}
+                                        >
+                                            <Heart size={16} className={isWishlisted ? "fill-current text-current" : ""} />
+                                            {isWishlisted ? "SUDAH TERSIMPAN DI FAVORIT" : "SIMPAN KE FAVORIT"}
                                         </button>
                                     </div>
                                 </div>
