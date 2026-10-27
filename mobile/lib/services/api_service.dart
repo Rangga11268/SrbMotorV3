@@ -366,7 +366,7 @@ class ApiService {
     try {
       final response = await http
           .post(
-            Uri.parse(ApiConstants.confirmSurvey(orderId)),
+            Uri.parse('${ApiConstants.orders}/$orderId/confirm-survey-done'),
             headers: _headers(token),
           )
           .timeout(_timeout);
