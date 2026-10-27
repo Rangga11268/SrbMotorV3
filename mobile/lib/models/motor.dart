@@ -18,6 +18,7 @@ class Motor {
   final bool isAvailable;
   final int stock;
   final double minDp;
+  final String branch;
 
   Motor({
     required this.id,
@@ -36,6 +37,7 @@ class Motor {
     this.isAvailable = true,
     this.stock = 1,
     this.minDp = 0,
+    this.branch = 'Pusat',
   });
 
   factory Motor.fromJson(Map<String, dynamic> json) {
@@ -95,6 +97,7 @@ class Motor {
       isAvailable: tersedia,
       stock: parsedStock,
       minDp: parsedMinDp,
+      branch: json['branch']?.toString() ?? 'Pusat',
     );
   }
 

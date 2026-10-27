@@ -38,8 +38,8 @@ class OrderController extends Controller
             'booking_fee' => 'nullable|numeric|min:0',
             'branch' => 'nullable|string',
             'branch_code' => 'nullable|string',
-            'ktp_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
-            'kk_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'ktp_image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'kk_image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         $motor = Motor::findOrFail($request->motor_id);

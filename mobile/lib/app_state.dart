@@ -315,4 +315,31 @@ class AppState extends ChangeNotifier {
     await _prefs.remove('wishlist');
     notifyListeners();
   }
+
+  // Order Placement
+  Future<Map<String, dynamic>> submitCashOrder(Map<String, dynamic> payload) async {
+    if (!isAuthenticated || _token == null) {
+      return {'success': false, 'message': 'Silakan masuk ke akun Anda untuk memesan motor.'};
+    }
+    final res = await ApiService.createCashOrder(token: _token!, data: payload);
+    if (res.isSuccess) {
+      fetchOrders();
+      fetchMotors();
+      return {'success': true, 'message': 'Pesanan tunai berhasil dibuat!', 'data': res.data};
+    }
+    return {'success': false, 'message': res.message ?? 'Gagal membuat pesanan tunai.'};
+  }
+
+  Future<Map<String, dynamic>> submitCreditOrder(Map<String, dynamic> payload) async {
+    if (!isAuthenticated || _token == null) {
+      return {'success': false, 'message': 'Silakan masuk ke akun Anda untuk mengajukan kredit.'};
+    }
+    final res = await ApiService.createCreditOrder(token: _token!, data: payload);
+    if (res.isSuccess) {
+      fetchOrders();
+      fetchMotors();
+      return {'success': true, 'message': 'Pengajuan kredit berhasil dikirim!', 'data': res.data};
+    }
+    return {'success': false, 'message': res.message ?? 'Gagal membuat pengajuan kredit.'};
+  }
 }

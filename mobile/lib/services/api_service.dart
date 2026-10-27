@@ -301,4 +301,60 @@ class ApiService {
       return ApiResponse.error('Error toggle wishlist: $e');
     }
   }
+
+  // Order: Create Cash Order
+  static Future<ApiResponse<Map<String, dynamic>>> createCashOrder({
+    required String token,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConstants.cashOrder),
+            headers: _headers(token),
+            body: jsonEncode(data),
+          )
+          .timeout(_timeout);
+
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiResponse.success(body as Map<String, dynamic>);
+      } else {
+        return ApiResponse.error(
+          body['message'] ?? 'Gagal membuat pesanan tunai.',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error('Error membuat pesanan: $e');
+    }
+  }
+
+  // Order: Create Credit Order
+  static Future<ApiResponse<Map<String, dynamic>>> createCreditOrder({
+    required String token,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConstants.creditOrder),
+            headers: _headers(token),
+            body: jsonEncode(data),
+          )
+          .timeout(_timeout);
+
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiResponse.success(body as Map<String, dynamic>);
+      } else {
+        return ApiResponse.error(
+          body['message'] ?? 'Gagal membuat pengajuan kredit.',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error('Error mengajukan kredit: $e');
+    }
+  }
 }
