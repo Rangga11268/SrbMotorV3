@@ -489,7 +489,7 @@ export default function Show({ credit, availableTransitions, timeline, leasingPr
                                                 <div key={doc.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
                                                     <div className="w-14 h-14 rounded-lg bg-white border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center">
                                                         {isImg && doc.file_path
-                                                            ? <img src={`/storage/${doc.file_path}`} alt={doc.document_type} className="w-full h-full object-cover" />
+                                                            ? <img src={`/documents/${doc.id}/preview`} alt={doc.document_type} className="w-full h-full object-cover" />
                                                             : <FileText size={22} className="text-gray-300" />}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -503,7 +503,7 @@ export default function Show({ credit, availableTransitions, timeline, leasingPr
                                                     </div>
                                                     <div className="flex items-center gap-2 shrink-0">
                                                         {doc.file_path && (
-                                                            <a href={`/storage/${doc.file_path}`} target="_blank" className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat File"><Eye size={15} /></a>
+                                                            <a href={`/documents/${doc.id}/preview`} target="_blank" className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat File"><Eye size={15} /></a>
                                                         )}
                                                         {approvalStatus !== "approved" && (
                                                             <button onClick={() => handleApproveDoc(doc.id)} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Setujui"><Check size={15} /></button>
@@ -702,9 +702,22 @@ export default function Show({ credit, availableTransitions, timeline, leasingPr
                                 <h3 className="font-bold text-gray-800 text-sm flex items-center gap-2"><Bike size={14} /> Unit Motor</h3>
                             </div>
                             <div className="p-4">
-                                {motor.image_path && (
+                                {(motor.image || motor.image_path) && (
                                     <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border border-gray-200 mb-3">
-                                        <img src={`/storage/${motor.image_path}`} alt={motor.name} className="w-full h-full object-cover" />
+                                        <img
+                                            src={
+                                                motor.image ||
+                                                (motor.image_path.startsWith('assets/')
+                                                    ? `/${motor.image_path}`
+                                                    : `/storage/${motor.image_path}`)
+                                            }
+                                            onError={(e) => {
+                                                e.currentTarget.onerror = null;
+                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                            }}
+                                            alt={motor.name}
+                                            className="w-full h-full object-cover"
+                                        />
                                     </div>
                                 )}
                                 <p className="font-black text-gray-800 text-sm">{motor.name}</p>

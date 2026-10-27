@@ -394,10 +394,19 @@ export default function Index({
                                                         <div className="relative aspect-[4/3] bg-white overflow-hidden p-6 border-b border-gray-100 flex items-center justify-center">
                                                             <img
                                                                 src={
-                                                                    motor.image_path
-                                                                        ? `/storage/${motor.image_path}`
-                                                                        : "/assets/img/no-image.webp"
+                                                                    motor.image ||
+                                                                    (motor.image_path
+                                                                        ? motor.image_path.startsWith('http') || motor.image_path.startsWith('/')
+                                                                            ? motor.image_path
+                                                                            : motor.image_path.startsWith('assets/')
+                                                                            ? `/${motor.image_path}`
+                                                                            : `/storage/${motor.image_path}`
+                                                                        : "/assets/img/no-image.webp")
                                                                 }
+                                                                onError={(e) => {
+                                                                    e.currentTarget.onerror = null;
+                                                                    e.currentTarget.src = "/assets/img/no-image.webp";
+                                                                }}
                                                                 alt={motor.name}
                                                                 className={`max-h-full object-contain transition-transform duration-500 group-hover:scale-105 ${!motor.tersedia ? "grayscale opacity-50" : ""}`}
                                                             />

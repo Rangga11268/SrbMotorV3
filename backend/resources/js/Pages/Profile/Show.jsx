@@ -1,6 +1,7 @@
-import React from "react";
-import { usePage, Link } from "@inertiajs/react";
+import React, { useState } from "react";
+import { usePage, Link, router } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
+import Modal from "@/Components/Modal";
 import { motion } from "framer-motion";
 import {
     Activity,
@@ -30,6 +31,7 @@ import {
 export default function Show({ user, dashboard }) {
     const { auth } = usePage().props;
     const isCurrentUser = auth.user && auth.user.id === user.id;
+    const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString("id-ID", {
@@ -147,14 +149,13 @@ export default function Show({ user, dashboard }) {
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">
                                     Otoritas Sesi
                                 </p>
-                                <Link
-                                    href={route("logout")}
-                                    method="post"
-                                    as="button"
-                                    className="w-full h-14 rounded-none border border-rose-600 hover:bg-rose-600 text-rose-600 hover:text-white font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 transition-colors"
+                                <button
+                                    type="button"
+                                    onClick={() => setLogoutModalOpen(true)}
+                                    className="w-full h-14 rounded-none border border-rose-600 hover:bg-rose-600 text-rose-600 hover:text-white font-bold uppercase text-[10px] tracking-widest flex items-center justify-center gap-3 transition-colors cursor-pointer"
                                 >
                                     <LogOut className="w-4 h-4" /> KELUAR SESI
-                                </Link>
+                                </button>
                             </div>
                         </div>
 
@@ -400,6 +401,20 @@ export default function Show({ user, dashboard }) {
                     </div>
                 </div>
             </div>
+            {/* Custom Logout Confirmation Modal */}
+            <Modal
+                isOpen={logoutModalOpen}
+                onClose={() => setLogoutModalOpen(false)}
+                title="Konfirmasi Keluar Sesi"
+                message="Apakah Anda yakin ingin keluar dari akun Anda? Sesi login saat ini akan diakhiri."
+                confirmText="Ya, Keluar"
+                cancelText="Batal"
+                type="danger"
+                onConfirm={() => {
+                    setLogoutModalOpen(false);
+                    router.post(route("logout"));
+                }}
+            />
         </PublicLayout>
     );
 }

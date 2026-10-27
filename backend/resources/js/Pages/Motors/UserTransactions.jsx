@@ -316,8 +316,21 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                             <div className="lg:col-span-3">
                                                 <div className="aspect-[4/3] bg-gray-100 border border-gray-200 p-4 relative group hover:bg-gray-200 transition-colors">
                                                     <img
-                                                        src={`/storage/${transaction.motor.image_path}`}
-                                                        alt={transaction.motor.name}
+                                                        src={
+                                                            transaction.motor?.image ||
+                                                            (transaction.motor?.image_path
+                                                                ? transaction.motor.image_path.startsWith('http') || transaction.motor.image_path.startsWith('/')
+                                                                    ? transaction.motor.image_path
+                                                                    : transaction.motor.image_path.startsWith('assets/')
+                                                                    ? `/${transaction.motor.image_path}`
+                                                                    : `/storage/${transaction.motor.image_path}`
+                                                                : "/assets/img/no-image.webp")
+                                                        }
+                                                        onError={(e) => {
+                                                            e.currentTarget.onerror = null;
+                                                            e.currentTarget.src = "/assets/img/no-image.webp";
+                                                        }}
+                                                        alt={transaction.motor?.name}
                                                         className="w-full h-full object-contain filter drop-shadow-2xl"
                                                     />
                                                     <div className="absolute top-0 right-0 bg-white border-l border-b border-gray-200 px-3 py-1 text-[9px] font-black tracking-widest text-[#1c69d4]">

@@ -311,7 +311,20 @@ export default function TransactionDetail({ transaction }) {
                                     <div className="hidden lg:block w-72 h-44 relative shrink-0">
                                         <div className="absolute inset-0 bg-[#1c69d4] opacity-20 blur-[60px] rounded-full"></div>
                                         <img
-                                            src={`/storage/${transaction.motor.image_path}`}
+                                            src={
+                                                transaction.motor.image ||
+                                                (transaction.motor.image_path
+                                                    ? transaction.motor.image_path.startsWith('http') || transaction.motor.image_path.startsWith('/')
+                                                        ? transaction.motor.image_path
+                                                        : transaction.motor.image_path.startsWith('assets/')
+                                                        ? `/${transaction.motor.image_path}`
+                                                        : `/storage/${transaction.motor.image_path}`
+                                                    : "/assets/img/no-image.webp")
+                                            }
+                                            onError={(e) => {
+                                                e.currentTarget.onerror = null;
+                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                            }}
                                             alt={transaction.motor.name}
                                             className="w-full h-full object-contain relative z-10 filter brightness-110 drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                                         />
@@ -353,7 +366,20 @@ export default function TransactionDetail({ transaction }) {
                                 <div className="bg-gray-50 border border-gray-200 p-8 sm:p-12 flex flex-col md:flex-row gap-12 items-center">
                                     <div className="w-full md:w-1/2 aspect-video bg-white border border-gray-200 p-6 flex items-center justify-center relative shadow-sm group">
                                         <img
-                                            src={`/storage/${transaction.motor.image_path}`}
+                                            src={
+                                                transaction.motor.image ||
+                                                (transaction.motor.image_path
+                                                    ? transaction.motor.image_path.startsWith('http') || transaction.motor.image_path.startsWith('/')
+                                                        ? transaction.motor.image_path
+                                                        : transaction.motor.image_path.startsWith('assets/')
+                                                        ? `/${transaction.motor.image_path}`
+                                                        : `/storage/${transaction.motor.image_path}`
+                                                    : "/assets/img/no-image.webp")
+                                            }
+                                            onError={(e) => {
+                                                e.currentTarget.onerror = null;
+                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                            }}
                                             alt={transaction.motor.name}
                                             className="max-w-full max-h-full object-contain filter drop-shadow-2xl group-hover:scale-105 transition-transform duration-700"
                                         />

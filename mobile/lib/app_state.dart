@@ -1,130 +1,287 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'models/motor.dart';
 import 'models/user.dart';
+import 'models/order.dart';
+import 'services/api_service.dart';
 
 class AppState extends ChangeNotifier {
   late SharedPreferences _prefs;
   User? _currentUser;
+  String? _token;
   List<int> _wishlist = [];
   bool _isInitialized = false;
 
+  // Motors state
+  List<Motor> _motors = [];
+  bool _isLoadingMotors = false;
+  String? _motorError;
+
+  // Orders state
+  List<Order> _orders = [];
+  bool _isLoadingOrders = false;
+  String? _orderError;
+
   // Getters
   User? get currentUser => _currentUser;
-  bool get isAuthenticated => _currentUser != null;
+  String? get token => _token;
+  bool get isAuthenticated => _token != null && _currentUser != null;
   List<int> get wishlist => _wishlist;
   bool get isInitialized => _isInitialized;
 
-  // Initialize SharedPreferences and load saved data
+  List<Motor> get motors => _motors.isNotEmpty ? _motors : motorList;
+  bool get isLoadingMotors => _isLoadingMotors;
+  String? get motorError => _motorError;
+
+  List<Order> get orders => _orders;
+  bool get isLoadingOrders => _isLoadingOrders;
+  String? get orderError => _orderError;
+
+  // Initialize SharedPreferences, restore session, and fetch initial data
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
     _loadWishlist();
-    _checkExistingUser();
+    await _checkExistingSession();
     _isInitialized = true;
     notifyListeners();
+
+    // Fetch initial dynamic motors
+    fetchMotors();
+    if (isAuthenticated) {
+      fetchOrders();
+    }
   }
 
-  // Load wishlist from SharedPreferences
   void _loadWishlist() {
     final wishlistJson = _prefs.getStringList('wishlist') ?? [];
-    _wishlist = wishlistJson.map((id) => int.parse(id)).toList();
+    _wishlist = wishlistJson.map((id) => int.tryParse(id) ?? 0).where((id) => id > 0).toList();
   }
 
-  // Check if user was previously logged in
-  void _checkExistingUser() {
+  // Restore session from token
+  Future<void> _checkExistingSession() async {
+    _token = _prefs.getString('auth_token');
     final userId = _prefs.getString('userId');
     final userName = _prefs.getString('userName');
     final userEmail = _prefs.getString('userEmail');
     final userPhone = _prefs.getString('userPhone');
 
-    if (userId != null && userName != null && userEmail != null && userPhone != null) {
+    if (userId != null && userName != null && userEmail != null) {
       _currentUser = User(
         id: userId,
         name: userName,
         email: userEmail,
-        phone: userPhone,
+        phone: userPhone ?? '-',
       );
+    }
+
+    // If token exists, verify with backend profile
+    if (_token != null && _token!.isNotEmpty) {
+      final res = await ApiService.getUserProfile(_token!);
+      if (res.isSuccess && res.data != null) {
+        final dynamic rawUser = res.data!['data'] ?? res.data!['user'] ?? res.data!;
+        if (rawUser is Map<String, dynamic>) {
+          _currentUser = User.fromJson(rawUser);
+          await _saveUserToPrefs(_currentUser!);
+        }
+      } else if (res.statusCode == 401) {
+        // Token expired
+        await logout();
+      }
     }
   }
 
-  // Simple login with email and password
-  Future<bool> login(String email, String password) async {
-    // Simple validation - in real app, would verify against backend
-    if (email.contains('@') && password.length >= 6) {
-      // Generate simple user ID
-      final userId = DateTime.now().millisecondsSinceEpoch.toString();
-      
-      _currentUser = User(
-        id: userId,
-        name: email.split('@')[0], // Use email prefix as name
-        email: email,
-        phone: '08xx-xxxx-xxxx',
-      );
-
-      // Save to SharedPreferences
-      await _prefs.setString('userId', userId);
-      await _prefs.setString('userName', _currentUser!.name);
-      await _prefs.setString('userEmail', _currentUser!.email);
-      await _prefs.setString('userPhone', _currentUser!.phone);
-
-      notifyListeners();
-      return true;
-    }
-    return false;
+  Future<void> _saveUserToPrefs(User user) async {
+    await _prefs.setString('userId', user.id);
+    await _prefs.setString('userName', user.name);
+    await _prefs.setString('userEmail', user.email);
+    await _prefs.setString('userPhone', user.phone);
   }
 
-  // Simple registration
-  Future<bool> register(String email, String name, String phone, String password) async {
-    if (email.contains('@') && password.length >= 6 && name.isNotEmpty && phone.isNotEmpty) {
-      final userId = DateTime.now().millisecondsSinceEpoch.toString();
-      
+  // Real login via REST API
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    final res = await ApiService.login(email: email, password: password);
+    if (res.isSuccess && res.data != null) {
+      final token = res.data!['token'] ?? res.data!['access_token'];
+      final dynamic rawUser = res.data!['data'] ?? res.data!['user'];
+
+      if (token != null && rawUser != null && rawUser is Map<String, dynamic>) {
+        _token = token.toString();
+        _currentUser = User.fromJson(rawUser);
+
+        await _prefs.setString('auth_token', _token!);
+        await _saveUserToPrefs(_currentUser!);
+
+        notifyListeners();
+        fetchOrders();
+        return {'success': true};
+      }
+    }
+
+    return {
+      'success': false,
+      'message': res.message ?? 'Login gagal. Periksa kembali email dan password.',
+    };
+  }
+
+  // Real registration via REST API
+  Future<Map<String, dynamic>> register({
+    required String name,
+    required String email,
+    required String phone,
+    required String password,
+  }) async {
+    final res = await ApiService.register(
+      name: name,
+      email: email,
+      phone: phone,
+      password: password,
+    );
+
+    if (res.isSuccess && res.data != null) {
+      final token = res.data!['token'] ?? res.data!['access_token'];
+      final dynamic rawUser = res.data!['data'] ?? res.data!['user'];
+
+      if (token != null && rawUser != null && rawUser is Map<String, dynamic>) {
+        _token = token.toString();
+        _currentUser = User.fromJson(rawUser);
+
+        await _prefs.setString('auth_token', _token!);
+        await _saveUserToPrefs(_currentUser!);
+
+        notifyListeners();
+        return {'success': true};
+      }
+      return {'success': true, 'message': 'Pendaftaran berhasil. Silakan masuk.'};
+    }
+
+    return {
+      'success': false,
+      'message': res.message ?? 'Pendaftaran gagal.',
+    };
+  }
+
+  // Update Profile
+  Future<Map<String, dynamic>> updateProfile({
+    required String name,
+    required String phone,
+  }) async {
+    if (_token != null && _token!.isNotEmpty) {
+      final res = await ApiService.updateProfile(_token!, name: name, phone: phone);
+      if (res.isSuccess && res.data != null) {
+        final dynamic rawUser = res.data!['data'] ?? res.data!['user'] ?? res.data!;
+        if (rawUser is Map<String, dynamic>) {
+          _currentUser = User.fromJson(rawUser);
+        } else {
+          _currentUser = User(
+            id: _currentUser?.id ?? '',
+            name: name,
+            email: _currentUser?.email ?? '',
+            phone: phone,
+            role: _currentUser?.role,
+            avatarUrl: _currentUser?.avatarUrl,
+          );
+        }
+        await _saveUserToPrefs(_currentUser!);
+        notifyListeners();
+        return {'success': true, 'message': res.data!['message'] ?? 'Profil berhasil diperbarui'};
+      }
+      return {
+        'success': false,
+        'message': res.message ?? 'Gagal memperbarui profil.',
+      };
+    } else if (_currentUser != null) {
       _currentUser = User(
-        id: userId,
+        id: _currentUser!.id,
         name: name,
-        email: email,
+        email: _currentUser!.email,
         phone: phone,
+        role: _currentUser!.role,
+        avatarUrl: _currentUser!.avatarUrl,
       );
-
-      // Save to SharedPreferences
-      await _prefs.setString('userId', userId);
-      await _prefs.setString('userName', name);
-      await _prefs.setString('userEmail', email);
-      await _prefs.setString('userPhone', phone);
-
+      await _saveUserToPrefs(_currentUser!);
       notifyListeners();
-      return true;
+      return {'success': true, 'message': 'Profil berhasil disimpan secara lokal.'};
     }
-    return false;
+    return {'success': false, 'message': 'Pengguna tidak ditemukan.'};
   }
 
   // Logout
   Future<void> logout() async {
+    if (_token != null) {
+      await ApiService.logout(_token!);
+    }
+    _token = null;
     _currentUser = null;
+    _orders = [];
+
+    await _prefs.remove('auth_token');
     await _prefs.remove('userId');
     await _prefs.remove('userName');
     await _prefs.remove('userEmail');
     await _prefs.remove('userPhone');
+
     notifyListeners();
   }
 
-  // Toggle wishlist item
+  // Fetch motors live from backend
+  Future<void> fetchMotors({String? brand, String? search}) async {
+    _isLoadingMotors = true;
+    _motorError = null;
+    notifyListeners();
+
+    final res = await ApiService.getMotors(brand: brand, search: search);
+    _isLoadingMotors = false;
+
+    if (res.isSuccess && res.data != null) {
+      try {
+        _motors = res.data!.map((item) => Motor.fromJson(item as Map<String, dynamic>)).toList();
+      } catch (e) {
+        _motorError = 'Gagal memproses data motor: $e';
+      }
+    } else {
+      _motorError = res.message ?? 'Gagal memuat katalog motor.';
+    }
+
+    notifyListeners();
+  }
+
+  // Fetch user orders live
+  Future<void> fetchOrders() async {
+    if (_token == null) return;
+
+    _isLoadingOrders = true;
+    _orderError = null;
+    notifyListeners();
+
+    final res = await ApiService.getUserOrders(_token!);
+    _isLoadingOrders = false;
+
+    if (res.isSuccess && res.data != null) {
+      try {
+        _orders = res.data!.map((item) => Order.fromJson(item as Map<String, dynamic>)).toList();
+      } catch (e) {
+        _orderError = 'Gagal memproses riwayat pesanan: $e';
+      }
+    } else {
+      _orderError = res.message;
+    }
+
+    notifyListeners();
+  }
+
+  // Wishlist toggle
   Future<void> toggleWishlist(int motorId) async {
     if (_wishlist.contains(motorId)) {
       _wishlist.remove(motorId);
     } else {
       _wishlist.add(motorId);
     }
-    
-    // Save to SharedPreferences
     await _prefs.setStringList('wishlist', _wishlist.map((id) => id.toString()).toList());
     notifyListeners();
   }
 
-  // Check if motor is in wishlist
-  bool isInWishlist(int motorId) {
-    return _wishlist.contains(motorId);
-  }
+  bool isInWishlist(int motorId) => _wishlist.contains(motorId);
 
-  // Clear all wishlist
   Future<void> clearWishlist() async {
     _wishlist.clear();
     await _prefs.remove('wishlist');

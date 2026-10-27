@@ -11,15 +11,26 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  bool isLoading = false;
-  String? errorMessage;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  GlobalKey<FormState>? _formKey;
+
+  TextEditingController get emailController => _emailController ??= TextEditingController();
+  TextEditingController get passwordController => _passwordController ??= TextEditingController();
+  GlobalKey<FormState> get formKey => _formKey ??= GlobalKey<FormState>();
+
+  bool? _isLoading;
+  bool get isLoading => _isLoading ?? false;
+
+  bool? _obscurePassword;
+  bool get isPasswordObscured => _obscurePassword ?? true;
+
+  String? _errorMessage;
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
+    _emailController?.dispose();
+    _passwordController?.dispose();
     super.dispose();
   }
 
@@ -29,199 +40,416 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       setState(() {
-        errorMessage = 'Email dan password harus diisi';
+        _errorMessage = 'Email dan password wajib diisi';
       });
       return;
     }
 
     setState(() {
-      isLoading = true;
-      errorMessage = null;
+      _isLoading = true;
+      _errorMessage = null;
     });
 
-    final success = await widget.appState.login(email, password);
+    final result = await widget.appState.login(email, password);
 
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
 
-    if (success) {
+    if (result['success'] == true) {
       Navigator.of(context).pushReplacementNamed('/home');
     } else {
       setState(() {
-        errorMessage = 'Email atau password salah';
+        _errorMessage = result['message'] ?? 'Email atau password salah';
       });
     }
   }
 
+  void _fillDemoAccount(String email, String password) {
+    setState(() {
+      emailController.text = email;
+      passwordController.text = password;
+      _errorMessage = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(0xFF1C69D4);
+    const darkBg = Color(0xFF0F172A);
+
     return Scaffold(
-      backgroundColor: Colors.white, // Matches bg-surface-container-lowest
+      backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 32),
-              // Logo Container
-              Center(
-                child: Image.asset(
-                  'assets/images/logos/logo_srb.webp',
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(
-                      Icons.two_wheeler,
-                      size: 64,
-                      color: Color(0xFF041627),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 32),
-              // Title
-              const Text(
-                'Selamat Datang',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Hanken Grotesk',
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF041627), // primary
-                ),
-              ),
-              const SizedBox(height: 48),
-              // Email field (Bottom border style)
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  hintText: 'Email',
-                  fillColor: Colors.transparent,
-                  filled: false,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12),
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFC4C6CD)),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFC4C6CD)),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF041627), width: 1.5),
-                  ),
-                ),
-                style: const TextStyle(fontSize: 16, color: Color(0xFF041627)),
-              ),
-              const SizedBox(height: 24),
-              // Password field (Bottom border style)
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'Password',
-                  fillColor: Colors.transparent,
-                  filled: false,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12),
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFC4C6CD)),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFC4C6CD)),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF041627), width: 1.5),
-                  ),
-                ),
-                style: const TextStyle(fontSize: 16, color: Color(0xFF041627)),
-              ),
-              const SizedBox(height: 12),
-              if (errorMessage != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  errorMessage!,
-                  style: const TextStyle(color: Color(0xFFBA1A1A), fontSize: 14),
-                  textAlign: TextAlign.left,
-                ),
-              ],
-              const SizedBox(height: 40),
-              // CTA Button (Masuk)
-              SizedBox(
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF041627), // primary container color
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4), // rounded-DEFAULT (minimal)
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 12),
+
+                  // Header Hero Card
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: darkBg,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x14000000),
+                          blurRadius: 20,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
                     ),
-                    elevation: 0,
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Text(
-                          'MASUK',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    color: primaryColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'SRB MOTOR MEMBER',
+                                  style: TextStyle(
+                                    color: Color(0xFF94A3B8),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 2.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0x1AFFFFFF),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                'MOBILE',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Selamat Datang Kembali',
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.5,
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
                           ),
                         ),
-                ),
-              ),
-              const SizedBox(height: 32),
-              // Auxiliary links
-              Center(
-                child: Column(
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Silakan hubungi admin untuk reset password'),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Masuk untuk akses katalog resmi, pengajuan kredit, dan pantau status transaksi.',
+                          style: TextStyle(
+                            color: Color(0xFF94A3B8),
+                            fontSize: 12,
+                            height: 1.4,
                           ),
-                        );
-                      },
-                      child: const Text(
-                        'Lupa Password?',
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // Error Banner
+                  if (_errorMessage != null) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFEE2E2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFFCA5A5), width: 0.8),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline_rounded, color: Color(0xFFDC2626), size: 20),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(
+                                color: Color(0xFFDC2626),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+
+                  // Email Field
+                  const Text(
+                    'ALAMAT EMAIL',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF475569),
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)),
+                    decoration: InputDecoration(
+                      hintText: 'nama@email.com',
+                      hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                      prefixIcon: const Icon(Icons.alternate_email_rounded, color: Color(0xFF64748B), size: 20),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: primaryColor, width: 1.8),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Password Field
+                  const Text(
+                    'KATA SANDI',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF475569),
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: isPasswordObscured,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) => _login(),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)),
+                    decoration: InputDecoration(
+                      hintText: '••••••••',
+                      hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                      prefixIcon: const Icon(Icons.lock_outline_rounded, color: Color(0xFF64748B), size: 20),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isPasswordObscured ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          color: const Color(0xFF64748B),
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !isPasswordObscured;
+                          });
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: primaryColor, width: 1.8),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Quick Demo Accounts Chips
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'PILIHAN CEPAT AKUN PENGUJIAN:',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF64748B),
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            InkWell(
+                              onTap: () => _fillDemoAccount('user@srbmotors.com', 'password'),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFFCBD5E1)),
+                                ),
+                                child: const Text(
+                                  'Customer: user@srbmotors.com',
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: primaryColor),
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => _fillDemoAccount('admin@srbmotors.com', 'password'),
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: const Color(0xFFCBD5E1)),
+                                ),
+                                child: const Text(
+                                  'Admin: admin@srbmotors.com',
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // Login Action Button
+                  SizedBox(
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.login_rounded, size: 18),
+                                SizedBox(width: 8),
+                                Text(
+                                  'MASUK SEKARANG',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Register Link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Belum memiliki akun? ',
                         style: TextStyle(
-                          color: Color(0xFF5F5E5E),
+                          color: Color(0xFF64748B),
+                          fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextButton(
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushReplacementNamed('/register');
+                        },
+                        child: const Text(
+                          'Daftar Sekarang',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Continue as Guest
+                  Center(
+                    child: TextButton.icon(
                       onPressed: () {
-                        Navigator.of(context).pushReplacementNamed('/register');
+                        Navigator.of(context).pushReplacementNamed('/home');
                       },
-                      child: const Text(
-                        'Daftar Sekarang',
+                      icon: const Icon(Icons.arrow_forward_rounded, size: 16, color: Color(0xFF64748B)),
+                      label: const Text(
+                        'Jelajahi Sebagai Tamu',
                         style: TextStyle(
-                          color: Color(0xFF041627),
+                          color: Color(0xFF64748B),
+                          fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(height: 16),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

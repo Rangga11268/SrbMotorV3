@@ -289,4 +289,14 @@ class MakalahSqaTest extends TestCase
         $response->assertRedirect('/');
         $this->assertGuest();
     }
+
+    public function test_user_can_logout_via_get()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->get(route('logout'));
+        $response->assertRedirect('/');
+        $this->assertGuest();
+    }
 }

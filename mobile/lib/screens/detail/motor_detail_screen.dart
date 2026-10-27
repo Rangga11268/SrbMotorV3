@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:srb_motor_app/app_state.dart';
 import 'package:srb_motor_app/models/motor.dart';
 import 'package:srb_motor_app/screens/detail/motor_compare_screen.dart';
+import 'package:srb_motor_app/widgets/motor_image_view.dart';
 
 class MotorDetailScreen extends StatefulWidget {
   final Motor motor;
   final AppState appState;
-  final String Function(double price) formatPrice;
+  final String Function(double price)? formatPrice;
 
   const MotorDetailScreen({
     super.key,
     required this.motor,
     required this.appState,
-    required this.formatPrice,
+    this.formatPrice,
   });
 
   @override
@@ -47,7 +48,7 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
   }
 
   void _showCompareSelection(BuildContext context) {
-    final otherMotors = motorList.where((m) => m.id != widget.motor.id).toList();
+    final otherMotors = widget.appState.motors.where((m) => m.id != widget.motor.id).toList();
 
     showModalBottomSheet(
       context: context,
@@ -89,7 +90,7 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                         other.name,
                         style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF041627)),
                       ),
-                      subtitle: Text('${other.brand} • ${widget.formatPrice(other.price)}'),
+                      subtitle: Text('${other.brand} • ${widget.formatPrice != null ? widget.formatPrice!(other.price) : other.formattedPrice}'),
                       onTap: () {
                         Navigator.pop(context); // Close bottom sheet
                         Navigator.push(
@@ -98,7 +99,7 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                             builder: (context) => MotorCompareScreen(
                               motor1: widget.motor,
                               motor2: other,
-                              formatPrice: widget.formatPrice,
+                              formatPrice: widget.formatPrice ?? (p) => other.formattedPrice,
                             ),
                           ),
                         );
@@ -143,20 +144,10 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                   Positioned.fill(
                     child: Padding(
                       padding: const EdgeInsets.all(18),
-                      child: Image.asset(
-                        widget.motor.imagePath,
+                      child: MotorImageView(
+                        imageUrl: widget.motor.displayImageUrl,
+                        assetPath: widget.motor.imagePath,
                         fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF1F5F9),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.two_wheeler, size: 84, color: Colors.grey),
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -207,7 +198,9 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.formatPrice(widget.motor.price),
+                        widget.formatPrice != null
+                            ? widget.formatPrice!(widget.motor.price)
+                            : widget.motor.formattedPrice,
                         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               color: const Color(0xFF2563EB),
                               fontWeight: FontWeight.w800,

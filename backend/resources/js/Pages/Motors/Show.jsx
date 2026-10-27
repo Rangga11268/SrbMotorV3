@@ -147,10 +147,19 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                         <div className="absolute inset-0 bg-[#1c69d4] opacity-20 blur-[100px] rounded-full pointer-events-none"></div>
                         <img
                             src={
-                                motor.image_path
-                                    ? `/storage/${motor.image_path}`
-                                    : "/assets/img/no-image.webp"
+                                motor.image ||
+                                (motor.image_path
+                                    ? motor.image_path.startsWith('http') || motor.image_path.startsWith('/')
+                                        ? motor.image_path
+                                        : motor.image_path.startsWith('assets/')
+                                        ? `/${motor.image_path}`
+                                        : `/storage/${motor.image_path}`
+                                    : "/assets/img/no-image.webp")
                             }
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/assets/img/no-image.webp";
+                            }}
                             alt={motor.name}
                             className={`w-full max-w-[500px] object-contain relative z-10 ${!motor.tersedia ? "grayscale opacity-70" : ""}`}
                         />
@@ -442,10 +451,19 @@ export default function Show({ motor, relatedMotors, settings = {} }) {
                                             )}
                                             <img
                                                 src={
-                                                    m.image_path
-                                                        ? `/storage/${m.image_path}`
-                                                        : "/assets/img/no-image.webp"
+                                                    m.image ||
+                                                    (m.image_path
+                                                        ? m.image_path.startsWith('http') || m.image_path.startsWith('/')
+                                                            ? m.image_path
+                                                            : m.image_path.startsWith('assets/')
+                                                            ? `/${m.image_path}`
+                                                            : `/storage/${m.image_path}`
+                                                        : "/assets/img/no-image.webp")
                                                 }
+                                                onError={(e) => {
+                                                    e.currentTarget.onerror = null;
+                                                    e.currentTarget.src = "/assets/img/no-image.webp";
+                                                }}
                                                 className={`max-h-full object-contain transition-transform duration-500 ${m.tersedia ? "group-hover:scale-105" : "grayscale opacity-70"}`}
                                                 alt={m.name}
                                             />

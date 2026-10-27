@@ -123,6 +123,47 @@ class AdminController extends Controller
             ];
         });
 
+        // Credit Portfolio & NPL Health
+        $totalInstallments = \App\Models\Installment::count();
+        $paidInstallments = \App\Models\Installment::where('status', 'paid')->count();
+        $overdueInstallments = \App\Models\Installment::where('status', 'overdue')->count();
+        $pendingInstallments = \App\Models\Installment::whereIn('status', ['pending', 'waiting_approval'])->count();
+        $overdueAmount = (float) \App\Models\Installment::where('status', 'overdue')->sum('amount');
+        $nplRatio = $totalInstallments > 0 ? round(($overdueInstallments / $totalInstallments) * 100, 2) : 0.0;
+
+        $creditPortfolio = [
+            'total' => $totalInstallments,
+            'paid' => $paidInstallments,
+            'overdue' => $overdueInstallments,
+            'pending' => $pendingInstallments,
+            'overdueAmount' => $overdueAmount,
+            'nplRatio' => $nplRatio,
+        ];
+
+        // Branch Performance Breakdown
+        $branchSalesMap = Transaction::select(
+            'branch_code',
+            DB::raw('COUNT(*) as total_orders'),
+            DB::raw('SUM(final_price) as total_revenue')
+        )
+        ->whereNotNull('branch_code')
+        ->groupBy('branch_code')
+        ->get()
+        ->keyBy('branch_code');
+
+        $branchPerformance = \App\Models\Branch::where('is_active', true)->get()->map(function($b) use ($branchSalesMap) {
+            $sales = $branchSalesMap->get($b->code);
+            $stock = Motor::where('branch', $b->code)->orWhere('branch', $b->name)->sum('stock');
+            return [
+                'code' => $b->code,
+                'name' => $b->name,
+                'city' => $b->city,
+                'stock' => (int) $stock,
+                'total_orders' => (int) ($sales->total_orders ?? 0),
+                'total_revenue' => (float) ($sales->total_revenue ?? 0),
+            ];
+        });
+
         return Inertia::render('Admin/Dashboard', [
 
             'motorsCount' => $motorsCount, 
@@ -142,6 +183,8 @@ class AdminController extends Controller
             'serviceStatusStats' => $serviceStatusStats,
             'serviceTypeStats' => $serviceTypeStats,
             'serviceHistoryStats' => $serviceHistoryStats,
+            'creditPortfolio' => $creditPortfolio,
+            'branchPerformance' => $branchPerformance,
         ]);
     }
 }

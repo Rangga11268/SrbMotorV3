@@ -15,7 +15,11 @@ import {
     Activity,
     Award,
     ChevronLeft,
-    Wrench
+    Wrench,
+    ShieldAlert,
+    Building2,
+    CheckCircle2,
+    Clock
 } from "lucide-react";
 import {
     RevenueChart,
@@ -41,6 +45,8 @@ export default function Dashboard({
     serviceStatusStats,
     serviceTypeStats,
     serviceHistoryStats,
+    creditPortfolio = { total: 0, paid: 0, overdue: 0, pending: 0, overdueAmount: 0, nplRatio: 0 },
+    branchPerformance = [],
 }) {
     const { auth } = usePage().props;
 
@@ -258,6 +264,132 @@ export default function Dashboard({
                     )}
                 </div>
             </div>
+
+            {/* Executive Analytics: NPL Credit Health & Branch Distribution */}
+            {!isMontir && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    {/* NPL & Credit Portfolio Card */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-2 rounded-lg bg-rose-50 text-rose-600">
+                                        <ShieldAlert size={20} />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-gray-800 text-sm">Kolektibilitas Kredit & NPL</h3>
+                                        <p className="text-xs text-gray-400">Non-Performing Loan Rasio</p>
+                                    </div>
+                                </div>
+                                <span className={`px-2.5 py-1 rounded-full text-xs font-black uppercase tracking-wider ${
+                                    creditPortfolio.nplRatio <= 5 
+                                        ? "bg-emerald-100 text-emerald-700" 
+                                        : creditPortfolio.nplRatio <= 10 
+                                            ? "bg-amber-100 text-amber-700" 
+                                            : "bg-rose-100 text-rose-700"
+                                }`}>
+                                    {creditPortfolio.nplRatio <= 5 ? "Sehat" : creditPortfolio.nplRatio <= 10 ? "Perhatian" : "Waspada"}
+                                </span>
+                            </div>
+
+                            <div className="my-4 p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-between">
+                                <div>
+                                    <span className="text-xs text-gray-500 font-medium">Rasio NPL</span>
+                                    <div className="text-2xl font-black text-gray-800">{creditPortfolio.nplRatio}%</div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xs text-gray-500 font-medium">Piutang Menunggak</span>
+                                    <div className="text-sm font-black text-rose-600">Rp {formatCurrency(creditPortfolio.overdueAmount)}</div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2 text-center text-xs font-bold pt-2">
+                                <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                    <div className="text-[10px] text-emerald-600 font-medium">Lunas</div>
+                                    <div className="text-base font-black">{creditPortfolio.paid}</div>
+                                </div>
+                                <div className="p-2 rounded-lg bg-amber-50 text-amber-700 border border-amber-100">
+                                    <div className="text-[10px] text-amber-600 font-medium">Berjalan</div>
+                                    <div className="text-base font-black">{creditPortfolio.pending}</div>
+                                </div>
+                                <div className="p-2 rounded-lg bg-rose-50 text-rose-700 border border-rose-100">
+                                    <div className="text-[10px] text-rose-600 font-medium">Macet</div>
+                                    <div className="text-base font-black">{creditPortfolio.overdue}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                            <span>Total Cicilan: <b>{creditPortfolio.total} angsuran</b></span>
+                            <Link href={route("admin.credits.index")} className="text-blue-600 font-bold hover:underline">
+                                Rincian Kredit &rarr;
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Branch Performance Card */}
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:col-span-2 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
+                                        <Building2 size={20} />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-gray-800 text-sm">Distribusi Stok & Performa Cabang</h3>
+                                        <p className="text-xs text-gray-400">Monitoring lintas cabang dealer SRB & SSM</p>
+                                    </div>
+                                </div>
+                                <Link href={route("admin.branches.index")} className="text-xs text-blue-600 font-bold hover:underline">
+                                    Kelola Cabang &rarr;
+                                </Link>
+                            </div>
+
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-xs">
+                                    <thead className="bg-gray-50 text-gray-500 font-bold uppercase tracking-wider border-b border-gray-100">
+                                        <tr>
+                                            <th className="py-2.5 px-3">Nama Cabang</th>
+                                            <th className="py-2.5 px-3 text-center">Stok Unit</th>
+                                            <th className="py-2.5 px-3 text-center">Order Masuk</th>
+                                            <th className="py-2.5 px-3 text-right">Total Omzet</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
+                                        {branchPerformance && branchPerformance.length > 0 ? (
+                                            branchPerformance.map((bp) => (
+                                                <tr key={bp.code} className="hover:bg-gray-50/50">
+                                                    <td className="py-3 px-3">
+                                                        <div className="font-bold text-gray-800">{bp.name}</div>
+                                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider">{bp.city} • {bp.code}</div>
+                                                    </td>
+                                                    <td className="py-3 px-3 text-center">
+                                                        <span className={`inline-block px-2 py-0.5 rounded font-bold text-xs ${
+                                                            bp.stock > 0 ? "bg-blue-50 text-blue-700" : "bg-gray-100 text-gray-400"
+                                                        }`}>
+                                                            {bp.stock} unit
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-3 px-3 text-center font-bold text-gray-800">
+                                                        {bp.total_orders} order
+                                                    </td>
+                                                    <td className="py-3 px-3 text-right font-black text-emerald-600">
+                                                        Rp {formatCurrency(bp.total_revenue)}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={4} className="py-4 text-center text-gray-400">Belum ada data cabang aktif.</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* List / Data Grids */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

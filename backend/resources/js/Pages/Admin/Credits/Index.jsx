@@ -201,9 +201,18 @@ export default function Index({ credits: initialCredits, statuses: statusList, f
                                         <td className="px-6 py-4 hidden md:table-cell">
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center">
-                                                    {credit.transaction?.motor?.image_path ? (
+                                                    {(credit.transaction?.motor?.image || credit.transaction?.motor?.image_path) ? (
                                                         <img
-                                                            src={`/storage/${credit.transaction.motor.image_path}`}
+                                                            src={
+                                                                credit.transaction.motor.image ||
+                                                                (credit.transaction.motor.image_path.startsWith('assets/')
+                                                                    ? `/${credit.transaction.motor.image_path}`
+                                                                    : `/storage/${credit.transaction.motor.image_path}`)
+                                                            }
+                                                            onError={(e) => {
+                                                                e.currentTarget.onerror = null;
+                                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                                            }}
                                                             alt={credit.transaction.motor.name}
                                                             className="w-full h-full object-cover"
                                                         />

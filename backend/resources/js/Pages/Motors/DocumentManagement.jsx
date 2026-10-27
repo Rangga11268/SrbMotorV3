@@ -206,7 +206,7 @@ export default function DocumentManagement({ transaction }) {
                                                     <div key={doc.id} className="flex items-center gap-3">
                                                         <CheckCircle size={14} className="text-[#1c69d4] shrink-0" />
                                                         <a
-                                                            href={`/storage/${doc.file_path}`}
+                                                            href={`/documents/${doc.id}/preview`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-xs font-bold text-gray-700 hover:text-[#1c69d4] transition-colors truncate uppercase tracking-tight"
@@ -296,7 +296,7 @@ export default function DocumentManagement({ transaction }) {
                                                 return (
                                                     <motion.a
                                                         key={doc.id}
-                                                        href={`/storage/${doc.file_path}`}
+                                                        href={`/documents/${doc.id}/preview`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         whileHover={{ y: -4 }}
@@ -305,7 +305,7 @@ export default function DocumentManagement({ transaction }) {
                                                         <div className="aspect-[4/3] bg-black flex items-center justify-center relative overflow-hidden">
                                                             {isImage ? (
                                                                 <img
-                                                                    src={`/storage/${doc.file_path}`}
+                                                                    src={`/documents/${doc.id}/preview`}
                                                                     alt={doc.document_type}
                                                                     className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity"
                                                                 />

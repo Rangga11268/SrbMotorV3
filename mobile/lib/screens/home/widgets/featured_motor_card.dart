@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:srb_motor_app/models/motor.dart';
+import '../../../models/motor.dart';
+import '../../../widgets/motor_image_view.dart';
 
 class FeaturedMotorCard extends StatelessWidget {
   final Motor motor;
   final bool isWishlisted;
   final VoidCallback onWishlistToggle;
   final VoidCallback onTap;
-  final String Function(double price) formatPrice;
+  final String Function(double price)? formatPrice;
 
   const FeaturedMotorCard({
     super.key,
@@ -14,62 +15,101 @@ class FeaturedMotorCard extends StatelessWidget {
     required this.isWishlisted,
     required this.onWishlistToggle,
     required this.onTap,
-    required this.formatPrice,
+    this.formatPrice,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: SizedBox(
-        width: 220,
-        child: Card(
+    final theme = Theme.of(context);
+    final isAvailable = motor.isAvailable;
+
+    return Container(
+      width: 210,
+      margin: const EdgeInsets.only(right: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Top Image Stack
               Stack(
                 children: [
-                  Container(
-                    height: 150,
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(14),
-                    child: Image.asset(
-                      motor.imagePath,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF1F5F9),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          child: const Center(
-                            child: Icon(Icons.two_wheeler, size: 48, color: Colors.grey),
-                          ),
-                        );
-                      },
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    child: Container(
+                      height: 135,
+                      width: double.infinity,
+                      color: const Color(0xFFF8FAFC),
+                      padding: const EdgeInsets.all(12),
+                      child: Opacity(
+                        opacity: isAvailable ? 1.0 : 0.45,
+                        child: MotorImageView(
+                          imageUrl: motor.displayImageUrl,
+                          assetPath: motor.imagePath,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
                   ),
+
+                  // Brand Tag
                   Positioned(
                     top: 10,
-                    right: 10,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFFE2E8F0), width: 0.8),
+                      ),
+                      child: Text(
+                        motor.brand.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF0F172A),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Favorite Button
+                  Positioned(
+                    top: 8,
+                    right: 8,
                     child: Material(
-                      color: Colors.white,
+                      color: Colors.white.withValues(alpha: 0.9),
                       shape: const CircleBorder(),
-                      child: IconButton(
-                        visualDensity: VisualDensity.compact,
-                        onPressed: onWishlistToggle,
-                        icon: Icon(
-                          isWishlisted ? Icons.favorite : Icons.favorite_border,
-                          color: isWishlisted ? Colors.red : Colors.grey,
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: onWishlistToggle,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Icon(
+                            isWishlisted ? Icons.favorite : Icons.favorite_border,
+                            size: 16,
+                            color: isWishlisted ? const Color(0xFFEF4444) : Colors.grey[400],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
+
+              // Bottom Details
               Padding(
-                padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -77,24 +117,29 @@ class FeaturedMotorCard extends StatelessWidget {
                       motor.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                        color: const Color(0xFF0F172A),
+                      ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
-                      motor.type,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                      '${motor.type} • ${motor.year}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey[500],
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Text(
-                      formatPrice(motor.price),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: const Color(0xFF2563EB),
-                            fontWeight: FontWeight.w800,
-                          ),
+                      formatPrice != null ? formatPrice!(motor.price) : motor.formattedPrice,
+                      style: const TextStyle(
+                        color: Color(0xFF1C69D4),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),

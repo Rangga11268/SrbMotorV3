@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Crypt;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -53,6 +55,32 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Resilient encrypted NIK accessor/mutator (gracefully handles unencrypted legacy rows)
+     */
+    protected function nik(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (!$value) return null;
+                try {
+                    return Crypt::decryptString($value);
+                } catch (\Throwable) {
+                    return $value;
+                }
+            },
+            set: function ($value) {
+                if (!$value) return null;
+                try {
+                    Crypt::decryptString($value);
+                    return $value;
+                } catch (\Throwable) {
+                    return Crypt::encryptString($value);
+                }
+            }
+        );
     }
 
     /**

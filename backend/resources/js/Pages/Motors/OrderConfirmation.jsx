@@ -192,7 +192,20 @@ export default function OrderConfirmation({
                                 <div className="bg-gray-50 border border-gray-200 rounded-none overflow-hidden sticky top-24">
                                     <div className="aspect-video bg-white border-b border-gray-200 flex items-center justify-center p-4">
                                         <img
-                                            src={`/storage/${transaction.motor.image_path}`}
+                                            src={
+                                                transaction.motor.image ||
+                                                (transaction.motor.image_path
+                                                    ? transaction.motor.image_path.startsWith('http') || transaction.motor.image_path.startsWith('/')
+                                                        ? transaction.motor.image_path
+                                                        : transaction.motor.image_path.startsWith('assets/')
+                                                        ? `/${transaction.motor.image_path}`
+                                                        : `/storage/${transaction.motor.image_path}`
+                                                    : "/assets/img/no-image.webp")
+                                            }
+                                            onError={(e) => {
+                                                e.currentTarget.onerror = null;
+                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                            }}
                                             alt={transaction.motor.name}
                                             className="w-full h-full object-contain"
                                         />

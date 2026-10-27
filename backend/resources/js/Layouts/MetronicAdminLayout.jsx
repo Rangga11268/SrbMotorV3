@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, usePage, Head } from "@inertiajs/react";
+import { Link, usePage, Head, router } from "@inertiajs/react";
 import {
     LayoutDashboard,
     Bike,
@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import NotificationBell from "../Components/Notification/NotificationBell";
+import Modal from "../Components/Modal";
 
 export default function MetronicAdminLayout({ children, title }) {
     const { auth, flash } = usePage().props;
@@ -44,6 +45,7 @@ export default function MetronicAdminLayout({ children, title }) {
 
     const [showFlash, setShowFlash] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -221,9 +223,14 @@ export default function MetronicAdminLayout({ children, title }) {
                             <div className="text-white text-sm font-semibold truncate">{auth.user.name}</div>
                             <div className={`text-xs font-medium ${isOwner ? 'text-amber-400' : 'text-[#A2A3B7]'}`}>{roleLabel}</div>
                         </div>
-                        <Link href={route("logout")} method="post" as="button" className="text-[#6D6D80] hover:text-white p-2">
+                        <button
+                            type="button"
+                            onClick={() => setLogoutModalOpen(true)}
+                            title="Keluar Akun"
+                            className="text-[#6D6D80] hover:text-red-400 p-2 transition-colors cursor-pointer"
+                        >
                             <LogOut size={18} />
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </aside>
@@ -280,9 +287,16 @@ export default function MetronicAdminLayout({ children, title }) {
                                                 </Link>
                                             </div>
                                             <div className="py-2 border-t border-gray-100">
-                                                <Link href={route('logout')} method="post" as="button" className="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 text-sm text-red-600 transition-colors">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setDropdownOpen(false);
+                                                        setLogoutModalOpen(true);
+                                                    }}
+                                                    className="w-full flex items-center gap-3 px-4 py-2 hover:bg-red-50 text-sm text-red-600 transition-colors text-left cursor-pointer"
+                                                >
                                                     <LogOut size={16} className="text-red-400" /> Keluar
-                                                </Link>
+                                                </button>
                                             </div>
                                         </motion.div>
                                     </>
@@ -308,6 +322,21 @@ export default function MetronicAdminLayout({ children, title }) {
                     </div>
                 </footer>
             </div>
+
+            {/* Custom Logout Confirmation Modal */}
+            <Modal
+                isOpen={logoutModalOpen}
+                onClose={() => setLogoutModalOpen(false)}
+                title="Konfirmasi Keluar Akun"
+                message="Apakah Anda yakin ingin keluar dari panel admin? Sesi Anda saat ini akan diakhiri."
+                confirmText="Ya, Keluar"
+                cancelText="Batal"
+                type="danger"
+                onConfirm={() => {
+                    setLogoutModalOpen(false);
+                    router.post(route("logout"));
+                }}
+            />
         </div>
     );
 }

@@ -112,6 +112,8 @@ Route::post("/motors/{transaction}/cancel", [
 ])
     ->name("motors.cancel")
     ->middleware(["auth"]);
+Route::get("/documents/{document}/preview", [\App\Http\Controllers\DocumentController::class, "preview"])->name("documents.preview")->middleware(["auth"]);
+Route::get("/documents/{document}/download", [\App\Http\Controllers\DocumentController::class, "download"])->name("documents.download")->middleware(["auth"]);
 Route::post("/documents/{document}/approve", [
     MotorGalleryController::class,
     "approveDocument",
@@ -368,9 +370,7 @@ Route::get("/auth/google/callback", [
     "callback",
 ])->name("google.callback");
 
-Route::post("/logout", [AuthController::class, "logout"])
-    ->name("logout")
-    ->middleware("auth");
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware("auth")->group(function () {
     Route::get("/profile", [ProfileController::class, "show"])->name(
@@ -491,7 +491,9 @@ Route::prefix("admin")
             App\Http\Controllers\Admin\CreditController::class,
             "export",
         ])->name("credits.export");
-        Route::post("/documents/{document}/approve", [
+        Route::get("/documents/{document}/preview", [\App\Http\Controllers\DocumentController::class, "preview"])->name("documents.preview")->middleware(["auth"]);
+Route::get("/documents/{document}/download", [\App\Http\Controllers\DocumentController::class, "download"])->name("documents.download")->middleware(["auth"]);
+Route::post("/documents/{document}/approve", [
             App\Http\Controllers\Admin\CreditController::class,
             "approveDocument",
         ])->name("documents.approve");
@@ -612,6 +614,7 @@ Route::prefix("admin")
 
         // Branch Management
         Route::resource("branches", \App\Http\Controllers\Admin\BranchController::class);
+        Route::post("/stock-transfers", [\App\Http\Controllers\Admin\StockTransferController::class, "store"])->name("stock-transfers.store");
 
         Route::get("/profile", [AdminProfileController::class, "show"])->name(
             "profile.show",

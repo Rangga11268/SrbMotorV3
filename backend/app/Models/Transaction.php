@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Crypt;
 
 class Transaction extends Model
 {
@@ -76,6 +78,32 @@ class Transaction extends Model
         "delivery_date" => "date",
         "cancelled_at" => "datetime",
     ];
+
+    /**
+     * Resilient encrypted NIK accessor/mutator (gracefully handles unencrypted legacy rows)
+     */
+    protected function nik(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (!$value) return null;
+                try {
+                    return Crypt::decryptString($value);
+                } catch (\Throwable) {
+                    return $value;
+                }
+            },
+            set: function ($value) {
+                if (!$value) return null;
+                try {
+                    Crypt::decryptString($value);
+                    return $value;
+                } catch (\Throwable) {
+                    return Crypt::encryptString($value);
+                }
+            }
+        );
+    }
 
     /**
      * Get the user that owns the transaction.

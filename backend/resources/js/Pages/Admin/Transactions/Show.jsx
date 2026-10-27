@@ -231,14 +231,14 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                                                 <p className="text-xs font-bold text-gray-700">{doc.document_type} - <span className="font-normal text-gray-500">{doc.original_name}</span></p>
                                             </div>
                                             <div className="p-2 flex justify-center bg-gray-50/30">
-                                                <a href={`/storage/${doc.file_path}`} target="_blank" rel="noreferrer" className="block relative group">
+                                                <a href={`/documents/${doc.id}/preview`} target="_blank" rel="noreferrer" className="block relative group">
                                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
                                                         <span className="text-white text-xs font-bold">Lihat Penuh</span>
                                                     </div>
                                                     {doc.file_path.toLowerCase().endsWith('.pdf') ? (
                                                         <div className="h-32 flex items-center justify-center bg-gray-100 w-full text-gray-400 font-bold">PDF FILE</div>
                                                     ) : (
-                                                        <img src={`/storage/${doc.file_path}`} alt={doc.document_type} className="h-32 object-contain max-w-full rounded" />
+                                                        <img src={`/documents/${doc.id}/preview`} alt={doc.document_type} className="h-32 object-contain max-w-full rounded" />
                                                     )}
                                                 </a>
                                             </div>
@@ -328,14 +328,27 @@ export default function Show({ transaction, motors, users, availableUnits }) {
                     </div>
 
                     {/* Foto Motor */}
-                    {motor?.image_path && (
+                    {(motor?.image || motor?.image_path) && (
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                             <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
                                 <h3 className="font-bold text-gray-800 text-sm">Unit Motor</h3>
                             </div>
                             <div className="p-4">
                                 <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
-                                    <img src={`/storage/${motor.image_path}`} alt={motor.name} className="w-full h-full object-cover" />
+                                    <img
+                                        src={
+                                            motor.image ||
+                                            (motor.image_path.startsWith('assets/')
+                                                ? `/${motor.image_path}`
+                                                : `/storage/${motor.image_path}`)
+                                        }
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null;
+                                            e.currentTarget.src = "/assets/img/no-image.webp";
+                                        }}
+                                        alt={motor.name}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="mt-3">
                                     <p className="font-black text-gray-800 text-sm">{motor.name}</p>

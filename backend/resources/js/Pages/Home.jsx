@@ -315,10 +315,20 @@ export default function Home({
                                         <div className="relative h-56 mb-8 mt-6">
                                             <img
                                                 src={
-                                                    motor.image_path
-                                                        ? `/storage/${motor.image_path}`
-                                                        : "/assets/img/no-image.webp"
+                                                    motor.image ||
+                                                    (motor.image_path
+                                                        ? motor.image_path.startsWith('http') || motor.image_path.startsWith('/')
+                                                            ? motor.image_path
+                                                            : motor.image_path.startsWith('assets/')
+                                                            ? `/${motor.image_path}`
+                                                            : `/storage/${motor.image_path}`
+                                                        : "/assets/img/no-image.webp")
                                                 }
+                                                onError={(e) => {
+                                                    e.currentTarget.onerror = null;
+                                                    e.currentTarget.src = "/assets/img/no-image.webp";
+                                                }}
+                                                alt={motor.name}
                                                 className={`w-full h-full object-contain filter transition-transform duration-700 ease-out group-hover:scale-105 ${
                                                     !motor.tersedia
                                                         ? "opacity-30 grayscale"

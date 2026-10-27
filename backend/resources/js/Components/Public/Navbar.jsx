@@ -1,8 +1,9 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import Button from "../UI/Button";
 import Logo from "./Logo";
 import AuthModal from "../Auth/AuthModal";
+import Modal from "../Modal";
 import {
     Menu,
     X,
@@ -37,6 +38,7 @@ export default function Navbar({ auth }) {
     const [showResults, setShowResults] = useState(false);
     const [authModalVisible, setAuthModalVisible] = useState(false);
     const [authModalMessage, setAuthModalMessage] = useState(null);
+    const [logoutModalOpen, setLogoutModalOpen] = useState(false);
     const { url } = usePage();
 
     useEffect(() => {
@@ -401,14 +403,16 @@ export default function Navbar({ auth }) {
                                                     </Link>
                                                 </div>
                                                 <div className="border-t border-gray-200" />
-                                                <Link
-                                                    href={route("logout")}
-                                                    method="post"
-                                                    as="button"
-                                                    className="flex w-full items-center gap-4 px-6 py-4 hover:bg-white hover:text-red-600 border border-transparent hover:border-red-600 text-white bg-red-600 text-xs font-bold uppercase tracking-widest transition-colors text-left"
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setUserDropdownOpen(false);
+                                                        setLogoutModalOpen(true);
+                                                    }}
+                                                    className="flex w-full items-center gap-4 px-6 py-4 hover:bg-white hover:text-red-600 border border-transparent hover:border-red-600 text-white bg-red-600 text-xs font-bold uppercase tracking-widest transition-colors text-left cursor-pointer"
                                                 >
                                                     Keluar Akun
-                                                </Link>
+                                                </button>
                                             </motion.div>
                                         </>
                                     )}
@@ -575,7 +579,20 @@ export default function Navbar({ auth }) {
                                 </Link>
                             ))}
 
-                            {!auth.user && (
+                            {auth.user ? (
+                                <div className="pt-6">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMobileMenuOpen(false);
+                                            setLogoutModalOpen(true);
+                                        }}
+                                        className="w-full py-4 border border-red-600 text-red-500 hover:bg-red-600 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors rounded-none cursor-pointer"
+                                    >
+                                        KELUAR AKUN
+                                    </button>
+                                </div>
+                            ) : (
                                 <div className="grid grid-cols-2 gap-4 pt-8">
                                     <button
                                         onClick={() => {
@@ -601,6 +618,21 @@ export default function Navbar({ auth }) {
                 onClose={() => {
                     setAuthModalVisible(false);
                     setAuthModalMessage(null);
+                }}
+            />
+
+            {/* Custom Logout Confirmation Modal */}
+            <Modal
+                isOpen={logoutModalOpen}
+                onClose={() => setLogoutModalOpen(false)}
+                title="Konfirmasi Keluar Akun"
+                message="Apakah Anda yakin ingin keluar dari akun Anda? Sesi Anda saat ini akan diakhiri."
+                confirmText="Ya, Keluar"
+                cancelText="Batal"
+                type="danger"
+                onConfirm={() => {
+                    setLogoutModalOpen(false);
+                    router.post(route("logout"));
                 }}
             />
         </nav>

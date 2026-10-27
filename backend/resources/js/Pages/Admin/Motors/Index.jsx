@@ -17,7 +17,8 @@ import {
     RefreshCw,
     Tag,
     Archive,
-    MapPin
+    MapPin,
+    ArrowRightLeft
 } from "lucide-react";
 
 export default function Index({ motors: initialMotors, filters, brands, branches }) {
@@ -100,6 +101,95 @@ export default function Index({ motors: initialMotors, filters, brands, branches
                 router.delete(route("admin.motors.destroy", motor.id), {
                     onSuccess: () => toast.success("Motor berhasil dihapus"),
                     onError: () => toast.error("Gagal menghapus motor"),
+                });
+            }
+        });
+    };
+
+    const handleTransferStock = (motor) => {
+        setDropdownOpen(null);
+        if ((motor.stock || 0) < 1) {
+            Swal.fire({
+                icon: "warning",
+                title: "Stok Kosong",
+                text: "Unit motor ini tidak memiliki stok untuk dimutasikan.",
+                confirmButtonColor: "#3b82f6",
+                borderRadius: "12px"
+            });
+            return;
+        }
+
+        const currentBranchCode = motor.branch_info?.code || motor.branch;
+        const availableTargets = (branches || []).filter(
+            (b) => (b.code || b) !== currentBranchCode
+        );
+
+        if (availableTargets.length === 0) {
+            Swal.fire({
+                icon: "info",
+                title: "Tidak Ada Cabang Lain",
+                text: "Tidak ditemukan cabang tujuan lain untuk mutasi stok.",
+                confirmButtonColor: "#3b82f6",
+                borderRadius: "12px"
+            });
+            return;
+        }
+
+        const branchOptions = availableTargets
+            .map((b) => `<option value="${b.code || b}">${b.name || b.code || b}</option>`)
+            .join("");
+
+        Swal.fire({
+            title: `<span class="text-lg font-bold text-gray-800">Transfer Stok: ${motor.name}</span>`,
+            html: `
+                <div class="text-left text-xs mb-3 p-3 bg-blue-50 rounded-lg border border-blue-100 text-blue-800">
+                    <div>Cabang Asal: <b>${motor.branch_info?.name || motor.branch || "-"}</b></div>
+                    <div class="mt-1">Stok Tersedia: <b>${motor.stock} unit</b></div>
+                </div>
+                <div class="text-left mb-3">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Pilih Cabang Tujuan:</label>
+                    <select id="swal-to-branch" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500">
+                        ${branchOptions}
+                    </select>
+                </div>
+                <div class="text-left mb-3">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Jumlah Unit Ditransfer:</label>
+                    <input id="swal-qty" type="number" min="1" max="${motor.stock}" value="1" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div class="text-left">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Catatan Mutasi (Opsional):</label>
+                    <textarea id="swal-notes" placeholder="Contoh: Pemindahan unit untuk display showroom" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500" rows="2"></textarea>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "Kirim Transfer",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#2563eb",
+            cancelButtonColor: "#6b7280",
+            borderRadius: "16px",
+            preConfirm: () => {
+                const to_branch = document.getElementById("swal-to-branch").value;
+                const quantity = parseInt(document.getElementById("swal-qty").value, 10);
+                const notes = document.getElementById("swal-notes").value;
+                if (!to_branch) {
+                    Swal.showValidationMessage("Silakan pilih cabang tujuan");
+                    return false;
+                }
+                if (!quantity || quantity < 1 || quantity > motor.stock) {
+                    Swal.showValidationMessage(`Jumlah harus antara 1 dan ${motor.stock}`);
+                    return false;
+                }
+                return { motor_id: motor.id, to_branch, quantity, notes };
+            }
+        }).then((res) => {
+            if (res.isConfirmed && res.value) {
+                router.post(route("admin.stock-transfers.store"), res.value, {
+                    onSuccess: () => {
+                        toast.success("Transfer stok berhasil diproses!");
+                    },
+                    onError: (err) => {
+                        toast.error(Object.values(err)[0] || "Gagal memproses transfer stok");
+                    }
                 });
             }
         });
@@ -239,6 +329,10 @@ export default function Index({ motors: initialMotors, filters, brands, branches
                                                         <img 
                                                             src={motor.image} 
                                                             alt={motor.name} 
+                                                            onError={(e) => {
+                                                                e.currentTarget.onerror = null;
+                                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                                            }}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     ) : (
@@ -307,6 +401,9 @@ export default function Index({ motors: initialMotors, filters, brands, branches
                                         <td className="px-6 py-4 text-right">
                                             {/* Desktop Nav */}
                                             <div className="hidden md:flex justify-end gap-2">
+                                                <button onClick={() => handleTransferStock(motor)} className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200 text-gray-600 hover:text-indigo-600 flex items-center justify-center transition-colors shadow-sm" title="Transfer Stok Cabang">
+                                                    <ArrowRightLeft size={15} />
+                                                </button>
                                                 <Link href={route("admin.motors.show", motor.id)} className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-200 text-gray-600 hover:text-blue-600 flex items-center justify-center transition-colors shadow-sm" title="Preview Catalog">
                                                     <Eye size={15} />
                                                 </Link>
@@ -331,6 +428,9 @@ export default function Index({ motors: initialMotors, filters, brands, branches
                                                                 initial={{ opacity: 0, scale: 0.95, y: -10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -10 }}
                                                                 className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 z-40 py-1"
                                                             >
+                                                                <button onClick={() => handleTransferStock(motor)} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2">
+                                                                    <ArrowRightLeft size={16} className="text-gray-400" /> Transfer Stok
+                                                                </button>
                                                                 <Link href={route("admin.motors.show", motor.id)} className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 flex items-center gap-2">
                                                                     <Eye size={16} className="text-gray-400" /> Detail Unit
                                                                 </Link>

@@ -442,7 +442,20 @@ export default function CreditStatus({ auth, credit, transaction }) {
                             <div className="p-10 bg-white border border-gray-200">
                                 <div className="aspect-[4/3] bg-gray-50 flex items-center justify-center p-6 mb-8 group overflow-hidden">
                                     <img
-                                        src={`/storage/${transaction.motor?.image_path}`}
+                                        src={
+                                            transaction.motor?.image ||
+                                            (transaction.motor?.image_path
+                                                ? transaction.motor.image_path.startsWith('http') || transaction.motor.image_path.startsWith('/')
+                                                    ? transaction.motor.image_path
+                                                    : transaction.motor.image_path.startsWith('assets/')
+                                                    ? `/${transaction.motor.image_path}`
+                                                    : `/storage/${transaction.motor.image_path}`
+                                                : "/assets/img/no-image.webp")
+                                        }
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null;
+                                            e.currentTarget.src = "/assets/img/no-image.webp";
+                                        }}
                                         alt={transaction.motor?.name}
                                         className="max-h-full w-auto object-contain transition-all duration-700 group-hover:scale-110"
                                     />

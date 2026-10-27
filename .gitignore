@@ -25,7 +25,7 @@ backend/node_modules/
 public/build/
 backend/public/build/
 public/hot
-backend/public/hot/
+backend/public/hot
 public/storage
 backend/public/storage/
 storage/*.key

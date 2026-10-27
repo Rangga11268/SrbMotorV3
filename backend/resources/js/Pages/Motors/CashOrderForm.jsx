@@ -1027,10 +1027,19 @@ export default function CashOrderForm({ motor, auth }) {
                                     <div className="h-56 bg-white relative border-b border-gray-200">
                                         <img
                                             src={
-                                                motor.image_path
-                                                    ? `/storage/${motor.image_path}`
-                                                    : "/assets/img/no-image.webp"
+                                                motor.image ||
+                                                (motor.image_path
+                                                    ? motor.image_path.startsWith('http') || motor.image_path.startsWith('/')
+                                                        ? motor.image_path
+                                                        : motor.image_path.startsWith('assets/')
+                                                        ? `/${motor.image_path}`
+                                                        : `/storage/${motor.image_path}`
+                                                    : "/assets/img/no-image.webp")
                                             }
+                                            onError={(e) => {
+                                                e.currentTarget.onerror = null;
+                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                            }}
                                             alt={motor.name}
                                             className="w-full h-full object-contain p-4"
                                         />

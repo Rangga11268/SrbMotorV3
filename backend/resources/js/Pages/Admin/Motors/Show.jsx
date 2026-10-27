@@ -105,6 +105,10 @@ export default function Show({ motor }) {
                                 <img
                                     src={motor.image}
                                     alt={motor.name}
+                                    onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = "/assets/img/no-image.webp";
+                                    }}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                             ) : (

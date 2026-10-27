@@ -195,9 +195,22 @@ export default function Create({ motors, users }) {
                                         <h3 className="font-bold text-gray-800 text-sm">Unit Dipilih</h3>
                                     </div>
                                     <div className="p-4">
-                                        {selectedMotor.image_path && (
+                                        {(selectedMotor.image || selectedMotor.image_path) && (
                                             <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100 border border-gray-200 mb-3">
-                                                <img src={`/storage/${selectedMotor.image_path}`} alt={selectedMotor.name} className="w-full h-full object-cover" />
+                                                <img
+                                                    src={
+                                                        selectedMotor.image ||
+                                                        (selectedMotor.image_path.startsWith('assets/')
+                                                            ? `/${selectedMotor.image_path}`
+                                                            : `/storage/${selectedMotor.image_path}`)
+                                                    }
+                                                    onError={(e) => {
+                                                        e.currentTarget.onerror = null;
+                                                        e.currentTarget.src = "/assets/img/no-image.webp";
+                                                    }}
+                                                    alt={selectedMotor.name}
+                                                    className="w-full h-full object-cover"
+                                                />
                                             </div>
                                         )}
                                         <p className="font-black text-gray-800">{selectedMotor.name}</p>

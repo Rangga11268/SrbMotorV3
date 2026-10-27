@@ -43,7 +43,7 @@ class Motor extends Model
     public function getImageAttribute()
     {
         if (!$this->image_path) {
-            return null;
+            return asset('assets/img/no-image.webp');
         }
 
         // Already a full URL
@@ -51,7 +51,7 @@ class Motor extends Model
             return $this->image_path;
         }
 
-        // Storage-disk path (e.g. motors/xxx.png) — use Storage::url()
+        // Storage-disk path (e.g. motors/xxx.webp) — use Storage::url()
         if (
             str_starts_with($this->image_path, "motors/") ||
             str_starts_with($this->image_path, "images/")
@@ -59,7 +59,22 @@ class Motor extends Model
             return Storage::disk("public")->url($this->image_path);
         }
 
-        // Legacy assets path (e.g. assets/img/yamaha/aerox_155.png)
+        // Assets path directly matching public file
+        if (file_exists(public_path($this->image_path))) {
+            return asset($this->image_path);
+        }
+
+        // Fallback: normalize legacy filenames (.png -> .webp, spaces -> underscores)
+        $converted = preg_replace('/\.png$/i', '.webp', str_replace(' ', '_', $this->image_path));
+        if (file_exists(public_path($converted))) {
+            return asset($converted);
+        }
+
+        $spaceConverted = preg_replace('/\.png$/i', '.webp', $this->image_path);
+        if (file_exists(public_path($spaceConverted))) {
+            return asset($spaceConverted);
+        }
+
         return asset($this->image_path);
     }
 

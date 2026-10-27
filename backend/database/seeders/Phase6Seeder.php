@@ -23,7 +23,7 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Matic',
                 'details' => '<h3>Fitur Unggulan NMAX Turbo</h3><ul><li>Mesin Blue Core 155cc</li><li>Y-Connect Navigation</li><li>Electric Power Socket</li></ul><p>Nikmati berkendara dengan kenyamanan maksimal dan teknologi turbo terbaru dari Yamaha.</p>',
-                'image_path' => 'assets/img/yamaha/NMax Turbo.png',
+                'image_path' => 'assets/img/yamaha/NMax_Turbo.webp',
                 'tersedia' => true
             ],
             [
@@ -34,7 +34,7 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Sport Matic',
                 'details' => '<h3>Aerox 155 Cyber City</h3><p>Desain sporty yang agresif dengan performa mesin yang tangguh. Cocok untuk Anda yang berjiwa muda.</p>',
-                'image_path' => 'assets/img/yamaha/aerox 155.png',
+                'image_path' => 'assets/img/yamaha/aerox_155.webp',
                 'tersedia' => true
             ],
             [
@@ -45,7 +45,7 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Classy',
                 'details' => '<h3>Gaya Hidup Classy dengan Fazzio</h3><p>Motor hybrid pertama di kelasnya. Hemat bahan bakar dan tampil elegan di jalanan Bekasi.</p>',
-                'image_path' => 'assets/img/yamaha/Fazzio.png',
+                'image_path' => 'assets/img/yamaha/Fazzio.webp',
                 'tersedia' => true
             ],
             [
@@ -56,7 +56,7 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Matic Premium',
                 'details' => '<h3>Elegansi dan Performa PCX 160</h3><p>Desain mewah dengan performa mesin eSP+ 160cc 4-katup yang bertenaga.</p>',
-                'image_path' => 'assets/img/honda/pcx 160.png',
+                'image_path' => 'assets/img/honda/pcx_160.webp',
                 'tersedia' => true
             ],
             [
@@ -67,7 +67,7 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Sport Matic',
                 'details' => '<h3>Vario 160 Bigger, Greater</h3><p>Tampil lebih besar dan tangguh dengan mesin 160cc untuk aktivitas sehari-hari gaya maksimal.</p>',
-                'image_path' => 'assets/img/honda/vario 160.png',
+                'image_path' => 'assets/img/honda/vario_160.webp',
                 'tersedia' => true
             ],
             [
@@ -78,7 +78,7 @@ class Phase6Seeder extends Seeder
                 'year' => 2024,
                 'type' => 'Classic',
                 'details' => '<h3>Scoopy Klasik yang Ikonik</h3><p>Fitur Smart Key System lengkap gaya retro yang abadi sepanjang masa.</p>',
-                'image_path' => 'assets/img/honda/scoopy.png',
+                'image_path' => 'assets/img/honda/scoopy.webp',
                 'tersedia' => true
             ]
         ];

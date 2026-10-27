@@ -220,8 +220,21 @@ export default function Index({ transactions: initialTransactions, filters, stat
                                         <td className="px-6 py-4 hidden md:table-cell">
                                             <div className="flex items-center gap-2.5">
                                                 <div className="w-10 h-10 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 flex items-center justify-center">
-                                                    {trx.motor?.image_path ? (
-                                                        <img src={`/storage/${trx.motor.image_path}`} alt={trx.motor.name} className="w-full h-full object-cover" />
+                                                    {(trx.motor?.image || trx.motor?.image_path) ? (
+                                                        <img
+                                                            src={
+                                                                trx.motor.image ||
+                                                                (trx.motor.image_path.startsWith('assets/')
+                                                                    ? `/${trx.motor.image_path}`
+                                                                    : `/storage/${trx.motor.image_path}`)
+                                                            }
+                                                            onError={(e) => {
+                                                                e.currentTarget.onerror = null;
+                                                                e.currentTarget.src = "/assets/img/no-image.webp";
+                                                            }}
+                                                            alt={trx.motor.name}
+                                                            className="w-full h-full object-cover"
+                                                        />
                                                     ) : (
                                                         <Bike size={16} className="text-gray-300" />
                                                     )}
