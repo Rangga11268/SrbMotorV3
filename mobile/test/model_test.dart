@@ -8,6 +8,9 @@ import 'package:srb_motor_app/services/api_constants.dart';
 import 'package:srb_motor_app/services/location_service.dart';
 import 'package:srb_motor_app/widgets/app_button.dart';
 import 'package:srb_motor_app/widgets/app_color_selector.dart';
+import 'package:srb_motor_app/screens/onboarding/onboarding_screen.dart';
+import 'package:srb_motor_app/app_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test('Motor.fromJson parses API response and resolves image URL correctly', () {
@@ -181,5 +184,25 @@ void main() {
     await tester.tap(find.text('Biru Matte').first);
     await tester.pump();
     expect(selected, 'Biru Matte');
+  });
+
+  testWidgets('OnboardingScreen renders initial slide and handles navigation', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final appState = AppState();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: OnboardingScreen(appState: appState),
+      ),
+    );
+
+    expect(find.text('Pilihan Unit Motor Terlengkap & Bergaransi'), findsOneWidget);
+    expect(find.text('Lewati'), findsOneWidget);
+    expect(find.text('Lanjutkan'), findsOneWidget);
+
+    await tester.tap(find.text('Lanjutkan'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pengajuan Kredit Cepat, DP Ringan & Bunga Rendah'), findsOneWidget);
   });
 }

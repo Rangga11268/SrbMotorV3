@@ -5,6 +5,7 @@ import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/splash/splash_screen.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/detail/motor_detail_phantom_x.dart';
 
 void main() async {
@@ -102,6 +103,10 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(appState: appState),
       onGenerateRoute: (settings) {
         switch (settings.name) {
+          case '/onboarding':
+            return MaterialPageRoute(
+              builder: (context) => OnboardingScreen(appState: appState),
+            );
           case '/login':
             return MaterialPageRoute(
               builder: (context) => LoginScreen(appState: appState),
