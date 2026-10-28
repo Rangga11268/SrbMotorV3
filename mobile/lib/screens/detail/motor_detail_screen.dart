@@ -4,6 +4,7 @@ import 'package:srb_motor_app/models/motor.dart';
 import 'package:srb_motor_app/screens/detail/motor_compare_screen.dart';
 import 'package:srb_motor_app/widgets/motor_image_view.dart';
 import 'package:srb_motor_app/widgets/app_selection_chip.dart';
+import 'package:srb_motor_app/widgets/app_button.dart';
 import 'package:srb_motor_app/screens/order/order_checkout_screen.dart';
 
 class MotorDetailScreen extends StatefulWidget {
@@ -374,51 +375,22 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                   // In-App Ordering Actions (Synchronized with Web)
                   if (widget.motor.isAvailable) ...[
                     // Beli Tunai Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: () => _openCheckout(context, isCredit: false),
-                        icon: const Icon(Icons.shopping_bag_outlined, color: Colors.white, size: 20),
-                        label: const Text(
-                          'PEMBELIAN TUNAI (CASH)',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.5,
-                            fontSize: 13,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1C69D4),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                        ),
-                      ),
+                    AppButton.primary(
+                      text: 'PEMBELIAN TUNAI (CASH)',
+                      isFullWidth: true,
+                      size: AppButtonSize.large,
+                      icon: Icons.shopping_bag_outlined,
+                      onPressed: () => _openCheckout(context, isCredit: false),
                     ),
                     const SizedBox(height: 10),
 
                     // Pengajuan Kredit Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: OutlinedButton.icon(
-                        onPressed: () => _openCheckout(context, isCredit: true),
-                        icon: const Icon(Icons.credit_card_outlined, color: Color(0xFF0F172A), size: 20),
-                        label: const Text(
-                          'PENGAJUAN KREDIT',
-                          style: TextStyle(
-                            color: Color(0xFF0F172A),
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.5,
-                            fontSize: 13,
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Color(0xFFCBD5E1), width: 1.5),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                        ),
-                      ),
+                    AppButton.outline(
+                      text: 'PENGAJUAN KREDIT',
+                      isFullWidth: true,
+                      size: AppButtonSize.large,
+                      icon: Icons.credit_card_outlined,
+                      onPressed: () => _openCheckout(context, isCredit: true),
                     ),
                   ] else ...[
                     // Sold out banner
@@ -587,27 +559,13 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                   ),
                   if (widget.motor.isAvailable) ...[
                     const SizedBox(height: 14),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 46,
-                      child: ElevatedButton.icon(
-                        onPressed: () => _openCheckout(context, isCredit: true),
-                        icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 18),
-                        label: Text(
-                          'AJUKAN DENGAN TENOR $selectedTenor BULAN',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.5,
-                            fontSize: 12,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1C69D4),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                      ),
+                    AppButton.primary(
+                      text: 'AJUKAN DENGAN TENOR $selectedTenor BULAN',
+                      isFullWidth: true,
+                      size: AppButtonSize.large,
+                      icon: Icons.arrow_forward_rounded,
+                      iconAfter: true,
+                      onPressed: () => _openCheckout(context, isCredit: true),
                     ),
                   ],
                 ],

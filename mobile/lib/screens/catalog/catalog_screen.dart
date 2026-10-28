@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_state.dart';
 import '../../models/motor.dart';
 import '../../widgets/app_selection_chip.dart';
+import '../../widgets/app_button.dart';
 import '../home/widgets/motor_card.dart';
 
 class MotorFilterOptions {
@@ -482,10 +483,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
                         ),
                       ],
                     ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
+                    child: SafeArea(
+                      top: false,
+                      child: AppButton.primary(
+                        text: previewCount > 0
+                            ? 'Terapkan Filter ($previewCount Motor)'
+                            : 'Tidak Ada Motor (Reset)',
+                        isFullWidth: true,
+                        size: AppButtonSize.large,
+                        icon: Icons.filter_alt_rounded,
                         onPressed: () {
                           setState(() {
                             filter = tempFilter;
@@ -493,24 +499,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           });
                           Navigator.pop(ctx);
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1C69D4),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          previewCount > 0
-                              ? 'Terapkan Filter ($previewCount Motor)'
-                              : 'Tidak Ada Motor (Reset)',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
                       ),
                     ),
                   ),
@@ -1005,7 +993,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
                 style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
               ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
+              AppButton.outline(
+                text: 'Reset Filter & Pencarian',
+                size: AppButtonSize.medium,
+                icon: Icons.refresh_rounded,
                 onPressed: () {
                   searchController.clear();
                   setState(() {
@@ -1013,14 +1004,6 @@ class _CatalogScreenState extends State<CatalogScreen> {
                     visibleCount = 6;
                   });
                 },
-                icon: const Icon(Icons.refresh_rounded, size: 16),
-                label: const Text('Reset Filter & Pencarian'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1C69D4),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
               ),
             ],
           ),

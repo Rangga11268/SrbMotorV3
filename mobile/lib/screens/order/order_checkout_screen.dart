@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../services/location_service.dart';
 import '../../widgets/motor_image_view.dart';
 import '../../widgets/app_selection_chip.dart';
+import '../../widgets/app_button.dart';
 import 'midtrans_payment_screen.dart';
 
 class OrderCheckoutScreen extends StatefulWidget {
@@ -464,17 +465,13 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             style: const TextStyle(fontSize: 14),
           ),
           actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
+            AppButton.primary(
+              text: 'Ke Menu Pesanan',
+              size: AppButtonSize.medium,
               onPressed: () {
                 Navigator.of(ctx).pop();
                 Navigator.of(context).pop(true);
               },
-              child: const Text('Ke Menu Pesanan'),
             ),
           ],
         ),
@@ -517,21 +514,15 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           ),
         ),
         actions: [
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('Lihat Pesanan Saya', style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
+          AppButton.primary(
+            text: 'Lihat Pesanan Saya',
+            isFullWidth: true,
+            size: AppButtonSize.medium,
+            icon: Icons.receipt_long_rounded,
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              Navigator.of(context).pop(true);
+            },
           ),
         ],
       ),
@@ -573,21 +564,15 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           ),
         ),
         actions: [
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('Buka Riwayat Pengajuan', style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
+          AppButton.primary(
+            text: 'Buka Riwayat Pengajuan',
+            isFullWidth: true,
+            size: AppButtonSize.medium,
+            icon: Icons.history_rounded,
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              Navigator.of(context).pop(true);
+            },
           ),
         ],
       ),
@@ -1638,49 +1623,37 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
         ? 'Ajukan Pembiayaan Kredit'
         : (_paymentMethod == 'Transfer Bank' ? 'Bayar Sekarang (Midtrans)' : 'Konfirmasi Pesanan');
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
-      ),
-      child: Row(
-        children: [
-          if (_currentStep > 0) ...[
-            OutlinedButton(
-              onPressed: _isSubmitting ? null : _onPrevStep,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF475569),
-                side: const BorderSide(color: Color(0xFFCBD5E1)),
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+        ),
+        child: Row(
+          children: [
+            if (_currentStep > 0) ...[
+              AppButton.outline(
+                text: 'Kembali',
+                size: AppButtonSize.large,
+                icon: Icons.arrow_back_rounded,
+                onPressed: _isSubmitting ? null : _onPrevStep,
               ),
-              child: const Text('Kembali', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: AppButton.primary(
+                text: isLastStep ? submitLabel : 'Lanjutkan',
+                size: AppButtonSize.large,
+                icon: isLastStep ? Icons.check_circle_rounded : Icons.arrow_forward_rounded,
+                iconAfter: !isLastStep,
+                isLoading: _isSubmitting,
+                onPressed: _isSubmitting ? null : _onNextStep,
+              ),
             ),
-            const SizedBox(width: 12),
           ],
-          Expanded(
-            child: ElevatedButton(
-              onPressed: _isSubmitting ? null : _onNextStep,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              child: _isSubmitting
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                    )
-                  : Text(
-                      isLastStep ? submitLabel : 'Lanjutkan',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

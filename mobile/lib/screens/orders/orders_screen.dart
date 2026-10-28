@@ -4,6 +4,7 @@ import '../../app_state.dart';
 import '../../models/order.dart';
 import '../../widgets/motor_image_view.dart';
 import '../../widgets/app_selection_chip.dart';
+import '../../widgets/app_button.dart';
 
 class OrderFilterOptions {
   String status; // 'Semua', 'MENUNGGU', 'SURVEI', 'DISETUJUI', 'SELESAI', 'DITOLAK'
@@ -1210,7 +1211,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: ElevatedButton.icon(
+                              child: AppButton.primary(
+                                text: 'Sudah Disurvei',
+                                size: AppButtonSize.medium,
+                                icon: Icons.check_circle_outline_rounded,
                                 onPressed: () async {
                                   final navigator = Navigator.of(ctx);
                                   final messenger = ScaffoldMessenger.of(context);
@@ -1223,21 +1227,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     ),
                                   );
                                 },
-                                icon: const Icon(Icons.check_circle_outline_rounded, size: 16),
-                                label: const Text('Sudah Disurvei'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF1C69D4),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                                  elevation: 0,
-                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
-                              child: OutlinedButton.icon(
+                              child: AppButton.outline(
+                                text: 'Belum Disurvei',
+                                size: AppButtonSize.medium,
+                                icon: Icons.help_outline_rounded,
                                 onPressed: () {
                                   Navigator.pop(ctx);
                                   final motorName = order.motor?.name ?? 'Motor';
@@ -1253,16 +1250,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     ),
                                   );
                                 },
-                                icon: const Icon(Icons.help_outline_rounded, size: 16),
-                                label: const Text('Belum Disurvei'),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFF92400E),
-                                  side: const BorderSide(color: Color(0xFFF59E0B)),
-                                  backgroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                  textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                                ),
                               ),
                             ),
                           ],
@@ -1285,27 +1272,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
               ],
 
               const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Layanan pelanggan: Hubungi CS WhatsApp di +62 821-2345-6789'),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.chat_rounded, size: 18),
-                  label: const Text('Bantuan / Hubungi Customer Service'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1C69D4),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
+              AppButton.primary(
+                text: 'Bantuan / Hubungi Customer Service',
+                isFullWidth: true,
+                size: AppButtonSize.medium,
+                icon: Icons.chat_rounded,
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Layanan pelanggan: Hubungi CS WhatsApp di +62 821-2345-6789'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:srb_motor_app/models/branch.dart';
 import 'package:srb_motor_app/models/motor.dart';
@@ -5,6 +6,7 @@ import 'package:srb_motor_app/models/order.dart';
 import 'package:srb_motor_app/models/user.dart';
 import 'package:srb_motor_app/services/api_constants.dart';
 import 'package:srb_motor_app/services/location_service.dart';
+import 'package:srb_motor_app/widgets/app_button.dart';
 
 void main() {
   test('Motor.fromJson parses API response and resolves image URL correctly', () {
@@ -130,5 +132,28 @@ void main() {
     );
     expect(distKm, greaterThan(3.0));
     expect(distKm, lessThan(4.0));
+  });
+
+  testWidgets('AppButton renders properly with glossy styling and triggers callback', (tester) async {
+    bool tapped = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AppButton.primary(
+            text: 'Lanjutkan',
+            icon: Icons.arrow_forward_rounded,
+            onPressed: () => tapped = true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Lanjutkan'), findsOneWidget);
+    expect(find.byIcon(Icons.arrow_forward_rounded), findsOneWidget);
+
+    await tester.tap(find.text('Lanjutkan'));
+    await tester.pump();
+    expect(tapped, true);
   });
 }
