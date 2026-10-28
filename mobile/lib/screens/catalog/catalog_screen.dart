@@ -706,28 +706,15 @@ class _CatalogScreenState extends State<CatalogScreen> {
                       final isSelected = filter.brand == brand;
                       return Padding(
                         padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(brand),
-                          selected: isSelected,
-                          checkmarkColor: Colors.white,
-                          onSelected: (val) {
-                            if (val) {
-                              setState(() {
-                                filter.brand = brand;
-                                visibleCount = 6;
-                              });
-                            }
+                        child: AppSelectionChip(
+                          label: brand,
+                          isSelected: isSelected,
+                          onTap: () {
+                            setState(() {
+                              filter.brand = brand;
+                              visibleCount = 6;
+                            });
                           },
-                          labelStyle: TextStyle(
-                            fontSize: 12,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected ? Colors.white : const Color(0xFF475569),
-                          ),
-                          selectedColor: const Color(0xFF0F172A),
-                          backgroundColor: const Color(0xFFF1F5F9),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          side: BorderSide.none,
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         ),
                       );
                     }).toList(),

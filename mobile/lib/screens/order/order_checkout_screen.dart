@@ -32,9 +32,21 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
   bool _isSubmitting = false;
 
   // Step 1: Unit & Delivery
-  late String _selectedColor;
-  List<Branch> _branches = Branch.defaultBranches;
+  String? _selectedColor;
+  String get selectedColor => _selectedColor ?? (widget.motor.colors.isNotEmpty ? widget.motor.colors.first : 'Hitam');
+
+  List<Branch>? _branches;
+  List<Branch> get branches => _branches ?? Branch.defaultBranches;
+
   Branch? _selectedBranch;
+  Branch get selectedBranch {
+    final list = branches;
+    if (_selectedBranch != null && list.any((b) => b.code == _selectedBranch!.code)) {
+      return _selectedBranch!;
+    }
+    return list.firstWhere((b) => b.isMainBranch, orElse: () => list.first);
+  }
+
   String _deliveryMethod = 'Kirim ke Alamat Rumah';
 
   // Step 2: Personal Info
@@ -51,9 +63,15 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
   final _employmentDurationController = TextEditingController();
 
   // Step 3: Financing (Credit) or Payment Type (Cash)
-  late double _dpAmount;
-  int _selectedTenor = 35; // Default 35 bulan
-  final List<int> _tenorOptions = [11, 17, 23, 29, 35];
+  double? _dpAmount;
+  double get dpAmount {
+    if (_dpAmount != null && _dpAmount! >= _minDp) return _dpAmount!;
+    return _minDp;
+  }
+
+  int? _selectedTenor;
+  int get selectedTenor => _selectedTenor ?? 35;
+  List<int> get tenorOptions => const [11, 17, 23, 29, 35];
 
   // Cash options
   bool _isBookingFee = false;
@@ -71,7 +89,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
     super.initState();
     _selectedColor = widget.motor.colors.isNotEmpty ? widget.motor.colors.first : 'Hitam';
     _branches = Branch.defaultBranches;
-    _selectedBranch = _branches.firstWhere((b) => b.isMainBranch, orElse: () => _branches.first);
+    _selectedBranch = branches.firstWhere((b) => b.isMainBranch, orElse: () => branches.first);
     _loadBranches();
 
     // Pre-fill user data if logged in
@@ -98,9 +116,9 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
       if (mounted) {
         setState(() {
           _branches = res.data!;
-          _selectedBranch = _branches.firstWhere(
+          _selectedBranch = branches.firstWhere(
             (b) => b.code == _selectedBranch?.code || b.isMainBranch,
-            orElse: () => _branches.first,
+            orElse: () => branches.first,
           );
         });
       }
@@ -124,13 +142,13 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
 
   double get _minDp => widget.motor.minDp > 0 ? widget.motor.minDp : (widget.motor.price * 0.2);
 
-  double get _loanAmount => (widget.motor.price - _dpAmount).clamp(0, widget.motor.price);
+  double get _loanAmount => (widget.motor.price - dpAmount).clamp(0, widget.motor.price);
 
   double get _monthlyInstallment {
-    if (!widget.isCredit || _selectedTenor <= 0) return 0;
+    if (!widget.isCredit || selectedTenor <= 0) return 0;
     const interestRate = 0.015; // 1.5% flat per month
-    final totalInterest = _loanAmount * interestRate * _selectedTenor;
-    return (_loanAmount + totalInterest) / _selectedTenor;
+    final totalInterest = _loanAmount * interestRate * selectedTenor;
+    return (_loanAmount + totalInterest) / selectedTenor;
   }
 
   String _formatRupiah(num value) {
@@ -268,16 +286,16 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             'customer_email': _emailController.text.trim(),
             'customer_nik': _nikController.text.trim(),
             'customer_address': _addressController.text.trim(),
-            'motor_color': _selectedColor,
+            'motor_color': selectedColor,
             'delivery_method': _deliveryMethod,
             'payment_method': _paymentMethod,
             'occupation': _occupationController.text.trim(),
             'monthly_income': monthlyIncome,
             'employment_duration': _employmentDurationController.text.trim(),
-            'dp_amount': _dpAmount,
-            'tenor': _selectedTenor,
-            'branch': _selectedBranch?.name ?? 'SSM MEKAR SARI (BEKASI)',
-            'branch_code': _selectedBranch?.code ?? 'SSM_MEKAR_SARI',
+            'dp_amount': dpAmount,
+            'tenor': selectedTenor,
+            'branch': selectedBranch.name,
+            'branch_code': selectedBranch.code,
           },
           ktpFilePath: _ktpFile?.path,
           kkFilePath: _kkFile?.path,
@@ -300,12 +318,12 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             'customer_email': _emailController.text.trim(),
             'customer_nik': _nikController.text.trim(),
             'customer_address': _addressController.text.trim(),
-            'motor_color': _selectedColor,
+            'motor_color': selectedColor,
             'delivery_method': _deliveryMethod,
             'payment_method': _paymentMethod,
             'booking_fee': fee,
-            'branch': _selectedBranch?.name ?? 'SSM MEKAR SARI (BEKASI)',
-            'branch_code': _selectedBranch?.code ?? 'SSM_MEKAR_SARI',
+            'branch': selectedBranch.name,
+            'branch_code': selectedBranch.code,
           },
           ktpFilePath: _ktpFile?.path,
           kkFilePath: _kkFile?.path,
@@ -702,8 +720,8 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: widget.motor.colors.map((color) {
-            final isSelected = _selectedColor == color;
+          children: (widget.motor.colors.isNotEmpty ? widget.motor.colors : const ['Hitam', 'Putih', 'Merah']).map((color) {
+            final isSelected = selectedColor == color;
             return AppSelectionChip(
               label: color,
               isSelected: isSelected,
@@ -729,8 +747,10 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<Branch>(
               isExpanded: true,
-              value: _selectedBranch,
-              items: _branches.map((b) {
+              value: branches.any((b) => b.code == selectedBranch.code)
+                  ? branches.firstWhere((b) => b.code == selectedBranch.code)
+                  : branches.first,
+              items: branches.map((b) {
                 return DropdownMenuItem<Branch>(
                   value: b,
                   child: Row(
@@ -929,7 +949,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                'Per bulan selama $_selectedTenor Bulan (Bunga Flat 1.5%)',
+                'Per bulan selama $selectedTenor Bulan (Bunga Flat 1.5%)',
                 style: const TextStyle(color: Colors.white70, fontSize: 12),
               ),
               const Divider(color: Colors.white24, height: 20),
@@ -937,7 +957,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Uang Muka (DP): ${_formatRupiah(_dpAmount)}',
+                    'Uang Muka (DP): ${_formatRupiah(dpAmount)}',
                     style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                   Text(
@@ -960,14 +980,14 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
             ),
             Text(
-              _formatRupiah(_dpAmount),
+              _formatRupiah(dpAmount),
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.primary),
             ),
           ],
         ),
         const SizedBox(height: 4),
         Slider(
-          value: _dpAmount,
+          value: dpAmount,
           min: _minDp,
           max: (widget.motor.price * 0.8).clamp(_minDp, widget.motor.price),
           divisions: 20,
@@ -995,8 +1015,8 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: _tenorOptions.map((t) {
-            final isSelected = _selectedTenor == t;
+          children: tenorOptions.map((t) {
+            final isSelected = selectedTenor == t;
             return Expanded(
               child: GestureDetector(
                 onTap: () => setState(() => _selectedTenor = t),
@@ -1151,12 +1171,12 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
               ),
               const SizedBox(height: 12),
               _buildSummaryRow('Unit Motor', widget.motor.name),
-              _buildSummaryRow('Warna Terpilih', _selectedColor),
-              _buildSummaryRow('Cabang Pengambilan', _selectedBranch?.name ?? '-'),
+              _buildSummaryRow('Warna Terpilih', selectedColor),
+              _buildSummaryRow('Cabang Pengambilan', selectedBranch.name),
               _buildSummaryRow('Harga OTR Unit', widget.motor.formattedPrice),
               if (widget.isCredit) ...[
-                _buildSummaryRow('Uang Muka (DP)', _formatRupiah(_dpAmount)),
-                _buildSummaryRow('Jangka Waktu (Tenor)', '$_selectedTenor Bulan'),
+                _buildSummaryRow('Uang Muka (DP)', _formatRupiah(dpAmount)),
+                _buildSummaryRow('Jangka Waktu (Tenor)', '$selectedTenor Bulan'),
                 _buildSummaryRow('Cicilan / Bulan', _formatRupiah(_monthlyInstallment), isHighlight: true),
               ] else ...[
                 if (_isBookingFee) ...[
