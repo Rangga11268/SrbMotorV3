@@ -110,10 +110,6 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
     // Default DP for credit (min 20% of motor price)
     final minDpCalc = widget.motor.minDp > 0 ? widget.motor.minDp : (widget.motor.price * 0.2);
     _dpAmount = minDpCalc;
-
-    _occupationController.text = 'Karyawan Swasta';
-    _incomeController.text = '6500000';
-    _employmentDurationController.text = '2 Tahun';
   }
 
   Future<void> _loadBranches() async {
@@ -1013,6 +1009,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           const SizedBox(height: 12),
           _buildTextField(
             label: 'Nama Lengkap (Sesuai KTP) *',
+            hintText: 'Contoh: Budi Santoso',
             controller: _nameController,
             validator: (v) => (v == null || v.trim().isEmpty) ? 'Nama lengkap wajib diisi' : null,
           ),
@@ -1022,6 +1019,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
               Expanded(
                 child: _buildTextField(
                   label: 'No. WhatsApp *',
+                  hintText: 'Contoh: 08123456789',
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   validator: (v) => (v == null || v.trim().length < 9) ? 'No HP minimal 9 digit' : null,
@@ -1031,6 +1029,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
               Expanded(
                 child: _buildTextField(
                   label: 'Email Aktif *',
+                  hintText: 'nama@email.com',
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: (v) => (v == null || !v.contains('@')) ? 'Email tidak valid' : null,
@@ -1041,6 +1040,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           const SizedBox(height: 12),
           _buildTextField(
             label: 'Nomor Induk Kependudukan (NIK) *',
+            hintText: '16 digit NIK sesuai e-KTP',
             controller: _nikController,
             keyboardType: TextInputType.number,
             maxLength: 16,
@@ -1049,9 +1049,10 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           const SizedBox(height: 12),
           _buildTextField(
             label: 'Alamat Lengkap Pengiriman / Domisili *',
+            hintText: 'Jl. Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota',
             controller: _addressController,
             maxLines: 2,
-            validator: (v) => (v == null || v.trim().isEmpty) ? 'Alamat wajib diisi' : null,
+            validator: (v) => (v == null || v.trim().isEmpty) ? 'Alamat domisili wajib diisi' : null,
           ),
 
           if (widget.isCredit) ...[
@@ -1063,6 +1064,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             const SizedBox(height: 12),
             _buildTextField(
               label: 'Pekerjaan Saat Ini *',
+              hintText: 'Contoh: Karyawan Swasta, PNS, Wiraswasta',
               controller: _occupationController,
               validator: (v) => (v == null || v.trim().isEmpty) ? 'Pekerjaan wajib diisi' : null,
             ),
@@ -1072,6 +1074,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
                 Expanded(
                   child: _buildTextField(
                     label: 'Penghasilan / Bulan (Rp) *',
+                    hintText: 'Contoh: 6500000',
                     controller: _incomeController,
                     keyboardType: TextInputType.number,
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Wajib diisi' : null,
@@ -1081,6 +1084,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
                 Expanded(
                   child: _buildTextField(
                     label: 'Lama Bekerja *',
+                    hintText: 'Contoh: 2 Tahun',
                     controller: _employmentDurationController,
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Wajib diisi' : null,
                   ),
@@ -1505,6 +1509,9 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
   Widget _buildTextField({
     required String label,
     required TextEditingController controller,
+    String? hintText,
+    String? helperText,
+    Widget? prefixIcon,
     String? Function(String?)? validator,
     TextInputType keyboardType = TextInputType.text,
     int maxLines = 1,
@@ -1524,8 +1531,13 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           keyboardType: keyboardType,
           maxLines: maxLines,
           maxLength: maxLength,
-          style: const TextStyle(fontSize: 13, color: Color(0xFF0F172A)),
+          style: const TextStyle(fontSize: 13, color: Color(0xFF0F172A), fontWeight: FontWeight.w500),
           decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8), fontWeight: FontWeight.normal),
+            helperText: helperText,
+            helperStyle: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+            prefixIcon: prefixIcon,
             counterText: '',
             filled: true,
             fillColor: Colors.white,
