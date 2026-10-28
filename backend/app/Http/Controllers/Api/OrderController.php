@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = Transaction::where('user_id', $request->user()->id)
-            ->with(['motor', 'installments', 'creditDetail.surveySchedules'])
+            ->with(['motor', 'installments', 'creditDetail.surveySchedules', 'documents'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -195,6 +195,8 @@ class OrderController extends Controller
             'dp_amount' => 'required|numeric',
             'tenor' => 'required|integer',
             'branch' => 'nullable|string',
+            'ktp_image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+            'kk_image' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
         ]);
 
         $motor = Motor::findOrFail($request->motor_id);
@@ -238,6 +240,28 @@ class OrderController extends Controller
                 'final_price' => $motor->price,
                 'reference_number' => 'CRD-' . strtoupper(uniqid()),
             ]);
+
+            if ($request->hasFile('ktp_image')) {
+                $ktpFile = $request->file('ktp_image');
+                $ktpPath = $ktpFile->store('documents', 'local');
+                \App\Models\Document::create([
+                    'transaction_id' => $order->id,
+                    'document_type' => 'KTP',
+                    'file_path' => $ktpPath,
+                    'original_name' => $ktpFile->getClientOriginalName(),
+                ]);
+            }
+
+            if ($request->hasFile('kk_image')) {
+                $kkFile = $request->file('kk_image');
+                $kkPath = $kkFile->store('documents', 'local');
+                \App\Models\Document::create([
+                    'transaction_id' => $order->id,
+                    'document_type' => 'KK',
+                    'file_path' => $kkPath,
+                    'original_name' => $kkFile->getClientOriginalName(),
+                ]);
+            }
 
             $loanAmount = $motor->price - $request->dp_amount;
             $interestRate = 0.015; // 1.5% flat
@@ -283,7 +307,7 @@ class OrderController extends Controller
     public function show($id, Request $request)
     {
         $order = Transaction::where('user_id', $request->user()->id)
-            ->with(['motor', 'installments', 'creditDetail.surveySchedules'])
+            ->with(['motor', 'installments', 'creditDetail.surveySchedules', 'documents'])
             ->findOrFail($id);
 
         return response()->json($order);

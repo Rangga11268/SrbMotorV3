@@ -1421,6 +1421,33 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                   ],
                 ),
+                if (order.isCredit && order.isSurveyOverdue && !order.isSurveyConfirmed) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEF3C7),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0xFFFCD34D)),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded, size: 16, color: Color(0xFFD97706)),
+                        SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'Jadwal Survei Terlewat - Butuh Konfirmasi',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF92400E),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 const Divider(height: 20, color: Color(0xFFF1F5F9)),
 
                 // Motor Details Row

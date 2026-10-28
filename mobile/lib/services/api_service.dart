@@ -10,6 +10,8 @@ class ApiResponse<T> {
   final String? message;
   final int? statusCode;
 
+  String? get errorMessage => message;
+
   ApiResponse({
     required this.isSuccess,
     this.data,
@@ -306,8 +308,40 @@ class ApiService {
   static Future<ApiResponse<Map<String, dynamic>>> createCashOrder({
     required String token,
     required Map<String, dynamic> data,
+    String? ktpFilePath,
+    String? kkFilePath,
   }) async {
     try {
+      if (ktpFilePath != null || kkFilePath != null) {
+        final request = http.MultipartRequest('POST', Uri.parse(ApiConstants.cashOrder));
+        request.headers.addAll({
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        });
+        data.forEach((key, value) {
+          if (value != null) {
+            request.fields[key] = value.toString();
+          }
+        });
+        if (ktpFilePath != null && ktpFilePath.isNotEmpty) {
+          request.files.add(await http.MultipartFile.fromPath('ktp_image', ktpFilePath));
+        }
+        if (kkFilePath != null && kkFilePath.isNotEmpty) {
+          request.files.add(await http.MultipartFile.fromPath('kk_image', kkFilePath));
+        }
+        final streamedResponse = await request.send().timeout(_timeout);
+        final response = await http.Response.fromStream(streamedResponse);
+        final body = jsonDecode(response.body);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return ApiResponse.success(body as Map<String, dynamic>);
+        } else {
+          return ApiResponse.error(
+            body['message'] ?? 'Gagal membuat pesanan tunai.',
+            statusCode: response.statusCode,
+          );
+        }
+      }
+
       final response = await http
           .post(
             Uri.parse(ApiConstants.cashOrder),
@@ -334,8 +368,40 @@ class ApiService {
   static Future<ApiResponse<Map<String, dynamic>>> createCreditOrder({
     required String token,
     required Map<String, dynamic> data,
+    String? ktpFilePath,
+    String? kkFilePath,
   }) async {
     try {
+      if (ktpFilePath != null || kkFilePath != null) {
+        final request = http.MultipartRequest('POST', Uri.parse(ApiConstants.creditOrder));
+        request.headers.addAll({
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        });
+        data.forEach((key, value) {
+          if (value != null) {
+            request.fields[key] = value.toString();
+          }
+        });
+        if (ktpFilePath != null && ktpFilePath.isNotEmpty) {
+          request.files.add(await http.MultipartFile.fromPath('ktp_image', ktpFilePath));
+        }
+        if (kkFilePath != null && kkFilePath.isNotEmpty) {
+          request.files.add(await http.MultipartFile.fromPath('kk_image', kkFilePath));
+        }
+        final streamedResponse = await request.send().timeout(_timeout);
+        final response = await http.Response.fromStream(streamedResponse);
+        final body = jsonDecode(response.body);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return ApiResponse.success(body as Map<String, dynamic>);
+        } else {
+          return ApiResponse.error(
+            body['message'] ?? 'Gagal membuat pengajuan kredit.',
+            statusCode: response.statusCode,
+          );
+        }
+      }
+
       final response = await http
           .post(
             Uri.parse(ApiConstants.creditOrder),

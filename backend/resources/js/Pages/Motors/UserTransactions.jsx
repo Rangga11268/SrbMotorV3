@@ -350,6 +350,27 @@ export default function UserTransactions({ transactions: initialTransactions, fi
                                                     <h3 className="text-3xl font-black text-black uppercase tracking-tighter leading-tight group-hover:text-[#1c69d4] transition-colors">
                                                         {transaction.motor.name}
                                                     </h3>
+                                                    {transaction.survey_info?.is_overdue && !transaction.survey_info?.customer_confirmed_at && (
+                                                        <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-300 text-amber-800 text-[10px] font-black tracking-widest uppercase">
+                                                            <AlertCircle size={14} className="text-amber-600 animate-pulse shrink-0" />
+                                                            <span>Jadwal Survei Terlewat — Butuh Konfirmasi</span>
+                                                        </div>
+                                                    )}
+                                                    {transaction.transaction_type === "CREDIT" && (
+                                                        <div className="mt-2 flex items-center gap-2">
+                                                            {transaction.documents && transaction.documents.length > 0 ? (
+                                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 text-green-700 text-[9px] font-bold tracking-wider uppercase">
+                                                                    <CheckCircle size={12} className="text-green-600" />
+                                                                    {transaction.documents.length} Dokumen Terlampir
+                                                                </span>
+                                                            ) : (
+                                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-[9px] font-bold tracking-wider uppercase">
+                                                                    <FileText size={12} className="text-amber-600" />
+                                                                    Berkas KTP/KK Perlu Dilengkapi
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
 
                                                 <div className="grid grid-cols-2 gap-8 pt-4 border-t border-gray-100">

@@ -278,7 +278,12 @@ Route::get("/api/services/unavailable-dates", [
 ])->name("api.services.unavailable-dates");
 
 Route::middleware(["guest", "throttle:5,1"])->group(function () {
-    Route::get("/login", function () {
+    Route::get("/login", function (\Illuminate\Http\Request $request) {
+        $referer = $request->headers->get("referer");
+        if ($referer && !str_contains($referer, "/login") && !str_contains($referer, "/register")) {
+            $separator = str_contains($referer, "?") ? "&" : "?";
+            return redirect()->to($referer . $separator . "login_required=1");
+        }
         return redirect()->route("home", ["login_required" => 1]);
     })->name("login");
     Route::post("/login", [AuthController::class, "login"]);

@@ -886,6 +886,7 @@ class MotorGalleryController extends Controller
 
         $query = Transaction::with([
             "motor",
+            "documents",
             "creditDetail.documents",
             "creditDetail.surveySchedules",
             "installments",

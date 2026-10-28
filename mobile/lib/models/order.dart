@@ -20,6 +20,10 @@ class Order {
 
   bool get isSurveyOverdue => _isSurveyOverdue ?? false;
   bool get isSurveyConfirmed => _isSurveyConfirmed ?? false;
+  bool get isCredit => transactionType.toUpperCase() == 'CREDIT';
+  String get motorName => motor?.name ?? 'Unit Motor';
+  String get referenceNumber => orderNumber;
+  String get createdAtFormatted => formattedDate;
 
   Order({
     required this.id,

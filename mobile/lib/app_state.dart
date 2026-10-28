@@ -24,8 +24,10 @@ class AppState extends ChangeNotifier {
 
   // Getters
   User? get currentUser => _currentUser;
+  User? get user => _currentUser;
   String? get token => _token;
   bool get isAuthenticated => _token != null && _currentUser != null;
+  bool get isLoggedIn => isAuthenticated;
   List<int> get wishlist => _wishlist;
   bool get isInitialized => _isInitialized;
 

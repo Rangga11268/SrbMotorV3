@@ -52,7 +52,7 @@ export default function Navbar({ auth }) {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has("login_required")) {
             setAuthModalMessage(
-                "Sesi Diperlukan: Silakan masuk untuk mengakses fitur perbaikan dan servis.",
+                "Sesi Diperlukan: Silakan masuk untuk melanjutkan pemesanan unit motor atau layanan SRB Motor.",
             );
             setAuthModalVisible(true);
             // Clean up the URL (optional but cleaner)

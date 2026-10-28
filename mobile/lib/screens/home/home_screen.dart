@@ -9,6 +9,7 @@ import '../profile/profile_screen.dart';
 import '../detail/motor_detail_screen.dart';
 import 'widgets/featured_motor_card.dart';
 import 'widgets/motor_card.dart';
+import '../notifications/notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final AppState appState;
@@ -176,8 +177,13 @@ class _HomeDashboardState extends State<_HomeDashboard> {
                       icon: const Icon(Icons.notifications_none_rounded, color: Color(0xFF0F172A), size: 22),
                       tooltip: 'Notifikasi',
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Belum ada notifikasi baru.')),
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => NotificationsScreen(
+                              appState: widget.appState,
+                              onNavigateToTab: widget.onTabChange,
+                            ),
+                          ),
                         );
                       },
                     ),
