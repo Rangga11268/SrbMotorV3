@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'api_constants.dart';
+import '../models/branch.dart';
 
 class ApiResponse<T> {
   final bool isSuccess;
@@ -232,6 +233,28 @@ class ApiService {
       }
     } catch (e) {
       return ApiResponse.error('Error: $e');
+    }
+  }
+
+  // Branches: Get Active Branches from Database
+  static Future<ApiResponse<List<Branch>>> getBranches() async {
+    try {
+      final response = await http
+          .get(Uri.parse(ApiConstants.branches), headers: _headers())
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        final list = (body['branches'] as List?)
+                ?.map((e) => Branch.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [];
+        return ApiResponse.success(list);
+      } else {
+        return ApiResponse.error('Gagal mengambil data cabang.');
+      }
+    } catch (e) {
+      return ApiResponse.error('Error memuat cabang: $e');
     }
   }
 

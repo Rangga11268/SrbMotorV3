@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app_state.dart';
 import '../../models/order.dart';
 import '../../widgets/motor_image_view.dart';
+import '../../widgets/app_selection_chip.dart';
 
 class OrderFilterOptions {
   String status; // 'Semua', 'MENUNGGU', 'SURVEI', 'DISETUJUI', 'SELESAI', 'DITOLAK'
@@ -449,25 +450,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
     required bool isSelected,
     required VoidCallback onSelected,
   }) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: isSelected,
-      checkmarkColor: Colors.white,
-      onSelected: (_) => onSelected(),
-      labelStyle: TextStyle(
-        fontSize: 12.5,
-        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-        color: isSelected ? Colors.white : const Color(0xFF334155),
-      ),
-      selectedColor: const Color(0xFF1C69D4),
-      backgroundColor: const Color(0xFFF8FAFC),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(
-          color: isSelected ? const Color(0xFF1C69D4) : const Color(0xFFE2E8F0),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    return AppSelectionChip(
+      label: label,
+      isSelected: isSelected,
+      onTap: onSelected,
     );
   }
 
@@ -695,28 +681,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       final label = st == 'Semua' ? 'Semua Status' : _getStatusLabel(st);
                       return Padding(
                         padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(label),
-                          selected: isSelected,
-                          checkmarkColor: Colors.white,
-                          onSelected: (val) {
-                            if (val) {
-                              setState(() {
-                                filter.status = st;
-                                visibleCount = 5;
-                              });
-                            }
+                        child: AppSelectionChip(
+                          label: label,
+                          isSelected: isSelected,
+                          onTap: () {
+                            setState(() {
+                              filter.status = st;
+                              visibleCount = 5;
+                            });
                           },
-                          labelStyle: TextStyle(
-                            fontSize: 12,
-                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                            color: isSelected ? Colors.white : const Color(0xFF475569),
-                          ),
-                          selectedColor: const Color(0xFF0F172A),
-                          backgroundColor: const Color(0xFFF1F5F9),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          side: BorderSide.none,
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         ),
                       );
                     }).toList(),

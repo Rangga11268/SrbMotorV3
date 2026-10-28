@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../app_state.dart';
 import '../../models/motor.dart';
+import '../../widgets/app_selection_chip.dart';
 import '../home/widgets/motor_card.dart';
 
 class MotorFilterOptions {
@@ -539,25 +540,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
     required bool isSelected,
     required VoidCallback onSelected,
   }) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: isSelected,
-      checkmarkColor: Colors.white,
-      onSelected: (_) => onSelected(),
-      labelStyle: TextStyle(
-        fontSize: 12.5,
-        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-        color: isSelected ? Colors.white : const Color(0xFF334155),
-      ),
-      selectedColor: const Color(0xFF1C69D4),
-      backgroundColor: const Color(0xFFF8FAFC),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: BorderSide(
-          color: isSelected ? const Color(0xFF1C69D4) : const Color(0xFFE2E8F0),
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    return AppSelectionChip(
+      label: label,
+      isSelected: isSelected,
+      onTap: onSelected,
     );
   }
 

@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import '../../app_state.dart';
 import '../../core/constants.dart';
 import '../../models/motor.dart';
+import '../../models/branch.dart';
 import '../../services/api_service.dart';
 import '../../widgets/motor_image_view.dart';
+import '../../widgets/app_selection_chip.dart';
 import 'midtrans_payment_screen.dart';
 
 class OrderCheckoutScreen extends StatefulWidget {
@@ -31,15 +33,9 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
 
   // Step 1: Unit & Delivery
   late String _selectedColor;
-  late String _selectedBranch;
+  List<Branch> _branches = Branch.defaultBranches;
+  Branch? _selectedBranch;
   String _deliveryMethod = 'Kirim ke Alamat Rumah';
-
-  final List<String> _branchOptions = [
-    'SRB Motor Pusat (Jakarta Barat)',
-    'SRB Motor Cabang Tangerang',
-    'SRB Motor Cabang Bekasi',
-    'SRB Motor Cabang Depok',
-  ];
 
   // Step 2: Personal Info
   final _formKeyPersonal = GlobalKey<FormState>();
@@ -74,7 +70,9 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
   void initState() {
     super.initState();
     _selectedColor = widget.motor.colors.isNotEmpty ? widget.motor.colors.first : 'Hitam';
-    _selectedBranch = _branchOptions.first;
+    _branches = Branch.defaultBranches;
+    _selectedBranch = _branches.firstWhere((b) => b.isMainBranch, orElse: () => _branches.first);
+    _loadBranches();
 
     // Pre-fill user data if logged in
     final user = widget.appState.user;
@@ -92,6 +90,21 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
     _occupationController.text = 'Karyawan Swasta';
     _incomeController.text = '6500000';
     _employmentDurationController.text = '2 Tahun';
+  }
+
+  Future<void> _loadBranches() async {
+    final res = await ApiService.getBranches();
+    if (res.isSuccess && res.data != null && res.data!.isNotEmpty) {
+      if (mounted) {
+        setState(() {
+          _branches = res.data!;
+          _selectedBranch = _branches.firstWhere(
+            (b) => b.code == _selectedBranch?.code || b.isMainBranch,
+            orElse: () => _branches.first,
+          );
+        });
+      }
+    }
   }
 
   @override
@@ -263,7 +276,8 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             'employment_duration': _employmentDurationController.text.trim(),
             'dp_amount': _dpAmount,
             'tenor': _selectedTenor,
-            'branch': _selectedBranch,
+            'branch': _selectedBranch?.name ?? 'SSM MEKAR SARI (BEKASI)',
+            'branch_code': _selectedBranch?.code ?? 'SSM_MEKAR_SARI',
           },
           ktpFilePath: _ktpFile?.path,
           kkFilePath: _kkFile?.path,
@@ -290,7 +304,8 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             'delivery_method': _deliveryMethod,
             'payment_method': _paymentMethod,
             'booking_fee': fee,
-            'branch': _selectedBranch,
+            'branch': _selectedBranch?.name ?? 'SSM MEKAR SARI (BEKASI)',
+            'branch_code': _selectedBranch?.code ?? 'SSM_MEKAR_SARI',
           },
           ktpFilePath: _ktpFile?.path,
           kkFilePath: _kkFile?.path,
@@ -689,23 +704,10 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
           runSpacing: 8,
           children: widget.motor.colors.map((color) {
             final isSelected = _selectedColor == color;
-            return ChoiceChip(
-              label: Text(color),
-              selected: isSelected,
-              onSelected: (val) {
-                if (val) setState(() => _selectedColor = color);
-              },
-              selectedColor: AppColors.primary,
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : const Color(0xFF0F172A),
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                fontSize: 12,
-              ),
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(color: isSelected ? AppColors.primary : const Color(0xFFCBD5E1)),
-              ),
+            return AppSelectionChip(
+              label: color,
+              isSelected: isSelected,
+              onTap: () => setState(() => _selectedColor = color),
             );
           }).toList(),
         ),
@@ -718,17 +720,49 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: const Color(0xFFCBD5E1)),
           ),
           child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
+            child: DropdownButton<Branch>(
               isExpanded: true,
               value: _selectedBranch,
-              items: _branchOptions.map((b) => DropdownMenuItem(value: b, child: Text(b, style: const TextStyle(fontSize: 13)))).toList(),
+              items: _branches.map((b) {
+                return DropdownMenuItem<Branch>(
+                  value: b,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.storefront_rounded, size: 18, color: AppColors.primary),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          b.name,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF0F172A)),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (b.isMainBranch) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0F172A),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'PUSAT',
+                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w800, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              }).toList(),
               onChanged: (val) {
                 if (val != null) setState(() => _selectedBranch = val);
               },
@@ -1118,7 +1152,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
               const SizedBox(height: 12),
               _buildSummaryRow('Unit Motor', widget.motor.name),
               _buildSummaryRow('Warna Terpilih', _selectedColor),
-              _buildSummaryRow('Cabang Pengambilan', _selectedBranch.split('(').first.trim()),
+              _buildSummaryRow('Cabang Pengambilan', _selectedBranch?.name ?? '-'),
               _buildSummaryRow('Harga OTR Unit', widget.motor.formattedPrice),
               if (widget.isCredit) ...[
                 _buildSummaryRow('Uang Muka (DP)', _formatRupiah(_dpAmount)),
