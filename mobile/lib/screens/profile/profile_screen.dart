@@ -3,6 +3,7 @@ import 'package:srb_motor_app/app_state.dart';
 import 'package:srb_motor_app/models/motor.dart';
 import 'package:srb_motor_app/screens/detail/motor_detail_screen.dart';
 import 'package:srb_motor_app/screens/home/widgets/motor_card.dart';
+import '../../widgets/app_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   final AppState appState;
@@ -167,14 +168,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('BATAL', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text('Batal', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF64748B))),
           ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFFBA1A1A),
-            ),
+          AppButton.danger(
+            text: 'Ya, Keluar',
+            size: AppButtonSize.small,
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('YA, KELUAR', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -425,38 +424,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton.icon(
+                child: AppButton.primary(
+                  text: 'Masuk',
+                  icon: Icons.login_rounded,
+                  size: AppButtonSize.medium,
+                  isFullWidth: true,
                   onPressed: () {
                     Navigator.pushNamed(context, '/login');
                   },
-                  icon: const Icon(Icons.login_rounded, size: 18),
-                  label: const Text('MASUK'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1C69D4),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: OutlinedButton.icon(
+                child: AppButton.outline(
+                  text: 'Daftar',
+                  icon: Icons.person_add_outlined,
+                  size: AppButtonSize.medium,
+                  isFullWidth: true,
                   onPressed: () {
                     Navigator.pushNamed(context, '/register');
                   },
-                  icon: const Icon(Icons.person_add_outlined, size: 18),
-                  label: const Text('DAFTAR'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF1C69D4),
-                    side: const BorderSide(color: Color(0xFF1C69D4)),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
                 ),
               ),
             ],
@@ -802,37 +789,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 18),
           // Tombol Simpan
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: _isSaving ? null : _saveChanges,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1C69D4),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-              ),
-              child: _isSaving
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Text(
-                      'SIMPAN PERUBAHAN',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-            ),
+          AppButton.primary(
+            text: 'Simpan Perubahan',
+            icon: Icons.save_rounded,
+            isFullWidth: true,
+            isLoading: _isSaving,
+            onPressed: _saveChanges,
           ),
         ],
       ),
@@ -1043,24 +1005,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // Logout Button
   Widget _buildLogoutButton() {
-    return OutlinedButton.icon(
+    return AppButton.danger(
+      text: 'Keluar dari Akun',
+      icon: Icons.logout_rounded,
+      isFullWidth: true,
       onPressed: _handleLogout,
-      icon: const Icon(Icons.logout_rounded, color: Color(0xFFBA1A1A), size: 18),
-      label: const Text(
-        'KELUAR DARI AKUN',
-        style: TextStyle(
-          color: Color(0xFFBA1A1A),
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
-          fontSize: 13,
-        ),
-      ),
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Color(0xFFFCA5A5)),
-        backgroundColor: const Color(0xFFFEF2F2),
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
     );
   }
 }
