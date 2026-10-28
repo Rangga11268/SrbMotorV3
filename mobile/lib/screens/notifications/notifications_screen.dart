@@ -307,7 +307,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         if (item.category == 'order') {
           Navigator.of(context).pop();
           if (widget.onNavigateToTab != null) {
-            widget.onNavigateToTab!(2); // Switch to Orders Tab
+            widget.onNavigateToTab!(3); // Switch to Orders/Transaction Tab
           }
         }
       },

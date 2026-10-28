@@ -37,6 +37,13 @@ class ApiConstants {
   static String get wishlist => '$baseUrl/wishlist';
   static String get toggleWishlist => '$baseUrl/wishlist/toggle';
 
+  // Service Endpoints
+  static String get services => '$baseUrl/services';
+  static String get bookService => '$baseUrl/services/book';
+  static String get serviceAvailableSlots => '$baseUrl/services/available-slots';
+  static String serviceDetail(int id) => '$baseUrl/services/$id';
+  static String cancelService(int id) => '$baseUrl/services/$id/cancel';
+
   // Resolver to ensure images resolve cleanly across Emulator and Web/Desktop
   static String resolveImageUrl(String? path) {
     if (path == null || path.isEmpty) {

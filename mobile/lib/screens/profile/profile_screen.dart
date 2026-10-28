@@ -584,7 +584,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: orderCount.toString(),
             label: 'Pesanan',
             color: const Color(0xFF1C69D4),
-            onTap: () => widget.onTabChange(2),
+            onTap: () => widget.onTabChange(3),
           ),
         ),
         const SizedBox(width: 12),
@@ -947,10 +947,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _buildMenuTile(
+            icon: Icons.handyman_outlined,
+            title: 'Reservasi & Servis Bengkel',
+            subtitle: 'Jadwal servis berkala, ganti oli, dan riwayat perbaikan',
+            onTap: () => widget.onTabChange(2),
+          ),
+          const Divider(height: 1, indent: 56, color: Color(0xFFF1F5F9)),
+          _buildMenuTile(
             icon: Icons.receipt_long_outlined,
             title: 'Riwayat Pesanan & Transaksi',
             subtitle: 'Lihat status pengajuan kredit dan pembelian motor',
-            onTap: () => widget.onTabChange(2),
+            onTap: () => widget.onTabChange(3),
           ),
           const Divider(height: 1, indent: 56, color: Color(0xFFF1F5F9)),
           _buildMenuTile(

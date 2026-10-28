@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:srb_motor_app/models/branch.dart';
 import 'package:srb_motor_app/models/motor.dart';
 import 'package:srb_motor_app/models/order.dart';
+import 'package:srb_motor_app/models/service_appointment.dart';
 import 'package:srb_motor_app/models/user.dart';
 import 'package:srb_motor_app/services/api_constants.dart';
 import 'package:srb_motor_app/services/location_service.dart';
@@ -204,5 +205,57 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Pengajuan Kredit Cepat, DP Ringan & Bunga Rendah'), findsOneWidget);
+  });
+
+  test('ServiceAppointment.fromJson correctly parses backend payload and handles status badges', () {
+    final appointmentJson = {
+      'id': 15,
+      'booking_code': 'SRB-SRV-20261028-001',
+      'queue_number': 'A-03',
+      'motor_name': 'Yamaha NMAX Turbo',
+      'plate_number': 'B 1234 SRB',
+      'service_type': 'Servis Lengkap + Oli Mesin',
+      'appointment_date': '2026-10-30',
+      'appointment_time': '09:00:00',
+      'status': 'confirmed',
+      'complaints': 'Tarikan awal agak berat dan getar di CVT',
+      'branch_name': 'SRB Motor Pondok Gede',
+      'branch_address': 'Jl. Raya Pondok Gede No. 45, Bekasi',
+      'branch_phone': '08978638973',
+      'created_at': '2026-10-28T14:00:00Z',
+    };
+
+    final apt = ServiceAppointment.fromJson(appointmentJson);
+
+    expect(apt.id, 15);
+    expect(apt.bookingCode, 'SRB-SRV-20261028-001');
+    expect(apt.queueNumber, 'A-03');
+    expect(apt.motorName, 'Yamaha NMAX Turbo');
+    expect(apt.plateNumber, 'B 1234 SRB');
+    expect(apt.serviceType, 'Servis Lengkap + Oli Mesin');
+    expect(apt.appointmentDate, '2026-10-30');
+    expect(apt.status, 'confirmed');
+    expect(apt.isConfirmed, true);
+    expect(apt.isCompleted, false);
+    expect(apt.statusLabel, 'Terkonfirmasi');
+    expect(apt.formattedTime, '09:00');
+    expect(apt.formattedDate, isNotEmpty);
+
+    // Test different statuses
+    final pendingApt = ServiceAppointment.fromJson({...appointmentJson, 'status': 'pending'});
+    expect(pendingApt.isPending, true);
+    expect(pendingApt.statusLabel, 'Menunggu Konfirmasi');
+
+    final progressApt = ServiceAppointment.fromJson({...appointmentJson, 'status': 'in_progress'});
+    expect(progressApt.isInProgress, true);
+    expect(progressApt.statusLabel, 'Sedang Dikerjakan');
+
+    final doneApt = ServiceAppointment.fromJson({...appointmentJson, 'status': 'completed'});
+    expect(doneApt.isCompleted, true);
+    expect(doneApt.statusLabel, 'Selesai');
+
+    final cancelApt = ServiceAppointment.fromJson({...appointmentJson, 'status': 'cancelled'});
+    expect(cancelApt.isCancelled, true);
+    expect(cancelApt.statusLabel, 'Dibatalkan');
   });
 }

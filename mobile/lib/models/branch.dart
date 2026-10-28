@@ -1,3 +1,5 @@
+import '../services/location_service.dart';
+
 class Branch {
   final int id;
   final String code;
@@ -9,6 +11,8 @@ class Branch {
   final double? distance;
   final double? latitude;
   final double? longitude;
+
+  double? get distanceKm => distance;
 
   Branch({
     required this.id,
@@ -29,6 +33,18 @@ class Branch {
       return '${(distance! * 1000).round()} m';
     }
     return '${distance!.toStringAsFixed(1)} km';
+  }
+
+  static List<Branch> sortByProximity(List<Branch> branches, double userLat, double userLon) {
+    final list = branches.map((b) {
+      if (b.latitude != null && b.longitude != null) {
+        final d = LocationService.calculateDistanceKm(userLat, userLon, b.latitude!, b.longitude!);
+        return b.copyWith(distance: d);
+      }
+      return b;
+    }).toList();
+    list.sort((a, b) => (a.distance ?? 999999).compareTo(b.distance ?? 999999));
+    return list;
   }
 
   Branch copyWith({

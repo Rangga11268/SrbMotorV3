@@ -498,4 +498,116 @@ class ApiService {
       return ApiResponse.error('Error konfirmasi survei: $e');
     }
   }
+
+  // Service: Get User Service Appointments
+  static Future<ApiResponse<List<dynamic>>> getUserServices(String token) async {
+    try {
+      final response = await http
+          .get(
+            Uri.parse(ApiConstants.services),
+            headers: _headers(token),
+          )
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body is List) {
+          return ApiResponse.success(body);
+        }
+        return ApiResponse.success([]);
+      } else {
+        return ApiResponse.error('Gagal mengambil daftar reservasi servis.', statusCode: response.statusCode);
+      }
+    } catch (e) {
+      return ApiResponse.error('Error koneksi layanan servis: $e');
+    }
+  }
+
+  // Service: Create New Booking
+  static Future<ApiResponse<Map<String, dynamic>>> bookService({
+    required String token,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConstants.bookService),
+            headers: _headers(token),
+            body: jsonEncode(data),
+          )
+          .timeout(_timeout);
+
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiResponse.success(body as Map<String, dynamic>);
+      } else {
+        return ApiResponse.error(
+          body['message'] ?? 'Gagal membuat antrean servis.',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error('Error membuat reservasi servis: $e');
+    }
+  }
+
+  // Service: Get Available Slots
+  static Future<ApiResponse<List<String>>> getAvailableSlots({
+    required String branch,
+    required String date,
+  }) async {
+    try {
+      final uri = Uri.parse(ApiConstants.serviceAvailableSlots).replace(
+        queryParameters: {'branch': branch, 'date': date},
+      );
+      final response = await http.get(uri, headers: _headers()).timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body is Map && body['available_slots'] is List) {
+          final list = (body['available_slots'] as List).map((e) => e.toString()).toList();
+          return ApiResponse.success(list);
+        } else if (body is List) {
+          final list = body.map((e) => e.toString()).toList();
+          return ApiResponse.success(list);
+        }
+        return ApiResponse.success(['08:30', '09:30', '10:30', '11:30', '13:30', '14:30', '15:30']);
+      } else {
+        // Fallback default operational slots
+        return ApiResponse.success(['08:30', '09:30', '10:30', '11:30', '13:30', '14:30', '15:30']);
+      }
+    } catch (_) {
+      // Fallback default operational slots if offline
+      return ApiResponse.success(['08:30', '09:30', '10:30', '11:30', '13:30', '14:30', '15:30']);
+    }
+  }
+
+  // Service: Cancel Appointment
+  static Future<ApiResponse<Map<String, dynamic>>> cancelService({
+    required String token,
+    required int serviceId,
+    String? reason,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse(ApiConstants.cancelService(serviceId)),
+            headers: _headers(token),
+            body: jsonEncode({'reason': reason ?? 'Dibatalkan oleh pelanggan via Mobile App.'}),
+          )
+          .timeout(_timeout);
+
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return ApiResponse.success(body as Map<String, dynamic>);
+      } else {
+        return ApiResponse.error(
+          body['message'] ?? 'Gagal membatalkan reservasi.',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      return ApiResponse.error('Error membatalkan servis: $e');
+    }
+  }
 }

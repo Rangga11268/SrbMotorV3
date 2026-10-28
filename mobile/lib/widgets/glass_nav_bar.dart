@@ -35,8 +35,9 @@ class GlassNavBar extends StatelessWidget {
             children: [
               _navItem(context, 0, Icons.home_outlined, Icons.home_rounded, 'Beranda'),
               _navItem(context, 1, Icons.two_wheeler_outlined, Icons.two_wheeler_rounded, 'Katalog'),
-              _navItem(context, 2, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Transaksi'),
-              _navItem(context, 3, Icons.person_outline_rounded, Icons.person_rounded, 'Akun'),
+              _navItem(context, 2, Icons.build_circle_outlined, Icons.build_circle_rounded, 'Servis'),
+              _navItem(context, 3, Icons.receipt_long_outlined, Icons.receipt_long_rounded, 'Transaksi'),
+              _navItem(context, 4, Icons.person_outline_rounded, Icons.person_rounded, 'Akun'),
             ],
           ),
         ),

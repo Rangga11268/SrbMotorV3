@@ -4,6 +4,7 @@ import '../../app_state.dart';
 import '../../models/motor.dart';
 import '../../widgets/glass_nav_bar.dart';
 import '../catalog/catalog_screen.dart';
+import '../service/service_screen.dart';
 import '../orders/orders_screen.dart';
 import '../profile/profile_screen.dart';
 import '../detail/motor_detail_screen.dart';
@@ -59,6 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
           CatalogScreen(
             appState: widget.appState,
             onMotorTap: _openDetail,
+          ),
+          ServiceScreen(
+            appState: widget.appState,
           ),
           OrdersScreen(
             appState: widget.appState,
@@ -171,7 +175,7 @@ class _HomeDashboardState extends State<_HomeDashboard> {
                     IconButton(
                       icon: const Icon(Icons.receipt_long_outlined, color: Color(0xFF0F172A), size: 22),
                       tooltip: 'Pesanan Saya',
-                      onPressed: () => widget.onTabChange(2),
+                      onPressed: () => widget.onTabChange(3),
                     ),
                     IconButton(
                       icon: const Icon(Icons.notifications_none_rounded, color: Color(0xFF0F172A), size: 22),
@@ -431,8 +435,8 @@ class _HomeDashboardState extends State<_HomeDashboard> {
             Row(
               children: [
                 _quickAction(Icons.two_wheeler_rounded, 'Katalog Unit', () => widget.onTabChange(1)),
-                _quickAction(Icons.calculate_outlined, 'Simulasi Cicilan', () => widget.onTabChange(1)),
-                _quickAction(Icons.receipt_long_rounded, 'Status Kredit', () => widget.onTabChange(2)),
+                _quickAction(Icons.build_circle_outlined, 'Servis Bengkel', () => widget.onTabChange(2)),
+                _quickAction(Icons.receipt_long_rounded, 'Status Kredit', () => widget.onTabChange(3)),
                 _quickAction(Icons.support_agent_rounded, 'Bantuan WA', () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Layanan WhatsApp SRB Motor: 0897-8638-973')),
@@ -440,7 +444,77 @@ class _HomeDashboardState extends State<_HomeDashboard> {
                 }),
               ],
             ),
-            const SizedBox(height: 26),
+            const SizedBox(height: 18),
+
+            // Service Banner Card
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x080F172A),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEFF6FF),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.handyman_rounded, color: Color(0xFF1C69D4), size: 24),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'Booking Servis Bebas Antre',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0F172A),
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'Pilih jadwal servis resmi & pantau antrean real-time.',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      backgroundColor: const Color(0xFF1C69D4),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () => widget.onTabChange(2),
+                    child: const Text(
+                      'Booking',
+                      style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 22),
 
             // Section 1: Popular Motors (Horizontal Scroll)
             Row(
