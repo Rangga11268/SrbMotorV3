@@ -23,6 +23,10 @@ import {
     Award,
     CheckCircle,
     CreditCard,
+    Smartphone,
+    QrCode,
+    Wrench,
+    CalendarCheck,
 } from "lucide-react";
 
 export default function Home({
@@ -769,6 +773,131 @@ export default function Home({
                                 </p>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* SRB MOBILE APP ECOSYSTEM SECTION (Garasi Digital & Purna Jual) */}
+            <section id="app-download" className="py-24 bg-gradient-to-br from-[#0B1120] via-[#111827] to-[#0A0F1D] text-white relative overflow-hidden border-t border-gray-800">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-[#1c69d4]/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+                    <div className="grid lg:grid-cols-12 gap-12 items-center">
+                        {/* Text Description */}
+                        <div className="lg:col-span-7 space-y-6">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#1c69d4]/20 border border-[#1c69d4]/40 text-[#38bdf8] text-[10px] font-bold tracking-[0.2em] uppercase">
+                                <Smartphone className="w-3.5 h-3.5" />
+                                Ekosistem Purna Jual Digital
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light uppercase tracking-tight leading-tight">
+                                Semua Urusan Motor Anda,{" "}
+                                <span className="font-bold text-white block sm:inline">Cukup Satu Aplikasi.</span>
+                            </h2>
+                            <p className="text-[#94a3b8] font-sans text-sm sm:text-base leading-relaxed max-w-xl">
+                                Dapatkan kemudahan perawatan purna jual setelah serah terima unit motor Anda. Dilengkapi sistem reservasi bengkel tanpa antre, buku garansi digital, dan pengingat servis otomatis.
+                            </p>
+
+                            {/* 3 Value Pillars */}
+                            <div className="grid sm:grid-cols-3 gap-4 pt-4">
+                                <div className="p-4 bg-white/5 border border-white/10 rounded-none space-y-2">
+                                    <Wrench className="w-5 h-5 text-[#38bdf8]" />
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">Bebas Antre</h4>
+                                    <p className="text-[11px] text-[#94a3b8] leading-normal">
+                                        Pilih paket servis resmi, jam mekanik, dan cabang terdekat via HP.
+                                    </p>
+                                </div>
+                                <div className="p-4 bg-white/5 border border-white/10 rounded-none space-y-2">
+                                    <ShieldCheck className="w-5 h-5 text-[#38bdf8]" />
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">Garansi Digital</h4>
+                                    <p className="text-[11px] text-[#94a3b8] leading-normal">
+                                        Buku servis fisik hilang? Semua kupon oli & garansi mesin tersimpan aman.
+                                    </p>
+                                </div>
+                                <div className="p-4 bg-white/5 border border-white/10 rounded-none space-y-2">
+                                    <CalendarCheck className="w-5 h-5 text-[#38bdf8]" />
+                                    <h4 className="text-xs font-bold uppercase tracking-wider text-white">Smart Reminder</h4>
+                                    <p className="text-[11px] text-[#94a3b8] leading-normal">
+                                        Notifikasi otomatis berkala saat motor sudah waktunya ganti oli.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Download Action */}
+                            <div className="flex flex-wrap items-center gap-4 pt-6">
+                                <a
+                                    href="/downloads/srb-motor-app.apk"
+                                    className="px-8 py-4 bg-[#1c69d4] hover:bg-[#1557b0] text-white font-bold text-xs uppercase tracking-widest flex items-center gap-3 transition-colors shadow-lg shadow-blue-900/30"
+                                >
+                                    <Smartphone className="w-4 h-4" />
+                                    Unduh Aplikasi Android (.APK)
+                                </a>
+                                <Link
+                                    href="/services"
+                                    className="px-6 py-4 border border-white/30 hover:border-white text-white font-bold text-xs uppercase tracking-widest flex items-center gap-2 transition-colors"
+                                >
+                                    Info Bengkel Resmi
+                                    <ArrowRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Interactive App Mockup & QR Code */}
+                        <div className="lg:col-span-5 flex justify-center">
+                            <div className="relative w-full max-w-sm bg-gradient-to-b from-white/10 to-white/5 p-6 border border-white/15 backdrop-blur-md shadow-2xl">
+                                <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                        <span className="text-[11px] font-bold uppercase tracking-wider text-white">SRB Mobile Online</span>
+                                    </div>
+                                    <span className="text-[10px] text-[#38bdf8] font-bold tracking-widest">v3.1 OFFICIAL</span>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {/* Mockup Card: Antrean Bengkel */}
+                                    <div className="p-4 bg-[#1e293b]/90 border border-white/10">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tiket Antrean Servis</span>
+                                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-[9px] font-bold uppercase">Terkonfirmasi</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="text-xl font-black text-white">A-03</div>
+                                                <div className="text-[11px] text-slate-300">Yamaha NMAX Turbo (B 1234 SRB)</div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-xs font-bold text-white">09:30 WIB</div>
+                                                <div className="text-[10px] text-slate-400">Pit 1 - SSM Mekar Sari</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Mockup Card: Garansi Digital */}
+                                    <div className="p-4 bg-[#1e293b]/90 border border-white/10 flex items-center gap-4">
+                                        <div className="p-3 bg-emerald-500/20 text-emerald-400">
+                                            <ShieldCheck className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <h5 className="text-xs font-bold text-white uppercase tracking-wider">Garansi Mesin 3 Tahun Aktif</h5>
+                                            <p className="text-[10px] text-slate-400">Klaim kupon KPB 1-4 langsung di bengkel resmi SRB.</p>
+                                        </div>
+                                    </div>
+
+                                    {/* QR Code Container */}
+                                    <div className="p-4 bg-white text-slate-900 flex items-center gap-4">
+                                        <div className="p-2 border border-slate-300 bg-slate-50">
+                                            <QrCode className="w-14 h-14 text-slate-900" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="text-[11px] font-black uppercase tracking-wider text-slate-900">Scan QR Code di HP</div>
+                                            <p className="text-[10px] text-slate-600 leading-tight">
+                                                Arahkan kamera smartphone Anda untuk mengunduh aplikasi secara langsung.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

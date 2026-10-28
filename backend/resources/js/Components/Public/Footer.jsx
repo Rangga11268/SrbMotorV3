@@ -20,8 +20,9 @@ export default function Footer() {
     const links = {
         produk: [
             { label: "Katalog Motor", href: "/motors" },
-            { label: "Simulasi Kredit", href: "#" },
+            { label: "Simulasi Kredit", href: "/motors" },
             { label: "Pesanan Saya", href: route("motors.user-transactions") },
+            { label: "Aplikasi Mobile SRB", href: "/#app-download" },
         ],
         bantuan: [
             { label: "Panduan Pemesanan", href: route("guide") },

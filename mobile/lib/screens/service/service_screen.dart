@@ -233,6 +233,93 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 ),
               ),
 
+              const SizedBox(height: 16),
+
+              // Digital Warranty & KPB Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFE2E8F0)),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x060F172A),
+                      blurRadius: 10,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(Icons.verified_user_rounded, color: primaryColor, size: 18),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Buku Garansi Digital & KPB',
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
+                                color: textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFDCFCE7),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'Garansi Aktif',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF16A34A),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Unit motor Anda terlindungi garansi resmi mesin 3 tahun / 30.000 KM dan kelistrikan 1 tahun di seluruh bengkel resmi SRB Motor.',
+                      style: TextStyle(fontSize: 11.5, color: textSecondary, height: 1.4),
+                    ),
+                    const SizedBox(height: 12),
+                    // KPB Coupon Chips
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _buildKpbChip('KPB 1', '1.000 KM', 'Gratis Oli & Jasa', true),
+                          const SizedBox(width: 8),
+                          _buildKpbChip('KPB 2', '4.000 KM', 'Gratis Jasa', false),
+                          const SizedBox(width: 8),
+                          _buildKpbChip('KPB 3', '8.000 KM', 'Gratis Jasa', false),
+                          const SizedBox(width: 8),
+                          _buildKpbChip('KPB 4', '12.000 KM', 'Gratis Jasa', false),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               const SizedBox(height: 24),
 
               // Filter Tabs
@@ -424,6 +511,51 @@ class _ServiceScreenState extends State<ServiceScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildKpbChip(String name, String km, String reward, bool isNext) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: isNext ? const Color(0xFFEFF6FF) : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isNext ? const Color(0xFF1D4ED8) : const Color(0xFFE2E8F0),
+          width: isNext ? 1.2 : 0.8,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                name,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: isNext ? const Color(0xFF1D4ED8) : const Color(0xFF0F172A),
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '($km)',
+                style: const TextStyle(fontSize: 9.5, color: Color(0xFF64748B)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            reward,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: isNext ? const Color(0xFF1D4ED8) : const Color(0xFF475569),
+            ),
+          ),
+        ],
       ),
     );
   }

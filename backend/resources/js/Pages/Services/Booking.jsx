@@ -7,7 +7,7 @@ import axios from "axios";
 import { 
     ChevronRight, Bike, ArrowLeft, Hash, MapPin, 
     ClipboardList, Activity, Calendar as CalendarIcon, 
-    Clock, CheckCircle2, ChevronLeft, Phone 
+    Clock, CheckCircle2, ChevronLeft, Phone, Smartphone 
 } from "lucide-react";
 
 export default function Booking({ user, branches = [], motorModels = [], serviceHours = {} }) {
@@ -173,6 +173,29 @@ export default function Booking({ user, branches = [], motorModels = [], service
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20">
                     <div className="flex flex-col lg:flex-row gap-12">
                         <div className="w-full lg:w-2/3">
+                            {/* Mobile App Recommendation Callout */}
+                            <div className="mb-6 p-4 sm:p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 bg-[#1c69d4] text-white shrink-0">
+                                        <Smartphone className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-bold text-[#1e3a8a] uppercase tracking-wider">
+                                            Lebih Cepat & Bebas Antre Lewat Aplikasi SRB Motor
+                                        </h4>
+                                        <p className="text-[11.5px] text-slate-600 leading-normal">
+                                            Dapatkan notifikasi pengerjaan live di HP dan kemudahan klaim voucher servis berkala.
+                                        </p>
+                                    </div>
+                                </div>
+                                <a
+                                    href="/#app-download"
+                                    className="px-5 py-2.5 bg-[#1c69d4] hover:bg-[#1557b0] text-white text-[11px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap shadow-sm"
+                                >
+                                    Unduh Aplikasi
+                                </a>
+                            </div>
+
                             <motion.div 
                                 className="bg-white border-2 border-black p-8 md:p-12 shadow-[16px_16px_0px_0px_rgba(28,105,212,0.1)] min-h-[500px]"
                                 initial={{ opacity: 0, y: 20 }}

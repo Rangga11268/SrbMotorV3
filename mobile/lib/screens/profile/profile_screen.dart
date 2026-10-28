@@ -947,6 +947,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _buildMenuTile(
+            icon: Icons.verified_user_outlined,
+            title: 'Buku Garansi Digital & KPB',
+            subtitle: 'Klaim kupon servis berkala dan cek garansi resmi',
+            onTap: () => widget.onTabChange(2),
+          ),
+          const Divider(height: 1, indent: 56, color: Color(0xFFF1F5F9)),
+          _buildMenuTile(
             icon: Icons.handyman_outlined,
             title: 'Reservasi & Servis Bengkel',
             subtitle: 'Jadwal servis berkala, ganti oli, dan riwayat perbaikan',
@@ -972,6 +979,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Tentang Aplikasi SRB Motor',
             subtitle: 'Versi 1.0.0 (Official Dealer)',
             onTap: _showAboutAppDialog,
+          ),
+          const Divider(height: 1, indent: 56, color: Color(0xFFF1F5F9)),
+          _buildMenuTile(
+            icon: Icons.share_rounded,
+            title: 'Bagikan Aplikasi SRB Motor',
+            subtitle: 'Bantu kerabat & keluarga reservasi servis bebas antre',
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tautan unduh aplikasi disalin: srbmotor.id/#app-download'),
+                ),
+              );
+            },
           ),
         ],
       ),
