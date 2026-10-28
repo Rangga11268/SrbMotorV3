@@ -31,9 +31,6 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
   final TextEditingController _plateController = TextEditingController();
   final TextEditingController _customComplaintController = TextEditingController();
 
-  String _selectedMotorChip = 'Yamaha NMAX';
-  bool _isCustomMotor = false;
-
   final Set<String> _selectedSymptoms = {'Servis Rutin / Berkala'};
 
   List<Branch> _branches = Branch.defaultBranches;
@@ -47,21 +44,6 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
   bool _isLoadingSlots = false;
   bool _isSubmitting = false;
   String? _errorMessage;
-
-  final List<String> _popularModels = [
-    'Yamaha NMAX Turbo',
-    'Yamaha Aerox 155',
-    'Yamaha Fazzio Hybrid',
-    'Yamaha Grand Filano',
-    'Yamaha XMAX 250',
-    'Honda Vario 160',
-    'Honda Beat Deluxe',
-    'Honda Scoopy',
-    'Honda PCX 160',
-    'Lainnya (Ketik Manual)',
-  ];
-
-  final List<String> _platePrefixes = ['B', 'D', 'F', 'E', 'T', 'Z'];
 
   final List<String> _commonSymptoms = [
     'Servis Rutin / Berkala',
@@ -104,15 +86,8 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
   @override
   void initState() {
     super.initState();
-    final init = widget.initialMotor ?? 'Yamaha NMAX Turbo';
+    final init = widget.initialMotor ?? '';
     _motorModelController = TextEditingController(text: init);
-    if (_popularModels.contains(init)) {
-      _selectedMotorChip = init;
-      _isCustomMotor = false;
-    } else {
-      _selectedMotorChip = 'Lainnya (Ketik Manual)';
-      _isCustomMotor = true;
-    }
 
     _detectNearestBranch();
     _fetchSlots();
@@ -213,12 +188,12 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
 
     // Validate step 0 before proceeding to step 1 or 2
     if (_currentStep == 0 && step > 0) {
-      if (_plateController.text.trim().isEmpty) {
-        setState(() => _errorMessage = 'Nomor polisi (plat motor) wajib diisi.');
+      if (_motorModelController.text.trim().isEmpty) {
+        setState(() => _errorMessage = 'Tipe / model motor wajib diisi.');
         return;
       }
-      if (_isCustomMotor && _motorModelController.text.trim().isEmpty) {
-        setState(() => _errorMessage = 'Model motor wajib diisi.');
+      if (_plateController.text.trim().isEmpty) {
+        setState(() => _errorMessage = 'Nomor polisi (plat motor) wajib diisi.');
         return;
       }
     }
@@ -239,6 +214,15 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
   }
 
   Future<void> _submitBooking() async {
+    final motorModel = _motorModelController.text.trim();
+    if (motorModel.isEmpty) {
+      setState(() {
+        _currentStep = 0;
+        _errorMessage = 'Tipe / model motor wajib diisi.';
+      });
+      return;
+    }
+
     if (_plateController.text.trim().isEmpty) {
       setState(() {
         _currentStep = 0;
@@ -263,16 +247,12 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
       _errorMessage = null;
     });
 
-    final motorModel = _isCustomMotor
-        ? _motorModelController.text.trim()
-        : _selectedMotorChip;
-
     final payload = {
       'branch': _selectedBranch?.name ?? 'SRB Motor Pusat',
       'plate_number': _plateController.text.trim().toUpperCase(),
       'service_date': DateFormat('yyyy-MM-dd').format(_selectedDate),
       'service_time': _selectedTimeSlot,
-      'motor_model': motorModel.isNotEmpty ? motorModel : 'Unit SRB/SSM',
+      'motor_model': motorModel,
       'service_type': _selectedServiceType,
       'complaint_notes': _compileComplaints(),
     };
@@ -501,109 +481,29 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
         ),
         const SizedBox(height: 16),
 
-        // Motor Model Options
+        // Motor Model Input
         const Text(
-          'Model / Tipe Motor:',
+          'Tipe / Model Motor:',
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: textPrimary),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _popularModels.map((model) {
-            final isSelected = _selectedMotorChip == model;
-            return ChoiceChip(
-              label: Text(model),
-              selected: isSelected,
-              selectedColor: const Color(0xFFEFF6FF),
-              backgroundColor: const Color(0xFFF8FAFC),
-              labelStyle: TextStyle(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                color: isSelected ? primaryColor : textPrimary,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(
-                  color: isSelected ? primaryColor : const Color(0xFFE2E8F0),
-                  width: isSelected ? 1.5 : 1.0,
-                ),
-              ),
-              showCheckmark: isSelected,
-              checkmarkColor: primaryColor,
-              onSelected: (selected) {
-                setState(() {
-                  _selectedMotorChip = model;
-                  _isCustomMotor = model.startsWith('Lainnya');
-                  if (!_isCustomMotor) {
-                    _motorModelController.text = model;
-                  }
-                });
-              },
-            );
-          }).toList(),
+        TextFormField(
+          controller: _motorModelController,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: textPrimary),
+          decoration: _inputDecoration(
+            label: 'Model Motor',
+            hint: 'contoh: Yamaha NMAX 155, Honda Beat, Vario, PCX',
+            icon: Icons.two_wheeler_rounded,
+          ),
+          validator: (val) => (val == null || val.trim().isEmpty) ? 'Model motor wajib diisi' : null,
         ),
 
-        if (_isCustomMotor) ...[
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _motorModelController,
-            style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: textPrimary),
-            decoration: _inputDecoration(
-              label: 'Nama Model Motor Lainnya',
-              hint: 'contoh: Yamaha Lexi 125, Honda ADV 160',
-              icon: Icons.two_wheeler_rounded,
-            ),
-          ),
-        ],
+        const SizedBox(height: 16),
 
-        const SizedBox(height: 20),
-
-        // Plate Number with Quick Regional Prefixes
+        // Plate Number Input
         const Text(
           'Nomor Polisi (Plat Motor):',
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: textPrimary),
-        ),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            const Text(
-              'Prefix Cepat:',
-              style: TextStyle(fontSize: 11.5, color: textSecondary, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _platePrefixes.map((p) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 6),
-                      child: ActionChip(
-                        label: Text(p),
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        labelStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: primaryColor),
-                        backgroundColor: const Color(0xFFEFF6FF),
-                        side: const BorderSide(color: Color(0xFFBFDBFE)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        onPressed: () {
-                          final current = _plateController.text.trim();
-                          if (current.isEmpty) {
-                            _plateController.text = '$p ';
-                          } else if (!current.startsWith(p)) {
-                            _plateController.text = '$p ${current.replaceFirst(RegExp(r'^[A-Z]+\s*'), '')}';
-                          }
-                          _plateController.selection = TextSelection.fromPosition(
-                            TextPosition(offset: _plateController.text.length),
-                          );
-                        },
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ],
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -1045,7 +945,7 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
                 ],
               ),
               const Divider(height: 20, color: Color(0xFFE2E8F0)),
-              _summaryRow('Unit Motor', _isCustomMotor ? _motorModelController.text : _selectedMotorChip),
+              _summaryRow('Unit Motor', _motorModelController.text.trim().isNotEmpty ? _motorModelController.text.trim() : '-'),
               _summaryRow('Plat Nomor', _plateController.text.toUpperCase()),
               _summaryRow('Paket Layanan', _selectedServiceType),
               _summaryRow('Bengkel', _selectedBranch?.name ?? 'SRB Motor Pusat'),
