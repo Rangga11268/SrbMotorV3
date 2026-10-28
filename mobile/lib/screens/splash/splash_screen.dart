@@ -79,6 +79,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
+        alignment: Alignment.center,
         children: [
           // Subtle Ambient Top Background Glow
           Positioned(
@@ -117,18 +118,21 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           ),
 
           SafeArea(
-            child: Column(
-              children: [
-                const Spacer(flex: 3),
+            child: SizedBox.expand(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 3),
 
-                // Center Brand Identity with Smooth Animation
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
+                  // Center Brand Identity with Smooth Animation
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: ScaleTransition(
+                      scale: _scaleAnimation,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
                         // Logo Container with soft shadow
                         Container(
                           padding: const EdgeInsets.all(18),
@@ -236,8 +240,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

@@ -177,6 +177,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             child: Image.asset(
                               item.imagePath,
                               fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   color: const Color(0xFFF8FAFC),

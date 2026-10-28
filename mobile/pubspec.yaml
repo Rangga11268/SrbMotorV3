@@ -76,6 +76,9 @@ flutter:
     - assets/images/yamaha/
     - assets/images/logos/
     - assets/images/onboarding/
+    - assets/images/onboarding/onboarding_1.jpg
+    - assets/images/onboarding/onboarding_2.jpg
+    - assets/images/onboarding/onboarding_3.jpg
     - assets/icon/
     - assets/img/
     - assets/img/honda/
