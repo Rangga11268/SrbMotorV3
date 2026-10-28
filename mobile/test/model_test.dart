@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:srb_motor_app/models/branch.dart';
 import 'package:srb_motor_app/models/motor.dart';
 import 'package:srb_motor_app/models/order.dart';
 import 'package:srb_motor_app/models/user.dart';
 import 'package:srb_motor_app/services/api_constants.dart';
+import 'package:srb_motor_app/services/location_service.dart';
 
 void main() {
   test('Motor.fromJson parses API response and resolves image URL correctly', () {
@@ -94,5 +96,39 @@ void main() {
     final updatedMap = user.toJson();
     expect(updatedMap['name'], 'Regular User');
     expect(updatedMap['phone'], '08123456789');
+  });
+
+  test('Branch.fromJson and distance formatting parses coordinates and computes distance correctly', () {
+    final branchJson = {
+      'id': 6,
+      'code': 'SSM_JATIBENING',
+      'name': 'Dealer Resmi Yamaha SSM Motor Jatibening',
+      'address': 'Jatibening, Kec. Pd. Gede, Kota Bks',
+      'city': 'Bekasi',
+      'phone': '0895383002103',
+      'is_main_branch': false,
+      'latitude': -6.25780485,
+      'longitude': 106.95166736,
+      'distance': 3.43,
+    };
+
+    final branch = Branch.fromJson(branchJson);
+    expect(branch.code, 'SSM_JATIBENING');
+    expect(branch.latitude, -6.25780485);
+    expect(branch.longitude, 106.95166736);
+    expect(branch.distance, 3.43);
+    expect(branch.formattedDistance, '3.4 km');
+
+    // Test distance calculation helper between user and branch
+    final userLat = -6.2382;
+    final userLon = 106.9756;
+    final distKm = LocationService.calculateDistanceKm(
+      userLat,
+      userLon,
+      branch.latitude!,
+      branch.longitude!,
+    );
+    expect(distKm, greaterThan(3.0));
+    expect(distKm, lessThan(4.0));
   });
 }

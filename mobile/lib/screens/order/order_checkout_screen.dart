@@ -7,6 +7,8 @@ import '../../core/constants.dart';
 import '../../models/motor.dart';
 import '../../models/branch.dart';
 import '../../services/api_service.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../services/location_service.dart';
 import '../../widgets/motor_image_view.dart';
 import '../../widgets/app_selection_chip.dart';
 import 'midtrans_payment_screen.dart';
@@ -48,6 +50,8 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
   }
 
   String _deliveryMethod = 'Kirim ke Alamat Rumah';
+  bool _isLocating = false;
+  Branch? _detectedNearestBranch;
 
   // Step 2: Personal Info
   final _formKeyPersonal = GlobalKey<FormState>();
@@ -91,6 +95,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
     _branches = Branch.defaultBranches;
     _selectedBranch = branches.firstWhere((b) => b.isMainBranch, orElse: () => branches.first);
     _loadBranches();
+    _autoDetectLocationIfPermitted();
 
     // Pre-fill user data if logged in
     final user = widget.appState.user;
@@ -121,6 +126,82 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
             orElse: () => branches.first,
           );
         });
+      }
+    }
+  }
+
+  Future<void> _autoDetectLocationIfPermitted() async {
+    try {
+      final permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
+        _detectNearestBranch(silent: true);
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _detectNearestBranch({bool silent = false}) async {
+    if (_isLocating) return;
+    setState(() => _isLocating = true);
+
+    final pos = await LocationService.getCurrentPosition();
+    if (pos == null) {
+      if (mounted) {
+        setState(() => _isLocating = false);
+        if (!silent) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Lokasi tidak dapat diakses. Pastikan GPS aktif dan izin diberikan.'),
+              backgroundColor: Color(0xFF64748B),
+            ),
+          );
+        }
+      }
+      return;
+    }
+
+    final res = await ApiService.getBranches(
+      latitude: pos.latitude,
+      longitude: pos.longitude,
+    );
+
+    if (mounted) {
+      List<Branch> updatedList;
+      if (res.isSuccess && res.data != null && res.data!.isNotEmpty) {
+        updatedList = res.data!;
+      } else {
+        // Fallback: calculate distance locally using Branch GPS coordinates
+        final list = List<Branch>.from(branches);
+        for (var i = 0; i < list.length; i++) {
+          final b = list[i];
+          if (b.latitude != null && b.longitude != null) {
+            final km = LocationService.calculateDistanceKm(
+              pos.latitude,
+              pos.longitude,
+              b.latitude!,
+              b.longitude!,
+            );
+            list[i] = b.copyWith(distance: km);
+          }
+        }
+        list.sort((a, b) => (a.distance ?? 9999).compareTo(b.distance ?? 9999));
+        updatedList = list;
+      }
+
+      final nearest = updatedList.first;
+      setState(() {
+        _branches = updatedList;
+        _detectedNearestBranch = nearest;
+        _selectedBranch = nearest;
+        _isLocating = false;
+      });
+
+      if (!silent) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cabang terdekat disarankan: ${nearest.name} (${nearest.formattedDistance})'),
+            backgroundColor: const Color(0xFF16A34A),
+          ),
+        );
       }
     }
   }
@@ -731,12 +812,114 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
         ),
         const SizedBox(height: 20),
 
-        // Dealer Branch Selection
-        const Text(
-          'Cabang Dealer SRB Motor',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+        // Dealer Branch Selection Header
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Cabang Dealer SRB Motor',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
+            ),
+            InkWell(
+              onTap: _isLocating ? null : () => _detectNearestBranch(silent: false),
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: _isLocating ? const Color(0xFFF1F5F9) : const Color(0xFFEFF6FF),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: _isLocating ? const Color(0xFFCBD5E1) : const Color(0xFFBFDBFE),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_isLocating) ...[
+                      const SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF1C69D4)),
+                      ),
+                      const SizedBox(width: 6),
+                      const Text(
+                        'Mencari GPS...',
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
+                      ),
+                    ] else ...[
+                      const Icon(Icons.my_location_rounded, size: 13, color: Color(0xFF1C69D4)),
+                      const SizedBox(width: 5),
+                      const Text(
+                        'Cari Terdekat',
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF1C69D4)),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
+
+        // Nearest Branch Banner (if detected)
+        if (_detectedNearestBranch != null) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0FDF4),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: const Color(0xFFBBF7D0)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.near_me_rounded, size: 16, color: Color(0xFF16A34A)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 12, color: Color(0xFF166534)),
+                      children: [
+                        const TextSpan(text: 'Dealer Terdekat: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: _detectedNearestBranch!.name),
+                        if (_detectedNearestBranch!.formattedDistance.isNotEmpty)
+                          TextSpan(
+                            text: ' (${_detectedNearestBranch!.formattedDistance})',
+                            style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF15803D)),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (selectedBranch.code != _detectedNearestBranch!.code) ...[
+                  const SizedBox(width: 6),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedBranch = _detectedNearestBranch;
+                      });
+                    },
+                    borderRadius: BorderRadius.circular(6),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF16A34A),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        'Gunakan',
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+
+        // Branch Dropdown Selector
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
           decoration: BoxDecoration(
@@ -765,6 +948,21 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      if (b.formattedDistance.isNotEmpty) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEFF6FF),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: const Color(0xFFBFDBFE)),
+                          ),
+                          child: Text(
+                            b.formattedDistance,
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF1D4ED8)),
+                          ),
+                        ),
+                      ],
                       if (b.isMainBranch) ...[
                         const SizedBox(width: 6),
                         Container(

@@ -3,6 +3,7 @@ import 'package:srb_motor_app/app_state.dart';
 import 'package:srb_motor_app/models/motor.dart';
 import 'package:srb_motor_app/screens/detail/motor_compare_screen.dart';
 import 'package:srb_motor_app/widgets/motor_image_view.dart';
+import 'package:srb_motor_app/widgets/app_selection_chip.dart';
 import 'package:srb_motor_app/screens/order/order_checkout_screen.dart';
 
 class MotorDetailScreen extends StatefulWidget {
@@ -531,29 +532,18 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: tenors.map((tenor) {
                       final active = selectedTenor == tenor;
-                      return ChoiceChip(
-                        label: Text('$tenor Bulan'),
-                        selected: active,
-                        checkmarkColor: Colors.white, // High contrast white checkmark
-                        onSelected: (selected) {
-                          if (selected) {
-                            setState(() {
-                              selectedTenor = tenor;
-                            });
-                          }
-                        },
-                        selectedColor: const Color(0xFF1C69D4),
-                        backgroundColor: const Color(0xFFF1F5F9),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(
-                            color: active ? const Color(0xFF1C69D4) : const Color(0xFFE2E8F0),
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: AppSelectionChip(
+                            label: '$tenor Bln',
+                            isSelected: active,
+                            onTap: () {
+                              setState(() {
+                                selectedTenor = tenor;
+                              });
+                            },
                           ),
-                        ),
-                        labelStyle: TextStyle(
-                          color: active ? Colors.white : const Color(0xFF041627),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
                         ),
                       );
                     }).toList(),

@@ -6,6 +6,9 @@ class Branch {
   final String city;
   final String? phone;
   final bool isMainBranch;
+  final double? distance;
+  final double? latitude;
+  final double? longitude;
 
   Branch({
     required this.id,
@@ -15,7 +18,44 @@ class Branch {
     required this.city,
     this.phone,
     this.isMainBranch = false,
+    this.distance,
+    this.latitude,
+    this.longitude,
   });
+
+  String get formattedDistance {
+    if (distance == null) return '';
+    if (distance! < 1.0) {
+      return '${(distance! * 1000).round()} m';
+    }
+    return '${distance!.toStringAsFixed(1)} km';
+  }
+
+  Branch copyWith({
+    int? id,
+    String? code,
+    String? name,
+    String? address,
+    String? city,
+    String? phone,
+    bool? isMainBranch,
+    double? distance,
+    double? latitude,
+    double? longitude,
+  }) {
+    return Branch(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      address: address ?? this.address,
+      city: city ?? this.city,
+      phone: phone ?? this.phone,
+      isMainBranch: isMainBranch ?? this.isMainBranch,
+      distance: distance ?? this.distance,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
+  }
 
   factory Branch.fromJson(Map<String, dynamic> json) {
     return Branch(
@@ -26,10 +66,13 @@ class Branch {
       city: json['city']?.toString() ?? 'Bekasi',
       phone: json['phone']?.toString(),
       isMainBranch: json['is_main_branch'] == true || json['is_main_branch'] == 1,
+      distance: json['distance'] != null ? double.tryParse(json['distance'].toString()) : null,
+      latitude: json['latitude'] != null ? double.tryParse(json['latitude'].toString()) : null,
+      longitude: json['longitude'] != null ? double.tryParse(json['longitude'].toString()) : null,
     );
   }
 
-  /// Real Branches from Database Seed / Fallback
+  /// Real Branches from Database Seed / Fallback with official GPS coordinates
   static List<Branch> get defaultBranches => [
     Branch(
       id: 1,
@@ -39,6 +82,8 @@ class Branch {
       city: 'Bekasi',
       phone: '02189094308',
       isMainBranch: true,
+      latitude: -6.22982301,
+      longitude: 107.01586284,
     ),
     Branch(
       id: 2,
@@ -48,6 +93,8 @@ class Branch {
       city: 'Bekasi',
       phone: '02184972828',
       isMainBranch: false,
+      latitude: -6.28729282,
+      longitude: 106.95384886,
     ),
     Branch(
       id: 3,
@@ -57,6 +104,8 @@ class Branch {
       city: 'Bekasi',
       phone: '08978638849',
       isMainBranch: false,
+      latitude: -6.20129849,
+      longitude: 107.00251372,
     ),
     Branch(
       id: 4,
@@ -65,6 +114,8 @@ class Branch {
       address: 'Jl. Raya Pd. Ungu Permai Blok II 10 No.86, Kaliabang Tengah, Kec. Bekasi Utara',
       city: 'Bekasi',
       isMainBranch: false,
+      latitude: -6.17860063,
+      longitude: 107.00491698,
     ),
     Branch(
       id: 5,
@@ -74,6 +125,8 @@ class Branch {
       city: 'Bekasi',
       phone: '08971756468',
       isMainBranch: false,
+      latitude: -6.19101224,
+      longitude: 107.00606014,
     ),
     Branch(
       id: 6,
@@ -83,6 +136,8 @@ class Branch {
       city: 'Bekasi',
       phone: '0895383002103',
       isMainBranch: false,
+      latitude: -6.25780485,
+      longitude: 106.95166736,
     ),
   ];
 }
