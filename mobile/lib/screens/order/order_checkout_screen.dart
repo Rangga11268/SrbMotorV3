@@ -10,20 +10,22 @@ import '../../services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../services/location_service.dart';
 import '../../widgets/motor_image_view.dart';
-import '../../widgets/app_selection_chip.dart';
 import '../../widgets/app_button.dart';
+import '../../widgets/app_color_selector.dart';
 import 'midtrans_payment_screen.dart';
 
 class OrderCheckoutScreen extends StatefulWidget {
   final Motor motor;
   final AppState appState;
   final bool isCredit;
+  final String? initialColor;
 
   const OrderCheckoutScreen({
     super.key,
     required this.motor,
     required this.appState,
     this.isCredit = false,
+    this.initialColor,
   });
 
   @override
@@ -92,7 +94,7 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedColor = widget.motor.colors.isNotEmpty ? widget.motor.colors.first : 'Hitam';
+    _selectedColor = widget.initialColor ?? (widget.motor.colors.isNotEmpty ? widget.motor.colors.first : 'Hitam');
     _branches = Branch.defaultBranches;
     _selectedBranch = branches.firstWhere((b) => b.isMainBranch, orElse: () => branches.first);
     _loadBranches();
@@ -774,22 +776,11 @@ class _OrderCheckoutScreenState extends State<OrderCheckoutScreen> {
         const SizedBox(height: 20),
 
         // Color Variant Selection
-        const Text(
-          'Pilih Warna Kendaraan',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFF0F172A)),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: (widget.motor.colors.isNotEmpty ? widget.motor.colors : const ['Hitam', 'Putih', 'Merah']).map((color) {
-            final isSelected = selectedColor == color;
-            return AppSelectionChip(
-              label: color,
-              isSelected: isSelected,
-              onTap: () => setState(() => _selectedColor = color),
-            );
-          }).toList(),
+        AppColorSelector(
+          title: 'Pilih Warna Kendaraan',
+          colors: widget.motor.colors,
+          selectedColor: selectedColor,
+          onColorSelected: (c) => setState(() => _selectedColor = c),
         ),
         const SizedBox(height: 20),
 

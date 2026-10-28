@@ -7,6 +7,7 @@ import 'package:srb_motor_app/models/user.dart';
 import 'package:srb_motor_app/services/api_constants.dart';
 import 'package:srb_motor_app/services/location_service.dart';
 import 'package:srb_motor_app/widgets/app_button.dart';
+import 'package:srb_motor_app/widgets/app_color_selector.dart';
 
 void main() {
   test('Motor.fromJson parses API response and resolves image URL correctly', () {
@@ -155,5 +156,30 @@ void main() {
     await tester.tap(find.text('Lanjutkan'));
     await tester.pump();
     expect(tapped, true);
+  });
+
+  testWidgets('AppColorSelector renders metallic swatches and handles selection', (tester) async {
+    String selected = 'Hitam';
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) => AppColorSelector(
+              colors: const ['Hitam', 'Putih', 'Merah', 'Biru Matte'],
+              selectedColor: selected,
+              onColorSelected: (val) => setState(() => selected = val),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Hitam'), findsWidgets);
+    expect(find.text('Biru Matte'), findsWidgets);
+
+    await tester.tap(find.text('Biru Matte').first);
+    await tester.pump();
+    expect(selected, 'Biru Matte');
   });
 }

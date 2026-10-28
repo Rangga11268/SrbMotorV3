@@ -5,6 +5,7 @@ import 'package:srb_motor_app/screens/detail/motor_compare_screen.dart';
 import 'package:srb_motor_app/widgets/motor_image_view.dart';
 import 'package:srb_motor_app/widgets/app_selection_chip.dart';
 import 'package:srb_motor_app/widgets/app_button.dart';
+import 'package:srb_motor_app/widgets/app_color_selector.dart';
 import 'package:srb_motor_app/screens/order/order_checkout_screen.dart';
 
 class MotorDetailScreen extends StatefulWidget {
@@ -27,6 +28,13 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
   double dpPercent = 20.0; // Default to 20% DP as in the web version
   int selectedTenor = 36; // Default to 36 months tenor as in the web version
   final List<int> tenors = const [12, 24, 36]; // Tenors: 12, 24, 36 months
+  late String selectedColor;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedColor = widget.motor.colors.isNotEmpty ? widget.motor.colors.first : 'Hitam';
+  }
 
   double get monthlyInstallment {
     final dpAmount = widget.motor.price * (dpPercent / 100);
@@ -213,6 +221,7 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
           motor: widget.motor,
           appState: widget.appState,
           isCredit: isCredit,
+          initialColor: selectedColor,
         ),
       ),
     );
@@ -356,19 +365,10 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                   _specRow('Mesin', '${widget.motor.engineCC} cc'),
                   _specRow('Berat', '${widget.motor.weight} kg'),
                   const SizedBox(height: 18),
-                  _detailTitle(context, 'Warna Pilihan'),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: widget.motor.colors
-                        .map(
-                          (color) => Chip(
-                            label: Text(color),
-                            backgroundColor: const Color(0xFFEFF6FF),
-                          ),
-                        )
-                        .toList(),
+                  AppColorSelector(
+                    colors: widget.motor.colors,
+                    selectedColor: selectedColor,
+                    onColorSelected: (c) => setState(() => selectedColor = c),
                   ),
                   const SizedBox(height: 24),
 
@@ -560,7 +560,7 @@ class _MotorDetailScreenState extends State<MotorDetailScreen> {
                   if (widget.motor.isAvailable) ...[
                     const SizedBox(height: 14),
                     AppButton.primary(
-                      text: 'AJUKAN DENGAN TENOR $selectedTenor BULAN',
+                      text: 'Ajukan Cicilan Tenor $selectedTenor Bulan',
                       isFullWidth: true,
                       size: AppButtonSize.large,
                       icon: Icons.arrow_forward_rounded,

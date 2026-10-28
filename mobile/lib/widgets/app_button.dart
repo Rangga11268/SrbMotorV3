@@ -137,9 +137,9 @@ class AppButton extends StatelessWidget {
     };
 
     final EdgeInsetsGeometry defaultPadding = switch (size) {
-      AppButtonSize.small => const EdgeInsets.symmetric(horizontal: 14),
-      AppButtonSize.medium => const EdgeInsets.symmetric(horizontal: 18),
-      AppButtonSize.large => const EdgeInsets.symmetric(horizontal: 22),
+      AppButtonSize.small => const EdgeInsets.symmetric(horizontal: 12),
+      AppButtonSize.medium => const EdgeInsets.symmetric(horizontal: 16),
+      AppButtonSize.large => const EdgeInsets.symmetric(horizontal: 16),
     };
 
     // Colors, Gradients & Shadows based on variant & state
@@ -258,16 +258,19 @@ class AppButton extends StatelessWidget {
           Icon(icon, size: iconSize, color: textColor),
           const SizedBox(width: 8),
         ],
-        Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.3,
+        Flexible(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: textColor,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.3,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
           ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
         if (!isLoading && icon != null && iconAfter) ...[
           const SizedBox(width: 8),
