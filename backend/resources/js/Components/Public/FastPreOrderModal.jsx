@@ -85,16 +85,28 @@ export default function FastPreOrderModal({
     };
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 transition-opacity">
-            <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+        <div 
+            onClick={(e) => {
+                if (e.target === e.currentTarget) onClose();
+            }}
+            className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 transition-opacity backdrop-brightness-75"
+        >
+            <div 
+                className="relative w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[88vh] sm:max-h-[92vh] flex flex-col animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:fade-in sm:zoom-in-95 duration-200"
+            >
+                {/* Mobile Bottom Sheet Drag / Pull Handle */}
+                <div className="sm:hidden flex justify-center pt-3 pb-1 shrink-0 bg-white">
+                    <div className="w-12 h-1.5 rounded-full bg-slate-300" />
+                </div>
+
                 {/* Header */}
-                <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-slate-100 flex items-start justify-between bg-white shrink-0">
+                <div className="px-5 py-3.5 sm:px-6 sm:py-5 border-b border-slate-100 flex items-start justify-between bg-white shrink-0">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-[#1c69d4] text-[10px] font-bold uppercase tracking-wider mb-1.5">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-[#1c69d4] text-[10px] font-bold uppercase tracking-wider mb-1">
                             <Sparkles className="w-3 h-3" />
                             Penawaran Kredit Cepat
                         </div>
-                        <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                        <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight leading-snug">
                             Ajukan Penawaran Kredit Kilat
                         </h3>
                         <p className="text-xs text-slate-500 mt-0.5">
@@ -275,7 +287,7 @@ export default function FastPreOrderModal({
                 </div>
 
                 {/* Footer Action Bar */}
-                <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50/70 rounded-b-2xl shrink-0 space-y-2.5">
+                <div className="p-4 pb-6 sm:p-5 border-t border-slate-100 bg-slate-50/70 sm:rounded-b-2xl shrink-0 space-y-2.5">
                     <button
                         type="submit"
                         form="fast-lead-form"
