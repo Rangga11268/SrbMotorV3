@@ -139,10 +139,7 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
             return;
         }
 
-        const targetBranchObj = branches.find((b) => b.code === leadBranch || b.name === leadBranch) ||
-            branches[0];
-
-        let rawPhone = targetBranchObj?.whatsapp || targetBranchObj?.phone || settings.contact_phone || "08978638849";
+        let rawPhone = settings.contact_phone || "08978638849";
         rawPhone = rawPhone.replace(/\D/g, "");
         if (rawPhone.startsWith("0")) {
             rawPhone = "62" + rawPhone.slice(1);
@@ -150,11 +147,9 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
             rawPhone = "62" + rawPhone;
         }
 
-        const branchName = targetBranchObj?.name || "Dealer Resmi SRB Motor";
-
         const lines = [
             `*PENGAJUAN PENAWARAN KREDIT MOTOR (FAST LEAD)*`,
-            `Halo Sales ${branchName}, saya tertarik mengajukan penawaran kredit untuk:`,
+            `Halo Tim Sales SRB Motors Kaliabang, saya tertarik mengajukan penawaran kredit untuk:`,
             ``,
             `🏍️ *Model*: ${motor.name}`,
             leadColor ? `🎨 *Warna*: ${leadColor}` : null,
@@ -166,7 +161,7 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
             `👤 *Data Calon Pembeli*:`,
             `- Nama: ${leadName.trim()}`,
             `- No. WhatsApp: ${leadPhone.trim()}`,
-            `- Cabang Diler: ${branchName}`,
+            `- Showroom: SRB Motors Kaliabang (Bekasi Utara)`,
             leadNotes.trim() ? `- Catatan: ${leadNotes.trim()}` : null,
             ``,
             `Mohon dibantu info ketersediaan unit, promo diskon DP, dan simulasi leasingnya. Terima kasih!`,
@@ -181,19 +176,11 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
         e.preventDefault();
         const phoneNumber =
             settings.contact_phone?.replace(/\D/g, "") || "628978638849";
-        
-        // If selectedBranch is just a code (string), we need to find its name if possible
-        // But for consistency, let's just use the code or pass the info
-        const branchDisplay = typeof selectedBranch === 'object' && selectedBranch?.name 
-            ? ` di cabang ${selectedBranch.name}` 
-            : selectedBranch 
-                ? ` di cabang ${selectedBranch}`
-                : "";
 
         const message = encodeURIComponent(
-            `Halo SRB Motors, saya tertarik dengan unit ${
+            `Halo Tim Sales SRB Motors Kaliabang, saya tertarik dengan unit ${
                 motor.name
-            } (Rp ${parseFloat(motor.price).toLocaleString("id-ID")})${branchDisplay}. Bisa minta info lebih lanjut?`,
+            } (Rp ${parseFloat(motor.price).toLocaleString("id-ID")}). Bisa minta info promo dan ketersediaan unitnya?`,
         );
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
     };
@@ -382,19 +369,26 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
 
                         {/* RIGHT SIDEBAR - FIXED PANELS */}
                         <aside className="lg:col-span-4 space-y-8">
-                            {/* ACTION PANEL (Combined with Branch Selection) */}
+                            {/* ACTION PANEL */}
                             <div className="bg-black text-white p-8 rounded-none space-y-8">
-                                <div>
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                                        PILIH LOKASI PENGAMBILAN
-                                    </p>
-                                    <BranchSelector
-                                        motorId={motor.id}
-                                        selectedBranch={selectedBranch}
-                                        onBranchSelect={setSelectedBranch}
-                                        showOnlyWithStock={false}
-                                        className="mb-0"
-                                    />
+                                <div className="border border-gray-800 bg-gray-950 p-4">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                            DILER RESMI & SHOWROOM
+                                        </p>
+                                        <span className="text-[9px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5">
+                                            UNIT READY / PO RESMI
+                                        </span>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <MapPin className="w-4 h-4 text-[#1c69d4] shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm font-bold text-white">SRB Motors Kaliabang</p>
+                                            <p className="text-[11px] text-gray-400 leading-relaxed mt-0.5">
+                                                Jl. Lori Sakti No.22, Kaliabang Tengah, Bekasi Utara
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="pt-8 border-t border-gray-800">
@@ -773,19 +767,12 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
 
                                 <div className={Array.isArray(motor.colors) && motor.colors.length > 0 ? "" : "md:col-span-2"}>
                                     <label className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
-                                        Cabang Diler Terdekat
+                                        Diler & Showroom
                                     </label>
-                                    <select
-                                        value={leadBranch}
-                                        onChange={(e) => setLeadBranch(e.target.value)}
-                                        className="w-full bg-gray-50 border border-gray-300 rounded-none py-2.5 px-3 text-sm font-medium text-black focus:border-[#1c69d4] focus:ring-0 outline-none"
-                                    >
-                                        {branches.map((b) => (
-                                            <option key={b.id || b.code} value={b.code}>
-                                                {b.name} {b.city ? `(${b.city})` : ""}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <div className="bg-gray-100 border border-gray-300 py-2.5 px-3 text-sm font-bold text-gray-800 flex items-center gap-2">
+                                        <MapPin size={14} className="text-[#1c69d4]" />
+                                        SRB Motors Kaliabang (Bekasi Utara)
+                                    </div>
                                 </div>
                             </div>
 

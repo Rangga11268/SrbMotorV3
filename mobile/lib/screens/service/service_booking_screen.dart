@@ -33,7 +33,7 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
 
   final Set<String> _selectedSymptoms = {'Servis Rutin / Berkala'};
 
-  List<Branch> _branches = Branch.defaultBranches;
+  List<Branch> _branches = Branch.serviceBranches;
   Branch? _selectedBranch;
 
   String _selectedServiceType = 'Servis Berkala (Tune Up)';
@@ -105,7 +105,7 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
     try {
       final loc = await LocationService.getCurrentPosition();
       if (loc != null) {
-        final sorted = Branch.sortByProximity(Branch.defaultBranches, loc.latitude, loc.longitude);
+        final sorted = Branch.sortByProximity(Branch.serviceBranches, loc.latitude, loc.longitude);
         if (sorted.isNotEmpty && mounted) {
           setState(() {
             _branches = sorted;
@@ -740,11 +740,32 @@ class _ServiceBookingScreenState extends State<ServiceBookingScreen> {
           'Pilih bengkel resmi terdekat dan jam kedatangan yang sesuai dengan agenda Anda.',
           style: TextStyle(fontSize: 12.5, color: textSecondary),
         ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFEFF6FF),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color(0xFFBFDBFE)),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.verified_rounded, size: 16, color: Color(0xFF1D4ED8)),
+              SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Layanan servis resmi SRB Motor didukung oleh 2 Bengkel Resmi Yamaha SSM Group.',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1E40AF)),
+                ),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 16),
 
         // Branch Selection Cards
         const Text(
-          'Cabang Bengkel Resmi:',
+          'Cabang Bengkel Resmi Rekanan:',
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: textPrimary),
         ),
         const SizedBox(height: 8),

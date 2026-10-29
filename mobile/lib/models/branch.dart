@@ -8,6 +8,7 @@ class Branch {
   final String city;
   final String? phone;
   final bool isMainBranch;
+  final bool canService;
   final double? distance;
   final double? latitude;
   final double? longitude;
@@ -22,6 +23,7 @@ class Branch {
     required this.city,
     this.phone,
     this.isMainBranch = false,
+    this.canService = false,
     this.distance,
     this.latitude,
     this.longitude,
@@ -55,6 +57,7 @@ class Branch {
     String? city,
     String? phone,
     bool? isMainBranch,
+    bool? canService,
     double? distance,
     double? latitude,
     double? longitude,
@@ -67,6 +70,7 @@ class Branch {
       city: city ?? this.city,
       phone: phone ?? this.phone,
       isMainBranch: isMainBranch ?? this.isMainBranch,
+      canService: canService ?? this.canService,
       distance: distance ?? this.distance,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -82,11 +86,54 @@ class Branch {
       city: json['city']?.toString() ?? 'Bekasi',
       phone: json['phone']?.toString(),
       isMainBranch: json['is_main_branch'] == true || json['is_main_branch'] == 1,
+      canService: json['can_service'] == true || json['can_service'] == 1,
       distance: json['distance'] != null ? double.tryParse(json['distance'].toString()) : null,
       latitude: json['latitude'] != null ? double.tryParse(json['latitude'].toString()) : null,
       longitude: json['longitude'] != null ? double.tryParse(json['longitude'].toString()) : null,
     );
   }
+
+  /// Official Authorized Workshops (SSM Group) that provide service & repair
+  static List<Branch> get serviceBranches => [
+    Branch(
+      id: 1,
+      code: 'SSM_MEKAR_SARI',
+      name: 'SSM MEKAR SARI (BEKASI)',
+      address: 'Jl. Mekar Sari No.39, Bekasi Jaya, Kec. Bekasi Tim., Kota Bks',
+      city: 'Bekasi',
+      phone: '02189094308',
+      isMainBranch: true,
+      canService: true,
+      latitude: -6.22982301,
+      longitude: 107.01586284,
+    ),
+    Branch(
+      id: 2,
+      code: 'SSM_JATIASIH_RSHOP',
+      name: 'Yamaha Sinar Surya Matahari - Premium R-Shop',
+      address: 'Jl. Raya Jatimekar No.72A, Jatimekar, Kec. Jatiasih, Kota Bks',
+      city: 'Bekasi',
+      phone: '02184972828',
+      isMainBranch: false,
+      canService: true,
+      latitude: -6.28729282,
+      longitude: 106.95384886,
+    ),
+  ];
+
+  /// Official Sales Showroom (SRB Motors Kaliabang)
+  static Branch get kaliabangShowroom => Branch(
+    id: 3,
+    code: 'SRB_KALIABANG',
+    name: 'SRB Motors Kaliabang (Showroom Utama)',
+    address: 'Jl. Lori Sakti No.22, Kaliabang Tengah, Kec. Bekasi Utara, Kota Bks',
+    city: 'Bekasi',
+    phone: '08978638849',
+    isMainBranch: true,
+    canService: false,
+    latitude: -6.20129849,
+    longitude: 107.00251372,
+  );
 
   /// Real Branches from Database Seed / Fallback with official GPS coordinates
   static List<Branch> get defaultBranches => [

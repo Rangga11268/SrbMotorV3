@@ -275,13 +275,13 @@ export default function ServicesIndex({
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                     <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
                         <span className="text-[10px] font-bold text-[#1c69d4] uppercase tracking-[0.2em]">
-                            Jaringan Diler & Bengkel Resmi
+                            JARINGAN BENGKEL RESMI PARTNER
                         </span>
                         <h2 className="text-3xl sm:text-4xl font-light uppercase tracking-tight text-slate-900">
-                            Lokasi <span className="font-bold">Cabang Kami</span>
+                            Lokasi <span className="font-bold">Bengkel Resmi SSM Group</span>
                         </h2>
                         <p className="text-sm text-slate-600">
-                            Kunjungi bengkel resmi SRB Motor terdekat di domisili Anda untuk pelayanan optimal.
+                            Layanan servis berkala dan perawatan resmi SRB Motor dilayani di 2 Bengkel Resmi Yamaha SSM Group (Cabang Mekar Sari & Jatiasih R-Shop) dengan mekanik tersertifikasi pabrikan dan jaminan suku cadang orisinil.
                         </p>
                     </div>
 

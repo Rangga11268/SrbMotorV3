@@ -174,6 +174,19 @@ void main() {
     expect(distKm, lessThan(4.0));
   });
 
+  test('Branch.serviceBranches contains only the 2 official SSM workshops', () {
+    final workshops = Branch.serviceBranches;
+    expect(workshops.length, 2);
+    expect(workshops.every((b) => b.canService), true);
+    expect(workshops.any((b) => b.code == 'SSM_MEKAR_SARI'), true);
+    expect(workshops.any((b) => b.code == 'SSM_JATIASIH_RSHOP'), true);
+    expect(workshops.any((b) => b.code == 'SRB_KALIABANG'), false);
+
+    final showroom = Branch.kaliabangShowroom;
+    expect(showroom.code, 'SRB_KALIABANG');
+    expect(showroom.canService, false);
+  });
+
   testWidgets('AppButton renders properly with glossy styling and triggers callback', (tester) async {
     bool tapped = false;
 
