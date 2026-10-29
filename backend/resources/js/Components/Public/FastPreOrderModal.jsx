@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
-import { X, Phone, MapPin, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
+import { X, Phone, MapPin, ArrowRight } from "lucide-react";
 
 export default function FastPreOrderModal({
     isOpen,
@@ -100,17 +100,13 @@ export default function FastPreOrderModal({
                 </div>
 
                 {/* Header */}
-                <div className="px-5 py-3.5 sm:px-6 sm:py-5 border-b border-slate-100 flex items-start justify-between bg-white shrink-0">
+                <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-slate-100 flex items-start justify-between bg-white shrink-0">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-[#1c69d4] text-[10px] font-bold uppercase tracking-wider mb-1">
-                            <Sparkles className="w-3 h-3" />
-                            Penawaran Kredit Cepat
-                        </div>
-                        <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight leading-snug">
-                            Ajukan Penawaran Kredit Kilat
+                        <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight leading-snug">
+                            Ajukan Penawaran Kredit
                         </h3>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                            Sales resmi SRB Motor akan segera menghubungi Anda via WhatsApp.
+                        <p className="text-xs text-slate-500 mt-1">
+                            Isi kontak untuk menerima simulasi cicilan dan konfirmasi unit dari diler SRB Motor.
                         </p>
                     </div>
                     <button
@@ -126,7 +122,7 @@ export default function FastPreOrderModal({
                 {/* Scrollable Content Body */}
                 <div className="overflow-y-auto px-5 py-4 sm:px-6 sm:py-5 space-y-4">
                     {/* Unit & Financing Summary Card */}
-                    <div className="bg-gradient-to-br from-slate-50 to-blue-50/20 border border-slate-200/90 rounded-xl p-3.5 sm:p-4">
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4">
                         <div className="flex items-center gap-3.5">
                             <div className="w-16 h-14 bg-white rounded-lg border border-slate-200/80 p-1 flex items-center justify-center shrink-0">
                                 <img
