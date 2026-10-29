@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import PublicLayout from "@/Layouts/PublicLayout";
 import BranchSelector from "@/Components/Branch/BranchSelector";
+import FastPreOrderModal from "@/Components/Public/FastPreOrderModal";
 import { motion } from "framer-motion";
 import {
     ChevronRight,
@@ -80,28 +81,8 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
     );
     const [selectedBranch, setSelectedBranch] = useState(null);
 
-    // Fast Pre-Order / Credit Lead Modal (Auto2000 Model)
+    // Fast Pre-Order / Credit Lead Modal
     const [isPreOrderModalOpen, setIsPreOrderModalOpen] = useState(false);
-    const [leadName, setLeadName] = useState(auth?.user?.name || "");
-    const [leadPhone, setLeadPhone] = useState(auth?.user?.phone || "");
-    const [leadColor, setLeadColor] = useState(
-        Array.isArray(motor.colors) && motor.colors.length > 0 ? motor.colors[0] : ""
-    );
-    const [leadBranch, setLeadBranch] = useState(() => {
-        if (selectedBranch) {
-            return typeof selectedBranch === "object" ? selectedBranch.code : selectedBranch;
-        }
-        return branches.length > 0 ? branches[0].code : "";
-    });
-    const [leadNotes, setLeadNotes] = useState("");
-    const [leadErrors, setLeadErrors] = useState({});
-
-    // Sync modal branch selection if user changes branch on the main page
-    useEffect(() => {
-        if (selectedBranch) {
-            setLeadBranch(typeof selectedBranch === "object" ? selectedBranch.code : selectedBranch);
-        }
-    }, [selectedBranch]);
 
     const monthlyInstallment = useMemo(() => {
         const principal = parseFloat(motor.price) - dpAmount;
@@ -123,53 +104,6 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
         const strValue = String(numStr);
         const cleanNum = strValue.replace(/[^\d]/g, "");
         return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    };
-
-    const handleSendFastLead = (e) => {
-        e.preventDefault();
-        const errors = {};
-        if (!leadName.trim()) errors.name = "Nama lengkap wajib diisi";
-        if (!leadPhone.trim()) {
-            errors.phone = "Nomor WhatsApp wajib diisi";
-        } else if (!/^[0-9+ -]{9,16}$/.test(leadPhone.trim())) {
-            errors.phone = "Format nomor WhatsApp tidak valid";
-        }
-        if (Object.keys(errors).length > 0) {
-            setLeadErrors(errors);
-            return;
-        }
-
-        let rawPhone = settings.contact_phone || "08978638849";
-        rawPhone = rawPhone.replace(/\D/g, "");
-        if (rawPhone.startsWith("0")) {
-            rawPhone = "62" + rawPhone.slice(1);
-        } else if (!rawPhone.startsWith("62")) {
-            rawPhone = "62" + rawPhone;
-        }
-
-        const lines = [
-            `*PENGAJUAN PENAWARAN KREDIT MOTOR (FAST LEAD)*`,
-            `Halo Tim Sales SRB Motors Kaliabang, saya tertarik mengajukan penawaran kredit untuk:`,
-            ``,
-            `🏍️ *Model*: ${motor.name}`,
-            leadColor ? `🎨 *Warna*: ${leadColor}` : null,
-            `💰 *Harga OTR*: Rp ${parseFloat(motor.price).toLocaleString("id-ID")}`,
-            `💵 *Rencana DP*: Rp ${dpAmount.toLocaleString("id-ID")}`,
-            `⏱️ *Tenor*: ${selectedTenor} Bulan`,
-            `📊 *Estimasi Angsuran*: Rp ${monthlyInstallment.toLocaleString("id-ID")} / bulan`,
-            ``,
-            `👤 *Data Calon Pembeli*:`,
-            `- Nama: ${leadName.trim()}`,
-            `- No. WhatsApp: ${leadPhone.trim()}`,
-            `- Showroom: SRB Motors Kaliabang (Bekasi Utara)`,
-            leadNotes.trim() ? `- Catatan: ${leadNotes.trim()}` : null,
-            ``,
-            `Mohon dibantu info ketersediaan unit, promo diskon DP, dan simulasi leasingnya. Terima kasih!`,
-        ].filter(Boolean);
-
-        const waUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(lines.join("\n"))}`;
-        window.open(waUrl, "_blank");
-        setIsPreOrderModalOpen(false);
     };
 
     const openWhatsApp = (e) => {
@@ -633,191 +567,17 @@ export default function Show({ motor, relatedMotors, settings = {}, branches = [
                 </div>
             </div>
 
-            {/* FAST PRE-ORDER / CREDIT LEAD MODAL (MODEL AUTO2000) */}
-            {isPreOrderModalOpen && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-                    <div className="relative w-full max-w-xl bg-white border border-gray-200 shadow-2xl rounded-none my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                        {/* Modal Header */}
-                        <div className="bg-black text-white p-6 flex items-start justify-between">
-                            <div>
-                                <span className="inline-block text-[9px] font-black uppercase tracking-[0.2em] bg-[#1c69d4] text-white px-2.5 py-1 mb-2">
-                                    PENAWARAN CEPAT • MODEL AUTO2000
-                                </span>
-                                <h3 className="text-xl font-black uppercase tracking-tight text-white">
-                                    Ajukan Penawaran Kredit Kilat
-                                </h3>
-                                <p className="text-xs text-gray-400 mt-1">
-                                    Cukup isi kontak, tim sales dealer resmi akan segera menghubungi Anda dengan simulasi leasing terbaik.
-                                </p>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setIsPreOrderModalOpen(false)}
-                                className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors rounded-none"
-                                aria-label="Tutup"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-
-                        {/* Unit & Credit Summary */}
-                        <div className="bg-gray-50 border-b border-gray-200 p-5">
-                            <div className="flex items-center gap-4">
-                                <img
-                                    src={
-                                        motor.image ||
-                                        (motor.image_path
-                                            ? motor.image_path.startsWith("http") || motor.image_path.startsWith("/")
-                                                ? motor.image_path
-                                                : motor.image_path.startsWith("assets/")
-                                                ? `/${motor.image_path}`
-                                                : `/storage/${motor.image_path}`
-                                            : "/assets/img/no-image.webp")
-                                    }
-                                    alt={motor.name}
-                                    className="w-20 h-16 object-contain bg-white border border-gray-200 p-1"
-                                />
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{motor.brand}</p>
-                                    <h4 className="text-sm font-black text-black truncate uppercase">{motor.name}</h4>
-                                    <p className="text-xs font-bold text-[#1c69d4]">
-                                        OTR: Rp {parseInt(motor.price).toLocaleString("id-ID")}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Simulation Badges */}
-                            <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-200 text-center">
-                                <div className="bg-white p-2 border border-gray-200">
-                                    <span className="block text-[9px] font-bold uppercase text-gray-400">Rencana DP</span>
-                                    <span className="text-xs font-black text-black">Rp {dpAmount.toLocaleString("id-ID")}</span>
-                                </div>
-                                <div className="bg-white p-2 border border-gray-200">
-                                    <span className="block text-[9px] font-bold uppercase text-gray-400">Tenor</span>
-                                    <span className="text-xs font-black text-[#1c69d4]">{selectedTenor} Bulan</span>
-                                </div>
-                                <div className="bg-white p-2 border border-gray-200">
-                                    <span className="block text-[9px] font-bold uppercase text-gray-400">Est. Angsuran</span>
-                                    <span className="text-xs font-black text-black">Rp {monthlyInstallment.toLocaleString("id-ID")}/bln</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Lead Form */}
-                        <form onSubmit={handleSendFastLead} className="p-6 space-y-4">
-                            <div>
-                                <label className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
-                                    Nama Lengkap <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    value={leadName}
-                                    onChange={(e) => {
-                                        setLeadName(e.target.value);
-                                        if (leadErrors.name) setLeadErrors((prev) => ({ ...prev, name: null }));
-                                    }}
-                                    placeholder="Contoh: Budi Santoso"
-                                    className={`w-full bg-gray-50 border rounded-none py-2.5 px-3.5 text-sm font-medium text-black focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors ${
-                                        leadErrors.name ? "border-red-500 bg-red-50/30" : "border-gray-300"
-                                    }`}
-                                />
-                                {leadErrors.name && (
-                                    <p className="text-[11px] text-red-500 mt-1 font-semibold">{leadErrors.name}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <label className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
-                                    Nomor Handphone / WhatsApp <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    value={leadPhone}
-                                    onChange={(e) => {
-                                        setLeadPhone(e.target.value);
-                                        if (leadErrors.phone) setLeadErrors((prev) => ({ ...prev, phone: null }));
-                                    }}
-                                    placeholder="081234567890"
-                                    className={`w-full bg-gray-50 border rounded-none py-2.5 px-3.5 text-sm font-medium text-black focus:border-[#1c69d4] focus:ring-0 outline-none transition-colors ${
-                                        leadErrors.phone ? "border-red-500 bg-red-50/30" : "border-gray-300"
-                                    }`}
-                                />
-                                {leadErrors.phone && (
-                                    <p className="text-[11px] text-red-500 mt-1 font-semibold">{leadErrors.phone}</p>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {Array.isArray(motor.colors) && motor.colors.length > 0 && (
-                                    <div>
-                                        <label className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
-                                            Pilihan Warna
-                                        </label>
-                                        <select
-                                            value={leadColor}
-                                            onChange={(e) => setLeadColor(e.target.value)}
-                                            className="w-full bg-gray-50 border border-gray-300 rounded-none py-2.5 px-3 text-sm font-medium text-black focus:border-[#1c69d4] focus:ring-0 outline-none"
-                                        >
-                                            {motor.colors.map((c, idx) => (
-                                                <option key={idx} value={c}>{c}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
-
-                                <div className={Array.isArray(motor.colors) && motor.colors.length > 0 ? "" : "md:col-span-2"}>
-                                    <label className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
-                                        Diler & Showroom
-                                    </label>
-                                    <div className="bg-gray-100 border border-gray-300 py-2.5 px-3 text-sm font-bold text-gray-800 flex items-center gap-2">
-                                        <MapPin size={14} className="text-[#1c69d4]" />
-                                        SRB Motors Kaliabang (Bekasi Utara)
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
-                                    Catatan Tambahan (Opsional)
-                                </label>
-                                <textarea
-                                    rows={2}
-                                    value={leadNotes}
-                                    onChange={(e) => setLeadNotes(e.target.value)}
-                                    placeholder="Contoh: Rencana tukar tambah motor lama, atau jadwal survei yang diinginkan..."
-                                    className="w-full bg-gray-50 border border-gray-300 rounded-none py-2 px-3 text-sm font-medium text-black focus:border-[#1c69d4] focus:ring-0 outline-none resize-none"
-                                />
-                            </div>
-
-                            {/* Submit Buttons */}
-                            <div className="pt-2 space-y-3">
-                                <button
-                                    type="submit"
-                                    className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black text-xs uppercase tracking-[0.2em] py-4 rounded-none transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
-                                >
-                                    <Phone size={16} /> KIRIM KE SALES DEALER (WHATSAPP)
-                                </button>
-
-                                <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-200">
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsPreOrderModalOpen(false)}
-                                        className="text-gray-400 hover:text-black font-bold uppercase text-[10px] tracking-wider"
-                                    >
-                                        TUTUP
-                                    </button>
-                                    <Link
-                                        href={route("motors.credit-order", motor.id)}
-                                        className="text-[#1c69d4] hover:underline font-bold text-[10px] uppercase tracking-wider flex items-center gap-1"
-                                    >
-                                        Upload Berkas KTP Online →
-                                    </Link>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+            {/* FAST PRE-ORDER / CREDIT LEAD MODAL */}
+            <FastPreOrderModal
+                isOpen={isPreOrderModalOpen}
+                onClose={() => setIsPreOrderModalOpen(false)}
+                motor={motor}
+                dpAmount={dpAmount}
+                selectedTenor={selectedTenor}
+                monthlyInstallment={monthlyInstallment}
+                contactPhone={settings.contact_phone || "08978638849"}
+                user={auth?.user}
+            />
         </PublicLayout>
     );
 }
