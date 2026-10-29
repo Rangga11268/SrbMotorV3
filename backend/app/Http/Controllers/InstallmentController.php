@@ -259,17 +259,8 @@ class InstallmentController extends Controller
 
     public function index()
     {
-        $transactions = Transaction::with(['installments' => function ($query) {
-                $query->orderBy('installment_number', 'asc');
-            }, 'motor'])
-            ->where('user_id', Auth::id())
-            ->whereHas('installments')
-            ->latest()
-            ->get();
-
-        return Inertia::render('Installments/Index', [
-            'transactions' => $transactions
-        ]);
+        // Production: Redirect ke riwayat pesanan karena cicilan bulanan dibayarkan langsung ke pihak leasing rekanan
+        return redirect()->route('motors.user-transactions');
     }
 
     public function paymentSuccess(Request $request)

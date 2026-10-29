@@ -1278,7 +1278,7 @@ class MotorGalleryController extends Controller
     }
 
     /**
-     * Show installments/cicilan page for a transaction
+     * Show installments/cicilan page for a transaction (Redirects to real transaction details)
      */
     public function showInstallments(Transaction $transaction)
     {
@@ -1292,12 +1292,7 @@ class MotorGalleryController extends Controller
             abort(403, "Unauthorized access");
         }
 
-        // Load relationships
-        $transaction->load(["motor", "installments"]);
-
-        return \Inertia\Inertia::render("Installments/Index", [
-            "transactions" => [$transaction],
-        ]);
+        return redirect()->route("motors.transaction.show", $transaction->id);
     }
 
     /**

@@ -118,11 +118,6 @@ export default function Navbar({ auth }) {
                       href: route("motors.user-transactions"),
                       active: url === "/motors/my-transactions",
                   },
-                  {
-                      label: "Cicilan Saya",
-                      href: route("installments.index"),
-                      active: url.startsWith("/installments"),
-                  },
               ]
             : []),
         {
@@ -411,14 +406,6 @@ export default function Navbar({ auth }) {
                                                         className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
                                                     >
                                                         Pesanan Saya
-                                                    </Link>
-                                                    <Link
-                                                        href={route(
-                                                            "installments.index",
-                                                        )}
-                                                        className="flex items-center gap-4 px-6 py-3 hover:bg-[#1c69d4] hover:text-white text-xs font-bold text-[#262626] uppercase tracking-widest transition-colors"
-                                                    >
-                                                        Cicilan Saya
                                                     </Link>
                                                 </div>
                                                 <div className="border-t border-gray-200" />

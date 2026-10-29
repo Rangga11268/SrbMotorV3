@@ -20,6 +20,7 @@ import {
     ChevronUp,
     XCircle,
     ArrowRight,
+    Info,
 } from "lucide-react";
 import TransactionTimeline from "@/Components/TransactionTimeline";
 
@@ -675,33 +676,44 @@ export default function TransactionDetail({ transaction }) {
                                         <summary className="flex justify-between items-center p-8 cursor-pointer list-none hover:bg-gray-50 transition-colors">
                                             <div className="flex items-center gap-6">
                                                 <DollarSign className="w-6 h-6 text-[#1c69d4]" />
-                                                <h3 className="text-lg font-black uppercase tracking-widest">RIWAYAT PEMBAYARAN ({transaction.installments.length})</h3>
+                                                <h3 className="text-lg font-black uppercase tracking-widest">
+                                                    {transaction.transaction_type === "CREDIT" ? "PEMBAYARAN KE DILER (UANG MUKA / DP)" : "RIWAYAT PEMBAYARAN"}
+                                                </h3>
                                             </div>
                                             <ChevronDown className="w-5 h-5 group-open:rotate-180 transition-transform" />
                                         </summary>
                                         <div className="p-8 pt-0 border-t border-gray-100 mt-4">
                                             <div className="space-y-4 pt-4">
-                                                {transaction.installments.map((installment) => (
+                                                {transaction.installments.filter(inst => inst.installment_number === 0).map((installment) => (
                                                     <div key={installment.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 bg-gray-50 border border-gray-100 group/item hover:bg-white hover:border-[#1c69d4] transition-all">
                                                         <div>
                                                             <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase mb-1">
-                                                                {installment.installment_number === 0 ? (transaction.transaction_type === "CASH" ? "BOOKING FEE" : "UANG MUKA / DP") : `ANGSURAN KE-${installment.installment_number}`}
-                                                            </p>
+                                                                {transaction.transaction_type === "CASH" ? "BOOKING FEE / TANDA JADI" : "UANG MUKA (DP) KE DILER"}
+                              </p>
                                                             <p className="font-black text-lg uppercase tracking-tight">{formatCurrency(installment.amount)}</p>
                                                         </div>
                                                         <div className="mt-4 sm:mt-0 flex items-center gap-4">
-                                                            <div className="text-right hidden sm:block">
-                                                                <p className="text-[9px] font-black text-gray-400 tracking-widest uppercase">JATUH TEMPO</p>
-                                                                <p className="text-[11px] font-bold uppercase">{new Date(installment.due_date).toLocaleDateString("id-ID")}</p>
-                                                            </div>
                                                             <span className={`px-4 py-1.5 text-[9px] font-black tracking-[0.2em] uppercase border ${
-                                                                installment.status === 'paid' ? 'bg-[#1c69d4]/10 border-[#1c69d4] text-[#1c69d4]' : 'bg-red-500/10 border-red-500 text-red-500'
+                                                                installment.status === 'paid' ? 'bg-[#1c69d4]/10 border-[#1c69d4] text-[#1c69d4]' : 'bg-amber-500/10 border-amber-500 text-amber-600'
                                                             }`}>
-                                                                {installment.status === 'paid' ? 'LUNAS' : 'PENDING'}
+                                                                {installment.status === 'paid' ? 'LUNAS (DITERIMA DILER)' : 'MENUNGGU PEMBAYARAN'}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 ))}
+
+                                                {/* Panduan Resmi Angsuran Bulanan Leasing */}
+                                                {transaction.transaction_type === "CREDIT" && (
+                                                    <div className="p-5 bg-blue-50/70 border border-blue-200 text-xs text-slate-700 space-y-2 mt-4">
+                                                        <div className="flex items-center gap-2 font-black uppercase tracking-wider text-[#1c69d4] text-[11px]">
+                                                            <Info size={16} />
+                                                            <span>Informasi Pembayaran Angsuran Bulanan Leasing</span>
+                                                        </div>
+                                                        <p className="text-slate-600 leading-relaxed text-xs">
+                                                            Setelah unit motor diserahkan, angsuran bulanan sebesar <strong>{formatCurrency(transaction.creditDetail?.monthly_installment || 0)}/bulan ({transaction.creditDetail?.tenor || 0}x)</strong> dibayarkan langsung ke pihak leasing rekanan ({transaction.creditDetail?.leasing_provider || "Partner Resmi"}), bukan ke rekening diler SRB Motor. Pembayaran dapat dilakukan via Indomaret, Alfamart, ATM, atau m-Banking menggunakan Nomor Kontrak Pembiayaan Anda.
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </details>
@@ -769,15 +781,17 @@ export default function TransactionDetail({ transaction }) {
                                             </Link>
                                         )}
                                         
-                                        {transaction.transaction_type === "CREDIT" && !["new_order", "pengajuan_masuk", "menunggu_persetujuan", "cancelled"].includes(transaction.status) && (
-
-                                            <Link
-                                                href={route("motors.installments", transaction.id)}
-                                                className="w-full bg-[#1c69d4] text-white hover:bg-blue-500 hover:scale-[1.02] active:scale-[0.98] h-16 transition-all font-black text-[10px] tracking-[0.3em] uppercase flex items-center justify-center gap-3 shadow-lg shadow-[#1c69d4]/20"
+                                        {transaction.transaction_type === "CREDIT" && ["disetujui", "waiting_payment"].includes(transaction.status) && (
+                                            <a
+                                                href={`https://wa.me/628978638849?text=${encodeURIComponent(
+                                                    `Halo Tim Sales SRB Motor Kaliabang, saya ingin konfirmasi pembayaran Uang Muka (DP) untuk unit ${transaction.motor?.name} (ID: #${String(transaction.id).padStart(6, "0")}).`
+                                                )}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full bg-[#25D366] text-white hover:bg-[#20bd5a] hover:scale-[1.02] active:scale-[0.98] h-16 transition-all font-black text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/20"
                                             >
-                                                LIHAT CICILAN <ArrowRight size={16} />
-                                            </Link>
-
+                                                <Phone size={16} /> KONFIRMASI BAYAR DP (WHATSAPP)
+                                            </a>
                                         )}
                                         
                                         {canCancel && (
