@@ -579,16 +579,6 @@ Route::post("/documents/{document}/approve", [
             "printReceipt",
         ])->name("services.receipt");
 
-
-        Route::post("/installments/{installment}/approve", [
-            \App\Http\Controllers\InstallmentController::class,
-            "approve",
-        ])->name("installments.approve");
-        Route::post("/installments/{installment}/reject", [
-            \App\Http\Controllers\InstallmentController::class,
-            "reject",
-        ])->name("installments.reject");
-
         Route::get("/transactions/{transaction}/invoice", [
             InvoiceController::class,
             "preview",
