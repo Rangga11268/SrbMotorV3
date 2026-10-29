@@ -17,7 +17,59 @@ use Midtrans\Transaction;
 class ServiceAppointmentController extends Controller
 {
     /**
-     * Display a listing of appointments
+     * Display the public workshop showcase landing page (Open for all visitors)
+     */
+    public function publicIndex()
+    {
+        $branches = \App\Models\Branch::where('can_service', true)
+            ->where('is_active', true)
+            ->get();
+
+        if ($branches->isEmpty()) {
+            $branches = \App\Models\Branch::where('is_active', true)->get();
+        }
+
+        $servicePackages = [
+            [
+                'title' => 'Servis Berkala (Tune Up)',
+                'desc' => 'Pemeriksaan menyeluruh 15 titik injeksi, busi, kelistrikan, dan filter udara sesuai standar pabrik.',
+                'price' => 'Rp 95.000',
+                'duration' => '45 Menit',
+                'icon' => 'tune',
+            ],
+            [
+                'title' => 'Paket Ganti Oli + Servis Ringan',
+                'desc' => 'Tune up lengkap + penggantian oli mesin resmi pabrikan (Yamalube / AHM Oil) jaminan orisinil.',
+                'price' => 'Rp 145.000',
+                'duration' => '60 Menit',
+                'icon' => 'oil',
+            ],
+            [
+                'title' => 'Servis Lengkap + Perawatan CVT Matic',
+                'desc' => 'Pembersihan mangkok ganda, roller, v-belt transmisi matic, dan pelumasan grease tahan panas.',
+                'price' => 'Rp 195.000',
+                'duration' => '75 Menit',
+                'icon' => 'gear',
+            ],
+            [
+                'title' => 'Pemeriksaan Keluhan Khusus & Diagnosa',
+                'desc' => 'Pemeriksaan kendala mesin brebet, kelistrikan, pengereman, atau kaki-kaki motor dengan scanner injeksi.',
+                'price' => 'Estimasi di Bengkel',
+                'duration' => 'Sesuai Kendala',
+                'icon' => 'wrench',
+            ],
+        ];
+
+        return Inertia::render('Services/Index', [
+            'branches' => $branches,
+            'servicePackages' => $servicePackages,
+            'settings' => Setting::pluck('value', 'key')->toArray(),
+            'hasActiveHistory' => Auth::check() ? ServiceAppointment::where('user_id', Auth::id())->exists() : false,
+        ]);
+    }
+
+    /**
+     * Display a listing of appointments (History)
      */
     public function index(Request $request)
     {

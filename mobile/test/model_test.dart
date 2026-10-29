@@ -82,6 +82,41 @@ void main() {
     expect(waitingOrder.statusLabel, 'Menunggu Persetujuan');
   });
 
+  test('Order credit and installment monitoring calculations are accurate', () {
+    final creditOrderJson = {
+      'id': 15,
+      'order_number': 'TRX-2026-099',
+      'transaction_type': 'CREDIT',
+      'status': 'APPROVED',
+      'total_amount': 38000000,
+      'dp_amount': 7000000,
+      'created_at': '2026-08-01T10:00:00Z',
+      'credit_detail': {
+        'leasing_provider': 'FIFGROUP',
+        'reference_number': 'CTR-FIF-2026-0089',
+        'tenor': 36,
+        'angsuran_per_bulan': 1150000,
+      },
+      'installments': [
+        {'id': 1, 'installment_number': 1, 'amount': 1150000, 'status': 'paid', 'due_date': '2026-09-01'},
+        {'id': 2, 'installment_number': 2, 'amount': 1150000, 'status': 'paid', 'due_date': '2026-10-01'},
+        {'id': 3, 'installment_number': 3, 'amount': 1150000, 'status': 'pending', 'due_date': '2026-11-01'},
+      ],
+    };
+
+    final order = Order.fromJson(creditOrderJson);
+
+    expect(order.hasActiveLeasing, true);
+    expect(order.leasingProvider, 'FIFGROUP');
+    expect(order.contractNumber, 'CTR-FIF-2026-0089');
+    expect(order.tenor, 36);
+    expect(order.paidInstallmentsCount, 2);
+    expect(order.totalInstallmentsCount, 36);
+    expect(order.remainingInstallmentsCount, 34);
+    expect(order.nextInstallment?.installmentNumber, 3);
+    expect(order.nextDueDateFormatted, contains('Nov 2026'));
+  });
+
   test('User.fromJson correctly parses backend Auth API payload', () {
     final backendPayload = {
       'id': 2,

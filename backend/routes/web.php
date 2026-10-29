@@ -246,12 +246,18 @@ Route::middleware(["auth"])->group(function () {
 
 // Customer-facing news routes (REMOVED)
 
-// Service Booking Routes (User)
+// Public Workshop Showcase (Open to all visitors without login)
+Route::get("/services", [
+    ServiceAppointmentController::class,
+    "publicIndex",
+])->name("services.index");
+
+// Service Booking Routes (User Auth)
 Route::middleware(["auth"])->group(function () {
-    Route::get("/services", [
+    Route::get("/services/history", [
         ServiceAppointmentController::class,
         "index",
-    ])->name("services.index");
+    ])->name("services.history");
     Route::get("/services/booking", [
         ServiceAppointmentController::class,
         "create",

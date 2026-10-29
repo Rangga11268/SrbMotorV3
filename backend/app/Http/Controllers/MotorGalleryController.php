@@ -117,11 +117,13 @@ class MotorGalleryController extends Controller
 
         // Get settings from database
         $settings = \App\Models\Setting::pluck("value", "key")->toArray();
+        $branches = \App\Models\Branch::where("is_active", true)->get();
 
         return \Inertia\Inertia::render("Motors/Show", [
             "motor" => $motor,
             "relatedMotors" => $relatedMotors,
             "settings" => $settings,
+            "branches" => $branches,
         ]);
     }
 

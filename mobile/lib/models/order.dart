@@ -1,6 +1,48 @@
 import 'package:intl/intl.dart';
 import 'motor.dart';
 
+class InstallmentItem {
+  final int id;
+  final int installmentNumber;
+  final double amount;
+  final double penaltyAmount;
+  final String? dueDate;
+  final String status; // 'paid', 'pending', 'overdue'
+  final String? paidAt;
+
+  InstallmentItem({
+    required this.id,
+    required this.installmentNumber,
+    required this.amount,
+    this.penaltyAmount = 0,
+    this.dueDate,
+    required this.status,
+    this.paidAt,
+  });
+
+  bool get isPaid => status.toLowerCase() == 'paid';
+  bool get isOverdue => status.toLowerCase() == 'overdue';
+
+  factory InstallmentItem.fromJson(Map<String, dynamic> json) {
+    final rawAmt = json['amount'] ?? 0;
+    final double amt = rawAmt is num ? rawAmt.toDouble() : double.tryParse(rawAmt.toString()) ?? 0;
+    final rawPen = json['penalty_amount'] ?? 0;
+    final double pen = rawPen is num ? rawPen.toDouble() : double.tryParse(rawPen.toString()) ?? 0;
+
+    return InstallmentItem(
+      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+      installmentNumber: json['installment_number'] is int
+          ? json['installment_number']
+          : int.tryParse(json['installment_number']?.toString() ?? '1') ?? 1,
+      amount: amt,
+      penaltyAmount: pen,
+      dueDate: json['due_date']?.toString(),
+      status: json['status']?.toString().toLowerCase() ?? 'pending',
+      paidAt: json['paid_at']?.toString(),
+    );
+  }
+}
+
 class Order {
   final int id;
   final String orderNumber;
@@ -17,6 +59,9 @@ class Order {
   final String? surveyorName;
   final String? surveyorPhone;
   final bool? _isSurveyConfirmed;
+  final String? leasingProvider;
+  final String? contractNumber;
+  final List<InstallmentItem> installments;
 
   bool get isSurveyOverdue => _isSurveyOverdue ?? false;
   bool get isSurveyConfirmed => _isSurveyConfirmed ?? false;
@@ -24,6 +69,65 @@ class Order {
   String get motorName => motor?.name ?? 'Unit Motor';
   String get referenceNumber => orderNumber;
   String get createdAtFormatted => formattedDate;
+
+  bool get hasActiveLeasing {
+    if (!isCredit) return false;
+    final s = status.toUpperCase();
+    return s.contains('APPROV') ||
+        s.contains('SELESAI') ||
+        s.contains('COMPLET') ||
+        s.contains('SETUJU') ||
+        s.contains('DELIVER') ||
+        s.contains('PREPARATION');
+  }
+
+  int get paidInstallmentsCount {
+    if (installments.isNotEmpty) {
+      return installments.where((i) => i.isPaid).length;
+    }
+    return 0;
+  }
+
+  int get totalInstallmentsCount {
+    if (tenor != null && tenor! > 0) return tenor!;
+    if (installments.isNotEmpty) return installments.length;
+    return 36;
+  }
+
+  int get remainingInstallmentsCount {
+    final rem = totalInstallmentsCount - paidInstallmentsCount;
+    return rem < 0 ? 0 : rem;
+  }
+
+  InstallmentItem? get nextInstallment {
+    try {
+      return installments.firstWhere((i) => !i.isPaid);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String get nextDueDateFormatted {
+    final next = nextInstallment;
+    if (next?.dueDate != null && next!.dueDate!.isNotEmpty) {
+      try {
+        final parsed = DateTime.parse(next.dueDate!);
+        try {
+          return DateFormat('dd MMM yyyy', 'id_ID').format(parsed);
+        } catch (_) {
+          return DateFormat('dd MMM yyyy').format(parsed);
+        }
+      } catch (_) {
+        return next.dueDate!;
+      }
+    }
+    final estDate = createdAt.add(Duration(days: 30 * (paidInstallmentsCount + 1)));
+    try {
+      return DateFormat('dd MMM yyyy', 'id_ID').format(estDate);
+    } catch (_) {
+      return DateFormat('dd MMM yyyy').format(estDate);
+    }
+  }
 
   Order({
     required this.id,
@@ -41,6 +145,9 @@ class Order {
     this.surveyorName,
     this.surveyorPhone,
     bool? isSurveyConfirmed = false,
+    this.leasingProvider,
+    this.contractNumber,
+    this.installments = const [],
   })  : _isSurveyOverdue = isSurveyOverdue ?? false,
         _isSurveyConfirmed = isSurveyConfirmed ?? false;
 
@@ -90,6 +197,23 @@ class Order {
 
     final bool isOverdue = rawOverdue || fallbackOverdue;
 
+    final creditDetail = json['credit_detail'] is Map ? json['credit_detail'] : null;
+    final String? lProvider = creditDetail?['leasing_provider']?.toString() ?? json['leasing_provider']?.toString();
+    final String? cNumber = creditDetail?['reference_number']?.toString() ??
+        json['contract_number']?.toString() ??
+        json['reference_number']?.toString();
+
+    List<InstallmentItem> parsedInstallments = [];
+    if (json['installments'] is List) {
+      for (final item in json['installments']) {
+        if (item is Map<String, dynamic>) {
+          parsedInstallments.add(InstallmentItem.fromJson(item));
+        } else if (item is Map) {
+          parsedInstallments.add(InstallmentItem.fromJson(Map<String, dynamic>.from(item)));
+        }
+      }
+    }
+
     return Order(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
       orderNumber: json['order_number']?.toString() ?? json['id']?.toString() ?? 'TRX-000',
@@ -106,6 +230,9 @@ class Order {
       surveyorName: sName,
       surveyorPhone: sPhone,
       isSurveyConfirmed: sConfirmed,
+      leasingProvider: lProvider,
+      contractNumber: cNumber,
+      installments: parsedInstallments,
     );
   }
 

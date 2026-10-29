@@ -1261,8 +1261,131 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 const SizedBox(height: 16),
               ],
 
-              // Financial Breakdown
+              // Financial Breakdown & Installment Monitoring
               if (order.transactionType == 'CREDIT') ...[
+                if (order.hasActiveLeasing) ...[
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.shield_rounded, size: 16, color: Color(0xFF1C69D4)),
+                                const SizedBox(width: 6),
+                                Text(
+                                  order.leasingProvider ?? 'Leasing Resmi SRB Motor',
+                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Color(0xFF0F172A)),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFECFDF5),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                'Kontrak Aktif',
+                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF059669)),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        if (order.contractNumber != null && order.contractNumber!.isNotEmpty) ...[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('No. Kontrak', style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B))),
+                              Text(
+                                order.contractNumber!,
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF0F172A)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Sisa Tenor', style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B))),
+                            Text(
+                              '${order.remainingInstallmentsCount} dari ${order.totalInstallmentsCount} Bulan',
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF1C69D4)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Angsuran Bulanan', style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B))),
+                            Text(
+                              '${order.formattedAngsuran} / bln',
+                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Color(0xFF0F172A)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Jatuh Tempo Berikutnya', style: TextStyle(fontSize: 11.5, color: Color(0xFF64748B))),
+                            Text(
+                              order.nextDueDateFormatted,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFFD97706)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: order.totalInstallmentsCount > 0
+                                ? (order.paidInstallmentsCount / order.totalInstallmentsCount).clamp(0.0, 1.0)
+                                : 0.0,
+                            backgroundColor: const Color(0xFFE2E8F0),
+                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1C69D4)),
+                            minHeight: 6,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  AppButton.primary(
+                    text: 'Konfirmasi / Bayar Cicilan Bulanan',
+                    isFullWidth: true,
+                    size: AppButtonSize.medium,
+                    icon: Icons.payments_rounded,
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      final contract = order.contractNumber ?? order.orderNumber;
+                      final motor = order.motor?.name ?? 'Motor';
+                      final msg = Uri.encodeComponent(
+                        'Halo Admin SRB Motor, saya ingin konfirmasi/bayar cicilan motor $motor untuk nomor kontrak $contract. Mohon info nomor rekening virtual account atau link pembayarannya.',
+                      );
+                      final waUrl = 'https://wa.me/6282123456789?text=$msg';
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Hubungi Admin Cicilan WA: $waUrl'),
+                          duration: const Duration(seconds: 4),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 _buildSummaryRow('Uang Muka (DP)', order.formattedDp),
                 const SizedBox(height: 6),
                 _buildSummaryRow('Angsuran per Bulan', '${order.formattedAngsuran} / bln'),
@@ -1448,6 +1571,77 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8), size: 20),
                   ],
                 ),
+                if (order.hasActiveLeasing) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0FDF4),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFFBBF7D0)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.account_balance_wallet_rounded, size: 13, color: Color(0xFF16A34A)),
+                                const SizedBox(width: 5),
+                                Text(
+                                  order.leasingProvider != null && order.leasingProvider!.isNotEmpty
+                                      ? order.leasingProvider!
+                                      : 'Cicilan Kredit Aktif',
+                                  style: const TextStyle(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF166534),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '${order.paidInstallmentsCount}/${order.totalInstallmentsCount} Bulan',
+                              style: const TextStyle(
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF15803D),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: order.totalInstallmentsCount > 0
+                                ? (order.paidInstallmentsCount / order.totalInstallmentsCount).clamp(0.0, 1.0)
+                                : 0.0,
+                            backgroundColor: const Color(0xFFDCFCE7),
+                            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF22C55E)),
+                            minHeight: 4,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${order.formattedAngsuran}/bln',
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF1E293B)),
+                            ),
+                            Text(
+                              'Jatuh tempo: ${order.nextDueDateFormatted}',
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

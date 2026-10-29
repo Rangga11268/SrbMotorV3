@@ -85,6 +85,11 @@ class Setting extends Model
     /**
      * Clear all setting cache
      */
+    public static function getAllSettings()
+    {
+        return self::pluck('value', 'key')->toArray();
+    }
+
     public static function clearCache()
     {
         Cache::flush();
